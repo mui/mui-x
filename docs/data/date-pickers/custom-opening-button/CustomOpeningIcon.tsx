@@ -21,12 +21,12 @@ export default function CustomOpeningIcon() {
       <DemoContainer components={['DatePicker', 'DatePicker', 'DatePicker']}>
         <DatePicker
           label="Departure"
-          // Using a svg component from `@mui/icons-material`
+          // Using an SVG component from `@mui/icons-material`
           slots={{ openPickerIcon: FlightTakeoffIcon }}
         />
         <DatePicker
           label="Arrival"
-          // Using a custom svg component
+          // Using a custom SVG component
           slots={{ openPickerIcon: FlightLandIcon }}
         />
         <DatePicker
