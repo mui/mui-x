@@ -36,7 +36,7 @@ Read the Charts [Installation instructions](https://mui.com/x/react-charts/#gett
 
 ### Tree View
 
-Read the Charts [Installation instructions](https://mui.com/x/react-tree-view/getting-started/#installation) in the MUI X docs.
+Read the Tree View [Installation instructions](https://mui.com/x/react-tree-view/getting-started/#installation) in the MUI X docs.
 
 ## MIT vs. commercial licenses
 
@@ -63,6 +63,7 @@ MIT licensed packages:
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 - [`@mui/x-charts`](https://www.npmjs.com/package/@mui/x-charts)
+- [`@mui/x-tree-view`](https://www.npmjs.com/package/@mui/x-tree-view)
 
 ### Pro plan
 
