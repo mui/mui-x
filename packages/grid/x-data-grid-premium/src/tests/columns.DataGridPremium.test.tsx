@@ -1,12 +1,8 @@
 import * as React from 'react';
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { act, createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import {
-  DataGridPremium,
-  gridClasses,
-  GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
-} from '@mui/x-data-grid-premium';
-import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
+import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -28,9 +24,15 @@ describe('<DataGridPremium /> - Columns', () => {
               { id: 0, brand: 'Nike' },
               { id: 1, brand: 'Adidas' },
               { id: 2, brand: 'Puma' },
+              { id: 3, brand: 'Reebok' },
+              { id: 4, brand: 'Under Armour' },
+              { id: 5, brand: 'Asics' },
+              { id: 6, brand: 'Salomon' },
             ]}
             columns={[{ field: 'brand' }]}
             initialState={{ aggregation: { model: { brand: 'size' } } }}
+            showCellVerticalBorder
+            rowBuffer={1}
           />
         </div>,
       );
@@ -41,10 +43,13 @@ describe('<DataGridPremium /> - Columns', () => {
       fireEvent.mouseUp(separator);
 
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '150px' });
-      const aggregationCell = document.querySelector(
-        `[data-id="${GRID_AGGREGATION_ROOT_FOOTER_ROW_ID}"] [role="cell"][data-colindex="0"]`,
-      );
-      expect(aggregationCell?.getBoundingClientRect().width).to.equal(150);
+      expect(getCell(0, 0).getBoundingClientRect().width).to.equal(150);
+
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      virtualScroller.scrollTop = 500; // scroll to the bottom
+      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+
+      expect(getCell(6, 0).getBoundingClientRect().width).to.equal(150);
     });
   });
 });
