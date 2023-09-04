@@ -119,6 +119,11 @@ export interface GridPrintExportOptions extends GridExportOptions {
    */
   hideFooter?: boolean;
   /**
+   * If `true`, the selection checkboxes will be included when printing.
+   * @default false
+   */
+  includeCheckboxes?: boolean;
+  /**
    * If `false`, all <style> and <link type="stylesheet" /> tags from the <head> will not be copied
    * to the print window.
    * @default true

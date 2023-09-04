@@ -23,6 +23,7 @@ import {
   GridPrintExportMenuItem,
 } from '../../../components/toolbar/GridToolbarExport';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef'
 
 function raf() {
   return new Promise<void>((resolve) => {
@@ -36,7 +37,7 @@ type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
   options?: Pick<
     GridPrintExportOptions,
-    'copyStyles' | 'bodyClassName' | 'pageStyle' | 'hideToolbar' | 'hideFooter'
+    'copyStyles' | 'bodyClassName' | 'pageStyle' | 'hideToolbar' | 'hideFooter' | 'includeCheckboxes'
   >,
 ) => void;
 
@@ -72,7 +73,7 @@ export const useGridPrintExport = (
   // Returns a promise because updateColumns triggers state update and
   // the new state needs to be in place before the grid can be sized correctly
   const updateGridColumnsForPrint = React.useCallback(
-    (fields?: string[], allColumns?: boolean) =>
+    (fields?: string[], allColumns?: boolean, includeCheckboxes?: boolean) =>
       new Promise<void>((resolve) => {
         const exportedColumnFields = getColumnsToExport({
           apiRef,
@@ -85,6 +86,10 @@ export const useGridPrintExport = (
         columns.forEach((column) => {
           newColumnVisibilityModel[column.field] = exportedColumnFields.includes(column.field);
         });
+
+        if (includeCheckboxes) {
+          newColumnVisibilityModel[GRID_CHECKBOX_SELECTION_COL_DEF.field] = true;
+        }
 
         apiRef.current.setColumnVisibilityModel(newColumnVisibilityModel);
         resolve();
@@ -112,6 +117,7 @@ export const useGridPrintExport = (
         copyStyles: true,
         hideToolbar: false,
         hideFooter: false,
+        includeCheckboxes: false,
         ...options,
       };
 
@@ -298,7 +304,7 @@ export const useGridPrintExport = (
         apiRef.current.forceUpdate();
       }
 
-      await updateGridColumnsForPrint(options?.fields, options?.allColumns);
+      await updateGridColumnsForPrint(options?.fields, options?.allColumns, options?.includeCheckboxes);
 
       const selectedRows = apiRef.current.getSelectedRows();
       if (selectedRows.size > 0) {
