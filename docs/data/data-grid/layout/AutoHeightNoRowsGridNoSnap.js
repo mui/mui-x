@@ -75,7 +75,7 @@ function CustomNoRowsOverlay() {
   );
 }
 
-export default function AutoHeightNoRowsGrid() {
+export default function AutoHeightNoRowsGridNoSnap() {
   return (
     <Box sx={{ width: '100%' }}>
       <DataGrid

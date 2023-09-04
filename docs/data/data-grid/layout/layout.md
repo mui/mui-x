@@ -37,7 +37,7 @@ By default, when the Data Grid has no rows, the rows container takes the height 
 
 To adjust the height of the rows container, use the `--DataGrid-noRowsOverlayHeight` CSS variable.
 
-{{"demo": "AutoHeightNoRowsGrid.js", "bg": "inline"}}
+{{"demo": "AutoHeightNoRowsGridNoSnap.js", "bg": "inline"}}
 
 ## API
 
