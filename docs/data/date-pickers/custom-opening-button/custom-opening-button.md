@@ -9,7 +9,7 @@ title: Date and Time Pickers - Custom opening button
 
 ## Set a custom opening icon
 
-If you want to change the icon opening the picker without changing its behavior, you can use the `openPickerIcon` slot.
+If you want to change the icon opening the picker without changing its behavior, you can use the `openPickerIcon` slot:
 
 {{"demo": "CustomOpeningIcon.js"}}
 
