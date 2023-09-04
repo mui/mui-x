@@ -2,110 +2,190 @@ import { StaticDatePicker, StaticDatePickerProps } from '@mui/x-date-pickers/Sta
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
-
-export const customizationLabels: { [k: string]: string } = {
-  customTheme: 'Custom Theme',
-  styledComponents: 'Styled Components',
-  sxProp: 'SX Prop',
-};
-
-type CustomizationItemsType = Partial<{
-  [k in keyof typeof customizationLabels]: { code: string; type?: 'warning' | 'success' };
-}>;
+import { PickersSubcomponentType } from 'docsx/src/modules/utils/useCustomizationPlayground';
 
 type PickerExamplesType<TComponent, TComponentProps> = {
   name: string;
   component: TComponent;
   componentProps: TComponentProps;
-  examples: { [k: string]: CustomizationItemsType };
+  examples: PickersSubcomponentType;
 };
 
-export const staticDatePickerExamples: { [k: string]: CustomizationItemsType } = {
+export const staticDatePickerExamples: PickersSubcomponentType = {
   PickersToolbar: {
-    customTheme: {
-      code: 'ToolbarCustomTheme.styling.ts',
+    examples: {
+      customTheme: {
+        type: 'success',
+      },
+      styledComponents: {
+        type: 'success',
+      },
+      sxProp: {
+        type: 'success',
+      },
     },
-    styledComponents: {
-      code: 'ToolbarStyledComponents.styling.ts',
-    },
-    sxProp: {
-      code: 'ToolbarSxProp.styling.tsx',
-    },
+    slots: ['root', 'content'],
   },
   DateCalendar: {
-    customTheme: {
-      code: 'DateCalendarCustomTheme.styling.ts',
+    examples: {
+      sxProp: {
+        type: 'success',
+      },
+      customTheme: {
+        type: 'success',
+      },
+      styledComponents: {
+        type: 'success',
+      },
     },
-    styledComponents: {
-      code: 'DateCalendarStyledComponents.styling.ts',
-    },
-    sxProp: {
-      code: 'DateCalendarSxProp.styling.ts',
-    },
+    slots: ['root'],
   },
   PickersCalendarHeader: {
-    customTheme: {
-      code: 'CalendarHeaderCustomTheme.styling.ts',
+    examples: {
+      sxProp: {
+        type: 'success',
+      },
+      customTheme: {
+        type: 'success',
+      },
+      styledComponents: {
+        type: 'success',
+      },
     },
-    styledComponents: {
-      code: 'CalendarHeaderStyledComponents.styling.ts',
-    },
-    sxProp: {
-      code: 'CalendarHeaderSxProp.styling.tsx',
-    },
+    slots: ['root', 'label', 'labelContainer', 'switchViewButton', 'switchViewIcon'],
   },
   DayCalendar: {
-    customTheme: {
-      code: 'DayCalendarCustomTheme.styling.ts',
+    examples: {
+      sxProp: {
+        type: 'success',
+      },
+      customTheme: {
+        type: 'success',
+      },
+      styledComponents: {
+        type: 'success',
+      },
     },
-    styledComponents: {
-      code: 'DayCalendarStyledComponents.styling.ts',
+    slots: ['root', 'weekDayLabel', 'weekContainer', 'weekNumberLabel', 'weekNumber'],
+  },
+  PickersDay: {
+    examples: {
+      sxProp: {
+        type: 'success',
+      },
+      customTheme: {
+        type: 'success',
+      },
+      styledComponents: {
+        type: 'success',
+      },
     },
-    sxProp: {
-      code: 'DayCalendarSxProp.styling.tsx',
+    slots: ['root', 'today'],
+  },
+  MonthCalendar: {
+    examples: {
+      sxProp: {
+        type: 'success',
+        componentProps: { views: ['month'] },
+      },
+      customTheme: {
+        type: 'success',
+        componentProps: { views: ['month'] },
+      },
+      styledComponents: {
+        type: 'success',
+        componentProps: { views: ['month'] },
+      },
     },
+    slots: ['root'],
+  },
+  PickersMonth: {
+    examples: {
+      sxProp: {
+        type: 'success',
+        componentProps: { views: ['month'] },
+      },
+      customTheme: {
+        type: 'success',
+        componentProps: { views: ['month'] },
+      },
+      styledComponents: {
+        type: 'success',
+        componentProps: { views: ['month'] },
+      },
+    },
+    slots: ['root', 'monthButton'],
   },
 };
 
-export const datePickerExamples: { [k: string]: CustomizationItemsType } = {
+export const datePickerExamples: PickersSubcomponentType = {
   DateCalendar: {
-    customTheme: {
-      code: 'DateCalendarCustomTheme.styling.ts',
+    examples: {
+      sxProp: {
+        type: 'success',
+      },
+      customTheme: {
+        type: 'success',
+      },
+      styledComponents: {
+        type: 'warning',
+        comments:
+          'You will need to use the `disablePortal` prop from the popper in order to be able to use styled components with the DesktopDatePicker',
+        componentProps: { slotProps: { popper: { disablePortal: true } } },
+      },
     },
-
-    sxProp: {
-      code: 'DesktopDatePicker/DateCalendarSxProp.styling.tsx',
-    },
-    styledComponents: {
-      code: 'DesktopDatePicker/DateCalendarStyledComponents.styling.tsx',
-      type: 'warning',
-    },
+    slots: ['root'],
   },
   PickersCalendarHeader: {
-    customTheme: {
-      code: 'CalendarHeaderCustomTheme.styling.ts',
+    examples: {
+      sxProp: {
+        type: 'success',
+      },
+      customTheme: {
+        type: 'success',
+      },
+      styledComponents: {
+        type: 'warning',
+        comments:
+          'You will need to use the `disablePortal` prop from the popper in order to be able to use styled components with the DesktopDatePicker',
+        componentProps: { slotProps: { popper: { disablePortal: true } } },
+      },
     },
-
-    sxProp: {
-      code: 'DesktopDatePicker/CalendarHeaderSxProp.styling.tsx',
-    },
-    styledComponents: {
-      code: 'DesktopDatePicker/CalendarHeaderStyledComponents.styling.tsx',
-      type: 'warning',
-    },
+    slots: ['root', 'label', 'labelContainer', 'switchViewButton', 'switchViewIcon'],
   },
   DayCalendar: {
-    customTheme: {
-      code: 'DayCalendarCustomTheme.styling.ts',
+    examples: {
+      sxProp: {
+        type: 'success',
+      },
+      customTheme: {
+        type: 'success',
+      },
+      styledComponents: {
+        type: 'warning',
+        comments:
+          'You will need to use the `disablePortal` prop from the popper in order to be able to use styled components with the DesktopDatePicker',
+        componentProps: { slotProps: { popper: { disablePortal: true } } },
+      },
     },
-
-    sxProp: {
-      code: 'DesktopDatePicker/DayCalendarSxProp.styling.tsx',
+    slots: ['root', 'weekDayLabel', 'weekContainer', 'weekNumberLabel', 'weekNumber'],
+  },
+  PickersDay: {
+    examples: {
+      sxProp: {
+        type: 'success',
+      },
+      customTheme: {
+        type: 'success',
+      },
+      styledComponents: {
+        type: 'warning',
+        comments:
+          'You will need to use the `disablePortal` prop from the popper in order to be able to use styled components with the DesktopDatePicker',
+        componentProps: { slotProps: { popper: { disablePortal: true } } },
+      },
     },
-    styledComponents: {
-      code: 'DesktopDatePicker/DayCalendarStyledComponents.styling.tsx',
-      type: 'warning',
-    },
+    slots: ['root', 'today'],
   },
 };
 
@@ -115,6 +195,7 @@ const pickerProps: DatePickerProps<Dayjs> = {
   yearsPerRow: 3,
   minDate: dayjs(new Date(2020, 0, 1)),
   maxDate: dayjs(new Date(2028, 12, 31)),
+  displayWeekNumber: true,
 };
 
 export const pickerExamples = [
@@ -129,6 +210,7 @@ export const pickerExamples = [
     component: DesktopDatePicker,
     componentProps: {
       open: true,
+      reduceAnimations: true,
       slotProps: {
         popper: {
           sx: { zIndex: 1 },
