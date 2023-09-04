@@ -24,3 +24,7 @@ The installation [instructions](/x/react-date-pickers/getting-started/#installat
 ### Charts
 
 The installation [instructions](/x/react-charts/#getting-started).
+
+### Tree View
+
+The installation [instructions](/x/react-tree-view/#getting-started).
