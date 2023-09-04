@@ -3,7 +3,7 @@ productId: x-date-pickers
 title: Date and Time Pickers - Custom opening button
 ---
 
-# Custom subcomponents
+# Custom opening button
 
 <p class="description">The date picker lets you customize the button to open the views.</p>
 
@@ -19,7 +19,7 @@ You can also change the icon rendered based on the current status of the picker:
 
 ## Pass props to the opening button
 
-If you want to customize the opening button without redefining it whole behavior, you either use:
+If you want to customize the opening button without redefining its whole behavior, you can use either:
 
 - the `openPickerButton` slot to target the [`IconButton`](/material-ui/api/icon-button/) component.
 - the `inputAdornment` slot to target the [`InputAdornment`](/material-ui/api/input-adornment/) component.

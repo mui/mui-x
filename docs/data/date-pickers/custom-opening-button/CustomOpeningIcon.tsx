@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { createSvgIcon } from '@mui/material/utils';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-const FlightTakeoffIcon = createSvgIcon(
-  <path d="M2.5 19h19v2h-19v-2zm19.57-9.36c-.21-.8-1.04-1.28-1.84-1.06L14.92 10l-6.9-6.43-1.93.51 4.14 7.17-4.97 1.33-1.97-1.54-1.45.39 2.59 4.49L21 11.49c.81-.23 1.28-1.05 1.07-1.85z" />,
-  'FlightTakeoff',
+const FlightLandIcon = createSvgIcon(
+  <path d="M2.5 19h19v2h-19v-2zm16.84-3.15c.8.21 1.62-.26 1.84-1.06.21-.8-.26-1.62-1.06-1.84l-5.31-1.42-2.76-9.02L10.12 2v8.28L5.15 8.95l-.93-2.32-1.45-.39v5.17l16.57 4.44z" />,
+  'FlightLandIcon',
 );
 
 function MuiIcon() {
@@ -17,12 +18,19 @@ function MuiIcon() {
 export default function CustomOpeningIcon() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker', 'DatePicker']}>
+      <DemoContainer components={['DatePicker', 'DatePicker', 'DatePicker']}>
         <DatePicker
           label="Departure"
           slots={{
-            // Using an svg component
+            // Using a svg component imported from `@mui/icons-material`
             openPickerIcon: FlightTakeoffIcon,
+          }}
+        />
+        <DatePicker
+          label="Arrival"
+          slots={{
+            // Using a svg component created with `createSvgIcon`
+            openPickerIcon: FlightLandIcon,
           }}
         />
         <DatePicker
