@@ -99,12 +99,12 @@ If not, it exports all rows except the footers (filtered and sorted rows, accord
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
 
-| Selector                                         | Behavior                                                                                                                                                                                                                             |
-| :----------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `gridRowIdsSelector`                           | The rows in their original order.                                                                                                                                                                                                    |
-| `gridSortedRowIdsSelector`                     | The rows after applying the sorting rules.                                                                                                                                                                                           |
-| `gridFilteredSortedRowIdsSelector`             | The rows after applying the sorting rules, and the filtering rules.                                                                                                                                                                  |
-| `gridExpandedSortedRowIdsSelector`             | The rows after applying the sorting rules, the filtering rules, and without the collapsed rows.                                                                                                                                      |
+| Selector                                       | Behavior                                                                                                                                                                                                                   |
+| :--------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gridRowIdsSelector`                           | The rows in their original order.                                                                                                                                                                                          |
+| `gridSortedRowIdsSelector`                     | The rows after applying the sorting rules.                                                                                                                                                                                 |
+| `gridFilteredSortedRowIdsSelector`             | The rows after applying the sorting rules, and the filtering rules.                                                                                                                                                        |
+| `gridExpandedSortedRowIdsSelector`             | The rows after applying the sorting rules, the filtering rules, and without the collapsed rows.                                                                                                                            |
 | `gridPaginatedVisibleSortedGridRowIdsSelector` | The rows after applying the sorting rules, the filtering rules, without the collapsed rows and only for the current page (**Note**: If the pagination is disabled, it will still take the value of `page` and `pageSize`). |
 
 {{"demo": "CsvGetRowsToExport.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -202,7 +202,7 @@ If rows are selected when exporting, the checkboxes will not be included in the 
 ```jsx
 <GridToolbarExport
   printOptions={{
-    includeCheckboxes: true
+    includeCheckboxes: true,
   }}
 />
 ```

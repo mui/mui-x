@@ -23,7 +23,7 @@ import {
   GridPrintExportMenuItem,
 } from '../../../components/toolbar/GridToolbarExport';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
-import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef'
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 
 function raf() {
   return new Promise<void>((resolve) => {
@@ -37,7 +37,12 @@ type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
   options?: Pick<
     GridPrintExportOptions,
-    'copyStyles' | 'bodyClassName' | 'pageStyle' | 'hideToolbar' | 'hideFooter' | 'includeCheckboxes'
+    | 'copyStyles'
+    | 'bodyClassName'
+    | 'pageStyle'
+    | 'hideToolbar'
+    | 'hideFooter'
+    | 'includeCheckboxes'
   >,
   hasRowsSelected?: boolean,
 ) => void;
@@ -164,7 +169,11 @@ export const useGridPrintExport = (
       }
 
       // Expand container height to accommodate all rows
-      const computedTotalHeight = rowsMeta.currentPageTotalHeight + getTotalHeaderHeight(apiRef, props.columnHeaderHeight) + gridToolbarElementHeight + gridFooterElementHeight
+      const computedTotalHeight =
+        rowsMeta.currentPageTotalHeight +
+        getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
+        gridToolbarElementHeight +
+        gridFooterElementHeight;
       gridClone.style.height = `${computedTotalHeight}px`;
       // The height above does not include grid border width, so we need to exclude it
       gridClone.style.boxSizing = 'content-box';
@@ -172,7 +181,9 @@ export const useGridPrintExport = (
       // the footer is always being placed at the bottom of the page as if all rows are exported
       // so if there are rows selected it needs to be moved up to the correct position
       if (hasRowsSelected) {
-        const gridFooterElement: HTMLElement | null = gridClone.querySelector(`.${gridClasses.footerContainer}`);
+        const gridFooterElement: HTMLElement | null = gridClone.querySelector(
+          `.${gridClasses.footerContainer}`,
+        );
         gridFooterElement!.style.position = 'absolute';
         gridFooterElement!.style.width = '100%';
         gridFooterElement!.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
@@ -310,7 +321,11 @@ export const useGridPrintExport = (
         apiRef.current.forceUpdate();
       }
 
-      await updateGridColumnsForPrint(options?.fields, options?.allColumns, options?.includeCheckboxes);
+      await updateGridColumnsForPrint(
+        options?.fields,
+        options?.allColumns,
+        options?.includeCheckboxes,
+      );
 
       const hasSelectedRows = apiRef.current.getSelectedRows().size > 0;
       if (hasSelectedRows) {
