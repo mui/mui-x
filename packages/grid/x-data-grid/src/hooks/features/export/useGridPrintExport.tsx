@@ -39,6 +39,7 @@ type PrintWindowOnLoad = (
     GridPrintExportOptions,
     'copyStyles' | 'bodyClassName' | 'pageStyle' | 'hideToolbar' | 'hideFooter' | 'includeCheckboxes'
   >,
+  hasRowsSelected?: boolean,
 ) => void;
 
 function buildPrintWindow(title?: string): HTMLIFrameElement {
@@ -112,7 +113,7 @@ export const useGridPrintExport = (
   );
 
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
-    (printWindow, options): void => {
+    (printWindow, options, hasRowsSelected): void => {
       const normalizeOptions = {
         copyStyles: true,
         hideToolbar: false,
@@ -163,14 +164,19 @@ export const useGridPrintExport = (
       }
 
       // Expand container height to accommodate all rows
-      gridClone.style.height = `${
-        rowsMeta.currentPageTotalHeight +
-        getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
-        gridToolbarElementHeight +
-        gridFooterElementHeight
-      }px`;
+      const computedTotalHeight = rowsMeta.currentPageTotalHeight + getTotalHeaderHeight(apiRef, props.columnHeaderHeight) + gridToolbarElementHeight + gridFooterElementHeight
+      gridClone.style.height = `${computedTotalHeight}px`;
       // The height above does not include grid border width, so we need to exclude it
       gridClone.style.boxSizing = 'content-box';
+
+      // the footer is always being placed at the bottom of the page as if all rows are exported
+      // so if there are rows selected it needs to be moved up to the correct position
+      if (hasRowsSelected) {
+        const gridFooterElement: HTMLElement | null = gridClone.querySelector(`.${gridClasses.footerContainer}`);
+        gridFooterElement!.style.position = 'absolute';
+        gridFooterElement!.style.width = '100%';
+        gridFooterElement!.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
+      }
 
       // printDoc.body.appendChild(gridClone); should be enough but a clone isolation bug in Safari
       // prevents us to do it
@@ -306,8 +312,8 @@ export const useGridPrintExport = (
 
       await updateGridColumnsForPrint(options?.fields, options?.allColumns, options?.includeCheckboxes);
 
-      const selectedRows = apiRef.current.getSelectedRows();
-      if (selectedRows.size > 0) {
+      const hasSelectedRows = apiRef.current.getSelectedRows().size > 0;
+      if (hasSelectedRows) {
         await updateGridRowsForPrint(options?.getRowsToExport);
       }
 
@@ -317,11 +323,11 @@ export const useGridPrintExport = (
       if (process.env.NODE_ENV === 'test') {
         doc.current!.body.appendChild(printWindow);
         // In test env, run the all pipeline without waiting for loading
-        handlePrintWindowLoad(printWindow, options);
+        handlePrintWindowLoad(printWindow, options, hasSelectedRows);
         handlePrintWindowAfterPrint(printWindow);
       } else {
         printWindow.onload = () => {
-          handlePrintWindowLoad(printWindow, options);
+          handlePrintWindowLoad(printWindow, options, hasSelectedRows);
 
           const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
           mediaQueryList.addEventListener('change', (mql) => {
