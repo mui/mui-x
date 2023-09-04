@@ -39,33 +39,31 @@ function FieldsSelect({
   const id = useId();
 
   return (
-    <div>
-      <FormControl sx={{ my: 1, width: 300 }} size="small">
-        <InputLabel id={labelId}>{label}</InputLabel>
-        <Select
-          labelId={labelId}
-          id={id}
-          multiple
-          value={values}
-          onChange={handleChange}
-          input={<OutlinedInput label={label} />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} size="small" />
-              ))}
-            </Box>
-          )}
-        >
-          {values.concat(options).map((option) => (
-            <MenuItem key={option} value={option} dense>
-              <Checkbox checked={values.indexOf(option) > -1} size="small" />
-              <ListItemText primary={option} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <FormControl sx={{ my: 1 }} size="small" fullWidth>
+      <InputLabel id={labelId}>{label}</InputLabel>
+      <Select
+        labelId={labelId}
+        id={id}
+        multiple
+        value={values}
+        onChange={handleChange}
+        input={<OutlinedInput label={label} />}
+        renderValue={(selected) => (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {selected.map((value) => (
+              <Chip key={value} label={value} size="small" />
+            ))}
+          </Box>
+        )}
+      >
+        {values.concat(options).map((option) => (
+          <MenuItem key={option} value={option} dense>
+            <Checkbox checked={values.indexOf(option) > -1} size="small" />
+            <ListItemText primary={option} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 }
 
@@ -125,11 +123,13 @@ function FieldsEditor<
 
   return (
     <div>
-      <Typography variant="caption">{label}</Typography>
+      <Typography variant="caption" component="div">
+        {label}
+      </Typography>
       {values.map((valueObj, index) => {
         const field = valueObj.field;
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center', my: 2, gap: '10px' }} key={field}>
+          <Box sx={{ display: 'flex', alignItems: 'center', my: 1.5, gap: '10px' }} key={field}>
             <SingleSelect
               label="Field"
               value={field}
@@ -143,7 +143,7 @@ function FieldsEditor<
                 onChange(newValues);
               }}
               options={[field].concat(options)}
-              sx={{ flex: '0 1 300px' }}
+              sx={{ flex: '0 1 60%' }}
             />
             {fieldsConfig.map((fieldConfig) => {
               const { key } = fieldConfig;
@@ -162,11 +162,10 @@ function FieldsEditor<
                     onChange(newValues);
                   }}
                   options={fieldConfig.options}
-                  sx={{ flex: '0 1 100px' }}
+                  sx={{ flex: '0 1 40%' }}
                 />
               );
             })}
-
             <IconButton
               size="small"
               onClick={() => {
@@ -180,7 +179,16 @@ function FieldsEditor<
       })}
       {emptyValues.map((value, emptyIndex) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center', my: 2, gap: '10px' }} key={emptyIndex}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              my: 1.5,
+              gap: '10px',
+              justifyContent: 'space-between',
+            }}
+            key={emptyIndex}
+          >
             <SingleSelect
               label="Field"
               value=""
@@ -191,7 +199,7 @@ function FieldsEditor<
                 onChange([...values, { ...value, field: event.target.value }] as TValues);
               }}
               options={options}
-              sx={{ flex: '0 1 300px' }}
+              sx={{ flex: '0 1 60%' }}
             />
             <IconButton
               size="small"
@@ -249,7 +257,7 @@ export default function GridPivotModelEditor({
   }, [pivotModel.columns, pivotModel.rows, pivotModel.values, fields]);
 
   return (
-    <div>
+    <div style={{ maxWidth: 300 }}>
       <FieldsSelect
         options={availableFields}
         label="Rows"
