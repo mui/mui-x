@@ -3,11 +3,11 @@ import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
 import * as ts from 'typescript';
-import { Project, ProjectNames } from '../getTypeScriptProjects';
+import { XTypeScriptProject, XProjectNames } from '../getTypeScriptProjects';
 
-export type DocumentedInterfaces = Map<string, ProjectNames[]>;
+export type DocumentedInterfaces = Map<string, XProjectNames[]>;
 
-export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>
+export const getSymbolDescription = (symbol: ts.Symbol, project: XTypeScriptProject) =>
   symbol
     .getDocumentationComment(project.checker)
     .flatMap((comment) => comment.text.split('\n'))
@@ -52,7 +52,7 @@ export const formatType = (rawType: string) => {
   return prettifiedSignatureWithTypeName.slice(prefix.length).replace(/\n$/, '');
 };
 
-export const stringifySymbol = (symbol: ts.Symbol, project: Project) => {
+export const stringifySymbol = (symbol: ts.Symbol, project: XTypeScriptProject) => {
   let rawType: string;
 
   const declaration = symbol.declarations?.[0];
@@ -88,7 +88,7 @@ export function linkify(
   });
 }
 
-export function writePrettifiedFile(filename: string, data: string, project: Project) {
+export function writePrettifiedFile(filename: string, data: string, project: XTypeScriptProject) {
   const prettierConfig = prettier.resolveConfig.sync(filename, {
     config: project.prettierConfigPath,
   });
@@ -112,7 +112,7 @@ export function writePrettifiedFile(filename: string, data: string, project: Pro
  * Do not go to the root definition for TypeAlias (ie: `export type XXX = YYY`)
  * Because we usually want to keep the description and tags of the aliased symbol.
  */
-export const resolveExportSpecifier = (symbol: ts.Symbol, project: Project) => {
+export const resolveExportSpecifier = (symbol: ts.Symbol, project: XTypeScriptProject) => {
   let resolvedSymbol = symbol;
 
   while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {

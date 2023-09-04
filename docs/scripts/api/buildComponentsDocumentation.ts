@@ -1,4 +1,8 @@
-import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
+import { getPropTypesFromFile } from '@mui/monorepo/packages/typescript-to-proptypes';
+import {
+  UnionType,
+  InterfaceType,
+} from '@mui/monorepo/packages/typescript-to-proptypes/src/models';
 import * as fse from 'fs-extra';
 import fs from 'fs';
 import path from 'path';
@@ -33,7 +37,7 @@ import {
   getSymbolJSDocTags,
   writePrettifiedFile,
 } from './utils';
-import { Project, Projects } from '../getTypeScriptProjects';
+import { XTypeScriptProject, XTypeScriptProjects } from '../getTypeScriptProjects';
 import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
 type CoreReactApiProps = CoreReactApi['propsTable'][string];
@@ -80,12 +84,14 @@ function extractSlots(options: {
   filename: string;
   name: string;
   displayName: string;
-  project: Project;
+  project: XTypeScriptProject;
 }) {
   const { filename, name: componentName, displayName, project } = options;
   const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
-  const proptypes = ttp.parseFromProgram(filename, project.program, {
+  const components = getPropTypesFromFile({
+    filePath: filename,
+    project,
     checkDeclarations: true,
     shouldResolveObject: ({ name }) => {
       return name === 'components';
@@ -96,7 +102,7 @@ function extractSlots(options: {
     },
   });
 
-  const props = proptypes.body.find((prop) => prop.name === displayName);
+  const props = components.find((prop) => prop.name === displayName);
   if (!props) {
     throw new Error(`No proptypes found for \`${displayName}\``);
   }
@@ -106,15 +112,13 @@ function extractSlots(options: {
     return slots;
   }
 
-  const propType = componentsProps.propType as ttp.UnionType;
+  const propType = componentsProps.propType as UnionType;
   const propInterface = propType.types.find((type) => type.type === 'InterfaceNode');
   if (!propInterface) {
     throw new Error(`The \`components\` prop in \`${componentName}\` is not an interface.`);
   }
 
-  const types = [...(propInterface as ttp.InterfaceType).types].sort((a, b) =>
-    a[0] > b[0] ? 1 : -1,
-  );
+  const types = [...(propInterface as InterfaceType).types].sort((a, b) => (a[0] > b[0] ? 1 : -1));
 
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
@@ -291,8 +295,8 @@ function getComponentImports(name: string, filename: string): string[] {
 
 const buildComponentDocumentation = async (options: {
   filename: string;
-  project: Project;
-  projects: Projects;
+  project: XTypeScriptProject;
+  projects: XTypeScriptProjects;
   apiPagesFolder: string;
   documentedInterfaces: DocumentedInterfaces;
   pagesMarkdown: ReadonlyArray<PageMarkdown>;
@@ -334,7 +338,7 @@ const buildComponentDocumentation = async (options: {
 
   reactApi.packages = Array.from(projects.keys())
     .map((projectName) => {
-      const currentProject = projects.get(projectName) as Project;
+      const currentProject = projects.get(projectName) as XTypeScriptProject;
 
       const symbol =
         currentProject.exports[reactApi.name] ||
@@ -650,7 +654,7 @@ Page.getInitialProps = () => {
 };
 
 interface BuildComponentsDocumentationOptions {
-  projects: Projects;
+  projects: XTypeScriptProjects;
   apiPagesFolder: string;
   dataFolder: string;
   documentedInterfaces: DocumentedInterfaces;

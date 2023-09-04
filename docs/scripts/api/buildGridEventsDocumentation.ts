@@ -9,14 +9,14 @@ import {
   stringifySymbol,
   writePrettifiedFile,
 } from './utils';
-import { ProjectNames, Projects } from '../getTypeScriptProjects';
+import { XProjectNames, XTypeScriptProjects } from '../getTypeScriptProjects';
 
 interface BuildEventsDocumentationOptions {
-  projects: Projects;
+  projects: XTypeScriptProjects;
   documentedInterfaces: DocumentedInterfaces;
 }
 
-const GRID_PROJECTS: ProjectNames[] = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'];
+const GRID_PROJECTS: XProjectNames[] = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'];
 
 export default function buildGridEventsDocumentation(options: BuildEventsDocumentationOptions) {
   const { projects, documentedInterfaces } = options;
@@ -27,7 +27,7 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
       description: string;
       params?: string;
       event?: string;
-      projects: ProjectNames[];
+      projects: XProjectNames[];
       componentProp?: string;
     };
   } = {};

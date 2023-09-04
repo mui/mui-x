@@ -1,5 +1,5 @@
 import path from 'path';
-import { Project } from '../getTypeScriptProjects';
+import { XTypeScriptProject } from '../getTypeScriptProjects';
 import type { ReactApi } from './buildComponentsDocumentation';
 import { writePrettifiedFile } from './utils';
 
@@ -36,9 +36,9 @@ type Options = {
    */
   identifier: string;
   /**
-   * One of the projects. Used to pretify the docs
+   * One of the projects. Used to prettify the docs
    */
-  project: Project;
+  project: XTypeScriptProject;
 };
 export default async function saveApiDocPages(
   createdPages: ApiPageType[],
