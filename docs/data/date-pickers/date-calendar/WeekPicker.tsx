@@ -17,9 +17,7 @@ interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
 const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
 })<CustomPickerDayProps>(({ theme, isSelected, isHovered, day }) => ({
-  ...((isSelected || isHovered) && {
-    borderRadius: 0,
-  }),
+  borderRadius: 0,
   ...(isSelected && {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
@@ -59,20 +57,12 @@ function Day(
 ) {
   const { day, selectedDay, hoveredDay, ...other } = props;
 
-  const dayIsBetween = (target: Dayjs | null | undefined) =>
-    target == null
-      ? false
-      : day.isBetween(target.startOf('week'), target.endOf('week'), null, '[]');
-
   return (
     <CustomPickersDay
       {...other}
       day={day}
-      sx={
-        dayIsBetween(selectedDay) || dayIsBetween(hoveredDay)
-          ? { px: 2.5, mx: 0 }
-          : {}
-      }
+      sx={{ px: 2.5 }}
+      disableMargin
       selected={false}
       isSelected={isInSameWeek(day, selectedDay)}
       isHovered={isInSameWeek(day, hoveredDay)}
@@ -97,8 +87,8 @@ export default function WeekPicker() {
             ({
               selectedDay: value,
               hoveredDay,
-              onMouseEnter: () => setHoveredDay(ownerState.day),
-              onMouseLeave: () => setHoveredDay(null),
+              onPointerEnter: () => setHoveredDay(ownerState.day),
+              onPointerLeave: () => setHoveredDay(null),
             } as any),
         }}
       />

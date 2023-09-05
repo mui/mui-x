@@ -9,8 +9,8 @@
       ({
         selectedDay: value,
         hoveredDay,
-        onMouseEnter: () => setHoveredDay(ownerState.day),
-        onMouseLeave: () => setHoveredDay(null),
+        onPointerEnter: () => setHoveredDay(ownerState.day),
+        onPointerLeave: () => setHoveredDay(null),
       } as any),
   }}
 />

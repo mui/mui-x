@@ -134,6 +134,9 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   padding: 0,
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
+  transition: theme.transitions.create('background-color', {
+    duration: theme.transitions.duration.short,
+  }),
   color: (theme.vars || theme).palette.text.primary,
   '@media (pointer: fine)': {
     '&:hover': {
@@ -155,9 +158,6 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
-    transition: theme.transitions.create('background-color', {
-      duration: theme.transitions.duration.short,
-    }),
     '&:hover': {
       willChange: 'background-color',
       backgroundColor: (theme.vars || theme).palette.primary.dark,
