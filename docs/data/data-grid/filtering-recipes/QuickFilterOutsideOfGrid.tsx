@@ -8,7 +8,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 function MyCustomToolbar(props: any) {
   return (
     <React.Fragment>
-      <Portal container={() => document.getElementById('filter-panel')}>
+      <Portal container={() => document.getElementById('filter-panel')!}>
         <GridToolbarQuickFilter />
       </Portal>
       <GridToolbar {...props} />
