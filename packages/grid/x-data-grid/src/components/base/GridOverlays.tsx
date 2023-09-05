@@ -21,6 +21,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapper',
+  shouldForwardProp: (prop) => prop !== 'overlayType',
   overridesResolver: (props, styles) => styles.overlayWrapper,
 })<{ overlayType: 'loadingOverlay' | string }>(({ overlayType }) => ({
   position: 'sticky', // To stay in place while scrolling
