@@ -49,13 +49,11 @@ export default function GridPivotingMovies() {
         }
         label="Pivot"
       />
-      {isPivot && (
-        <GridPivotModelEditor
-          columns={data.columns}
-          pivotModel={pivotModel}
-          onPivotModelChange={setPivotModel}
-        />
-      )}
+      <GridPivotModelEditor
+        columns={data.columns}
+        pivotModel={pivotModel}
+        onPivotModelChange={setPivotModel}
+      />
       <div style={{ height: isPivot ? undefined : 400, width: '100%' }}>
         <DataGridPremium
           key={isPivot.toString()}

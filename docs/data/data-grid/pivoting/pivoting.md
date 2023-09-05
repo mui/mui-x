@@ -16,11 +16,15 @@ Don't hesitate to leave a comment on the same issue to influence what gets built
 
 Pivoting will allow you to take a columns values and turn them into columns.
 
+## Movies
+
+{{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Simple examples
+
 {{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}}
 
 {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
-
-{{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## API
 
