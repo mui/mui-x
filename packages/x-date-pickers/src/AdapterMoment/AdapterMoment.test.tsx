@@ -143,6 +143,15 @@ describe('<AdapterMoment />', () => {
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
       expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
     });
+
+    it('should respect the adapter locale in getWeekdays method even when the current locale is different', () => {
+      const adapter = new AdapterMoment({ locale: 'fr' });
+      moment.locale('de');
+      expect(adapter.getWeekdays()[0]).to.equal('lun.');
+
+      // Reset for the next tests
+      moment.locale('en');
+    });
   });
 
   describe('Picker localization', () => {

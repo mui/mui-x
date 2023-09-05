@@ -705,6 +705,12 @@
     },
     {
       "class": null,
+      "name": "footerRowCount",
+      "description": "Row count component rendered in the footer",
+      "default": "GridRowCount"
+    },
+    {
+      "class": null,
       "name": "groupingCriteriaCollapseIcon",
       "description": "Icon displayed on the grouping column when the children are expanded",
       "default": "GridExpandMoreIcon"

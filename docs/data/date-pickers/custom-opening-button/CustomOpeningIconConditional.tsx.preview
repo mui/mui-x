@@ -1,0 +1,8 @@
+<DatePicker
+  value={value}
+  onChange={setValue}
+  slots={{
+    openPickerIcon:
+      value == null || !value.isValid() ? PriorityHighIcon : CheckIcon,
+  }}
+/>
