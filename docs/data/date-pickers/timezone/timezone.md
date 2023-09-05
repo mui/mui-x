@@ -303,7 +303,7 @@ function App() {
 
 ### Moment and timezone
 
-Before using the timezone with Day.js, you have to pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`:
+Before using the timezone with Moment, you have to pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`:
 
 ```tsx
 import moment from 'moment-timezone';

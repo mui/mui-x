@@ -12,11 +12,11 @@ import {
 import {
   adapterToUse,
   buildPickerDragInteractions,
-  createPickerRenderer,
   MockedDataTransfer,
   rangeCalendarDayTouches,
+  createPickerRenderer,
   wrapPickerMount,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,

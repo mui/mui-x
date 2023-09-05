@@ -5,9 +5,9 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
-  getTextbox,
   expectInputPlaceholder,
-} from 'test/utils/pickers-utils';
+  getTextbox,
+} from 'test/utils/pickers';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 

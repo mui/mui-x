@@ -8,7 +8,6 @@
   slotProps={{
     toolbar: {
       showQuickFilter: true,
-      quickFilterProps: { debounceMs: 500 },
     },
   }}
 />

@@ -6,10 +6,10 @@ import {
   createPickerRenderer,
   expectInputValue,
   getCleanedSelectedContent,
-  adapterToUse,
   getTextbox,
   buildFieldInteractions,
-} from 'test/utils/pickers-utils';
+  adapterToUse,
+} from 'test/utils/pickers';
 
 describe('<DateField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

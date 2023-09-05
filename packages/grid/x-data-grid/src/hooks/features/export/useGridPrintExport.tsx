@@ -15,6 +15,7 @@ import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getColumnsToExport } from './utils';
+import { mergeStateWithPaginationModel } from '../pagination/useGridPagination';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GridExportDisplayOptions,
@@ -71,12 +72,6 @@ export const useGridPrintExport = (
   const updateGridColumnsForPrint = React.useCallback(
     (fields?: string[], allColumns?: boolean) =>
       new Promise<void>((resolve) => {
-        // TODO remove unused Promise
-        if (!fields && !allColumns) {
-          resolve();
-          return;
-        }
-
         const exportedColumnFields = getColumnsToExport({
           apiRef,
           options: { fields, allColumns },
@@ -272,7 +267,16 @@ export const useGridPrintExport = (
 
       if (props.pagination) {
         const visibleRowCount = gridExpandedRowCountSelector(apiRef);
-        apiRef.current.setPageSize(visibleRowCount);
+        const paginationModel = {
+          page: 0,
+          pageSize: visibleRowCount,
+        };
+        apiRef.current.updateControlState(
+          'pagination',
+          // Using signature `DataGridPro` to allow more than 100 rows in the print export
+          mergeStateWithPaginationModel(visibleRowCount, 'DataGridPro', paginationModel),
+        );
+        apiRef.current.forceUpdate();
       }
 
       await updateGridColumnsForPrint(options?.fields, options?.allColumns);

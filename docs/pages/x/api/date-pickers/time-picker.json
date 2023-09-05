@@ -84,6 +84,14 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "reduceAnimations": {
+      "type": { "name": "bool" },
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
+    },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
+    },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -167,7 +175,7 @@
       "class": null,
       "name": "desktopTransition",
       "description": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Grow from '@mui/material'."
+      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`."
     },
     {
       "class": null,

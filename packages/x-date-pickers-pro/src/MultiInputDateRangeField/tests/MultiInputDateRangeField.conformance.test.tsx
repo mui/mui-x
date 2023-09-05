@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describeConformance } from '@mui/monorepo/test/utils';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers-utils';
+import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers';
 
 describe('<MultiInputDateRangeField />', () => {
   const { render } = createPickerRenderer();

@@ -8,7 +8,7 @@ packageName: '@mui/x-date-pickers'
 
 # Date Calendar
 
-<p class="description">The Date Calendar component lets the user select a date without any input or popper / modal.</p>
+<p class="description">The Date Calendar component lets users select a date without any input or popper / modal.</p>
 
 ## Basic usage
 
@@ -43,6 +43,19 @@ You can customize the enabled views using the `views` prop.
 Views will appear in the order they're included in the `views` array.
 
 {{"demo": "DateCalendarViews.js"}}
+
+## Choose the initial year / month
+
+If `value` or `defaultValue` contains a valid date, this date will be used to choose which month to render in the `day` view and which year to render in the `month` view.
+If both `value` and `defaultValue` contain no valid date, the component will try to find a month and year that satisfies the validation rules.
+
+You can override this date using the `referenceDate`, in the example below the calendar renders April 2022 even though no date is visually selected:
+
+{{"demo": "DateCalendarReferenceDate.js"}}
+
+:::success
+Learn more about the `referenceDate` in the [dedicated doc section](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined).
+:::
 
 ## Month and Year Calendar
 
