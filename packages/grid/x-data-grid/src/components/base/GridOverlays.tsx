@@ -38,6 +38,7 @@ const GridOverlayWrapperRoot = styled('div', {
 const GridOverlayWrapperInner = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapperInner',
+  shouldForwardProp: (prop) => prop !== 'overlayType',
   overridesResolver: (props, styles) => styles.overlayWrapperInner,
 })({});
 
