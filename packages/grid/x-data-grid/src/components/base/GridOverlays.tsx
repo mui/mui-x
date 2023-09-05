@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import {
   unstable_composeClasses as composeClasses,
@@ -21,14 +22,17 @@ const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapper',
   overridesResolver: (props, styles) => styles.overlayWrapper,
-})({
+})<{ overlayType: 'loadingOverlay' | string }>(({ overlayType }) => ({
   position: 'sticky', // To stay in place while scrolling
   top: 0,
   left: 0,
   width: 0, // To stay above the content instead of shifting it down
   height: 0, // To stay above the content instead of shifting it down
-  zIndex: 4, // Should be above pinned columns, pinned rows and detail panel
-});
+  zIndex:
+    overlayType === 'loadingOverlay'
+      ? 5 // Should be above pinned columns, pinned rows, and detail panel
+      : 4, // Should be above pinned columns and detail panel
+}));
 
 const GridOverlayWrapperInner = styled('div', {
   name: 'MuiDataGrid',
@@ -49,7 +53,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
+function GridOverlayWrapper(props: React.PropsWithChildren<{ overlayType: string }>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
@@ -77,7 +81,7 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   }
 
   return (
-    <GridOverlayWrapperRoot className={clsx(classes.root)}>
+    <GridOverlayWrapperRoot className={clsx(classes.root)} overlayType={props.overlayType}>
       <GridOverlayWrapperInner
         className={clsx(classes.inner)}
         style={{
@@ -89,6 +93,14 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
     </GridOverlayWrapperRoot>
   );
 }
+
+GridOverlayWrapper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  overlayType: PropTypes.string.isRequired,
+} as any;
 
 export function GridOverlays() {
   const apiRef = useGridApiContext();
@@ -102,22 +114,26 @@ export function GridOverlays() {
   const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
 
   let overlay: React.JSX.Element | null = null;
+  let overlayType = '';
 
   if (showNoRowsOverlay) {
     overlay = <rootProps.slots.noRowsOverlay {...rootProps.slotProps?.noRowsOverlay} />;
+    overlayType = 'noRowsOverlay';
   }
 
   if (showNoResultsOverlay) {
     overlay = <rootProps.slots.noResultsOverlay {...rootProps.slotProps?.noResultsOverlay} />;
+    overlayType = 'noResultsOverlay';
   }
 
   if (loading) {
     overlay = <rootProps.slots.loadingOverlay {...rootProps.slotProps?.loadingOverlay} />;
+    overlayType = 'loadingOverlay';
   }
 
   if (overlay === null) {
     return null;
   }
 
-  return <GridOverlayWrapper>{overlay}</GridOverlayWrapper>;
+  return <GridOverlayWrapper overlayType={overlayType}>{overlay}</GridOverlayWrapper>;
 }
