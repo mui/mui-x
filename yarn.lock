@@ -1789,7 +1789,7 @@
     react-test-renderer "^18.0.0"
     semver "^5.7.0"
 
-"@mui/base@5.0.0-beta.13", "@mui/base@^5.0.0-beta.13":
+"@mui/base@5.0.0-beta.13", "@mui/base@^5.0.0-alpha.87", "@mui/base@^5.0.0-beta.13":
   version "5.0.0-beta.13"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-beta.13.tgz#3bae94c39752546d84a67d4ca73486b7c4923a89"
   integrity sha512-uC0l97pBspfDAp+iz2cJq8YZ8Sd9i73V77+WzUiOAckIVEyCm5dyVDZCCO2/phmzckVEeZCGcytybkjMQuhPQw==
