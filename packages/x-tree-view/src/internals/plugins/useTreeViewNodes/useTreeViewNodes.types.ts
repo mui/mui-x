@@ -1,12 +1,11 @@
 import { TreeViewNode, DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
+import { UseTreeViewJSXNodesRegistrationSignature } from '../useTreeViewJSXNodesRegistration';
 
 export interface UseTreeViewNodesInstance {
   getNode: (nodeId: string) => TreeViewNode;
   getChildrenIds: (nodeId: string | null) => string[];
   getNavigableChildrenIds: (nodeId: string | null) => string[];
   isNodeDisabled: (nodeId: string | null) => nodeId is string;
-  registerNode: (node: TreeViewNode) => () => void;
 }
 
 export interface UseTreeViewNodesParameters {
@@ -27,6 +26,7 @@ export type UseTreeViewNodesSignature = TreeViewPluginSignature<
   UseTreeViewNodesDefaultizedParameters,
   UseTreeViewNodesInstance,
   {},
+  {},
   never,
-  [UseTreeViewFocusSignature]
+  [UseTreeViewJSXNodesRegistrationSignature]
 >;

@@ -37,6 +37,7 @@ export type UseTreeViewContextValueBuilderSignature = TreeViewPluginSignature<
   UseTreeViewContextValueBuilderDefaultizedParameters,
   {},
   {},
+  {},
   never,
   [UseTreeViewNodesSignature, UseTreeViewSelectionSignature<any>]
 >;

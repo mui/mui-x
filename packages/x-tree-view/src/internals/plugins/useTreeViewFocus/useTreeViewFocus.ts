@@ -1,9 +1,11 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { EventHandlers } from '@mui/base/utils';
+import ownerDocument from '@mui/utils/ownerDocument';
 import { TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
+import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
@@ -11,6 +13,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   state,
   setState,
   models,
+  rootRef,
 }) => {
   const setFocusedNodeId = useEventCallback((nodeId: React.SetStateAction<string | null>) => {
     const cleanNodeId = typeof nodeId === 'function' ? nodeId(state.focusedNodeId) : nodeId;
@@ -35,7 +38,18 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   populateInstance<UseTreeViewFocusSignature>(instance, {
     isNodeFocused,
     focusNode,
-    setFocusedNodeId,
+  });
+
+  useInstanceEventHandler(instance, 'unRegisterNode', ({ id }) => {
+    setFocusedNodeId((oldFocusedNodeId) => {
+      if (
+        oldFocusedNodeId === id &&
+        rootRef.current === ownerDocument(rootRef.current).activeElement
+      ) {
+        return instance.getChildrenIds(null)[0];
+      }
+      return oldFocusedNodeId;
+    });
   });
 
   const createHandleFocus =

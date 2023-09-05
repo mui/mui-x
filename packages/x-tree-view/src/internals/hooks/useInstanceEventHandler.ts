@@ -1,19 +1,10 @@
 import * as React from 'react';
-import { GridEventListener, GridEvents } from '../../models/events';
-import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/CleanupTracking';
-import { EventListenerOptions } from '../../utils/EventManager';
-import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
-import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
-import type { GridApiCommon } from '../../models';
-
-/**
- * Signal to the underlying logic what version of the public component API
- * of the data grid is exposed.
- */
-enum GridSignature {
-  DataGrid = 'DataGrid',
-  DataGridPro = 'DataGridPro',
-}
+import { UnregisterToken, CleanupTracking } from '../utils/cleanupTracking/CleanupTracking';
+import { TimerBasedCleanupTracking } from '../utils/cleanupTracking/TimerBasedCleanupTracking';
+import { FinalizationRegistryBasedCleanupTracking } from '../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
+import { TreeViewAnyPluginSignature, TreeViewUsedEvents } from '../models';
+import { TreeViewEventListener } from '../models/events';
+import { UseTreeViewInstanceEventsInstance } from '../plugins/useTreeViewInstanceEvents/useTreeViewInstanceEvents.types';
 
 interface RegistryContainer {
   registry: CleanupTracking | null;
@@ -24,15 +15,21 @@ class ObjectToBeRetainedByReact {}
 
 // Based on https://github.com/Bnaya/use-dispose-uncommitted/blob/main/src/finalization-registry-based-impl.ts
 // Check https://github.com/facebook/react/issues/15317 to get more information
-export function createUseGridApiEventHandler(registryContainer: RegistryContainer) {
+export function createUseInstanceEventHandler(registryContainer: RegistryContainer) {
   let cleanupTokensCounter = 0;
 
-  return function useGridApiEventHandler<Api extends GridApiCommon, E extends GridEvents>(
-    apiRef: React.MutableRefObject<Api>,
+  return function useInstanceEventHandler<
+    Instance extends UseTreeViewInstanceEventsInstance & {
+      $$signature: TreeViewAnyPluginSignature;
+    },
+    E extends keyof TreeViewUsedEvents<Instance['$$signature']>,
+  >(
+    instance: Instance,
     eventName: E,
-    handler?: GridEventListener<E>,
-    options?: EventListenerOptions,
+    handler?: TreeViewEventListener<TreeViewUsedEvents<Instance['$$signature']>[E]>,
   ) {
+    type Signature = Instance['$$signature'];
+
     if (registryContainer.registry === null) {
       registryContainer.registry =
         typeof FinalizationRegistry !== 'undefined'
@@ -42,18 +39,23 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
 
     const [objectRetainedByReact] = React.useState(new ObjectToBeRetainedByReact());
     const subscription = React.useRef<(() => void) | null>(null);
-    const handlerRef = React.useRef<GridEventListener<E> | undefined>();
+    const handlerRef = React.useRef<
+      TreeViewEventListener<TreeViewUsedEvents<Signature>[E]> | undefined
+    >();
     handlerRef.current = handler;
     const cleanupTokenRef = React.useRef<UnregisterToken | null>(null);
 
     if (!subscription.current && handlerRef.current) {
-      const enhancedHandler: GridEventListener<E> = (params, event, details) => {
+      const enhancedHandler: TreeViewEventListener<TreeViewUsedEvents<Signature>[E]> = (
+        params,
+        event,
+      ) => {
         if (!event.defaultMuiPrevented) {
-          handlerRef.current?.(params, event, details);
+          handlerRef.current?.(params, event);
         }
       };
 
-      subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
+      subscription.current = instance.subscribeEvent(eventName as string, enhancedHandler);
 
       cleanupTokensCounter += 1;
       cleanupTokenRef.current = { cleanupToken: cleanupTokensCounter };
@@ -79,13 +81,16 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
 
     React.useEffect(() => {
       if (!subscription.current && handlerRef.current) {
-        const enhancedHandler: GridEventListener<E> = (params, event, details) => {
+        const enhancedHandler: TreeViewEventListener<TreeViewUsedEvents<Signature>[E]> = (
+          params,
+          event,
+        ) => {
           if (!event.defaultMuiPrevented) {
-            handlerRef.current?.(params, event, details);
+            handlerRef.current?.(params, event);
           }
         };
 
-        subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
+        subscription.current = instance.subscribeEvent(eventName as string, enhancedHandler);
       }
 
       if (cleanupTokenRef.current && registryContainer.registry) {
@@ -99,30 +104,16 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
         subscription.current?.();
         subscription.current = null;
       };
-    }, [apiRef, eventName, options]);
+    }, [instance, eventName]);
   };
 }
 
 const registryContainer: RegistryContainer = { registry: null };
 
-// TODO: move to @mui/x-data-grid/internals
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_resetCleanupTracking = () => {
   registryContainer.registry?.reset();
   registryContainer.registry = null;
 };
 
-export const useGridApiEventHandler = createUseGridApiEventHandler(registryContainer);
-
-const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
-
-export function useGridApiOptionHandler<Api extends GridApiCommon, E extends GridEvents>(
-  apiRef: React.MutableRefObject<Api>,
-  eventName: E,
-  handler?: GridEventListener<E>,
-) {
-  // Validate that only one per event name?
-  useGridApiEventHandler(apiRef, eventName, handler, optionsSubscriberOptions);
-}
-
-export { GridSignature };
+export const useInstanceEventHandler = createUseInstanceEventHandler(registryContainer);

@@ -1,17 +1,13 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import ownerDocument from '@mui/utils/ownerDocument';
-import { TreeViewPlugin, TreeViewNode } from '../../models';
+import { TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewNodesSignature } from './useTreeViewNodes.types';
 
 export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   instance,
   params,
-  rootRef,
 }) => {
-  const nodeMap = React.useRef<{ [nodeId: string]: TreeViewNode }>({});
-
   const isNodeDisabled = React.useCallback(
     (nodeId: string | null): nodeId is string => {
       if (nodeId == null) {
@@ -42,7 +38,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   );
 
   const getChildrenIds = useEventCallback((nodeId: string | null) =>
-    Object.values(nodeMap.current)
+    Object.values(instance.getNodeMap())
       .filter((node) => node.parentId === nodeId)
       .sort((a, b) => a.index - b.index)
       .map((child) => child.id),
@@ -57,35 +53,12 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     return childrenIds;
   };
 
-  const registerNode = useEventCallback((node: TreeViewNode) => {
-    const { id, index, parentId, expandable, idAttribute, disabled } = node;
-
-    nodeMap.current[id] = { id, index, parentId, expandable, idAttribute, disabled };
-
-    return () => {
-      const newMap = { ...nodeMap.current };
-      delete newMap[id];
-      nodeMap.current = newMap;
-
-      instance.setFocusedNodeId((oldFocusedNodeId) => {
-        if (
-          oldFocusedNodeId === id &&
-          rootRef.current === ownerDocument(rootRef.current).activeElement
-        ) {
-          return instance.getChildrenIds(null)[0];
-        }
-        return oldFocusedNodeId;
-      });
-    };
-  });
-
-  const getNode = React.useCallback((nodeId: string) => nodeMap.current[nodeId], []);
+  const getNode = React.useCallback((nodeId: string) => instance.getNodeMap()[nodeId], [instance]);
 
   populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,
     getChildrenIds,
     getNavigableChildrenIds,
     isNodeDisabled,
-    registerNode,
   });
 };
