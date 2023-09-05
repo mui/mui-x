@@ -1,6 +1,6 @@
 ---
 productId: x-date-pickers
-title: Date and Time Picker React components
+title: React Date Picker and Time Picker components
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # Date and Time Pickers
 
-<p class="description">The Date and Time Pickers let the user select date and time values.</p>
+<p class="description">These react date picker and time picker components let users select date or time values.</p>
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
@@ -57,10 +57,10 @@ Here is the weight added to your gzipped bundle size by each of these libraries 
 
 | Library           | Gzipped size |
 | :---------------- | -----------: |
-| `dayjs@1.11.5`    |       6.77kB |
-| `date-fns@2.29.3` |      19.39kB |
-| `luxon@3.0.4`     |      23.26kB |
-| `moment@2.29.4`   |      20.78kB |
+| `dayjs@1.11.5`    |      6.77 kB |
+| `date-fns@2.29.3` |     19.39 kB |
+| `luxon@3.0.4`     |     23.26 kB |
+| `moment@2.29.4`   |     20.78 kB |
 
 :::info
 The results above were obtained in October 2022 with the latest version of each library.

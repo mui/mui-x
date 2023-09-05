@@ -340,6 +340,7 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
+          { pathname: '/x/react-date-pickers/custom-opening-button' },
         ],
       },
 

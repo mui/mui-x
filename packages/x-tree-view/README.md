@@ -21,7 +21,6 @@ This component has the following peer dependencies that you will need to install
 
 ```json
 "peerDependencies": {
-  "@mui/base": "^5.0.0-alpha.87",
   "@mui/material": "^5.8.6",
   "@mui/system": "^5.8.0",
   "react": "^17.0.0 || ^18.0.0",
