@@ -104,16 +104,14 @@ export const useGridPrintExport = (
   );
 
   const updateGridRowsForPrint = React.useCallback(
-    (rowsToExport?: (params: GridPrintGetRowsToExportParams<GridApiCommunity>) => GridRowId[]) =>
-      new Promise<void>((resolve) => {
-        const getRowsToExport = rowsToExport ?? defaultGetRowsToExport;
-        const rowsToExportIds = getRowsToExport({ apiRef });
+    (rowsToExport?: (params: GridPrintGetRowsToExportParams<GridApiCommunity>) => GridRowId[]) => {
+      const getRowsToExport = rowsToExport ?? defaultGetRowsToExport;
+      const rowsToExportIds = getRowsToExport({ apiRef });
 
-        const newRows = rowsToExportIds.map((id) => apiRef.current.getRow(id));
+      const newRows = rowsToExportIds.map((id) => apiRef.current.getRow(id));
 
-        apiRef.current.setRows(newRows);
-        resolve();
-      }),
+      apiRef.current.setRows(newRows);
+    },
     [apiRef],
   );
 
