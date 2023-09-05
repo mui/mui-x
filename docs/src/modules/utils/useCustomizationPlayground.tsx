@@ -67,6 +67,7 @@ export type UseCustomizationPlaygroundReturnType = {
   availableSlots: string[] | null;
   handleTokenChange: HandleTokenChangeType;
   selectedTokens: StyleTokensType;
+  selectedExample?: CustomizationItemType | null;
 };
 
 export function withStyles(
@@ -134,22 +135,40 @@ interface Props
   examples: CustomizationItemType;
 }
 
-function formatComponentProps(componentProps: Object) {
+/* I use this method to parse whatever component props are passed in and format them for the code example, 
+so the code example includes the same props as the rendered component. e.g. the views={['month']} */
+function formatComponentProps(componentProps?: Object, spacing: number = 1) {
   function formatObject(obj: Object, indentLevel = 0, separator = ': '): string {
     const indent = ' '.repeat(indentLevel * 2);
+
     return (Object.keys(obj) as Array<keyof typeof obj>)
       .map((key) => {
+        const getValue = (val: any) => {
+          if (typeof val === 'string') {
+            return `'${val}'`;
+          }
+          if (separator === '=' && typeof val !== 'object') {
+            return `{${val}}`;
+          }
+          return val;
+        };
+
         const value = obj[key];
-        if (typeof value === 'object') {
+        if (typeof value === 'object' && !Array.isArray(value)) {
           return `${indent}${key}${separator}${separator === '=' ? '{' : ''}{\n${formatObject(
-            value,
+            getValue(value),
             indentLevel + 1,
             ': ',
           )}\n${indent}${separator === '=' ? '}' : ''}}`;
         }
-        return `${indent}${key}${separator}${separator === '=' ? '{' : ''}${value}${
-          separator === '=' ? '}' : ''
-        }`;
+
+        if (Array.isArray(value)) {
+          return `${indent}${key}${separator}${separator === '=' ? '{' : ''}[${value.map((val) =>
+            getValue(val),
+          )}]${separator === '=' ? '}' : ''}`;
+        }
+
+        return `${indent}${key}${separator}${getValue(value)}`;
       })
       .join('\n');
   }
@@ -158,7 +177,7 @@ function formatComponentProps(componentProps: Object) {
     return '';
   }
 
-  return `\n${formatObject(componentProps, 1, '=')}`;
+  return `\n${formatObject(componentProps, spacing, '=')} `;
 }
 
 const getCodeExample = ({
@@ -185,7 +204,7 @@ const getCodeExample = ({
   };
 
   const getTokensString = (indent: number = 0): string => {
-    const spaces = '  '.repeat(indent);
+    const spaces = ' '.repeat(indent * 2);
     return (Object.keys(tokens) as Array<keyof typeof tokens>).reduce((acc, key) => {
       return `${acc}\n${spaces}${key}: ${
         typeof tokens[key] === 'string' ? `'${tokens[key]}'` : tokens[key]
@@ -193,14 +212,10 @@ const getCodeExample = ({
     }, '');
   };
 
-  const componentProps = examples?.componentProps
-    ? formatComponentProps(examples.componentProps)
-    : '';
-
   let code = examples?.comments ? `\n// ${examples?.comments}` : '';
 
   if (selectedCustomizationOption === 'sxProp') {
-    code = `${code}\n<${componentName} ${componentProps}
+    code = `${code}\n<${componentName} ${formatComponentProps(examples.componentProps, 1)}
   sx={{
     '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
     },
@@ -221,7 +236,7 @@ const getCodeExample = ({
     })
   }
 >
-  <${componentName} />
+  <${componentName}${formatComponentProps(examples.componentProps, 2)} />
 </ThemeProvider>`;
   } else if (selectedCustomizationOption === 'styledComponents') {
     return `import { styled } from '@mui/material/styles'\n${code}
@@ -230,7 +245,7 @@ const Styled${componentName} = styled(${componentName})({
 }))\n
 export default function StyledPickerContainer() {
   return (
-    <StyledPicker ${componentProps.trim()}/>
+    <StyledPicker ${formatComponentProps(examples.componentProps, 3)}/>
   );
 }`;
   }
@@ -262,7 +277,7 @@ export function useCustomizationPlayground({
 
   const setOptions = React.useCallback(
     (demo: string) => {
-      const slot = examples[demo]?.slots?.length ? examples[demo]?.slots[0] : 'root';
+      const slot = examples[demo].slots.length ? examples[demo].slots[0] : 'root';
       const customizationExamples = Object.keys(examples[demo].examples) as Array<
         keyof CustomizationLabelType
       >;
@@ -276,20 +291,20 @@ export function useCustomizationPlayground({
   );
 
   React.useEffect(() => {
-    if (selectedDemo) {
+    if (selectedDemo && examples && examples[selectedDemo]) {
       setOptions(selectedDemo);
     }
-  }, [selectedDemo, setOptions]);
+  }, [selectedDemo, setOptions, examples]);
 
   React.useEffect(() => {
-    if (selectedDemo && selectedCustomizationOption) {
+    if (selectedDemo && selectedCustomizationOption && examples[selectedDemo]) {
       const code = getCodeExample({
         selectedDemo,
         selectedSlot,
         selectedCustomizationOption,
         selectedTokens,
         componentName,
-        examples: examples[selectedDemo]?.examples[
+        examples: examples[selectedDemo].examples[
           selectedCustomizationOption
         ] as CustomizationItemType,
         theme,
@@ -328,8 +343,13 @@ export function useCustomizationPlayground({
     selectedSlot,
     setSelectedSlot,
     codeExample,
-    availableSlots: selectedDemo ? examples[selectedDemo]?.slots : ['root'],
+    availableSlots:
+      selectedDemo && examples[selectedDemo] ? examples[selectedDemo].slots : ['root'],
     handleTokenChange,
     selectedTokens,
+    selectedExample:
+      selectedDemo && selectedCustomizationOption
+        ? examples[selectedDemo]?.examples[selectedCustomizationOption]
+        : null,
   };
 }

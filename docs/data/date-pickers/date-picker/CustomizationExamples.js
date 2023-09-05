@@ -13,10 +13,12 @@ export default function CustomizationExamples() {
   const [selectedPicker, setSelectedPicker] = React.useState(0);
 
   const handleSelectedPickerChange = (_e, newValue) => {
-    setSelectedPicker(newValue);
+    if (newValue !== null) {
+      setSelectedPicker(newValue);
+    }
   };
 
-  if (!pickerExamples[selectedPicker].examples) {
+  if (!pickerExamples[selectedPicker]?.examples) {
     return (
       <BrandingProvider>
         <CircularProgress />

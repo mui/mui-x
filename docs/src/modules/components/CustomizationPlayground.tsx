@@ -215,6 +215,7 @@ const CustomizationPlayground = function CustomizationPlayground({
     availableSlots,
     handleTokenChange,
     selectedTokens,
+    selectedExample,
   } = useCustomizationPlayground({ examples, componentName });
 
   const StyledChild = withStyles(
@@ -254,25 +255,26 @@ const CustomizationPlayground = function CustomizationPlayground({
                 ))}
               </Tabs>
             </Box>
-            {examples[selectedDemo].examples[selectedCustomizationOption] && (
-              <StylingRecommendation
-                type={examples[selectedDemo].examples[selectedCustomizationOption]!.type}
-              />
-            )}
+            {selectedExample && <StylingRecommendation type={selectedExample.type} />}
           </Box>
         )}
       </BrandingProvider>
       <PlaygroundWrapper>
         <PlaygroundDemoArea>
           <StyledChild sx={{ width: 'fit-content' }}>
-            {React.cloneElement(
-              (children as React.ReactElement[])[0],
-              selectedDemo && selectedCustomizationOption
-                ? {
-                    ...examples[selectedDemo]?.examples[selectedCustomizationOption]
-                      ?.componentProps,
-                  }
-                : {},
+            {React.Children.map(
+              children,
+              (child) =>
+                React.isValidElement(child) &&
+                React.cloneElement(
+                  child,
+                  selectedDemo && selectedCustomizationOption
+                    ? {
+                        ...examples[selectedDemo]?.examples[selectedCustomizationOption]
+                          ?.componentProps,
+                      }
+                    : {},
+                ),
             )}
           </StyledChild>
         </PlaygroundDemoArea>
@@ -280,7 +282,7 @@ const CustomizationPlayground = function CustomizationPlayground({
         <PlaygroundConfigArea>
           <NavLabel gutterBottom>Components</NavLabel>
           <NavItemsWrapper>
-            {Object.keys(examples).map((item) => (
+            {Object.keys(examples || {}).map((item) => (
               <NavItem
                 size="small"
                 onClick={() => selectDemo(item)}
@@ -294,18 +296,20 @@ const CustomizationPlayground = function CustomizationPlayground({
           {shouldBeInteractive && (
             <React.Fragment>
               <NavLabel gutterBottom>Slots</NavLabel>
-              <NavItemsWrapper>
-                {(availableSlots as string[]).map((slot: string) => (
-                  <NavItem
-                    size="small"
-                    onClick={() => setSelectedSlot(slot)}
-                    key={slot}
-                    variant={selectedSlot === slot ? 'outlined' : 'text'}
-                  >
-                    {slot}
-                  </NavItem>
-                ))}
-              </NavItemsWrapper>
+              {availableSlots && (
+                <NavItemsWrapper>
+                  {(availableSlots as string[]).map((slot: string) => (
+                    <NavItem
+                      size="small"
+                      onClick={() => setSelectedSlot(slot)}
+                      key={slot}
+                      variant={selectedSlot === slot ? 'outlined' : 'text'}
+                    >
+                      {slot}
+                    </NavItem>
+                  ))}
+                </NavItemsWrapper>
+              )}
               <NavLabel gutterBottom>Playground</NavLabel>
               <Stack sx={{ gap: 1 }}>
                 <ColorSwitcher {...{ handleTokenChange, selectedColor: selectedTokens.color }} />
