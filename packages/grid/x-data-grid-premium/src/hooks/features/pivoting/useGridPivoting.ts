@@ -200,22 +200,26 @@ const getPivotedData = ({
 };
 
 export const useGridPivoting = ({
+  initialIsPivot = false,
   columns,
   rows,
   pivotModel,
   apiRef,
 }: {
+  initialIsPivot?: boolean;
   rows: GridRowModel[];
   columns: GridColDef[];
   pivotModel: PivotModel;
   apiRef: React.MutableRefObject<GridApiPremium>;
 }) => {
-  const [isPivot, setIsPivot] = React.useState(false);
+  const [isPivot, setIsPivot] = React.useState(initialIsPivot);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
 
   const props = React.useMemo(() => {
     if (isPivot) {
-      exportedStateRef.current = apiRef.current.exportState();
+      if (exportedStateRef.current) {
+        exportedStateRef.current = apiRef.current.exportState();
+      }
       return getPivotedData({
         rows,
         columns,
