@@ -20,7 +20,7 @@ const CustomPickersDay = styled(PickersDay, {
   borderRadius: 0,
   ...(isSelected && {
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
+    color: theme.palette.primary.contrastText,
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
     },
