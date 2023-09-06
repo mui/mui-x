@@ -38,7 +38,8 @@
     "directory": "packages/x-charts"
   },
   "dependencies": {
-    "@babel/runtime": "^7.22.11",
+    "@babel/runtime": "^7.22.15",
+    "@mui/base": "^5.0.0-alpha.87",
     "clsx": "^2.0.0",
     "d3-color": "^3.1.0",
     "d3-scale": "^4.0.2",
