@@ -15,5 +15,6 @@
   { "name": "TreeViewClassKey", "kind": "TypeAlias" },
   { "name": "TreeViewProps", "kind": "Interface" },
   { "name": "TreeViewPropsBase", "kind": "Interface" },
+  { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
   { "name": "useTreeItem", "kind": "Function" }
 ]
