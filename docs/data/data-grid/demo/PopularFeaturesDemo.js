@@ -281,7 +281,7 @@ function RowDemo(props) {
         {row.linkToCode ? (
           <Typography sx={{ marginTop: 1 }} variant="body2">
             <Link href={`/x/react-data-grid${row.linkToCode}`} target="_blank">
-              Show code
+              Open demo source
             </Link>
           </Typography>
         ) : null}
