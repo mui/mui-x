@@ -31,13 +31,13 @@ This is not recommended for large datasets as row virtualization will not be abl
 
 {{"demo": "AutoHeightGrid.js", "bg": "inline"}}
 
-### No rows height
+### Overlay height
 
-By default, when the Data Grid has no rows, the rows container takes the height of two rows.
+By default, when the Data Grid has no rows, the grid overlays (like ["Loading"](/x/react-data-grid/components/#loading-overlay) or ["No rows"](/x/react-data-grid/components/#no-rows-overlay)) take the height of two rows.
 
-To adjust the height of the rows container, use the `--DataGrid-noRowsOverlayHeight` CSS variable.
+To customize the height of the overlay, use the `--DataGrid-overlayHeight` CSS variable.
 
-{{"demo": "AutoHeightNoRowsGridNoSnap.js", "bg": "inline"}}
+{{"demo": "AutoHeightOverlayNoSnap.js", "bg": "inline"}}
 
 ## API
 

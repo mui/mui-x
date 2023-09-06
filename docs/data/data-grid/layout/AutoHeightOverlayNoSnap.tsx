@@ -75,7 +75,7 @@ function CustomNoRowsOverlay() {
   );
 }
 
-export default function AutoHeightNoRowsGridNoSnap() {
+export default function AutoHeightOverlayNoSnap() {
   return (
     <Box sx={{ width: '100%' }}>
       <DataGrid
@@ -83,7 +83,7 @@ export default function AutoHeightNoRowsGridNoSnap() {
         columns={[{ field: 'ID' }, { field: 'First name' }, { field: 'Last name' }]}
         rows={[]}
         slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-        sx={{ '--DataGrid-noRowsOverlayHeight': '300px' }}
+        sx={{ '--DataGrid-overlayHeight': '300px' }}
       />
     </Box>
   );

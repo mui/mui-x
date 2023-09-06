@@ -738,7 +738,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
               {...baselineProps}
               rows={[]}
               autoHeight
-              sx={{ '--DataGrid-noRowsOverlayHeight': '300px' }}
+              sx={{ '--DataGrid-overlayHeight': '300px' }}
             />
           </div>,
         );
