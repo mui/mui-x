@@ -994,6 +994,7 @@
       "cell--rangeBottom",
       "cell--rangeLeft",
       "cell--rangeRight",
+      "cell--selectionMode",
       "cell",
       "cellContent",
       "cellCheckbox",
