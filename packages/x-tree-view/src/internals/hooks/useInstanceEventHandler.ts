@@ -26,7 +26,7 @@ export function createUseInstanceEventHandler(registryContainer: RegistryContain
   >(
     instance: Instance,
     eventName: E,
-    handler?: TreeViewEventListener<TreeViewUsedEvents<Instance['$$signature']>[E]>,
+    handler: TreeViewEventListener<TreeViewUsedEvents<Instance['$$signature']>[E]>,
   ) {
     type Signature = Instance['$$signature'];
 
@@ -55,7 +55,7 @@ export function createUseInstanceEventHandler(registryContainer: RegistryContain
         }
       };
 
-      subscription.current = instance.subscribeEvent(eventName as string, enhancedHandler);
+      subscription.current = instance.$$subscribeEvent(eventName as string, enhancedHandler);
 
       cleanupTokensCounter += 1;
       cleanupTokenRef.current = { cleanupToken: cleanupTokensCounter };
@@ -90,7 +90,7 @@ export function createUseInstanceEventHandler(registryContainer: RegistryContain
           }
         };
 
-        subscription.current = instance.subscribeEvent(eventName as string, enhancedHandler);
+        subscription.current = instance.$$subscribeEvent(eventName as string, enhancedHandler);
       }
 
       if (cleanupTokenRef.current && registryContainer.registry) {

@@ -44,7 +44,7 @@ export const useTreeViewInstanceEvents: TreeViewPlugin<UseTreeViewInstanceEvents
   );
 
   populateInstance<UseTreeViewInstanceEventsSignature>(instance, {
-    publishEvent,
-    subscribeEvent,
+    $$publishEvent: publishEvent,
+    $$subscribeEvent: subscribeEvent,
   });
 };

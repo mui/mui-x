@@ -3,6 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewNode, TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewJSXNodesRegistrationSignature } from './useTreeViewJSXNodesRegistration.types';
+import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 
 /**
  * Plugin responsible for the registering of the nodes defined as JSX children of the TreeView.
@@ -23,11 +24,7 @@ export const useTreeViewJSXNodesRegistration: TreeViewPlugin<
       const newMap = { ...nodeMap.current };
       delete newMap[id];
       nodeMap.current = newMap;
-
-      instance.publishEvent<UseTreeViewJSXNodesRegistrationSignature, 'unRegisterNode'>(
-        'unRegisterNode',
-        { id },
-      );
+      publishTreeViewEvent(instance, 'unRegisterNode', { id });
     };
   });
 
