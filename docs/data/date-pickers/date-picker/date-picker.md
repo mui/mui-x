@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Picker
 
-<p class="description">The Date Picker component lets the user select a date.</p>
+<p class="description">The Date Picker component lets users select a date.</p>
 
 ## Basic usage
 
@@ -95,6 +95,10 @@ By default, the Date Picker component automatically sets the orientation based o
 You can force a specific orientation using the `orientation` prop:
 
 {{"demo": "StaticDatePickerLandscape.js", "bg": true}}
+
+:::info
+You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
+:::
 
 ## Helper text
 

@@ -196,27 +196,17 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current.updateColumns([colDefRef.current!]);
+    if (colDefRef.current) {
+      apiRef.current.setColumnWidth(colDefRef.current.field, colDefRef.current.width!);
+      logger.debug(
+        `Updating col ${colDefRef.current.field} with new width: ${colDefRef.current.width}`,
+      );
+    }
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
       apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
-      if (colDefRef.current) {
-        apiRef.current.publishEvent(
-          'columnWidthChange',
-          {
-            element: colElementRef.current,
-            colDef: colDefRef.current,
-            width: colDefRef.current?.computedWidth,
-          },
-          nativeEvent,
-        );
-      }
     });
-
-    logger.debug(
-      `Updating col ${colDefRef.current!.field} with new width: ${colDefRef.current!.width}`,
-    );
   };
 
   const handleResizeMouseUp = useEventCallback(finishResize);

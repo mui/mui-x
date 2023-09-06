@@ -251,4 +251,4 @@ You can avoid this by customizing the popper height. This will not produce any v
 ## Shortcuts
 
 You can add shortcuts to every pickers.
-For more information, check the [dedicated page](/x/react-date-pickers/shortcuts/)
+For more information, check the [dedicated page](/x/react-date-pickers/shortcuts/).
