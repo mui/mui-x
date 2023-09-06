@@ -8,7 +8,7 @@ packageName: '@mui/x-date-pickers'
 
 # Date Calendar
 
-<p class="description">The Date Calendar component lets the user select a date without any input or popper / modal.</p>
+<p class="description">The Date Calendar component lets users select a date without any input or popper / modal.</p>
 
 ## Basic usage
 
@@ -82,12 +82,11 @@ You can also customize what's rendered as a calendar week number, using a callba
 
 {{"demo": "AddWeekNumber.js"}}
 
-### Custom day rendering
+### Week picker
 
-The displayed days are customizable with the `Day` component slot.
-You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
+You can select the whole week using the `day` component slot:
 
-{{"demo": "CustomDay.js"}}
+{{"demo": "WeekPicker.js"}}
 
 ## Dynamic data
 
