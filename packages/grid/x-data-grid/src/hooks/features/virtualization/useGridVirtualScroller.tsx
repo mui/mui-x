@@ -10,6 +10,7 @@ import { defaultMemoize } from 'reselect';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
+import { createControllablePromise, AbortError, ControllablePromise } from '../../../utils/createControllablePromise';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
@@ -139,7 +140,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, rootRef);
-  const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
+  const [renderContext, setRenderContextState] = React.useState<GridRenderContext | null>(null);
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const scrollPosition = React.useRef({ top: 0, left: 0 });
   const [containerDimensions, setContainerDimensions] = React.useState<ContainerDimensions>({
@@ -367,16 +368,21 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     ],
   );
 
-  const updateRenderContext = React.useCallback(
+  const getRenderContext = React.useCallback(() => prevRenderContext.current!, []);
+
+  const didUpdateRenderContext = React.useRef<ControllablePromise | undefined>();
+  const setRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
       if (
         prevRenderContext.current &&
         areRenderContextsEqual(nextRenderContext, prevRenderContext.current)
       ) {
         updateRenderZonePosition(nextRenderContext);
-        return;
+        const result = createControllablePromise();
+        result.resolve();
+        return result;
       }
-      setRenderContext(nextRenderContext);
+      setRenderContextState(nextRenderContext);
 
       updateRenderZonePosition(nextRenderContext);
 
@@ -394,16 +400,30 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       });
 
       prevRenderContext.current = nextRenderContext;
+
+      if (didUpdateRenderContext.current) {
+        didUpdateRenderContext.current.reject(new AbortError())
+      }
+      didUpdateRenderContext.current = createControllablePromise();
+
+      return didUpdateRenderContext.current!;
     },
     [
       apiRef,
-      setRenderContext,
+      setRenderContextState,
       prevRenderContext,
       currentPage.rows.length,
       rootProps.rowBuffer,
       updateRenderZonePosition,
     ],
   );
+  React.useEffect(() => {
+    if (didUpdateRenderContext.current && prevRenderContext.current === renderContext) {
+      didUpdateRenderContext.current.resolve();
+      didUpdateRenderContext.current = undefined;
+    }
+  });
+
 
   useEnhancedEffect(() => {
     if (containerDimensions.width == null) {
@@ -411,12 +431,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     const initialRenderContext = computeRenderContext();
-    updateRenderContext(initialRenderContext);
+    setRenderContext(initialRenderContext);
 
     const { top, left } = scrollPosition.current!;
     const params = { top, left, renderContext: initialRenderContext };
     apiRef.current.publishEvent('scrollPositionChange', params);
-  }, [apiRef, computeRenderContext, containerDimensions.width, updateRenderContext]);
+  }, [apiRef, computeRenderContext, containerDimensions.width, setRenderContext]);
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
@@ -477,7 +497,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     if (shouldSetState) {
       // Prevents batching render context changes
       ReactDOM.flushSync(() => {
-        updateRenderContext(nextRenderContext);
+        setRenderContext(nextRenderContext);
       });
       prevTotalWidth.current = columnsTotalWidth;
     }
@@ -769,11 +789,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return style;
   }, [needsHorizontalScrollbar, rootProps.autoHeight]);
 
-  const getRenderContext = React.useCallback((): GridRenderContext => {
-    return prevRenderContext.current!;
-  }, []);
-
-  apiRef.current.register('private', { getRenderContext });
+  apiRef.current.register('private', {
+    getRenderContext,
+    setRenderContext,
+  });
 
   return {
     renderContext,

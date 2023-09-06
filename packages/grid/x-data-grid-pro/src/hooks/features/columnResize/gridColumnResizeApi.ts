@@ -7,5 +7,5 @@ export interface GridColumnResizeApi {
   /**
    * Auto-size the columns of the grid based on the cells' content and the space available.
    */
-  autosizeColumns: (options?: { columns?: GridColDef[]; includeHeader?: boolean }) => void;
+  autosizeColumns: (options?: { columns?: GridColDef[]; includeHeader?: boolean }) => Promise<void>;
 }

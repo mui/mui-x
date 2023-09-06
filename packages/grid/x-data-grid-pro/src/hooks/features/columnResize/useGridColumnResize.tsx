@@ -15,11 +15,14 @@ import {
   useGridNativeEventListener,
   useGridLogger,
   GridColDef,
+  GridRenderContext,
 } from '@mui/x-data-grid';
 import {
   clamp,
   findParentElementFromClassName,
   gridColumnsStateSelector,
+  unwrapPrivateAPI,
+  AbortError,
   GridStateInitializer,
   GridStateColDef,
 } from '@mui/x-data-grid/internals';
@@ -434,7 +437,7 @@ export const useGridColumnResize = (
    * API METHODS
    */
 
-  const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>((options = {}) => {
+  const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>(async (options = {}) => {
     const root = apiRef.current.rootElementRef?.current;
     if (!root) {
       return;
@@ -443,7 +446,29 @@ export const useGridColumnResize = (
     const state = gridColumnsStateSelector(apiRef.current.state);
     const columns = options.columns ?? state.orderedFields.map(field => state.lookup[field]);
 
+    let renderContext: GridRenderContext
+    let tryCount = 0;
+    while (true) {
+      tryCount += 1;
+      try {
+        renderContext = apiRef.current.getRenderContext()
+        await apiRef.current.setRenderContext({
+          firstColumnIndex: 0,
+          lastColumnIndex: state.orderedFields.length,
+          firstRowIndex: renderContext.firstRowIndex,
+          lastRowIndex: renderContext.lastRowIndex,
+        })
+        break
+      } catch (e) {
+        if (!(e instanceof AbortError) || tryCount > 5) {
+          throw e
+        }
+      }
+    }
+    
     const widthsByField = extractWidths(root, columns, options);
+
+    await apiRef.current.setRenderContext(renderContext!)
 
     console.log(widthsByField)
 

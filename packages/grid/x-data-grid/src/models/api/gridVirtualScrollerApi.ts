@@ -6,4 +6,8 @@ export interface GridVirtualScrollerApi {
    * @returns {GridRenderContext} The `GridRenderContext`.
    */
   getRenderContext: () => GridRenderContext;
+  /**
+   * Set the current grid rendering context.
+   */
+  setRenderContext: (renderContext: GridRenderContext) => Promise<unknown>;
 }

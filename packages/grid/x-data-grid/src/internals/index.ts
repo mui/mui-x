@@ -134,6 +134,7 @@ export {
   createSelectorMemoized,
   unstable_resetCreateSelectorCache,
 } from '../utils/createSelector';
+export * from '../utils/createControllablePromise';
 export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
