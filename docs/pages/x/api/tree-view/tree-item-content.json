@@ -1,0 +1,34 @@
+{
+  "props": {
+    "classes": {
+      "type": { "name": "object" },
+      "required": true,
+      "additionalInfo": { "cssApi": true }
+    },
+    "nodeId": { "type": { "name": "string" }, "required": true },
+    "className": { "type": { "name": "string" } },
+    "displayIcon": { "type": { "name": "node" } },
+    "expansionIcon": { "type": { "name": "node" } },
+    "icon": { "type": { "name": "node" } },
+    "label": { "type": { "name": "node" } }
+  },
+  "slots": [],
+  "name": "TreeItemContent",
+  "imports": [
+    "import { TreeItemContent } from '@mui/x-tree-view/TreeItem';",
+    "import { TreeItemContent } from '@mui/x-tree-view';"
+  ],
+  "styles": {
+    "classes": ["root", "expanded", "selected", "focused", "disabled", "iconContainer", "label"],
+    "globalClasses": {
+      "expanded": "Mui-expanded",
+      "selected": "Mui-selected",
+      "focused": "Mui-focused",
+      "disabled": "Mui-disabled"
+    },
+    "name": "MuiTreeItemContent"
+  },
+  "filename": "/packages/x-tree-view/src/TreeItem/TreeItemContent.tsx",
+  "demos": "<ul></ul>",
+  "packages": [{ "packageName": "@mui/x-tree-view", "componentName": "TreeItemContent" }]
+}

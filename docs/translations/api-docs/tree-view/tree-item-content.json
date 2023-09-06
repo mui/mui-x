@@ -1,13 +1,33 @@
 {
   "componentDescription": "@ignore - internal component.",
   "propDescriptions": {
-    "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
-    "className": "className applied to the root element.",
-    "displayIcon": "The icon to display next to the tree node&#39;s label. Either a parent or end icon.",
-    "expansionIcon": "The icon to display next to the tree node&#39;s label. Either an expansion or collapse icon.",
-    "icon": "The icon to display next to the tree node&#39;s label.",
-    "label": "The tree node label.",
-    "nodeId": "The id of the node."
+    "classes": {
+      "description": "Override or extend the styles applied to the component.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "className": {
+      "description": "className applied to the root element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "displayIcon": {
+      "description": "The icon to display next to the tree node&#39;s label. Either a parent or end icon.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "expansionIcon": {
+      "description": "The icon to display next to the tree node&#39;s label. Either an expansion or collapse icon.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "icon": {
+      "description": "The icon to display next to the tree node&#39;s label.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "label": { "description": "The tree node label.", "deprecated": "", "typeDescriptions": {} },
+    "nodeId": { "description": "The id of the node.", "deprecated": "", "typeDescriptions": {} }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },
