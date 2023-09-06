@@ -28,28 +28,30 @@ export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateAp
   const colIndex = Number(ariaColIndex) - 1;
   const cells: Element[] = [];
 
-  api.virtualScrollerRef?.current?.childNodes.forEach((child) => {
-    const renderedRowElements = (child as HTMLElement).querySelectorAll(
-      `:scope > div > .${gridClasses.row}`, // Use > to ignore rows from detail panels
-    );
+  if (!api.virtualScrollerRef?.current) {
+    return [];
+  }
 
-    renderedRowElements.forEach((rowElement) => {
-      const rowId = rowElement.getAttribute('data-id');
-      if (!rowId) {
-        return;
-      }
+  const renderedRowElements = api.virtualScrollerRef?.current.querySelectorAll(
+    `:scope > div > div > .${gridClasses.row}`, // Use > to ignore rows from nested data grids (e.g. in detail panel)
+  );
 
-      let columnIndex = colIndex;
+  renderedRowElements.forEach((rowElement) => {
+    const rowId = rowElement.getAttribute('data-id');
+    if (!rowId) {
+      return;
+    }
 
-      const cellColSpanInfo = api.unstable_getCellColSpanInfo(rowId, colIndex);
-      if (cellColSpanInfo && cellColSpanInfo.spannedByColSpan) {
-        columnIndex = cellColSpanInfo.leftVisibleCellIndex;
-      }
-      const cell = rowElement.querySelector(`[data-colindex="${columnIndex}"]`);
-      if (cell) {
-        cells.push(cell);
-      }
-    });
+    let columnIndex = colIndex;
+
+    const cellColSpanInfo = api.unstable_getCellColSpanInfo(rowId, colIndex);
+    if (cellColSpanInfo && cellColSpanInfo.spannedByColSpan) {
+      columnIndex = cellColSpanInfo.leftVisibleCellIndex;
+    }
+    const cell = rowElement.querySelector(`[data-colindex="${columnIndex}"]`);
+    if (cell) {
+      cells.push(cell);
+    }
   });
 
   return cells;
