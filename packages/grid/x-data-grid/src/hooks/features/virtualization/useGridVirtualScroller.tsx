@@ -751,8 +751,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     currentPage.rows.length,
   ]);
 
-  React.useEffect(() => {
-    apiRef.current.publishEvent('virtualScrollerContentSizeChange');
+  useEnhancedEffect(() => {
+    apiRef.current.publishEvent('virtualScrollerContentSizeChange', contentSize);
   }, [apiRef, contentSize]);
 
   const rootStyle = React.useMemo(() => {

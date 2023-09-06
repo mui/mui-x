@@ -1,0 +1,16 @@
+<Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+  <Button size="small" onClick={removeRow}>
+    Remove a row
+  </Button>
+  <Button size="small" onClick={addRow}>
+    Add a row
+  </Button>
+</Stack>
+<div style={{ height: autoHeight ? 'auto' : maxHeight }}>
+  <DataGrid
+    apiRef={apiRef}
+    autoHeight={autoHeight}
+    {...data}
+    rows={data.rows.slice(0, nbRows)}
+  />
+</div>
