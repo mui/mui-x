@@ -614,7 +614,14 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
   const isSelectionMode = rootProps.unstable_cellSelection;
-  const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected, isSelectionMode };
+  const ownerState = {
+    align,
+    showRightBorder,
+    isEditable,
+    classes: rootProps.classes,
+    isSelected,
+    isSelectionMode,
+  };
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
