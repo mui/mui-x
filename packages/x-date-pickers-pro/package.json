@@ -41,7 +41,8 @@
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.22.11",
+    "@babel/runtime": "^7.22.15",
+    "@mui/base": "^5.0.0-alpha.87",
     "@mui/utils": "^5.14.7",
     "@mui/x-date-pickers": "6.12.1",
     "@mui/x-license-pro": "6.10.2",
@@ -52,7 +53,6 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/base": "^5.0.0-alpha.87",
     "@mui/material": "^5.8.6",
     "@mui/system": "^5.8.0",
     "date-fns": "^2.25.0",
