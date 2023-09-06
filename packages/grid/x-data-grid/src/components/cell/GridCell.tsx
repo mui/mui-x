@@ -32,7 +32,6 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { DataGridPremiumProcessedProps } from '@mui/x-data-grid-premium/models/dataGridPremiumProps';
 
 type GridCellV7Props = {
   align: GridAlignment;
@@ -58,6 +57,8 @@ type GridCellV7Props = {
 };
 
 type GridCellWrapperProps = GridCellV7Props;
+
+type GridCellV7RootProps = DataGridProcessedProps & { unstable_cellSelection: boolean };
 
 export type GridCellProps<V = any, F = V> = GridCellWrapperProps & {
   field: string;
@@ -547,7 +548,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps<DataGridPremiumProcessedProps>();
+  const rootProps = useGridRootProps<GridCellV7RootProps>();
 
   const field = column.field;
 
