@@ -14,10 +14,12 @@ import {
   useGridApiMethod,
   useGridNativeEventListener,
   useGridLogger,
+  GridColDef,
 } from '@mui/x-data-grid';
 import {
   clamp,
   findParentElementFromClassName,
+  gridColumnsStateSelector,
   GridStateInitializer,
   GridStateColDef,
 } from '@mui/x-data-grid/internals';
@@ -432,23 +434,18 @@ export const useGridColumnResize = (
    * API METHODS
    */
 
-  const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>((options) => {
-    // XXX: implement
-    console.log(options);
-
+  const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>((options = {}) => {
     const root = apiRef.current.rootElementRef?.current;
     if (!root) {
       return;
     }
 
-    const getCells = (index: number) => Array.from(root.querySelectorAll(`[data-colindex="${index}"]`))
+    const state = gridColumnsStateSelector(apiRef.current.state);
+    const columns = options.columns ?? state.orderedFields.map(field => state.lookup[field]);
 
-    const cells = getCells(1)
-    const widths = cells.map(cell => cell.firstElementChild?.getBoundingClientRect().width ?? 0)
+    const widthsByField = extractWidths(root, columns, options);
 
-    console.log(widths)
-
-    debugger
+    console.log(widthsByField)
 
   }, []);
 
@@ -486,3 +483,43 @@ export const useGridColumnResize = (
   useGridApiOptionHandler(apiRef, 'columnResize', props.onColumnResize);
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
+
+function extractWidths(root: Element, columns: GridColDef[], options: Parameters<GridColumnResizeApi['autosizeColumns']>[0]) {
+  const includeHeaders = options?.includeHeader ?? false;
+  const extraSelector = includeHeaders ? '' : `[role="cell"]`
+
+  try {
+    root.classList.add(gridClasses.autosizing)
+
+    const getCells = (field: string) =>
+      Array.from(root.querySelectorAll(`[data-field="${field}"]` + extraSelector))
+
+    const widthsByField = columns.reduce((result, column) => {
+      if ((column as any).hide) { // XXX: better typing than `any`
+        return result
+      }
+      const cells = getCells(column.field)
+      const widths = cells.map(cell => cell.firstElementChild?.getBoundingClientRect().width ?? 0)
+      const hasColumnMin = column.minWidth !== -Infinity && column.minWidth !== undefined
+      const hasColumnMax = column.maxWidth !==  Infinity && column.maxWidth !== undefined
+      const current =
+        widths.length > 0 ?
+          {
+            min: Math.min(...widths),
+            max: Math.max(...widths),
+          } :
+          {
+            min: hasColumnMin ? column.minWidth! : 0,
+            max: hasColumnMax ? column.maxWidth! : Infinity,
+          }
+      current.min = hasColumnMin && current.min < column.minWidth! ? column.minWidth! : current.min;
+      current.max = hasColumnMax && current.max < column.maxWidth! ? column.maxWidth! : current.max;
+      result[column.field] = current
+      return result
+    }, {} as Record<string, { min: number, max: number }>);
+
+    return widthsByField
+  } finally {
+    root.classList.remove(gridClasses.autosizing)
+  }
+}

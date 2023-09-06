@@ -69,6 +69,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
     { [`& .${gridClasses['cell--rangeRight']}`]: styles['cell--rangeRight'] },
     { [`& .${gridClasses['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
+    { [`& .${gridClasses['cell--autosizing']}`]: styles['cell--autosizing'] },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
@@ -496,6 +497,11 @@ export const GridRootStyles = styled('div', {
       flex: '0 0 28px',
       alignSelf: 'stretch',
       marginRight: theme.spacing(2),
+    },
+    [`&.${gridClasses.autosizing}`]: {
+      [`.${gridClasses['cell']} > *`]: {
+        overflow: 'visible',
+      },
     },
   };
 

@@ -39,6 +39,7 @@ export {
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
 export { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
+export { gridColumnsStateSelector } from '../hooks/features/columns/gridColumnsSelector';
 export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
