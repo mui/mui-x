@@ -5,10 +5,10 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
-  openPicker,
   expectInputPlaceholder,
+  openPicker,
   getTextbox,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 

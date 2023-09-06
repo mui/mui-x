@@ -70,6 +70,7 @@
         "description": "{ ariaV7?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
+    "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
       "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -833,6 +834,12 @@
       "name": "footer",
       "description": "Footer component rendered at the bottom of the grid viewport.",
       "default": "GridFooter"
+    },
+    {
+      "class": null,
+      "name": "footerRowCount",
+      "description": "Row count component rendered in the footer",
+      "default": "GridRowCount"
     },
     {
       "class": null,

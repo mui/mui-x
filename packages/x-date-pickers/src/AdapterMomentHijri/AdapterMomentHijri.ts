@@ -1,7 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import defaultHMoment, { Moment } from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
-import { AdapterFormats, AdapterOptions, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  DateBuilderReturnType,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -136,8 +142,10 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return this.moment(value).locale('ar-SA');
   };
 
-  public dateWithTimezone = (value: string | null | undefined): Moment | null => {
-    return this.date(value);
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
+  ): DateBuilderReturnType<T, Moment> => {
+    return <DateBuilderReturnType<T, Moment>>this.date(value);
   };
 
   public getTimezone = (): string => {

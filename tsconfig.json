@@ -4,8 +4,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     // Already tested with eslint
     "noUnusedLocals": false,
-    // TODO, turn to true
-    "noImplicitAny": false,
+    "strict": true,
     "baseUrl": "./",
     "allowJs": true,
     "paths": {

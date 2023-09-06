@@ -46,7 +46,7 @@ export const paginationStateInitializer: GridStateInitializer<
   };
 };
 
-const mergeStateWithPaginationModel =
+export const mergeStateWithPaginationModel =
   (
     rowCount: number,
     signature: DataGridProcessedProps['signature'],

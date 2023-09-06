@@ -1,8 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["react", "mocha", "node"],
-    "noImplicitAny": true
+    "types": ["react", "mocha", "node"]
   },
   "include": [
     "src/**/*",

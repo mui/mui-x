@@ -1,0 +1,12 @@
+<DatePicker
+  slotProps={{
+    // Targets the `IconButton` component.
+    openPickerButton: {
+      color: 'primary',
+    },
+    // Targets the `InputAdornment` component.
+    inputAdornment: {
+      position: 'start',
+    },
+  }}
+/>

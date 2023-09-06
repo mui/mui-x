@@ -23,6 +23,7 @@ export const renderDateViewCalendar = <TDate extends unknown>({
   onFocusedViewChange,
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -64,6 +65,7 @@ export const renderDateViewCalendar = <TDate extends unknown>({
     onFocusedViewChange={onFocusedViewChange}
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}
