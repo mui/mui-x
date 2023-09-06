@@ -445,6 +445,21 @@ export const useGridColumnResize = (
   const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>((options) => {
     // XXX: implement
     console.log(options);
+
+    const root = apiRef.current.rootElementRef?.current;
+    if (!root) {
+      return;
+    }
+
+    const getCells = (index: number) => Array.from(root.querySelectorAll(`[data-colindex="${index}"]`))
+
+    const cells = getCells(1)
+    const widths = cells.map(cell => cell.firstElementChild?.getBoundingClientRect().width ?? 0)
+
+    console.log(widths)
+
+    debugger
+
   }, []);
 
   /**
