@@ -77,6 +77,10 @@ export interface GridClasses {
    */
   'cell--rangeRight': string;
   /**
+   * Styles applied to the cell element if it is in a cell selection range.
+   */
+  'cell--selectionMode': string;
+  /**
    * Styles applied to the cell element.
    */
   cell: string;
@@ -557,6 +561,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--rangeBottom',
   'cell--rangeLeft',
   'cell--rangeRight',
+  'cell--selectionMode',
   'cell',
   'cellContent',
   'cellCheckbox',

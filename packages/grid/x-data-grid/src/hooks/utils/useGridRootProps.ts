@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-export const useGridRootProps = () => {
+export const useGridRootProps = <T extends DataGridProcessedProps = DataGridProcessedProps>() => {
   const contextValue = React.useContext(GridRootPropsContext);
 
   if (!contextValue) {
@@ -11,5 +11,5 @@ export const useGridRootProps = () => {
     );
   }
 
-  return contextValue as DataGridProcessedProps;
+  return contextValue as T;
 };

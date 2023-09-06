@@ -32,6 +32,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { DataGridPremiumProcessedProps } from '@mui/x-data-grid-premium/models/dataGridPremiumProps';
 
 type GridCellV7Props = {
   align: GridAlignment;
@@ -101,11 +102,12 @@ const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder'> & {
   isEditable?: boolean;
   isSelected?: boolean;
+  isSelectionMode?: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { align, showRightBorder, isEditable, isSelected, classes } = ownerState;
+  const { align, showRightBorder, isEditable, isSelected, isSelectionMode, classes } = ownerState;
 
   const slots = {
     root: [
@@ -114,6 +116,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEditable && 'cell--editable',
       isSelected && 'selected',
       showRightBorder && 'cell--withRightBorder',
+      isSelectionMode && 'cell--selectionMode',
       'withBorderColor',
     ],
     content: ['cellContent'],
@@ -544,7 +547,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const rootProps = useGridRootProps<DataGridPremiumProcessedProps>();
 
   const field = column.field;
 
@@ -609,7 +612,8 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected };
+  const isSelectionMode = rootProps.unstable_cellSelection;
+  const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected, isSelectionMode };
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
