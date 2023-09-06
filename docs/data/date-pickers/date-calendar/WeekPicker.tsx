@@ -26,9 +26,9 @@ const CustomPickersDay = styled(PickersDay, {
     },
   }),
   ...(isHovered && {
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary[theme.palette.mode],
     '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: theme.palette.primary[theme.palette.mode],
     },
   }),
   ...(day.day() === 0 && {
