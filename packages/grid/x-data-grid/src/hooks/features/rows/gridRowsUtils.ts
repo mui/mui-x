@@ -389,5 +389,5 @@ export function getMinimalContentHeight(
   rowHeight: number,
 ) {
   const densityFactor = gridDensityFactorSelector(apiRef);
-  return 2 * Math.floor(rowHeight * densityFactor);
+  return `var(--DataGrid-overlayHeight, ${2 * Math.floor(rowHeight * densityFactor)}px)`;
 }
