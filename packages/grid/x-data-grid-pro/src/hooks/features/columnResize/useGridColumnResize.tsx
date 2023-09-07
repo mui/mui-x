@@ -653,7 +653,7 @@ function excludeOutliers(inputValues: number[], factor: number) {
   const q1 = values[Math.floor(values.length * 0.25)];
   const q3 = values[Math.floor(values.length * 0.75)];
   const iqr = q3 - q1;
-  const deviation = iqr < 5 ? 10 : iqr * factor;
+  const deviation = iqr < 5 ? 5 : iqr * factor;
 
   return values.filter((v) => v > q1 - deviation && v < q3 + deviation);
 }
