@@ -16,6 +16,7 @@ export default function ColumnAutosizing() {
       >
         Autosize columns
       </Button>
+      <br />
       <div style={{ height: 400, width: '100%' }}>
         <DataGridPro apiRef={apiRef} density="compact" {...data} />
       </div>
