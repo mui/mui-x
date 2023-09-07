@@ -9,5 +9,9 @@ export interface GridVirtualScrollerApi {
   /**
    * Set the current grid rendering context.
    */
-  setRenderContext: (renderContext: GridRenderContext) => Promise<unknown>;
+  setRenderContext: (renderContext: GridRenderContext) => void;
+  /**
+   * Enable/disable column headers virtualization.
+   */
+  setColumnHeadersVirtualization: (value: boolean) => void;
 }

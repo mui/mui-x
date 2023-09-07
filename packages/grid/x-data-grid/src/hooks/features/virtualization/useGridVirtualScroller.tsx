@@ -11,11 +11,6 @@ import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
-  createControllablePromise,
-  AbortError,
-  ControllablePromise,
-} from '../../../utils/createControllablePromise';
-import {
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
@@ -374,7 +369,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const getRenderContext = React.useCallback(() => prevRenderContext.current!, []);
 
-  const didUpdateRenderContext = React.useRef<ControllablePromise | undefined>();
   const setRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
       if (
@@ -382,9 +376,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         areRenderContextsEqual(nextRenderContext, prevRenderContext.current)
       ) {
         updateRenderZonePosition(nextRenderContext);
-        const result = createControllablePromise();
-        result.resolve();
-        return result;
+        return;
       }
       setRenderContextState(nextRenderContext);
 
@@ -405,12 +397,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       prevRenderContext.current = nextRenderContext;
 
-      if (didUpdateRenderContext.current) {
-        didUpdateRenderContext.current.reject(new AbortError());
-      }
-      didUpdateRenderContext.current = createControllablePromise();
-
-      return didUpdateRenderContext.current!;
+      return;
     },
     [
       apiRef,
@@ -421,12 +408,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       updateRenderZonePosition,
     ],
   );
-  React.useEffect(() => {
-    if (didUpdateRenderContext.current && prevRenderContext.current === renderContext) {
-      didUpdateRenderContext.current.resolve();
-      didUpdateRenderContext.current = undefined;
-    }
-  });
 
   useEnhancedEffect(() => {
     if (containerDimensions.width == null) {

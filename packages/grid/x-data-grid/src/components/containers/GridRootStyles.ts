@@ -499,7 +499,7 @@ export const GridRootStyles = styled('div', {
       marginRight: theme.spacing(2),
     },
     [`&.${gridClasses.autosizing}`]: {
-      [`.${gridClasses['columnHeaderTitle']} > *`]: {
+      [`.${gridClasses['columnHeaderTitle']}`]: {
         overflow: 'visible',
       },
       [`.${gridClasses['cell']} > *`]: {

@@ -14,14 +14,15 @@ import {
   useGridApiMethod,
   useGridNativeEventListener,
   useGridLogger,
-  GridColumnsState,
   GridRenderContext,
+  gridVisibleColumnFieldsSelector,
+  gridDataRowIdsSelector,
 } from '@mui/x-data-grid';
 import {
   clamp,
   findParentElementFromClassName,
   gridColumnsStateSelector,
-  AbortError,
+  waitForDOM,
   GridStateInitializer,
   GridStateColDef,
 } from '@mui/x-data-grid/internals';
@@ -34,7 +35,13 @@ import {
 } from '../../../utils/domUtils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridColumnResizeApi } from './gridColumnResizeApi';
+import {
+  GridAutosizeOptions,
+  GridColumnResizeApi,
+  DEFAULT_GRID_AUTOSIZE_OPTIONS,
+} from './gridColumnResizeApi';
+
+type AutosizeOptionsRequired = Required<GridAutosizeOptions>;
 
 type ResizeDirection = keyof typeof GridColumnHeaderSeparatorSides;
 
@@ -436,29 +443,45 @@ export const useGridColumnResize = (
    * API METHODS
    */
 
+  const isAutosizingRef = React.useRef(false);
   const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>(
-    async (options = {}) => {
+    async (userOptions) => {
       const root = apiRef.current.rootElementRef?.current;
       if (!root) {
         return;
       }
+      if (isAutosizingRef.current) {
+        throw new Error('Already autosizing the grid. This method cannot be called twice in parallel.')
+      }
 
-      const context = await disableColumnVirtualization(apiRef);
-
-      const [columns, widthsByField] = extractColumnWidths(apiRef, root, options);
-
-      await restoreColumnVirtualization(apiRef, context);
-
-      const newColumns = columns.map((column) => {
-        const newColumn = { ...column };
-        const width = widthsByField[column.field];
-        newColumn.width = clamp(width.maxContent, width.min, width.max);
-        return newColumn;
+      const state = gridColumnsStateSelector(apiRef.current.state);
+      const options = Object.assign({}, DEFAULT_GRID_AUTOSIZE_OPTIONS, userOptions, {
+        columns: userOptions?.columns ?? state.orderedFields.map((field) => state.lookup[field]),
       });
+      options.columns = options.columns.filter(
+        (c) => state.columnVisibilityModel[c.field] !== false,
+      );
 
-      console.log(widthsByField);
+      let context: GridRenderContext;
+      try {
+        context = await disableColumnVirtualization(apiRef, options);
+        const widthsByField = extractColumnWidths(root, options);
 
-      apiRef.current.updateColumns(newColumns);
+        const newColumns = options.columns.map((column) => {
+          const newColumn = { ...column, computedWidth: undefined };
+          const width = widthsByField[column.field];
+          newColumn.width = clamp(width.maxContent, width.min, width.max);
+          return newColumn;
+        });
+
+        console.log(widthsByField);
+
+        apiRef.current.updateColumns(newColumns);
+      } finally {
+        if (context!) {
+          restoreColumnVirtualization(apiRef, context);
+        }
+      }
     },
     [],
   );
@@ -498,21 +521,11 @@ export const useGridColumnResize = (
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
 
-function extractColumnWidths(
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
-  root: Element,
-  options: Parameters<GridColumnResizeApi['autosizeColumns']>[0],
-) {
+function extractColumnWidths(root: Element, options: AutosizeOptionsRequired) {
   type Result = Record<
     string,
     { min: number; max: number; minContent: number; maxContent: number }
   >;
-
-  const state = gridColumnsStateSelector(apiRef.current.state);
-
-  const inputColumns = options?.columns ?? state.orderedFields.map((field) => state.lookup[field]);
-  const columns = inputColumns.filter((c) => state.columnVisibilityModel[c.field] !== false);
-  const includeHeaders = options?.includeHeader ?? false;
 
   root.classList.add(gridClasses.autosizing);
 
@@ -522,7 +535,7 @@ function extractColumnWidths(
   const getCells = (field: string) =>
     Array.from(root.querySelectorAll(`[data-field="${field}"][role="cell"]`));
 
-  const widthsByField = columns.reduce((result, column) => {
+  const widthsByField = options.columns.reduce((result, column) => {
     const cells = getCells(column.field);
     const widths = cells.map((cell) => {
       // XXX:
@@ -534,7 +547,11 @@ function extractColumnWidths(
       return paddingWidth + contentWidth;
     });
 
-    if (includeHeaders) {
+    const filteredWidths = options.excludeOutliers
+      ? excludeOutliers(widths, options.outliersFactor)
+      : widths;
+
+    if (options.includeHeaders) {
       const header = getHeader(column.field);
       if (header) {
         const content = header.querySelector(`.${gridClasses['columnHeaderTitle']}`)!;
@@ -544,7 +561,7 @@ function extractColumnWidths(
         const contentWidth = content.getBoundingClientRect().width;
         const width = paddingWidth + contentWidth;
 
-        widths.push(width);
+        filteredWidths.push(width);
       }
     }
 
@@ -553,49 +570,90 @@ function extractColumnWidths(
     const current = {
       min: hasColumnMin ? column.minWidth! : 0,
       max: hasColumnMax ? column.maxWidth! : Infinity,
-      minContent: widths.length === 0 ? 0 : Math.min(...widths),
-      maxContent: widths.length === 0 ? 0 : Math.max(...widths),
+      minContent: filteredWidths.length === 0 ? 0 : Math.min(...filteredWidths),
+      maxContent: filteredWidths.length === 0 ? 0 : Math.max(...filteredWidths),
     };
-    current.min = hasColumnMin && current.min < column.minWidth! ? column.minWidth! : current.min;
-    current.max = hasColumnMax && current.max < column.maxWidth! ? column.maxWidth! : current.max;
+
     result[column.field] = current;
     return result;
   }, {} as Result);
 
   root.classList.remove(gridClasses.autosizing);
 
-  return [columns, widthsByField] as const;
+  return widthsByField;
 }
 
-async function disableColumnVirtualization(apiRef: React.MutableRefObject<GridPrivateApiPro>) {
+async function disableColumnVirtualization(
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  options: AutosizeOptionsRequired,
+) {
   const state = gridColumnsStateSelector(apiRef.current.state);
+  const rowsLength = gridDataRowIdsSelector(apiRef).length;
+  const visibleColumnsLength = gridVisibleColumnFieldsSelector(apiRef).length;
 
-  let context: GridRenderContext;
-  let tryCount = 0;
-  while (true) {
-    tryCount += 1;
-    try {
-      context = apiRef.current.getRenderContext();
-      await apiRef.current.setRenderContext({
-        firstColumnIndex: 0,
-        lastColumnIndex: state.orderedFields.length,
-        firstRowIndex: context.firstRowIndex,
-        lastRowIndex: context.lastRowIndex,
-      });
-      break;
-    } catch (e) {
-      if (!(e instanceof AbortError) || tryCount > 5) {
-        throw e;
-      }
-    }
+  const context = apiRef.current.getRenderContext();
+
+  // We render a context of at least `sampleLength` rows, centered around the current context
+  // to re-use as much as possible of the already rendered rows.
+  const halfLength = Math.floor(options.sampleLength / 2);
+  const middleRowIndex =
+    context.firstRowIndex + Math.floor((context.lastRowIndex - context.firstRowIndex) / 2);
+  const firstRowIndex = clamp(middleRowIndex - halfLength, 0, rowsLength);
+  const lastRowIndex = clamp(firstRowIndex + options.sampleLength, 0, rowsLength);
+
+  // Create our temporary render context. Note that if the new first/last row indexes are within
+  // the currently rendered range, we just reuse those instead. That case happens when the
+  // `sampleLength` is smaller than the currently rendered range.
+  const newContext = {
+    firstColumnIndex: 0,
+    lastColumnIndex: state.orderedFields.length,
+    firstRowIndex: Math.min(firstRowIndex, context.firstRowIndex),
+    lastRowIndex: Math.max(lastRowIndex, context.lastRowIndex),
   }
+
+  apiRef.current.setColumnHeadersVirtualization(false);
+  apiRef.current.setRenderContext(newContext);
+
+  const headerContainer = apiRef.current.columnHeadersElementRef!.current!;
+  const cellsContainer = apiRef.current.virtualScrollerRef!.current!;
+  const firstRow = cellsContainer.querySelector('[role="row"]');
+
+  await Promise.all([
+    waitForDOM({
+      target: headerContainer,
+      validate: () => {
+        return headerContainer.querySelectorAll('[data-field]').length === visibleColumnsLength;
+      },
+    }),
+    firstRow
+      ? waitForDOM({
+          target: firstRow,
+          validate: () => {
+            return firstRow.querySelectorAll('[data-field]').length === visibleColumnsLength;
+          },
+        })
+      : Promise.resolve(),
+  ]);
 
   return context;
 }
 
-async function restoreColumnVirtualization(
+function restoreColumnVirtualization(
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   context: GridRenderContext,
 ) {
-  await apiRef.current.setRenderContext(context!);
+  apiRef.current.setColumnHeadersVirtualization(true);
+  apiRef.current.setRenderContext(context!);
+}
+
+function excludeOutliers(inputValues: number[], factor: number) {
+  const values = inputValues.slice();
+  values.sort((a, b) => a - b);
+
+  const q1 = values[Math.floor(values.length * 0.25)];
+  const q3 = values[Math.floor(values.length * 0.75)];
+  const iqr = q3 - q1;
+  const deviation = iqr < 5 ? 10 : iqr * factor;
+
+  return values.filter((v) => v > q1 - deviation && v < q3 + deviation);
 }
