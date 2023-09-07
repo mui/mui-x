@@ -10,6 +10,7 @@
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
     },
+    "disableLineItemHighlight": { "type": { "name": "bool" } },
     "leftAxis": {
       "type": {
         "name": "union",

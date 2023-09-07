@@ -21,7 +21,7 @@ export interface PieArcLabelClasses {
 
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
-export interface PieArcLabelOwnerState {
+interface PieArcLabelOwnerState {
   id: string;
   dataIndex: number;
   color: string;
