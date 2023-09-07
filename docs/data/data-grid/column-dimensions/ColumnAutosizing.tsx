@@ -21,7 +21,7 @@ export default function ColumnAutosizing() {
     DEFAULT_GRID_AUTOSIZE_OPTIONS.excludeOutliers,
   );
   const [outliersFactor, setOutliersFactor] = React.useState(
-    DEFAULT_GRID_AUTOSIZE_OPTIONS.outliersFactor,
+    String(DEFAULT_GRID_AUTOSIZE_OPTIONS.outliersFactor),
   );
 
   return (
@@ -40,7 +40,7 @@ export default function ColumnAutosizing() {
                 sampleLength,
                 includeHeaders,
                 excludeOutliers,
-                outliersFactor,
+                outliersFactor: Number.isNaN(parseFloat(outliersFactor)) ? 1 : parseFloat(outliersFactor),
               })
             }
           >
@@ -73,10 +73,9 @@ export default function ColumnAutosizing() {
           label="Exclude outliers"
         />
         <TextField
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
           label="Outliers factor"
           value={outliersFactor}
-          onChange={(ev) => setOutliersFactor(parseInt(ev.target.value))}
+          onChange={(ev) => setOutliersFactor(ev.target.value)}
           sx={{ width: '12ch' }}
         />
       </Stack>

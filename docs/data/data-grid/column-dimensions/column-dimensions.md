@@ -60,9 +60,7 @@ To capture changes in the width of a column there are two callbacks that are cal
 
 ## Autosizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-The `DataGridPro` also allows for auto-sizing the columns' dimensions based on their content. Be aware that it can only
-calculate the column widths of a limited set of rows, namely those that are currently rendered by the virtualization
-engine.
+The `DataGridPro` also allows for auto-sizing the columns' dimensions based on their content. Be aware that it can only autosize based on a limited set of rows, namely the `options.sampleLength` parameter, because it needs to render the rows to the DOM to accurately calculate dimensions.
 
 {{"demo": "ColumnAutosizing.js", "disableAd": true, "bg": "inline"}}
 
