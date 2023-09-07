@@ -443,31 +443,11 @@ export const useGridColumnResize = (
         return;
       }
 
-      const state = gridColumnsStateSelector(apiRef.current.state);
+      const context = await disableColumnVirtualization(apiRef);
 
-      let renderContext: GridRenderContext;
-      let tryCount = 0;
-      while (true) {
-        tryCount += 1;
-        try {
-          renderContext = apiRef.current.getRenderContext();
-          await apiRef.current.setRenderContext({
-            firstColumnIndex: 0,
-            lastColumnIndex: state.orderedFields.length,
-            firstRowIndex: renderContext.firstRowIndex,
-            lastRowIndex: renderContext.lastRowIndex,
-          });
-          break;
-        } catch (e) {
-          if (!(e instanceof AbortError) || tryCount > 5) {
-            throw e;
-          }
-        }
-      }
+      const [columns, widthsByField] = extractColumnWidths(apiRef, root, options);
 
-      const [columns, widthsByField] = extractColumnWidths(root, state, options);
-
-      await apiRef.current.setRenderContext(renderContext!);
+      await restoreColumnVirtualization(apiRef, context);
 
       const newColumns = columns.map((column) => {
         const newColumn = { ...column };
@@ -519,8 +499,8 @@ export const useGridColumnResize = (
 };
 
 function extractColumnWidths(
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   root: Element,
-  state: GridColumnsState,
   options: Parameters<GridColumnResizeApi['autosizeColumns']>[0],
 ) {
   type Result = Record<
@@ -528,10 +508,10 @@ function extractColumnWidths(
     { min: number; max: number; contentMin: number; contentMax: number }
   >;
 
+  const state = gridColumnsStateSelector(apiRef.current.state);
+
   const inputColumns = options?.columns ?? state.orderedFields.map((field) => state.lookup[field]);
-  const columns = inputColumns.filter(
-    (column) => state.columnVisibilityModel[column.field] !== false,
-  );
+  const columns = inputColumns.filter((c) => state.columnVisibilityModel[c.field] !== false);
   const includeHeaders = options?.includeHeader ?? false;
 
   try {
@@ -541,7 +521,7 @@ function extractColumnWidths(
       root.querySelector(`[data-field="${field}"][role="columnheader"]`);
 
     const getCells = (field: string) =>
-      Array.from(root.querySelectorAll(`[data-field="${field}"]`));
+      Array.from(root.querySelectorAll(`[data-field="${field}"][role="cell"]`));
 
     const widthsByField = columns.reduce((result, column) => {
       const cells = getCells(column.field);
@@ -587,4 +567,37 @@ function extractColumnWidths(
   } finally {
     root.classList.remove(gridClasses.autosizing);
   }
+}
+
+async function disableColumnVirtualization(apiRef: React.MutableRefObject<GridPrivateApiPro>) {
+  const state = gridColumnsStateSelector(apiRef.current.state);
+
+  let context: GridRenderContext;
+  let tryCount = 0;
+  while (true) {
+    tryCount += 1;
+    try {
+      context = apiRef.current.getRenderContext();
+      await apiRef.current.setRenderContext({
+        firstColumnIndex: 0,
+        lastColumnIndex: state.orderedFields.length,
+        firstRowIndex: context.firstRowIndex,
+        lastRowIndex: context.lastRowIndex,
+      });
+      break;
+    } catch (e) {
+      if (!(e instanceof AbortError) || tryCount > 5) {
+        throw e;
+      }
+    }
+  }
+
+  return context;
+}
+
+async function restoreColumnVirtualization(
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  context: GridRenderContext,
+) {
+  await apiRef.current.setRenderContext(context!);
 }
