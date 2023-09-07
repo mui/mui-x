@@ -452,7 +452,7 @@ export const useGridColumnResize = (
       const newColumns = columns.map((column) => {
         const newColumn = { ...column };
         const width = widthsByField[column.field];
-        newColumn.width = clamp(width.contentMax, width.min, width.max);
+        newColumn.width = clamp(width.maxContent, width.min, width.max);
         return newColumn;
       });
 
@@ -505,7 +505,7 @@ function extractColumnWidths(
 ) {
   type Result = Record<
     string,
-    { min: number; max: number; contentMin: number; contentMax: number }
+    { min: number; max: number; minContent: number; maxContent: number }
   >;
 
   const state = gridColumnsStateSelector(apiRef.current.state);
@@ -514,59 +514,57 @@ function extractColumnWidths(
   const columns = inputColumns.filter((c) => state.columnVisibilityModel[c.field] !== false);
   const includeHeaders = options?.includeHeader ?? false;
 
-  try {
-    root.classList.add(gridClasses.autosizing);
+  root.classList.add(gridClasses.autosizing);
 
-    const getHeader = (field: string) =>
-      root.querySelector(`[data-field="${field}"][role="columnheader"]`);
+  const getHeader = (field: string) =>
+    root.querySelector(`[data-field="${field}"][role="columnheader"]`);
 
-    const getCells = (field: string) =>
-      Array.from(root.querySelectorAll(`[data-field="${field}"][role="cell"]`));
+  const getCells = (field: string) =>
+    Array.from(root.querySelectorAll(`[data-field="${field}"][role="cell"]`));
 
-    const widthsByField = columns.reduce((result, column) => {
-      const cells = getCells(column.field);
-      const widths = cells.map((cell) => {
-        // XXX:
-        // Is there a more efficient way to do this?
-        // Can we assume the cell padding is constant for all cells?
-        const style = window.getComputedStyle(cell, null);
+  const widthsByField = columns.reduce((result, column) => {
+    const cells = getCells(column.field);
+    const widths = cells.map((cell) => {
+      // XXX:
+      // Is there a more efficient way to do this?
+      // Can we assume the cell padding is constant for all cells?
+      const style = window.getComputedStyle(cell, null);
+      const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
+      const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0;
+      return paddingWidth + contentWidth;
+    });
+
+    if (includeHeaders) {
+      const header = getHeader(column.field);
+      if (header) {
+        const content = header.querySelector(`.${gridClasses['columnHeaderTitle']}`)!;
+
+        const style = window.getComputedStyle(header, null);
         const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-        const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0;
-        return paddingWidth + contentWidth;
-      });
+        const contentWidth = content.getBoundingClientRect().width;
+        const width = paddingWidth + contentWidth;
 
-      if (includeHeaders) {
-        const header = getHeader(column.field);
-        if (header) {
-          const content = header.querySelector(`.${gridClasses['columnHeaderTitle']}`)!;
-
-          const style = window.getComputedStyle(header, null);
-          const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-          const contentWidth = content.getBoundingClientRect().width;
-          const width = paddingWidth + contentWidth;
-
-          widths.push(width);
-        }
+        widths.push(width);
       }
+    }
 
-      const hasColumnMin = column.minWidth !== -Infinity && column.minWidth !== undefined;
-      const hasColumnMax = column.maxWidth !== Infinity && column.maxWidth !== undefined;
-      const current = {
-        min: hasColumnMin ? column.minWidth! : 0,
-        max: hasColumnMax ? column.maxWidth! : Infinity,
-        contentMin: Math.min(...widths),
-        contentMax: Math.max(...widths),
-      };
-      current.min = hasColumnMin && current.min < column.minWidth! ? column.minWidth! : current.min;
-      current.max = hasColumnMax && current.max < column.maxWidth! ? column.maxWidth! : current.max;
-      result[column.field] = current;
-      return result;
-    }, {} as Result);
+    const hasColumnMin = column.minWidth !== -Infinity && column.minWidth !== undefined;
+    const hasColumnMax = column.maxWidth !== Infinity && column.maxWidth !== undefined;
+    const current = {
+      min: hasColumnMin ? column.minWidth! : 0,
+      max: hasColumnMax ? column.maxWidth! : Infinity,
+      minContent: widths.length === 0 ? 0 : Math.min(...widths),
+      maxContent: widths.length === 0 ? 0 : Math.max(...widths),
+    };
+    current.min = hasColumnMin && current.min < column.minWidth! ? column.minWidth! : current.min;
+    current.max = hasColumnMax && current.max < column.maxWidth! ? column.maxWidth! : current.max;
+    result[column.field] = current;
+    return result;
+  }, {} as Result);
 
-    return [columns, widthsByField] as const;
-  } finally {
-    root.classList.remove(gridClasses.autosizing);
-  }
+  root.classList.remove(gridClasses.autosizing);
+
+  return [columns, widthsByField] as const;
 }
 
 async function disableColumnVirtualization(apiRef: React.MutableRefObject<GridPrivateApiPro>) {
