@@ -58,6 +58,14 @@ To capture changes in the width of a column there are two callbacks that are cal
 - `onColumnResize`: Called while a column is being resized.
 - `onColumnWidthChange`: Called after the width of a column is changed, but not during resizing.
 
+## Autosizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+The `DataGridPro` also allows for auto-sizing the columns' dimensions based on their content. Be aware that it can only
+calculate the column widths of a limited set of rows, namely those that are currently rendered by the virtualization
+engine.
+
+{{"demo": "ColumnAutosizing.js", "disableAd": true, "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
