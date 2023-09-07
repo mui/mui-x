@@ -71,12 +71,14 @@
     ".": {
       "types": "./index.d.ts",
       "require": "./index.js",
-      "import": "./esm/index.js"
+      "import": "./esm/index.js",
+      "default": "./modern/index.js"
     },
     "./*": {
       "types": "./*/index.d.ts",
       "require": "./*/index.js",
-      "import": "./esm/*/index.js"
+      "import": "./esm/*/index.js",
+      "default": "./modern/*/index.js"
     }
   },
   "setupFiles": [
