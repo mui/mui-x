@@ -45,7 +45,7 @@
     "@babel/runtime": "^7.22.15",
     "@mui/utils": "^5.14.7",
     "@mui/x-data-grid": "6.13.0",
-    "@mui/x-license-pro": "6.10.3",
+    "@mui/x-license-pro": "6.10.2",
     "@types/format-util": "^1.0.2",
     "clsx": "^2.0.0",
     "prop-types": "^15.8.1",
