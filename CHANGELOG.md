@@ -58,6 +58,7 @@ Same changes as in `@mui/x-date-pickers@v6.13.0`, plus:
 - [docs] Fix npm package indentation @oliviertassinari
 - [docs] Fix typo in tree view docs @oliviertassinari
 - [docs] Improve the week picker example (#8257) @flaviendelangle
+- [docs] Include code links in the data grid demo (#10219) @cherniavskii
 - [docs] Add pickers `Custom opening button` page (#10200) @flaviendelangle
 - [docs] Polish page for SEO (#10216) @oliviertassinari
 - [docs] Use `Base UI` `Portal` for the quick filter recipe (#10188) @DanailH
