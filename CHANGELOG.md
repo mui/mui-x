@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.13.0
+
+_Sep 7, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Fix `anchorRef` behavior on range pickers (#10077) @LukasTy
+
+  The range picker popup will now be anchored to the first input element and left aligned like other pickers.
+- 🌍 Improve Slovak (sk-SK) locale on the data grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@v6.13.0`
+
+- [DataGrid] Allow to override the default overlay height in `autoHeight` mode (#10203) @cherniavskii
+- [DataGrid] Allow to override the default row count component in footer (#10063) @hungmanhle
+- [DataGrid] Fix an error when hovering on a row, the background changed to white (#10214) @chucamphong
+- [DataGrid] Fix custom column docs, remove legacy `extendType` (#10175) @oliviertassinari
+- [DataGrid] Make the pinned rows be on top of the no rows overlay (#9986) @DanailH
+- [l10n] Improve Slovak (sk-SK) locale (#10182) @msidlo
+
+#### `@mui/x-data-grid-pro@v6.13.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v6.13.0`, plus:
+
+- [DataGridPro] Fix column resize with pinned rows (#10229) @cherniavskii
+
+#### `@mui/x-data-grid-premium@v6.13.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v6.13.0`, plus:
+
+- [DataGridPremium] Fix aggregated column resizing (#10079) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.13.0`
+
+- [pickers] Respect the adapter locale in `AdapterMoment.getWeekdays` (#10221) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@v6.13.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v6.13.0`, plus:
+
+- [DateRangePicker] Fix `anchorRef` behavior (#10077) @LukasTy
+
+### Docs
+
+- [docs] Add pie chart demo with a center label (#10220) @giladappsforce
+- [docs] Fix `e.g.` typo @oliviertassinari
+- [docs] Fix npm package indentation @oliviertassinari
+- [docs] Fix typo in tree view docs @oliviertassinari
+- [docs] Improve the week picker example (#8257) @flaviendelangle
+- [docs] Add pickers `Custom opening button` page (#10200) @flaviendelangle
+- [docs] Polish page for SEO (#10216) @oliviertassinari
+- [docs] Use `Base UI` `Portal` for the quick filter recipe (#10188) @DanailH
+
+### Core
+
+- [core] Finish migration to GA4 @oliviertassinari
+- [core] Fix yarn docs:create-playground script @oliviertassinari
+- [core] Move @mui/base from peer dependency to dependency (#10215) @oliviertassinari
+- [core] Prevent `e.g.` typo (#10193) @oliviertassinari
+- [core] Remove unused `babel-plugin-tester` package (#10243) @LukasTy
+
 ## 6.12.1
 
 _Aug 31, 2023_
