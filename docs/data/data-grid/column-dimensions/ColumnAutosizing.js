@@ -9,14 +9,15 @@ export default function ColumnAutosizing() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 1000 });
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <Button
+        variant="outlined"
         onClick={() => apiRef.current.autosizeColumns({ includeHeader: false })}
       >
         Autosize columns
       </Button>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro {...data} />
+        <DataGridPro apiRef={apiRef} density="compact" {...data} />
       </div>
     </div>
   );

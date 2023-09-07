@@ -10,7 +10,11 @@ import { defaultMemoize } from 'reselect';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { createControllablePromise, AbortError, ControllablePromise } from '../../../utils/createControllablePromise';
+import {
+  createControllablePromise,
+  AbortError,
+  ControllablePromise,
+} from '../../../utils/createControllablePromise';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
@@ -402,7 +406,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       prevRenderContext.current = nextRenderContext;
 
       if (didUpdateRenderContext.current) {
-        didUpdateRenderContext.current.reject(new AbortError())
+        didUpdateRenderContext.current.reject(new AbortError());
       }
       didUpdateRenderContext.current = createControllablePromise();
 
@@ -423,7 +427,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       didUpdateRenderContext.current = undefined;
     }
   });
-
 
   useEnhancedEffect(() => {
     if (containerDimensions.width == null) {

@@ -10,15 +10,14 @@ export default function ColumnAutosizing() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current.autosizeColumns({ includeHeader: false })}>
+      <Button
+        variant="outlined"
+        onClick={() => apiRef.current.autosizeColumns({ includeHeader: false })}
+      >
         Autosize columns
       </Button>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
-          apiRef={apiRef}
-          density='compact'
-          {...data}
-        />
+        <DataGridPro apiRef={apiRef} density="compact" {...data} />
       </div>
     </div>
   );
