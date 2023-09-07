@@ -14,14 +14,13 @@ import {
   useGridApiMethod,
   useGridNativeEventListener,
   useGridLogger,
-  GridColDef,
+  GridColumnsState,
   GridRenderContext,
 } from '@mui/x-data-grid';
 import {
   clamp,
   findParentElementFromClassName,
   gridColumnsStateSelector,
-  unwrapPrivateAPI,
   AbortError,
   GridStateInitializer,
   GridStateColDef,
@@ -444,7 +443,6 @@ export const useGridColumnResize = (
     }
 
     const state = gridColumnsStateSelector(apiRef.current.state);
-    const columns = options.columns ?? state.orderedFields.map(field => state.lookup[field]);
 
     let renderContext: GridRenderContext
     let tryCount = 0;
@@ -466,11 +464,20 @@ export const useGridColumnResize = (
       }
     }
     
-    const widthsByField = extractWidths(root, columns, options);
+    const [columns, widthsByField] = extractColumnWidths(root, state, options);
 
     await apiRef.current.setRenderContext(renderContext!)
 
+    const newColumns = columns.map(column => {
+      const newColumn = { ...column }
+      const width = widthsByField[column.field]
+      newColumn.width = clamp(width.contentMax, width.min, width.max)
+      return newColumn
+    })
+
     console.log(widthsByField)
+
+    apiRef.current.updateColumns(newColumns)
 
   }, []);
 
@@ -509,41 +516,66 @@ export const useGridColumnResize = (
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
 
-function extractWidths(root: Element, columns: GridColDef[], options: Parameters<GridColumnResizeApi['autosizeColumns']>[0]) {
+function extractColumnWidths(root: Element, state: GridColumnsState, options: Parameters<GridColumnResizeApi['autosizeColumns']>[0]) {
+  type Result = Record<string,
+    { min: number, max: number, contentMin: number, contentMax: number }
+  >;
+
+  const inputColumns = options?.columns ?? state.orderedFields.map(field => state.lookup[field]);
+  const columns = inputColumns.filter(column => state.columnVisibilityModel[column.field] !== false);
   const includeHeaders = options?.includeHeader ?? false;
-  const extraSelector = includeHeaders ? '' : `[role="cell"]`
 
   try {
     root.classList.add(gridClasses.autosizing)
 
+    const getHeader = (field: string) =>
+      root.querySelector(`[data-field="${field}"][role="columnheader"]`)
+
     const getCells = (field: string) =>
-      Array.from(root.querySelectorAll(`[data-field="${field}"]` + extraSelector))
+      Array.from(root.querySelectorAll(`[data-field="${field}"]`))
 
     const widthsByField = columns.reduce((result, column) => {
-      if ((column as any).hide) { // XXX: better typing than `any`
-        return result
-      }
       const cells = getCells(column.field)
-      const widths = cells.map(cell => cell.firstElementChild?.getBoundingClientRect().width ?? 0)
+      const widths = cells.map(cell => {
+        // XXX:
+        // Is there a more efficient way to do this?
+        // Can we assume the cell padding is constant for all cells?
+        const style = window.getComputedStyle(cell, null)
+        const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10)
+        const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0
+        return paddingWidth + contentWidth
+      })
+
+      if (includeHeaders) {
+        const header = getHeader(column.field);
+        if (header) {
+          const content = header.querySelector(`.${gridClasses['columnHeaderTitle']}`)!
+
+          const style = window.getComputedStyle(header, null)
+          const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10)
+          const contentWidth = content.getBoundingClientRect().width
+          const width = paddingWidth + contentWidth
+
+          widths.push(width)
+        }
+      }
+
       const hasColumnMin = column.minWidth !== -Infinity && column.minWidth !== undefined
       const hasColumnMax = column.maxWidth !==  Infinity && column.maxWidth !== undefined
       const current =
-        widths.length > 0 ?
-          {
-            min: Math.min(...widths),
-            max: Math.max(...widths),
-          } :
-          {
-            min: hasColumnMin ? column.minWidth! : 0,
-            max: hasColumnMax ? column.maxWidth! : Infinity,
-          }
+        {
+          min: hasColumnMin ? column.minWidth! : 0,
+          max: hasColumnMax ? column.maxWidth! : Infinity,
+          contentMin: Math.min(...widths),
+          contentMax: Math.max(...widths),
+        }
       current.min = hasColumnMin && current.min < column.minWidth! ? column.minWidth! : current.min;
       current.max = hasColumnMax && current.max < column.maxWidth! ? column.maxWidth! : current.max;
       result[column.field] = current
       return result
-    }, {} as Record<string, { min: number, max: number }>);
+    }, {} as Result);
 
-    return widthsByField
+    return [columns, widthsByField] as const
   } finally {
     root.classList.remove(gridClasses.autosizing)
   }
