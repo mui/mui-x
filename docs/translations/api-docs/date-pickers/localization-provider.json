@@ -1,5 +1,5 @@
 {
-  "componentDescription": "@ignore - do not document.",
+  "componentDescription": "",
   "propDescriptions": {
     "adapterLocale": {
       "description": "Locale for the date library you are using",

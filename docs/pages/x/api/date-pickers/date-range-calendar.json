@@ -166,6 +166,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <span class=\"plan-pro\"></span></a></li></ul>",
-  "packages": [{ "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangeCalendar" }]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <span class=\"plan-pro\"></span></a></li></ul>"
 }
