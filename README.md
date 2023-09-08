@@ -18,6 +18,7 @@ See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
 - [Data Grid](https://mui.com/x/react-data-grid/)
 - [Date and Time Pickers](https://mui.com/x/react-date-pickers/getting-started/)
 - [Charts](https://mui.com/x/react-charts/)
+- [Tree View](https://mui.com/x/react-tree-view/)
 
 ## Installation
 
@@ -32,6 +33,10 @@ Read the Date and Time Pickers [Installation instructions](https://mui.com/x/rea
 ### Charts
 
 Read the Charts [Installation instructions](https://mui.com/x/react-charts/#getting-started) in the MUI X docs.
+
+### Tree View
+
+Read the Tree View [Installation instructions](https://mui.com/x/react-tree-view/getting-started/#installation) in the MUI X docs.
 
 ## MIT vs. commercial licenses
 
@@ -58,6 +63,7 @@ MIT licensed packages:
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 - [`@mui/x-charts`](https://www.npmjs.com/package/@mui/x-charts)
+- [`@mui/x-tree-view`](https://www.npmjs.com/package/@mui/x-tree-view)
 
 ### Pro plan
 

@@ -55,9 +55,6 @@ type LocalizationProviderComponent = (<TDate, TLocale>(
   props: LocalizationProviderProps<TDate, TLocale>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-/**
- * @ignore - do not document.
- */
 export const LocalizationProvider = function LocalizationProvider<TDate, TLocale>(
   inProps: LocalizationProviderProps<TDate, TLocale>,
 ) {

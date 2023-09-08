@@ -8,6 +8,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsAxisHighlight" },
   "filename": "/packages/x-charts/src/ChartsAxisHighlight/ChartsAxisHighlight.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsAxisHighlight" }]
+  "demos": "<ul></ul>"
 }
