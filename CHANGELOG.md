@@ -5,9 +5,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.13.0
 
-_Sep 7, 2023_
+_Sep ū, 2023_
 
-We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Fix `anchorRef` behavior on range pickers (#10077) @LukasTy
 
@@ -51,10 +51,21 @@ Same changes as in `@mui/x-date-pickers@v6.13.0`, plus:
 
 - [DateRangePicker] Fix `anchorRef` behavior (#10077) @LukasTy
 
+### Charts / `@mui/x-charts@6.0.0-alpha.10`
+
+- [charts] Remove require condition from package.json exports (#10272) @Janpot
+
+### Tree View / `@mui/x-tree-view@6.0.0-alpha.2`
+
+- [TreeView] Add missing export (#10245) @flaviendelangle
+
 ### Docs
 
+- [docs] Add a `Getting Started` page for the Tree View (#10218) @flaviendelangle
 - [docs] Add pickers `Custom opening button` page (#10200) @flaviendelangle
 - [docs] Add pie chart demo with a center label (#10220) @giladappsforce
+- [docs] Do not document ignored components (#10258) @flaviendelangle
+- [docs] Fix charts demo using too deep import (#10263) @LukasTy
 - [docs] Fix `e.g.` typo @oliviertassinari
 - [docs] Fix npm package indentation @oliviertassinari
 - [docs] Fix typo in tree view docs @oliviertassinari
