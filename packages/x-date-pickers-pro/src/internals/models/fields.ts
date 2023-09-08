@@ -19,6 +19,9 @@ export interface MultiInputFieldSlotTextFieldProps {
   onKeyDown?: React.KeyboardEventHandler;
   onFocus?: React.FocusEventHandler;
   focused?: boolean;
+  InputProps?: {
+    ref?: React.Ref<HTMLDivElement>;
+  };
 }
 
 /**

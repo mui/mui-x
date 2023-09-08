@@ -33,7 +33,7 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 
 const joyTheme = extendJoyTheme();
 
-const JoyField = React.forwardRef((props, inputRef) => {
+const JoyField = React.forwardRef((props, ref) => {
   const {
     disabled,
     id,
@@ -42,6 +42,7 @@ const JoyField = React.forwardRef((props, inputRef) => {
     formControlSx,
     endDecorator,
     startDecorator,
+    slotProps,
     ...other
   } = props;
 
@@ -55,12 +56,12 @@ const JoyField = React.forwardRef((props, inputRef) => {
         },
         ...(Array.isArray(formControlSx) ? formControlSx : [formControlSx]),
       ]}
-      ref={containerRef}
+      ref={ref}
     >
       <FormLabel>{label}</FormLabel>
       <Input
+        ref={ref}
         disabled={disabled}
-        slotProps={{ input: { ref: inputRef } }}
         startDecorator={
           <React.Fragment>
             {startAdornment}
@@ -73,6 +74,10 @@ const JoyField = React.forwardRef((props, inputRef) => {
             {endDecorator}
           </React.Fragment>
         }
+        slotProps={{
+          ...slotProps,
+          root: { ...slotProps?.root, ref: containerRef },
+        }}
         {...other}
       />
     </FormControl>
@@ -81,20 +86,18 @@ const JoyField = React.forwardRef((props, inputRef) => {
 
 const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, onAdornmentClick, ...other } = props;
-  const { size, color, sx, variant, ...ownerState } = props;
 
   const { inputRef: externalInputRef, ...textFieldProps } = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
-    ownerState,
+    ownerState: props,
   });
 
   const {
     onClear,
     clearable,
-    slots: inSlots,
-    slotProps: inSlotProps,
+    ref: inputRef,
     ...fieldProps
   } = useSingleInputDateRangeField({
     props: textFieldProps,
@@ -108,13 +111,19 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
       clearable,
       fieldProps,
       InputProps: fieldProps.InputProps,
-      slots: { ...inSlots, clearButton: IconButton },
-      slotProps: { ...inSlotProps, clearIcon: { color: 'action' } },
+      slots: { ...slots, clearButton: IconButton },
+      slotProps: { ...slotProps, clearIcon: { color: 'action' } },
     });
 
   return (
     <JoyField
       {...processedFieldProps}
+      ref={ref}
+      slotProps={{
+        input: {
+          ref: inputRef,
+        },
+      }}
       endDecorator={
         <IconButton
           onClick={onAdornmentClick}
@@ -125,14 +134,14 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
           <DateRangeIcon color="action" />
         </IconButton>
       }
-      InputProps={{ ...ProcessedInputProps, ref }}
+      InputProps={{ ...ProcessedInputProps }}
     />
   );
 });
 
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
-function JoySingleInputDateRangePicker(props) {
+const JoySingleInputDateRangePicker = React.forwardRef((props, ref) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const toggleOpen = (event) => {
@@ -148,19 +157,21 @@ function JoySingleInputDateRangePicker(props) {
   return (
     <DateRangePicker
       {...props}
+      ref={ref}
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
       slots={{ field: JoySingleInputDateRangeField }}
       slotProps={{
         field: {
-          onAdornmentClick: toggleOpen,
           ...props?.slotProps?.field,
+          onAdornmentClick: toggleOpen,
+          name: 'test',
         },
       }}
     />
   );
-}
+});
 
 const MultiInputJoyDateRangeFieldRoot = styled(
   React.forwardRef((props, ref) => (
@@ -220,7 +231,10 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
     ownerState: { ...props, position: 'end' },
   });
 
-  const { startDate, endDate } = useMultiInputDateRangeField({
+  const {
+    startDate: { ref: startRef, ...startDateProps },
+    endDate: { ref: endRef, ...endDateProps },
+  } = useMultiInputDateRangeField({
     sharedProps: {
       value,
       defaultValue,
@@ -245,23 +259,46 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
 
   return (
     <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
-      <JoyField {...startDate} />
+      <JoyField
+        {...startDateProps}
+        slotProps={{
+          input: {
+            ref: startRef,
+          },
+        }}
+      />
       <MultiInputJoyDateRangeFieldSeparator />
-      <JoyField {...endDate} />
+      <JoyField
+        {...endDateProps}
+        slotProps={{
+          input: {
+            ref: endRef,
+          },
+        }}
+      />
     </MultiInputJoyDateRangeFieldRoot>
   );
 });
 
-function JoyDateRangePicker(props) {
+const JoyDateRangePicker = React.forwardRef((props, ref) => {
   return (
-    <DateRangePicker slots={{ field: JoyMultiInputDateRangeField }} {...props} />
+    <DateRangePicker
+      ref={ref}
+      slots={{ field: JoyMultiInputDateRangeField }}
+      {...props}
+    />
   );
-}
+});
 
-function JoyDateField(props) {
-  const { inputRef: externalInputRef, ...textFieldProps } = props;
+const JoyDateField = React.forwardRef((props, ref) => {
+  const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
 
-  const { onClear, clearable, slots, slotProps, ...fieldProps } = useDateField({
+  const {
+    onClear,
+    clearable,
+    ref: inputRef,
+    ...fieldProps
+  } = useDateField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
@@ -277,12 +314,24 @@ function JoyDateField(props) {
       slotProps,
     });
 
-  return <JoyField {...processedFieldProps} InputProps={ProcessedInputProps} />;
-}
+  return (
+    <JoyField
+      ref={ref}
+      slotProps={{
+        input: {
+          ref: inputRef,
+        },
+      }}
+      {...processedFieldProps}
+      InputProps={ProcessedInputProps}
+    />
+  );
+});
 
-function JoyDatePicker(props) {
+const JoyDatePicker = React.forwardRef((props, ref) => {
   return (
     <DatePicker
+      ref={ref}
       {...props}
       slots={{ field: JoyDateField, ...props.slots }}
       slotProps={{
@@ -296,7 +345,7 @@ function JoyDatePicker(props) {
       }}
     />
   );
-}
+});
 
 /**
  * This component is for syncing the MUI docs's mode with this demo.

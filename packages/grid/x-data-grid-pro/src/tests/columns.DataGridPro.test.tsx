@@ -177,6 +177,42 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
 
+    it('should work with pinned rows', () => {
+      render(
+        <Test
+          {...baselineProps}
+          pinnedRows={{
+            top: [{ id: 'top-0', brand: 'Reebok' }],
+            bottom: [{ id: 'bottom-0', brand: 'Asics' }],
+          }}
+        />,
+      );
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const nonPinnedCell = getCell(1, 0);
+      const columnHeaderCell = getColumnHeaderCell(0);
+      const topPinnedRowCell = document.querySelector(
+        `.${gridClasses['pinnedRows--top']} [role="cell"][data-colindex="0"]`,
+      );
+      const bottomPinnedRowCell = document.querySelector(
+        `.${gridClasses['pinnedRows--bottom']} [role="cell"][data-colindex="0"]`,
+      );
+
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+
+      expect(columnHeaderCell).toHaveInlineStyle({ width: '150px' });
+      expect(nonPinnedCell).toHaveInlineStyle({ width: '150px' });
+      expect(topPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
+      expect(bottomPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
+
+      fireEvent.mouseUp(separator);
+
+      expect(columnHeaderCell).toHaveInlineStyle({ width: '150px' });
+      expect(nonPinnedCell).toHaveInlineStyle({ width: '150px' });
+      expect(topPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
+      expect(bottomPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
+    });
+
     describe('flex resizing', () => {
       before(function beforeHook() {
         if (isJSDOM) {
