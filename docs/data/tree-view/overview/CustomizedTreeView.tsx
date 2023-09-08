@@ -76,7 +76,7 @@ const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
 
 export default function CustomizedTreeView() {
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 300 }}>
+    <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
       <TreeView
         aria-label="customized"
         defaultExpanded={['1']}
