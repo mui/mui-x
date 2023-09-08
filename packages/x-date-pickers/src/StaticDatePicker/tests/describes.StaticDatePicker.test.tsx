@@ -1,5 +1,5 @@
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer } from 'test/utils/pickers';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 

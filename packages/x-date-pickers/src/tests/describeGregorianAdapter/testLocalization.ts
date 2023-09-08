@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { stub } from 'sinon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { cleanText } from 'test/utils/pickers-utils';
+import { cleanText } from 'test/utils/pickers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING } from './describeGregorianAdapter.utils';
 

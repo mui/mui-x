@@ -2,7 +2,7 @@ import { screen } from '@mui/monorepo/test/utils';
 import { fireEvent } from '@mui/monorepo/test/utils/createRenderer';
 import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
-import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 describe('<MultiInputTimeRangeField />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

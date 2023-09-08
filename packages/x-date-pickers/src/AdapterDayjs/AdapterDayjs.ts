@@ -11,6 +11,7 @@ import {
   AdapterUnits,
   AdapterOptions,
   PickersTimezone,
+  DateBuilderReturnType,
 } from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
@@ -299,12 +300,13 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return this.dayjs(value);
   };
 
-  public dateWithTimezone = (
-    value: string | null | undefined,
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
     timezone: PickersTimezone,
-  ): Dayjs | null => {
+  ): DateBuilderReturnType<T, Dayjs> => {
+    type R = DateBuilderReturnType<T, Dayjs>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
     let parsedValue: Dayjs;
@@ -317,10 +319,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     }
 
     if (this.locale === undefined) {
-      return parsedValue;
+      return <R>parsedValue;
     }
 
-    return parsedValue.locale(this.locale);
+    return <R>parsedValue.locale(this.locale);
   };
 
   public getTimezone = (value: Dayjs): string => {

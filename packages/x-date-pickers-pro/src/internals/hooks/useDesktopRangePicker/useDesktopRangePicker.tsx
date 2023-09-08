@@ -54,9 +54,11 @@ export const useDesktopRangePicker = <
     autoFocus,
     disableOpenPicker,
     localeText,
+    reduceAnimations,
   } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
 
   const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
@@ -146,6 +148,7 @@ export const useDesktopRangePicker = <
     pickerSlotProps: slotProps,
     pickerSlots: slots,
     fieldProps,
+    anchorRef,
   });
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
@@ -163,14 +166,16 @@ export const useDesktopRangePicker = <
       <Field {...enrichedFieldProps} />
       <PickersPopper
         role="tooltip"
+        placement="bottom-start"
         containerRef={popperRef}
-        anchorEl={fieldContainerRef.current}
+        anchorEl={anchorRef.current}
         onBlur={handleBlur}
         {...actions}
         open={open}
         slots={slots}
         slotProps={slotProps}
         shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
       >
         <Layout
           {...layoutProps}

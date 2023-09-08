@@ -103,7 +103,7 @@ If you want to implement a more advanced logic, the `<GridToolbarQuickFilter/>` 
 This function takes the string from the search text field and returns an array of values.
 
 If you control the `quickFilterValues` either by controlling `filterModel` or with the initial state, the content of the input must be updated to reflect the new values.
-By default, values are joint with a spaces. You can customize this behavior by providing `quickFilterFormatter`.
+By default, values are joint with spaces. You can customize this behavior by providing `quickFilterFormatter`.
 This formatter can be seen as the inverse of the `quickFilterParser`.
 
 For example, the following parser allows to search words containing a space by using the `','` to split values.

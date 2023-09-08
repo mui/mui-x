@@ -247,6 +247,12 @@ function AppWrapper(props) {
         name: 'Charts',
         versions: [{ text: `v${process.env.CHARTS_VERSION}`, current: true }],
       };
+    } else if (productId === 'x-tree-view') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Tree View',
+        versions: [{ text: `v${process.env.TREE_VIEW_VERSION}`, current: true }],
+      };
     }
 
     return {
@@ -330,16 +336,16 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 // Track fraction of actual events to prevent exceeding event quota.
 // Filter sessions instead of individual events so that we can track multiple metrics per device.
 const disableWebVitalsReporting = Math.random() > 0.0001;
-export function reportWebVitals({ id, name, label, value }) {
+export function reportWebVitals({ id, name, label, delta, value }) {
   if (disableWebVitalsReporting) {
     return;
   }
 
-  window.ga('send', 'event', {
-    eventCategory: label === 'web-vital' ? 'Web Vitals' : 'Next.js custom metric',
-    eventAction: name,
-    eventValue: Math.round(name === 'CLS' ? value * 1000 : value), // values must be integers
-    eventLabel: id, // id unique to current page load
-    nonInteraction: true, // avoids affecting bounce rate.
+  window.gtag('event', name, {
+    value: delta,
+    metric_label: label === 'web-vital' ? 'Web Vitals' : 'Next.js custom metric',
+    metric_value: value,
+    metric_delta: delta,
+    metric_id: id, // id unique to current page load
   });
 }

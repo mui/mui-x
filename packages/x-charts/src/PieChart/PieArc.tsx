@@ -25,7 +25,7 @@ export interface PieArcClasses {
 
 export type PieArcClassKey = keyof PieArcClasses;
 
-export interface PieArcOwnerState {
+interface PieArcOwnerState {
   id: string;
   dataIndex: number;
   color: string;

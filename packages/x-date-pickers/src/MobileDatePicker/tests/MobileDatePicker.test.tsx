@@ -10,7 +10,7 @@ import {
   adapterToUse,
   getTextbox,
   expectInputValue,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 
 describe('<MobileDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

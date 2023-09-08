@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/monorepo/test/utils';
-import { adapterToUse } from 'test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {

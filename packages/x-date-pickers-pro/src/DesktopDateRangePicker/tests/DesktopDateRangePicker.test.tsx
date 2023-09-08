@@ -10,7 +10,7 @@ import {
   adapterToUse,
   AdapterClassToUse,
   openPicker,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 
 const getPickerDay = (name: string, picker = 'January 2018'): HTMLButtonElement =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
