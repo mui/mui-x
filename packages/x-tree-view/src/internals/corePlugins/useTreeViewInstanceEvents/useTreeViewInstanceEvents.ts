@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { EventManager } from '../../utils/EventManager';
-import { TreeViewPlugin } from '../../models';
+import type { TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewInstanceEventsSignature } from './useTreeViewInstanceEvents.types';
-import { TreeViewEventListener } from '../../models/events';
+import type { TreeViewEventListener } from '../../models/events';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;

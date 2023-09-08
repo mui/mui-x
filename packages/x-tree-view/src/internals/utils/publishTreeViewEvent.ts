@@ -1,4 +1,4 @@
-import { UseTreeViewInstanceEventsInstance } from '../plugins/useTreeViewInstanceEvents/useTreeViewInstanceEvents.types';
+import { UseTreeViewInstanceEventsInstance } from '../corePlugins/useTreeViewInstanceEvents/useTreeViewInstanceEvents.types';
 import { TreeViewAnyPluginSignature, TreeViewUsedEvents } from '../models';
 
 export const publishTreeViewEvent = <

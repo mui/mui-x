@@ -1,5 +1,4 @@
 import { TreeViewNode, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewInstanceEventsSignature } from '../useTreeViewInstanceEvents';
 
 export interface UseTreeViewJSXNodesRegistrationInstance {
   registerNode: (node: TreeViewNode) => () => void;
@@ -19,5 +18,5 @@ export type UseTreeViewJSXNodesRegistrationSignature = TreeViewPluginSignature<
   UseTreeViewJSXNodesRegistrationEventLookup,
   {},
   never,
-  [UseTreeViewInstanceEventsSignature]
+  []
 >;

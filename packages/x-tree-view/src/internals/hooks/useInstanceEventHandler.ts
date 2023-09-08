@@ -4,7 +4,7 @@ import { TimerBasedCleanupTracking } from '../utils/cleanupTracking/TimerBasedCl
 import { FinalizationRegistryBasedCleanupTracking } from '../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TreeViewAnyPluginSignature, TreeViewUsedEvents } from '../models';
 import { TreeViewEventListener } from '../models/events';
-import { UseTreeViewInstanceEventsInstance } from '../plugins/useTreeViewInstanceEvents/useTreeViewInstanceEvents.types';
+import { UseTreeViewInstanceEventsInstance } from '../corePlugins/useTreeViewInstanceEvents/useTreeViewInstanceEvents.types';
 
 interface RegistryContainer {
   registry: CleanupTracking | null;

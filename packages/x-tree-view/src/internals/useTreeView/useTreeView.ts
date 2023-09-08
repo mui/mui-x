@@ -17,13 +17,15 @@ import {
 import { DEFAULT_TREE_VIEW_CONTEXT_VALUE } from '../TreeViewProvider/TreeViewContext';
 import { useTreeViewModels } from './useTreeViewModels';
 import { TreeViewContextValue } from '../TreeViewProvider';
+import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
 
 export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]>(
   inParams: UseTreeViewParameters<Plugins>,
 ): UseTreeViewReturnValue<ConvertPluginsIntoSignatures<Plugins>> => {
-  type Signatures = ConvertPluginsIntoSignatures<Plugins>;
+  const plugins = [...TREE_VIEW_CORE_PLUGINS, ...inParams.plugins];
+  type Signatures = ConvertPluginsIntoSignatures<typeof plugins>;
 
-  const params = inParams.plugins.reduce((acc, plugin) => {
+  const params = plugins.reduce((acc, plugin) => {
     if (plugin.getDefaultizedParams) {
       return plugin.getDefaultizedParams(acc);
     }
@@ -32,7 +34,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   }, inParams) as unknown as UseTreeViewDefaultizedParameters<Plugins>;
 
   const models = useTreeViewModels(
-    params.plugins,
+    plugins,
     params as MergePluginsProperty<Signatures, 'defaultizedParams'>,
   );
   const instanceRef = React.useRef<TreeViewInstance<Signatures>>(
@@ -44,7 +46,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
   const [state, setState] = React.useState(() => {
     const temp = {} as MergePluginsProperty<Signatures, 'state'>;
-    params.plugins.forEach((plugin) => {
+    plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
         Object.assign(
           temp,
@@ -74,7 +76,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     }
   };
 
-  params.plugins.forEach(runPlugin);
+  plugins.forEach(runPlugin);
 
   const getRootProps = <TOther extends EventHandlers = {}>(
     otherHandlers: TOther = {} as TOther,

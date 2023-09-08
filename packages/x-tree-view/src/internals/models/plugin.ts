@@ -4,6 +4,7 @@ import { TreeViewModel } from './treeView';
 import type { TreeViewContextValue } from '../TreeViewProvider';
 import type { MergePluginsProperty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
+import type { TreeViewCorePluginsSignature } from '../corePlugins';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
   instance: TreeViewUsedInstance<TSignature>;
@@ -60,16 +61,21 @@ export type TreeViewAnyPluginSignature = {
   models: any;
 };
 
+type TreeViewUsedPlugins<TSignature extends TreeViewAnyPluginSignature> = [
+  TreeViewCorePluginsSignature,
+  ...TSignature['dependantPlugins'],
+];
+
 type TreeViewUsedParams<TSignature extends TreeViewAnyPluginSignature> = TSignature['params'] &
-  MergePluginsProperty<TSignature['dependantPlugins'], 'params'>;
+  MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'params'>;
 
 type TreeViewUsedDefaultizedParams<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['defaultizedParams'] &
-    MergePluginsProperty<TSignature['dependantPlugins'], 'defaultizedParams'>;
+    MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'defaultizedParams'>;
 
 export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['instance'] &
-    MergePluginsProperty<TSignature['dependantPlugins'], 'instance'> & {
+    MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'instance'> & {
       /**
        * Private property only defined in TypeScript to be able to access the plugin signature from the instance object.
        */
@@ -77,13 +83,13 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
     };
 
 type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> = TSignature['state'] &
-  MergePluginsProperty<TSignature['dependantPlugins'], 'state'>;
+  MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'state'>;
 
 export type TreeViewUsedModels<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['models'] & MergePluginsProperty<TSignature['dependantPlugins'], 'models'>;
+  TSignature['models'] & MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'models'>;
 
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['events'] & MergePluginsProperty<TSignature['dependantPlugins'], 'events'>;
+  TSignature['events'] & MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'events'>;
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   (options: TreeViewPluginOptions<TSignature>): void | TreeViewResponse;
