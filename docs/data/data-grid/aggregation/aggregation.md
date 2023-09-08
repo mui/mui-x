@@ -68,7 +68,7 @@ This position must be one of the three following values:
 ```tsx
 // Will aggregate the root group on the top-level footer and the other groups on their grouping row
 // (default behavior)
-getAggregationPosition=(groupNode) => (groupNode == null ? 'footer' : 'inline'),
+getAggregationPosition={(groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')}
 
 // Will aggregate all the groups on their grouping row
 // The root will not be aggregated
