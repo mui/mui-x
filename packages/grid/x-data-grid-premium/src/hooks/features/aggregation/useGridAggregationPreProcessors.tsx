@@ -75,7 +75,7 @@ export const useGridAggregationPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, props.aggregationFunctions, props.disableAggregation],
+    [apiRef, props.aggregationFunctions, props.disableAggregation, props.unstable_pivotMode],
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
