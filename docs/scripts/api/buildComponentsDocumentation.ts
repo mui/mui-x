@@ -451,9 +451,6 @@ const buildComponentDocumentation = async (options: {
       const propTypeDescription = generatePropTypeDescription(propDescriptor.type);
       const chainedPropType = getChained(prop.type);
 
-      // console.log('$$$$ propTypeDescription', propTypeDescription)
-      // console.log('$$$$ propDescriptor', JSON.stringify(propDescriptor))
-
       const requiredProp =
         prop.required ||
         /\.isRequired/.test(prop.type.raw) ||
