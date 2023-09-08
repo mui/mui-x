@@ -39,6 +39,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiSparkLineChart" },
   "filename": "/packages/x-charts/src/SparkLineChart/SparkLineChart.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "SparkLineChart" }]
+  "demos": "<ul></ul>"
 }
