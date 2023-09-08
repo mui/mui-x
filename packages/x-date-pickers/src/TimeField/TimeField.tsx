@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
-import {refType} from "@mui/utils";
 
 type TimeFieldComponent = (<TDate>(
   props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,

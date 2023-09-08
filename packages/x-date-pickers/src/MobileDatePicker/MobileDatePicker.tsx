@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
@@ -11,7 +12,6 @@ import { extractValidationProps } from '../internals/utils/validation/extractVal
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
-import {refType} from "@mui/utils";
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,

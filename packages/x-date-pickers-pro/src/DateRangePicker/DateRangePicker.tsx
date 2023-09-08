@@ -2,10 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
+import { refType } from '@mui/utils';
 import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
-import {refType} from "@mui/utils";
 
 type DatePickerComponent = (<TDate>(
   props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,

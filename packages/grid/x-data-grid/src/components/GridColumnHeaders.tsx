@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { refType } from '@mui/utils';
 import { fastMemo } from '../utils/fastMemo';
 import {
   useGridColumnHeaders,
@@ -7,7 +8,6 @@ import {
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
-import {refType} from "@mui/utils";
 
 interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,

@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -10,7 +11,6 @@ import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 import { DateRange } from '../internals/models';
-import {refType} from "@mui/utils";
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,

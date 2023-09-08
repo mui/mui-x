@@ -2,11 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
+import { refType } from '@mui/utils';
 import { DesktopTimePicker } from '../DesktopTimePicker';
 import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
 import { TimePickerProps } from './TimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
-import {refType} from "@mui/utils";
 
 type TimePickerComponent = (<TDate>(
   props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,

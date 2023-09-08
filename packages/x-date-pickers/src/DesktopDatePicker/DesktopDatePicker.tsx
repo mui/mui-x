@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
@@ -13,7 +14,6 @@ import { extractValidationProps } from '../internals/utils/validation/extractVal
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { resolveDateFormat } from '../internals/utils/date-utils';
-import {refType} from "@mui/utils";
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
