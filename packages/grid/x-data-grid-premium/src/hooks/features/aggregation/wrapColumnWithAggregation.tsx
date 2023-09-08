@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { GridColDef, GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
 import { GridBaseColDef, tagInternalFilter } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import type { GridApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   GridAggregationCellMeta,
   GridAggregationLookup,
@@ -35,6 +36,7 @@ type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
     id: GridRowId,
     field: string,
   ) => GridAggregationLookup[GridRowId][string] | null;
+  pivotMode: DataGridPremiumProcessedProps['unstable_pivotMode'];
 }) => GridBaseColDef[P];
 
 const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'> = ({
@@ -90,6 +92,7 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
   value: renderCell,
   aggregationRule,
   getCellAggregationResult,
+  pivotMode,
 }) => {
   const wrappedRenderCell: GridBaseColDef['renderCell'] = (params) => {
     const cellAggregationResult = getCellAggregationResult(params.id, params.field);
@@ -99,7 +102,15 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
           return <GridFooterCell {...params} />;
         }
 
+        if (pivotMode && cellAggregationResult.value === 0) {
+          return null;
+        }
+
         return params.formattedValue;
+      }
+
+      if (pivotMode && cellAggregationResult.value === 0) {
+        return null;
       }
 
       const aggregationMeta: GridAggregationCellMeta = {
@@ -194,10 +205,12 @@ export const wrapColumnWithAggregationValue = ({
   column,
   apiRef,
   aggregationRule,
+  pivotMode,
 }: {
   column: GridBaseColDef;
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationRule: GridAggregationRule;
+  pivotMode: DataGridPremiumProcessedProps['unstable_pivotMode'];
 }): GridBaseColDef => {
   const getCellAggregationResult = (
     id: GridRowId,
@@ -244,6 +257,7 @@ export const wrapColumnWithAggregationValue = ({
       colDef: column,
       aggregationRule,
       getCellAggregationResult,
+      pivotMode,
     });
 
     if (wrappedProperty !== originalValue) {
