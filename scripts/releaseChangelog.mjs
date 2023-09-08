@@ -229,44 +229,44 @@ ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 
 ### Data Grid
 
-#### \`@mui/x-data-grid@v__VERSION__\`
+#### \`@mui/x-data-grid@__VERSION__\`
 
 ${logChangelogSection(dataGridCommits)}
 
-#### \`@mui/x-data-grid-pro@v__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### \`@mui/x-data-grid-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in \`@mui/x-data-grid@v__VERSION__\`${
+Same changes as in \`@mui/x-data-grid@__VERSION__\`${
     dataGridProCommits.length > 0 ? ', plus:\n' : '.'
   }
 ${logChangelogSection(dataGridProCommits)}
 
-#### \`@mui/x-data-grid-premium@v__VERSION__\` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### \`@mui/x-data-grid-premium@__VERSION__\` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in \`@mui/x-data-grid-pro@v__VERSION__\`${
+Same changes as in \`@mui/x-data-grid-pro@__VERSION__\`${
     dataGridPremiumCommits.length > 0 ? ', plus:\n' : '.'
   }
 ${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 0 ? '\n' : ''}
 ### Date Pickers
 
-#### \`@mui/x-date-pickers@v__VERSION__\`
+#### \`@mui/x-date-pickers@__VERSION__\`
 
 ${logChangelogSection(pickersCommits)}
 
-#### \`@mui/x-date-pickers-pro@v__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### \`@mui/x-date-pickers-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in \`@mui/x-date-pickers@v__VERSION__\`${
+Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
     pickersProCommits.length > 0 ? ', plus:\n' : '.'
   }
 ${logChangelogSection(pickersProCommits)}
 
-### Charts / \`@mui/x-charts@v__CHARTS_VERSION__\`
+### Charts / \`@mui/x-charts@__CHARTS_VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
 
-### Tree View / \`@mui/x-tree-view@v__TREE_VIEW_VERSION__\`
+### Tree View / \`@mui/x-tree-view@__TREE_VIEW_VERSION__\`
 
 ${logChangelogSection(treeViewCommits)}
-${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@v__VERSION__\``)}
+${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
 ${logChangelogSection(otherCommits, '')}
