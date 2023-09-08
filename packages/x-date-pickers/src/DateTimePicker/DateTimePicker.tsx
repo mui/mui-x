@@ -6,6 +6,7 @@ import { DesktopDateTimePicker } from '../DesktopDateTimePicker';
 import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTimePicker';
 import { DateTimePickerProps } from './DateTimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
+import {refType} from "@mui/utils";
 
 type DateTimePickerComponent = (<TDate>(
   props: DateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -148,12 +149,7 @@ DateTimePicker.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */

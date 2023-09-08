@@ -7,6 +7,7 @@ import {
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
+import {refType} from "@mui/utils";
 
 interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -103,12 +104,7 @@ GridColumnHeaders.propTypes = {
   filterColumnLookup: PropTypes.object.isRequired,
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,
-  innerRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  innerRef: refType,
   minColumnIndex: PropTypes.number,
   sortColumnLookup: PropTypes.object.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
