@@ -250,6 +250,34 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getCell(1, 2)).to.have.text(secondColumnValuesBeforePaste[1]);
         expect(getCell(2, 2)).to.have.text(secondColumnValuesBeforePaste[2]);
       });
+
+      it('should paste all values when they exceed `pageSize` and pagination disabled but fit into visible row area', async () => {
+        render(
+          <Test
+            rowLength={8}
+            colLength={4}
+            paginationModel={{ page: 1, pageSize: 5 }}
+            pagination={false}
+          />,
+        );
+
+        const cell = getCell(1, 1);
+        cell.focus();
+        userEvent.mousePress(cell);
+
+        const clipboardData = Array.from(new Array(7))
+          .map((_, idx) => [`p${idx + 1}1`, `p${idx + 1}2`, `p${idx + 1}3`].join('\t'))
+          .join('\n');
+
+        paste(cell, clipboardData);
+
+        await waitFor(() => {
+          expect(getCell(3, 3).textContent).to.equal('p33');
+          expect(getCell(6, 2).textContent).to.equal('p62');
+          expect(getCell(7, 1).textContent).to.equal('p71');
+          expect(getCell(7, 3).textContent).to.equal('p73');
+        });
+      });
     });
 
     describe('row selection', () => {
