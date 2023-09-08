@@ -9,6 +9,7 @@ import {
   gridStringOrNumberComparator,
   isLeaf,
 } from '@mui/x-data-grid-pro';
+import { usePreviousProps } from '@mui/utils';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import {
   DataGridPremiumProps,
@@ -214,10 +215,11 @@ export const useGridPivoting = ({
 }) => {
   const [isPivot, setIsPivot] = React.useState(initialIsPivot);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
+  const prevProps = usePreviousProps({ isPivot });
 
   const props = React.useMemo(() => {
     if (isPivot) {
-      if (apiRef.current.exportState) {
+      if (apiRef.current.exportState && prevProps.isPivot === false) {
         exportedStateRef.current = apiRef.current.exportState();
       }
       return getPivotedData({
@@ -237,7 +239,7 @@ export const useGridPivoting = ({
       nonPivotProps.initialState = exportedStateRef.current;
     }
     return nonPivotProps;
-  }, [isPivot, columns, rows, pivotModel, apiRef]);
+  }, [isPivot, columns, rows, pivotModel, apiRef, prevProps.isPivot]);
 
   return {
     isPivot,
