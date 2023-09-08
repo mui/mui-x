@@ -41,6 +41,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiPieChart" },
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "PieChart" }]
+  "demos": "<ul></ul>"
 }

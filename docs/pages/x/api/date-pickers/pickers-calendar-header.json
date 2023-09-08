@@ -25,9 +25,5 @@
     "name": "MuiPickersCalendarHeader"
   },
   "filename": "/packages/x-date-pickers/src/PickersCalendarHeader/PickersCalendarHeader.tsx",
-  "demos": "<ul></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersCalendarHeader" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersCalendarHeader" }
-  ]
+  "demos": "<ul></ul>"
 }

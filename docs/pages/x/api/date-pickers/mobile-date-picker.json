@@ -295,9 +295,5 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDatePicker" },
   "filename": "/packages/x-date-pickers/src/MobileDatePicker/MobileDatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MobileDatePicker" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "MobileDatePicker" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }
