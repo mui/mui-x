@@ -192,7 +192,7 @@ const getPivotedData = ({
     columns: pivotColumns,
     rowGroupingModel: pivotModel.rows,
     aggregationModel,
-    getAggregationPosition: () => 'inline',
+    getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
     columnVisibilityModel,
     columnGroupingModel,
     unstable_pivotMode: true,
