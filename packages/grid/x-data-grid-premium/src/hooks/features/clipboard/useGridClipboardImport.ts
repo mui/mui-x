@@ -214,7 +214,7 @@ function defaultPasteResolver({
   pastedData: string[][];
   apiRef: React.MutableRefObject<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
-  pagination: boolean;
+  pagination: DataGridPremiumProcessedProps['pagination'];
 }) {
   const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
