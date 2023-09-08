@@ -217,7 +217,7 @@ export const useGridPivoting = ({
 
   const props = React.useMemo(() => {
     if (isPivot) {
-      if (exportedStateRef.current) {
+      if (apiRef.current.exportState) {
         exportedStateRef.current = apiRef.current.exportState();
       }
       return getPivotedData({
