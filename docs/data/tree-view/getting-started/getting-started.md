@@ -78,6 +78,6 @@ Take a look at the [Styled engine guide](/material-ui/guides/styled-engine/) for
 
 ## Render your first component
 
-To make sure that everything is set up correctly, try rendering a simple `DatePicker` component:
+To make sure that everything is set up correctly, try rendering a simple `TreeView` component:
 
 {{"demo": "FirstComponent.js"}}
