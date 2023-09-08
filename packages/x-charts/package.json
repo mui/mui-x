@@ -70,13 +70,11 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./esm/index.js",
-      "default": "./esm/index.js"
+      "import": "./esm/index.js"
     },
     "./*": {
       "types": "./*/index.d.ts",
-      "import": "./esm/*/index.js",
-      "default": "./esm/*/index.js"
+      "import": "./esm/*/index.js"
     }
   },
   "setupFiles": [
