@@ -25,6 +25,7 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent, UncapitalizedGridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
+import {GridAutosizeOptions} from '../hooks';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -102,6 +103,16 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    */
   isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
   /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: boolean;
+  /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: boolean;
+  /**
    * If `true`, the column pinning is disabled.
    * @default false
    */
@@ -157,6 +168,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiPro>;
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions: GridAutosizeOptions;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
