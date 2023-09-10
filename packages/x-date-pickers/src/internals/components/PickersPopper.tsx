@@ -7,7 +7,7 @@ import MuiPopper, {
   PopperProps as MuiPopperProps,
   PopperPlacementType,
 } from '@mui/material/Popper';
-import MuiTrapFocus, {
+import BaseFocusTrap, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
 import {
@@ -61,7 +61,7 @@ export interface PickersPopperSlotsComponentsProps {
    */
   desktopTransition?: Partial<MuiTransitionProps>;
   /**
-   * Props passed down to the [TrapFocus](https://mui.com/base/react-focus-trap/) component on desktop.
+   * Props passed down to the [FocusTrap](https://mui.com/base/react-focus-trap/) component on desktop.
    */
   desktopTrapFocus?: Partial<MuiTrapFocusProps>;
   /**
@@ -396,7 +396,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
   };
 
   const Transition = slots?.desktopTransition ?? reduceAnimations ? Fade : Grow;
-  const TrapFocus = slots?.desktopTrapFocus ?? MuiTrapFocus;
+  const FocusTrap = slots?.desktopTrapFocus ?? BaseFocusTrap;
 
   const Paper = slots?.desktopPaper ?? PickersPopperPaper;
   const Popper = slots?.popper ?? PickersPopperRoot;
@@ -418,7 +418,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
   return (
     <Popper {...popperProps}>
       {({ TransitionProps, placement: popperPlacement }) => (
-        <TrapFocus
+        <FocusTrap
           open={open}
           disableAutoFocus
           // pickers are managing focus position manually
@@ -443,7 +443,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
               {children}
             </PickersPopperPaperWrapper>
           </Transition>
-        </TrapFocus>
+        </FocusTrap>
       )}
     </Popper>
   );
