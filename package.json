@@ -67,7 +67,7 @@
     "validate": "concurrently \"yarn prettier && yarn eslint\" \"yarn proptypes\" \"yarn docs:typescript:formatted\" \"yarn docs:api\""
   },
   "devDependencies": {
-    "@argos-ci/core": "^0.9.0",
+    "@argos-ci/core": "^0.11.1",
     "@babel/cli": "^7.22.15",
     "@babel/core": "^7.22.15",
     "@babel/node": "^7.22.15",
