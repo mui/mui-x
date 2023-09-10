@@ -1,6 +1,6 @@
 <!-- markdownlint-disable-next-line -->
 <p align="center">
-  <a href="https://mui.com/" rel="noopener" target="_blank"><img width="150" height="133" src="https://mui.com/static/logo.svg" alt="MUI logo"></a>
+  <a href="https://mui.com/x/" rel="noopener" target="_blank"><img width="150" height="133" src="https://mui.com/static/logo.svg" alt="MUI X logo"></a>
 </p>
 
 <h1 align="center">MUI X</h1>
@@ -16,7 +16,7 @@ See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
 ## Components
 
 - [Data Grid](https://mui.com/x/react-data-grid/)
-- [Date and Time Pickers](https://mui.com/x/react-date-pickers/getting-started/)
+- [Date and Time Pickers](https://mui.com/x/react-date-pickers/)
 - [Charts](https://mui.com/x/react-charts/)
 - [Tree View](https://mui.com/x/react-tree-view/)
 

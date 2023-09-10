@@ -62,4 +62,4 @@ function App({ children }) {
 
 ## Documentation
 
-[The documentation](https://mui.com/x/react-date-pickers/getting-started/)
+[The documentation](https://mui.com/x/react-date-pickers/)

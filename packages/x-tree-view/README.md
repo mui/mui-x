@@ -30,4 +30,4 @@ This component has the following peer dependencies that you will need to install
 
 ## Documentation
 
-WIP
+[The documentation](https://mui.com/x/react-tree-view/)
