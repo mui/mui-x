@@ -12,7 +12,7 @@ npm install @mui/x-date-pickers
 ```
 
 Then install the date library of your choice (if not already installed).
-We currently support 4 different date libraries:
+The pickers currently support the following date libraries:
 
 - [date-fns](https://date-fns.org/)
 - [Day.js](https://day.js.org/)
