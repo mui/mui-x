@@ -1,7 +1,7 @@
 # @mui/x-date-pickers
 
 This package is the community edition of the date and time picker components.
-It's part of MUI X, an open-core extension of MUI, with advanced components.
+It's part of MUI X, an open-core extension of MUI Core, with advanced components.
 
 ## Installation
 
