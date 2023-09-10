@@ -61,7 +61,7 @@ export interface PickersPopperSlotsComponentsProps {
    */
   desktopTransition?: Partial<MuiTransitionProps>;
   /**
-   * Props passed down to the [FocusTrap](https://mui.com/base/react-focus-trap/) component on desktop.
+   * Props passed down to the [FocusTrap](https://mui.com/base-ui/react-focus-trap/) component on desktop.
    */
   desktopTrapFocus?: Partial<MuiTrapFocusProps>;
   /**
