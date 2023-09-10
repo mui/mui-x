@@ -11,12 +11,6 @@ Install the package in your project directory with:
 npm install @mui/x-charts
 ```
 
-or
-
-```bash
-yarn add @mui/x-charts
-```
-
 This component has the following peer dependencies that you will need to install as well.
 
 ```json

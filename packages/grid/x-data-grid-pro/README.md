@@ -8,11 +8,7 @@ It's part of MUI X, an open-core extension of MUI Core, with advanced components
 Install the package in your project directory with:
 
 ```bash
-// with npm
 npm install @mui/x-data-grid-pro
-
-// with yarn
-yarn add @mui/x-data-grid-pro
 ```
 
 This component has the following peer dependencies that you will need to install as well.
