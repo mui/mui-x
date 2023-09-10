@@ -1,7 +1,7 @@
-# @mui/x-tree-view
+# MUI X Tree View
 
 This package is the community edition of the tree view components.
-It's part of MUI X, an open-core extension of MUI Core, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
 
 ## Installation
 
