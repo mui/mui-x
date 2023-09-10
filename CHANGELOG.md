@@ -1838,7 +1838,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Add interface for `singleSelect` column (#7685) @m4theushw
-- [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7733) @ivek-Prajapatii
+- [DataGrid] Allow to pass props to the `FocusTrap` inside the panel wrapper (#7733) @ivek-Prajapatii
 - [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7857) @cherniavskii
 - [DataGridPro] Change cursor when dragging a column (#7725) @sai6855
 - [DataGridPremium] Fix `leafField` to have correct focus value (#7950) @MBilalShafi
