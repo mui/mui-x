@@ -24,4 +24,4 @@ This component has the following peer dependencies that you will need to install
 
 ## Documentation
 
-[The documentation](https://mui.com/x/react-charts/)
+Visit [https://mui.com/x/react-charts/](https://mui.com/x/react-charts/) to view the full documentation.

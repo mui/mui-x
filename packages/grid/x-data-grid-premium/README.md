@@ -24,4 +24,4 @@ This component has the following peer dependencies that you will need to install
 
 ## Documentation
 
-[The documentation](https://mui.com/x/react-data-grid/)
+Visit [https://mui.com/x/react-data-grid/](https://mui.com/x/react-data-grid/) to view the full documentation.

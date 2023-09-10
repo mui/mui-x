@@ -62,4 +62,4 @@ function App({ children }) {
 
 ## Documentation
 
-[The documentation](https://mui.com/x/react-date-pickers/)
+Visit [https://mui.com/x/react-date-pickers/](https://mui.com/x/react-date-pickers/) to view the full documentation.

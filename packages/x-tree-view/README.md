@@ -24,4 +24,4 @@ This component has the following peer dependencies that you will need to install
 
 ## Documentation
 
-[The documentation](https://mui.com/x/react-tree-view/)
+Visit [https://mui.com/x/react-tree-view/](https://mui.com/x/react-tree-view/) to view the full documentation.
