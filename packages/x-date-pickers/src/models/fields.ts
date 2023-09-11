@@ -9,7 +9,8 @@ export type FieldSectionType =
   | 'hours'
   | 'minutes'
   | 'seconds'
-  | 'meridiem';
+  | 'meridiem'
+  | 'empty';
 
 export type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
 
