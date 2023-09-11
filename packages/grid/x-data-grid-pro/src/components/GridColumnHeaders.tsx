@@ -358,7 +358,7 @@ GridColumnHeaders.propTypes = {
   filterColumnLookup: PropTypes.object.isRequired,
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,
-  innerRef: refType,
+  innerRef: refType /* @typescript-to-proptypes-ignore */,
   minColumnIndex: PropTypes.number,
   pinnedColumns: PropTypes.shape({
     left: PropTypes.arrayOf(PropTypes.string),

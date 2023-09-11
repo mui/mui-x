@@ -82,7 +82,7 @@ GridHeaderFilterMenuContainer.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
-  buttonRef: refType,
+  buttonRef: refType /* @typescript-to-proptypes-ignore */,
   field: PropTypes.string.isRequired,
   headerFilterMenuRef: PropTypes.shape({
     current: PropTypes.object,

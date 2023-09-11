@@ -201,7 +201,7 @@ DesktopTimePicker.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: refType,
+  inputRef: refType /* @typescript-to-proptypes-ignore */,
   /**
    * The label content.
    */
