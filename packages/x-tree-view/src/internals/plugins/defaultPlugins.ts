@@ -7,11 +7,9 @@ import {
   useTreeViewContextValueBuilder,
   UseTreeViewContextValueBuilderParameters,
 } from './useTreeViewContextValueBuilder';
-import { useTreeViewJSXNodesRegistration } from './useTreeViewJSXNodesRegistration';
 import { ConvertPluginsIntoSignatures } from '../models';
 
 export const DEFAULT_TREE_VIEW_PLUGINS = [
-  useTreeViewJSXNodesRegistration,
   useTreeViewNodes,
   useTreeViewExpansion,
   useTreeViewSelection,

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { TreeViewPluginSignature } from '../../models';
 import type { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
-import { UseTreeViewJSXNodesRegistrationSignature } from '../useTreeViewJSXNodesRegistration';
 
 export interface UseTreeViewFocusInstance {
   isNodeFocused: (nodeId: string) => boolean;
@@ -32,9 +31,5 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<
   {},
   UseTreeViewFocusState,
   never,
-  [
-    UseTreeViewJSXNodesRegistrationSignature,
-    UseTreeViewNodesSignature,
-    UseTreeViewSelectionSignature<any>,
-  ]
+  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature<any>]
 >;

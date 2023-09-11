@@ -1,13 +1,32 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewPlugin } from '../../models';
+import { TreeViewNode, TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewNodesSignature } from './useTreeViewNodes.types';
+import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 
 export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   instance,
   params,
 }) => {
+  const nodeMap = React.useRef<{ [nodeId: string]: TreeViewNode }>({});
+
+  const getNode = React.useCallback((nodeId: string) => nodeMap.current[nodeId], []);
+
+  const insertNode = React.useCallback((node: TreeViewNode) => {
+    nodeMap.current[node.id] = node;
+  }, []);
+
+  const removeNode = React.useCallback(
+    (nodeId: string) => {
+      const newMap = { ...nodeMap.current };
+      delete newMap[nodeId];
+      nodeMap.current = newMap;
+      publishTreeViewEvent(instance, 'removeNode', { id: nodeId });
+    },
+    [instance],
+  );
+
   const isNodeDisabled = React.useCallback(
     (nodeId: string | null): nodeId is string => {
       if (nodeId == null) {
@@ -38,7 +57,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   );
 
   const getChildrenIds = useEventCallback((nodeId: string | null) =>
-    Object.values(instance.getNodeMap())
+    Object.values(nodeMap.current)
       .filter((node) => node.parentId === nodeId)
       .sort((a, b) => a.index - b.index)
       .map((child) => child.id),
@@ -53,10 +72,10 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     return childrenIds;
   };
 
-  const getNode = React.useCallback((nodeId: string) => instance.getNodeMap()[nodeId], [instance]);
-
   populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,
+    updateNode: insertNode,
+    removeNode,
     getChildrenIds,
     getNavigableChildrenIds,
     isNodeDisabled,
