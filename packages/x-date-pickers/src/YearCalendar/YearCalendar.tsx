@@ -99,6 +99,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     onFocusedViewChange,
     yearsPerRow = 3,
     timezone: timezoneProp,
+    gridLabelId,
     ...other
   } = props;
 
@@ -275,6 +276,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
       ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      role="radiogroup"
+      aria-labelledby={gridLabelId}
       {...other}
     >
       {utils.getYearRange(minDate, maxDate).map((year) => {
