@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/utils';
+import { refType, unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -125,12 +125,7 @@ GridFilterInputBoolean.propTypes = {
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
   clearButton: PropTypes.node,
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
+  focusElementRef: refType /* @typescript-to-proptypes-ignore */,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)
