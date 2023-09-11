@@ -51,6 +51,7 @@
         "description": "{ ariaV7?: bool, columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
+    "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -704,6 +705,12 @@
     },
     {
       "class": null,
+      "name": "footerRowCount",
+      "description": "Row count component rendered in the footer",
+      "default": "GridRowCount"
+    },
+    {
+      "class": null,
       "name": "groupingCriteriaCollapseIcon",
       "description": "Icon displayed on the grouping column when the children are expanded",
       "default": "GridExpandMoreIcon"
@@ -963,6 +970,5 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>",
-  "packages": [{ "packageName": "@mui/x-data-grid", "componentName": "DataGrid" }]
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>"
 }

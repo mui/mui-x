@@ -11,6 +11,7 @@ import {
   useGridApiEventHandler,
   GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
+  gridExpandedSortedRowIdsSelector,
 } from '@mui/x-data-grid';
 import {
   buildWarning,
@@ -208,10 +209,12 @@ function defaultPasteResolver({
   pastedData,
   apiRef,
   updateCell,
+  pagination,
 }: {
   pastedData: string[][];
   apiRef: React.MutableRefObject<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
+  pagination: DataGridPremiumProcessedProps['pagination'];
 }) {
   const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
@@ -282,7 +285,9 @@ function defaultPasteResolver({
 
   const selectedRowId = selectedCell.id;
   const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
-  const visibleRowIds = gridPaginatedVisibleSortedGridRowIdsSelector(apiRef);
+  const visibleRowIds = pagination
+    ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+    : gridExpandedSortedRowIdsSelector(apiRef);
 
   const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
   pastedData.forEach((rowData, index) => {
@@ -378,6 +383,7 @@ export const useGridClipboardImport = (
         updateCell: (...args) => {
           cellUpdater.updateCell(...args);
         },
+        pagination: props.pagination,
       });
 
       cellUpdater.applyUpdates();
@@ -390,6 +396,7 @@ export const useGridClipboardImport = (
       enableClipboardPaste,
       rootEl,
       splitClipboardPastedText,
+      props.pagination,
     ],
   );
 

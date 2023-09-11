@@ -98,7 +98,11 @@ export default function MuiColorTemplate() {
             colors={categories[colorScheme]}
             {...legendPlacement}
           />
-          <Stack direction="row" alignItems="center" justifyContent="space-evenly">
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            alignItems="center"
+            justifyContent="space-evenly"
+          >
             <div>
               <Button
                 sx={{ ml: 1 }}
@@ -115,6 +119,7 @@ export default function MuiColorTemplate() {
             </div>
             <TextField
               select
+              sx={{ maxWidth: 1 }}
               value={colorScheme}
               onChange={(event) => setColorScheme(event.target.value as PaletteKey)}
             >

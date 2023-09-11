@@ -55,9 +55,5 @@
     "name": "MuiPickersLayout"
   },
   "filename": "/packages/x-date-pickers/src/PickersLayout/PickersLayout.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersLayout" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersLayout" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>"
 }

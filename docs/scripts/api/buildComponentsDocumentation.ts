@@ -26,13 +26,7 @@ import {
 import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-builder/ApiBuilders/ComponentApiBuilder';
-import {
-  DocumentedInterfaces,
-  getJsdocDefaultValue,
-  linkify,
-  getSymbolJSDocTags,
-  writePrettifiedFile,
-} from './utils';
+import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
 import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
@@ -40,7 +34,6 @@ type CoreReactApiProps = CoreReactApi['propsTable'][string];
 
 export interface ReactApi extends Omit<CoreReactApi, 'propsTable' | 'translations' | 'classes'> {
   displayName: string;
-  packages: { packageName: string; componentName: string }[];
 }
 
 /**
@@ -203,9 +196,16 @@ function findXDemos(
   return pagesMarkdown
     .filter((page) => page.components.includes(componentName))
     .map((page) => {
+      // Titles for paid packages have the structure "Page title <a><span/></a>"
+      // Next line remove the <a/> to avoid nested links and keep the <span/> to show the plan level.
+      // A link can be present when the Pro or Premium icon is added to the h1 of the demo page.
+      let demoPageTitle = page.title
+        .replace(/<a\b[^>]*>/i, '')
+        .replace(/<\/a>/i, '')
+        .replace(/\[(.*)]\((.*)\)/g, '$1');
+
       if (page.pathname.includes('date-pickers')) {
-        let demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
-        demoPageTitle = demoPageTitle.replace(/\[(.*)]\((.*)\)/g, '');
+        demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(demoPageTitle)?.[1] ?? demoPageTitle;
 
         const pathnameMatches = /\/date-pickers\/([^/]+)\/([^/]+)/.exec(page.pathname);
 
@@ -290,11 +290,21 @@ const buildComponentDocumentation = async (options: {
   documentedInterfaces: DocumentedInterfaces;
   pagesMarkdown: ReadonlyArray<PageMarkdown>;
 }) => {
-  const { filename, project, apiPagesFolder, documentedInterfaces, projects, pagesMarkdown } =
-    options;
+  const { filename, project, apiPagesFolder, documentedInterfaces, pagesMarkdown } = options;
 
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
+
+  // Same check as on the core
+  const shouldSkip =
+    !!reactApi.description.match(/@ignore - internal component\./) ||
+    !!reactApi.description.match(/@ignore - internal hook\./) ||
+    !!reactApi.description.match(/@ignore - do not document\./);
+
+  if (shouldSkip) {
+    return null;
+  }
+
   reactApi.filename = filename; // Some components don't have props
   reactApi.name = path.parse(filename).name;
   reactApi.imports = getComponentImports(reactApi.name, filename);
@@ -324,34 +334,6 @@ const buildComponentDocumentation = async (options: {
     const globalClass = generateUtilityClass(reactApi.styles.name!, key);
     reactApi.styles.globalClasses[key] = globalClass;
   });
-
-  reactApi.packages = Array.from(projects.keys())
-    .map((projectName) => {
-      const currentProject = projects.get(projectName) as Project;
-
-      const symbol =
-        currentProject.exports[reactApi.name] ||
-        currentProject.exports[`Unstable_${reactApi.name}`];
-
-      if (symbol) {
-        const jsDoc = getSymbolJSDocTags(symbol);
-
-        // Do not show imports if the module is deprecated
-        if (jsDoc.deprecated) {
-          return null;
-        }
-
-        return {
-          packageName: `@mui/${projectName}`,
-          componentName: symbol.escapedName.toString(),
-        };
-      }
-
-      return null;
-    })
-    .filter((p): p is ReactApi['packages'][number] => p != null)
-    // Display the imports from the pro packages above imports from the community packages
-    .sort((a, b) => b.packageName.length - a.packageName.length);
 
   const componentApi: CoreReactApi['translations'] = {
     componentDescription: reactApi.description,
@@ -588,7 +570,6 @@ const buildComponentDocumentation = async (options: {
     demos: `<ul>${reactApi.demos
       .map((item) => `<li><a href="${item.demoPathname}">${item.demoPageTitle}</a></li>`)
       .join('\n')}</ul>`,
-    packages: reactApi.packages,
   };
 
   // docs/pages/component-name.json
@@ -637,7 +618,7 @@ Page.getInitialProps = () => {
 
   return {
     name: reactApi.name,
-    packages: reactApi.packages,
+    imports: reactApi.imports,
     folder: project.documentationFolderName,
   };
 };
@@ -671,10 +652,10 @@ export default async function buildComponentsDocumentation(
     }
 
     const componentsWithApiDoc = project.getComponentsWithApiDoc(project);
-    return componentsWithApiDoc.map<Promise<ApiPageType>>(async (filename) => {
+    return componentsWithApiDoc.map<Promise<ApiPageType | null>>(async (filename) => {
       try {
-        // Create the api files, and data to create it's link
-        const { name, packages, folder } = await buildComponentDocumentation({
+        // Create the api files, and data to create its link
+        const response = await buildComponentDocumentation({
           filename,
           project,
           projects,
@@ -683,11 +664,17 @@ export default async function buildComponentsDocumentation(
           documentedInterfaces,
         });
 
+        if (response === null) {
+          return null;
+        }
+
+        const { name, imports, folder } = response;
+
         return {
           folderName: folder,
           pathname: `/x/api/${folder}/${kebabCase(name)}`,
           title: name,
-          plan: getPlan(packages),
+          plan: getPlan(imports),
         };
       } catch (error: any) {
         error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
@@ -714,7 +701,8 @@ export default async function buildComponentsDocumentation(
     .filter(
       (promise): promise is PromiseFulfilledResult<ApiPageType> => promise.status === 'fulfilled',
     )
-    .map((build) => build.value);
+    .map((build) => build.value)
+    .filter((value): value is ApiPageType => value != null);
 
   return saveApiDocPages(createdPages, {
     dataFolder,

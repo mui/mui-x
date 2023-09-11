@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
@@ -18,7 +19,6 @@ const barChartsParams = {
     { data: [4, 3, 1, 5, 8], label: 'B' },
     { data: [4, 2, 5, 4, 1], label: 'C' },
   ],
-  width: 600,
   height: 400,
 };
 const lineChartsParams = {
@@ -28,7 +28,6 @@ const lineChartsParams = {
     { data: [4, 2, 5, 4, 1], label: 'C', area: false, stack: 'total' },
   ],
   xAxis: [{ data: [1, 2, 3, 4, 5], type: 'linear' }],
-  width: 600,
   height: 400,
 };
 
@@ -65,7 +64,6 @@ const scatterChartsParams = {
       label: 'B',
     },
   ],
-  width: 600,
   height: 400,
 };
 
@@ -84,7 +82,6 @@ const pieChartsParams = {
       highlighted: { additionalRadius: 10 },
     },
   ],
-  width: 600,
   height: 400,
   margin: { top: 50, bottom: 50 },
 };
@@ -102,8 +99,12 @@ export default function ElementHighlights() {
   };
 
   return (
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-      <div>
+    <Stack
+      direction={{ xs: 'column', xl: 'row' }}
+      spacing={1}
+      sx={{ width: '100%' }}
+    >
+      <Box sx={{ flexGrow: 1 }}>
         <ToggleButtonGroup
           value={chartType}
           exclusive
@@ -169,11 +170,13 @@ export default function ElementHighlights() {
             }))}
           />
         )}
-      </div>
+      </Box>
       <Stack
-        direction={{ xs: 'row', sm: 'column' }}
-        justifyContent="center"
+        direction={{ xs: 'row', xl: 'column' }}
         spacing={3}
+        justifyContent="center"
+        flexWrap="wrap"
+        useFlexGap
       >
         <TextField
           select

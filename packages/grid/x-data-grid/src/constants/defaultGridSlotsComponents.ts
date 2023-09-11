@@ -11,6 +11,7 @@ import {
   GridPreferencesPanel,
   GridRow,
   GridColumnHeaderFilterIconButton,
+  GridRowCount,
 } from '../components';
 import { GridCellV7 } from '../components/cell/GridCell';
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
@@ -28,6 +29,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ColumnMenu: GridColumnMenu,
   ColumnHeaders: GridColumnHeaders,
   Footer: GridFooter,
+  FooterRowCount: GridRowCount,
   Toolbar: null,
   PreferencesPanel: GridPreferencesPanel,
   LoadingOverlay: GridLoadingOverlay,

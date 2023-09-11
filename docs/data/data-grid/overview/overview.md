@@ -23,7 +23,7 @@ The `DataGrid` presents information in a structured format of rows and columns. 
 
 The component comes in three different versions. One available under MIT license and two available under commercial license.
 
-### MIT version (Free forever)
+## MIT version (Free forever)
 
 The first version is meant as a stronger alternative to [data tables](/material-ui/react-table/#sorting-amp-selecting). It's a clean abstraction with basic features like editing, pagination, sorting and filtering single columns, and column groups.
 
@@ -33,11 +33,11 @@ import { DataGrid } from '@mui/x-data-grid';
 
 {{"demo": "DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### Commercial versions
+## Commercial versions
 
 The commercial versions are available in the form of two plans: Pro and Premium.
 
-#### Pro Plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+### Pro plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The Pro version includes and extends the features available in the MIT version to support more complex use cases. It adds new features like advanced filtering, column pinning, column and row reordering, support for tree data, and virtualization to handle bigger datasets.
 
@@ -49,7 +49,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 {{"demo": "DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
-#### Premium Plan [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+### Premium plan [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The Premium version includes everything from Pro, as well as advanced features for data analysis and large datasets management, like row grouping with aggregation functions (e.g., Sum) and the ability to export to Excel files.
 

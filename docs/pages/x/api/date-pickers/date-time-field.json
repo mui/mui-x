@@ -40,9 +40,7 @@
     "InputLabelProps": { "type": { "name": "object" } },
     "inputProps": { "type": { "name": "object" } },
     "InputProps": { "type": { "name": "object" } },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current: any }" }
-    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "margin": {
       "type": {
@@ -180,9 +178,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateTimeField/DateTimeField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-field/\">Date Time Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimeField" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DateTimeField" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-field/\">Date Time Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
 }
