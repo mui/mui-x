@@ -1,0 +1,80 @@
+# -*- mode: yaml -*-
+manifest:
+  version: 1.0
+
+automations:
+  # Enforces a certain format on PR titles
+  enforce_pr_title:
+    if:
+      - {{ pr.title | match(regex=titlePolicy.titleRegex) | nope }}
+    run:
+      - action: request-changes@v1
+        args:
+          comment: |
+            All PRs must be titled according to our semantic naming policy: `[Component]: <short summary>`
+
+            Component must be one of the following:
+             * DataGrid
+             * Pickers 
+             * Charts
+             * TreeView
+  # Add a label that indicates how many minutes it will take to review the PR.
+  estimated_time_to_review:
+    if:
+      - true
+    run:
+      - action: add-label@v1
+        args:
+          label: "{{ calc.etr }} min review"
+          color: {{ colors.error if (calc.etr >= 20) else (colors.warning if (calc.etr >= 5) else colors.success) }}
+  # Post a comment that lists the best experts for the files that were modified.
+  explain_code_experts:
+    if:
+      - { { pr.labels | match(term='Auto assign') | some } }
+    run:
+      - action: explain-code-experts@v1
+        args:
+          gt: 10
+  # Assign a random reviewer when the 'Share knowledge' label gets added
+  share_knowledge:
+    if:
+      - { { pr.labels | match(term='Share Knowledge') | some } }
+    run:
+      - action: add-reviewers@v1
+        args:
+          reviewers: { { repo | codeExperts(gt=30, lt=60) | random } }
+      - action: add-comment@v1
+        args:
+          comment: |
+            gitStream has assigned a reviewer to increase knowledge sharing on this PR.
+  # Apply a label that indicates when a PR deletes files
+  # This uses the `has` custom expression found at the bottom of this file
+  label_deleted_files:
+    if:
+      - { { has.deleted_files } }
+    run:
+      - action: add-label@v1
+        args:
+          label: '⚠️ deleted-files'
+          color: colors.warning
+
+# This is used in the `label_deleted_files` automation
+has:
+  deleted_files: { { source.diff.files | map(attr='new_file') | match(term='/dev/null') | some } }
+
+# The next function calculates the estimated time to review and makes it available in the automation above.
+calc:
+  etr: {{ branch | estimatedReviewTime }}
+
+# define some colors to be used in the labels
+colors:
+  error: '#f44336'    # mui palette error.main
+  warning: '#ffa726'  # mui palette warning.main
+  success: '#66bb6a'  # mui palette success.main
+  info: '#29b6f6'     # mui palette info.main
+  primary: '#e3f2fd'  # mui palette primary.main
+
+# define the regex the PR title is tested against to enforce a title format
+titlePolicy:
+  titleRegex: /\[(DataGrid|Pickers|Charts|TreeView)\]:\s*\w+.*/gm
+
