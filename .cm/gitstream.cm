@@ -11,13 +11,14 @@ automations:
       - action: request-changes@v1
         args:
           comment: |
-            All PRs must be titled according to our semantic naming policy: `[Component]: <short summary>`
+            All PRs must be titled according to our semantic naming policy: `[Area]: <short summary>`
 
-            Component must be one of the following:
+            Area must be one of the following:
              * DataGrid
              * Pickers 
              * Charts
              * TreeView
+             * Chore
   # Add a label that indicates how many minutes it will take to review the PR.
   estimated_time_to_review:
     if:
