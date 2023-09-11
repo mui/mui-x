@@ -1,12 +1,12 @@
 <!-- markdownlint-disable-next-line -->
 <p align="center">
-  <a href="https://mui.com/" rel="noopener" target="_blank"><img width="150" src="https://mui.com/static/logo.svg" alt="MUI logo"></a>
+  <a href="https://mui.com/x/" rel="noopener" target="_blank"><img width="150" height="133" src="https://mui.com/static/logo.svg" alt="MUI X logo"></a>
 </p>
 
 <h1 align="center">MUI X</h1>
 
 MUI X is a collection of advanced UI components that are significantly more complex than the ones found in the [MUI Core](https://github.com/mui/material-ui/) libraries.
-They feature state-of-the-art functionality and complex UX workflows for data-rich applications, and support a wide range of use cases.
+They feature state-of-the-art functionality and complex UX workflows for data-rich applications and support a wide range of use cases.
 
 MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
@@ -16,7 +16,7 @@ See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
 ## Components
 
 - [Data Grid](https://mui.com/x/react-data-grid/)
-- [Date and Time Pickers](https://mui.com/x/react-date-pickers/getting-started/)
+- [Date and Time Pickers](https://mui.com/x/react-date-pickers/)
 - [Charts](https://mui.com/x/react-charts/)
 - [Tree View](https://mui.com/x/react-tree-view/)
 

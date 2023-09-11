@@ -144,11 +144,11 @@ const TreeItemGroup = styled(Collapse, {
  *
  * Demos:
  *
- * - [Tree View](https://mui.com/material-ui/react-tree-view/)
+ * - [Tree View](https://mui.com/x/react-tree-view/)
  *
  * API:
  *
- * - [TreeItem API](https://mui.com/material-ui/api/tree-item/)
+ * - [TreeItem API](https://mui.com/x/api/tree-view/tree-item/)
  */
 export const TreeItem = React.forwardRef(function TreeItem(
   inProps: TreeItemProps,

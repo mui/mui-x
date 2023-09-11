@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "6.0.0-alpha.9",
+  "version": "6.0.0-alpha.10",
   "description": "The community edition of the charts components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -70,13 +70,13 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "require": "./index.js",
-      "import": "./esm/index.js"
+      "import": "./esm/index.js",
+      "default": "./esm/index.js"
     },
     "./*": {
       "types": "./*/index.d.ts",
-      "require": "./*/index.js",
-      "import": "./esm/*/index.js"
+      "import": "./esm/*/index.js",
+      "default": "./esm/*/index.js"
     }
   },
   "setupFiles": [

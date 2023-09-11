@@ -14,7 +14,7 @@ export default function DisabledTreeItems() {
   };
 
   return (
-    <Box sx={{ height: 270, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }} px={2}>
+    <Box sx={{ minHeight: 220, flexGrow: 1, maxWidth: 300 }}>
       <Box sx={{ mb: 1 }}>
         <FormControlLabel
           control={
@@ -34,21 +34,14 @@ export default function DisabledTreeItems() {
         disabledItemsFocusable={focusDisabledItems}
         multiSelect
       >
-        <TreeItem nodeId="1" label="One">
-          <TreeItem nodeId="2" label="Two" />
-          <TreeItem nodeId="3" label="Three" />
-          <TreeItem nodeId="4" label="Four" />
+        <TreeItem nodeId="1" label="Applications">
+          <TreeItem nodeId="2" label="Calendar" />
         </TreeItem>
-        <TreeItem nodeId="5" label="Five" disabled>
-          <TreeItem nodeId="6" label="Six" />
-        </TreeItem>
-        <TreeItem nodeId="7" label="Seven">
-          <TreeItem nodeId="8" label="Eight" />
-          <TreeItem nodeId="9" label="Nine">
-            <TreeItem nodeId="10" label="Ten">
-              <TreeItem nodeId="11" label="Eleven" />
-              <TreeItem nodeId="12" label="Twelve" />
-            </TreeItem>
+        <TreeItem nodeId="11" label="Blog" disabled />
+        <TreeItem nodeId="5" label="Documents">
+          <TreeItem nodeId="10" label="OSS" />
+          <TreeItem nodeId="6" label="MUI">
+            <TreeItem nodeId="8" label="index.js" />
           </TreeItem>
         </TreeItem>
       </TreeView>
