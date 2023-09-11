@@ -327,6 +327,7 @@ MonthCalendar.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  gridLabelId: PropTypes.string,
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
