@@ -160,7 +160,7 @@ DateRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.
    */
-  inputRef: refType /* @typescript-to-proptypes-ignore */,
+  inputRef: refType,
   /**
    * The label content.
    * Ignored if the field has several inputs.

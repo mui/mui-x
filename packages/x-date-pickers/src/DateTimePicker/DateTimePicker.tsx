@@ -149,7 +149,7 @@ DateTimePicker.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: refType /* @typescript-to-proptypes-ignore */,
+  inputRef: refType,
   /**
    * The label content.
    */

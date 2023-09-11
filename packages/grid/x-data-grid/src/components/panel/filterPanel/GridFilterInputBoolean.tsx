@@ -125,7 +125,7 @@ GridFilterInputBoolean.propTypes = {
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
   clearButton: PropTypes.node,
-  focusElementRef: refType /* @typescript-to-proptypes-ignore */,
+  focusElementRef: refType,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)
