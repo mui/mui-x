@@ -325,6 +325,7 @@
   { "name": "TimePickerToolbarClasses", "kind": "Interface" },
   { "name": "TimePickerToolbarClassKey", "kind": "TypeAlias" },
   { "name": "TimePickerToolbarProps", "kind": "Interface" },
+  { "name": "TimeRangePicker", "kind": "Variable" },
   { "name": "TimeRangePickerProps", "kind": "Interface" },
   { "name": "TimeRangePickerSlotsComponents", "kind": "Interface" },
   { "name": "TimeRangePickerSlotsComponentsProps", "kind": "Interface" },

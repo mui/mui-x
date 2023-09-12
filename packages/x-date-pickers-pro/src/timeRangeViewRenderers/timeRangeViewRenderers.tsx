@@ -9,8 +9,8 @@ import { DigitalClock, DigitalClockProps } from '@mui/x-date-pickers/DigitalCloc
 import Stack from '@mui/material/Stack';
 import { TimeView } from '@mui/x-date-pickers/models';
 import type { TimeRangePickerProps } from '../TimeRangePicker/TimeRangePicker.types';
-import { DateRange, RangePosition } from '../internals/models';
-import { UseRangePositionProps } from '@mui/x-date-pickers-pro/internals/hooks/useRangePosition';
+import { DateRange } from '../internals/models';
+import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 
 export type TimeRangeViewRendererProps<
   TDate,

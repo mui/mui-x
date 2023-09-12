@@ -97,6 +97,7 @@ export default [
   { pathname: '/x/api/date-pickers/time-field', title: 'TimeField' },
   { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
   { pathname: '/x/api/date-pickers/time-picker-toolbar', title: 'TimePickerToolbar' },
+  { pathname: '/x/api/date-pickers/time-range-picker', title: 'TimeRangePicker', plan: 'pro' },
   {
     pathname: '/x/api/date-pickers/time-range-picker-toolbar',
     title: 'TimeRangePickerToolbar',

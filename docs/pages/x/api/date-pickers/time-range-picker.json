@@ -25,6 +25,10 @@
       "default": "'start'"
     },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "desktopModeMediaQuery": {
+      "type": { "name": "string" },
+      "default": "'@media (pointer: fine)'"
+    },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
@@ -35,9 +39,7 @@
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
-    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "localeText": { "type": { "name": "object" } },
     "maxTime": { "type": { "name": "any" } },
@@ -253,12 +255,12 @@
       "default": "DateTimePickerToolbar"
     }
   ],
-  "name": "DesktopTimeRangePicker",
+  "name": "TimeRangePicker",
   "imports": [
-    "import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';",
-    "import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro';"
+    "import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';",
+    "import { TimeRangePicker } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopTimeRangePicker" },
-  "filename": "/packages/x-date-pickers-pro/src/DesktopTimeRangePicker/DesktopTimeRangePicker.tsx",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimeRangePicker" },
+  "filename": "/packages/x-date-pickers-pro/src/TimeRangePicker/TimeRangePicker.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/time-range-picker/\">Time Range Picker <span class=\"plan-pro\"></span></a></li></ul>"
 }
