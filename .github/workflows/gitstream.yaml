@@ -4,6 +4,8 @@ name: gitStream workflow automation
 run-name: |
   /:\ gitStream: PR #${{ fromJSON(fromJSON(github.event.inputs.client_payload)).pullRequestNumber }} from ${{ github.event.inputs.full_repository }}
 
+permissions: {}
+
 on:
   workflow_dispatch:
     inputs:
