@@ -11,7 +11,7 @@ automations:
       - action: request-changes@v1
         args:
           comment: |
-            All PRs must be titled according to our semantic naming policy: `[Area]: <short summary>`
+            All PRs must be titled according to our semantic naming policy: `[primary-label] <short summary>`
 
             Area must be one of the following:
              * DataGrid
