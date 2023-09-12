@@ -12,13 +12,6 @@ automations:
         args:
           comment: |
             All PRs must be titled according to our semantic naming policy: `[primary-label] <short summary>`
-
-            Area must be one of the following:
-             * DataGrid
-             * Pickers 
-             * Charts
-             * TreeView
-             * Chore
   # Add a label that indicates how many minutes it will take to review the PR.
   estimated_time_to_review:
     if:
@@ -36,32 +29,6 @@ automations:
       - action: explain-code-experts@v1
         args:
           gt: 10
-  # Assign a random reviewer when the 'Share knowledge' label gets added
-  share_knowledge:
-    if:
-      - { { pr.labels | match(term='Share Knowledge') | some } }
-    run:
-      - action: add-reviewers@v1
-        args:
-          reviewers: { { repo | codeExperts(gt=30, lt=60) | random } }
-      - action: add-comment@v1
-        args:
-          comment: |
-            gitStream has assigned a reviewer to increase knowledge sharing on this PR.
-  # Apply a label that indicates when a PR deletes files
-  # This uses the `has` custom expression found at the bottom of this file
-  label_deleted_files:
-    if:
-      - { { has.deleted_files } }
-    run:
-      - action: add-label@v1
-        args:
-          label: '⚠️ deleted-files'
-          color: colors.warning
-
-# This is used in the `label_deleted_files` automation
-has:
-  deleted_files: { { source.diff.files | map(attr='new_file') | match(term='/dev/null') | some } }
 
 # The next function calculates the estimated time to review and makes it available in the automation above.
 calc:
@@ -77,5 +44,5 @@ colors:
 
 # define the regex the PR title is tested against to enforce a title format
 titlePolicy:
-  titleRegex: /\[(DataGrid|Pickers|Charts|TreeView)\]:\s*\w+.*/gm
+  titleRegex: /^\[\w+\]\s*\w+.*/gm
 
