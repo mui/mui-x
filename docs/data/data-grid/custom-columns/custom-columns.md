@@ -1,15 +1,14 @@
 # Data Grid - Custom columns
 
-<p class="description">Define custom column types.</p>
+<p class="description">Create custom column types.</p>
 
-The columns are defined with the `columns` prop which has the type `GridColDef[]`.
-
-`field` is the only required property since it's the column identifier. It's also used to match with `GridRowModel` values.
+This page show how to create custom columns based on the concepts explained in [Column definition](/x/react-data-grid/column-definition/).
 
 ## Sparkline
 
-Sparkline are mini-charts optimized for grid cell.
-They can be integrated inside your data grid using the [`@mui/x-charts` package](/x/react-charts/).
+Sparkline charts can be useful as an overview of data trends.
+
+In the demo below, we create a [custom column type](http://localhost:3001/x/react-data-grid/column-definition/#custom-column-types) using the `GridColTypeDef` interface and use the [Sparkline](/x/react-charts/sparkline/) component from [`@mui/x-charts`](/x/react-charts/) package in the [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells) property.
 
 {{"demo": "SparklineColumn.js", "bg": "inline"}}
 
