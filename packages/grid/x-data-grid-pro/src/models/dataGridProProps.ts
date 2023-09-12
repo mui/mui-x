@@ -25,7 +25,7 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent, UncapitalizedGridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
-import {GridAutosizeOptions} from '../hooks';
+import { GridAutosizeOptions } from '../hooks';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -171,7 +171,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * The options for autosize when user-initiated.
    */
-  autosizeOptions: GridAutosizeOptions;
+  autosizeOptions?: GridAutosizeOptions;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.

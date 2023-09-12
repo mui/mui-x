@@ -14,17 +14,20 @@ import {
   useGridApiMethod,
   useGridNativeEventListener,
   useGridLogger,
-  GridRenderContext,
+  useGridSelector,
   gridVisibleColumnFieldsSelector,
-  gridDataRowIdsSelector,
+  gridVirtualizationColumnEnabledSelector,
 } from '@mui/x-data-grid';
 import {
   clamp,
   findParentElementFromClassName,
   gridColumnsStateSelector,
-  waitForDOM,
-  GridStateInitializer,
+  useOnMount,
+  useTimeout,
+  createControllablePromise,
+  ControllablePromise,
   GridStateColDef,
+  GridStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { useTheme, Direction } from '@mui/material/styles';
 import {
@@ -137,13 +140,25 @@ export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
   columnResize: { resizingColumnField: '' },
 });
 
+const preventClick = (event: MouseEvent) => {
+  event.preventDefault();
+  event.stopImmediatePropagation();
+};
+
 /**
  * @requires useGridColumns (method, event)
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'onColumnResize' | 'onColumnWidthChange'>,
+  props: Pick<
+    DataGridProProcessedProps,
+    | 'autosizeOptions'
+    | 'autosizeOnMount'
+    | 'disableAutosize'
+    | 'onColumnResize'
+    | 'onColumnWidthChange'
+  >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
@@ -160,7 +175,7 @@ export const useGridColumnResize = (
   const initialOffsetToSeparator = React.useRef<number>();
   const resizeDirection = React.useRef<ResizeDirection>();
 
-  const stopResizeEventTimeout = React.useRef<any>();
+  const stopResizeEventTimeout = useTimeout();
   const touchId = React.useRef<number>();
 
   const updateWidth = (newWidth: number) => {
@@ -214,8 +229,7 @@ export const useGridColumnResize = (
       );
     }
 
-    clearTimeout(stopResizeEventTimeout.current);
-    stopResizeEventTimeout.current = setTimeout(() => {
+    stopResizeEventTimeout.start(0, () => {
       apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
     });
   };
@@ -246,66 +260,6 @@ export const useGridColumnResize = (
     };
     apiRef.current.publishEvent('columnResize', params, nativeEvent);
   });
-
-  const handleColumnResizeMouseDown: GridEventListener<'columnSeparatorMouseDown'> =
-    useEventCallback(({ colDef }, event) => {
-      // Only handle left clicks
-      if (event.button !== 0) {
-        return;
-      }
-
-      // Skip if the column isn't resizable
-      if (!event.currentTarget.classList.contains(gridClasses['columnSeparator--resizable'])) {
-        return;
-      }
-
-      // Avoid text selection
-      event.preventDefault();
-
-      logger.debug(`Start Resize on col ${colDef.field}`);
-      apiRef.current.publishEvent('columnResizeStart', { field: colDef.field }, event);
-
-      colDefRef.current = colDef as GridStateColDef;
-      colElementRef.current =
-        apiRef.current.columnHeadersContainerElementRef?.current!.querySelector<HTMLDivElement>(
-          `[data-field="${colDef.field}"]`,
-        )!;
-
-      const headerFilterRowElement = apiRef.current.headerFiltersElementRef?.current;
-
-      if (headerFilterRowElement) {
-        headerFilterElementRef.current = headerFilterRowElement.querySelector<HTMLDivElement>(
-          `[data-field="${colDef.field}"]`,
-        ) as HTMLDivElement;
-      }
-
-      colGroupingElementRef.current = findGroupHeaderElementsFromField(
-        apiRef.current.columnHeadersContainerElementRef?.current!,
-        colDef.field,
-      );
-
-      colCellElementsRef.current = findGridCellElementsFromCol(
-        colElementRef.current,
-        apiRef.current,
-      );
-
-      const doc = ownerDocument(apiRef.current.rootElementRef!.current);
-      doc.body.style.cursor = 'col-resize';
-
-      resizeDirection.current = getResizeDirection(event.currentTarget, theme.direction);
-
-      initialOffsetToSeparator.current = computeOffsetToSeparator(
-        event.clientX,
-        colElementRef.current!.getBoundingClientRect(),
-        resizeDirection.current,
-      );
-
-      doc.addEventListener('mousemove', handleResizeMouseMove);
-      doc.addEventListener('mouseup', handleResizeMouseUp);
-
-      // Fixes https://github.com/mui/mui-x/issues/4777
-      colElementRef.current.style.pointerEvents = 'none';
-    });
 
   const handleTouchEnd = useEventCallback((nativeEvent: any) => {
     const finger = trackFinger(nativeEvent, touchId.current);
@@ -408,6 +362,11 @@ export const useGridColumnResize = (
     doc.removeEventListener('mouseup', handleResizeMouseUp);
     doc.removeEventListener('touchmove', handleTouchMove);
     doc.removeEventListener('touchend', handleTouchEnd);
+    // The click event runs right after the mouseup event, we want to wait until it
+    // has been canceled before removing our handler.
+    setTimeout(() => {
+      doc.removeEventListener('click', preventClick, true);
+    }, 100);
     if (colElementRef.current) {
       colElementRef.current!.style.pointerEvents = 'unset';
     }
@@ -439,10 +398,86 @@ export const useGridColumnResize = (
     apiRef.current.forceUpdate();
   }, [apiRef]);
 
+  const handleColumnResizeMouseDown: GridEventListener<'columnSeparatorMouseDown'> =
+    useEventCallback(({ colDef }, event) => {
+      // Only handle left clicks
+      if (event.button !== 0) {
+        return;
+      }
+
+      // Skip if the column isn't resizable
+      if (!event.currentTarget.classList.contains(gridClasses['columnSeparator--resizable'])) {
+        return;
+      }
+
+      // Avoid text selection
+      event.preventDefault();
+
+      logger.debug(`Start Resize on col ${colDef.field}`);
+      apiRef.current.publishEvent('columnResizeStart', { field: colDef.field }, event);
+
+      colDefRef.current = colDef as GridStateColDef;
+      colElementRef.current =
+        apiRef.current.columnHeadersContainerElementRef?.current!.querySelector<HTMLDivElement>(
+          `[data-field="${colDef.field}"]`,
+        )!;
+
+      const headerFilterRowElement = apiRef.current.headerFiltersElementRef?.current;
+
+      if (headerFilterRowElement) {
+        headerFilterElementRef.current = headerFilterRowElement.querySelector<HTMLDivElement>(
+          `[data-field="${colDef.field}"]`,
+        ) as HTMLDivElement;
+      }
+
+      colGroupingElementRef.current = findGroupHeaderElementsFromField(
+        apiRef.current.columnHeadersContainerElementRef?.current!,
+        colDef.field,
+      );
+
+      colCellElementsRef.current = findGridCellElementsFromCol(
+        colElementRef.current,
+        apiRef.current,
+      );
+
+      const doc = ownerDocument(apiRef.current.rootElementRef!.current);
+      doc.body.style.cursor = 'col-resize';
+
+      resizeDirection.current = getResizeDirection(event.currentTarget, theme.direction);
+
+      initialOffsetToSeparator.current = computeOffsetToSeparator(
+        event.clientX,
+        colElementRef.current!.getBoundingClientRect(),
+        resizeDirection.current,
+      );
+
+      doc.addEventListener('mousemove', handleResizeMouseMove);
+      doc.addEventListener('mouseup', handleResizeMouseUp);
+
+      // Prevent the click event if we have resized the column.
+      // Fixes https://github.com/mui/mui-x/issues/4777
+      doc.addEventListener('click', preventClick, true);
+    });
+
+  const handleColumnResizeDoubleClick: GridEventListener<'columnSeparatorDoubleClick'> =
+    useEventCallback((_, event) => {
+      if (props.disableAutosize) {
+        return;
+      }
+
+      // Only handle left clicks
+      if (event.button !== 0) {
+        return;
+      }
+
+      apiRef.current.autosizeColumns(props.autosizeOptions);
+    });
+
   /**
    * API METHODS
    */
 
+  const columnVirtualizationDisabled = useColumnVirtualizationDisabled(apiRef);
   const isAutosizingRef = React.useRef(false);
   const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>(
     async (userOptions) => {
@@ -451,8 +486,9 @@ export const useGridColumnResize = (
         return;
       }
       if (isAutosizingRef.current) {
-        throw new Error('Already autosizing the grid. This method cannot be called twice in parallel.')
+        return;
       }
+      isAutosizingRef.current = true;
 
       const state = gridColumnsStateSelector(apiRef.current.state);
       const options = Object.assign({}, DEFAULT_GRID_AUTOSIZE_OPTIONS, userOptions, {
@@ -462,25 +498,22 @@ export const useGridColumnResize = (
         (c) => state.columnVisibilityModel[c.field] !== false,
       );
 
-      let context: GridRenderContext;
       try {
-        context = await disableColumnVirtualization(apiRef, options);
-        const widthsByField = extractColumnWidths(root, options);
+        apiRef.current.unstable_setColumnVirtualization(false);
+        await columnVirtualizationDisabled();
 
-        const newColumns = options.columns.map((column) => {
-          const newColumn = { ...column, computedWidth: undefined };
-          const width = widthsByField[column.field];
-          newColumn.width = clamp(width.maxContent, width.min, width.max);
-          return newColumn;
-        });
+        const widthByField = extractColumnWidths(root, options);
 
-        console.log(widthsByField);
+        const newColumns = options.columns.map((column) => ({
+          ...column,
+          width: widthByField[column.field],
+          computedWidth: undefined,
+        }));
 
         apiRef.current.updateColumns(newColumns);
       } finally {
-        if (context!) {
-          restoreColumnVirtualization(apiRef, context);
-        }
+        apiRef.current.unstable_setColumnVirtualization(true);
+        isAutosizingRef.current = false;
       }
     },
     [],
@@ -490,12 +523,13 @@ export const useGridColumnResize = (
    * EFFECTS
    */
 
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(stopResizeEventTimeout.current);
-      stopListening();
-    };
-  }, [apiRef, handleTouchStart, stopListening]);
+  React.useEffect(() => stopListening, [stopListening]);
+
+  useOnMount(() => {
+    if (props.autosizeOnMount) {
+      apiRef.current.autosizeColumns(props.autosizeOptions);
+    }
+  });
 
   useGridNativeEventListener(
     apiRef,
@@ -513,19 +547,42 @@ export const useGridColumnResize = (
     'public',
   );
 
-  useGridApiEventHandler(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
-  useGridApiEventHandler(apiRef, 'columnResizeStart', handleResizeStart);
   useGridApiEventHandler(apiRef, 'columnResizeStop', handleResizeStop);
+  useGridApiEventHandler(apiRef, 'columnResizeStart', handleResizeStart);
+  useGridApiEventHandler(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
+  useGridApiEventHandler(apiRef, 'columnSeparatorDoubleClick', handleColumnResizeDoubleClick);
 
   useGridApiOptionHandler(apiRef, 'columnResize', props.onColumnResize);
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
 
+function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiPro>) {
+  const promise = React.useRef<ControllablePromise>();
+  const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
+  const value = useGridSelector(apiRef, selector);
+
+  React.useEffect(() => {
+    if (promise.current && value === false) {
+      promise.current.resolve();
+      promise.current = undefined;
+    }
+  });
+
+  const asyncCheck = () => {
+    if (!promise.current) {
+      if (selector() === false) {
+        return Promise.resolve();
+      }
+      promise.current = createControllablePromise();
+    }
+    return promise.current;
+  };
+
+  return asyncCheck;
+}
+
 function extractColumnWidths(root: Element, options: AutosizeOptionsRequired) {
-  type Result = Record<
-    string,
-    { min: number; max: number; minContent: number; maxContent: number }
-  >;
+  type Result = Record<string, number>;
 
   root.classList.add(gridClasses.autosizing);
 
@@ -535,12 +592,10 @@ function extractColumnWidths(root: Element, options: AutosizeOptionsRequired) {
   const getCells = (field: string) =>
     Array.from(root.querySelectorAll(`[data-field="${field}"][role="cell"]`));
 
-  const widthsByField = options.columns.reduce((result, column) => {
+  const widthByField = options.columns.reduce((result, column) => {
     const cells = getCells(column.field);
+
     const widths = cells.map((cell) => {
-      // XXX:
-      // Is there a more efficient way to do this?
-      // Can we assume the cell padding is constant for all cells?
       const style = window.getComputedStyle(cell, null);
       const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
       const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0;
@@ -567,83 +622,19 @@ function extractColumnWidths(root: Element, options: AutosizeOptionsRequired) {
 
     const hasColumnMin = column.minWidth !== -Infinity && column.minWidth !== undefined;
     const hasColumnMax = column.maxWidth !== Infinity && column.maxWidth !== undefined;
-    const current = {
-      min: hasColumnMin ? column.minWidth! : 0,
-      max: hasColumnMax ? column.maxWidth! : Infinity,
-      minContent: filteredWidths.length === 0 ? 0 : Math.min(...filteredWidths),
-      maxContent: filteredWidths.length === 0 ? 0 : Math.max(...filteredWidths),
-    };
 
-    result[column.field] = current;
+    const min = hasColumnMin ? column.minWidth! : 0;
+    const max = hasColumnMax ? column.maxWidth! : Infinity;
+    const maxContent = filteredWidths.length === 0 ? 0 : Math.max(...filteredWidths);
+
+    result[column.field] = clamp(maxContent, min, max);
+
     return result;
   }, {} as Result);
 
   root.classList.remove(gridClasses.autosizing);
 
-  return widthsByField;
-}
-
-async function disableColumnVirtualization(
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
-  options: AutosizeOptionsRequired,
-) {
-  const state = gridColumnsStateSelector(apiRef.current.state);
-  const rowsLength = gridDataRowIdsSelector(apiRef).length;
-  const visibleColumnsLength = gridVisibleColumnFieldsSelector(apiRef).length;
-
-  const context = apiRef.current.getRenderContext();
-
-  // We render a context of at least `sampleLength` rows, centered around the current context
-  // to re-use as much as possible of the already rendered rows.
-  const halfLength = Math.floor(options.sampleLength / 2);
-  const middleRowIndex =
-    context.firstRowIndex + Math.floor((context.lastRowIndex - context.firstRowIndex) / 2);
-  const firstRowIndex = clamp(middleRowIndex - halfLength, 0, rowsLength);
-  const lastRowIndex = clamp(firstRowIndex + options.sampleLength, 0, rowsLength);
-
-  // Create our temporary render context. Note that if the new first/last row indexes are within
-  // the currently rendered range, we just reuse those instead. That case happens when the
-  // `sampleLength` is smaller than the currently rendered range.
-  const newContext = {
-    firstColumnIndex: 0,
-    lastColumnIndex: state.orderedFields.length,
-    firstRowIndex: Math.min(firstRowIndex, context.firstRowIndex),
-    lastRowIndex: Math.max(lastRowIndex, context.lastRowIndex),
-  }
-
-  apiRef.current.setColumnHeadersVirtualization(false);
-  apiRef.current.setRenderContext(newContext);
-
-  const headerContainer = apiRef.current.columnHeadersElementRef!.current!;
-  const cellsContainer = apiRef.current.virtualScrollerRef!.current!;
-  const firstRow = cellsContainer.querySelector('[role="row"]');
-
-  await Promise.all([
-    waitForDOM({
-      target: headerContainer,
-      validate: () => {
-        return headerContainer.querySelectorAll('[data-field]').length === visibleColumnsLength;
-      },
-    }),
-    firstRow
-      ? waitForDOM({
-          target: firstRow,
-          validate: () => {
-            return firstRow.querySelectorAll('[data-field]').length === visibleColumnsLength;
-          },
-        })
-      : Promise.resolve(),
-  ]);
-
-  return context;
-}
-
-function restoreColumnVirtualization(
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
-  context: GridRenderContext,
-) {
-  apiRef.current.setColumnHeadersVirtualization(true);
-  apiRef.current.setRenderContext(context!);
+  return widthByField;
 }
 
 function excludeOutliers(inputValues: number[], factor: number) {

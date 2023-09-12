@@ -100,11 +100,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [resizeCol, setResizeCol] = React.useState('');
 
   const apiRef = useGridPrivateApiContext();
+  const hasVirtualization = apiRef.current.state.virtualization.enabledForColumns;
 
   const rootProps = useGridRootProps();
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
-  const [hasVirtualization, setVirtualization] = React.useState(true);
   const [renderContext, setRenderContextRaw] = React.useState<GridRenderContext | null>(null);
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
@@ -493,10 +493,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     maxHeight: totalHeaderHeight,
     lineHeight: `${headerHeight}px`,
   };
-
-  apiRef.current.register('private', {
-    setColumnHeadersVirtualization: setVirtualization as (v: boolean) => void,
-  })
 
   return {
     renderContext,

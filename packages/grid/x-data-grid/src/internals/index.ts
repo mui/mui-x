@@ -114,6 +114,7 @@ export {
   useGridVirtualScroller,
   getRenderableIndexes,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
+export * from '../hooks/features/virtualization';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
@@ -129,12 +130,12 @@ export type {
 } from '../models/props/DataGridProps';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
+export * from '../utils/createControllablePromise';
 export {
   createSelector,
   createSelectorMemoized,
   unstable_resetCreateSelectorCache,
 } from '../utils/createSelector';
-export * from '../utils/waitForDOM';
 export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
@@ -142,6 +143,7 @@ export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
 export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+export * from '../hooks/utils/useOnMount';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';

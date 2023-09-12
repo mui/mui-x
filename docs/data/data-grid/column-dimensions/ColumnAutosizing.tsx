@@ -40,7 +40,9 @@ export default function ColumnAutosizing() {
                 sampleLength,
                 includeHeaders,
                 excludeOutliers,
-                outliersFactor: Number.isNaN(parseFloat(outliersFactor)) ? 1 : parseFloat(outliersFactor),
+                outliersFactor: Number.isNaN(parseFloat(outliersFactor))
+                  ? 1
+                  : parseFloat(outliersFactor),
               })
             }
           >
