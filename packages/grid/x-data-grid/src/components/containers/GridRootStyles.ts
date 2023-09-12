@@ -69,7 +69,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
     { [`& .${gridClasses['cell--rangeRight']}`]: styles['cell--rangeRight'] },
     { [`& .${gridClasses['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
-    { [`& .${gridClasses['cell--autosizing']}`]: styles['cell--autosizing'] },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
