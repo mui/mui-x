@@ -130,6 +130,7 @@ export {
 } from './utils/date-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
+export { isTimeView } from './utils/time-utils';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
