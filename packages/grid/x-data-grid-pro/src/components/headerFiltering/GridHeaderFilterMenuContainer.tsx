@@ -6,7 +6,7 @@ import {
   useGridApiContext,
   GridColDef,
 } from '@mui/x-data-grid';
-import { unstable_useId as useId } from '@mui/utils';
+import { refType, unstable_useId as useId } from '@mui/utils';
 import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -82,12 +82,7 @@ GridHeaderFilterMenuContainer.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
-  buttonRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  buttonRef: refType,
   field: PropTypes.string.isRequired,
   headerFilterMenuRef: PropTypes.shape({
     current: PropTypes.object,
@@ -101,6 +96,7 @@ GridHeaderFilterMenuContainer.propTypes = {
   operators: PropTypes.arrayOf(
     PropTypes.shape({
       getApplyFilterFn: PropTypes.func.isRequired,
+      getApplyFilterFnV7: PropTypes.func,
       getValueAsString: PropTypes.func,
       headerLabel: PropTypes.string,
       InputComponent: PropTypes.elementType,

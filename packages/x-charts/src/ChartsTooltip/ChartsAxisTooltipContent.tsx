@@ -2,9 +2,13 @@ import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { AxisInteractionData } from '../context/InteractionProvider';
-import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
+import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import {
+  CartesianChartSeriesType,
+  ChartSeriesDefaultized,
+  ChartSeriesType,
+} from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 import {
   ChartsTooltipCell,
@@ -53,7 +57,7 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
   return (
     <ChartsTooltipPaper sx={sx} variant="outlined" className={classes.root}>
       <ChartsTooltipTable>
-        {axisValue != null && (
+        {axisValue != null && !axis.hideTooltip && (
           <thead>
             <ChartsTooltipRow>
               <ChartsTooltipCell colSpan={3}>
@@ -91,30 +95,38 @@ export function ChartsAxisTooltipContent(props: {
   classes: ChartsAxisContentProps['classes'];
 }) {
   const { content, axisData, sx, classes } = props;
-  const dataIndex = axisData.x && axisData.x.index;
-  const axisValue = axisData.x && axisData.x.value;
 
-  const { xAxisIds, xAxis } = React.useContext(CartesianContext);
+  const isXaxis = (axisData.x && axisData.x.index) !== undefined;
+
+  const dataIndex = isXaxis ? axisData.x && axisData.x.index : axisData.y && axisData.y.index;
+  const axisValue = isXaxis ? axisData.x && axisData.x.value : axisData.y && axisData.y.value;
+
+  const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
   const series = React.useContext(SeriesContext);
 
-  const USED_X_AXIS_ID = xAxisIds[0];
+  const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
 
   const relevantSeries = React.useMemo(() => {
     const rep: any[] = [];
-    (Object.keys(series) as (keyof FormattedSeries)[]).forEach((seriesType) => {
+    (
+      Object.keys(series).filter((seriesType) =>
+        ['bar', 'line', 'scatter'].includes(seriesType),
+      ) as CartesianChartSeriesType[]
+    ).forEach((seriesType) => {
       series[seriesType]!.seriesOrder.forEach((seriesId) => {
-        const axisKey = series[seriesType]!.series[seriesId].xAxisKey;
-        if (axisKey === undefined || axisKey === USED_X_AXIS_ID) {
+        const item = series[seriesType]!.series[seriesId];
+        const axisKey = isXaxis ? item.xAxisKey : item.yAxisKey;
+        if (axisKey === undefined || axisKey === USED_AXIS_ID) {
           rep.push(series[seriesType]!.series[seriesId]);
         }
       });
     });
     return rep;
-  }, [USED_X_AXIS_ID, series]);
+  }, [USED_AXIS_ID, isXaxis, series]);
 
   const relevantAxis = React.useMemo(() => {
-    return xAxis[USED_X_AXIS_ID];
-  }, [USED_X_AXIS_ID, xAxis]);
+    return isXaxis ? xAxis[USED_AXIS_ID] : yAxis[USED_AXIS_ID];
+  }, [USED_AXIS_ID, isXaxis, xAxis, yAxis]);
 
   const Content = content ?? DefaultChartsAxisContent;
   return (

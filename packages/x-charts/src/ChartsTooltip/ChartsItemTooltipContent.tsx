@@ -36,9 +36,17 @@ export function DefaultChartsItemContent<T extends ChartSeriesType>(
   if (itemData.dataIndex === undefined) {
     return null;
   }
+  const { displayedLabel, color } =
+    series.type === 'pie'
+      ? {
+          color: series.data[itemData.dataIndex].color,
+          displayedLabel: series.data[itemData.dataIndex].label,
+        }
+      : {
+          color: series.color,
+          displayedLabel: series.label,
+        };
 
-  const displayedLabel = series.label ?? null;
-  const color = series.color;
   // TODO: Manage to let TS understand series.data and series.valueFormatter are coherent
   // @ts-ignore
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);

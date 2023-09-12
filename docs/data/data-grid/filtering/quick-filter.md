@@ -28,6 +28,29 @@ The quick filter values can be initialized by setting the `filter.filterModel.qu
 
 {{"demo": "QuickFilteringInitialize.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Excluding hidden columns
+
+By default, the quick filter searches all the columns, including those that are hidden.
+
+To exclude the hidden columns from the quick filter, set `filterModel.quickFilterExcludeHiddenColumns` to `true`:
+
+```tsx
+<DataGrid
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [],
+        quickFilterExcludeHiddenColumns: true,
+      },
+    },
+  }}
+/>
+```
+
+In the demo below, try hiding the `ID` column. You will see no results, because there are no visible columns that contain `1`:
+
+{{"demo": "QuickFilteringExcludeHiddenColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Custom filtering logic
 
 The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
@@ -80,7 +103,7 @@ If you want to implement a more advanced logic, the `<GridToolbarQuickFilter/>` 
 This function takes the string from the search text field and returns an array of values.
 
 If you control the `quickFilterValues` either by controlling `filterModel` or with the initial state, the content of the input must be updated to reflect the new values.
-By default, values are joint with a spaces. You can customize this behavior by providing `quickFilterFormatter`.
+By default, values are joint with spaces. You can customize this behavior by providing `quickFilterFormatter`.
 This formatter can be seen as the inverse of the `quickFilterParser`.
 
 For example, the following parser allows to search words containing a space by using the `','` to split values.

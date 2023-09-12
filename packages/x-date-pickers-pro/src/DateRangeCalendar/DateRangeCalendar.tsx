@@ -7,6 +7,7 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Watermark } from '@mui/x-license-pro';
+import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   applyDefaultDate,
   BaseDateValidationProps,
@@ -14,9 +15,8 @@ import {
   DayCalendar,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
-  defaultReduceAnimations,
+  useDefaultReduceAnimations,
   PickersArrowSwitcher,
-  PickersCalendarHeader,
   useCalendarState,
   useDefaultDates,
   useLocaleText,
@@ -31,7 +31,7 @@ import {
   buildWarning,
   useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
-import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
   getDateRangeCalendarUtilityClass,
@@ -47,13 +47,13 @@ import {
   isRangeValid,
   isStartOfRange,
   isWithinRange,
-} from '../internal/utils/date-utils';
-import { calculateRangeChange, calculateRangePreview } from '../internal/utils/date-range-manager';
-import { DateRange } from '../internal/models';
+} from '../internals/utils/date-utils';
+import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
+import { DateRange } from '../internals/models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
-import { rangeValueManager } from '../internal/utils/valueManagers';
+import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
-import { useRangePosition } from '../internal/hooks/useRangePosition';
+import { useRangePosition } from '../internals/hooks/useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
@@ -119,6 +119,7 @@ function useDateRangeCalendarDefaultizedProps<TDate>(
 ): DateRangeCalendarDefaultizedProps<TDate> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
+  const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
     name,
@@ -152,7 +153,7 @@ const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
 
 type DateRangeCalendarComponent = (<TDate>(
   props: DateRangeCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   inProps: DateRangeCalendarProps<TDate>,
@@ -166,6 +167,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const {
     value: valueProp,
     defaultValue,
+    referenceDate,
     onChange,
     className,
     disableFuture,
@@ -311,6 +313,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     onMonthSwitchingAnimationEnd,
   } = useCalendarState<TDate>({
     value: value[0] || value[1],
+    referenceDate,
     defaultCalendarMonth,
     disableFuture,
     disablePast,
@@ -728,10 +731,15 @@ DateRangeCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.

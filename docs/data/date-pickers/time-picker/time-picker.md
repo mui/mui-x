@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Time Picker component
 components: TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker
 githubLabel: 'component: TimePicker'
@@ -25,6 +25,8 @@ Check-out their documentation page for more information:
 - [Time Field](/x/react-date-pickers/time-field/)
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
 - [Time Clock](/x/react-date-pickers/time-clock/)
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
@@ -95,6 +97,10 @@ You can force a specific orientation using the `orientation` prop.
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}
 
+:::info
+You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
+:::
+
 ## Choose time view renderer
 
 You can use the `viewRenderers` prop to change the view that is used for rendering a view.
@@ -104,4 +110,4 @@ You might be interested in using the [Time Clock](/x/react-date-pickers/time-clo
 
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).

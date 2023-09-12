@@ -28,4 +28,5 @@ export * from './ukUA';
 export * from './urPK';
 export * from './viVN';
 export * from './zhCN';
+export * from './zhHK';
 export * from './utils/pickersLocaleTextApi';

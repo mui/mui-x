@@ -1,18 +1,14 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import moment from 'moment';
 import jMoment from 'moment-jalaali';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import { expect } from 'chai';
-import {
-  createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
-import 'moment/locale/fa';
+import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { describeJalaliAdapter } from '@mui/x-date-pickers/tests/describeJalaliAdapter';
+import 'moment/locale/fa';
 
 describe('<AdapterMomentJalaali />', () => {
   describeJalaliAdapter(AdapterMomentJalaali, {

@@ -9,6 +9,9 @@ import {
   GridFilterItem,
   GridPreferencePanelsValue,
   GridToolbar,
+  GridFilterOperator,
+  GRID_STRING_COL_DEF,
+  getGridStringOperators,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -38,10 +41,22 @@ describe('<DataGrid /> - Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
+  let disableEval = false;
+
+  function testEval(fn: Function) {
+    return () => {
+      disableEval = false;
+      fn();
+      disableEval = true;
+      fn();
+      disableEval = false;
+    };
+  }
+
   function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...baselineProps} {...props} />
+        <DataGrid {...baselineProps} {...props} disableEval={disableEval} />
       </div>
     );
   }
@@ -215,6 +230,33 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
+  describe('prop: getRowId', () => {
+    it('works with filter', () => {
+      render(
+        <TestCase
+          getRowId={(row) => row.brand}
+          filterModel={{
+            items: [{ id: 0, field: 'brand', operator: 'contains', value: 'Nike' }],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+    });
+
+    it('works with quick filter', () => {
+      render(
+        <TestCase
+          getRowId={(row) => row.brand}
+          filterModel={{
+            items: [],
+            quickFilterValues: ['Nike'],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+    });
+  });
+
   describe('column type: string', () => {
     const getRows = (item: Omit<GridFilterItem, 'field'>) => {
       const { unmount } = render(
@@ -248,25 +290,27 @@ describe('<DataGrid /> - Filter', () => {
     const ALL_ROWS = ['', '', '', 'France (fr)', 'Germany', '0', '1'];
 
     it('should filter with operator "contains"', () => {
-      expect(getRows({ operator: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
+      testEval(() => {
+        expect(getRows({ operator: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
 
-      // Trim value
-      expect(getRows({ operator: 'contains', value: ' Fra ' })).to.deep.equal(['France (fr)']);
+        // Trim value
+        expect(getRows({ operator: 'contains', value: ' Fra ' })).to.deep.equal(['France (fr)']);
 
-      // Case-insensitive
-      expect(getRows({ operator: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
+        // Case-insensitive
+        expect(getRows({ operator: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
 
-      // Number casting
-      expect(getRows({ operator: 'contains', value: '0' })).to.deep.equal(['0']);
-      expect(getRows({ operator: 'contains', value: '1' })).to.deep.equal(['1']);
+        // Number casting
+        expect(getRows({ operator: 'contains', value: '0' })).to.deep.equal(['0']);
+        expect(getRows({ operator: 'contains', value: '1' })).to.deep.equal(['1']);
 
-      // Empty values
-      expect(getRows({ operator: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operator: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
+        // Empty values
+        expect(getRows({ operator: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
+        expect(getRows({ operator: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
 
-      // Value with regexp special literal
-      expect(getRows({ operator: 'contains', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal([]);
-      expect(getRows({ operator: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
+        // Value with regexp special literal
+        expect(getRows({ operator: 'contains', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal([]);
+        expect(getRows({ operator: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
+      });
     });
 
     it('should filter with operator "equals"', () => {
@@ -1216,6 +1260,171 @@ describe('<DataGrid /> - Filter', () => {
 
       expect(tooltip).toBeVisible();
       expect(tooltip.textContent).to.contain('"John" text string');
+    });
+  });
+
+  describe('v7 filter compatibility', () => {
+    const getRows = (operator: GridFilterOperator) => {
+      const { unmount } = render(
+        <TestCase
+          filterModel={{
+            items: [{ field: 'country', operator: 'equals', value: 'UK' }],
+          }}
+          rows={[
+            { id: 0, country: 'Canada' },
+            { id: 1, country: 'Spain' },
+            { id: 2, country: 'UK' },
+          ]}
+          columns={[
+            {
+              field: 'country',
+              type: 'string',
+              filterOperators: [operator],
+            },
+          ]}
+        />,
+      );
+
+      const values = getColumnValues(0);
+      unmount();
+      return values;
+    };
+
+    it('works with internal filters', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFn,
+        getApplyFilterFnV7: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFnV7,
+      };
+
+      expect(getRows(operator)).to.deep.equal(['UK']);
+    });
+
+    it('works with custom getApplyFilterFn', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: () => {
+          return (params): boolean => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyFilterFnV7: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFnV7,
+      };
+
+      expect(getRows(operator)).to.deep.equal(['Canada']);
+    });
+
+    it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: () => {
+          return (params): boolean => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyFilterFnV7: () => {
+          return (value): boolean => {
+            return value === 'Spain';
+          };
+        },
+      };
+
+      expect(getRows(operator)).to.deep.equal(['Spain']);
+    });
+
+    it('works with custom getApplyFilterFnV7', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFn,
+        getApplyFilterFnV7: () => {
+          return (value): boolean => {
+            return value === 'Spain';
+          };
+        },
+      };
+
+      expect(getRows(operator)).to.deep.equal(['Spain']);
+    });
+  });
+
+  describe('v7 quick filter compatibility', () => {
+    const getRows = (colDef: Partial<GridColDef>) => {
+      const { unmount } = render(
+        <TestCase
+          filterModel={{
+            items: [],
+            quickFilterValues: ['UK'],
+          }}
+          rows={[
+            { id: 0, country: 'Canada' },
+            { id: 1, country: 'Spain' },
+            { id: 2, country: 'UK' },
+          ]}
+          columns={[
+            {
+              field: 'country',
+              type: 'string',
+              ...colDef,
+            },
+          ]}
+        />,
+      );
+
+      const values = getColumnValues(0);
+      unmount();
+      return values;
+    };
+
+    it('works with internal filters', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
+        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
+      };
+      expect(getRows(colDef)).to.deep.equal(['UK']);
+    });
+
+    it('works with custom getApplyFilterFn', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: () => {
+          return (params) => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
+      };
+      expect(getRows(colDef)).to.deep.equal(['Canada']);
+    });
+
+    it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: () => {
+          return (params) => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyQuickFilterFnV7: () => {
+          return (value) => {
+            return value === 'Spain';
+          };
+        },
+      };
+      expect(getRows(colDef)).to.deep.equal(['Spain']);
+    });
+
+    it('works with custom getApplyFilterFnV7', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
+        getApplyQuickFilterFnV7: () => {
+          return (value) => {
+            return value === 'Spain';
+          };
+        },
+      };
+      expect(getRows(colDef)).to.deep.equal(['Spain']);
     });
   });
 

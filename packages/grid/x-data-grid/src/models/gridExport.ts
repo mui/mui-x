@@ -75,10 +75,17 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
    */
   utf8WithBom?: boolean;
   /**
-   * If `true`, the first row of the CSV will include the headers of the grid.
+   * If `true`, the CSV will include the column headers and column groups.
+   * Use `includeColumnGroupsHeaders` to control whether the column groups are included.
    * @default true
    */
   includeHeaders?: boolean;
+  /**
+   * If `true`, the CSV will include the column groups.
+   * @see See {@link https://mui.com/x/react-data-grid/column-groups/ column groups docs} for more details.
+   * @default true
+   */
+  includeColumnGroupsHeaders?: boolean;
   /**
    * Function that returns the id of the rows to export on the order they should be exported.
    * @param {GridCsvGetRowsToExportParams} params With all properties from [[GridCsvGetRowsToExportParams]].

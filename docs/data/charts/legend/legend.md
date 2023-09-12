@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Legend
 ---
 
@@ -11,7 +10,7 @@ title: Charts - Legend
 
 In chart components, the legend links series with `label` properties and their color.
 
-{{"demo": "BasicLegend.js", "bg": "inline"}}
+{{"demo": "BasicLegend.js"}}
 
 ## Placement
 
@@ -26,7 +25,7 @@ The `position` places the legend just next to the drawing area, and offset value
 
 Defaults are such that the legend is placed on top of the charts.
 
-{{"demo": "LegendCustomizationNoSnap.js", "bg": "inline"}}
+{{"demo": "LegendCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 ## Dimensions
 
@@ -37,4 +36,4 @@ The dimension of the legend is defined by some CSS variables:
 - `--ChartsLegend-labelSpacing`: The space between the mark and the label.
 - `--ChartsLegend-rootSpacing`: The space between two series.
 
-{{"demo": "DimensionsNoSnap.js", "bg": "inline"}}
+{{"demo": "DimensionsNoSnap.js", "hideToolbar": true, "bg": "inline"}}

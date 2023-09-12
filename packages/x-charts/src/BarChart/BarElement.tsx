@@ -1,5 +1,7 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
+import type { SlotComponentProps } from '@mui/base';
+import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
@@ -45,7 +47,7 @@ const useUtilityClasses = (ownerState: BarElementOwnerState) => {
   return composeClasses(slots, getBarElementUtilityClass, classes);
 };
 
-const BarElementPath = styled('rect', {
+export const BarElementPath = styled('rect', {
   name: 'MuiBarElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
@@ -62,10 +64,37 @@ const BarElementPath = styled('rect', {
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     highlightScope?: Partial<HighlightScope>;
+    /**
+     * The props used for each component slot.
+     * @default {}
+     */
+    slotProps?: {
+      bar?: SlotComponentProps<'path', {}, BarElementOwnerState>;
+    };
+    /**
+     * Overridable component slots.
+     * @default {}
+     */
+    slots?: {
+      /**
+       * The component that renders the root.
+       * @default BarElementPath
+       */
+      bar?: React.ElementType;
+    };
   };
 
 export function BarElement(props: BarElementProps) {
-  const { id, dataIndex, classes: innerClasses, color, highlightScope, ...other } = props;
+  const {
+    id,
+    dataIndex,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    slots,
+    slotProps,
+    ...other
+  } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const { item } = React.useContext(InteractionContext);
@@ -88,12 +117,16 @@ export function BarElement(props: BarElementProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  return (
-    <BarElementPath
-      {...other}
-      ownerState={ownerState}
-      className={classes.root}
-      {...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex })}
-    />
-  );
+  const Bar = slots?.bar ?? BarElementPath;
+  const barProps = useSlotProps({
+    elementType: Bar,
+    externalSlotProps: slotProps?.bar,
+    additionalProps: {
+      ...other,
+      ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
+      className: classes.root,
+    },
+    ownerState,
+  });
+  return <Bar {...barProps} />;
 }

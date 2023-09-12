@@ -11,7 +11,7 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
 }
 
 /**
- * An object that allows to identify a single line.
+ * An object that allows to identify a single scatter item.
  * Used for item interaction
  */
 export type ScatterItemIdentifier = {

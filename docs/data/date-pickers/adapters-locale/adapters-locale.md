@@ -1,6 +1,6 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Date localization
+productId: x-date-pickers
+title: Date and Time Pickers - Date localization
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
@@ -165,7 +165,7 @@ Here is the list of the currently supported formats:
 - The month
 
   - ✅ 1-based digit (e.g: `08`)
-  - ✅ Multi-letter values (e.g `Aug`, `August`)
+  - ✅ Multi-letter values (e.g. `Aug`, `August`)
   - ❌ 1-letter values (e.g: `A`) because several months are represented with the same letter
 
 - The day of the month

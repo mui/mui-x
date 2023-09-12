@@ -1,6 +1,6 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Custom layout
+productId: x-date-pickers
+title: Date and Time Pickers - Custom layout
 components: PickersActionBar, PickersLayout
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
@@ -36,7 +36,7 @@ Here is a demonstration with the 3 main blocks outlined with color borders.
 
 A `<PickersLayoutRoot />` wraps all the subcomponents to provide the structure.
 By default it renders a `div` with `display: grid`.
-Such that all subcomponents are placed in a 3 by 3 [CSS grid](https://developer.mozilla.org/fr/docs/Web/CSS/CSS_Grid_Layout).
+Such that all subcomponents are placed in a 3 by 3 [CSS grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout).
 
 ```jsx
 <PickersLayoutRoot>

@@ -9,7 +9,13 @@
         "description": "{ columnInputProps?: any, columnsSort?: 'asc'<br>&#124;&nbsp;'desc', deleteIconProps?: any, filterColumns?: func, logicOperatorInputProps?: any, operatorInputProps?: any, valueInputProps?: any }"
       }
     },
-    "getColumnForNewFilter": { "type": { "name": "func" } },
+    "getColumnForNewFilter": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(args: GetColumnForNewFilterArgs) => void",
+        "describedArgs": ["args"]
+      }
+    },
     "logicOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
       "default": "[GridLogicOperator.And, GridLogicOperator.Or]"
@@ -18,18 +24,20 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "GridFilterPanel",
+  "imports": [
+    "import { GridFilterPanel } from '@mui/x-data-grid/components';",
+    "import { GridFilterPanel } from '@mui/x-data-grid';",
+    "import { GridFilterPanel } from '@mui/x-data-grid-pro';",
+    "import { GridFilterPanel } from '@mui/x-data-grid-premium';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterPanel.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-data-grid-premium", "componentName": "GridFilterPanel" },
-    { "packageName": "@mui/x-data-grid-pro", "componentName": "GridFilterPanel" },
-    { "packageName": "@mui/x-data-grid", "componentName": "GridFilterPanel" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>"
 }

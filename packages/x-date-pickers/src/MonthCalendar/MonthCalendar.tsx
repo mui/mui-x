@@ -65,7 +65,7 @@ const MonthCalendarRoot = styled('div', {
 
 type MonthCalendarComponent = (<TDate>(
   props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
   inProps: MonthCalendarProps<TDate>,
@@ -350,7 +350,7 @@ MonthCalendar.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
-   * @default The closest valid month using the validation props, except callbacks such as `shouldDisableDate`.
+   * @default The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`.
    */
   referenceDate: PropTypes.any,
   /**

@@ -18,6 +18,22 @@ This is the most common target for organizations so what MUI aims to support ver
 
 The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
+## Accessibility changes in v7
+
+The Data Grid v7 will improve the accessibility and will be more aligned with the WAI-ARIA authoring practices.
+
+You can start using the new accessibility features by enabling `ariaV7` experimental feature flag:
+
+```tsx
+<DataGrid experimentalFeatures={{ ariaV7: true }} />
+```
+
+:::warning
+The value of `ariaV7` should be constant and not change during the lifetime of the Data Grid.
+:::
+
+{{"demo": "GridAriaV7.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Density
 
 You can change the density of the rows and the column header.
@@ -62,11 +78,11 @@ Use the `tabIndex` prop passed to the `renderCell` params to determine if the re
 
 ```jsx
 renderCell: (params) => (
-  <Box>
+  <div>
     <Link tabIndex={params.tabIndex} href="/#">
       more info
     </Link>
-  </Box>
+  </div>
 );
 ```
 

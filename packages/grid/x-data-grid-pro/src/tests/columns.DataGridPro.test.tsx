@@ -149,6 +149,70 @@ describe('<DataGridPro /> - Columns', () => {
       expect(onColumnWidthChange.args[0][0].width).to.equal(120);
     });
 
+    it('should not affect other cell elements that are not part of the main DataGrid instance', () => {
+      render(
+        <Test
+          rows={baselineProps.rows.slice(0, 1)}
+          columns={[
+            {
+              field: 'brand',
+              width: 100,
+              renderCell: ({ id }) => (
+                <div className={gridClasses.row} data-id={id} data-testid="dummy-row">
+                  <div data-colindex={0} style={{ width: 90 }} />
+                </div>
+              ),
+            },
+          ]}
+        />,
+      );
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
+      fireEvent.mouseUp(separator);
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
+      expect(getCell(0, 0)).toHaveInlineStyle({ width: '110px' });
+      expect(screen.getByTestId('dummy-row').firstElementChild).toHaveInlineStyle({
+        width: '90px',
+      });
+    });
+
+    it('should work with pinned rows', () => {
+      render(
+        <Test
+          {...baselineProps}
+          pinnedRows={{
+            top: [{ id: 'top-0', brand: 'Reebok' }],
+            bottom: [{ id: 'bottom-0', brand: 'Asics' }],
+          }}
+        />,
+      );
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const nonPinnedCell = getCell(1, 0);
+      const columnHeaderCell = getColumnHeaderCell(0);
+      const topPinnedRowCell = document.querySelector(
+        `.${gridClasses['pinnedRows--top']} [role="cell"][data-colindex="0"]`,
+      );
+      const bottomPinnedRowCell = document.querySelector(
+        `.${gridClasses['pinnedRows--bottom']} [role="cell"][data-colindex="0"]`,
+      );
+
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+
+      expect(columnHeaderCell).toHaveInlineStyle({ width: '150px' });
+      expect(nonPinnedCell).toHaveInlineStyle({ width: '150px' });
+      expect(topPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
+      expect(bottomPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
+
+      fireEvent.mouseUp(separator);
+
+      expect(columnHeaderCell).toHaveInlineStyle({ width: '150px' });
+      expect(nonPinnedCell).toHaveInlineStyle({ width: '150px' });
+      expect(topPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
+      expect(bottomPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
+    });
+
     describe('flex resizing', () => {
       before(function beforeHook() {
         if (isJSDOM) {

@@ -1,12 +1,38 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { MarkElement } from './MarkElement';
+import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 
-export function MarkPlot() {
+export interface MarkPlotSlotsComponent {
+  mark?: React.JSXElementConstructor<MarkElementProps>;
+}
+
+export interface MarkPlotSlotComponentProps {
+  mark?: Partial<MarkElementProps>;
+}
+
+export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: MarkPlotSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: MarkPlotSlotComponentProps;
+}
+
+function MarkPlot(props: MarkPlotProps) {
+  const { slots, slotProps, ...other } = props;
+
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
+
+  const Mark = slots?.mark ?? MarkElement;
 
   if (seriesData === undefined) {
     return null;
@@ -17,14 +43,19 @@ export function MarkPlot() {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <g>
+    <g {...other}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
+            showMark = true,
           } = series[seriesId];
+
+          if (showMark === false) {
+            return null;
+          }
 
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
@@ -55,24 +86,55 @@ export function MarkPlot() {
               return {
                 x: xScale(x),
                 y: yScale(y),
+                position: x,
+                value: y,
                 index,
               };
             })
             .filter(isInRange)
-            .map(({ x, y, index }) => (
-              <MarkElement
-                key={`${seriesId}-${index}`}
-                id={seriesId}
-                dataIndex={index}
-                shape="circle"
-                color={series[seriesId].color}
-                x={x}
-                y={y}
-                highlightScope={series[seriesId].highlightScope}
-              />
-            ));
+            .map(({ x, y, index, position, value }) => {
+              return showMark === true ||
+                showMark({
+                  x,
+                  y,
+                  index,
+                  position,
+                  value,
+                }) ? (
+                <Mark
+                  key={`${seriesId}-${index}`}
+                  id={seriesId}
+                  dataIndex={index}
+                  shape="circle"
+                  color={series[seriesId].color}
+                  x={x}
+                  y={y}
+                  highlightScope={series[seriesId].highlightScope}
+                  {...slotProps?.mark}
+                />
+              ) : null;
+            });
         });
       })}
     </g>
   );
 }
+
+MarkPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { MarkPlot };

@@ -5,13 +5,13 @@ import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useUtils } from '@mui/x-date-pickers/internals';
-import { PickersDay, pickersDayClasses, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
   dateRangePickerDayClasses,
 } from './dateRangePickerDayClasses';
-import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
@@ -253,13 +253,6 @@ const DateRangePickerDayDay = styled(PickersDay, {
   '& > *': {
     transform: 'scale(0.9)',
   },
-  ...(!ownerState.selected &&
-    ownerState.isHighlighting && {
-      opacity: 0.7,
-      [`&.${pickersDayClasses.dayOutsideMonth}`]: {
-        opacity: 0.4,
-      },
-    }),
   ...(ownerState.draggable && {
     cursor: 'grab',
   }),
@@ -268,11 +261,11 @@ const DateRangePickerDayDay = styled(PickersDay, {
   }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
-) => JSX.Element;
+) => React.JSX.Element;
 
 type DateRangePickerDayComponent = <TDate>(
   props: DateRangePickerDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
-) => JSX.Element;
+) => React.JSX.Element;
 
 const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate>(
   inProps: DateRangePickerDayProps<TDate>,
@@ -379,6 +372,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * The date to show.
    */

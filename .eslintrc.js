@@ -56,7 +56,7 @@ const baselineOverrides = baseline.overrides.filter((override) => {
 
 module.exports = {
   ...baseline,
-  plugins: [...baseline.plugins, 'jsdoc', 'filenames'],
+  plugins: [...baseline.plugins, 'eslint-plugin-jsdoc'],
   settings: {
     'import/resolver': {
       webpack: {

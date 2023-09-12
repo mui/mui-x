@@ -127,6 +127,7 @@ export const GridRootStyles = styled('div', {
     '--unstable_DataGrid-overlayBackground': theme.vars
       ? `rgba(${theme.vars.palette.background.defaultChannel} / ${theme.vars.palette.action.disabledOpacity})`
       : alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
+    '--DataGrid-cellOffsetMultiplier': 2,
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
@@ -328,9 +329,10 @@ export const GridRootStyles = styled('div', {
           : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
         '&:hover, &.Mui-hovered': {
           backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${
-                theme.vars.palette.action.selectedOpacity + theme.palette.action.hoverOpacity
-              })`
+            ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(
+                ${theme.vars.palette.action.selectedOpacity} + 
+                ${theme.vars.palette.action.hoverOpacity}
+              ))`
             : alpha(
                 theme.palette.primary.main,
                 theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,

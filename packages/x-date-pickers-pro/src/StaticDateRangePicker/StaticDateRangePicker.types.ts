@@ -3,7 +3,7 @@ import {
   StaticRangeOnlyPickerProps,
   UseStaticRangePickerSlotsComponent,
   UseStaticRangePickerSlotsComponentsProps,
-} from '../internal/hooks/useStaticRangePicker';
+} from '../internals/hooks/useStaticRangePicker';
 import {
   BaseDateRangePickerProps,
   BaseDateRangePickerSlotsComponent,

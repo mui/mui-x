@@ -7,30 +7,30 @@ export const AxisRoot = styled('g', {
   overridesResolver: (props, styles) => styles.root,
 })({
   [`&.${axisClasses.directionY}`]: {
-    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'middle' },
-    [`.${axisClasses.label}`]: { alignmentBaseline: 'baseline', textAnchor: 'middle' },
+    [`.${axisClasses.tickLabel}`]: { dominantBaseline: 'middle' },
+    [`.${axisClasses.label}`]: { dominantBaseline: 'auto', textAnchor: 'middle' },
   },
   [`&.${axisClasses.left}`]: {
-    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'central', textAnchor: 'end' },
+    [`.${axisClasses.tickLabel}`]: { dominantBaseline: 'central', textAnchor: 'end' },
   },
   [`&.${axisClasses.right}`]: {
-    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'central', textAnchor: 'start' },
+    [`.${axisClasses.tickLabel}`]: { dominantBaseline: 'central', textAnchor: 'start' },
   },
   [`&.${axisClasses.bottom}`]: {
     [`.${axisClasses.tickLabel}, .${axisClasses.label}`]: {
-      alignmentBaseline: 'hanging',
+      dominantBaseline: 'hanging',
       textAnchor: 'middle',
     },
   },
   [`&.${axisClasses.top}`]: {
     [`.${axisClasses.tickLabel}, .${axisClasses.label}`]: {
-      alignmentBaseline: 'baseline',
+      dominantBaseline: 'baseline',
       textAnchor: 'middle',
     },
   },
 });
 
-export const Line = styled('line', {
+export const ChartsLine = styled('line', {
   name: 'MuiChartsAxis',
   slot: 'Line',
   overridesResolver: (props, styles) => styles.line,
@@ -40,7 +40,7 @@ export const Line = styled('line', {
   strokeWidth: 1,
 }));
 
-export const Tick = styled('line', {
+export const ChartsTick = styled('line', {
   name: 'MuiChartsAxis',
   slot: 'Tick',
   overridesResolver: (props, styles) => styles.tick,
@@ -49,7 +49,7 @@ export const Tick = styled('line', {
   shapeRendering: 'crispEdges',
 }));
 
-export const TickLabel = styled('text', {
+export const ChartsTickLabel = styled('text', {
   name: 'MuiChartsAxis',
   slot: 'TickLabel',
   overridesResolver: (props, styles) => styles.tickLabel,
@@ -58,7 +58,7 @@ export const TickLabel = styled('text', {
   fill: theme.palette.text.primary,
 }));
 
-export const Label = styled('text', {
+export const ChartsLabel = styled('text', {
   name: 'MuiChartsAxis',
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,

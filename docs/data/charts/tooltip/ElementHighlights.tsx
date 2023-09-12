@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
@@ -11,6 +11,7 @@ import { HighlightScope } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { PieChart } from '@mui/x-charts/PieChart';
 
 const barChartsParams = {
   series: [
@@ -18,7 +19,6 @@ const barChartsParams = {
     { data: [4, 3, 1, 5, 8], label: 'B' },
     { data: [4, 2, 5, 4, 1], label: 'C' },
   ],
-  width: 600,
   height: 400,
 };
 const lineChartsParams = {
@@ -28,7 +28,6 @@ const lineChartsParams = {
     { data: [4, 2, 5, 4, 1], label: 'C', area: false, stack: 'total' },
   ],
   xAxis: [{ data: [1, 2, 3, 4, 5], type: 'linear' }],
-  width: 600,
   height: 400,
 };
 
@@ -65,8 +64,26 @@ const scatterChartsParams = {
       label: 'B',
     },
   ],
-  width: 600,
   height: 400,
+};
+
+const pieChartsParams = {
+  series: [
+    {
+      data: [{ value: 5 }, { value: 10 }, { value: 15 }],
+      label: 'Series 1',
+      outerRadius: 80,
+      highlighted: { additionalRadius: 10 },
+    },
+    {
+      data: [{ value: 5 }, { value: 10 }, { value: 15 }],
+      label: 'Series 1',
+      innerRadius: 90,
+      highlighted: { additionalRadius: 10 },
+    },
+  ],
+  height: 400,
+  margin: { top: 50, bottom: 50 },
 };
 
 export default function ElementHighlights() {
@@ -82,8 +99,12 @@ export default function ElementHighlights() {
   };
 
   return (
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-      <Box>
+    <Stack
+      direction={{ xs: 'column', xl: 'row' }}
+      spacing={1}
+      sx={{ width: '100%' }}
+    >
+      <Box sx={{ flexGrow: 1 }}>
         <ToggleButtonGroup
           value={chartType}
           exclusive
@@ -91,7 +112,7 @@ export default function ElementHighlights() {
           aria-label="chart type"
           fullWidth
         >
-          {['bar', 'line', 'scatter'].map((type) => (
+          {['bar', 'line', 'scatter', 'pie'].map((type) => (
             <ToggleButton key={type} value={type} aria-label="left aligned">
               {type}
             </ToggleButton>
@@ -134,11 +155,25 @@ export default function ElementHighlights() {
             }))}
           />
         )}
+        {chartType === 'pie' && (
+          <PieChart
+            {...pieChartsParams}
+            series={pieChartsParams.series.map((series) => ({
+              ...series,
+              highlightScope: {
+                highlighted,
+                faded,
+              } as HighlightScope,
+            }))}
+          />
+        )}
       </Box>
       <Stack
-        direction={{ xs: 'row', sm: 'column' }}
-        justifyContent="center"
+        direction={{ xs: 'row', xl: 'column' }}
         spacing={3}
+        justifyContent="center"
+        flexWrap="wrap"
+        useFlexGap
       >
         <TextField
           select
@@ -166,7 +201,6 @@ export default function ElementHighlights() {
           <FormControlLabel
             control={
               <Switch
-                defaultChecked
                 checked={withArea}
                 onChange={(event) => setWithArea(event.target.checked)}
               />

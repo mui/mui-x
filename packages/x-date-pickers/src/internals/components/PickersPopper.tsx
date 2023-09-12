@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import Grow from '@mui/material/Grow';
+import Fade from '@mui/material/Fade';
 import MuiPaper, { PaperProps as MuiPaperProps } from '@mui/material/Paper';
 import MuiPopper, {
   PopperProps as MuiPopperProps,
   PopperPlacementType,
 } from '@mui/material/Popper';
-import MuiTrapFocus, {
+import BaseFocusTrap, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
 import {
@@ -21,6 +22,11 @@ import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPop
 import { getActiveElement } from '../utils/utils';
 import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
+import { useDefaultReduceAnimations } from '../hooks/useDefaultReduceAnimations';
+
+interface PickersPopperOwnerState extends PickerPopperProps {
+  placement: PopperPlacementType;
+}
 
 export interface PickersPopperSlotsComponent {
   /**
@@ -30,17 +36,17 @@ export interface PickersPopperSlotsComponent {
   DesktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
    * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).
-   * @default Grow from @mui/material
+   * @default Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.
    */
   DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
    * Custom component for trapping the focus inside the views on desktop.
-   * @default TrapFocus from @mui/material
+   * @default FocusTrap from '@mui/base'.
    */
   DesktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
    * Custom component for the popper inside which the views are rendered on desktop.
-   * @default Popper from @mui/material
+   * @default Popper from '@mui/material'.
    */
   Popper?: React.ElementType<MuiPopperProps>;
 }
@@ -49,17 +55,13 @@ export interface PickersPopperSlotsComponentsProps {
   /**
    * Props passed down to the desktop [Paper](https://mui.com/material-ui/api/paper/) component.
    */
-  desktopPaper?: SlotComponentProps<
-    typeof MuiPaper,
-    {},
-    PickerPopperProps & { placement: PopperPlacementType | undefined }
-  >;
+  desktopPaper?: SlotComponentProps<typeof MuiPaper, {}, PickersPopperOwnerState>;
   /**
    * Props passed down to the desktop [Transition](https://mui.com/material-ui/transitions/) component.
    */
   desktopTransition?: Partial<MuiTransitionProps>;
   /**
-   * Props passed down to the [TrapFocus](https://mui.com/base/react-focus-trap/) component on desktop.
+   * Props passed down to the [FocusTrap](https://mui.com/base-ui/react-focus-trap/) component on desktop.
    */
   desktopTrapFocus?: Partial<MuiTrapFocusProps>;
   /**
@@ -80,6 +82,7 @@ export interface PickerPopperProps extends UsePickerValueActions {
   slotProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
+  reduceAnimations?: boolean;
 }
 
 const useUtilityClasses = (ownerState: PickerPopperProps) => {
@@ -106,11 +109,11 @@ const PickersPopperPaper = styled(MuiPaper, {
   slot: 'Paper',
   overridesResolver: (_, styles) => styles.paper,
 })<{
-  ownerState: PickerPopperProps & Pick<MuiPopperProps, 'placement'>;
+  ownerState: PickersPopperOwnerState;
 }>(({ ownerState }) => ({
-  transformOrigin: 'top center',
   outline: 0,
-  ...(ownerState.placement === 'top' && {
+  transformOrigin: 'top center',
+  ...(ownerState.placement.includes('top') && {
     transformOrigin: 'bottom center',
   }),
 }));
@@ -259,6 +262,64 @@ function useClickAwayListener(
   return [nodeRef, handleSynthetic, handleSynthetic];
 }
 
+interface PickersPopperPaperProps {
+  PaperComponent: React.ElementType;
+  children: React.ReactNode;
+  ownerState: PickerPopperProps;
+  popperPlacement: PopperPlacementType;
+  paperClasses: string;
+  onPaperClick: React.MouseEventHandler<HTMLDivElement>;
+  onPaperTouchStart: React.TouchEventHandler<HTMLDivElement>;
+  paperSlotProps?: PickersPopperSlotsComponentsProps['desktopPaper'];
+}
+
+const PickersPopperPaperWrapper = React.forwardRef(
+  (props: PickersPopperPaperProps, ref: React.Ref<HTMLDivElement>) => {
+    const {
+      PaperComponent,
+      popperPlacement,
+      ownerState: inOwnerState,
+      children,
+      paperSlotProps,
+      paperClasses,
+      onPaperClick,
+      onPaperTouchStart,
+      // picks up the style props provided by `Transition`
+      // https://mui.com/material-ui/transitions/#child-requirement
+      ...other
+    } = props;
+    const ownerState = { ...inOwnerState, placement: popperPlacement };
+    const paperProps: MuiPaperProps = useSlotProps({
+      elementType: PaperComponent,
+      externalSlotProps: paperSlotProps,
+      additionalProps: {
+        tabIndex: -1,
+        elevation: 8,
+        ref,
+      },
+      className: paperClasses,
+      ownerState,
+    });
+    return (
+      <PaperComponent
+        {...other}
+        {...paperProps}
+        onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+          onPaperClick(event);
+          paperProps.onClick?.(event);
+        }}
+        onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {
+          onPaperTouchStart(event);
+          paperProps.onTouchStart?.(event);
+        }}
+        ownerState={ownerState}
+      >
+        {children}
+      </PaperComponent>
+    );
+  },
+);
+
 export function PickersPopper(inProps: PickerPopperProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersPopper' });
   const {
@@ -273,6 +334,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     placement,
     slots,
     slotProps,
+    reduceAnimations: inReduceAnimations,
   } = props;
 
   React.useEffect(() => {
@@ -322,6 +384,8 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
+  const defaultReduceAnimations = useDefaultReduceAnimations();
+  const reduceAnimations = inReduceAnimations ?? defaultReduceAnimations;
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
@@ -331,22 +395,10 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
   };
 
-  const Transition = slots?.desktopTransition ?? Grow;
-  const TrapFocus = slots?.desktopTrapFocus ?? MuiTrapFocus;
+  const Transition = slots?.desktopTransition ?? reduceAnimations ? Fade : Grow;
+  const FocusTrap = slots?.desktopTrapFocus ?? BaseFocusTrap;
 
   const Paper = slots?.desktopPaper ?? PickersPopperPaper;
-  const paperProps: MuiPaperProps = useSlotProps({
-    elementType: Paper,
-    externalSlotProps: slotProps?.desktopPaper,
-    additionalProps: {
-      tabIndex: -1,
-      elevation: 8,
-      ref: handlePaperRef,
-    },
-    className: classes.paper,
-    ownerState: {} as any, // Is overridden below to use `placement
-  });
-
   const Popper = slots?.popper ?? PickersPopperRoot;
   const popperProps = useSlotProps({
     elementType: Popper,
@@ -366,7 +418,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
   return (
     <Popper {...popperProps}>
       {({ TransitionProps, placement: popperPlacement }) => (
-        <TrapFocus
+        <FocusTrap
           open={open}
           disableAutoFocus
           // pickers are managing focus position manually
@@ -378,22 +430,20 @@ export function PickersPopper(inProps: PickerPopperProps) {
           {...slotProps?.desktopTrapFocus}
         >
           <Transition {...TransitionProps} {...slotProps?.desktopTransition}>
-            <Paper
-              {...paperProps}
-              onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-                onPaperClick(event);
-                paperProps.onClick?.(event);
-              }}
-              onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {
-                onPaperTouchStart(event);
-                paperProps.onTouchStart?.(event);
-              }}
-              ownerState={{ ...ownerState, placement: popperPlacement }}
+            <PickersPopperPaperWrapper
+              PaperComponent={Paper}
+              ownerState={ownerState}
+              popperPlacement={popperPlacement}
+              ref={handlePaperRef}
+              onPaperClick={onPaperClick}
+              onPaperTouchStart={onPaperTouchStart}
+              paperClasses={classes.paper}
+              paperSlotProps={slotProps?.desktopPaper}
             >
               {children}
-            </Paper>
+            </PickersPopperPaperWrapper>
           </Transition>
-        </TrapFocus>
+        </FocusTrap>
       )}
     </Popper>
   );

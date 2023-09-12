@@ -13,6 +13,13 @@ By default, each page contains 100 rows. The user can change the size of the pag
 
 You can configure the page size the user can choose from with the `pageSizeOptions` prop.
 
+It's possible to customize the options shown in the "Rows per page" select using the `pageSizeOptions` prop.
+You should either provide an array of:
+
+- **numbers**, each number will be used for the option's label and value.
+
+- **objects**, the `value` and `label` keys will be used respectively for the value and label of the option (useful for language strings such as 'All').
+
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
 
 ### Automatic page size
@@ -93,8 +100,8 @@ For more information regarding server-side pagination in combination with contro
 - Provide a `rowCount` prop to let the data grid know how many pages there are
 - Use the `onPaginationModelChange` prop callback to load the rows when the page changes
 
-Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
-To avoid this problem, you can keep the previous value of `rowCount` while loading as follow:
+Since the `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading resets the page to zero.
+To avoid this problem, you can keep the previous value of `rowCount` while loading as follows:
 
 ```jsx
 const [rowCountState, setRowCountState] = React.useState(rowCount);

@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Field component
 components: DateField
 githubLabel: 'component: pickers'
@@ -8,11 +8,13 @@ packageName: '@mui/x-date-pickers'
 
 # Date Field
 
-<p class="description">The Date Field component lets the user select a date with the keyboard.</p>
+<p class="description">The Date Field component lets users select a date with the keyboard.</p>
 
 ## Basic usage
 
 {{"demo": "BasicDateField.js"}}
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

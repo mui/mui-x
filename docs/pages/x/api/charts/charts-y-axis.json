@@ -1,19 +1,28 @@
 {
   "props": {
     "axisId": { "type": { "name": "string" }, "required": true },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disableLine": { "type": { "name": "bool" } },
     "disableTicks": { "type": { "name": "bool" } },
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
     "labelFontSize": { "type": { "name": "number" }, "default": "14" },
     "position": { "type": { "name": "enum", "description": "'left'<br>&#124;&nbsp;'right'" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "stroke": { "type": { "name": "string" }, "default": "'currentColor'" },
     "tickFontSize": { "type": { "name": "number" }, "default": "12" },
+    "tickMaxStep": { "type": { "name": "number" } },
+    "tickMinStep": { "type": { "name": "number" } },
+    "tickNumber": { "type": { "name": "number" } },
     "tickSize": { "type": { "name": "number" }, "default": "6" }
   },
-  "slots": {},
+  "slots": [],
   "name": "ChartsYAxis",
+  "imports": [
+    "import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';",
+    "import { ChartsYAxis } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": [
       "root",
@@ -33,6 +42,5 @@
     "name": "MuiChartsYAxis"
   },
   "filename": "/packages/x-charts/src/ChartsYAxis/ChartsYAxis.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsYAxis" }]
+  "demos": "<ul></ul>"
 }

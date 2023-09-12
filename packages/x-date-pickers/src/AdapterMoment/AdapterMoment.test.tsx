@@ -7,11 +7,7 @@ import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
 import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
@@ -146,6 +142,15 @@ describe('<AdapterMoment />', () => {
       expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
       expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
+    });
+
+    it('should respect the adapter locale in getWeekdays method even when the current locale is different', () => {
+      const adapter = new AdapterMoment({ locale: 'fr' });
+      moment.locale('de');
+      expect(adapter.getWeekdays()[0]).to.equal('lun.');
+
+      // Reset for the next tests
+      moment.locale('en');
     });
   });
 

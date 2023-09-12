@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SortIcon from '@mui/icons-material/Sort';
 import { DataGrid } from '@mui/x-data-grid';
 
 export function SortedDescendingIcon() {
@@ -9,6 +10,10 @@ export function SortedDescendingIcon() {
 
 export function SortedAscendingIcon() {
   return <ExpandLessIcon className="icon" />;
+}
+
+export function UnsortedIcon() {
+  return <SortIcon className="icon" />;
 }
 
 const rows = [
@@ -35,10 +40,13 @@ export default function CustomSortIcons() {
       <DataGrid
         columns={columns}
         rows={rows}
-        sortModel={[{ field: 'name', sort: 'asc' }]}
+        initialState={{
+          sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
+        }}
         slots={{
           columnSortedDescendingIcon: SortedDescendingIcon,
           columnSortedAscendingIcon: SortedAscendingIcon,
+          columnUnsortedIcon: UnsortedIcon,
         }}
       />
     </div>

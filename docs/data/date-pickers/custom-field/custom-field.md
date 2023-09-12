@@ -1,6 +1,6 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Custom field
+productId: x-date-pickers
+title: Date and Time Pickers - Custom field
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
@@ -17,13 +17,13 @@ You can use the `textField` slot to pass custom props to the `TextField`:
 
 {{"demo": "TextFieldSlotProps.js"}}
 
-### Customize the separator of multi input fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+### Customize the separator of multi input fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can use the `fieldSeparator` slot to pass custom props to the `Typography` rendered between the two `TextField`:
 
 {{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
 
-### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can pass the single input fields to the range picker to use it for keyboard editing:
 
@@ -53,9 +53,9 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 ### Using another input
 
-#### With the Joy input
+#### With the Joy UI input
 
-You can use the [_Joy UI_](https://mui.com/joy-ui/getting-started/overview/) components instead of the _Material UI_ ones:
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
 
 :::info
 A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.

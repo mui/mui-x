@@ -46,7 +46,7 @@ The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` 
 
 <!-- #default-branch-switch -->
 
-```sh
+```bash
 git push upstream master:docs-v6 -f
 ```
 

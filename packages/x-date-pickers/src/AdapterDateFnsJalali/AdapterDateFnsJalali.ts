@@ -60,6 +60,7 @@ import {
   AdapterFormats,
   AdapterOptions,
   AdapterUnits,
+  DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
 } from '../models';
@@ -235,8 +236,10 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return new Date(value);
   };
 
-  public dateWithTimezone = (value: string | null | undefined): Date | null => {
-    return this.date(value);
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
+  ): DateBuilderReturnType<T, Date> => {
+    return <DateBuilderReturnType<T, Date>>this.date(value);
   };
 
   public getTimezone = (): string => {

@@ -1,25 +1,25 @@
-# @mui/x-date-pickers-pro
+# MUI X Date Pickers Pro
 
 This package is the commercial edition of the date and time picker components.
-It's part of MUI X, an open-core extension of MUI, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
 
 ## Installation
 
 Install the package in your project directory with:
 
-```sh
+```bash
 npm install @mui/x-date-pickers-pro
 ```
 
 Then install the date library of your choice (if not already installed).
-We currently support 4 different date libraries:
+The pickers currently support the following date libraries:
 
 - [date-fns](https://date-fns.org/)
 - [Day.js](https://day.js.org/)
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
 
-```sh
+```bash
 // date-fns
 npm install date-fns
 // or dayjs
@@ -34,7 +34,6 @@ This component has the following peer dependencies that you will need to install
 
 ```json
 "peerDependencies": {
-  "@mui/base": "^5.0.0-alpha.87",
   "@mui/material": "^5.8.6",
   "@mui/system": "^5.8.0",
   "react": "^17.0.0 || ^18.0.0",
@@ -63,4 +62,4 @@ function App({ children }) {
 
 ## Documentation
 
-[The documentation](https://mui.com/x/react-date-pickers/getting-started/)
+Visit [https://mui.com/x/react-date-pickers/](https://mui.com/x/react-date-pickers/) to view the full documentation.

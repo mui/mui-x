@@ -30,7 +30,7 @@ export const getHourNumbers = <TDate extends unknown>({
 }: GetHourNumbersOptions<TDate>) => {
   const currentHours = value ? utils.getHours(value) : null;
 
-  const hourNumbers: JSX.Element[] = [];
+  const hourNumbers: React.JSX.Element[] = [];
   const startHour = ampm ? 1 : 0;
   const endHour = ampm ? 12 : 23;
 

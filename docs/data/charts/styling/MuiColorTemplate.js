@@ -6,10 +6,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import globalChance from 'chance';
+import { Chance } from 'chance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
 import {
@@ -18,7 +17,7 @@ import {
   cheerfulFiestaPalette,
 } from '@mui/x-charts/colorPalettes';
 
-const chance = globalChance();
+const chance = new Chance(42);
 
 function getGaussianSeriesData(mean, stdev = [0.3, 0.4], N = 50) {
   return [...Array(N)].map((_, i) => {
@@ -92,8 +91,12 @@ export default function MuiColorTemplate() {
             colors={categories[colorScheme]}
             {...legendPlacement}
           />
-          <Stack direction="row" alignItems="center" justifyContent="space-evenly">
-            <Box>
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            alignItems="center"
+            justifyContent="space-evenly"
+          >
+            <div>
               <Button
                 sx={{ ml: 1 }}
                 onClick={() =>
@@ -106,9 +109,10 @@ export default function MuiColorTemplate() {
               >
                 {colorMode} mode
               </Button>
-            </Box>
+            </div>
             <TextField
               select
+              sx={{ maxWidth: 1 }}
               value={colorScheme}
               onChange={(event) => setColorScheme(event.target.value)}
             >

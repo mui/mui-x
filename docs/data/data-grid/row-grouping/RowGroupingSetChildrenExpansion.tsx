@@ -10,9 +10,16 @@ import { useMovieData } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
+const debug = (params: GridGroupNode) =>
+  console.info('Row expansion changed for row ', params.id);
+
 export default function RowGroupingSetChildrenExpansion() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    apiRef.current.subscribeEvent('rowExpansionChange', debug);
+  }, [apiRef]);
 
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
