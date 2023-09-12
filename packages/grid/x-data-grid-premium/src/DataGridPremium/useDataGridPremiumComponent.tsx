@@ -172,6 +172,7 @@ export const useDataGridPremiumComponent = (
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
+  useGridVirtualization(apiRef, props);
 
   return apiRef;
 };
