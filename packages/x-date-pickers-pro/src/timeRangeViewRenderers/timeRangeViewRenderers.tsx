@@ -10,6 +10,7 @@ import Stack from '@mui/material/Stack';
 import { TimeView } from '@mui/x-date-pickers/models';
 import type { TimeRangePickerProps } from '../TimeRangePicker/TimeRangePicker.types';
 import { DateRange, RangePosition } from '../internals/models';
+import { UseRangePositionProps } from '@mui/x-date-pickers-pro/internals/hooks/useRangePosition';
 
 export type TimeRangeViewRendererProps<
   TDate,
@@ -54,23 +55,29 @@ export const renderDigitalClockTimeRangeView = <TDate extends unknown>({
   skipDisabled,
   timezone,
   rangePosition,
+  onRangePositionChange,
 }: TimeRangeViewRendererProps<
   TDate,
   Extract<TimeView, 'hours'>,
   Omit<DigitalClockProps<TDate>, 'timeStep' | 'value' | 'defaultValue' | 'onChange'> &
-    Pick<TimeRangePickerProps<TDate>, 'timeSteps'> & {
+    Pick<TimeRangePickerProps<TDate>, 'timeSteps'> &
+    UseRangePositionProps & {
       value: DateRange<TDate>;
       onChange: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
-      rangePosition: RangePosition;
     }
 >) => {
   const viewValue = rangePosition === 'start' ? value[0] : value[1];
 
-  const handleChange = (newValue: TDate | null, selectionState?: PickerSelectionState) =>
+  const handleChange = (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+    if (rangePosition === 'start') {
+      onRangePositionChange?.('end');
+    }
+
     onChange(
       rangePosition === 'start' ? [newValue, value[1]] : [value[0], newValue],
-      selectionState,
+      rangePosition === 'start' ? 'partial' : selectionState,
     );
+  };
 
   return (
     <Stack>

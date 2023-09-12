@@ -96,6 +96,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   pickerSlots: UncapitalizeObjectKeys<RangePickerFieldSlotsComponent> | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
+  shouldMovePopperToFocusedInput: boolean;
 }
 
 const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
@@ -113,6 +114,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   pickerSlots,
   fieldProps,
   anchorRef,
+  shouldMovePopperToFocusedInput,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -196,7 +198,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeStartSelection }),
           ...(wrapperVariant === 'mobile' && { readOnly: true }),
         };
-        if (anchorRef) {
+        if (anchorRef && (!shouldMovePopperToFocusedInput || rangePosition === 'start')) {
           InputProps = {
             ...resolvedComponentProps?.InputProps,
             ref: anchorRef,
@@ -214,6 +216,12 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeEndSelection }),
           ...(wrapperVariant === 'mobile' && { readOnly: true }),
         };
+        if (anchorRef && shouldMovePopperToFocusedInput && rangePosition === 'end') {
+          InputProps = {
+            ...resolvedComponentProps?.InputProps,
+            ref: anchorRef,
+          };
+        }
       }
 
       return {

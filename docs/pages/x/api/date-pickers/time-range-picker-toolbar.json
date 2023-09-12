@@ -1,0 +1,21 @@
+{
+  "props": {
+    "className": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "toolbarFormat": { "type": { "name": "string" } },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+  },
+  "slots": [],
+  "name": "TimeRangePickerToolbar",
+  "imports": [
+    "import { TimeRangePickerToolbar } from '@mui/x-date-pickers-pro/TimeRangePicker';",
+    "import { TimeRangePickerToolbar } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": {
+    "classes": ["root", "container"],
+    "globalClasses": {},
+    "name": "MuiTimeRangePickerToolbar"
+  },
+  "filename": "/packages/x-date-pickers-pro/src/TimeRangePicker/TimeRangePickerToolbar.tsx",
+  "demos": "<ul></ul>"
+}

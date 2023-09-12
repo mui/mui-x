@@ -100,4 +100,9 @@ export interface UseDesktopRangePickerParams<
     'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
+  /**
+   * If `true`, the popper will always be aligned on the currently focused input.
+   * This is helpful when the view only renders information about one of the dates.
+   */
+  shouldMovePopperToFocusedInput: boolean;
 }

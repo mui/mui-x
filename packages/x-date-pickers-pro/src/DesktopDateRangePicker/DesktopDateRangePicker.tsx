@@ -60,6 +60,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     valueManager: rangeValueManager,
     valueType: 'date',
     validator: validateDateRange,
+    shouldMovePopperToFocusedInput: false,
   });
 
   return renderPicker();
