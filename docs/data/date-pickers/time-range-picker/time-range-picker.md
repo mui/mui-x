@@ -1,19 +1,95 @@
 ---
 productId: x-date-pickers
 title: React Time Range Picker component
-githubLabel: 'component: TimeRangePicker'
+components: TimeRangePicker, DesktopTimeRangePicker, MobileTimeRangePicker, StaticTimeRangePicker
+githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
 
-# Time Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
+# Time Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The Time Range Picker let the user select a range of time.</p>
+<p class="description">The Time Range Picker let the user select a range of times.</p>
+
+## Basic usage
+
+{{"demo": "BasicTimeRangePicker.js"}}
+
+## Component composition
+
+The component is built using the `MultiInputTimeRangeField` for the keyboard editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile view editing.
+All the documented props of those two components can also be passed to the Time Range Picker component.
+
+Check-out their documentation page for more information:
+
+- [Time Range Field](/x/react-date-pickers/time-range-field/)
+- [Digital Clock](/x/react-date-pickers/digital-clock/)
+- [Time Clock](/x/react-date-pickers/time-clock/)
+
+## Uncontrolled vs. controlled value
+
+The value of the component can be uncontrolled or controlled.
+
+[//]: # '{{"demo": "TimeRangePickerValue.js"}}'
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
+
+## Available components
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4460](https://github.com/mui/mui-x/issues/4460) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+NOT READY
 :::
+
+The component is available in four variants:
+
+- The `DesktopTimeRangePicker` component which works best for mouse devices and large screens.
+  It renders the views inside a popover and allows editing values directly inside the field.
+
+- The `MobileTimeRangePicker` component which works best for touch devices and small screens.
+  It renders the view inside a modal and does not allow editing values directly inside the field.
+
+- The `TimeRangePicker` component which renders `DesktopTimeRangePicker` or `MobileTimeRangePicker` depending on the device it runs on.
+
+- The `StaticTimeRangePicker` component which renders without the popover/modal and field.
+
+[//]: # '{{"demo": "ResponsiveDateRangePickers.js"}}'
+
+By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+This can be customized with the `desktopModeMediaQuery` prop.
+
+:::warning
+Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
+Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
+:::
+
+## Form props
+
+The component can be disabled or read-only.
+
+[//]: # '{{"demo": "FormPropsTimeRangePickers.js"}}'
+
+## Customization
+
+### Use a single input field
+
+:::warning
+NOT READY
+:::
+
+You can pass the `SingleInputTimeRangeField` component to the Date Range Picker to use it for keyboard editing:
+
+[//]: # '{{"demo": "SingleInputDateRangePicker.js"}}'
+
+:::info
+For more information, check out the [Custom field](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers) page.
+:::
+
+## Validation
+
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).

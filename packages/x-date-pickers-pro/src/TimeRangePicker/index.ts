@@ -1,4 +1,4 @@
-// export { TimeRangePicker } from './TimeRangePicker';
+export { TimeRangePicker } from './TimeRangePicker';
 export type {
   TimeRangePickerProps,
   TimeRangePickerSlotsComponents,
