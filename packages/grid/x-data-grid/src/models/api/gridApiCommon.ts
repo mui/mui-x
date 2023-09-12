@@ -17,7 +17,7 @@ import { GridSortApi } from './gridSortApi';
 import { GridStateApi, GridStatePrivateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
-import { GridVirtualizationApi } from './gridVirtualizationApi';
+import { GridVirtualizationApi, GridVirtualizationPrivateApi } from './gridVirtualizationApi';
 import type {
   GridPipeProcessingApi,
   GridPipeProcessingPrivateApi,
@@ -77,7 +77,8 @@ export interface GridPrivateOnlyApiCommon<
     GridEditingPrivateApi,
     GridLoggerApi,
     GridFocusPrivateApi,
-    GridHeaderFilteringPrivateApi {}
+    GridHeaderFilteringPrivateApi,
+    GridVirtualizationPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,
