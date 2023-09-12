@@ -556,6 +556,10 @@ export const useGridColumnResize = (
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
 
+/**
+ * Checker that returns a promise that resolves when the column virtualization
+ * is disabled.
+ */
 function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiPro>) {
   const promise = React.useRef<ControllablePromise>();
   const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
@@ -637,6 +641,10 @@ function extractColumnWidths(root: Element, options: AutosizeOptionsRequired) {
   return widthByField;
 }
 
+/**
+ * Basic stats outlier detection, checks if the value is `F * IQR` away from
+ * the Q1 and Q3 boundaries. IQR: interquartile range.
+ */
 function excludeOutliers(inputValues: number[], factor: number) {
   const values = inputValues.slice();
   values.sort((a, b) => a - b);
@@ -644,6 +652,12 @@ function excludeOutliers(inputValues: number[], factor: number) {
   const q1 = values[Math.floor(values.length * 0.25)];
   const q3 = values[Math.floor(values.length * 0.75)];
   const iqr = q3 - q1;
+
+  // We make a small adjustment if `iqr < 5` for the cases where the IQR is
+  // very small (e.g. zero) due to very close by values in the input data.
+  // Otherwise, with an IQR of `0`, anything outside that would be considered
+  // an outlier, but it makes more sense visually to allow for this 5px variance
+  // rather than showing a cropped cell.
   const deviation = iqr < 5 ? 5 : iqr * factor;
 
   return values.filter((v) => v > q1 - deviation && v < q3 + deviation);
