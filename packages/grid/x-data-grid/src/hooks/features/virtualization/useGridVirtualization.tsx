@@ -18,7 +18,7 @@ export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (
   _apiRef,
 ) => {
   const virtualization = {
-    enabled: props.disableVirtualization ? props.disableVirtualization : true,
+    enabled: !(props.disableVirtualization ?? false),
     enabledForColumns: true,
   };
 
