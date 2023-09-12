@@ -13,12 +13,6 @@ export type GridAutosizeOptions = {
    */
   columns?: GridColDef[];
   /**
-   * The amount of rows to sample when calculating widths. Note that this amount of rows will
-   * be rendered to the DOM, so increading this value might have a noticeable performance impact.
-   * @default 50
-   */
-  sampleLength?: number;
-  /**
    * If true, include the header widths in the calculation
    * @default false
    */
