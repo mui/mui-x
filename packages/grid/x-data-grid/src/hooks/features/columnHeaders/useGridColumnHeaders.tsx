@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled, useTheme } from '@mui/system';
 import { defaultMemoize } from 'reselect';
+import { useGridSelector } from '../../utils';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
@@ -15,6 +16,7 @@ import {
   areRenderContextsEqual,
   getRenderableIndexes,
 } from '../virtualization/useGridVirtualScroller';
+import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -100,7 +102,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [resizeCol, setResizeCol] = React.useState('');
 
   const apiRef = useGridPrivateApiContext();
-  const hasVirtualization = apiRef.current.state.virtualization.enabledForColumns;
+  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
 
   const rootProps = useGridRootProps();
   const innerRef = React.useRef<HTMLDivElement>(null);
