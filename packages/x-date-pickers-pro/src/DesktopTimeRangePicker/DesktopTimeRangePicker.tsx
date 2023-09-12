@@ -5,6 +5,8 @@ import {
   extractValidationProps,
   PickerViewRendererLookup,
   TimeViewWithMeridiem,
+  useUtils,
+  resolveTimeFormat,
 } from '@mui/x-date-pickers/internals';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -24,6 +26,8 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   inProps: DesktopTimeRangePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const utils = useUtils<TDate>();
+
   // Props with the default values common to all date time pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<
     TDate,
@@ -58,6 +62,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: resolveTimeFormat(utils, defaultizedProps),
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
     slots: {
       field: MultiInputDateRangeField,

@@ -540,6 +540,8 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     return toDisplay;
   }, [currentMonth, fixedWeekNumber, utils, timezone]);
 
+  console.log(weeksToDisplay);
+
   return (
     <div role="grid" aria-labelledby={gridLabelId}>
       <PickersCalendarDayHeader role="row" className={classes.header}>

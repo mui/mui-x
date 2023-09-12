@@ -1,10 +1,15 @@
 import * as React from 'react';
-import { BaseClockProps, TimeViewWithMeridiem, isTimeView } from '@mui/x-date-pickers/internals';
+import {
+  BaseClockProps,
+  TimeViewWithMeridiem,
+  isTimeView,
+  PickerSelectionState,
+} from '@mui/x-date-pickers/internals';
 import { DigitalClock, DigitalClockProps } from '@mui/x-date-pickers/DigitalClock';
 import Stack from '@mui/material/Stack';
 import { TimeView } from '@mui/x-date-pickers/models';
 import type { TimeRangePickerProps } from '../TimeRangePicker/TimeRangePicker.types';
-import { DateRange } from '../internals/models';
+import { DateRange, RangePosition } from '../internals/models';
 
 export type TimeRangeViewRendererProps<
   TDate,
@@ -48,15 +53,25 @@ export const renderDigitalClockTimeRangeView = <TDate extends unknown>({
   timeSteps,
   skipDisabled,
   timezone,
+  rangePosition,
 }: TimeRangeViewRendererProps<
   TDate,
   Extract<TimeView, 'hours'>,
   Omit<DigitalClockProps<TDate>, 'timeStep' | 'value' | 'defaultValue' | 'onChange'> &
     Pick<TimeRangePickerProps<TDate>, 'timeSteps'> & {
       value: DateRange<TDate>;
-      onChange: (value: DateRange<TDate>) => void;
+      onChange: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
+      rangePosition: RangePosition;
     }
 >) => {
+  const viewValue = rangePosition === 'start' ? value[0] : value[1];
+
+  const handleChange = (newValue: TDate | null, selectionState?: PickerSelectionState) =>
+    onChange(
+      rangePosition === 'start' ? [newValue, value[1]] : [value[0], newValue],
+      selectionState,
+    );
+
   return (
     <Stack>
       <DigitalClock<TDate>
@@ -65,9 +80,9 @@ export const renderDigitalClockTimeRangeView = <TDate extends unknown>({
         focusedView={focusedView}
         onFocusedViewChange={onFocusedViewChange}
         views={views.filter(isTimeView)}
-        value={value[0]}
+        value={viewValue}
         referenceDate={referenceDate}
-        onChange={(newValue) => onChange?.([newValue, value[1]])}
+        onChange={handleChange}
         className={className}
         classes={classes}
         disableFuture={disableFuture}
