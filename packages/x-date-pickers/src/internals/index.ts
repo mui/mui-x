@@ -104,7 +104,11 @@ export type {
   BasePickerInputProps,
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
-export type { BaseClockProps, ExportedBaseClockProps } from './models/props/clock';
+export type {
+  BaseClockProps,
+  ExportedBaseClockProps,
+  DesktopOnlyTimePickerProps,
+} from './models/props/clock';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { WrapperVariant, TimeViewWithMeridiem } from './models/common';
@@ -137,6 +141,7 @@ export { extractValidationProps } from './utils/validation/extractValidationProp
 export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
+export { applyDefaultViewProps } from './utils/views';
 export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
 export { uncapitalizeObjectKeys } from './utils/slots-migration';
 export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';

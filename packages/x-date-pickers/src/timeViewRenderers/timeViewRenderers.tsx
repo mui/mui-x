@@ -52,7 +52,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   showViewSwitcher,
   disableIgnoringDatePartForTimeValidation,
   timezone,
-}: TimeViewRendererProps<TimeView, TimeClockProps<TDate, TimeView>>) => (
+}: TimeViewRendererProps<TimeView, TimeClockProps<TDate>>) => (
   <TimeClock<TDate>
     view={view}
     onViewChange={onViewChange}

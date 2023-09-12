@@ -38,6 +38,7 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Күн мен уақытты таңдау',
   timePickerToolbarTitle: 'Уақытты таңдау',
   dateRangePickerToolbarTitle: 'Кезеңді таңдаңыз',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

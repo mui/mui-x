@@ -32,11 +32,16 @@ export interface UseDesktopRangePickerSlotsComponent<
 export interface UseDesktopRangePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends PickersPopperSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponentsProps<TDate> {
+> extends ExportedUseDesktopRangePickerSlotsComponentsProps<TDate, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
+
+export interface ExportedUseDesktopRangePickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersPopperSlotsComponentsProps,
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
+    RangePickerFieldSlotsComponentsProps<TDate> {}
 
 export interface DesktopRangeOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,

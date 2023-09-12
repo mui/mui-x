@@ -37,6 +37,7 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Valitse päivä ja aika',
   timePickerToolbarTitle: 'Valitse aika',
   dateRangePickerToolbarTitle: 'Valitse aikaväli',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

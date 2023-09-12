@@ -37,6 +37,7 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Välj datum & tid',
   timePickerToolbarTitle: 'Välj tid',
   dateRangePickerToolbarTitle: 'Välj datumintervall',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

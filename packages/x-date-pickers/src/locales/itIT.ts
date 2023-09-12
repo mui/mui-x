@@ -37,6 +37,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Seleziona data e orario',
   timePickerToolbarTitle: 'Seleziona orario',
   dateRangePickerToolbarTitle: 'Seleziona intervallo di date',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

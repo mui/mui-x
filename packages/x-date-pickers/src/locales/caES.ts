@@ -37,6 +37,7 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Seleccionar data i hora',
   timePickerToolbarTitle: 'Seleccionar hora',
   dateRangePickerToolbarTitle: 'Seleccionar rang de dates',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

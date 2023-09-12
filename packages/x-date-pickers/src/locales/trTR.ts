@@ -37,6 +37,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Tarih & Saat seç',
   timePickerToolbarTitle: 'Saat seç',
   dateRangePickerToolbarTitle: 'Tarih aralığı seçin',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

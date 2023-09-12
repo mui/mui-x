@@ -1,15 +1,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
-import { rangeValueManager } from '../internal/utils/valueManagers';
+import {
+  extractValidationProps,
+  PickerViewRendererLookup,
+  TimeViewWithMeridiem,
+} from '@mui/x-date-pickers/internals';
+import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
+import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
-import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
-import { renderDateRangeViewCalendar } from '@mui/x-date-pickers/timeViewRenderers';
+import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
-import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
-import { validateDateRange } from '../internal/utils/validation/validateDateRange';
-import { DateRange } from '../internal/models';
+import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
+import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
+import { DateRange } from '../internals/models';
+import { renderDigitalClockTimeRangeView } from '../timeRangeViewRenderers';
 
 type DesktopTimeRangePickerComponent = (<TDate>(
   props: DesktopTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -20,22 +25,40 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   ref: React.Ref<HTMLDivElement>,
 ) {
   // Props with the default values common to all date time pickers
-  const defaultizedProps = useDateRangePickerDefaultizedProps<
+  const defaultizedProps = useTimeRangePickerDefaultizedProps<
     TDate,
+    TimeViewWithMeridiem,
     DesktopTimeRangePickerProps<TDate>
   >(inProps, 'MuiDesktopTimeRangePicker');
 
-  const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
-    day: renderDateRangeViewCalendar,
+  // const thresholdToRenderTimeInASingleColumn =
+  //   defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
+  // const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
+  const shouldRenderTimeInASingleColumn = true; // (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
+
+  const renderTimeView = shouldRenderTimeInASingleColumn
+    ? renderDigitalClockTimeRangeView
+    : renderMultiSectionDigitalClockTimeView;
+
+  const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, TimeViewWithMeridiem, any, {}> = {
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
+
+  const shouldHoursRendererContainMeridiemView =
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+  const views: readonly TimeViewWithMeridiem[] =
+    defaultizedProps.ampm && shouldHoursRendererContainMeridiemView
+      ? [...defaultizedProps.views, 'meridiem']
+      : defaultizedProps.views;
 
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    calendars: defaultizedProps.calendars ?? 2,
-    views: ['day'] as const,
-    openTo: 'day' as const,
+    views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
     slots: {
       field: MultiInputDateRangeField,
       ...defaultizedProps.slots,
@@ -54,11 +77,11 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, 'day', typeof props>({
+  const { renderPicker } = useDesktopRangePicker<TDate, TimeViewWithMeridiem, typeof props>({
     props,
     valueManager: rangeValueManager,
-    valueType: 'date',
-    validator: validateDateRange,
+    valueType: 'time',
+    validator: validateTimeRange,
   });
 
   return renderPicker();

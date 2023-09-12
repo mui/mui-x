@@ -38,6 +38,7 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Dátum és idő kiválasztása',
   timePickerToolbarTitle: 'Idő kiválasztása',
   dateRangePickerToolbarTitle: 'Dátumhatárok kiválasztása',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

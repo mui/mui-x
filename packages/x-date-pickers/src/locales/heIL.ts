@@ -37,6 +37,7 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'בחירת תאריך ושעה',
   timePickerToolbarTitle: 'בחירת שעה',
   dateRangePickerToolbarTitle: 'בחירת טווח תאריכים',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

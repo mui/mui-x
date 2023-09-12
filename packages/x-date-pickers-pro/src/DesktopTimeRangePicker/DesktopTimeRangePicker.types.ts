@@ -1,31 +1,37 @@
-import { MakeOptional, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import { TimeView } from '@mui/x-date-pickers/models';
+import {
+  MakeOptional,
+  UncapitalizeObjectKeys,
+  DesktopOnlyTimePickerProps,
+  TimeViewWithMeridiem,
+} from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerSlotsComponent,
-  UseDesktopRangePickerSlotsComponentsProps,
+  ExportedUseDesktopRangePickerSlotsComponentsProps,
   DesktopRangeOnlyPickerProps,
-} from '../internal/hooks/useDesktopRangePicker';
+} from '../internals/hooks/useDesktopRangePicker';
 import {
-  BaseDateRangePickerProps,
-  BaseDateRangePickerSlotsComponent,
-  BaseDateRangePickerSlotsComponentsProps,
-} from '../DateRangePicker/shared';
+  BaseTimeRangePickerProps,
+  BaseTimeRangePickerSlotsComponent,
+  BaseTimeRangePickerSlotsComponentsProps,
+} from '../TimeRangePicker/shared';
 
 export interface DesktopTimeRangePickerSlotsComponent<TDate>
-  extends BaseDateRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, 'day'>, 'Field'> {}
+  extends BaseTimeRangePickerSlotsComponent<TDate>,
+    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, TimeViewWithMeridiem>, 'Field'> {}
 
 export interface DesktopTimeRangePickerSlotsComponentsProps<TDate>
-  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
-    UseDesktopRangePickerSlotsComponentsProps<TDate, 'day'> {}
+  extends BaseTimeRangePickerSlotsComponentsProps,
+    ExportedUseDesktopRangePickerSlotsComponentsProps<TDate, TimeViewWithMeridiem> {}
 
 export interface DesktopTimeRangePickerProps<TDate>
-  extends BaseDateRangePickerProps<TDate>,
-    DesktopRangeOnlyPickerProps<TDate> {
+  extends BaseTimeRangePickerProps<TDate, TimeViewWithMeridiem>,
+    DesktopRangeOnlyPickerProps<TDate>,
+    DesktopOnlyTimePickerProps<TDate> {
   /**
-   * The number of calendars to render on **desktop**.
-   * @default 2
+   * Available views.
    */
-  calendars?: 1 | 2 | 3;
+  views?: readonly TimeView[];
   /**
    * Overridable components.
    * @default {}

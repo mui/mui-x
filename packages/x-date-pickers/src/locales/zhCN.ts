@@ -35,6 +35,7 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: '选择日期和时间',
   timePickerToolbarTitle: '选择时间',
   dateRangePickerToolbarTitle: '选择时间范围',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

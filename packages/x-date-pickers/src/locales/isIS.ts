@@ -37,6 +37,7 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Velja dagsetningu og tíma',
   timePickerToolbarTitle: 'Velja tíma',
   dateRangePickerToolbarTitle: 'Velja tímabil',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

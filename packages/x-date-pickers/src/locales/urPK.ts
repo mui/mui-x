@@ -37,6 +37,7 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'تاریخ اور وقت منتخب کریں',
   timePickerToolbarTitle: 'وقت منتخب کریں',
   dateRangePickerToolbarTitle: 'تاریخوں کی رینج منتخب کریں',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

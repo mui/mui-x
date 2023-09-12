@@ -12,37 +12,37 @@ import {
   ExportedBaseClockProps,
   TimeViewWithMeridiem,
   useUtils,
+  applyDefaultViewProps,
 } from '@mui/x-date-pickers/internals';
 import {
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
 } from '@mui/x-date-pickers/TimeClock';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
-// TODO: Fix nested import
 import {
-  TimePickerToolbar,
-  TimePickerToolbarProps,
-  ExportedTimePickerToolbarProps,
-} from '@mui/x-date-pickers/TimePicker/TimePickerToolbar';
+  TimeRangePickerToolbar,
+  TimeRangePickerToolbarProps,
+  ExportedTimeRangePickerToolbarProps,
+} from './TimeRangePickerToolbar';
 import { TimeRangeValidationError } from '../models';
-import { DateRange } from '../internal/models';
+import { DateRange } from '../internals/models';
 
 export interface BaseTimeRangePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
+  Toolbar?: React.JSXElementConstructor<TimeRangePickerToolbarProps<TDate>>;
 }
 
 export interface BaseTimeRangePickerSlotsComponentsProps extends TimeClockSlotsComponentsProps {
-  toolbar?: ExportedTimePickerToolbarProps;
+  toolbar?: ExportedTimeRangePickerToolbarProps;
 }
 
 export interface BaseTimeRangePickerProps<TDate, TView extends TimeViewWithMeridiem>
   extends Omit<
       BasePickerInputProps<DateRange<TDate>, TDate, TView, TimeRangeValidationError>,
-      'view' | 'views' | 'openTo' | 'onViewChange' | 'orientation'
+      'orientation'
     >,
     ExportedBaseClockProps<TDate> {
   /**
@@ -91,7 +91,13 @@ type UseTimeRangePickerDefaultizedProps<
   TDate,
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimeRangePickerProps<TDate, TView>,
-> = LocalizedComponent<TDate, DefaultizedProps<Props, keyof BaseTimeValidationProps>>;
+> = Omit<
+  LocalizedComponent<
+    TDate,
+    DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
+  >,
+  'components' | 'componentsProps'
+>;
 
 export function useTimeRangePickerDefaultizedProps<
   TDate,
@@ -126,11 +132,18 @@ export function useTimeRangePickerDefaultizedProps<
 
   return {
     ...themeProps,
+    ampm,
     localeText,
+    ...applyDefaultViewProps({
+      views: themeProps.views,
+      openTo: themeProps.openTo,
+      defaultViews: ['hours', 'minutes'] as TView[],
+      defaultOpenTo: 'hours' as TView,
+    }),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     slots: {
-      toolbar: TimePickerToolbar,
+      toolbar: TimeRangePickerToolbar,
       ...slots,
     },
     slotProps: {
