@@ -7,9 +7,6 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 export default function ColumnAutosizing() {
   const apiRef = useGridApiRef();
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 1000 });
-  const [sampleLength, setSampleLength] = React.useState(
-    DEFAULT_GRID_AUTOSIZE_OPTIONS.sampleLength,
-  );
   const [includeHeaders, setIncludeHeaders] = React.useState(
     DEFAULT_GRID_AUTOSIZE_OPTIONS.includeHeaders,
   );
@@ -33,7 +30,6 @@ export default function ColumnAutosizing() {
             variant="outlined"
             onClick={() =>
               apiRef.current.autosizeColumns({
-                sampleLength,
                 includeHeaders,
                 excludeOutliers,
                 outliersFactor: Number.isNaN(parseFloat(outliersFactor))
@@ -45,13 +41,6 @@ export default function ColumnAutosizing() {
             Autosize columns
           </Button>
         </div>
-        <TextField
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-          label="Sample length"
-          value={sampleLength}
-          onChange={(ev) => setSampleLength(parseInt(ev.target.value))}
-          sx={{ width: '12ch' }}
-        />
         <FormControlLabel
           control={
             <Checkbox
