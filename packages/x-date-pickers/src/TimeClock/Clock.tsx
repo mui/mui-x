@@ -14,6 +14,7 @@ import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { getHours, getMinutes } from './shared';
 import { TimeView } from '../models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
+import { formatMeridiem } from '../internals/utils/date-utils';
 
 export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   ampm: boolean;
@@ -359,7 +360,9 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
             ownerState={ownerState}
             className={classes.amButton}
           >
-            <Typography variant="caption">AM</Typography>
+            <Typography variant="caption" minWidth={19}>
+              {formatMeridiem(utils, 'am')}
+            </Typography>
           </ClockAmButton>
           <ClockPmButton
             disabled={disabled || meridiemMode === null}
@@ -368,7 +371,9 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
             ownerState={ownerState}
             className={classes.pmButton}
           >
-            <Typography variant="caption">PM</Typography>
+            <Typography variant="caption" minWidth={19}>
+              {formatMeridiem(utils, 'pm')}
+            </Typography>
           </ClockPmButton>
         </React.Fragment>
       )}
