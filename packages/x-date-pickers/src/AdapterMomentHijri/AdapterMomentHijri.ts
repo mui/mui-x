@@ -253,6 +253,13 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     });
   };
 
+  public getWeekdaysDates = (value: Moment) => {
+    const start = value.clone().startOf('week');
+    return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
+      return start.clone().add(dayOfWeek, 'day');
+    });
+  };
+
   public getWeekArray = (value: Moment) => {
     const start = value.clone().startOf('iMonth').startOf('week');
 

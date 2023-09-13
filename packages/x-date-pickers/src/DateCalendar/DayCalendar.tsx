@@ -553,17 +553,20 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             {localeText.calendarWeekNumberHeaderText}
           </PickersCalendarWeekNumberLabel>
         )}
-        {utils.getWeekdays().map((day, i) => (
-          <PickersCalendarWeekDayLabel
-            key={day + i.toString()}
-            variant="caption"
-            role="columnheader"
-            aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
-            className={classes.weekDayLabel}
-          >
-            {dayOfWeekFormatter?.(day) ?? day}
-          </PickersCalendarWeekDayLabel>
-        ))}
+        {utils.getWeekdaysDates(now).map((weekday, i) => {
+          const day = utils.format(weekday, 'weekdayShort');
+          return (
+            <PickersCalendarWeekDayLabel
+              key={day + i.toString()}
+              variant="caption"
+              role="columnheader"
+              aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
+              className={classes.weekDayLabel}
+            >
+              {dayOfWeekFormatter?.(day) ?? day}
+            </PickersCalendarWeekDayLabel>
+          );
+        })}
       </PickersCalendarDayHeader>
 
       {loading ? (

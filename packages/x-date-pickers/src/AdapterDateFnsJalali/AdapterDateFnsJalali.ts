@@ -56,6 +56,7 @@ import isWithinInterval from 'date-fns-jalali/isWithinInterval';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
+import { Moment } from 'moment-hijri';
 import {
   AdapterFormats,
   AdapterOptions,
@@ -562,6 +563,13 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
       start: startOfWeek(now, { locale: this.locale }),
       end: endOfWeek(now, { locale: this.locale }),
     }).map((day) => this.formatByString(day, 'EEEEEE'));
+  };
+
+  public getWeekdaysDates = (value: Date) => {
+    return eachDayOfInterval({
+      start: startOfWeek(value, { locale: this.locale }),
+      end: endOfWeek(value, { locale: this.locale }),
+    });
   };
 
   public getWeekArray = (value: Date) => {
