@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -18,7 +17,7 @@ export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (
   _apiRef,
 ) => {
   const virtualization = {
-    enabled: !(props.disableVirtualization ?? false),
+    enabled: !props.disableVirtualization,
     enabledForColumns: true,
   };
 
@@ -68,7 +67,6 @@ export function useGridVirtualization(
    */
 
   React.useEffect(() => {
-    const disable = props.disableVirtualization ?? false;
-    setVirtualization(!disable);
+    setVirtualization(!props.disableVirtualization);
   }, [props.disableVirtualization]);
 }

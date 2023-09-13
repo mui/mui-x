@@ -10,7 +10,24 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function ColumnAutosizing() {
   const apiRef = useGridApiRef<GridApiPro>();
-  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 1000 });
+
+  const { data: originalData } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 500,
+  });
+
+  const data = { ...originalData };
+  const outlierIndex = data.rows.findIndex(
+    (row) => row.commodity === 'Frozen Concentrated Orange Juice',
+  );
+  if (outlierIndex !== 0 && outlierIndex !== -1) {
+    const rows = data.rows.slice();
+    const row = rows[0];
+    rows[0] = rows[outlierIndex];
+    rows[outlierIndex] = row;
+    data.rows = rows;
+  }
+
   const [includeHeaders, setIncludeHeaders] = React.useState(
     DEFAULT_GRID_AUTOSIZE_OPTIONS.includeHeaders,
   );
@@ -34,6 +51,7 @@ export default function ColumnAutosizing() {
             variant="outlined"
             onClick={() =>
               apiRef.current.autosizeColumns({
+                columns: data.columns.slice(1, 2),
                 includeHeaders,
                 excludeOutliers,
                 outliersFactor: Number.isNaN(parseFloat(outliersFactor))
