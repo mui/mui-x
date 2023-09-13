@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Time Range Picker component
 components: TimeRangePicker, DesktopTimeRangePicker, MobileTimeRangePicker, StaticTimeRangePicker
-githubLabel: 'component: DateRangePicker'
+githubLabel: 'component: TimeRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
@@ -60,7 +60,7 @@ The component is available in four variants:
 
 {{"demo": "ResponsiveTimeRangePickers.js"}}
 
-By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `TimeRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning
@@ -82,9 +82,9 @@ The component can be disabled or read-only.
 NOT READY
 :::
 
-You can pass the `SingleInputTimeRangeField` component to the Date Range Picker to use it for keyboard editing:
+You can pass the `SingleInputTimeRangeField` component to the Time Range Picker to use it for keyboard editing:
 
-[//]: # '{{"demo": "SingleInputDateRangePicker.js"}}'
+{{"demo": "SingleInputTimeRangePicker.js"}}
 
 :::info
 For more information, check out the [Custom field](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers) page.
