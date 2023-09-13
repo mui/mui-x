@@ -42,7 +42,7 @@ function useData(length) {
     ];
 
     return { rows, columns };
-  }, []);
+  }, [length]);
 }
 
 export default function ColumnAutosizing() {

@@ -173,6 +173,32 @@ function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPriv
   return asyncCheck;
 }
 
+/**
+ * Basic statistical outlier detection, checks if the value is `F * IQR` away from
+ * the Q1 and Q3 boundaries. IQR: interquartile range.
+ */
+function excludeOutliers(inputValues: number[], factor: number) {
+  if (inputValues.length < 4) {
+    return inputValues;
+  }
+
+  const values = inputValues.slice();
+  values.sort((a, b) => a - b);
+
+  const q1 = values[Math.floor(values.length * 0.25)];
+  const q3 = values[Math.floor(values.length * 0.75) - 1];
+  const iqr = q3 - q1;
+
+  // We make a small adjustment if `iqr < 5` for the cases where the IQR is
+  // very small (e.g. zero) due to very close by values in the input data.
+  // Otherwise, with an IQR of `0`, anything outside that would be considered
+  // an outlier, but it makes more sense visually to allow for this 5px variance
+  // rather than showing a cropped cell.
+  const deviation = iqr < 5 ? 5 : iqr * factor;
+
+  return values.filter((v) => v > q1 - deviation && v < q3 + deviation);
+}
+
 function extractColumnWidths(
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   options: AutosizeOptionsRequired,
@@ -236,32 +262,6 @@ function extractColumnWidths(
   root.classList.remove(gridClasses.autosizing);
 
   return widthByField;
-}
-
-/**
- * Basic stats outlier detection, checks if the value is `F * IQR` away from
- * the Q1 and Q3 boundaries. IQR: interquartile range.
- */
-function excludeOutliers(inputValues: number[], factor: number) {
-  if (inputValues.length < 4) {
-    return inputValues;
-  }
-
-  const values = inputValues.slice();
-  values.sort((a, b) => a - b);
-
-  const q1 = values[Math.floor(values.length * 0.25)];
-  const q3 = values[Math.floor(values.length * 0.75) - 1];
-  const iqr = q3 - q1;
-
-  // We make a small adjustment if `iqr < 5` for the cases where the IQR is
-  // very small (e.g. zero) due to very close by values in the input data.
-  // Otherwise, with an IQR of `0`, anything outside that would be considered
-  // an outlier, but it makes more sense visually to allow for this 5px variance
-  // rather than showing a cropped cell.
-  const deviation = iqr < 5 ? 5 : iqr * factor;
-
-  return values.filter((v) => v > q1 - deviation && v < q3 + deviation);
 }
 
 /**

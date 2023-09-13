@@ -411,7 +411,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  describe.only('autosizing', () => {
+  describe('autosizing', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting
@@ -469,7 +469,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     describe('options', () => {
-      const test = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
+      const autosizeWith = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
         render(<Test rows={rows} columns={columns} />);
         await apiRef.current.autosizeColumns(options);
         await microtasks();
@@ -477,19 +477,19 @@ describe('<DataGridPro /> - Columns', () => {
       };
 
       it('.columns works', async () => {
-        await test({ columns: [columns[0]] }, [50, 100]);
+        await autosizeWith({ columns: [columns[0]] }, [50, 100]);
       });
       it('.includeHeaders works', async () => {
-        await test({ includeHeaders: true }, [153, 176]);
+        await autosizeWith({ includeHeaders: true }, [153, 176]);
       });
       it('.excludeOutliers works', async () => {
-        await test({ excludeOutliers: true }, [50, 63]);
+        await autosizeWith({ excludeOutliers: true }, [50, 63]);
       });
       it('.outliersFactor works', async () => {
-        await test({ excludeOutliers: true, outliersFactor: 40 }, [50, 144]);
+        await autosizeWith({ excludeOutliers: true, outliersFactor: 40 }, [50, 144]);
       });
       it('.expand works', async () => {
-        await test({ expand: true }, [94, 188]);
+        await autosizeWith({ expand: true }, [94, 188]);
       });
     });
   });

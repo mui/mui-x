@@ -45,7 +45,7 @@ function useData(length: number) {
     ];
 
     return { rows, columns };
-  }, []);
+  }, [length]);
 }
 
 export default function ColumnAutosizing() {
