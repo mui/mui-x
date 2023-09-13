@@ -59,6 +59,8 @@ const TimeRangePickerToolbarContainer = styled('div', {
   overridesResolver: (_, styles) => styles.container,
 })({
   display: 'flex',
+  justifyContent: 'space-between',
+  width: '100%',
 });
 
 const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
