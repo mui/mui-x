@@ -134,12 +134,7 @@ function getResizeDirection(element: HTMLElement, direction: Direction) {
   return side;
 }
 
-export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
-  ...state,
-  columnResize: { resizingColumnField: '' },
-});
-
-const preventClick = (event: MouseEvent) => {
+function preventClick(event: MouseEvent) {
   event.preventDefault();
   event.stopImmediatePropagation();
 };
@@ -264,6 +259,10 @@ function extractColumnWidths(
   return widthByField;
 }
 
+export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  columnResize: { resizingColumnField: '' },
+});
 /**
  * @requires useGridColumns (method, event)
  * TODO: improve experience for last column
