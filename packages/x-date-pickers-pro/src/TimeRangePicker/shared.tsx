@@ -46,11 +46,6 @@ export interface BaseTimeRangePickerProps<TDate, TView extends TimeViewWithMerid
     >,
     ExportedBaseClockProps<TDate> {
   /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default true on desktop, false on mobile
-   */
-  ampmInClock?: boolean;
-  /**
    * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
@@ -150,7 +145,6 @@ export function useTimeRangePickerDefaultizedProps<
       ...slotProps,
       toolbar: {
         ampm,
-        ampmInClock: themeProps.ampmInClock,
         ...slotProps?.toolbar,
       },
     },

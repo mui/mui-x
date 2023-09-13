@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { TimeView } from '@mui/x-date-pickers/models';
 import {
   PickersToolbar,
   PickersToolbarButton,
@@ -12,6 +13,7 @@ import {
   useLocaleText,
   ExportedBaseToolbarProps,
   TimeViewWithMeridiem,
+  resolveTimeFormat,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../internals/models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
@@ -31,17 +33,16 @@ const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps<any>) => {
 };
 
 export interface TimeRangePickerToolbarProps<TDate>
-  extends Omit<
-      BaseToolbarProps<DateRange<TDate>, TimeViewWithMeridiem>,
-      'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
-    >,
+  extends BaseToolbarProps<DateRange<TDate>, TimeViewWithMeridiem>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
+  ampm: boolean;
+  ampmInClock: boolean;
   classes?: Partial<TimeRangePickerToolbarClasses>;
 }
 
 export interface ExportedTimeRangePickerToolbarProps extends ExportedBaseToolbarProps {
-  ampm?: boolean;
-  ampmInClock?: boolean;
+  ampm: boolean;
+  ampmInClock: boolean;
 }
 
 const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
@@ -72,18 +73,25 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
     onRangePositionChange,
     toolbarFormat,
     className,
+    ampm,
+    ampmInClock,
+    views,
     ...other
   } = props;
 
   const localeText = useLocaleText<TDate>();
 
-  const startDateValue = start
-    ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
-    : localeText.start;
+  const format = React.useMemo(() => {
+    if (toolbarFormat) {
+      return toolbarFormat;
+    }
 
-  const endDateValue = end
-    ? utils.formatByString(end, toolbarFormat || utils.formats.shortDate)
-    : localeText.end;
+    return resolveTimeFormat(utils, { format: undefined, ampm, views: views as TimeView[] });
+  }, [toolbarFormat]);
+
+  const startDateValue = start ? utils.formatByString(start, format) : localeText.start;
+
+  const endDateValue = end ? utils.formatByString(end, format) : localeText.end;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);

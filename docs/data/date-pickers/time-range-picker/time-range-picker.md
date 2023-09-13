@@ -30,7 +30,7 @@ Check-out their documentation page for more information:
 
 The value of the component can be uncontrolled or controlled.
 
-[//]: # '{{"demo": "TimeRangePickerValue.js"}}'
+{{"demo": "TimeRangePickerValue.js"}}
 
 :::info
 
@@ -58,7 +58,7 @@ The component is available in four variants:
 
 - The `StaticTimeRangePicker` component which renders without the popover/modal and field.
 
-[//]: # '{{"demo": "ResponsiveDateRangePickers.js"}}'
+{{"demo": "ResponsiveTimeRangePickers.js"}}
 
 By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
@@ -72,7 +72,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 The component can be disabled or read-only.
 
-[//]: # '{{"demo": "FormPropsTimeRangePickers.js"}}'
+{{"demo": "FormPropsTimeRangePickers.js"}}
 
 ## Customization
 

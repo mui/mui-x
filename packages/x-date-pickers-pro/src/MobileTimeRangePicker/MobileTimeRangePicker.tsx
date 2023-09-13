@@ -1,49 +1,86 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useThemeProps } from '@mui/material/styles';
+import { TimeView } from '@mui/x-date-pickers/models';
+import {
+  extractValidationProps,
+  PickerViewRendererLookup,
+  resolveTimeFormat,
+  useUtils,
+} from '@mui/x-date-pickers/internals';
+import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import { DesktopTimeRangePicker } from '../DesktopTimeRangePicker';
-import { MobileTimeRangePicker } from '../MobileTimeRangePicker';
-import { TimeRangePickerProps } from './TimeRangePicker.types';
+import { rangeValueManager } from '../internals/utils/valueManagers';
+import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
+import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
+import { renderTimeRangeViewClock } from '../timeRangeViewRenderers';
+import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
+import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
+import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
+import { DateRange } from '../internals/models';
 
-type TimePickerComponent = (<TDate>(
-  props: TimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileTimeRangePickerComponent = (<TDate>(
+  props: MobileTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const TimeRangePicker = React.forwardRef(function TimeRangePicker<TDate>(
-  inProps: TimeRangePickerProps<TDate>,
+const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<TDate>(
+  inProps: MobileTimeRangePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePicker' });
+  const utils = useUtils<TDate>();
 
-  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
+  // Props with the default values common to all date time pickers
+  const defaultizedProps = useTimeRangePickerDefaultizedProps<
+    TDate,
+    TimeView,
+    MobileTimeRangePickerProps<TDate>
+  >(inProps, 'MuiMobileTimeRangePicker');
 
-  // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
-  const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
+  const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, TimeView, any, {}> = {
+    hours: renderTimeRangeViewClock,
+    minutes: renderTimeRangeViewClock,
+    seconds: renderTimeRangeViewClock,
+    ...defaultizedProps.viewRenderers,
+  };
 
-  if (isDesktop) {
-    return <DesktopTimeRangePicker ref={ref} {...other} />;
-  }
+  const props = {
+    ...defaultizedProps,
+    // TODO: Do we want the toolbar to support AM/PM switch on mobile?
+    ampmInClock: true,
+    viewRenderers,
+    format: resolveTimeFormat(utils, defaultizedProps),
+    slots: {
+      field: MultiInputTimeRangeField,
+      ...defaultizedProps.slots,
+    },
+    slotProps: {
+      ...defaultizedProps.slotProps,
+      field: (ownerState: any) => ({
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
+        ...extractValidationProps(defaultizedProps),
+        ref,
+      }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
+    },
+  };
 
-  return <MobileTimeRangePicker ref={ref} {...other} />;
-}) as TimePickerComponent;
+  const { renderPicker } = useMobileRangePicker<TDate, TimeView, typeof props>({
+    props,
+    valueManager: rangeValueManager,
+    valueType: 'time',
+    validator: validateTimeRange,
+  });
 
-TimeRangePicker.propTypes = {
+  return renderPicker();
+}) as MobileTimeRangePickerComponent;
+
+MobileTimeRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
-   */
-  ampm: PropTypes.bool,
-  /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default true on desktop, false on mobile
-   */
-  ampmInClock: PropTypes.bool,
   /**
    * If `true`, the main element is focused during the first mount.
    * This main element is:
@@ -51,6 +88,11 @@ TimeRangePicker.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
+  /**
+   * The number of calendars to render on **desktop**.
+   * @default 2
+   */
+  calendars: PropTypes.oneOf([1, 2, 3]),
   /**
    * Class name applied to the root element.
    */
@@ -73,6 +115,22 @@ TimeRangePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
+  /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
+  /**
+   * Default calendar month displayed when `value={[null, null]}`.
+   */
+  defaultCalendarMonth: PropTypes.any,
+  /**
    * The initial position in the edited date range.
    * Used when the component is not controlled.
    * @default 'start'
@@ -84,26 +142,30 @@ TimeRangePicker.propTypes = {
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
-   * CSS media query when `Mobile` mode will be changed to `Desktop`.
-   * @default '@media (pointer: fine)'
-   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
+   * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
+   * @default false
    */
-  desktopModeMediaQuery: PropTypes.string,
+  disableAutoMonthSwitching: PropTypes.bool,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
+   * If `true`, editing dates by dragging is disabled.
+   * @default false
+   */
+  disableDragEditing: PropTypes.bool,
+  /**
    * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
   /**
-   * Do not ignore date part when validating min/max time.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
-  disableIgnoringDatePartForTimeValidation: PropTypes.bool,
+  disableHighlightToday: PropTypes.bool,
   /**
    * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
@@ -114,6 +176,16 @@ TimeRangePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
@@ -136,25 +208,24 @@ TimeRangePicker.propTypes = {
    */
   label: PropTypes.node,
   /**
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
+   * Can be used to preload information and show it in calendar.
+   * @default false
+   */
+  loading: PropTypes.bool,
+  /**
    * Locale for components texts.
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText: PropTypes.object,
   /**
-   * Maximal selectable time.
-   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
+   * Maximal selectable date.
    */
-  maxTime: PropTypes.any,
+  maxDate: PropTypes.any,
   /**
-   * Minimal selectable time.
-   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
+   * Minimal selectable date.
    */
-  minTime: PropTypes.any,
-  /**
-   * Step over minutes.
-   * @default 1
-   */
-  minutesStep: PropTypes.number,
+  minDate: PropTypes.any,
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -185,6 +256,12 @@ TimeRangePicker.propTypes = {
    */
   onError: PropTypes.func,
   /**
+   * Callback fired on month change.
+   * @template TDate
+   * @param {TDate} month The new month.
+   */
+  onMonthChange: PropTypes.func,
+  /**
    * Callback fired when the popup requests to be opened.
    * Use in controlled mode (see `open`).
    */
@@ -200,22 +277,10 @@ TimeRangePicker.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
-   * Callback fired on view change.
-   * @template TView
-   * @param {TView} view The new view.
-   */
-  onViewChange: PropTypes.func,
-  /**
    * Control the popup or dialog open state.
    * @default false
    */
   open: PropTypes.bool,
-  /**
-   * The default visible view.
-   * Used when the component view is not controlled.
-   * Must be a valid option from `views` list.
-   */
-  openTo: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * The position in the currently edited date range.
    * Used when the component position is controlled.
@@ -232,6 +297,12 @@ TimeRangePicker.propTypes = {
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
   referenceDate: PropTypes.any,
+  /**
+   * Component displaying when passed `loading` true.
+   * @returns {React.ReactNode} The node to render when loading.
+   * @default () => "..."
+   */
+  renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -260,26 +331,24 @@ TimeRangePicker.propTypes = {
     }),
   ]),
   /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
-  /**
-   * Disable specific time.
+   * Disable specific date.
    * @template TDate
-   * @param {TDate} value The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
+   * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
+   * @returns {boolean} Returns `true` if the date should be disabled.
    */
-  shouldDisableTime: PropTypes.func,
+  shouldDisableDate: PropTypes.func,
   /**
-   * If `true`, disabled digital clock items will not be rendered.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
-  skipDisabled: PropTypes.bool,
+  showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -299,22 +368,6 @@ TimeRangePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Amount of time options below or at which the single column time renderer is used.
-   * @default 24
-   */
-  thresholdToRenderTimeInASingleColumn: PropTypes.number,
-  /**
-   * The time steps between two time unit options.
-   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
-   * When single column time renderer is used, only `timeStep.minutes` will be used.
-   * @default{ hours: 1, minutes: 5, seconds: 5 }
-   */
-  timeSteps: PropTypes.shape({
-    hours: PropTypes.number,
-    minutes: PropTypes.number,
-    seconds: PropTypes.number,
-  }),
-  /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
@@ -328,26 +381,13 @@ TimeRangePicker.propTypes = {
    */
   value: PropTypes.arrayOf(PropTypes.any),
   /**
-   * The visible view.
-   * Used when the component view is controlled.
-   * Must be a valid option from `views` list.
-   */
-  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
-  /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be the used.
    */
   viewRenderers: PropTypes.shape({
-    hours: PropTypes.func,
-    meridiem: PropTypes.func,
-    minutes: PropTypes.func,
-    seconds: PropTypes.func,
+    day: PropTypes.func,
   }),
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;
 
-export { TimeRangePicker };
+export { MobileTimeRangePicker };

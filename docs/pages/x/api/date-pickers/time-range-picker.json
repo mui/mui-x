@@ -190,6 +190,12 @@
       "description": "Custom component for trapping the focus inside the views on desktop.",
       "default": "FocusTrap from '@mui/base'."
     },
+    {
+      "class": null,
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot"
+    },
     { "class": null, "name": "field", "description": "" },
     {
       "class": null,
@@ -211,6 +217,18 @@
       "name": "leftArrowIcon",
       "description": "Icon displayed in the left view switch button.",
       "default": "ArrowLeft"
+    },
+    {
+      "class": null,
+      "name": "mobilePaper",
+      "description": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
+      "default": "Paper from '@mui/material'."
+    },
+    {
+      "class": null,
+      "name": "mobileTransition",
+      "description": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
+      "default": "Fade from '@mui/material'."
     },
     {
       "class": null,

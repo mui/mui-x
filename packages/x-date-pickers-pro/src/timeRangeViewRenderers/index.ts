@@ -1,1 +1,4 @@
-export { renderDigitalClockTimeRangeView } from './timeRangeViewRenderers';
+export {
+  renderDigitalClockTimeRangeView,
+  renderTimeRangeViewClock,
+} from './timeRangeViewRenderers';

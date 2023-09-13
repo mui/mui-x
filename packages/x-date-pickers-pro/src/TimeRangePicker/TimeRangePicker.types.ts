@@ -1,17 +1,26 @@
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import { TimeViewWithMeridiem, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   DesktopTimeRangePickerProps,
   DesktopTimeRangePickerSlotsComponent,
   DesktopTimeRangePickerSlotsComponentsProps,
 } from '../DesktopTimeRangePicker';
+import {
+  MobileTimeRangePickerProps,
+  MobileTimeRangePickerSlotsComponent,
+  MobileTimeRangePickerSlotsComponentsProps,
+} from '../MobileTimeRangePicker';
 
 export interface TimeRangePickerSlotsComponents<TDate>
-  extends DesktopTimeRangePickerSlotsComponent<TDate> {}
+  extends DesktopTimeRangePickerSlotsComponent<TDate>,
+    MobileTimeRangePickerSlotsComponent<TDate, TimeViewWithMeridiem> {}
 
 export interface TimeRangePickerSlotsComponentsProps<TDate>
-  extends DesktopTimeRangePickerSlotsComponentsProps<TDate> {}
+  extends DesktopTimeRangePickerSlotsComponentsProps<TDate>,
+    MobileTimeRangePickerSlotsComponentsProps<TDate, TimeViewWithMeridiem> {}
 
-export interface TimeRangePickerProps<TDate> extends DesktopTimeRangePickerProps<TDate> {
+export interface TimeRangePickerProps<TDate>
+  extends DesktopTimeRangePickerProps<TDate>,
+    Omit<MobileTimeRangePickerProps<TDate, TimeViewWithMeridiem>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'

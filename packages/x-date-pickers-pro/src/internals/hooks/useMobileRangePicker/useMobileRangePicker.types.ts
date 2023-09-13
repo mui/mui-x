@@ -30,11 +30,16 @@ export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrT
 export interface UseMobileRangePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends PickersModalDialogSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponentsProps<TDate> {
+> extends ExportedUseMobileRangePickerSlotsComponentsProps<TDate, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
+
+export interface ExportedUseMobileRangePickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersModalDialogSlotsComponentsProps,
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
+    RangePickerFieldSlotsComponentsProps<TDate> {}
 
 export interface MobileRangeOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
