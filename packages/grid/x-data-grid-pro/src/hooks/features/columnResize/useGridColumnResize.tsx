@@ -200,11 +200,8 @@ function extractColumnWidths(
 ) {
   type Result = Record<string, number>;
 
-  const root = apiRef.current.rootElementRef?.current!;
   const headers = apiRef.current.columnHeadersContainerElementRef?.current!;
   const container = apiRef.current.virtualScrollerRef?.current!;
-
-  root.classList.add(gridClasses.autosizing);
 
   const getHeader = (field: string) =>
     headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
@@ -220,7 +217,7 @@ function extractColumnWidths(
     const widths = cells.map((cell) => {
       const style = window.getComputedStyle(cell, null);
       const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-      const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0;
+      const contentWidth = (cell.firstElementChild?.scrollWidth ?? -1) + 1;
       return paddingWidth + contentWidth;
     });
 
@@ -235,7 +232,7 @@ function extractColumnWidths(
 
         const style = window.getComputedStyle(header, null);
         const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-        const contentWidth = content.getBoundingClientRect().width;
+        const contentWidth = content.scrollWidth + 1;
         const width = paddingWidth + contentWidth;
 
         filteredWidths.push(width);
@@ -253,8 +250,6 @@ function extractColumnWidths(
 
     return result;
   }, {} as Result);
-
-  root.classList.remove(gridClasses.autosizing);
 
   return widthByField;
 }

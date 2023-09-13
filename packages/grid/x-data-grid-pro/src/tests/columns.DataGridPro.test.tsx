@@ -450,7 +450,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} />);
       await apiRef.current.autosizeColumns();
       await microtasks();
-      expect(getWidths()).to.deep.equal([50, 144]);
+      expect(getWidths()).to.deep.equal([50, 145]);
     });
 
     it('should work through double-clicking the separator', async () => {
@@ -458,18 +458,18 @@ describe('<DataGridPro /> - Columns', () => {
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.doubleClick(separator);
       await microtasks();
-      expect(getWidths()).to.deep.equal([50, 144]);
+      expect(getWidths()).to.deep.equal([50, 145]);
     });
 
     it('should work on mount', async () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
-      expect(getWidths()).to.deep.equal([50, 144]);
+      expect(getWidths()).to.deep.equal([50, 145]);
     });
 
     describe('options', () => {
-      const autosizeWith = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
+      const autosize = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
         render(<Test rows={rows} columns={columns} />);
         await apiRef.current.autosizeColumns(options);
         await microtasks();
@@ -477,19 +477,19 @@ describe('<DataGridPro /> - Columns', () => {
       };
 
       it('.columns works', async () => {
-        await autosizeWith({ columns: [columns[0]] }, [50, 100]);
+        await autosize({ columns: [columns[0]] }, [50, 100]);
       });
       it('.includeHeaders works', async () => {
-        await autosizeWith({ includeHeaders: true }, [153, 176]);
+        await autosize({ includeHeaders: true }, [155, 177]);
       });
       it('.excludeOutliers works', async () => {
-        await autosizeWith({ excludeOutliers: true }, [50, 63]);
+        await autosize({ excludeOutliers: true }, [50, 65]);
       });
       it('.outliersFactor works', async () => {
-        await autosizeWith({ excludeOutliers: true, outliersFactor: 40 }, [50, 144]);
+        await autosize({ excludeOutliers: true, outliersFactor: 40 }, [50, 145]);
       });
       it('.expand works', async () => {
-        await autosizeWith({ expand: true }, [94, 188]);
+        await autosize({ expand: true }, [94, 189]);
       });
     });
   });

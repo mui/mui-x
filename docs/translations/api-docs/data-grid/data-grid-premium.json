@@ -987,10 +987,6 @@
       "nodeName": "the root element",
       "conditions": "<code>autoHeight={true}</code>"
     },
-    "autosizing": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the cell element while it is being autosized"
-    },
     "booleanCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the icon of the boolean cell"
