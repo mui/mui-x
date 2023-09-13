@@ -21,6 +21,7 @@ import { GridOverlayProps } from '../components/containers/GridOverlay';
 import { GridPanelProps } from '../components/panel/GridPanel';
 import type { GridRowProps } from '../components/GridRow';
 import type { GridCellProps } from '../components/cell/GridCell';
+import type { GridRowCountProps } from '../components';
 
 // Overrides for module augmentation
 export interface BaseCheckboxPropsOverrides {}
@@ -42,6 +43,7 @@ export interface ColumnMenuPropsOverrides {}
 export interface ColumnsPanelPropsOverrides {}
 export interface FilterPanelPropsOverrides {}
 export interface FooterPropsOverrides {}
+export interface FooterRowCountOverrides {}
 export interface PaginationPropsOverrides {}
 export interface LoadingOverlayPropsOverrides {}
 export interface NoResultsOverlayPropsOverrides {}
@@ -80,6 +82,7 @@ export interface GridSlotsComponentsProps {
   columnsPanel?: SlotProps<GridColumnsPanelProps, ColumnsPanelPropsOverrides>;
   filterPanel?: SlotProps<GridFilterPanelProps, FilterPanelPropsOverrides>;
   footer?: SlotProps<GridFooterContainerProps, FooterPropsOverrides>;
+  footerRowCount?: SlotProps<GridRowCountProps, FooterRowCountOverrides>;
   loadingOverlay?: SlotProps<GridOverlayProps, LoadingOverlayPropsOverrides>;
   noResultsOverlay?: SlotProps<GridOverlayProps, NoResultsOverlayPropsOverrides>;
   noRowsOverlay?: SlotProps<GridOverlayProps, NoRowsOverlayPropsOverrides>;

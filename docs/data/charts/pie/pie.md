@@ -1,5 +1,5 @@
 ---
-title: Charts - Pie
+title: React Pie chart
 ---
 
 # Charts - Pie

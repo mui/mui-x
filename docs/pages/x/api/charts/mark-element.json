@@ -21,6 +21,5 @@
     "name": "MuiMarkElement"
   },
   "filename": "/packages/x-charts/src/LineChart/MarkElement.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "MarkElement" }]
+  "demos": "<ul></ul>"
 }

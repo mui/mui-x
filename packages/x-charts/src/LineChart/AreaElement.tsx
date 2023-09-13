@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { SlotComponentProps } from '@mui/base';
+import type { SlotComponentProps } from '@mui/base';
 import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -26,7 +26,7 @@ export interface AreaElementClasses {
 
 export type AreaElementClassKey = keyof AreaElementClasses;
 
-export interface AreaElementOwnerState {
+interface AreaElementOwnerState {
   id: string;
   color: string;
   isFaded: boolean;

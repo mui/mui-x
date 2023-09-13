@@ -16,6 +16,7 @@ export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeViewW
 export const renderDateRangeViewCalendar = <TDate extends unknown>({
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -54,6 +55,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   <DateRangeCalendar
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}

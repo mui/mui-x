@@ -60,6 +60,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
 })<{ ownerState: TreeItemOwnerState }>(({ theme }) => ({
   padding: '0 8px',
   width: '100%',
+  boxSizing: 'border-box', // prevent width + padding to overflow
   display: 'flex',
   alignItems: 'center',
   cursor: 'pointer',
@@ -116,10 +117,11 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     },
   },
   [`& .${treeItemClasses.label}`]: {
+    paddingLeft: 4,
     width: '100%',
+    boxSizing: 'border-box', // prevent width + padding to overflow
     // fixes overflow - see https://github.com/mui/material-ui/issues/27372
     minWidth: 0,
-    paddingLeft: 4,
     position: 'relative',
     ...theme.typography.body1,
   },
@@ -139,11 +141,11 @@ const TreeItemGroup = styled(Collapse, {
  *
  * Demos:
  *
- * - [Tree View](https://mui.com/material-ui/react-tree-view/)
+ * - [Tree View](https://mui.com/x/react-tree-view/)
  *
  * API:
  *
- * - [TreeItem API](https://mui.com/material-ui/api/tree-item/)
+ * - [TreeItem API](https://mui.com/x/api/tree-view/tree-item/)
  */
 export const TreeItem = React.forwardRef(function TreeItem(
   inProps: TreeItemProps,
