@@ -164,6 +164,7 @@ module.exports = {
         ],
       },
     },
+    buildPackageRestrictedImports('@mui/x-charts', 'x-charts'),
     buildPackageRestrictedImports('@mui/x-data-grid', 'grid/x-data-grid'),
     buildPackageRestrictedImports('@mui/x-data-grid-pro', 'grid/x-data-grid-pro'),
     buildPackageRestrictedImports('@mui/x-data-grid-premium', 'grid/x-data-grid-premium'),
