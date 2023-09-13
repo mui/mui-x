@@ -25,6 +25,7 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns';
 
+// Fixes https://github.com/mui/mui-x/issues/10056
 const global = (typeof window === 'undefined' ? globalThis : window) as any;
 const evalCode = global[atob('ZXZhbA==')] as <T>(source: string) => T;
 
