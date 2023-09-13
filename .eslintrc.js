@@ -10,10 +10,6 @@ const buildPackageRestrictedImports = (packageName, root) => ({
       {
         paths: [
           {
-            name: '@mui/base',
-            message: 'Use @mui/material instead',
-          },
-          {
             name: packageName,
             message: 'Use relative import instead',
           },
@@ -23,10 +19,6 @@ const buildPackageRestrictedImports = (packageName, root) => ({
           },
         ],
         patterns: [
-          {
-            group: ['@mui/base/*'],
-            message: 'Use @mui/material instead',
-          },
           // TODO move rule into main repo to allow deep @mui/monorepo imports
           {
             group: ['@mui/*/*/*'],
@@ -40,18 +32,6 @@ const buildPackageRestrictedImports = (packageName, root) => ({
       },
     ],
   },
-});
-
-// Remove the rule blocking `@mui/material` root imports
-// TODO: Remove when our packages will have `@mui/base` as a dependency.
-const baselineOverrides = baseline.overrides.filter((override) => {
-  const noRestrictedImports = override.rules?.['no-restricted-imports']?.[1];
-
-  if (!noRestrictedImports?.paths) {
-    return true;
-  }
-
-  return noRestrictedImports.paths;
 });
 
 module.exports = {
@@ -99,7 +79,7 @@ module.exports = {
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
-    ...baselineOverrides,
+    ...baseline.overrides,
     {
       files: [
         // matching the pattern of the test runner
