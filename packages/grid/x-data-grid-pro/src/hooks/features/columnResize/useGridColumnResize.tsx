@@ -137,7 +137,7 @@ function getResizeDirection(element: HTMLElement, direction: Direction) {
 function preventClick(event: MouseEvent) {
   event.preventDefault();
   event.stopImmediatePropagation();
-};
+}
 
 /**
  * Checker that returns a promise that resolves when the column virtualization
