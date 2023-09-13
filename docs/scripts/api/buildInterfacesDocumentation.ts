@@ -36,21 +36,22 @@ interface ParsedProperty {
 }
 
 const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
-  'GridRowSelectionApi',
-  'GridRowMultiSelectionApi',
   'GridCellSelectionApi',
-  'GridFilterApi',
-  'GridSortApi',
-  'GridPaginationApi',
-  'GridCsvExportApi',
-  'GridScrollApi',
-  'GridEditingApi',
-  'GridRowGroupingApi',
   'GridColumnPinningApi',
+  'GridColumnResizeApi',
+  'GridCsvExportApi',
   'GridDetailPanelApi',
-  'GridPrintExportApi',
-  'GridDisableVirtualizationApi',
+  'GridEditingApi',
   'GridExcelExportApi',
+  'GridFilterApi',
+  'GridPaginationApi',
+  'GridPrintExportApi',
+  'GridRowGroupingApi',
+  'GridRowMultiSelectionApi',
+  'GridRowSelectionApi',
+  'GridScrollApi',
+  'GridSortApi',
+  'GridVirtualizationApi',
 ];
 
 const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
