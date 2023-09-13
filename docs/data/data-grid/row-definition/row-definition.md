@@ -31,10 +31,10 @@ The following demo shows how to use `getRowId` to grab the unique identifier fro
 
 ```tsx
 function getRowId(row) {
-  return row.internalId
+  return row.internalId;
 }
 
-<DataGrid getRowId={getRowId} />
+<DataGrid getRowId={getRowId} />;
 ```
 
 {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
