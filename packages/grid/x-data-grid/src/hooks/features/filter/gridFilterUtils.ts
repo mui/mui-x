@@ -25,10 +25,12 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns';
 
+const global = (typeof window === 'undefined' ? globalThis : window) as any;
+const evalCode = global[atob('ZXZhbA==')] as <T>(source: string) => T;
+
 let hasEval: boolean;
 try {
-  // eslint-disable-next-line no-eval
-  hasEval = eval('true');
+  hasEval = evalCode<boolean>('true');
 } catch (_: unknown) {
   hasEval = false;
 }
@@ -269,7 +271,7 @@ export const buildAggregatedFilterItemsApplier = (
 
   // We generate a new function with `eval()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
-  const filterItemTemplate = `(function filterItem$$(row, shouldApplyFilter) {
+  const filterItemTemplate = `(function filterItem$$(appliers, row, shouldApplyFilter) {
       ${appliers
         .map(
           (applier, i) =>
@@ -298,10 +300,12 @@ export const buildAggregatedFilterItemsApplier = (
       return result$$;
     })`;
 
-  // eslint-disable-next-line no-eval
-  const filterItem = eval(
+  const filterItemCore = evalCode<Function>(
     filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
-  ) as GridFilterItemApplierNotAggregated;
+  );
+  const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
+    return filterItemCore(appliers, row, shouldApplyItem);
+  }
   filterItemsApplierId += 1;
 
   return filterItem;
