@@ -11,6 +11,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "onViewChange": {
+      "description": "Callback called when a toolbar is clicked",
+      "deprecated": "",
+      "typeDescriptions": { "view": "The view to open" }
+    },
     "toolbarFormat": {
       "description": "Toolbar date format.",
       "deprecated": "",
@@ -18,6 +23,11 @@
     },
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "view": {
+      "description": "Currently visible picker view.",
       "deprecated": "",
       "typeDescriptions": {}
     }

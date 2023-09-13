@@ -6,11 +6,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "ampmInClock": {
-      "description": "Display ampm controls under the clock (instead of in the toolbar).",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "autoFocus": {
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered.",
       "deprecated": "",

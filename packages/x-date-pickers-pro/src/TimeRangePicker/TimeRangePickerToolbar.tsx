@@ -129,6 +129,8 @@ TimeRangePickerToolbar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  ampm: PropTypes.bool.isRequired,
+  ampmInClock: PropTypes.bool.isRequired,
   classes: PropTypes.object,
   /**
    * className applied to the root component.
@@ -140,7 +142,15 @@ TimeRangePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
+  isLandscape: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
   onRangePositionChange: PropTypes.func.isRequired,
+  /**
+   * Callback called when a toolbar is clicked
+   * @template TView
+   * @param {TView} view The view to open
+   */
+  onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
   titleId: PropTypes.string,
@@ -154,6 +164,12 @@ TimeRangePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   value: PropTypes.arrayOf(PropTypes.any).isRequired,
+  /**
+   * Currently visible picker view.
+   */
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired,
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired)
+    .isRequired,
 } as any;
 
 export { TimeRangePickerToolbar };

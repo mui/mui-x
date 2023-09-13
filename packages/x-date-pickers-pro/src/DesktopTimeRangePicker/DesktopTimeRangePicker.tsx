@@ -104,11 +104,6 @@ DesktopTimeRangePicker.propTypes = {
    */
   ampm: PropTypes.bool,
   /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default true on desktop, false on mobile
-   */
-  ampmInClock: PropTypes.bool,
-  /**
    * If `true`, the main element is focused during the first mount.
    * This main element is:
    * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
