@@ -102,7 +102,7 @@
     "date-fns": "^2.30.0",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.11.9",
-    "luxon": "^3.4.2",
+    "luxon": "^3.4.3",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
     "moment-jalaali": "^0.10.0"
