@@ -1,4 +1,3 @@
-import type { GridRowId } from '../../../models';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import type { GridColumnDimensionProperties } from './gridColumnsUtils';
 
