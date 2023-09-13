@@ -6,7 +6,7 @@ title: Data Grid - Multi filters
 
 <p class="description">Apply multiple filters at the same time.</p>
 
-Multi filters allow filtering rows by multiple columns with multiple criteria. 
+Multi filters allow filtering rows by multiple columns with multiple criteria.
 To add more filters, use the `Add Filter` button on the filter panel.
 
 The following demo lets you filter the rows according to several criteria at the same time.
