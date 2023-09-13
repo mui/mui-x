@@ -87,7 +87,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
     }
 
     return resolveTimeFormat(utils, { format: undefined, ampm, views: views as TimeView[] });
-  }, [toolbarFormat]);
+  }, [utils, toolbarFormat, ampm, views]);
 
   const startDateValue = start ? utils.formatByString(start, format) : localeText.start;
 
