@@ -4,7 +4,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
 import { DesktopTimeRangePicker } from '../DesktopTimeRangePicker';
-import { MobileTimeRangePicker } from '../MobileTimeRangePicker';
+import { MobileTimeRangePicker, MobileTimeRangePickerProps } from '../MobileTimeRangePicker';
 import { TimeRangePickerProps } from './TimeRangePicker.types';
 
 type TimePickerComponent = (<TDate>(
@@ -26,7 +26,7 @@ const TimeRangePicker = React.forwardRef(function TimeRangePicker<TDate>(
     return <DesktopTimeRangePicker ref={ref} {...other} />;
   }
 
-  return <MobileTimeRangePicker ref={ref} {...other} />;
+  return <MobileTimeRangePicker ref={ref} {...(other as MobileTimeRangePickerProps<TDate>)} />;
 }) as TimePickerComponent;
 
 TimeRangePicker.propTypes = {

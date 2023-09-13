@@ -35,7 +35,7 @@ export interface MobileTimeRangePickerProps<TDate, TView extends TimeViewWithMer
    * @default {}
    * @deprecated Please use `slots`.
    */
-  components?: MobileTimeRangePickerSlotsComponent<TDate>;
+  components?: MobileTimeRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -46,10 +46,10 @@ export interface MobileTimeRangePickerProps<TDate, TView extends TimeViewWithMer
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<MobileTimeRangePickerSlotsComponent<TDate>>;
+  slots?: UncapitalizeObjectKeys<MobileTimeRangePickerSlotsComponent<TDate, TView>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileTimeRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: MobileTimeRangePickerSlotsComponentsProps<TDate, TView>;
 }
