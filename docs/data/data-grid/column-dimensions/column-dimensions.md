@@ -60,9 +60,9 @@ To capture changes in the width of a column there are two callbacks that are cal
 
 ## Autosizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-The `DataGridPro` also allows for autosizing the columns' dimensions based on their content. It can be autosized by 3 methods:
+`DataGridPro` also allows for autosizing the columns' dimensions based on their content. It can be autosized by 3 methods:
 
-- Calling the `.autosizeColumns` API method,
+- Calling the `.autosizeColumns(options?: GridAutosizeOptions)` API method,
 - Adding the `autosizeOnMount` prop,
 - Double-clicking a column header separator on the grid.
 
@@ -70,7 +70,7 @@ You can pass options directly to the API method when you call it. If you need to
 
 {{"demo": "ColumnAutosizing.js", "disableAd": true, "bg": "inline"}}
 
-:::warning:::
+:::warn:::
 The datagrid can only autosize based on the currently rendered cells.
 
 DOM access is required to accurately calculate dimensions, so unmounted cells (when virtualization is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) so we can discuss it further.
