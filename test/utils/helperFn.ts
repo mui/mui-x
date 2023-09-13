@@ -12,7 +12,7 @@ export function sleep(duration: number) {
 }
 
 export function microtasks() {
-  return act(() => Promise.resolve());
+  return act(() => Promise.resolve()) as unknown as Promise<void>;
 }
 
 export function spyApi(api: GridApiCommon, methodName: string) {

@@ -243,11 +243,15 @@ function extractColumnWidths(
  * the Q1 and Q3 boundaries. IQR: interquartile range.
  */
 function excludeOutliers(inputValues: number[], factor: number) {
+  if (inputValues.length < 4) {
+    return inputValues;
+  }
+
   const values = inputValues.slice();
   values.sort((a, b) => a - b);
 
   const q1 = values[Math.floor(values.length * 0.25)];
-  const q3 = values[Math.floor(values.length * 0.75)];
+  const q3 = values[Math.floor(values.length * 0.75) - 1];
   const iqr = q3 - q1;
 
   // We make a small adjustment if `iqr < 5` for the cases where the IQR is
@@ -624,8 +628,30 @@ export const useGridColumnResize = (
         const newColumns = options.columns.map((column) => ({
           ...column,
           width: widthByField[column.field],
-          computedWidth: undefined,
+          computedWidth: widthByField[column.field],
         }));
+
+        if (options.expand) {
+          const visibleColumns = state.orderedFields
+            .map((field) => state.lookup[field])
+            .filter((c) => state.columnVisibilityModel[c.field] !== false);
+
+          const totalWidth = visibleColumns.reduce(
+            (total, column) =>
+              total + (widthByField[column.field] ?? column.computedWidth ?? column.width),
+            0,
+          );
+          const availableWidth = apiRef.current.getRootDimensions()?.viewportInnerSize.width ?? 0;
+          const remainingWidth = availableWidth - totalWidth;
+
+          if (remainingWidth > 0) {
+            const widthPerColumn = remainingWidth / (newColumns.length || 1);
+            newColumns.forEach((column) => {
+              column.width += widthPerColumn;
+              column.computedWidth += widthPerColumn;
+            });
+          }
+        }
 
         apiRef.current.updateColumns(newColumns);
       } finally {
@@ -644,7 +670,9 @@ export const useGridColumnResize = (
 
   useOnMount(() => {
     if (props.autosizeOnMount) {
-      apiRef.current.autosizeColumns(props.autosizeOptions);
+      Promise.resolve().then(() => {
+        apiRef.current.autosizeColumns(props.autosizeOptions);
+      });
     }
   });
 

@@ -1,28 +1,53 @@
 import * as React from 'react';
-import { Button, Checkbox, FormControlLabel, Stack, TextField } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Rating,
+  Stack,
+  TextField,
+} from '@mui/material';
 import { useGridApiRef } from '@mui/x-data-grid';
 import { DataGridPro, DEFAULT_GRID_AUTOSIZE_OPTIONS } from '@mui/x-data-grid-pro';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { randomRating, randomTraderName } from '@mui/x-data-grid-generator';
+
+function renderRating(params) {
+  return <Rating readOnly value={params.value} />;
+}
+
+function useData(length) {
+  return React.useMemo(() => {
+    const names = [
+      'Nike',
+      'Adidas',
+      'Puma',
+      'Reebok',
+      'Fila',
+      'Lululemon Athletica Clothing',
+      'Varley',
+    ];
+
+    const rows = Array.from({ length }).map((_, id) => ({
+      id,
+      brand: names[id % names.length],
+      rep: randomTraderName(),
+      rating: randomRating(),
+    }));
+
+    const columns = [
+      { field: 'id', headerName: 'Brand ID' },
+      { field: 'brand', headerName: 'Brand name' },
+      { field: 'rep', headerName: 'Representative' },
+      { field: 'rating', headerName: 'Rating', renderCell: renderRating },
+    ];
+
+    return { rows, columns };
+  }, []);
+}
 
 export default function ColumnAutosizing() {
   const apiRef = useGridApiRef();
-
-  const { data: originalData } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 500,
-  });
-
-  const data = { ...originalData };
-  const outlierIndex = data.rows.findIndex(
-    (row) => row.commodity === 'Frozen Concentrated Orange Juice',
-  );
-  if (outlierIndex !== 0 && outlierIndex !== -1) {
-    const rows = data.rows.slice();
-    const row = rows[0];
-    rows[0] = rows[outlierIndex];
-    rows[outlierIndex] = row;
-    data.rows = rows;
-  }
+  const data = useData(100);
 
   const [includeHeaders, setIncludeHeaders] = React.useState(
     DEFAULT_GRID_AUTOSIZE_OPTIONS.includeHeaders,
@@ -33,6 +58,7 @@ export default function ColumnAutosizing() {
   const [outliersFactor, setOutliersFactor] = React.useState(
     String(DEFAULT_GRID_AUTOSIZE_OPTIONS.outliersFactor),
   );
+  const [expand, setExpand] = React.useState(DEFAULT_GRID_AUTOSIZE_OPTIONS.expand);
 
   return (
     <div style={{ width: '100%' }}>
@@ -47,12 +73,12 @@ export default function ColumnAutosizing() {
             variant="outlined"
             onClick={() =>
               apiRef.current.autosizeColumns({
-                columns: data.columns.slice(1, 2),
                 includeHeaders,
                 excludeOutliers,
                 outliersFactor: Number.isNaN(parseFloat(outliersFactor))
                   ? 1
                   : parseFloat(outliersFactor),
+                expand,
               })
             }
           >
@@ -82,6 +108,15 @@ export default function ColumnAutosizing() {
           value={outliersFactor}
           onChange={(ev) => setOutliersFactor(ev.target.value)}
           sx={{ width: '12ch' }}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={expand}
+              onChange={(ev) => setExpand(ev.target.checked)}
+            />
+          }
+          label="Expand"
         />
       </Stack>
       <div style={{ height: 400, width: '100%' }}>

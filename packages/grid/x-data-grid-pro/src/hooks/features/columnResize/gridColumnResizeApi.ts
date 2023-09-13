@@ -4,6 +4,7 @@ export const DEFAULT_GRID_AUTOSIZE_OPTIONS = {
   includeHeaders: false,
   excludeOutliers: false,
   outliersFactor: 1.5,
+  expand: false,
 };
 
 export type GridAutosizeOptions = {
@@ -26,6 +27,11 @@ export type GridAutosizeOptions = {
    * @default 1.5
    */
   outliersFactor?: number;
+  /**
+   * If the total width is less than the available width, expand columns to fill it.
+   * @default false
+   */
+  expand?: boolean;
 };
 
 /**

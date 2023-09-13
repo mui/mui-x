@@ -10,9 +10,10 @@ import {
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
   GridApi,
+  GridAutosizeOptions,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
-import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getCell, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -406,6 +407,89 @@ describe('<DataGridPro /> - Columns', () => {
         fireEvent.mouseUp(separator);
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
+      });
+    });
+  });
+
+  describe.only('autosizing', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    const rows = [
+      {
+        id: 0,
+        brand: 'Nike',
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+      },
+      {
+        id: 3,
+        brand: 'Lululemon Athletica',
+      },
+    ];
+    const columns = [
+      { field: 'id', headerName: 'This is the ID column' },
+      { field: 'brand', headerName: 'This is the brand column' },
+    ];
+
+    const getWidths = () => {
+      return columns.map((_, i) => parseInt(getColumnHeaderCell(i).style.width, 10));
+    };
+
+    it('should work through the API', async () => {
+      render(<Test rows={rows} columns={columns} />);
+      await apiRef.current.autosizeColumns();
+      await microtasks();
+      expect(getWidths()).to.deep.equal([50, 144]);
+    });
+
+    it('should work through double-clicking the separator', async () => {
+      render(<Test rows={rows} columns={columns} />);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      fireEvent.doubleClick(separator);
+      await microtasks();
+      expect(getWidths()).to.deep.equal([50, 144]);
+    });
+
+    it('should work on mount', async () => {
+      render(<Test rows={rows} columns={columns} autosizeOnMount />);
+      await microtasks(); /* first effect after render */
+      await microtasks(); /* async autosize operation */
+      expect(getWidths()).to.deep.equal([50, 144]);
+    });
+
+    describe('options', () => {
+      const test = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
+        render(<Test rows={rows} columns={columns} />);
+        await apiRef.current.autosizeColumns(options);
+        await microtasks();
+        expect(getWidths()).to.deep.equal(widths);
+      };
+
+      it('.columns works', async () => {
+        await test({ columns: [columns[0]] }, [50, 100]);
+      });
+      it('.includeHeaders works', async () => {
+        await test({ includeHeaders: true }, [153, 176]);
+      });
+      it('.excludeOutliers works', async () => {
+        await test({ excludeOutliers: true }, [50, 63]);
+      });
+      it('.outliersFactor works', async () => {
+        await test({ excludeOutliers: true, outliersFactor: 40 }, [50, 144]);
+      });
+      it('.expand works', async () => {
+        await test({ expand: true }, [94, 188]);
       });
     });
   });
