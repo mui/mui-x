@@ -306,7 +306,7 @@ export const buildAggregatedFilterItemsApplier = (
   );
   const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
     return filterItemCore(appliers, row, shouldApplyItem);
-  }
+  };
   filterItemsApplierId += 1;
 
   return filterItem;
