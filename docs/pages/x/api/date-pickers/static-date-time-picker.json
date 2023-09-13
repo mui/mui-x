@@ -280,9 +280,5 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/StaticDateTimePicker/StaticDateTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "StaticDateTimePicker" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "StaticDateTimePicker" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }

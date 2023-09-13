@@ -56,6 +56,5 @@
     "name": "MuiChartsAxis"
   },
   "filename": "/packages/x-charts/src/ChartsAxis/ChartsAxis.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsAxis" }]
+  "demos": "<ul></ul>"
 }
