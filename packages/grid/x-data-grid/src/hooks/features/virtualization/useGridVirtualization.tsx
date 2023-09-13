@@ -11,11 +11,7 @@ export type GridVirtualizationState = {
   enabledForColumns: boolean;
 };
 
-export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (
-  state,
-  props,
-  _apiRef,
-) => {
+export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (state, props) => {
   const virtualization = {
     enabled: !props.disableVirtualization,
     enabledForColumns: true,
@@ -66,7 +62,9 @@ export function useGridVirtualization(
    * EFFECTS
    */
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
     setVirtualization(!props.disableVirtualization);
   }, [props.disableVirtualization]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 }

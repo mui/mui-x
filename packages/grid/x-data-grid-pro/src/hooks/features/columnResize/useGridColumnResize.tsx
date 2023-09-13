@@ -145,6 +145,122 @@ const preventClick = (event: MouseEvent) => {
 };
 
 /**
+ * Checker that returns a promise that resolves when the column virtualization
+ * is disabled.
+ */
+function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiPro>) {
+  const promise = React.useRef<ControllablePromise>();
+  const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
+  const value = useGridSelector(apiRef, selector);
+
+  React.useEffect(() => {
+    if (promise.current && value === false) {
+      promise.current.resolve();
+      promise.current = undefined;
+    }
+  });
+
+  const asyncCheck = () => {
+    if (!promise.current) {
+      if (selector() === false) {
+        return Promise.resolve();
+      }
+      promise.current = createControllablePromise();
+    }
+    return promise.current;
+  };
+
+  return asyncCheck;
+}
+
+function extractColumnWidths(
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  options: AutosizeOptionsRequired,
+) {
+  type Result = Record<string, number>;
+
+  const root = apiRef.current.rootElementRef?.current!;
+  const headers = apiRef.current.columnHeadersContainerElementRef?.current!;
+  const container = apiRef.current.virtualScrollerRef?.current!;
+
+  root.classList.add(gridClasses.autosizing);
+
+  const getHeader = (field: string) =>
+    headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
+
+  const getCells = (field: string) =>
+    Array.from(
+      container.querySelectorAll(`:scope > div > div > div > [data-field="${field}"][role="cell"]`),
+    );
+
+  const widthByField = options.columns.reduce((result, column) => {
+    const cells = getCells(column.field);
+
+    const widths = cells.map((cell) => {
+      const style = window.getComputedStyle(cell, null);
+      const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
+      const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0;
+      return paddingWidth + contentWidth;
+    });
+
+    const filteredWidths = options.excludeOutliers
+      ? excludeOutliers(widths, options.outliersFactor)
+      : widths;
+
+    if (options.includeHeaders) {
+      const header = getHeader(column.field);
+      if (header) {
+        const content = header.querySelector(`.${gridClasses.columnHeaderTitle}`)!;
+
+        const style = window.getComputedStyle(header, null);
+        const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
+        const contentWidth = content.getBoundingClientRect().width;
+        const width = paddingWidth + contentWidth;
+
+        filteredWidths.push(width);
+      }
+    }
+
+    const hasColumnMin = column.minWidth !== -Infinity && column.minWidth !== undefined;
+    const hasColumnMax = column.maxWidth !== Infinity && column.maxWidth !== undefined;
+
+    const min = hasColumnMin ? column.minWidth! : 0;
+    const max = hasColumnMax ? column.maxWidth! : Infinity;
+    const maxContent = filteredWidths.length === 0 ? 0 : Math.max(...filteredWidths);
+
+    result[column.field] = clamp(maxContent, min, max);
+
+    return result;
+  }, {} as Result);
+
+  root.classList.remove(gridClasses.autosizing);
+
+  return widthByField;
+}
+
+/**
+ * Basic stats outlier detection, checks if the value is `F * IQR` away from
+ * the Q1 and Q3 boundaries. IQR: interquartile range.
+ */
+function excludeOutliers(inputValues: number[], factor: number) {
+  const values = inputValues.slice();
+  values.sort((a, b) => a - b);
+
+  const q1 = values[Math.floor(values.length * 0.25)];
+  const q3 = values[Math.floor(values.length * 0.75)];
+  const iqr = q3 - q1;
+
+  // We make a small adjustment if `iqr < 5` for the cases where the IQR is
+  // very small (e.g. zero) due to very close by values in the input data.
+  // Otherwise, with an IQR of `0`, anything outside that would be considered
+  // an outlier, but it makes more sense visually to allow for this 5px variance
+  // rather than showing a cropped cell.
+  const deviation = iqr < 5 ? 5 : iqr * factor;
+
+  return values.filter((v) => v > q1 - deviation && v < q3 + deviation);
+}
+
+/**
  * @requires useGridColumns (method, event)
  * TODO: improve experience for last column
  */
@@ -556,114 +672,3 @@ export const useGridColumnResize = (
   useGridApiOptionHandler(apiRef, 'columnResize', props.onColumnResize);
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
-
-/**
- * Checker that returns a promise that resolves when the column virtualization
- * is disabled.
- */
-function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiPro>) {
-  const promise = React.useRef<ControllablePromise>();
-  const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
-  const value = useGridSelector(apiRef, selector);
-
-  React.useEffect(() => {
-    if (promise.current && value === false) {
-      promise.current.resolve();
-      promise.current = undefined;
-    }
-  });
-
-  const asyncCheck = () => {
-    if (!promise.current) {
-      if (selector() === false) {
-        return Promise.resolve();
-      }
-      promise.current = createControllablePromise();
-    }
-    return promise.current;
-  };
-
-  return asyncCheck;
-}
-
-function extractColumnWidths(apiRef: React.MutableRefObject<GridPrivateApiPro>, options: AutosizeOptionsRequired) {
-  type Result = Record<string, number>;
-
-  const root = apiRef.current.rootElementRef?.current!;
-  const headers = apiRef.current.columnHeadersContainerElementRef?.current!;
-  const container = apiRef.current.virtualScrollerRef?.current!;
-
-  root.classList.add(gridClasses.autosizing);
-
-  const getHeader = (field: string) =>
-    headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
-
-  const getCells = (field: string) =>
-    Array.from(container.querySelectorAll(`:scope > div > div > div > [data-field="${field}"][role="cell"]`));
-
-  const widthByField = options.columns.reduce((result, column) => {
-    const cells = getCells(column.field);
-
-    const widths = cells.map((cell) => {
-      const style = window.getComputedStyle(cell, null);
-      const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-      const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0;
-      return paddingWidth + contentWidth;
-    });
-
-    const filteredWidths = options.excludeOutliers
-      ? excludeOutliers(widths, options.outliersFactor)
-      : widths;
-
-    if (options.includeHeaders) {
-      const header = getHeader(column.field);
-      if (header) {
-        const content = header.querySelector(`.${gridClasses.columnHeaderTitle}`)!;
-
-        const style = window.getComputedStyle(header, null);
-        const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-        const contentWidth = content.getBoundingClientRect().width;
-        const width = paddingWidth + contentWidth;
-
-        filteredWidths.push(width);
-      }
-    }
-
-    const hasColumnMin = column.minWidth !== -Infinity && column.minWidth !== undefined;
-    const hasColumnMax = column.maxWidth !== Infinity && column.maxWidth !== undefined;
-
-    const min = hasColumnMin ? column.minWidth! : 0;
-    const max = hasColumnMax ? column.maxWidth! : Infinity;
-    const maxContent = filteredWidths.length === 0 ? 0 : Math.max(...filteredWidths);
-
-    result[column.field] = clamp(maxContent, min, max);
-
-    return result;
-  }, {} as Result);
-
-  root.classList.remove(gridClasses.autosizing);
-
-  return widthByField;
-}
-
-/**
- * Basic stats outlier detection, checks if the value is `F * IQR` away from
- * the Q1 and Q3 boundaries. IQR: interquartile range.
- */
-function excludeOutliers(inputValues: number[], factor: number) {
-  const values = inputValues.slice();
-  values.sort((a, b) => a - b);
-
-  const q1 = values[Math.floor(values.length * 0.25)];
-  const q3 = values[Math.floor(values.length * 0.75)];
-  const iqr = q3 - q1;
-
-  // We make a small adjustment if `iqr < 5` for the cases where the IQR is
-  // very small (e.g. zero) due to very close by values in the input data.
-  // Otherwise, with an IQR of `0`, anything outside that would be considered
-  // an outlier, but it makes more sense visually to allow for this 5px variance
-  // rather than showing a cropped cell.
-  const deviation = iqr < 5 ? 5 : iqr * factor;
-
-  return values.filter((v) => v > q1 - deviation && v < q3 + deviation);
-}

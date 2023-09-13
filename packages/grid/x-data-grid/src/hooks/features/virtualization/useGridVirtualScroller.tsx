@@ -407,8 +407,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       });
 
       prevRenderContext.current = nextRenderContext;
-
-      return;
     },
     [
       apiRef,

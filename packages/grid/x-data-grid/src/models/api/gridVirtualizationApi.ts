@@ -2,11 +2,13 @@ import { GridRenderContext } from '../params';
 
 export interface GridVirtualizationApi {
   /**
-   * Enable/disable column virtualization.
+   * Enable/disable virtualization.
+   * @param {boolean} enabled The enabled value for virtualization
    */
   unstable_setVirtualization: (enabled: boolean) => void;
   /**
    * Enable/disable column virtualization.
+   * @param {boolean} enabled The enabled value for column virtualization
    */
   unstable_setColumnVirtualization: (enabled: boolean) => void;
 }
