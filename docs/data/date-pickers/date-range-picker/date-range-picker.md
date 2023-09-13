@@ -81,12 +81,6 @@ This prop will be ignored on the mobile picker.
 
 {{"demo": "DateRangePickerCalendarProp.js"}}
 
-### Conditional props
-
-You can pass conditional props to the `textField` slot to customize the input styling based on the `position`.
-
-{{"demo": "DateRangePickerTextFieldProps.js"}}
-
 ### Use a single input field
 
 You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing:
