@@ -577,7 +577,7 @@ export const useGridColumnResize = (
       doc.addEventListener('click', preventClick, true);
     });
 
-  const handleColumnResizeDoubleClick: GridEventListener<'columnSeparatorDoubleClick'> =
+  const handleColumnSeparatorDoubleClick: GridEventListener<'columnSeparatorDoubleClick'> =
     useEventCallback((_, event) => {
       if (props.disableAutosize) {
         return;
@@ -694,7 +694,7 @@ export const useGridColumnResize = (
   useGridApiEventHandler(apiRef, 'columnResizeStop', handleResizeStop);
   useGridApiEventHandler(apiRef, 'columnResizeStart', handleResizeStart);
   useGridApiEventHandler(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
-  useGridApiEventHandler(apiRef, 'columnSeparatorDoubleClick', handleColumnResizeDoubleClick);
+  useGridApiEventHandler(apiRef, 'columnSeparatorDoubleClick', handleColumnSeparatorDoubleClick);
 
   useGridApiOptionHandler(apiRef, 'columnResize', props.onColumnResize);
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
