@@ -15,7 +15,6 @@ import {
   useGridNativeEventListener,
   useGridLogger,
   useGridSelector,
-  gridVisibleColumnFieldsSelector,
   gridVirtualizationColumnEnabledSelector,
 } from '@mui/x-data-grid';
 import {
@@ -491,9 +490,11 @@ export const useGridColumnResize = (
       isAutosizingRef.current = true;
 
       const state = gridColumnsStateSelector(apiRef.current.state);
-      const options = Object.assign({}, DEFAULT_GRID_AUTOSIZE_OPTIONS, userOptions, {
+      const options = {
+        ...DEFAULT_GRID_AUTOSIZE_OPTIONS,
+        ...userOptions,
         columns: userOptions?.columns ?? state.orderedFields.map((field) => state.lookup[field]),
-      });
+      };
       options.columns = options.columns.filter(
         (c) => state.columnVisibilityModel[c.field] !== false,
       );
@@ -502,7 +503,7 @@ export const useGridColumnResize = (
         apiRef.current.unstable_setColumnVirtualization(false);
         await columnVirtualizationDisabled();
 
-        const widthByField = extractColumnWidths(root, options);
+        const widthByField = extractColumnWidths(apiRef, options);
 
         const newColumns = options.columns.map((column) => ({
           ...column,
@@ -516,7 +517,7 @@ export const useGridColumnResize = (
         isAutosizingRef.current = false;
       }
     },
-    [],
+    [apiRef, columnVirtualizationDisabled],
   );
 
   /**
@@ -585,16 +586,20 @@ function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPriv
   return asyncCheck;
 }
 
-function extractColumnWidths(root: Element, options: AutosizeOptionsRequired) {
+function extractColumnWidths(apiRef: React.MutableRefObject<GridPrivateApiPro>, options: AutosizeOptionsRequired) {
   type Result = Record<string, number>;
+
+  const root = apiRef.current.rootElementRef?.current!;
+  const headers = apiRef.current.columnHeadersContainerElementRef?.current!;
+  const container = apiRef.current.virtualScrollerRef?.current!;
 
   root.classList.add(gridClasses.autosizing);
 
   const getHeader = (field: string) =>
-    root.querySelector(`[data-field="${field}"][role="columnheader"]`);
+    headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
 
   const getCells = (field: string) =>
-    Array.from(root.querySelectorAll(`[data-field="${field}"][role="cell"]`));
+    Array.from(container.querySelectorAll(`:scope > div > div > div > [data-field="${field}"][role="cell"]`));
 
   const widthByField = options.columns.reduce((result, column) => {
     const cells = getCells(column.field);
@@ -613,7 +618,7 @@ function extractColumnWidths(root: Element, options: AutosizeOptionsRequired) {
     if (options.includeHeaders) {
       const header = getHeader(column.field);
       if (header) {
-        const content = header.querySelector(`.${gridClasses['columnHeaderTitle']}`)!;
+        const content = header.querySelector(`.${gridClasses.columnHeaderTitle}`)!;
 
         const style = window.getComputedStyle(header, null);
         const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);

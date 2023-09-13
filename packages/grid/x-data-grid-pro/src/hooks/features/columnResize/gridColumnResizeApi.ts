@@ -34,6 +34,8 @@ export type GridAutosizeOptions = {
 export interface GridColumnResizeApi {
   /**
    * Auto-size the columns of the grid based on the cells' content and the space available.
+   * @param {GridAutosizeOptions} options The autosizing options
+   * @returns A promise that resolves when autosizing is completed
    */
   autosizeColumns: (options?: GridAutosizeOptions) => Promise<void>;
 }
