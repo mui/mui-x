@@ -228,7 +228,7 @@ function extractColumnWidths(
     if (options.includeHeaders) {
       const header = getHeader(column.field);
       if (header) {
-        const content = header.querySelector(`.${gridClasses.columnHeaderTitle}`)!;
+        const content = header.querySelector(`.${gridClasses.columnHeaderTitleContainerContent}`)!;
 
         const style = window.getComputedStyle(header, null);
         const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
