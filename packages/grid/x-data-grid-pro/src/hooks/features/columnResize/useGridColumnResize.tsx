@@ -573,7 +573,7 @@ export const useGridColumnResize = (
     });
 
   const handleColumnSeparatorDoubleClick: GridEventListener<'columnSeparatorDoubleClick'> =
-    useEventCallback((_, event) => {
+    useEventCallback((params, event) => {
       if (props.disableAutosize) {
         return;
       }
@@ -583,7 +583,11 @@ export const useGridColumnResize = (
         return;
       }
 
-      apiRef.current.autosizeColumns(props.autosizeOptions);
+      const column = apiRef.current.state.columns.lookup[params.field];
+      const options = { ...props.autosizeOptions };
+      options.columns ??= [column];
+
+      apiRef.current.autosizeColumns(options);
     });
 
   /**

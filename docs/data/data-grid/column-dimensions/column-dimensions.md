@@ -62,11 +62,11 @@ To capture changes in the width of a column there are two callbacks that are cal
 
 `DataGridPro` also allows for autosizing the columns' dimensions based on their content. It can be autosized by 3 methods:
 
-- Calling the `.autosizeColumns(options?: GridAutosizeOptions)` API method,
-- Adding the `autosizeOnMount` prop,
-- Double-clicking a column header separator on the grid.
+- Double-clicking a column header separator on the grid,
+- Calling the `.autosizeColumns(options)` API method,
+- Adding the `autosizeOnMount` prop.
 
-You can pass options directly to the API method when you call it. If you need to configure autosize for the other two methods, you can provide the options in the `autosizeOptions` prop.
+You can pass options directly to the API method when you call it. If you need to configure autosize for the other two methods, you can provide the options in the `autosizeOptions` prop. Note that for the separator double-click method, the clicked column will be passed to the `.columns` option unless `autosizeOptions` already has a `.columns` list.
 
 {{"demo": "ColumnAutosizing.js", "disableAd": true, "bg": "inline"}}
 
