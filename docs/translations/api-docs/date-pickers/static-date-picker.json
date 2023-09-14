@@ -25,7 +25,7 @@
       "description": "Formats the day of week displayed in the calendar header.",
       "deprecated": "",
       "typeDescriptions": {
-        "day": "The day of week provided by the adapter&#39;s method <code>getWeekdays</code>.",
+        "weekday": "The day of week provided by the adapter&#39;s method <code>getWeek</code>.",
         "string": "The name to display."
       }
     },
