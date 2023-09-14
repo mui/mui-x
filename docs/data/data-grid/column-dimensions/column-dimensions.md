@@ -73,7 +73,7 @@ You can pass options directly to the API method when you call it. If you need to
 :::warning
 The datagrid can only autosize based on the currently rendered cells.
 
-DOM access is required to accurately calculate dimensions, so unmounted cells (when virtualization is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) so we can discuss it further.
+DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) so we can discuss it further.
 
 :::
 
