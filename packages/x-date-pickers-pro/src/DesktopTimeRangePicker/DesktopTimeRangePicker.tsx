@@ -8,7 +8,6 @@ import {
   useUtils,
   resolveTimeFormat,
 } from '@mui/x-date-pickers/internals';
-import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
@@ -16,7 +15,10 @@ import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
 import { DateRange } from '../internals/models';
-import { renderDigitalClockTimeRangeView } from '../timeRangeViewRenderers';
+import {
+  renderDigitalClockTimeRangeView,
+  renderMultiSectionDigitalClockTimeRangeView,
+} from '../timeRangeViewRenderers';
 
 type DesktopTimeRangePickerComponent = (<TDate>(
   props: DesktopTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -35,14 +37,15 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     DesktopTimeRangePickerProps<TDate>
   >(inProps, 'MuiDesktopTimeRangePicker');
 
-  // const thresholdToRenderTimeInASingleColumn =
-  //   defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
-  // const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
-  const shouldRenderTimeInASingleColumn = true; // (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
+  const thresholdToRenderTimeInASingleColumn =
+    defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
+  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
+  const shouldRenderTimeInASingleColumn =
+    (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeRangeView
-    : renderMultiSectionDigitalClockTimeView;
+    : renderMultiSectionDigitalClockTimeRangeView;
 
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, TimeViewWithMeridiem, any, {}> = {
     hours: renderTimeView,
@@ -53,7 +56,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   };
 
   const shouldHoursRendererContainMeridiemView =
-    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeRangeView.name;
   const views: readonly TimeViewWithMeridiem[] =
     defaultizedProps.ampm && shouldHoursRendererContainMeridiemView
       ? [...defaultizedProps.views, 'meridiem']
@@ -61,6 +64,8 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
 
   const props = {
     ...defaultizedProps,
+    ampmInClock: true,
+    timeSteps,
     viewRenderers,
     format: resolveTimeFormat(utils, defaultizedProps),
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
@@ -77,6 +82,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
       }),
       toolbar: {
         hidden: true,
+        ampmInClock: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },

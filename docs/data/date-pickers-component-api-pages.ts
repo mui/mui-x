@@ -45,6 +45,11 @@ export default [
   },
   { pathname: '/x/api/date-pickers/mobile-date-time-picker', title: 'MobileDateTimePicker' },
   { pathname: '/x/api/date-pickers/mobile-time-picker', title: 'MobileTimePicker' },
+  {
+    pathname: '/x/api/date-pickers/mobile-time-range-picker',
+    title: 'MobileTimeRangePicker',
+    plan: 'pro',
+  },
   { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
   {
     pathname: '/x/api/date-pickers/multi-input-date-range-field',

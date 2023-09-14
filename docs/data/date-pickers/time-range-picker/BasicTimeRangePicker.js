@@ -7,7 +7,7 @@ import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 export default function BasicTimeRangePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DateRangePicker']}>
+      <DemoContainer components={['TimeRangePicker']}>
         <TimeRangePicker localeText={{ start: 'Check-in', end: 'Check-out' }} />
       </DemoContainer>
     </LocalizationProvider>

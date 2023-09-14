@@ -82,17 +82,17 @@ MobileTimeRangePicker.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm: PropTypes.bool,
+  /**
    * If `true`, the main element is focused during the first mount.
    * This main element is:
    * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
-  /**
-   * The number of calendars to render on **desktop**.
-   * @default 2
-   */
-  calendars: PropTypes.oneOf([1, 2, 3]),
   /**
    * Class name applied to the root element.
    */
@@ -115,22 +115,6 @@ MobileTimeRangePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * Position the current month is rendered in.
-   * @default 1
-   */
-  currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
-  /**
-   * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
-   * @returns {string} The name to display.
-   * @default (day) => day.charAt(0).toUpperCase()
-   */
-  dayOfWeekFormatter: PropTypes.func,
-  /**
-   * Default calendar month displayed when `value={[null, null]}`.
-   */
-  defaultCalendarMonth: PropTypes.any,
-  /**
    * The initial position in the edited date range.
    * Used when the component is not controlled.
    * @default 'start'
@@ -142,30 +126,20 @@ MobileTimeRangePicker.propTypes = {
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
-   * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
-   * @default false
-   */
-  disableAutoMonthSwitching: PropTypes.bool,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
-  /**
-   * If `true`, editing dates by dragging is disabled.
-   * @default false
-   */
-  disableDragEditing: PropTypes.bool,
   /**
    * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * Do not ignore date part when validating min/max time.
    * @default false
    */
-  disableHighlightToday: PropTypes.bool,
+  disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
@@ -176,16 +150,6 @@ MobileTimeRangePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * If `true`, the week number will be display in the calendar.
-   */
-  displayWeekNumber: PropTypes.bool,
-  /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
-   * @default undefined
-   */
-  fixedWeekNumber: PropTypes.number,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
@@ -208,24 +172,25 @@ MobileTimeRangePicker.propTypes = {
    */
   label: PropTypes.node,
   /**
-   * If `true`, calls `renderLoading` instead of rendering the day calendar.
-   * Can be used to preload information and show it in calendar.
-   * @default false
-   */
-  loading: PropTypes.bool,
-  /**
    * Locale for components texts.
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText: PropTypes.object,
   /**
-   * Maximal selectable date.
+   * Maximal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxDate: PropTypes.any,
+  maxTime: PropTypes.any,
   /**
-   * Minimal selectable date.
+   * Minimal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minDate: PropTypes.any,
+  minTime: PropTypes.any,
+  /**
+   * Step over minutes.
+   * @default 1
+   */
+  minutesStep: PropTypes.number,
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -256,12 +221,6 @@ MobileTimeRangePicker.propTypes = {
    */
   onError: PropTypes.func,
   /**
-   * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
-   */
-  onMonthChange: PropTypes.func,
-  /**
    * Callback fired when the popup requests to be opened.
    * Use in controlled mode (see `open`).
    */
@@ -277,10 +236,22 @@ MobileTimeRangePicker.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
+   * Callback fired on view change.
+   * @template TView
+   * @param {TView} view The new view.
+   */
+  onViewChange: PropTypes.func,
+  /**
    * Control the popup or dialog open state.
    * @default false
    */
   open: PropTypes.bool,
+  /**
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
+   */
+  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * The position in the currently edited date range.
    * Used when the component position is controlled.
@@ -297,12 +268,6 @@ MobileTimeRangePicker.propTypes = {
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
   referenceDate: PropTypes.any,
-  /**
-   * Component displaying when passed `loading` true.
-   * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
-   */
-  renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -331,24 +296,21 @@ MobileTimeRangePicker.propTypes = {
     }),
   ]),
   /**
-   * Disable specific date.
-   * @template TDate
-   * @param {TDate} day The date to test.
-   * @param {string} position The date to test, 'start' or 'end'.
-   * @returns {boolean} Returns `true` if the date should be disabled.
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
    */
-  shouldDisableDate: PropTypes.func,
+  shouldDisableClock: PropTypes.func,
   /**
-   * If `true`, days outside the current month are rendered:
-   *
-   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
-   *
-   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
-   *
-   * - ignored if `calendars` equals more than `1` on range pickers.
-   * @default false
+   * Disable specific time.
+   * @template TDate
+   * @param {TDate} value The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
    */
-  showDaysOutsideCurrentMonth: PropTypes.bool,
+  shouldDisableTime: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}
@@ -381,13 +343,25 @@ MobileTimeRangePicker.propTypes = {
    */
   value: PropTypes.arrayOf(PropTypes.any),
   /**
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be the used.
    */
   viewRenderers: PropTypes.shape({
-    day: PropTypes.func,
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    seconds: PropTypes.func,
   }),
+  /**
+   * Available views.
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;
 
 export { MobileTimeRangePicker };

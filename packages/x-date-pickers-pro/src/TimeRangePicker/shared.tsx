@@ -118,7 +118,7 @@ export function useTimeRangePickerDefaultizedProps<
 
     return {
       ...themeProps.localeText,
-      dateRangePickerToolbarTitle: themeProps.localeText.toolbarTitle,
+      timeRangePickerToolbarTitle: themeProps.localeText.toolbarTitle,
     };
   }, [themeProps.localeText]);
 
