@@ -143,8 +143,10 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
         ref={ref}
         disabled={disabled}
         type="button"
+        role="radio"
         tabIndex={disabled ? -1 : tabIndex}
         aria-current={ariaCurrent}
+        aria-checked={selected}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
         onFocus={(event) => onFocus(event, value)}
