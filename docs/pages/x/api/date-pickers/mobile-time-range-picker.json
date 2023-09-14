@@ -1,10 +1,7 @@
 {
   "props": {
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
-    "calendars": {
-      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
-      "default": "2"
-    },
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
@@ -22,34 +19,16 @@
       "deprecated": true,
       "deprecationInfo": "Please use <code>slotProps</code>."
     },
-    "currentMonthCalendarPosition": {
-      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
-      "default": "1"
-    },
-    "dayOfWeekFormatter": {
-      "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()",
-      "signature": {
-        "type": "function(day: string) => string",
-        "describedArgs": ["day"],
-        "returned": "string"
-      }
-    },
-    "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultRangePosition": {
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
-    "disableDragEditing": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
-    "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
@@ -57,10 +36,10 @@
     },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
-    "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
+    "maxTime": { "type": { "name": "any" } },
+    "minTime": { "type": { "name": "any" } },
+    "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onAccept": {
       "type": { "name": "func" },
       "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
@@ -80,10 +59,6 @@
         "describedArgs": ["error", "value"]
       }
     },
-    "onMonthChange": {
-      "type": { "name": "func" },
-      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
-    },
     "onOpen": { "type": { "name": "func" } },
     "onRangePositionChange": {
       "type": { "name": "func" },
@@ -99,7 +74,17 @@
         "describedArgs": ["newValue"]
       }
     },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
     "open": { "type": { "name": "bool" } },
+    "openTo": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      }
+    },
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
@@ -109,30 +94,30 @@
       "type": { "name": "any" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
-    "renderLoading": {
-      "type": { "name": "func" },
-      "default": "() => \"...\"",
-      "signature": {
-        "type": "function() => React.ReactNode",
-        "describedArgs": [],
-        "returned": "React.ReactNode"
-      }
-    },
     "selectedSections": {
       "type": {
         "name": "union",
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
-    "shouldDisableDate": {
+    "shouldDisableClock": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
       "signature": {
-        "type": "function(day: TDate, position: string) => boolean",
-        "describedArgs": ["day", "position"],
+        "type": "function(clockValue: number, view: TimeView) => boolean",
+        "describedArgs": ["clockValue", "view"],
         "returned": "boolean"
       }
     },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
@@ -147,7 +132,21 @@
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      }
+    },
+    "viewRenderers": {
+      "type": { "name": "shape", "description": "{ hours?: func, minutes?: func, seconds?: func }" }
+    },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
+      }
+    }
   },
   "slots": [
     {
