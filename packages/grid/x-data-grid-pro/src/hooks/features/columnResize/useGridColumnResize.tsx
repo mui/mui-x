@@ -228,11 +228,13 @@ function extractColumnWidths(
     if (options.includeHeaders) {
       const header = getHeader(column.field);
       if (header) {
+        const title = header.querySelector(`.${gridClasses.columnHeaderTitle}`);
         const content = header.querySelector(`.${gridClasses.columnHeaderTitleContainerContent}`)!;
+        const element = title ?? content;
 
         const style = window.getComputedStyle(header, null);
         const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-        const contentWidth = content.scrollWidth + 1;
+        const contentWidth = element.scrollWidth + 1;
         const width = paddingWidth + contentWidth;
 
         filteredWidths.push(width);

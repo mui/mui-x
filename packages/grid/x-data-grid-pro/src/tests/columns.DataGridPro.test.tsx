@@ -455,10 +455,10 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should work through double-clicking the separator', async () => {
       render(<Test rows={rows} columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const separator = document.querySelectorAll(`.${gridClasses['columnSeparator--resizable']}`)[1];
       fireEvent.doubleClick(separator);
       await microtasks();
-      expect(getWidths()).to.deep.equal([50, 145]);
+      expect(getWidths()).to.deep.equal([100, 145]);
     });
 
     it('should work on mount', async () => {
