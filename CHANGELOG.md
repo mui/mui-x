@@ -9,12 +9,12 @@ _Sep 14, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Fix `YearCalendar` and `MonthCalendar` a11y (#10312) @LukasTy
+- 🎁 Fix `YearCalendar` and `MonthCalendar` accessibility (#10312) @LukasTy
 
   The `YearCalendar` and `MonthCalendar` items role has been changed from `button` to `radio` in order to improve the component's a11y support.
   If you were relying on the mentioned components having a `button` role for items, you will need to update your usage to expect a `radio` role instead.
 
-- 🌍 Improve Japanese (ja-JP), Persian (fa-IR), and Improve Vietnamese (vi-VN) locales on the data grid
+- 🌍 Improve Japanese (ja-JP), Persian (fa-IR), and Vietnamese (vi-VN) locales on the data grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -60,7 +60,7 @@ Same changes as in `@mui/x-date-pickers@6.14.0`.
 
 - [docs] Add conditional range picker props example (#10227) @LukasTy
 - [docs] Add toolbar to the multi-filters demo (#10223) @MBilalShafi
-- [docs] Avoid use of We @oliviertassinari
+- [docs] Avoid the use of "We" @oliviertassinari
 - [docs] Clarify MUI vs. MUI Core difference @oliviertassinari
 - [docs] Enable `ariaV7` flag for demos using `useDemoData` hook (#10204) @cherniavskii
 - [docs] Fix Tree View link to API references (#10282) @oliviertassinari
@@ -78,7 +78,6 @@ Same changes as in `@mui/x-date-pickers@6.14.0`.
 
 - [core] Add types extension for clarity @oliviertassinari
 - [core] Set logo height to fix layout shift in GitHub @oliviertassinari
-- [core] TrapFocus was renamed to FocusTrap @oliviertassinari
 - [core] TrapFocus was renamed to FocusTrap @oliviertassinari
 
 ## 6.13.0
