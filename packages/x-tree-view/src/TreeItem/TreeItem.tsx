@@ -65,6 +65,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
 })<{ ownerState: TreeItemOwnerState }>(({ theme }) => ({
   padding: '0 8px',
   width: '100%',
+  boxSizing: 'border-box', // prevent width + padding to overflow
   display: 'flex',
   alignItems: 'center',
   cursor: 'pointer',
@@ -121,10 +122,11 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     },
   },
   [`& .${treeItemClasses.label}`]: {
+    paddingLeft: 4,
     width: '100%',
+    boxSizing: 'border-box', // prevent width + padding to overflow
     // fixes overflow - see https://github.com/mui/material-ui/issues/27372
     minWidth: 0,
-    paddingLeft: 4,
     position: 'relative',
     ...theme.typography.body1,
   },
