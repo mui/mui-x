@@ -47,7 +47,7 @@ export interface DayCalendarSlotsComponentsProps<TDate> {
   >;
 }
 
-export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
+export interface ExportedDayCalendarProps<TDate> extends ExportedPickersDayProps {
   /**
    * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
@@ -62,11 +62,11 @@ export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
   renderLoading?: () => React.ReactNode;
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @param {TDate} weekday The day of week provided by the adapter's method `getWeek`.
    * @returns {string} The name to display.
-   * @default (day) => day.charAt(0).toUpperCase()
+   * @default (weekday: TDate) => adapter.format(weekday, 'weekdayShort').charAt(0).toUpperCase()
    */
-  dayOfWeekFormatter?: (day: string) => string;
+  dayOfWeekFormatter?: (weekday: TDate) => string;
   /**
    * If `true`, the week number will be display in the calendar.
    */
@@ -80,7 +80,7 @@ export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
 }
 
 export interface DayCalendarProps<TDate>
-  extends ExportedDayCalendarProps,
+  extends ExportedDayCalendarProps<TDate>,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
@@ -122,8 +122,6 @@ const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
 
   return composeClasses(slots, getDayCalendarUtilityClass, classes);
 };
-
-const defaultDayOfWeekFormatter = (day: string) => day.charAt(0).toUpperCase();
 
 const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
@@ -344,7 +342,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     shouldDisableDate,
     shouldDisableMonth,
     shouldDisableYear,
-    dayOfWeekFormatter = defaultDayOfWeekFormatter,
+    dayOfWeekFormatter: dayOfWeekFormatterFromProps,
     hasFocus,
     onFocusedViewChange,
     gridLabelId,
@@ -359,6 +357,11 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   const classes = useUtilityClasses(props);
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
+
+  // before we could define this outside of the component scope, but now we need utils, which is only defined here
+  const dayOfWeekFormatter =
+    dayOfWeekFormatterFromProps ||
+    ((weekday: TDate) => utils.format(weekday, 'weekdayShort').charAt(0).toUpperCase());
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -553,7 +556,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             {localeText.calendarWeekNumberHeaderText}
           </PickersCalendarWeekNumberLabel>
         )}
-        {utils.getWeekdaysDates(now).map((weekday, i) => {
+        {utils.getWeek(now).map((weekday, i) => {
           const day = utils.format(weekday, 'weekdayShort');
           return (
             <PickersCalendarWeekDayLabel
@@ -563,7 +566,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
               aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
               className={classes.weekDayLabel}
             >
-              {dayOfWeekFormatter?.(day) ?? day}
+              {dayOfWeekFormatter?.(weekday) ?? day}
             </PickersCalendarWeekDayLabel>
           );
         })}

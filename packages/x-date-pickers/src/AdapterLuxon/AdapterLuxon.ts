@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime, Info } from 'luxon';
-import eachDayOfInterval from 'date-fns-jalali/eachDayOfInterval';
 import {
   AdapterFormats,
   AdapterOptions,
@@ -528,7 +527,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return Info.weekdaysFormat('narrow', { locale: this.locale });
   };
 
-  public getWeekdaysDates = (value: DateTime) => {
+  public getWeek = (value: DateTime) => {
     const cleanValue = this.setLocaleToValue(value);
     const start = cleanValue.startOf('week');
     return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => this.addDays(start, dayOfWeek));

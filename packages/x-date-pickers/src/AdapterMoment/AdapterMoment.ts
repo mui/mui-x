@@ -571,7 +571,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return defaultMoment.weekdaysShort(true);
   };
 
-  public getWeekdaysDates = (value: Moment) => {
+  public getWeek = (value: Moment) => {
     const start = value.clone().startOf('week');
     return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
       return start.clone().add(dayOfWeek, 'day');

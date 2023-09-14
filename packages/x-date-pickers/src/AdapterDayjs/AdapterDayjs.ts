@@ -686,7 +686,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     );
   };
 
-  public getWeekdaysDates = (value: Dayjs) => {
+  public getWeek = (value: Dayjs) => {
     const start = value.startOf('week');
     return [0, 1, 2, 3, 4, 5, 6].map((diff) => this.addDays(start, diff));
   };

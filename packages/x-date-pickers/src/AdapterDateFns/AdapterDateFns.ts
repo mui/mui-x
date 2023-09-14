@@ -550,7 +550,7 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     }).map((day) => this.formatByString(day, 'EEEEEE'));
   };
 
-  public getWeekdaysDates = (value: Date) => {
+  public getWeek = (value: Date) => {
     return eachDayOfInterval({
       start: startOfWeek(value, { locale: this.locale }),
       end: endOfWeek(value, { locale: this.locale }),
