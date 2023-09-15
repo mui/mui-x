@@ -2,19 +2,15 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridRowId,
-  GridValidRowModel,
-  DataGridPremiumProps,
   useGridApiRef,
   GridActionsCellItem,
-  GridColDef,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreIcon from '@mui/icons-material/Restore';
 
-export default function BulkEditing() {
+export default function BulkEditingNoSnap() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -33,15 +29,12 @@ export default function BulkEditing() {
   const apiRef = useGridApiRef();
 
   const [hasUnsavedRows, setHasUnsavedRows] = React.useState(false);
-  const unsavedChangesRef = React.useRef<{
-    unsavedRows: Record<GridRowId, GridValidRowModel>;
-    rowsBeforeChange: Record<GridRowId, GridValidRowModel>;
-  }>({
+  const unsavedChangesRef = React.useRef({
     unsavedRows: {},
     rowsBeforeChange: {},
   });
 
-  const columns = React.useMemo<GridColDef[]>(() => {
+  const columns = React.useMemo(() => {
     return [
       {
         field: 'actions',
@@ -85,10 +78,7 @@ export default function BulkEditing() {
     ];
   }, [data.columns, unsavedChangesRef, apiRef]);
 
-  const processRowUpdate: NonNullable<DataGridPremiumProps['processRowUpdate']> = (
-    newRow,
-    oldRow,
-  ) => {
+  const processRowUpdate = (newRow, oldRow) => {
     const rowId = newRow.id;
 
     unsavedChangesRef.current.unsavedRows[rowId] = newRow;

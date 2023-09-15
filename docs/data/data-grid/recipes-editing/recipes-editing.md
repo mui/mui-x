@@ -123,4 +123,4 @@ See [Localization](/x/react-date-pickers/localization/) for more information.
 
 ## Bulk editing
 
-{{"demo": "BulkEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "BulkEditingNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
