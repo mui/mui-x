@@ -44,5 +44,5 @@ colors:
 
 # define the regex the PR title is tested against to enforce a title format
 titlePolicy:
-  titleRegex: /^\[\w+\]\s*\w+.*/gm
+  titleRegex: /^(\[\w+\]\s{1}\w+.*|Bump\s*\w+.*|v\d+\.\d+\.\d+(\-{1}.*)*)$/gm
 
