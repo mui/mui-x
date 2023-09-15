@@ -27,6 +27,8 @@ MIT licensed npm packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
+- [`@mui/x-charts`](https://www.npmjs.com/package/@mui/x-charts)
+- [`@mui/x-tree-view`](https://www.npmjs.com/package/@mui/x-tree-view)
 
 ### Pro plan <span class="plan-pro"></span>
 
