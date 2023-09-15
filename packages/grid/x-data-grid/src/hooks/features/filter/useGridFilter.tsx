@@ -433,7 +433,9 @@ export const useGridFilter = (
           filterCache,
         );
 
-        if (isRowPassing) filteredRowsLookup.add(id);
+        if (isRowPassing) {
+          filteredRowsLookup.add(id);
+        }
       }
 
       const footerId = 'auto-generated-group-footer-root';

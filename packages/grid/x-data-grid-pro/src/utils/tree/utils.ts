@@ -240,12 +240,15 @@ export const getVisibleRowsLookup = ({
       });
     }
 
-    if (isPassingFiltering && areAncestorsExpanded) visibleRowsLookup.add(node.id);
+    if (isPassingFiltering && areAncestorsExpanded) {
+      visibleRowsLookup.add(node.id);
+    }
 
     // TODO rows v6: Should we keep storing the visibility status of footer independently or rely on the group visibility in the selector ?
     if (node.type === 'group' && node.footerId != null) {
-      if (isPassingFiltering && areAncestorsExpanded && !!node.childrenExpanded)
+      if (isPassingFiltering && areAncestorsExpanded && !!node.childrenExpanded) {
         visibleRowsLookup.add(node.footerId);
+      }
     }
   };
 
