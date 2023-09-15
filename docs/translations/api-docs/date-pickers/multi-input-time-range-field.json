@@ -182,6 +182,6 @@
   "slotDescriptions": {
     "root": "Element rendered at the root.",
     "separator": "Element rendered between the two inputs.",
-    "textField": "Form control with an input to render a time.\nIt is rendered twice: once for the start time and once for the end time.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "textField": "Form control with an input to render a time. It is rendered twice: once for the start time and once for the end time. Receives the same props as <code>@mui/material/TextField</code>."
   }
 }

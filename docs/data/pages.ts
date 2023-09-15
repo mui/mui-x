@@ -340,6 +340,7 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
+          { pathname: '/x/react-date-pickers/custom-opening-button' },
         ],
       },
 
@@ -418,6 +419,7 @@ const pages: MuiPage[] = [
     title: 'Tree View',
     newFeature: true,
     children: [
+      { pathname: '/x/react-tree-view/getting-started' },
       { pathname: '/x/react-tree-view', title: 'Overview' },
       {
         pathname: '/x/api/tree-view-group',

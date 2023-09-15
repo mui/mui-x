@@ -64,6 +64,10 @@ interface DemoItemProps {
   component?: string;
   children: React.ReactNode;
 }
+/**
+ * WARNING: This is an internal component used in documentation to achieve a desired layout.
+ * Please do not use it in your application.
+ */
 export function DemoItem(props: DemoItemProps) {
   const { label, children, component } = props;
 
@@ -90,6 +94,10 @@ export function DemoItem(props: DemoItemProps) {
   );
 }
 
+/**
+ * WARNING: This is an internal component used in documentation to achieve a desired layout.
+ * Please do not use it in your application.
+ */
 export function DemoContainer(props: DemoGridProps) {
   const { children, components, sx: sxProp } = props;
 

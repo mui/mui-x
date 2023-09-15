@@ -17,8 +17,5 @@
     "name": "MuiDateRangePickerToolbar"
   },
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePickerToolbar.tsx",
-  "demos": "<ul></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangePickerToolbar" }
-  ]
+  "demos": "<ul></ul>"
 }

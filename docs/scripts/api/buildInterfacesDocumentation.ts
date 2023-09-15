@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import * as prettier from 'prettier';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderInline as renderMarkdownInline } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/monorepo/packages/markdown';
 import {
   escapeCell,
   getSymbolDescription,
@@ -13,11 +13,15 @@ import {
   resolveExportSpecifier,
   DocumentedInterfaces,
 } from './utils';
-import { Projects, Project, ProjectNames } from '../getTypeScriptProjects';
+import {
+  XTypeScriptProjects,
+  XTypeScriptProject,
+  XProjectNames,
+} from '../createXTypeScriptProjects';
 
 interface ParsedObject {
   name: string;
-  projects: ProjectNames[];
+  projects: XProjectNames[];
   description?: string;
   properties: ParsedProperty[];
   tags: { [tagName: string]: ts.JSDocTagInfo };
@@ -32,7 +36,7 @@ interface ParsedProperty {
   /**
    * Name of the projects on which the interface has this property
    */
-  projects: ProjectNames[];
+  projects: XProjectNames[];
 }
 
 const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
@@ -81,7 +85,7 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridAggregationFunction',
 ];
 
-const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
+const parseProperty = (propertySymbol: ts.Symbol, project: XTypeScriptProject): ParsedProperty => ({
   name: propertySymbol.name,
   description: getSymbolDescription(propertySymbol, project),
   tags: getSymbolJSDocTags(propertySymbol),
@@ -91,7 +95,7 @@ const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedPrope
 });
 
 interface ProjectInterface {
-  project: Project;
+  project: XTypeScriptProject;
   symbol: ts.Symbol;
   type: ts.Type;
   declaration: ts.InterfaceDeclaration;
@@ -100,7 +104,7 @@ interface ProjectInterface {
 const parseInterfaceSymbol = (
   interfaceName: string,
   documentedInterfaces: DocumentedInterfaces,
-  projects: Projects,
+  projects: XTypeScriptProjects,
 ): ParsedObject | null => {
   const projectInterfaces = documentedInterfaces
     .get(interfaceName)!
@@ -219,7 +223,7 @@ function generateMarkdownFromProperties(
   return text;
 }
 
-function generateImportStatement(objects: ParsedObject[], projects: Projects) {
+function generateImportStatement(objects: ParsedObject[], projects: XTypeScriptProjects) {
   let imports = '```js\n';
 
   const projectImports = Array.from(projects.values())
@@ -253,7 +257,7 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
 
 function generateMarkdown(
   object: ParsedObject,
-  projects: Projects,
+  projects: XTypeScriptProjects,
   documentedInterfaces: DocumentedInterfaces,
 ) {
   const demos = object.tags.demos;
@@ -282,7 +286,7 @@ function generateMarkdown(
 }
 
 interface BuildInterfacesDocumentationOptions {
-  projects: Projects;
+  projects: XTypeScriptProjects;
   apiPagesFolder: string;
 }
 
@@ -322,9 +326,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         description: linkify(parsedInterface.description, documentedInterfaces, 'html'),
         properties: parsedInterface.properties.map((property) => ({
           name: property.name,
-          description: renderMarkdownInline(
-            linkify(property.description, documentedInterfaces, 'html'),
-          ),
+          description: renderMarkdown(linkify(property.description, documentedInterfaces, 'html')),
           type: property.typeStr,
         })),
       };

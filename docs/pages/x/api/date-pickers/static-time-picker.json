@@ -131,7 +131,7 @@
     {
       "class": null,
       "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
     },
     {
       "class": null,
@@ -181,9 +181,5 @@
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers/src/StaticTimePicker/StaticTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "StaticTimePicker" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "StaticTimePicker" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }
