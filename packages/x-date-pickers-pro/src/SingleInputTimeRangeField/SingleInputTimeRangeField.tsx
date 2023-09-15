@@ -4,6 +4,7 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import {
   SingleInputTimeRangeFieldProps,
   SingleInputTimeRangeFieldSlotsComponent,
@@ -205,12 +206,7 @@ SingleInputTimeRangeField.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */

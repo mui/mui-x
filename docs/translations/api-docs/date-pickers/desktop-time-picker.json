@@ -255,7 +255,7 @@
     "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
     "field": "Component used to enter the date with the keyboard.",
     "inputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
-    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "openPickerButton": "Button to open the picker on desktop.",
@@ -264,7 +264,7 @@
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
-    "textField": "Form control with an input to render the value inside the default field.\nReceives the same props as <code>@mui/material/TextField</code>.",
+    "textField": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

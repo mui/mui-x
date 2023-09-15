@@ -44,9 +44,7 @@
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
-    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
@@ -231,7 +229,7 @@
     {
       "class": null,
       "name": "calendarHeader",
-      "description": "Custom component for calendar header.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
       "default": "PickersCalendarHeader"
     },
     {
@@ -249,7 +247,7 @@
     {
       "class": null,
       "name": "day",
-      "description": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+      "description": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
       "default": "PickersDay"
     },
     {
@@ -268,7 +266,7 @@
       "class": null,
       "name": "desktopTrapFocus",
       "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "TrapFocus from '@mui/material'."
+      "default": "FocusTrap from '@mui/base'."
     },
     {
       "class": null,
@@ -290,7 +288,7 @@
     {
       "class": null,
       "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
     },
     {
       "class": null,
@@ -360,7 +358,7 @@
     {
       "class": null,
       "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     },
     {
@@ -379,9 +377,5 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDateTimePicker/DesktopDateTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DesktopDateTimePicker" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DesktopDateTimePicker" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }
