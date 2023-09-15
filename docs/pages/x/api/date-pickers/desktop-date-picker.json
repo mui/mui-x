@@ -41,9 +41,7 @@
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
-    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
@@ -219,7 +217,7 @@
       "class": null,
       "name": "desktopTrapFocus",
       "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "TrapFocus from '@mui/material'."
+      "default": "FocusTrap from '@mui/base'."
     },
     {
       "class": null,
@@ -318,9 +316,5 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDatePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDatePicker/DesktopDatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DesktopDatePicker" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DesktopDatePicker" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }

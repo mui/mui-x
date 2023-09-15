@@ -729,7 +729,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       shouldExtendContent = true;
     }
 
-    const size = {
+    const size: React.CSSProperties = {
       width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
       height,
       minHeight: shouldExtendContent ? '100%' : 'auto',

@@ -1226,6 +1226,7 @@
     "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter panel.",
     "filterPanelRemoveAllIcon": "Icon displayed for deleting all the active filters from filter panel.",
     "footer": "Footer component rendered at the bottom of the grid viewport.",
+    "footerRowCount": "Row count component rendered in the footer",
     "groupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "loadIcon": "Icon displayed on the input while processing.",
