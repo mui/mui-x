@@ -22,11 +22,7 @@ import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse } from 'react-docgen';
-import {
-  renderInline as renderMarkdownInline,
-  getHeaders,
-  getTitle,
-} from '@mui/monorepo/packages/markdown';
+import { renderMarkdown, getHeaders, getTitle } from '@mui/monorepo/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-builder/ApiBuilders/ComponentApiBuilder';
@@ -115,7 +111,7 @@ function extractSlots(options: {
 
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
-    const description = renderMarkdownInline(parsed.description);
+    const description = renderMarkdown(parsed.description);
     const defaultValue = getJsdocDefaultValue(parsed);
 
     let type: string | undefined;
@@ -375,7 +371,7 @@ const buildComponentDocumentation = async (options: {
         signatureReturn,
         requiresRef,
       } = generatePropDescription(prop, propName);
-      let description = renderMarkdownInline(jsDocText);
+      let description = renderMarkdown(jsDocText);
 
       const additionalInfo: CoreReactApiProps['additionalInfo'] = {};
       if (propName === 'classes') {
@@ -397,7 +393,7 @@ const buildComponentDocumentation = async (options: {
         .concat(signatureReturn || [])
         .forEach(({ name, description: paramDescription }) => {
           typeDescriptions[name] = linkify(
-            renderMarkdownInline(paramDescription),
+            renderMarkdown(paramDescription),
             documentedInterfaces,
             'html',
           );
@@ -457,8 +453,7 @@ const buildComponentDocumentation = async (options: {
           // undefined values are not serialized => saving some bytes
           required: requiredProp || undefined,
           deprecated: !!deprecation || undefined,
-          deprecationInfo:
-            renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
+          deprecationInfo: renderMarkdown(deprecation?.groups?.info || '').trim() || undefined,
           signature,
           additionalInfo: Object.keys(additionalInfo).length === 0 ? undefined : additionalInfo,
         },

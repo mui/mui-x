@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import path from 'path';
-import { renderInline as renderMarkdownInline } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/monorepo/packages/markdown';
 import {
   DocumentedInterfaces,
   getSymbolDescription,
@@ -69,7 +69,7 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
         events[event.name] = {
           projects: [project.name],
           name: event.name,
-          description: renderMarkdownInline(description),
+          description: renderMarkdown(description),
           params: linkify(eventParams.params, documentedInterfaces, 'html'),
           event: `MuiEvent<${eventParams.event ?? '{}'}>`,
         };

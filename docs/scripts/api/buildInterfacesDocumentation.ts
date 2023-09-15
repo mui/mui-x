@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import * as prettier from 'prettier';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderInline as renderMarkdownInline } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/monorepo/packages/markdown';
 import {
   escapeCell,
   getSymbolDescription,
@@ -326,9 +326,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         description: linkify(parsedInterface.description, documentedInterfaces, 'html'),
         properties: parsedInterface.properties.map((property) => ({
           name: property.name,
-          description: renderMarkdownInline(
-            linkify(property.description, documentedInterfaces, 'html'),
-          ),
+          description: renderMarkdown(linkify(property.description, documentedInterfaces, 'html')),
           type: property.typeStr,
         })),
       };
