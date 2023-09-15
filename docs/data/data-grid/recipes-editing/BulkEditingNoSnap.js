@@ -9,6 +9,8 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreIcon from '@mui/icons-material/Restore';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
 
 export default function BulkEditingNoSnap() {
   const { data } = useDemoData({
@@ -33,6 +35,7 @@ export default function BulkEditingNoSnap() {
     unsavedRows: {},
     rowsBeforeChange: {},
   });
+  const [isSaving, setIsSaving] = React.useState(false);
 
   const columns = React.useMemo(() => {
     return [
@@ -43,7 +46,7 @@ export default function BulkEditingNoSnap() {
           return [
             <GridActionsCellItem
               icon={<RestoreIcon />}
-              label="Restore"
+              label="Discard changes"
               disabled={unsavedChangesRef.current.unsavedRows[id] === undefined}
               onClick={() => {
                 apiRef.current.updateRows([
@@ -100,10 +103,15 @@ export default function BulkEditingNoSnap() {
     };
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     try {
-      // TODO: Persist updates in the database
+      // Persist updates in the database
+      setIsSaving(true);
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
 
+      setIsSaving(false);
       const rowsToDelete = Object.values(
         unsavedChangesRef.current.unsavedRows,
       ).filter((row) => row._action === 'delete');
@@ -117,17 +125,27 @@ export default function BulkEditingNoSnap() {
         rowsBeforeChange: {},
       };
     } catch (error) {
-      // Retry or restore the old data?
+      setIsSaving(false);
     }
   };
 
   return (
     <div style={{ width: '100%' }}>
       <div style={{ marginBottom: 8 }}>
-        <Button disabled={!hasUnsavedRows} onClick={saveChanges}>
-          Save
-        </Button>
-        <Button disabled={!hasUnsavedRows} onClick={discardChanges}>
+        <LoadingButton
+          disabled={!hasUnsavedRows}
+          loading={isSaving}
+          onClick={saveChanges}
+          startIcon={<SaveIcon />}
+          loadingPosition="start"
+        >
+          <span>Save</span>
+        </LoadingButton>
+        <Button
+          disabled={!hasUnsavedRows || isSaving}
+          onClick={discardChanges}
+          startIcon={<RestoreIcon />}
+        >
           Discard all changes
         </Button>
       </div>
@@ -137,7 +155,6 @@ export default function BulkEditingNoSnap() {
           columns={columns}
           apiRef={apiRef}
           disableRowSelectionOnClick
-          checkboxSelection
           unstable_cellSelection
           processRowUpdate={processRowUpdate}
           experimentalFeatures={{ clipboardPaste: true }}
@@ -150,6 +167,7 @@ export default function BulkEditingNoSnap() {
               backgroundColor: 'rgba(0, 100, 0, 0.3)',
             },
           }}
+          loading={isSaving}
           getRowClassName={({ id }) => {
             const unsavedRow = unsavedChangesRef.current.unsavedRows[id];
             if (unsavedRow) {
