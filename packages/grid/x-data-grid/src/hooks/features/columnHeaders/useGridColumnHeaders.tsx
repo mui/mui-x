@@ -407,9 +407,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         })
         .filter((groupStructure) => groupStructure.columnFields.length > 0);
 
-      if (!visibleColumnGroupHeader.length) {
-        return null;
-      }
+      if (!visibleColumnGroupHeader.length) continue;
 
       const firstVisibleColumnIndex =
         visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
