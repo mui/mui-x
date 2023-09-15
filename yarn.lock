@@ -1853,7 +1853,7 @@
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.14.5"
-  resolved "https://github.com/mui/material-ui.git#52109ea4c47fd9f5052ab257f0b52853460fdc0a"
+  resolved "https://github.com/mui/material-ui.git#93b3f9ccf16df63450dcdba127ef73e4c734abd4"
 
 "@mui/private-theming@^5.14.7", "@mui/private-theming@^5.14.8":
   version "5.14.8"
@@ -11771,10 +11771,10 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
-react-hook-form@^7.45.4:
-  version "7.45.4"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.45.4.tgz#73d228b704026ae95d7e5f7b207a681b173ec62a"
-  integrity sha512-HGDV1JOOBPZj10LB3+OZgfDBTn+IeEsNOKiq/cxbQAIbKaiJUe/KV8DBUzsx0Gx/7IG/orWqRRm736JwOfUSWQ==
+react-hook-form@^7.46.1:
+  version "7.46.1"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.46.1.tgz#39347dbff19d980cb41087ac32a57abdc6045bb3"
+  integrity sha512-0GfI31LRTBd5tqbXMGXT1Rdsv3rnvy0FjEk8Gn9/4tp6+s77T7DPZuGEpBRXOauL+NhyGT5iaXzdIM2R6F/E+w==
 
 "react-is@^16.12.0 || ^17.0.0 || ^18.0.0", react-is@^16.13.1, react-is@^16.7.0, react-is@^17.0.1, react-is@^18.0.0, react-is@^18.2.0:
   version "18.2.0"

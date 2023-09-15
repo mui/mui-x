@@ -131,7 +131,7 @@
     {
       "class": null,
       "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
     },
     {
       "class": null,
