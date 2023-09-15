@@ -559,7 +559,9 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
           </PickersCalendarWeekNumberLabel>
         )}
         {getWeekdays(utils, now).map((weekday, i) => {
-          const day = utils.format(weekday, 'weekdayShort');
+          // regression-prevention:
+          // since 'weekdayShort' now always returns an abbreviated form we slice the first 2 letters from it.
+          const day = utils.format(weekday, 'weekdayShort').slice(0, 1);
           return (
             <PickersCalendarWeekDayLabel
               key={day + i.toString()}
