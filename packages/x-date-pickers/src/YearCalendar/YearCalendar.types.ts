@@ -63,4 +63,5 @@ export interface YearCalendarProps<TDate>
   onYearFocus?: (year: number) => void;
   hasFocus?: boolean;
   onFocusedViewChange?: (hasFocus: boolean) => void;
+  gridLabelId?: string;
 }
