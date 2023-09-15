@@ -61,17 +61,6 @@ describe('<AdapterDayjs />', () => {
         expect(result).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
       });
 
-      it('getWeek: should start on Sunday', () => {
-        const result = adapter.getWeek(date);
-        expect(adapter.format(result[0], 'weekdayShort')).to.equal('Sun');
-      });
-
-      it('getWeek: should return week from Oct 28 to Nov 03', () => {
-        const result = adapter.getWeek(date);
-        expect(adapter.format(result[0], 'fullDate')).to.equal('Oct 28, 2018');
-        expect(adapter.format(result[6], 'fullDate')).to.equal('Nov 3, 2018');
-      });
-
       it('getWeekArray: should start on Sunday', () => {
         const result = adapter.getWeekArray(date);
         expect(result[0][0].format('dd')).to.equal('Su');

@@ -74,9 +74,10 @@ DateTimePicker.propTypes = {
   componentsProps: PropTypes.object,
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} weekday The day of week provided by the adapter's method `getWeek`.
+   * @param {string} day The day of week provided by the adapter.  Deprecated in v7: Use `date` instead.
+   * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (weekday: TDate) => adapter.format(weekday, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (_day: string, date: TDate) => adapter.format(weekday, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**

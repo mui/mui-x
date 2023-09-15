@@ -8,6 +8,7 @@ import {
   unstable_useControlled as useControlled,
 } from '@mui/utils';
 import clsx from 'clsx';
+import { getWeekdays } from '@mui/x-date-pickers-pro/internals/utils/date-utils';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
@@ -62,11 +63,12 @@ export interface ExportedDayCalendarProps<TDate> extends ExportedPickersDayProps
   renderLoading?: () => React.ReactNode;
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} weekday The day of week provided by the adapter's method `getWeek`.
+   * @param {string} day The day of week provided by the adapter.  Deprecated in v7: Use `date` instead.
+   * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (weekday: TDate) => adapter.format(weekday, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (_day: string, date: TDate) => adapter.format(weekday, 'weekdayShort').charAt(0).toUpperCase()
    */
-  dayOfWeekFormatter?: (weekday: TDate) => string;
+  dayOfWeekFormatter?: (day: string, date: TDate) => string;
   /**
    * If `true`, the week number will be display in the calendar.
    */
@@ -361,7 +363,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   // before we could define this outside of the component scope, but now we need utils, which is only defined here
   const dayOfWeekFormatter =
     dayOfWeekFormatterFromProps ||
-    ((weekday: TDate) => utils.format(weekday, 'weekdayShort').charAt(0).toUpperCase());
+    ((_day: string, date: TDate) => utils.format(date, 'weekdayShort').charAt(0).toUpperCase());
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -556,7 +558,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             {localeText.calendarWeekNumberHeaderText}
           </PickersCalendarWeekNumberLabel>
         )}
-        {utils.getWeek(now).map((weekday, i) => {
+        {getWeekdays(utils, now).map((weekday, i) => {
           const day = utils.format(weekday, 'weekdayShort');
           return (
             <PickersCalendarWeekDayLabel
@@ -566,7 +568,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
               aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
               className={classes.weekDayLabel}
             >
-              {dayOfWeekFormatter?.(weekday) ?? day}
+              {dayOfWeekFormatter?.(day, weekday) ?? day}
             </PickersCalendarWeekDayLabel>
           );
         })}

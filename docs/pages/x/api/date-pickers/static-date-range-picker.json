@@ -24,10 +24,10 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(weekday: TDate) => adapter.format(weekday, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(_day: string, date: TDate) => adapter.format(weekday, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(weekday: TDate) => string",
-        "describedArgs": ["weekday"],
+        "type": "function(day: string, date: TDate) => string",
+        "describedArgs": ["day", "date"],
         "returned": "string"
       }
     },

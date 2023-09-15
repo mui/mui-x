@@ -686,11 +686,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     );
   };
 
-  public getWeek = (value: Dayjs) => {
-    const start = value.startOf('week');
-    return [0, 1, 2, 3, 4, 5, 6].map((diff) => this.addDays(start, diff));
-  };
-
   public getWeekArray = (value: Dayjs) => {
     const cleanValue = this.setLocaleToValue(value);
     const start = cleanValue.startOf('month').startOf('week');

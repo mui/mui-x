@@ -726,12 +726,6 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   getWeekdays(): string[];
   /**
-   * Get an array with all the weekdays dates in the week of the given date.
-   * @param {TDate} value The given date.
-   * @returns {TDate[]} The date of each day of a week.
-   */
-  getWeek(value: TDate): TDate[];
-  /**
    * Create a nested list with all the days of the month of the given date grouped by week.
    * @template TDate
    * @param {TDate} value The given date.

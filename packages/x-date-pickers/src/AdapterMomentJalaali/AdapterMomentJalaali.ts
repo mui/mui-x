@@ -288,13 +288,6 @@ export class AdapterMomentJalaali
     });
   };
 
-  public getWeek = (value: Moment) => {
-    const start = value.clone().startOf('week');
-    return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-      return start.clone().add(dayOfWeek, 'day');
-    });
-  };
-
   public getWeekArray = (value: Moment) => {
     const start = value.clone().startOf('jMonth').startOf('week');
     const end = value.clone().endOf('jMonth').endOf('week');

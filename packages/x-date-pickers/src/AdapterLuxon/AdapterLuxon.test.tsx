@@ -29,21 +29,9 @@ describe('<AdapterLuxon />', () => {
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterLuxon({ locale: 'en-US' });
-      const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       it('is12HourCycleInCurrentLocale: should have meridiem', () => {
         expect(adapter.is12HourCycleInCurrentLocale()).to.equal(true);
-      });
-
-      it('getWeek: should start on Monday', () => {
-        const result = adapter.getWeek(date);
-        expect(adapter.format(result[0], 'weekdayShort')).to.equal('Mon');
-      });
-
-      it('getWeek: should return week from Oct 29 to Nov 4', () => {
-        const result = adapter.getWeek(date);
-        expect(adapter.format(result[0], 'fullDate')).to.equal('Oct 29, 2018');
-        expect(adapter.format(result[6], 'fullDate')).to.equal('Nov 4, 2018');
       });
     });
 
