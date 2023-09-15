@@ -23,6 +23,12 @@ You can use the `fieldSeparator` slot to pass custom props to the `Typography` r
 
 {{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
 
+### Customize the `start` and `end` fields differently [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+You can pass conditional props to the `textField` slot to customize the input styling based on the `position`.
+
+{{"demo": "MultiInputFieldTextFieldProps.js"}}
+
 ### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can pass the single input fields to the range picker to use it for keyboard editing:
