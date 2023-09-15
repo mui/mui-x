@@ -52,7 +52,7 @@ describe('<YearCalendar /> - Describes', () => {
     setNewValue: (value) => {
       const newValue = adapterToUse.addYears(value, 1);
       userEvent.mousePress(
-        screen.getByRole('button', { name: adapterToUse.getYear(newValue).toString() }),
+        screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),
       );
 
       return newValue;

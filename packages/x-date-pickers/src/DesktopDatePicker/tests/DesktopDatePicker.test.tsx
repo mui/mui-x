@@ -220,7 +220,7 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Select year
-      userEvent.mousePress(screen.getByRole('button', { name: '2025' }));
+      userEvent.mousePress(screen.getByRole('radio', { name: '2025' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onAccept.callCount).to.equal(0);
