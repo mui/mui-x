@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import path from 'path';
-import { renderInline as renderMarkdownInline } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/monorepo/packages/markdown';
 import {
   DocumentedInterfaces,
   getSymbolDescription,
@@ -9,14 +9,14 @@ import {
   stringifySymbol,
   writePrettifiedFile,
 } from './utils';
-import { ProjectNames, Projects } from '../getTypeScriptProjects';
+import { XProjectNames, XTypeScriptProjects } from '../createXTypeScriptProjects';
 
 interface BuildEventsDocumentationOptions {
-  projects: Projects;
+  projects: XTypeScriptProjects;
   documentedInterfaces: DocumentedInterfaces;
 }
 
-const GRID_PROJECTS: ProjectNames[] = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'];
+const GRID_PROJECTS: XProjectNames[] = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'];
 
 export default function buildGridEventsDocumentation(options: BuildEventsDocumentationOptions) {
   const { projects, documentedInterfaces } = options;
@@ -27,7 +27,7 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
       description: string;
       params?: string;
       event?: string;
-      projects: ProjectNames[];
+      projects: XProjectNames[];
       componentProp?: string;
     };
   } = {};
@@ -69,7 +69,7 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
         events[event.name] = {
           projects: [project.name],
           name: event.name,
-          description: renderMarkdownInline(description),
+          description: renderMarkdown(description),
           params: linkify(eventParams.params, documentedInterfaces, 'html'),
           event: `MuiEvent<${eventParams.event ?? '{}'}>`,
         };
