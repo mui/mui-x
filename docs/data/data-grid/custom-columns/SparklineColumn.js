@@ -7,7 +7,13 @@ function GridSparklineCell(props) {
     return null;
   }
 
-  return <SparkLineChart data={props.value} width={props.colDef.computedWidth} />;
+  return (
+    <SparkLineChart
+      data={props.value}
+      width={props.colDef.computedWidth}
+      plotType={props.plotType}
+    />
+  );
 }
 
 const sparklineColumnType = {
@@ -25,8 +31,16 @@ const columns = [
   {
     field: 'monthlyDownloads',
     ...sparklineColumnType,
-    headerName: 'Monthly DLs',
+    headerName: 'Monthly DLs (line)',
     width: 150,
+  },
+  {
+    field: 'monthlyDownloadsBar',
+    ...sparklineColumnType,
+    headerName: 'Monthly DLs (bar)',
+    renderCell: (params) => <GridSparklineCell {...params} plotType="bar" />,
+    width: 150,
+    valueGetter: (params) => params.row.monthlyDownloads,
   },
   {
     field: 'lastMonthDownloads',

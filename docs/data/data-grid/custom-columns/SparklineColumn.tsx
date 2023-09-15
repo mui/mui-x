@@ -9,12 +9,24 @@ import {
 } from '@mui/x-data-grid';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
-function GridSparklineCell(props: GridRenderCellParams) {
+type SparkLineChartProps = React.ComponentProps<typeof SparkLineChart>;
+
+function GridSparklineCell(
+  props: GridRenderCellParams & {
+    plotType?: SparkLineChartProps['plotType'];
+  },
+) {
   if (props.value == null) {
     return null;
   }
 
-  return <SparkLineChart data={props.value} width={props.colDef.computedWidth} />;
+  return (
+    <SparkLineChart
+      data={props.value}
+      width={props.colDef.computedWidth}
+      plotType={props.plotType}
+    />
+  );
 }
 
 const sparklineColumnType: GridColTypeDef<number[]> = {
@@ -32,8 +44,16 @@ const columns: GridColDef[] = [
   {
     field: 'monthlyDownloads',
     ...sparklineColumnType,
-    headerName: 'Monthly DLs',
+    headerName: 'Monthly DLs (line)',
     width: 150,
+  },
+  {
+    field: 'monthlyDownloadsBar',
+    ...sparklineColumnType,
+    headerName: 'Monthly DLs (bar)',
+    renderCell: (params) => <GridSparklineCell {...params} plotType="bar" />,
+    width: 150,
+    valueGetter: (params) => params.row.monthlyDownloads,
   },
   {
     field: 'lastMonthDownloads',
