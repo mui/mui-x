@@ -8,6 +8,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 export type GridActionsCellItemProps = {
   label: string;
   icon?: React.ReactElement;
+  component?: React.ElementType;
 } & (
   | ({ showInMenu?: false; icon: React.ReactElement } & IconButtonProps)
   | ({ showInMenu: true } & MenuItemProps)
