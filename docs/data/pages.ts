@@ -4,11 +4,6 @@ import pickersComponentApi from './date-pickers-component-api-pages';
 import chartsComponentApi from './charts-component-api-pages';
 import treeViewComponentApi from './tree-view-component-api-pages';
 
-// const isPreview =
-//   process.env.NODE_ENV === 'development' ||
-//   process.env.CONTEXT === 'deploy-preview' ||
-//   process.env.CONTEXT === 'branch-deploy';
-
 const pages: MuiPage[] = [
   {
     pathname: '/blog/mui-x-v6/',
@@ -198,7 +193,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
-
       {
         pathname: '/x/react-date-pickers-components',
         subheader: 'Components',
@@ -299,7 +293,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
         ],
       },
-
       {
         pathname: '/x/react-date-pickers/common-features',
         subheader: 'Common features',
@@ -309,7 +302,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/shortcuts' },
         ],
       },
-
       {
         pathname: '/x/react-date-pickers/localization-group',
         subheader: 'Localization',
@@ -329,7 +321,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],
       },
-
       {
         pathname: '/x/react-date-pickers/visual-customization',
         subheader: 'Visual customization',
@@ -343,8 +334,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-opening-button' },
         ],
       },
-
-      { pathname: '/x/react-date-pickers/playground', title: 'Playground' },
+      { pathname: '/x/react-date-pickers/playground' },
       {
         pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
