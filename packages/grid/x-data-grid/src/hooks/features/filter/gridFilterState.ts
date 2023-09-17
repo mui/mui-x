@@ -17,8 +17,7 @@ export interface GridFilterState {
 
   /**
    * Filtering status for each row.
-   * A row is filtered if it is passing the filters, whether its parents are expanded or not.
-   * If a row is not registered in this lookup, it is filtered.
+   * This contains the rows that are filtered *out*, which means they did not pass the filters.
    * This is the equivalent of the `hiddenRowsLookup` if all the groups were expanded.
    */
   filteredRowsLookup: Set<GridRowId>;
