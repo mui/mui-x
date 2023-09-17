@@ -5,10 +5,10 @@ import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildGridSelectorsDocumentation from './buildGridSelectorsDocumentation';
 import buildGridEventsDocumentation from './buildGridEventsDocumentation';
-import { getTypeScriptProjects } from '../getTypeScriptProjects';
+import { createXTypeScriptProjects } from '../createXTypeScriptProjects';
 
 async function run() {
-  const projects = getTypeScriptProjects();
+  const projects = createXTypeScriptProjects();
 
   // Create documentation folder if it does not exist
   const apiPagesFolder = path.resolve('./docs/pages/x/api');

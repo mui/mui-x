@@ -1121,6 +1121,5 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li></ul>",
-  "packages": [{ "packageName": "@mui/x-data-grid-pro", "componentName": "DataGridPro" }]
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li></ul>"
 }

@@ -16,6 +16,7 @@ export interface ExportedPickersMonthProps {
 
 export interface PickersMonthProps extends ExportedPickersMonthProps {
   'aria-current'?: React.AriaAttributes['aria-current'];
+  'aria-label'?: React.AriaAttributes['aria-label'];
   autoFocus: boolean;
   children: React.ReactNode;
   disabled?: boolean;
@@ -120,6 +121,7 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
     onFocus,
     onBlur,
     'aria-current': ariaCurrent,
+    'aria-label': ariaLabel,
     // We don't want to forward this prop to the root element
     monthsPerRow,
     ...other
@@ -140,8 +142,11 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
         ref={ref}
         disabled={disabled}
         type="button"
+        role="radio"
         tabIndex={disabled ? -1 : tabIndex}
         aria-current={ariaCurrent}
+        aria-checked={selected}
+        aria-label={ariaLabel}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
         onFocus={(event) => onFocus(event, value)}

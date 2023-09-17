@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
@@ -41,14 +42,15 @@ export default function RichObjectTreeView() {
   );
 
   return (
-    <TreeView
-      aria-label="rich object"
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpanded={['root']}
-      defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ height: 110, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-    >
-      {renderTree(data)}
-    </TreeView>
+    <Box sx={{ minHeight: 110, flexGrow: 1, maxWidth: 300 }}>
+      <TreeView
+        aria-label="rich object"
+        defaultCollapseIcon={<ExpandMoreIcon />}
+        defaultExpanded={['root']}
+        defaultExpandIcon={<ChevronRightIcon />}
+      >
+        {renderTree(data)}
+      </TreeView>
+    </Box>
   );
 }

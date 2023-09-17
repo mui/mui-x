@@ -88,7 +88,7 @@ You can pass the `SingleInputDateRangeField` component to the Date Range Picker 
 {{"demo": "SingleInputDateRangePicker.js"}}
 
 :::info
-For more information, check out the [Custom field](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers) page.
+You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers).
 :::
 
 ### Add shortcuts
@@ -96,6 +96,10 @@ For more information, check out the [Custom field](/x/react-date-pickers/custom-
 To simplify range selection, you can add [shortcuts](/x/react-date-pickers/shortcuts/#range-shortcuts).
 
 {{"demo": "BasicRangeShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Customize the field
+
+You can find the documentation in the [Custom field page](/x/react-date-pickers/custom-field/).
 
 ## Validation
 

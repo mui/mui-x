@@ -1,4 +1,8 @@
-import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
+import { getPropTypesFromFile } from '@mui/monorepo/packages/typescript-to-proptypes';
+import {
+  UnionType,
+  InterfaceType,
+} from '@mui/monorepo/packages/typescript-to-proptypes/src/models';
 import * as fse from 'fs-extra';
 import fs from 'fs';
 import path from 'path';
@@ -18,29 +22,18 @@ import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse } from 'react-docgen';
-import {
-  renderInline as renderMarkdownInline,
-  getHeaders,
-  getTitle,
-} from '@mui/monorepo/packages/markdown';
+import { renderMarkdown, getHeaders, getTitle } from '@mui/monorepo/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-builder/ApiBuilders/ComponentApiBuilder';
-import {
-  DocumentedInterfaces,
-  getJsdocDefaultValue,
-  linkify,
-  getSymbolJSDocTags,
-  writePrettifiedFile,
-} from './utils';
-import { Project, Projects } from '../getTypeScriptProjects';
+import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
+import { XTypeScriptProject, XTypeScriptProjects } from '../createXTypeScriptProjects';
 import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
 type CoreReactApiProps = CoreReactApi['propsTable'][string];
 
 export interface ReactApi extends Omit<CoreReactApi, 'propsTable' | 'translations' | 'classes'> {
   displayName: string;
-  packages: { packageName: string; componentName: string }[];
 }
 
 /**
@@ -80,12 +73,14 @@ function extractSlots(options: {
   filename: string;
   name: string;
   displayName: string;
-  project: Project;
+  project: XTypeScriptProject;
 }) {
   const { filename, name: componentName, displayName, project } = options;
   const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
-  const proptypes = ttp.parseFromProgram(filename, project.program, {
+  const components = getPropTypesFromFile({
+    filePath: filename,
+    project,
     checkDeclarations: true,
     shouldResolveObject: ({ name }) => {
       return name === 'components';
@@ -96,7 +91,7 @@ function extractSlots(options: {
     },
   });
 
-  const props = proptypes.body.find((prop) => prop.name === displayName);
+  const props = components.find((prop) => prop.name === displayName);
   if (!props) {
     throw new Error(`No proptypes found for \`${displayName}\``);
   }
@@ -106,19 +101,17 @@ function extractSlots(options: {
     return slots;
   }
 
-  const propType = componentsProps.propType as ttp.UnionType;
+  const propType = componentsProps.propType as UnionType;
   const propInterface = propType.types.find((type) => type.type === 'InterfaceNode');
   if (!propInterface) {
     throw new Error(`The \`components\` prop in \`${componentName}\` is not an interface.`);
   }
 
-  const types = [...(propInterface as ttp.InterfaceType).types].sort((a, b) =>
-    a[0] > b[0] ? 1 : -1,
-  );
+  const types = [...(propInterface as InterfaceType).types].sort((a, b) => (a[0] > b[0] ? 1 : -1));
 
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
-    const description = renderMarkdownInline(parsed.description);
+    const description = renderMarkdown(parsed.description);
     const defaultValue = getJsdocDefaultValue(parsed);
 
     let type: string | undefined;
@@ -291,17 +284,27 @@ function getComponentImports(name: string, filename: string): string[] {
 
 const buildComponentDocumentation = async (options: {
   filename: string;
-  project: Project;
-  projects: Projects;
+  project: XTypeScriptProject;
+  projects: XTypeScriptProjects;
   apiPagesFolder: string;
   documentedInterfaces: DocumentedInterfaces;
   pagesMarkdown: ReadonlyArray<PageMarkdown>;
 }) => {
-  const { filename, project, apiPagesFolder, documentedInterfaces, projects, pagesMarkdown } =
-    options;
+  const { filename, project, apiPagesFolder, documentedInterfaces, pagesMarkdown } = options;
 
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
+
+  // Same check as on the core
+  const shouldSkip =
+    !!reactApi.description.match(/@ignore - internal component\./) ||
+    !!reactApi.description.match(/@ignore - internal hook\./) ||
+    !!reactApi.description.match(/@ignore - do not document\./);
+
+  if (shouldSkip) {
+    return null;
+  }
+
   reactApi.filename = filename; // Some components don't have props
   reactApi.name = path.parse(filename).name;
   reactApi.imports = getComponentImports(reactApi.name, filename);
@@ -331,34 +334,6 @@ const buildComponentDocumentation = async (options: {
     const globalClass = generateUtilityClass(reactApi.styles.name!, key);
     reactApi.styles.globalClasses[key] = globalClass;
   });
-
-  reactApi.packages = Array.from(projects.keys())
-    .map((projectName) => {
-      const currentProject = projects.get(projectName) as Project;
-
-      const symbol =
-        currentProject.exports[reactApi.name] ||
-        currentProject.exports[`Unstable_${reactApi.name}`];
-
-      if (symbol) {
-        const jsDoc = getSymbolJSDocTags(symbol);
-
-        // Do not show imports if the module is deprecated
-        if (jsDoc.deprecated) {
-          return null;
-        }
-
-        return {
-          packageName: `@mui/${projectName}`,
-          componentName: symbol.escapedName.toString(),
-        };
-      }
-
-      return null;
-    })
-    .filter((p): p is ReactApi['packages'][number] => p != null)
-    // Display the imports from the pro packages above imports from the community packages
-    .sort((a, b) => b.packageName.length - a.packageName.length);
 
   const componentApi: CoreReactApi['translations'] = {
     componentDescription: reactApi.description,
@@ -396,7 +371,7 @@ const buildComponentDocumentation = async (options: {
         signatureReturn,
         requiresRef,
       } = generatePropDescription(prop, propName);
-      let description = renderMarkdownInline(jsDocText);
+      let description = renderMarkdown(jsDocText);
 
       const additionalInfo: CoreReactApiProps['additionalInfo'] = {};
       if (propName === 'classes') {
@@ -418,7 +393,7 @@ const buildComponentDocumentation = async (options: {
         .concat(signatureReturn || [])
         .forEach(({ name, description: paramDescription }) => {
           typeDescriptions[name] = linkify(
-            renderMarkdownInline(paramDescription),
+            renderMarkdown(paramDescription),
             documentedInterfaces,
             'html',
           );
@@ -478,8 +453,7 @@ const buildComponentDocumentation = async (options: {
           // undefined values are not serialized => saving some bytes
           required: requiredProp || undefined,
           deprecated: !!deprecation || undefined,
-          deprecationInfo:
-            renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
+          deprecationInfo: renderMarkdown(deprecation?.groups?.info || '').trim() || undefined,
           signature,
           additionalInfo: Object.keys(additionalInfo).length === 0 ? undefined : additionalInfo,
         },
@@ -595,7 +569,6 @@ const buildComponentDocumentation = async (options: {
     demos: `<ul>${reactApi.demos
       .map((item) => `<li><a href="${item.demoPathname}">${item.demoPageTitle}</a></li>`)
       .join('\n')}</ul>`,
-    packages: reactApi.packages,
   };
 
   // docs/pages/component-name.json
@@ -644,13 +617,13 @@ Page.getInitialProps = () => {
 
   return {
     name: reactApi.name,
-    packages: reactApi.packages,
+    imports: reactApi.imports,
     folder: project.documentationFolderName,
   };
 };
 
 interface BuildComponentsDocumentationOptions {
-  projects: Projects;
+  projects: XTypeScriptProjects;
   apiPagesFolder: string;
   dataFolder: string;
   documentedInterfaces: DocumentedInterfaces;
@@ -678,10 +651,10 @@ export default async function buildComponentsDocumentation(
     }
 
     const componentsWithApiDoc = project.getComponentsWithApiDoc(project);
-    return componentsWithApiDoc.map<Promise<ApiPageType>>(async (filename) => {
+    return componentsWithApiDoc.map<Promise<ApiPageType | null>>(async (filename) => {
       try {
-        // Create the api files, and data to create it's link
-        const { name, packages, folder } = await buildComponentDocumentation({
+        // Create the api files, and data to create its link
+        const response = await buildComponentDocumentation({
           filename,
           project,
           projects,
@@ -690,11 +663,17 @@ export default async function buildComponentsDocumentation(
           documentedInterfaces,
         });
 
+        if (response === null) {
+          return null;
+        }
+
+        const { name, imports, folder } = response;
+
         return {
           folderName: folder,
           pathname: `/x/api/${folder}/${kebabCase(name)}`,
           title: name,
-          plan: getPlan(packages),
+          plan: getPlan(imports),
         };
       } catch (error: any) {
         error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
@@ -721,7 +700,8 @@ export default async function buildComponentsDocumentation(
     .filter(
       (promise): promise is PromiseFulfilledResult<ApiPageType> => promise.status === 'fulfilled',
     )
-    .map((build) => build.value);
+    .map((build) => build.value)
+    .filter((value): value is ApiPageType => value != null);
 
   return saveApiDocPages(createdPages, {
     dataFolder,
