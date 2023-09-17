@@ -215,6 +215,11 @@ function extractColumnWidths(
     const cells = getCells(column.field);
 
     const widths = cells.map((cell) => {
+      const id = cell.parentElement!.getAttribute('data-id') ?? '';
+      const hasAutoHeight = apiRef.current.rowHasAutoHeight(id);
+      if (hasAutoHeight) {
+        return (column as any).computedWidth ?? column.width;
+      }
       const style = window.getComputedStyle(cell, null);
       const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
       const contentWidth = (cell.firstElementChild?.scrollWidth ?? -1) + 1;
