@@ -574,7 +574,7 @@
   { "name": "GridVisibilityOffIcon", "kind": "Variable" },
   { "name": "gridVisibleColumnDefinitionsSelector", "kind": "Variable" },
   { "name": "gridVisibleColumnFieldsSelector", "kind": "Variable" },
-  { "name": "gridVisibleRowsLookupSelector", "kind": "Variable" },
+  { "name": "gridHiddenRowsLookupSelector", "kind": "Variable" },
   { "name": "GridWorkspacesIcon", "kind": "Variable" },
   { "name": "heIL", "kind": "Variable" },
   { "name": "huHU", "kind": "Variable" },

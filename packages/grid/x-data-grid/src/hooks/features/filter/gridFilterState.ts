@@ -19,7 +19,7 @@ export interface GridFilterState {
    * Filtering status for each row.
    * A row is filtered if it is passing the filters, whether its parents are expanded or not.
    * If a row is not registered in this lookup, it is filtered.
-   * This is the equivalent of the `visibleRowsLookup` if all the groups were expanded.
+   * This is the equivalent of the `hiddenRowsLookup` if all the groups were expanded.
    */
   filteredRowsLookup: Set<GridRowId>;
   /**
@@ -62,4 +62,4 @@ export type GridFilteringMethodValue = Omit<GridFilterState, 'filterModel'>;
  * A row is visible if it is passing the filters AND if its parents are expanded.
  * If a row is not registered in this lookup, it is visible.
  */
-export type GridVisibleRowsLookupState = Set<GridRowId>;
+export type GridHiddenRowsLookupState = Set<GridRowId>;

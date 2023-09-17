@@ -37,7 +37,7 @@ const getAggregationCellValue = ({
 
   const values: any[] = [];
   rowIds.forEach((rowId) => {
-    if (aggregationRowsScope === 'filtered' && !filteredRowsLookup.has(rowId)) {
+    if (aggregationRowsScope === 'filtered' && filteredRowsLookup.has(rowId)) {
       return;
     }
 

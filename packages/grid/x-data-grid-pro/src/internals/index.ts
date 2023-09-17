@@ -51,5 +51,5 @@ export type {
 export { createRowTree } from '../utils/tree/createRowTree';
 export { updateRowTree } from '../utils/tree/updateRowTree';
 export { sortRowTree } from '../utils/tree/sortRowTree';
-export { insertNodeInTree, removeNodeFromTree, getVisibleRowsLookup } from '../utils/tree/utils';
+export { insertNodeInTree, removeNodeFromTree, getHiddenRowsLookup } from '../utils/tree/utils';
 export type { RowTreeBuilderGroupingCriterion } from '../utils/tree/models';

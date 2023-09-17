@@ -32,7 +32,7 @@ export const gridQuickFilterValuesSelector = createSelector(
  * @category Visible rows
  * @ignore - do not document.
  */
-export const gridVisibleRowsLookupSelector = (state: GridStateCommunity) => state.visibleRowsLookup;
+export const gridHiddenRowsLookupSelector = (state: GridStateCommunity) => state.hiddenRowsLookup;
 
 /**
  * @category Filtering
@@ -58,9 +58,9 @@ export const gridFilteredDescendantCountLookupSelector = createSelector(
  * @category Filtering
  */
 export const gridExpandedSortedRowEntriesSelector = createSelectorMemoized(
-  gridVisibleRowsLookupSelector,
+  gridHiddenRowsLookupSelector,
   gridSortedRowEntriesSelector,
-  (visibleRowsLookup, sortedRows) => sortedRows.filter((row) => visibleRowsLookup.has(row.id)),
+  (hiddenRowsLookup, sortedRows) => sortedRows.filter((row) => !hiddenRowsLookup.has(row.id)),
 );
 
 /**
@@ -81,7 +81,7 @@ export const gridExpandedSortedRowIdsSelector = createSelectorMemoized(
 export const gridFilteredSortedRowEntriesSelector = createSelectorMemoized(
   gridFilteredRowsLookupSelector,
   gridSortedRowEntriesSelector,
-  (filteredRowsLookup, sortedRows) => sortedRows.filter((row) => filteredRowsLookup.has(row.id)),
+  (filteredRowsLookup, sortedRows) => sortedRows.filter((row) => !filteredRowsLookup.has(row.id)),
 );
 
 /**

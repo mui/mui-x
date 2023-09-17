@@ -322,7 +322,7 @@ export const useGridRows = (
 
       if (applyFiltering) {
         const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-        children = children.filter((childId) => filteredRowsLookup.has(childId));
+        children = children.filter((childId) => !filteredRowsLookup.has(childId));
       }
 
       return children;

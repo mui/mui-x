@@ -44,23 +44,23 @@ export const filterStateInitializer: GridStateInitializer<
     ...state,
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
-      filteredRowsLookup: {},
+      filteredRowsLookup: new Set(),
       filteredDescendantCountLookup: {},
     },
-    visibleRowsLookup: new Set(),
+    hiddenRowsLookup: new Set(),
   };
 };
 
-const getVisibleRowsLookup: GridStrategyProcessor<'visibleRowsLookupCreation'> = (params) => {
-  // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
+const getHiddenRowsLookup: GridStrategyProcessor<'hiddenRowsLookupCreation'> = (params) => {
+  // For flat tree, the `hiddenRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
   return params.filteredRowsLookup;
 };
 
-function getVisibleRowsLookupState(
+function getHiddenRowsLookupState(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   state: GridStateCommunity,
 ) {
-  return apiRef.current.applyStrategyProcessor('visibleRowsLookupCreation', {
+  return apiRef.current.applyStrategyProcessor('hiddenRowsLookupCreation', {
     tree: state.rows.tree,
     filteredRowsLookup: state.filter.filteredRowsLookup,
   });
@@ -123,11 +123,11 @@ export const useGridFilter = (
         },
       };
 
-      const visibleRowsLookupState = getVisibleRowsLookupState(apiRef, newState);
+      const hiddenRowsLookupState = getHiddenRowsLookupState(apiRef, newState);
 
       return {
         ...newState,
-        visibleRowsLookup: visibleRowsLookupState,
+        hiddenRowsLookup: hiddenRowsLookupState,
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
@@ -433,7 +433,7 @@ export const useGridFilter = (
           filterCache,
         );
 
-        if (isRowPassing) {
+        if (!isRowPassing) {
           filteredRowsLookup.add(id);
         }
       }
@@ -460,8 +460,8 @@ export const useGridFilter = (
   useGridRegisterStrategyProcessor(
     apiRef,
     GRID_DEFAULT_STRATEGY,
-    'visibleRowsLookupCreation',
-    getVisibleRowsLookup,
+    'hiddenRowsLookupCreation',
+    getHiddenRowsLookup,
   );
 
   /**
@@ -490,11 +490,11 @@ export const useGridFilter = (
     [apiRef],
   );
 
-  const updateVisibleRowsLookupState = React.useCallback(() => {
+  const updateHiddenRowsLookupState = React.useCallback(() => {
     apiRef.current.setState((state) => {
       return {
         ...state,
-        visibleRowsLookup: getVisibleRowsLookupState(apiRef, state),
+        hiddenRowsLookup: getHiddenRowsLookupState(apiRef, state),
       };
     });
     apiRef.current.forceUpdate();
@@ -505,7 +505,7 @@ export const useGridFilter = (
   useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
-  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateHiddenRowsLookupState);
   useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
     const filterModel = gridFilterModelSelector(apiRef);
     if (filterModel.quickFilterValues && filterModel.quickFilterExcludeHiddenColumns) {

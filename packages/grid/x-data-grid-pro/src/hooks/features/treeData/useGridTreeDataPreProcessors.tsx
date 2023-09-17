@@ -33,7 +33,7 @@ import {
 } from '../../../utils/tree/models';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { updateRowTree } from '../../../utils/tree/updateRowTree';
-import { getVisibleRowsLookup } from '../../../utils/tree/utils';
+import { getHiddenRowsLookup } from '../../../utils/tree/utils';
 
 export const useGridTreeDataPreProcessors = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
@@ -216,8 +216,8 @@ export const useGridTreeDataPreProcessors = (
   useGridRegisterStrategyProcessor(
     privateApiRef,
     TREE_DATA_STRATEGY,
-    'visibleRowsLookupCreation',
-    getVisibleRowsLookup,
+    'hiddenRowsLookupCreation',
+    getHiddenRowsLookup,
   );
 
   /**

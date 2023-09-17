@@ -7,7 +7,7 @@ import {
   GridFilteringMethodParams,
   GridFilteringMethodValue,
   GridFilterState,
-  GridVisibleRowsLookupState,
+  GridHiddenRowsLookupState,
 } from '../../features/filter/gridFilterState';
 import {
   GridSortingMethodParams,
@@ -35,13 +35,13 @@ export interface GridStrategyProcessingLookup {
     params: GridSortingMethodParams;
     value: GridSortingMethodValue;
   };
-  visibleRowsLookupCreation: {
+  hiddenRowsLookupCreation: {
     group: 'rowTree';
     params: {
       tree: GridRowsState['tree'];
       filteredRowsLookup: GridFilterState['filteredRowsLookup'];
     };
-    value: GridVisibleRowsLookupState;
+    value: GridHiddenRowsLookupState;
   };
 }
 

@@ -141,7 +141,7 @@ export const filterRowTreeFromGroupingColumns = (
       }
     }
 
-    if (isPassingFiltering) {
+    if (!isPassingFiltering) {
       filteredRowsLookup.add(node.id);
     }
 

@@ -217,7 +217,7 @@ export const createUpdatedGroupsManager = (): GridRowTreeUpdatedGroupsManager =>
   },
 });
 
-export const getVisibleRowsLookup = ({
+export const getHiddenRowsLookup = ({
   tree,
   filteredRowsLookup,
 }: {
@@ -228,10 +228,10 @@ export const getVisibleRowsLookup = ({
     return new Set<GridRowId>();
   }
 
-  const visibleRowsLookup = new Set<GridRowId>();
+  const hiddenRowsLookup = new Set<GridRowId>();
 
   const handleTreeNode = (node: GridTreeNode, areAncestorsExpanded: boolean) => {
-    const isPassingFiltering = filteredRowsLookup.has(node.id);
+    const isPassingFiltering = !filteredRowsLookup.has(node.id);
 
     if (node.type === 'group') {
       node.children.forEach((childId) => {
@@ -240,14 +240,14 @@ export const getVisibleRowsLookup = ({
       });
     }
 
-    if (isPassingFiltering && areAncestorsExpanded) {
-      visibleRowsLookup.add(node.id);
+    if (!(isPassingFiltering && areAncestorsExpanded)) {
+      hiddenRowsLookup.add(node.id);
     }
 
     // TODO rows v6: Should we keep storing the visibility status of footer independently or rely on the group visibility in the selector ?
     if (node.type === 'group' && node.footerId != null) {
-      if (isPassingFiltering && areAncestorsExpanded && !!node.childrenExpanded) {
-        visibleRowsLookup.add(node.footerId);
+      if (!(isPassingFiltering && areAncestorsExpanded && !!node.childrenExpanded)) {
+        hiddenRowsLookup.add(node.footerId);
       }
     }
   };
@@ -259,5 +259,5 @@ export const getVisibleRowsLookup = ({
       handleTreeNode(node, true);
     }
   }
-  return visibleRowsLookup;
+  return hiddenRowsLookup;
 };

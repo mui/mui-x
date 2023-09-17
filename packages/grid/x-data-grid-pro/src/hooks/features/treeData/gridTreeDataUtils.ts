@@ -94,7 +94,7 @@ export const filterRowTreeFromTreeData = (
       }
     }
 
-    if (shouldPassFilters) {
+    if (!shouldPassFilters) {
       filteredRowsLookup.add(node.id);
     }
 
