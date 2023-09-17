@@ -60,6 +60,15 @@ export default function ColumnAutosizing() {
   );
   const [expand, setExpand] = React.useState(DEFAULT_GRID_AUTOSIZE_OPTIONS.expand);
 
+  const autosizeOptions = {
+    includeHeaders,
+    excludeOutliers,
+    outliersFactor: Number.isNaN(parseFloat(outliersFactor))
+      ? 1
+      : parseFloat(outliersFactor),
+    expand,
+  };
+
   return (
     <div style={{ width: '100%' }}>
       <Stack
@@ -71,16 +80,7 @@ export default function ColumnAutosizing() {
         <div>
           <Button
             variant="outlined"
-            onClick={() =>
-              apiRef.current.autosizeColumns({
-                includeHeaders,
-                excludeOutliers,
-                outliersFactor: Number.isNaN(parseFloat(outliersFactor))
-                  ? 1
-                  : parseFloat(outliersFactor),
-                expand,
-              })
-            }
+            onClick={() => apiRef.current.autosizeColumns(autosizeOptions)}
           >
             Autosize columns
           </Button>
@@ -120,7 +120,12 @@ export default function ColumnAutosizing() {
         />
       </Stack>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro apiRef={apiRef} density="compact" {...data} />
+        <DataGridPro
+          apiRef={apiRef}
+          density="compact"
+          {...data}
+          autosizeOptions={autosizeOptions}
+        />
       </div>
     </div>
   );
