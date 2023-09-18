@@ -68,4 +68,3 @@ export function findGridCells(api: GridPrivateApiPro, field: string) {
     container.querySelectorAll(`:scope > div > div > div > [data-field="${field}"][role="cell"]`),
   );
 }
-
