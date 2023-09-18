@@ -24,7 +24,6 @@ body:
         - label: I have tested the latest version
           required: true
 
-
   - type: textarea
     attributes:
       label: Summary 💡
