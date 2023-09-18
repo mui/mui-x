@@ -62,11 +62,22 @@ To capture changes in the width of a column there are two callbacks that are cal
 
 `DataGridPro` also allows for autosizing the columns' dimensions based on their content. It can be autosized by 3 methods:
 
+- Adding the `autosizeOnMount` prop,
 - Double-clicking a column header separator on the grid,
-- Calling the `.autosizeColumns(options)` API method,
-- Adding the `autosizeOnMount` prop.
+- Calling the `apiRef.current.autosizeColumns(options)` API method.
 
 You can pass options directly to the API method when you call it. If you need to configure autosize for the other two methods, you can provide the options in the `autosizeOptions` prop. Note that for the separator double-click method, the clicked column will be passed to the `.columns` option unless `autosizeOptions` already has a `.columns` list. In all cases, the `.minWidth` and `.maxWidth` options of columns will always be respected.
+
+```tsx
+<DataGridPro
+  {...otherProps}
+  autosizeOptions={{
+    columns: ['name', 'status', 'createdBy'],
+    excludeOutliers: true,
+    includeHeaders: false,
+  }}
+/>
+```
 
 {{"demo": "ColumnAutosizing.js", "disableAd": true, "bg": "inline"}}
 
@@ -77,9 +88,12 @@ Autosizing has no effect if dynamic row height is enabled.
 :::warning
 The datagrid can only autosize based on the currently rendered cells.
 
-DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) so we can discuss it further.
-
+DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) to discuss it further.
 :::
+
+### Disable autosizing
+
+Autosizing is enabled by default. If you want to turn it off, you can pass the `disableAutosize` prop to the datagrid.
 
 ## API
 
