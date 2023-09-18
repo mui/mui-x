@@ -104,7 +104,7 @@ export default function ColumnAutosizing() {
               onChange={(ev) => setExcludeOutliers(ev.target.checked)}
             />
           }
-          label="Exclude outliers"
+          label="Include outliers"
         />
         <TextField
           label="Outliers factor"

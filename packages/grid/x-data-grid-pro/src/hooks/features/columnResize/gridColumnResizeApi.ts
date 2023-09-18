@@ -19,7 +19,7 @@ export type GridAutosizeOptions = {
   includeHeaders?: boolean;
   /**
    * If true, width outliers will be ignored.
-   * @default true
+   * @default false
    */
   includeOutliers?: boolean;
   /**

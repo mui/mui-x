@@ -26,7 +26,7 @@
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, includeOutliers?: bool, expand?: bool, includeHeaders?: bool, outliersFactor?: number }"
+        "description": "{ columns?: Array&lt;string&gt;, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
