@@ -116,7 +116,7 @@ DataGridPremiumRaw.propTypes = {
    * The options for autosize when user-initiated.
    */
   autosizeOptions: PropTypes.shape({
-    columns: PropTypes.arrayOf(PropTypes.object),
+    columns: PropTypes.arrayOf(PropTypes.string),
     excludeOutliers: PropTypes.bool,
     expand: PropTypes.bool,
     includeHeaders: PropTypes.bool,

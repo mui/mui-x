@@ -199,10 +199,11 @@ function excludeOutliers(inputValues: number[], factor: number) {
 function extractColumnWidths(
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   options: AutosizeOptionsRequired,
+  columns: GridStateColDef[],
 ) {
   const widthByField = {} as Record<string, number>;
 
-  options.columns.forEach((column) => {
+  columns.forEach((column) => {
     const cells = findGridCells(apiRef.current, column.field);
 
     const widths = cells.map((cell) => {
@@ -584,10 +585,10 @@ export const useGridColumnResize = (
         return;
       }
 
-      const options = { ...props.autosizeOptions };
-      options.columns ??= [column];
-
-      apiRef.current.autosizeColumns(options);
+      apiRef.current.autosizeColumns({
+        ...props.autosizeOptions,
+        columns: [column.field],
+      });
     });
 
   /**
@@ -611,19 +612,19 @@ export const useGridColumnResize = (
       const options = {
         ...DEFAULT_GRID_AUTOSIZE_OPTIONS,
         ...userOptions,
-        columns: userOptions?.columns ?? state.orderedFields.map((field) => state.lookup[field]),
+        columns: userOptions?.columns ?? state.orderedFields,
       };
-      options.columns = options.columns.filter(
-        (c) => state.columnVisibilityModel[c.field] !== false,
-      );
+      options.columns = options.columns.filter((c) => state.columnVisibilityModel[c] !== false);
+
+      const columns = options.columns.map((c) => apiRef.current.state.columns.lookup[c]);
 
       try {
         apiRef.current.unstable_setColumnVirtualization(false);
         await columnVirtualizationDisabled();
 
-        const widthByField = extractColumnWidths(apiRef, options);
+        const widthByField = extractColumnWidths(apiRef, options, columns);
 
-        const newColumns = options.columns.map((column) => ({
+        const newColumns = columns.map((column) => ({
           ...column,
           width: widthByField[column.field],
           computedWidth: widthByField[column.field],
