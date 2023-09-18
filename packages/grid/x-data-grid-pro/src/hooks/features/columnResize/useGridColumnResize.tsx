@@ -34,6 +34,8 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
   findGroupHeaderElementsFromField,
+  findGridHeader,
+  findGridCells,
 } from '../../../utils/domUtils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -198,21 +200,10 @@ function extractColumnWidths(
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   options: AutosizeOptionsRequired,
 ) {
-  type Result = Record<string, number>;
+  const widthByField = {} as Record<string, number>;
 
-  const headers = apiRef.current.columnHeadersContainerElementRef?.current!;
-  const container = apiRef.current.virtualScrollerRef?.current!;
-
-  const getHeader = (field: string) =>
-    headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
-
-  const getCells = (field: string) =>
-    Array.from(
-      container.querySelectorAll(`:scope > div > div > div > [data-field="${field}"][role="cell"]`),
-    );
-
-  const widthByField = options.columns.reduce((result, column) => {
-    const cells = getCells(column.field);
+  options.columns.forEach((column) => {
+    const cells = findGridCells(apiRef.current, column.field);
 
     const widths = cells.map((cell) => {
       const id = cell.parentElement!.getAttribute('data-id') ?? '';
@@ -231,7 +222,7 @@ function extractColumnWidths(
       : widths;
 
     if (options.includeHeaders) {
-      const header = getHeader(column.field);
+      const header = findGridHeader(apiRef.current, column.field);
       if (header) {
         const title = header.querySelector(`.${gridClasses.columnHeaderTitle}`);
         const content = header.querySelector(`.${gridClasses.columnHeaderTitleContainerContent}`)!;
@@ -253,10 +244,8 @@ function extractColumnWidths(
     const max = hasColumnMax ? column.maxWidth! : Infinity;
     const maxContent = filteredWidths.length === 0 ? 0 : Math.max(...filteredWidths);
 
-    result[column.field] = clamp(maxContent, min, max);
-
-    return result;
-  }, {} as Result);
+    widthByField[column.field] = clamp(maxContent, min, max);
+  });
 
   return widthByField;
 }
@@ -621,7 +610,7 @@ export const useGridColumnResize = (
         columns: userOptions?.columns ?? state.orderedFields.map((field) => state.lookup[field]),
       };
       options.columns = options.columns.filter(
-        (c) => state.columnVisibilityModel[c.field] !== false,
+        (c) => state.columnVisibilityModel[c.field] !== false && c.resizable !== false,
       );
 
       try {

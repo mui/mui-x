@@ -56,3 +56,16 @@ export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateAp
 
   return cells;
 }
+
+export function findGridHeader(api: GridPrivateApiPro, field: string) {
+  const headers = api.columnHeadersContainerElementRef!.current!;
+  return headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
+}
+
+export function findGridCells(api: GridPrivateApiPro, field: string) {
+  const container = api.virtualScrollerRef!.current!;
+  return Array.from(
+    container.querySelectorAll(`:scope > div > div > div > [data-field="${field}"][role="cell"]`),
+  );
+}
+
