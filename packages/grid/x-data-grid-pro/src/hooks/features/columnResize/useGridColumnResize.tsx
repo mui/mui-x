@@ -580,6 +580,10 @@ export const useGridColumnResize = (
       }
 
       const column = apiRef.current.state.columns.lookup[params.field];
+      if (column.resizable === false) {
+        return;
+      }
+
       const options = { ...props.autosizeOptions };
       options.columns ??= [column];
 
@@ -610,7 +614,7 @@ export const useGridColumnResize = (
         columns: userOptions?.columns ?? state.orderedFields.map((field) => state.lookup[field]),
       };
       options.columns = options.columns.filter(
-        (c) => state.columnVisibilityModel[c.field] !== false && c.resizable !== false,
+        (c) => state.columnVisibilityModel[c.field] !== false,
       );
 
       try {
