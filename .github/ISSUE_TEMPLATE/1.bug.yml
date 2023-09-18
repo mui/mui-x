@@ -9,13 +9,6 @@ body:
 
         Thanks for contributing by creating an issue! ❤️
 
-  - type: checkboxes
-    attributes:
-      label: Latest version
-      description: We roll bug fixes, performance enhancements, and other improvements into new releases.
-      options:
-        - label: I have tested the latest version
-          required: true
   - type: input
     attributes:
       label: Search keywords
@@ -23,6 +16,13 @@ body:
       placeholder: ex. datagrid column resizing
     validations:
       required: true
+  - type: checkboxes
+    attributes:
+      label: Latest version
+      description: We roll bug fixes, performance enhancements, and other improvements into new releases.
+      options:
+        - label: I have tested the latest version
+          required: true
 
   - type: textarea
     attributes:
