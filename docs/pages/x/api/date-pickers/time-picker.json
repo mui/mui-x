@@ -213,7 +213,7 @@
     {
       "class": null,
       "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
     },
     {
       "class": null,
@@ -277,7 +277,7 @@
     {
       "class": null,
       "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     },
     {
