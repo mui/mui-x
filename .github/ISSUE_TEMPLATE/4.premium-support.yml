@@ -9,21 +9,7 @@ body:
         Please provide a searchable summary of the issue in the title above ⬆️.
 
         ⚠️ **Don't use this form if the problem is [a bug](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+needs+triage&template=1.bug.yml) or a [feature request](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+needs+triage&template=2.feature.yml), use the dedicated form instead.**
-  - type: input
-    id: contact
-    attributes:
-      label: Order ID
-      description: The order ID of the purchased Premium plan. Community users can [learn more about support](https://mui.com/getting-started/support/) in the documentation.
-      placeholder: 'e.g. 11111'
-    validations:
-      required: true
-  - type: checkboxes
-    attributes:
-      label: Duplicates
-      description: Please [search the history](https://github.com/mui/mui-x/issues) to see if an issue already exists for the same problem.
-      options:
-        - label: I have searched the existing issues
-          required: true
+
   - type: checkboxes
     attributes:
       label: Latest version
@@ -31,6 +17,23 @@ body:
       options:
         - label: I have tested the latest version
           required: true
+  - type: input
+    attributes:
+      label: Search keywords
+      description: Which keywords did you use to search for duplicates? Please [search the history](https://github.com/mui/mui-x/issues) to see if an issue already exists for the same problem.
+      placeholder: ex. datagrid column resizing
+    validations:
+      required: true
+
+  - type: input
+    id: contact
+    attributes:
+      label: Order ID or Support key 💳
+      description: The order ID of the purchased Premium plan. Community users can [learn more about support](https://mui.com/getting-started/support/) in the documentation.
+      placeholder: 'e.g. 11111'
+    validations:
+      required: true
+
   - type: textarea
     attributes:
       label: The problem in depth 🔍

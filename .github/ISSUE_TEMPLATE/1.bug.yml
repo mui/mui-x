@@ -8,13 +8,7 @@ body:
         Please provide a searchable summary of the issue in the title above ⬆️.
 
         Thanks for contributing by creating an issue! ❤️
-  - type: checkboxes
-    attributes:
-      label: Duplicates
-      description: Please [search the history](https://github.com/mui/mui-x/issues) to see if an issue already exists for the same problem.
-      options:
-        - label: I have searched the existing issues
-          required: true
+
   - type: checkboxes
     attributes:
       label: Latest version
@@ -22,6 +16,14 @@ body:
       options:
         - label: I have tested the latest version
           required: true
+  - type: input
+    attributes:
+      label: Search keywords
+      description: Which keywords did you use to search for duplicates? Please [search the history](https://github.com/mui/mui-x/issues) to see if an issue already exists for the same problem.
+      placeholder: ex. datagrid column resizing
+    validations:
+      required: true
+
   - type: textarea
     attributes:
       label: Steps to reproduce 🕹
@@ -30,7 +32,7 @@ body:
 
         Please provide a link to a live example and an unambiguous set of steps to reproduce this bug. As a starting point, we recommend you [browse the documentation](https://mui.com/x/introduction/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case. Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
       value: |
-        Link to live example:
+        Link to live example: (required)
 
         Steps:
         1.
