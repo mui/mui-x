@@ -177,7 +177,7 @@ jobs:
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Generate the documentation
-          command: NODE_OPTIONS=--max_old_space_size=4096 yarn docs:api
+          command: yarn docs:api
       - run:
           name: '`yarn docs:api` changes committed?'
           command: git add -A && git diff --exit-code --staged
