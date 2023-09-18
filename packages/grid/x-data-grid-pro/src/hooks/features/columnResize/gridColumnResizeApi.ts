@@ -2,7 +2,7 @@ import { GridColDef } from '@mui/x-data-grid';
 
 export const DEFAULT_GRID_AUTOSIZE_OPTIONS = {
   includeHeaders: false,
-  excludeOutliers: true,
+  includeOutliers: false,
   outliersFactor: 1.5,
   expand: false,
 };
@@ -21,7 +21,7 @@ export type GridAutosizeOptions = {
    * If true, width outliers will be ignored.
    * @default true
    */
-  excludeOutliers?: boolean;
+  includeOutliers?: boolean;
   /**
    * The IQR factor range to detect outliers.
    * @default 1.5

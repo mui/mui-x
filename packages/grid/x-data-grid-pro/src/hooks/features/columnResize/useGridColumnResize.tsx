@@ -218,9 +218,9 @@ function extractColumnWidths(
       return paddingWidth + contentWidth;
     });
 
-    const filteredWidths = options.excludeOutliers
-      ? excludeOutliers(widths, options.outliersFactor)
-      : widths;
+    const filteredWidths = options.includeOutliers
+      ? widths
+      : excludeOutliers(widths, options.outliersFactor);
 
     if (options.includeHeaders) {
       const header = findGridHeader(apiRef.current, column.field);

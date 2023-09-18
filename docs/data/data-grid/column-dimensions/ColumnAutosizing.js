@@ -52,8 +52,8 @@ export default function ColumnAutosizing() {
   const [includeHeaders, setIncludeHeaders] = React.useState(
     DEFAULT_GRID_AUTOSIZE_OPTIONS.includeHeaders,
   );
-  const [excludeOutliers, setExcludeOutliers] = React.useState(
-    DEFAULT_GRID_AUTOSIZE_OPTIONS.excludeOutliers,
+  const [includeOutliers, setExcludeOutliers] = React.useState(
+    DEFAULT_GRID_AUTOSIZE_OPTIONS.includeOutliers,
   );
   const [outliersFactor, setOutliersFactor] = React.useState(
     String(DEFAULT_GRID_AUTOSIZE_OPTIONS.outliersFactor),
@@ -62,7 +62,7 @@ export default function ColumnAutosizing() {
 
   const autosizeOptions = {
     includeHeaders,
-    excludeOutliers,
+    includeOutliers,
     outliersFactor: Number.isNaN(parseFloat(outliersFactor))
       ? 1
       : parseFloat(outliersFactor),
@@ -97,7 +97,7 @@ export default function ColumnAutosizing() {
         <FormControlLabel
           control={
             <Checkbox
-              checked={excludeOutliers}
+              checked={includeOutliers}
               onChange={(ev) => setExcludeOutliers(ev.target.checked)}
             />
           }

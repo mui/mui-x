@@ -450,7 +450,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} />);
       await apiRef.current.autosizeColumns();
       await microtasks();
-      expect(getWidths()).to.deep.equal([50, 145]);
+      expect(getWidths()).to.deep.equal([50, 65]);
     });
 
     it('should work through double-clicking the separator', async () => {
@@ -460,14 +460,14 @@ describe('<DataGridPro /> - Columns', () => {
       )[1];
       fireEvent.doubleClick(separator);
       await microtasks();
-      expect(getWidths()).to.deep.equal([100, 145]);
+      expect(getWidths()).to.deep.equal([100, 65]);
     });
 
     it('should work on mount', async () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
-      expect(getWidths()).to.deep.equal([50, 145]);
+      expect(getWidths()).to.deep.equal([50, 65]);
     });
 
     describe('options', () => {
@@ -479,19 +479,19 @@ describe('<DataGridPro /> - Columns', () => {
       };
 
       it('.columns works', async () => {
-        await autosize({ columns: [columns[0]] }, [50, 100]);
+        await autosize({ columns: [columns[0].field] }, [50, 100]);
       });
       it('.includeHeaders works', async () => {
         await autosize({ includeHeaders: true }, [155, 177]);
       });
-      it('.excludeOutliers works', async () => {
-        await autosize({ excludeOutliers: true }, [50, 65]);
+      it('.includeOutliers works', async () => {
+        await autosize({ includeOutliers: true }, [50, 145]);
       });
       it('.outliersFactor works', async () => {
-        await autosize({ excludeOutliers: true, outliersFactor: 40 }, [50, 145]);
+        await autosize({ outliersFactor: 40 }, [50, 145]);
       });
       it('.expand works', async () => {
-        await autosize({ expand: true }, [94, 189]);
+        await autosize({ expand: true }, [134, 149]);
       });
     });
   });

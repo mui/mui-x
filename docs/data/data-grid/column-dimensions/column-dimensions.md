@@ -73,7 +73,7 @@ You can pass options directly to the API method when you call it. If you need to
   {...otherProps}
   autosizeOptions={{
     columns: ['name', 'status', 'createdBy'],
-    excludeOutliers: true,
+    includeOutliers: true,
     includeHeaders: false,
   }}
 />

@@ -117,7 +117,7 @@ DataGridPremiumRaw.propTypes = {
    */
   autosizeOptions: PropTypes.shape({
     columns: PropTypes.arrayOf(PropTypes.string),
-    excludeOutliers: PropTypes.bool,
+    includeOutliers: PropTypes.bool,
     expand: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     outliersFactor: PropTypes.number,
