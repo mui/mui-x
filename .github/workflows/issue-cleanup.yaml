@@ -34,12 +34,6 @@ jobs:
               lines.push('**Order ID**: ' + orderID)
             }
 
-            console.log({
-              lines,
-              searchKeywords,
-              orderID,
-            })
-
             const body = lines.join('\n')
 
             await github.rest.issues.update({
