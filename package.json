@@ -6,7 +6,7 @@
     "docs:dev": "yarn workspace docs dev",
     "docs:start": "yarn workspace docs start",
     "docs:create-playground": "yarn workspace docs create-playground",
-    "docs:api": "yarn docs:api:build",
+    "docs:api": "NODE_OPTIONS=--max-old-space-size=4096 yarn docs:api:build",
     "docs:api:build": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/api/buildApi.ts",
     "docs:link-check": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" --extensions \".tsx,.ts,.js\" ./docs/scripts/reportBrokenLinks.js",
     "docs:build": "yarn workspace docs build",
