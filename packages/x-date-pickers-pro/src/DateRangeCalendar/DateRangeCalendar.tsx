@@ -203,7 +203,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     disableDragEditing,
     displayWeekNumber,
     timezone: timezoneProp,
-    sequentialViewOrder,
+    forceFinishSelection,
     views,
     view: inView,
     openTo,
@@ -254,7 +254,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       selectionState: PickerSelectionState | undefined,
       allowRangeFlip: boolean = false,
     ) => {
-      const { nextSelection, newRange } = calculateRangeChange({
+      const { newRange } = calculateRangeChange({
         newDate,
         utils,
         range: value,
@@ -263,14 +263,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         shouldMergeDateAndTime: true,
       });
 
-      if (!sequentialViewOrder) {
-        onRangePositionChange(nextSelection);
-      }
-
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
       setValueAndGoToNextView(
         newRange,
-        isFullRangeSelected || sequentialViewOrder ? 'finish' : 'partial',
+        isFullRangeSelected || forceFinishSelection ? 'finish' : 'partial',
       );
     },
   );

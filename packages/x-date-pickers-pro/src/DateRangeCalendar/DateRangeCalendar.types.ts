@@ -156,6 +156,12 @@ export interface DateRangeCalendarProps<TDate>
    * @default {}
    */
   slotProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+  /**
+   * If `true`, force a `finish` selection state.
+   * Used on Date Time Range pickers to enable date -> time -> date -> time selection flow.
+   * @default false
+   */
+  forceFinishSelection?: boolean;
 }
 
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {

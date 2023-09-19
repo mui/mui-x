@@ -9,10 +9,7 @@ import {
   useUtils,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../internals/models';
-import {
-  UseRangePositionProps,
-  UseRangePositionResponse,
-} from '../internals/hooks/useRangePosition';
+import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import { isRangeValid } from '../internals/utils/date-utils';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
 
@@ -24,8 +21,7 @@ export type DateTimeRangePickerTimeWrapperProps<
   Omit<
     TComponentProps,
     'views' | 'openTo' | 'view' | 'onViewChange' | 'value' | 'defaultValue' | 'onChange'
-  > &
-  Pick<UseRangePositionProps, 'sequentialViewOrder'> & {
+  > & {
     view: TView;
     onViewChange?: (view: TView) => void;
     views: readonly TView[];
@@ -66,7 +62,6 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
     defaultValue,
     onViewChange,
     views,
-    sequentialViewOrder,
     className,
     ...other
   } = props;
@@ -92,11 +87,7 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
     const timeViews = views.filter(isInternalTimeView);
     // reset view to the first time view and swap range position after selecting the last time view (start or end position)
     if (selectedView === timeViews[timeViews.length - 1] && onViewChange) {
-      if (sequentialViewOrder) {
-        onViewChange(views[0]);
-      } else {
-        onViewChange(timeViews[0]);
-      }
+      onViewChange(views[0]);
       onRangePositionChange(rangePosition === 'start' ? 'end' : 'start');
     }
     onChange(newRange, isFullRangeSelected ? 'finish' : 'partial', selectedView);

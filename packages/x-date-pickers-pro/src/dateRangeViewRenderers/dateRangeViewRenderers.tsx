@@ -49,7 +49,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   disableDragEditing,
   displayWeekNumber,
   timezone,
-  sequentialViewOrder,
+  forceFinishSelection,
   views,
   view,
   onViewChange,
@@ -92,7 +92,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     disableDragEditing={disableDragEditing}
     displayWeekNumber={displayWeekNumber}
     timezone={timezone}
-    sequentialViewOrder={sequentialViewOrder}
+    forceFinishSelection={forceFinishSelection}
     view={view}
     views={views}
     onViewChange={onViewChange}

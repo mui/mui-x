@@ -22,11 +22,3 @@ Don't hesitate to leave a comment on the same issue to influence what gets built
 ## Basic usage
 
 {{"demo": "BasicDateTimeRangePicker.js"}}
-
-## Alternative views sequence
-
-You can use `sequentialViewOrder` prop to use the pickers with a sequential views order.
-In this mode the following views sequence will be used: **start date** -> **start time** -> **end date** -> **end time**.
-The default views sequence is: **start date** -> **end date** -> **start time** -> **end time**
-
-{{"demo": "SequentialDateTimeRangePicker.js"}}
