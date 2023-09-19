@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { useTheme, Theme } from '@mui/system';
 import pick from 'lodash/pick';
 import { blue, grey, deepPurple, amber, pink } from '@mui/material/colors';
 import { BoxProps } from '@mui/material/Box';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme, ThemeProvider, styled, useTheme, Theme } from '@mui/material/styles';
 
 export type CustomizationLabelType = {
   [k in 'customTheme' | 'styledComponents' | 'sxProp']: string;
@@ -28,9 +27,9 @@ export interface UseCustomizationPlaygroundProps {
   componentName: string;
 }
 export const customizationLabels: CustomizationLabelType = {
-  customTheme: 'Custom Theme',
-  styledComponents: 'Styled Components',
-  sxProp: 'SX Prop',
+  customTheme: 'Custom theme',
+  styledComponents: 'Styled components',
+  sxProp: 'sx prop',
 };
 
 export const DEFAULT_COLORS = { deepPurple, amber, pink, blue, grey };
@@ -38,13 +37,11 @@ export type ColorKey = keyof typeof DEFAULT_COLORS;
 
 export type StyleTokensType = {
   color: ColorKey;
-  padding: number;
   borderRadius: number;
   borderWidth: number;
 };
 const styleTokens: StyleTokensType = {
   color: 'deepPurple',
-  padding: 1,
   borderRadius: 2,
   borderWidth: 1,
 };
@@ -78,20 +75,19 @@ export function withStyles(
   selectedSlot: string | null,
 ) {
   return function StyledChild<T extends BoxProps>(props: T) {
-    const theme = useTheme();
+    const defaultTheme = useTheme();
 
     const tokens = {
-      padding: selectedTokens.padding,
       borderRadius: selectedTokens.borderRadius,
       borderColor: DEFAULT_COLORS[selectedTokens.color][500],
       border: `${selectedTokens.borderWidth}px solid`,
       backgroundColor:
-        theme.palette.mode === 'light'
+        defaultTheme.palette.mode === 'light'
           ? DEFAULT_COLORS[selectedTokens.color][100]
-          : DEFAULT_COLORS[selectedTokens.color][700],
+          : DEFAULT_COLORS[selectedTokens.color][900],
       color:
-        theme.palette.mode === 'light'
-          ? DEFAULT_COLORS[selectedTokens.color][900]
+        defaultTheme.palette.mode === 'light'
+          ? DEFAULT_COLORS[selectedTokens.color][800]
           : DEFAULT_COLORS[selectedTokens.color][100],
     };
 
@@ -103,11 +99,13 @@ export function withStyles(
     }
 
     if (selectedCustomizationOption === 'customTheme') {
-      const newTheme = createTheme({
-        components: {
-          [`Mui${selectedDemo}`]: { styleOverrides: { [selectedSlot as string]: { ...tokens } } },
-        },
-      });
+      const newTheme = (theme: Theme) =>
+        createTheme({
+          ...theme,
+          components: {
+            [`Mui${selectedDemo}`]: { styleOverrides: { [selectedSlot as string]: { ...tokens } } },
+          },
+        });
       return (
         <ThemeProvider theme={newTheme}>
           <Component {...props} />
@@ -196,10 +194,10 @@ const getCodeExample = ({
     backgroundColor:
       theme.palette.mode === 'light'
         ? DEFAULT_COLORS[selectedTokens.color][100]
-        : DEFAULT_COLORS[selectedTokens.color][700],
+        : DEFAULT_COLORS[selectedTokens.color][900],
     color:
       theme.palette.mode === 'light'
-        ? DEFAULT_COLORS[selectedTokens.color][700]
+        ? DEFAULT_COLORS[selectedTokens.color][800]
         : DEFAULT_COLORS[selectedTokens.color][100],
   };
 
@@ -212,24 +210,55 @@ const getCodeExample = ({
     }, '');
   };
 
-  let code = examples?.comments ? `\n// ${examples?.comments}` : '';
+  const splitStringWithoutWordBreak = (inputString: string, maxLineLength: number): string[] => {
+    let lines: string[] = [];
+    let startIndex = 0;
+
+    while (startIndex < inputString.length) {
+      let endIndex = startIndex + maxLineLength;
+
+      if (endIndex < inputString.length) {
+        while (endIndex > startIndex && inputString[endIndex] !== ' ') {
+          endIndex -= 1;
+        }
+
+        if (endIndex === startIndex) {
+          endIndex = startIndex + maxLineLength;
+        }
+      }
+
+      lines = [...lines, inputString.substring(startIndex, endIndex).trim()];
+
+      startIndex = endIndex;
+    }
+
+    return lines;
+  };
+
+  let code;
+  if (examples?.comments) {
+    const lines = splitStringWithoutWordBreak(examples.comments, 90);
+    code = `\n/* ${lines.join('\n')} */`;
+  } else {
+    code = '';
+  }
 
   if (selectedCustomizationOption === 'sxProp') {
-    code = `${code}\n<${componentName} ${formatComponentProps(examples.componentProps, 1)}
+    code = `${code}\n<${componentName}${formatComponentProps(examples.componentProps, 1)}
   sx={{
-    '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
+    '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
     },
   }}
 />`;
   } else if (selectedCustomizationOption === 'customTheme') {
     code = `import { createTheme } from '@mui/material/styles'\n${code}
-<ThemeProvider 
+<ThemeProvider
   theme={
     createTheme({
       components: {
         Mui${selectedDemo}: {
           styleOverrides: {
-            ${selectedSlot}:{${getTokensString(7)}
+            ${selectedSlot}: {${getTokensString(7)}
             }
           }
         }
@@ -242,10 +271,11 @@ const getCodeExample = ({
     return `import { styled } from '@mui/material/styles'\n${code}
 const Styled${componentName} = styled(${componentName})({
   '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
-}))\n
+}))
+
 export default function StyledPickerContainer() {
   return (
-    <StyledPicker ${formatComponentProps(examples.componentProps, 3)}/>
+    <Styled${componentName} ${formatComponentProps(examples.componentProps, 3)}/>
   );
 }`;
   }

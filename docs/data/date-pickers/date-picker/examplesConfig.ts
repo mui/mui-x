@@ -48,7 +48,6 @@ export const staticDatePickerExamples: PickersSubcomponentType = {
       sxProp: {
         type: 'success',
       },
-
       styledComponents: {
         type: 'success',
       },
@@ -211,7 +210,7 @@ export const pickerExamples = [
   {
     name: 'StaticDatePicker',
     component: StaticDatePicker,
-    componentProps: { ...pickerProps },
+    componentProps: { ...pickerProps, orientation: 'portrait' },
     examples: staticDatePickerExamples,
   } as PickerExamplesType<typeof StaticDatePicker, StaticDatePickerProps<Dayjs>>,
   {

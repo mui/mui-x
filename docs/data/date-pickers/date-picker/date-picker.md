@@ -118,8 +118,4 @@ You can find the documentation about localization in the [Date localization](/x/
 
 You can check out multiple examples of how to customize the date pickers and their subcomponents.
 
-:::info
-More detailed examples will be added in the future
-:::
-
 {{"demo": "CustomizationExamples.js", "hideToolbar": true, "bg": "inline"}}

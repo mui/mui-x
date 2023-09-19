@@ -3,9 +3,9 @@ import * as React from 'react';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 // @ts-ignore
 import BrandingProvider from 'docs/src/BrandingProvider';
-import { styled, Theme } from '@mui/material/styles';
+import { styled, Theme, alpha, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Tabs from '@mui/material/Tabs';
-import Divider from '@mui/material/Divider';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -17,6 +17,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import Slider from '@mui/material/Slider';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Alert from '@mui/material/Alert';
 import { grey } from '@mui/material/colors';
 import pick from 'lodash/pick';
 import {
@@ -26,32 +30,47 @@ import {
   withStyles,
   ColorKey,
   StyleTokensType,
+  CustomizationLabelType,
 } from '../utils/useCustomizationPlayground';
 
 const PlaygroundWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   borderRadius: theme.shape.borderRadius,
   border: `1px solid ${grey[200]}`,
-}));
-
-const PlaygroundDemoArea = styled(Box)(({ theme }) => ({
-  flexGrow: 1,
   padding: theme.spacing(2),
+  gap: theme.spacing(2),
+  justifyContent: 'space-between',
+
+  [theme.breakpoints.down('lg')]: { flexWrap: 'wrap-reverse' },
 }));
 
-const PlaygroundConfigArea = styled(Stack)(({ theme }) => ({
-  gap: 0.5,
-  width: '250px',
+const PlaygroundDemoArea = styled(Box)(() => ({
+  minWidth: 320,
+}));
+
+const PlaygroundConfigArea = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
+  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[3],
+  [theme.breakpoints.down('lg')]: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexGrow: 1,
+    gap: theme.spacing(3),
+  },
 }));
 
-const NavItemsWrapper = styled(Box)(() => ({
-  display: 'flex',
-  gap: 1,
-  flexWrap: 'wrap',
+const ComponentsSelect = styled(Select)(({ theme }) => ({
+  ...theme.typography.caption,
 }));
 
-const NavLabel = styled(Typography)(({ theme }) => ({
+const ConfigSectionWrapper = styled(Box)(({ theme }) => ({
+  gap: theme.spacing(0.5),
+  width: 250,
+}));
+
+const ConfigLabel = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(1),
   fontWeight: theme.typography.fontWeightBold,
@@ -60,7 +79,7 @@ const NavLabel = styled(Typography)(({ theme }) => ({
   letterSpacing: '.08rem',
 }));
 
-const NavItemLabel = styled(Typography)(({ theme }) => ({
+const ConfigItemLabel = styled(Typography)(({ theme }) => ({
   ...theme.typography.caption,
   letterSpacing: '.08rem',
   textTransform: 'uppercase',
@@ -69,16 +88,48 @@ const NavItemLabel = styled(Typography)(({ theme }) => ({
   fontweight: 600,
 }));
 
-const NavItem = styled(Button)(({ theme }) => {
-  return {
-    width: 'fit-content',
-    borderRadius: theme.spacing(2),
-    textTransform: 'none',
-    '&:hover, &.hovered': {
-      color: theme.palette.primary.main,
-    },
-  };
-});
+const SlotItemsWrapper = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap: theme.spacing(1),
+  flexWrap: 'wrap',
+}));
+
+const SlotItem = styled(Button)(({ theme }) => ({
+  borderWidth: 1,
+  borderRadius: theme.spacing(2),
+  textTransform: 'none',
+  padding: theme.spacing(0.1, 1),
+}));
+
+const TabsWrapper = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginBottom: theme.spacing(1),
+  gap: theme.spacing(1),
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+}));
+
+type TabsProps = {
+  value: string;
+  onChange: (e: React.SyntheticEvent, value: any) => void;
+  options: Partial<CustomizationLabelType>;
+};
+
+function StylingApproachTabs({ value, onChange, options }: TabsProps) {
+  return (
+    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Tabs value={value} onChange={onChange} aria-label="Customization option">
+        {(Object.keys(options) as Array<keyof typeof options>)?.map((option) => (
+          <Tab value={option} key={option} label={options[option]} />
+        ))}
+      </Tabs>
+    </Box>
+  );
+}
 
 const RECOMMENDATION_MESSAGES: { [k in 'warning' | 'success']: string } = {
   warning:
@@ -87,6 +138,17 @@ const RECOMMENDATION_MESSAGES: { [k in 'warning' | 'success']: string } = {
 };
 
 function StylingRecommendation({ type = 'success' }: { type?: 'warning' | 'success' }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  if (isMobile) {
+    return (
+      <Alert severity={type || 'warning'} sx={{ width: '100%', p: 0.5 }}>
+        {RECOMMENDATION_MESSAGES[type]}
+      </Alert>
+    );
+  }
+
   return (
     <Tooltip title={RECOMMENDATION_MESSAGES[type]}>
       {type === 'warning' ? (
@@ -99,6 +161,7 @@ function StylingRecommendation({ type = 'success' }: { type?: 'warning' | 'succe
 }
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+  backgroundColor: 'transparent',
   '& .MuiToggleButtonGroup-grouped': {
     margin: theme.spacing(0.5),
     border: 0,
@@ -129,9 +192,11 @@ const StyledToggleButton = styled(ToggleButton, {
     background: DEFAULT_COLORS[selectedColor][600],
   },
   '&.Mui-selected': {
+    borderColor: 'transparent!important',
     background: DEFAULT_COLORS[selectedColor][500],
     color: theme.palette.primary.contrastText,
     '&:hover': {
+      borderColor: 'transparent!important',
       background: DEFAULT_COLORS[selectedColor][600],
     },
   },
@@ -146,12 +211,16 @@ function ColorSwitcher({
 }) {
   return (
     <React.Fragment>
-      <NavItemLabel>Color</NavItemLabel>
+      <ConfigItemLabel>Color</ConfigItemLabel>
       <StyledToggleButtonGroup
         size="small"
         value={selectedColor}
         exclusive
-        onChange={(_e, v) => handleTokenChange('color', v)}
+        onChange={(_, value) => {
+          if (value !== null) {
+            handleTokenChange('color', value);
+          }
+        }}
         aria-label="color palette"
       >
         {(Object.keys(DEFAULT_COLORS) as Array<ColorKey>).map((color) => (
@@ -180,11 +249,11 @@ function NumericTokensSlider({
     <React.Fragment>
       {(Object.keys(tokens) as Array<keyof typeof tokens>).map((token) => (
         <React.Fragment key={token}>
-          <NavItemLabel>{token}</NavItemLabel>
+          <ConfigItemLabel>{token}</ConfigItemLabel>
           <Slider
             size="small"
             value={tokens[token]}
-            onChange={(_e, v) => handleTokenChange(token, v as number)}
+            onChange={(_, value) => handleTokenChange(token, value as number)}
             aria-label={`${token} slider`}
             key={token}
             min={0}
@@ -232,102 +301,92 @@ const CustomizationPlayground = function CustomizationPlayground({
     <Box sx={{ flexGrow: 1 }}>
       <BrandingProvider>
         {selectedDemo && customizationOptions && selectedCustomizationOption && (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: 1,
-            }}
-          >
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs
-                value={selectedCustomizationOption}
-                onChange={(_e, newValue) => {
-                  setSelectedCustomizationOption(newValue);
-                }}
-                aria-label="Customization option"
-              >
-                {(
-                  Object.keys(customizationOptions) as Array<keyof typeof customizationOptions>
-                )?.map((option) => (
-                  <Tab value={option} key={option} label={customizationOptions[option]} />
-                ))}
-              </Tabs>
-            </Box>
+          <TabsWrapper>
+            <StylingApproachTabs
+              onChange={(_e, newValue) => {
+                setSelectedCustomizationOption(newValue);
+              }}
+              value={selectedCustomizationOption}
+              options={customizationOptions}
+            />
             {selectedExample && <StylingRecommendation type={selectedExample.type} />}
-          </Box>
+          </TabsWrapper>
+        )}
+        <PlaygroundWrapper>
+          <PlaygroundDemoArea>
+            <StyledChild sx={{ width: 'fit-content' }}>
+              {React.Children.map(
+                children,
+                (child) =>
+                  React.isValidElement(child) &&
+                  React.cloneElement(
+                    child,
+                    selectedDemo && selectedCustomizationOption
+                      ? {
+                          ...examples[selectedDemo]?.examples[selectedCustomizationOption]
+                            ?.componentProps,
+                        }
+                      : {},
+                  ),
+              )}
+            </StyledChild>
+          </PlaygroundDemoArea>
+          {shouldBeInteractive && (
+            <PlaygroundConfigArea>
+              <ConfigSectionWrapper>
+                <ConfigLabel gutterBottom>Components</ConfigLabel>
+                <FormControl size="small" sx={{ backgroundColor: 'transparent', flexGrow: 1 }}>
+                  <ComponentsSelect
+                    id="select-component"
+                    label=""
+                    value={selectedDemo}
+                    onChange={(e) => selectDemo(e.target.value as string)}
+                  >
+                    {Object.keys(examples || {}).map((item) => (
+                      <MenuItem key={item} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </ComponentsSelect>
+                </FormControl>
+                {availableSlots && (
+                  <React.Fragment>
+                    <ConfigLabel gutterBottom>Slots</ConfigLabel>
+                    <SlotItemsWrapper>
+                      {(availableSlots as string[]).map((slot: string) => (
+                        <SlotItem
+                          size="small"
+                          onClick={() => setSelectedSlot(slot)}
+                          key={slot}
+                          variant={selectedSlot === slot ? 'contained' : 'outlined'}
+                        >
+                          {slot}
+                        </SlotItem>
+                      ))}
+                    </SlotItemsWrapper>
+                  </React.Fragment>
+                )}
+              </ConfigSectionWrapper>
+              <ConfigSectionWrapper>
+                <ConfigLabel gutterBottom>Playground</ConfigLabel>
+                <Stack sx={{ gap: 0.5 }}>
+                  <ColorSwitcher {...{ handleTokenChange, selectedColor: selectedTokens.color }} />
+                  <NumericTokensSlider
+                    {...{
+                      handleTokenChange,
+                      tokens: pick(selectedTokens, ['borderRadius', 'borderWidth']),
+                    }}
+                  />
+                </Stack>
+              </ConfigSectionWrapper>
+            </PlaygroundConfigArea>
+          )}
+        </PlaygroundWrapper>
+
+        {shouldBeInteractive && (
+          <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
         )}
       </BrandingProvider>
-      <PlaygroundWrapper>
-        <PlaygroundDemoArea>
-          <StyledChild sx={{ width: 'fit-content' }}>
-            {React.Children.map(
-              children,
-              (child) =>
-                React.isValidElement(child) &&
-                React.cloneElement(
-                  child,
-                  selectedDemo && selectedCustomizationOption
-                    ? {
-                        ...examples[selectedDemo]?.examples[selectedCustomizationOption]
-                          ?.componentProps,
-                      }
-                    : {},
-                ),
-            )}
-          </StyledChild>
-        </PlaygroundDemoArea>
-        <Divider flexItem orientation="vertical" sx={{ borderColor: grey[200] }} />
-        <PlaygroundConfigArea>
-          <NavLabel gutterBottom>Components</NavLabel>
-          <NavItemsWrapper>
-            {Object.keys(examples || {}).map((item) => (
-              <NavItem
-                size="small"
-                onClick={() => selectDemo(item)}
-                key={item}
-                variant={selectedDemo === item ? 'outlined' : 'text'}
-              >
-                {item}
-              </NavItem>
-            ))}
-          </NavItemsWrapper>
-          {shouldBeInteractive && (
-            <React.Fragment>
-              <NavLabel gutterBottom>Slots</NavLabel>
-              {availableSlots && (
-                <NavItemsWrapper>
-                  {(availableSlots as string[]).map((slot: string) => (
-                    <NavItem
-                      size="small"
-                      onClick={() => setSelectedSlot(slot)}
-                      key={slot}
-                      variant={selectedSlot === slot ? 'outlined' : 'text'}
-                    >
-                      {slot}
-                    </NavItem>
-                  ))}
-                </NavItemsWrapper>
-              )}
-              <NavLabel gutterBottom>Playground</NavLabel>
-              <Stack sx={{ gap: 1 }}>
-                <ColorSwitcher {...{ handleTokenChange, selectedColor: selectedTokens.color }} />
-                <NumericTokensSlider
-                  {...{
-                    handleTokenChange,
-                    tokens: pick(selectedTokens, ['padding', 'borderRadius', 'borderWidth']),
-                  }}
-                />
-              </Stack>
-            </React.Fragment>
-          )}
-        </PlaygroundConfigArea>
-      </PlaygroundWrapper>
-
-      {shouldBeInteractive && (
-        <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
-      )}
     </Box>
   );
 };
