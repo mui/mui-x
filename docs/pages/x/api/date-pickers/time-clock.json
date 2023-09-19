@@ -141,9 +141,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/TimeClock/TimeClock.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-clock/\">Time Clock</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "TimeClock" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "TimeClock" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-clock/\">Time Clock</a></li></ul>"
 }

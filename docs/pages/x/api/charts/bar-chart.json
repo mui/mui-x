@@ -42,6 +42,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiBarChart" },
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "BarChart" }]
+  "demos": "<ul></ul>"
 }

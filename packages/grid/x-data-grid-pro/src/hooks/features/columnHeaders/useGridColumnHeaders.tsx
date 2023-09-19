@@ -5,6 +5,7 @@ import {
   gridFilterModelSelector,
   unstable_gridTabIndexColumnHeaderFilterSelector,
   getDataGridUtilityClass,
+  GridFilterItem,
 } from '@mui/x-data-grid';
 import { styled } from '@mui/system';
 import {
@@ -14,6 +15,7 @@ import {
   getTotalHeaderHeight,
   useGridPrivateApiContext,
   getGridFilter,
+  GridStateColDef,
 } from '@mui/x-data-grid/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -39,6 +41,8 @@ const GridHeaderFilterRow = styled('div', {
 })<{ ownerState: OwnerState }>(() => ({
   display: 'flex',
 }));
+
+const filterItemsCache: Record<GridStateColDef['field'], GridFilterItem> = Object.create(null);
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
@@ -69,6 +73,28 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const columnHeaderFilterFocus = useGridSelector(
     apiRef,
     unstable_gridFocusColumnHeaderFilterSelector,
+  );
+
+  const getFilterItem = React.useCallback(
+    (colDef: GridStateColDef) => {
+      const filterModelItem = filterModel?.items.find(
+        (it) => it.field === colDef.field && it.operator !== 'isAnyOf',
+      );
+      if (filterModelItem != null) {
+        // there's a valid `filterModelItem` for this column
+        return filterModelItem;
+      }
+      const defaultCachedItem = filterItemsCache[colDef.field];
+      if (defaultCachedItem != null) {
+        // there's a cached `defaultItem` for this column
+        return defaultCachedItem;
+      }
+      // there's no cached `defaultItem` for this column, let's generate one and cache it
+      const defaultItem = getGridFilter(colDef);
+      filterItemsCache[colDef.field] = defaultItem;
+      return defaultItem;
+    },
+    [filterModel],
   );
 
   const getColumnFilters = (params?: GetHeadersParams, other = {}) => {
@@ -105,9 +131,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const filterOperators =
         colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
 
-      const item =
-        filterModel?.items.find((it) => it.field === colDef.field && it.operator !== 'isAnyOf') ??
-        getGridFilter(colDef);
+      const item = getFilterItem(colDef);
 
       filters.push(
         <rootProps.slots.headerFilterCell
