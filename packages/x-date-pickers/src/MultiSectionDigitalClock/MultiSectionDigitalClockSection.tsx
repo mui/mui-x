@@ -68,9 +68,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
       },
     },
     '@media (pointer: none), (pointer: coarse)': {
-      '&:hover': {
-        overflowY: 'auto',
-      },
+      overflowY: 'auto',
     },
     '&:not(:first-of-type)': {
       borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
