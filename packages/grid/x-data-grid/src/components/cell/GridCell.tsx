@@ -117,7 +117,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEditable && 'cell--editable',
       isSelected && 'selected',
       showRightBorder && 'cell--withRightBorder',
-      isSelectionMode && 'cell--selectionMode',
+      isSelectionMode && !isEditable && 'cell--selectionMode',
       'withBorderColor',
     ],
     content: ['cellContent'],
