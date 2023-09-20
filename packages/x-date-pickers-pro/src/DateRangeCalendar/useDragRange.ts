@@ -66,10 +66,7 @@ const resolveButtonElement = (element: Element | null): HTMLButtonElement | null
   return element;
 };
 
-const resolveElementFromTouch = (
-  event: React.TouchEvent<HTMLButtonElement>,
-  ignoreTouchTarget?: boolean,
-) => {
+const resolveElementFromTouch = (event: React.TouchEvent<HTMLButtonElement>) => {
   // don't parse multi-touch result
   if (event.changedTouches?.length === 1 && event.touches.length <= 1) {
     const element = document.elementFromPoint(
@@ -78,11 +75,7 @@ const resolveElementFromTouch = (
     );
     // `elementFromPoint` could have resolved preview div or wrapping div
     // might need to recursively find the nested button
-    const buttonElement = resolveButtonElement(element);
-    if (ignoreTouchTarget && buttonElement === event.changedTouches[0].target) {
-      return null;
-    }
-    return buttonElement;
+    return resolveButtonElement(element);
   }
   return null;
 };
@@ -153,6 +146,12 @@ const useDragRangeEvents = <TDate>({
 
     setRangeDragDay(newDate);
     setIsDragging(true);
+
+    // return early if it is the initial target
+    if (target === event.changedTouches[0].target) {
+      return;
+    }
+
     const button = event.target as HTMLButtonElement;
     const buttonDataset = button.dataset;
     if (buttonDataset.position) {
@@ -210,13 +209,19 @@ const useDragRangeEvents = <TDate>({
     setRangeDragDay(null);
     setIsDragging(false);
 
-    const target = resolveElementFromTouch(event, false);
+    const target = resolveElementFromTouch(event);
     if (!target) {
       return;
     }
 
     // make sure the focused element is the element where touch ended
     target.focus();
+
+    // return early if it is the initial target
+    if (target === event.changedTouches[0].target) {
+      return;
+    }
+
     const newDate = resolveDateFromTarget(target, utils, timezone);
     if (newDate) {
       onDrop(newDate);
