@@ -141,7 +141,7 @@ TreeView.propTypes = {
   defaultEndIcon: PropTypes.node,
   /**
    * Expanded node ids.
-   * Used when the item's expansion are not controlled.
+   * Used when the item's expansion is not controlled.
    * @default []
    */
   defaultExpanded: PropTypes.arrayOf(PropTypes.string),
@@ -175,7 +175,7 @@ TreeView.propTypes = {
   disableSelection: PropTypes.bool,
   /**
    * Expanded node ids.
-   * Used when the item's expansion are controlled.
+   * Used when the item's expansion is controlled.
    */
   expanded: PropTypes.arrayOf(PropTypes.string),
   /**
