@@ -254,7 +254,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       selectionState: PickerSelectionState | undefined,
       allowRangeFlip: boolean = false,
     ) => {
-      const { newRange } = calculateRangeChange({
+      const { nextSelection, newRange } = calculateRangeChange({
         newDate,
         utils,
         range: value,
@@ -262,6 +262,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         allowRangeFlip,
         shouldMergeDateAndTime: true,
       });
+
+      if (!forceFinishSelection) {
+        onRangePositionChange(nextSelection);
+      }
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
       setValueAndGoToNextView(
