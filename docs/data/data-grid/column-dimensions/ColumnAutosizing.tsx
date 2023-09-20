@@ -101,7 +101,7 @@ export default function ColumnAutosizing() {
           control={
             <Checkbox
               checked={includeOutliers}
-              onChange={(ev) => setExcludeOutliers(ev.target.checked)}
+              onChange={(event) => setExcludeOutliers(event.target.checked)}
             />
           }
           label="Include outliers"
