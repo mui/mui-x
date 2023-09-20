@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
@@ -74,26 +75,22 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
 
 export default function IconExpansionTreeView() {
   return (
-    <TreeView
-      aria-label="icon expansion"
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-    >
-      <CustomTreeItem nodeId="1" label="Applications">
-        <CustomTreeItem nodeId="2" label="Calendar" />
-        <CustomTreeItem nodeId="3" label="Chrome" />
-        <CustomTreeItem nodeId="4" label="Webstorm" />
-      </CustomTreeItem>
-      <CustomTreeItem nodeId="5" label="Documents">
-        <CustomTreeItem nodeId="10" label="OSS" />
-        <CustomTreeItem nodeId="6" label="MUI">
-          <CustomTreeItem nodeId="7" label="src">
+    <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
+      <TreeView
+        aria-label="icon expansion"
+        defaultCollapseIcon={<ExpandMoreIcon />}
+        defaultExpandIcon={<ChevronRightIcon />}
+      >
+        <CustomTreeItem nodeId="1" label="Applications">
+          <CustomTreeItem nodeId="2" label="Calendar" />
+        </CustomTreeItem>
+        <CustomTreeItem nodeId="5" label="Documents">
+          <CustomTreeItem nodeId="10" label="OSS" />
+          <CustomTreeItem nodeId="6" label="MUI">
             <CustomTreeItem nodeId="8" label="index.js" />
-            <CustomTreeItem nodeId="9" label="tree-view.js" />
           </CustomTreeItem>
         </CustomTreeItem>
-      </CustomTreeItem>
-    </TreeView>
+      </TreeView>
+    </Box>
   );
 }

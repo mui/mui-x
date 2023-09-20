@@ -59,17 +59,17 @@ const data = {
 };
 ```
 
-{{"demo": "RichObjectTreeView.js", "defaultCodeOpen": false}}
+{{"demo": "RichObjectTreeView.js"}}
 
 ## ContentComponent prop
 
 You can use the `ContentComponent` prop and the `useTreeItem` hook to further customize the behavior of the TreeItem.
 
-Such as limiting expansion to clicking the icon:
+Such as limiting expansion to clicking the expand icon:
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
 
-Or increasing the width of the state indicator:
+Or increasing the width of the item state indicator to be full-width:
 
 {{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
 
@@ -122,7 +122,7 @@ Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
 // When using TypeScript 4.x and above
-import type {} from '@mui/x-tree-vie/themeAugmentation';
+import type {} from '@mui/x-tree-view/themeAugmentation';
 // When using TypeScript 3.x and below
 import '@mui/x-tree-view/themeAugmentation';
 

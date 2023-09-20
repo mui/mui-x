@@ -6,57 +6,58 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 const CustomContentRoot = styled('div')(({ theme }) => ({
   WebkitTapHighlightColor: 'transparent',
-  '&:hover, &.Mui-disabled, &.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused, &.Mui-selected:hover':
+  '&&:hover, &&.Mui-disabled, &&.Mui-focused, &&.Mui-selected, &&.Mui-selected.Mui-focused, &&.Mui-selected:hover':
     {
       backgroundColor: 'transparent',
     },
-  [`& .MuiTreeItem-contentBar`]: {
+  '.MuiTreeItem-contentBar': {
     position: 'absolute',
     width: '100%',
     height: 24,
     left: 0,
-    '&:hover &': {
-      backgroundColor: theme.palette.action.hover,
-      // Reset on touch devices, it doesn't add specificity
-      '@media (hover: none)': {
-        backgroundColor: 'transparent',
-      },
-    },
-    '&.Mui-disabled &': {
-      opacity: theme.palette.action.disabledOpacity,
+  },
+  '&:hover .MuiTreeItem-contentBar': {
+    backgroundColor: theme.palette.action.hover,
+    // Reset on touch devices, it doesn't add specificity
+    '@media (hover: none)': {
       backgroundColor: 'transparent',
     },
-    '&.Mui-focused &': {
-      backgroundColor: theme.palette.action.focus,
-    },
-    '&.Mui-selected &': {
+  },
+  '&.Mui-disabled .MuiTreeItem-contentBar': {
+    opacity: theme.palette.action.disabledOpacity,
+    backgroundColor: 'transparent',
+  },
+  '&.Mui-focused .MuiTreeItem-contentBar': {
+    backgroundColor: theme.palette.action.focus,
+  },
+  '&.Mui-selected .MuiTreeItem-contentBar': {
+    backgroundColor: alpha(
+      theme.palette.primary.main,
+      theme.palette.action.selectedOpacity,
+    ),
+  },
+  '&.Mui-selected:hover .MuiTreeItem-contentBar': {
+    backgroundColor: alpha(
+      theme.palette.primary.main,
+      theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+    ),
+    // Reset on touch devices, it doesn't add specificity
+    '@media (hover: none)': {
       backgroundColor: alpha(
         theme.palette.primary.main,
         theme.palette.action.selectedOpacity,
       ),
     },
-    '&.Mui-selected:hover &': {
-      backgroundColor: alpha(
-        theme.palette.primary.main,
-        theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-      ),
-      // Reset on touch devices, it doesn't add specificity
-      '@media (hover: none)': {
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity,
-        ),
-      },
-    },
-    '&.Mui-selected.Mui-focused &': {
-      backgroundColor: alpha(
-        theme.palette.primary.main,
-        theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
-      ),
-    },
+  },
+  '&.Mui-selected.Mui-focused .MuiTreeItem-contentBar': {
+    backgroundColor: alpha(
+      theme.palette.primary.main,
+      theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
+    ),
   },
 }));
 
@@ -119,26 +120,23 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
 
 export default function BarTreeView() {
   return (
-    <TreeView
-      aria-label="icon expansion"
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ height: 240, flexGrow: 1, maxWidth: 400, position: 'relative' }}
-    >
-      <CustomTreeItem nodeId="1" label="Applications">
-        <CustomTreeItem nodeId="2" label="Calendar" />
-        <CustomTreeItem nodeId="3" label="Chrome" />
-        <CustomTreeItem nodeId="4" label="Webstorm" />
-      </CustomTreeItem>
-      <CustomTreeItem nodeId="5" label="Documents">
-        <CustomTreeItem nodeId="10" label="OSS" />
-        <CustomTreeItem nodeId="6" label="MUI">
-          <CustomTreeItem nodeId="7" label="src">
+    <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
+      <TreeView
+        aria-label="icon expansion"
+        defaultCollapseIcon={<ExpandMoreIcon />}
+        defaultExpandIcon={<ChevronRightIcon />}
+        sx={{ position: 'relative' }}
+      >
+        <CustomTreeItem nodeId="1" label="Applications">
+          <CustomTreeItem nodeId="2" label="Calendar" />
+        </CustomTreeItem>
+        <CustomTreeItem nodeId="5" label="Documents">
+          <CustomTreeItem nodeId="10" label="OSS" />
+          <CustomTreeItem nodeId="6" label="MUI">
             <CustomTreeItem nodeId="8" label="index.js" />
-            <CustomTreeItem nodeId="9" label="tree-view.js" />
           </CustomTreeItem>
         </CustomTreeItem>
-      </CustomTreeItem>
-    </TreeView>
+      </TreeView>
+    </Box>
   );
 }
