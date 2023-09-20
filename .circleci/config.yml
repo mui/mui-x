@@ -312,7 +312,7 @@ workflows:
       - test_regressions:
           requires:
             - checkout
-      - test_performance:
+      - run_danger:
           requires:
             - checkout
   e2e-website:
