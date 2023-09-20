@@ -88,14 +88,14 @@ Autosizing has no effect if dynamic row height is enabled.
 :::
 
 :::warning
-The datagrid can only autosize based on the currently rendered cells.
+The data grid can only autosize based on the currently rendered cells.
 
 DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) to discuss it further.
 :::
 
 ### Disable autosizing
 
-Autosizing is enabled by default. If you want to turn it off, you can pass the `disableAutosize` prop to the datagrid.
+Autosizing is enabled by default. If you want to turn it off, you can pass the `disableAutosize` prop to the data grid.
 
 ## API
 
