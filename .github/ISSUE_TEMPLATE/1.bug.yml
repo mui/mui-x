@@ -26,11 +26,12 @@ body:
 
   - type: textarea
     attributes:
-      label: Steps to reproduce 🕹
+      label: Steps to reproduce
       description: |
-        **⚠️ Issues that we can't reproduce will be closed.**
-
-        Please provide a link to a live example and an unambiguous set of steps to reproduce this bug. As a starting point, we recommend you [browse the documentation](https://mui.com/x/introduction/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case. Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
+        **⚠️ Please provide a live example for your report⚠️**
+        If you don't have one, you can use one of these options:
+          - [DataGrid codesandbox template](https://codesandbox.io/s/github/mui/mui-x/tree/master/templates/x-data-grid?file=demo.tsx)
+          - Fork any of the examples in our [documentation](https://mui.com/x/introduction/) by [clicking on the codesandbox or stackblitz icon](https://mui.com/static/docs/forking-an-example.png)
       value: |
         Link to live example: (required)
 
@@ -40,19 +41,19 @@ body:
         3.
   - type: textarea
     attributes:
-      label: Current behavior 😯
+      label: Current behavior
       description: Describe what happens instead of the expected behavior.
   - type: textarea
     attributes:
-      label: Expected behavior 🤔
+      label: Expected behavior
       description: Describe what should happen.
   - type: textarea
     attributes:
-      label: Context 🔦
+      label: Context
       description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with a solution that is more useful in the real world.
   - type: textarea
     attributes:
-      label: Your environment 🌎
+      label: Your environment
       description: Run `npx @mui/envinfo` and post the results. If you encounter issues with TypeScript please include the used tsconfig.
       value: |
         <details>
