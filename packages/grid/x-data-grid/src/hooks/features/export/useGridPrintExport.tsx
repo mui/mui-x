@@ -108,9 +108,7 @@ export const useGridPrintExport = (
       getRowsToExport: (params: GridPrintGetRowsToExportParams<GridApiCommunity>) => GridRowId[],
     ) => {
       const rowsToExportIds = getRowsToExport({ apiRef });
-
       const newRows = rowsToExportIds.map((id) => apiRef.current.getRow(id));
-
       apiRef.current.setRows(newRows);
     },
     [apiRef],

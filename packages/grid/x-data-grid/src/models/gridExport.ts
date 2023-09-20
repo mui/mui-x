@@ -35,9 +35,9 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
    */
   includeHeaders?: boolean;
   /**
-   * Function that returns the id of the rows to export on the order they should be exported.
+   * Function that returns the list of row ids to export on the order they should be exported.
    * @param {GridGetRowsToExportParams} params With all properties from [[GridGetRowsToExportParams]].
-   * @returns {GridRowId[]} The id of the rows to export.
+   * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridGetRowsToExportParams<Api>) => GridRowId[];
 }
@@ -90,9 +90,9 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
    */
   includeColumnGroupsHeaders?: boolean;
   /**
-   * Function that returns the id of the rows to export on the order they should be exported.
+   * Function that returns the list of row ids to export on the order they should be exported.
    * @param {GridCsvGetRowsToExportParams} params With all properties from [[GridCsvGetRowsToExportParams]].
-   * @returns {GridRowId[]} The id of the rows to export.
+   * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridCsvGetRowsToExportParams) => GridRowId[];
 }
@@ -138,9 +138,9 @@ export interface GridPrintExportOptions extends GridExportOptions {
    */
   pageStyle?: string | Function;
   /**
-   * Function that returns the id of the rows to export in the order they should be exported.
+   * Function that returns the list of row ids to export in the order they should be exported.
    * @param {GridPrintGetRowsToExportParams} params With all properties from [[GridPrintGetRowsToExportParams]].
-   * @returns {GridRowId[]} The id of the rows to export.
+   * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridPrintGetRowsToExportParams) => GridRowId[];
 }
