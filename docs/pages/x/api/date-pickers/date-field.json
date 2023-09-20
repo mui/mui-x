@@ -138,7 +138,7 @@
     {
       "class": null,
       "name": "textField",
-      "description": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     }
   ],
