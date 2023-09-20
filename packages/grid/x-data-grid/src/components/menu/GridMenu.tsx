@@ -73,7 +73,8 @@ function GridMenu(props: GridMenuProps) {
   const savedFocusRef = React.useRef<HTMLElement | null>(null);
   React.useEffect(() => {
     if (open) {
-      savedFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      savedFocusRef.current =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
     } else {
       savedFocusRef.current?.focus?.();
       savedFocusRef.current = null;
