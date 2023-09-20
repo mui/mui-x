@@ -492,7 +492,6 @@ export const useGridFocus = (
   }, [apiRef, handleDocumentClick]);
 
   useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleBlur);
-  useGridApiEventHandler(apiRef, 'headerFilterBlur', handleBlur);
   useGridApiEventHandler(apiRef, 'cellDoubleClick', handleCellDoubleClick);
   useGridApiEventHandler(apiRef, 'cellMouseDown', handleCellMouseDown);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);

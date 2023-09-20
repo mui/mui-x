@@ -41,9 +41,7 @@
         "describedArgs": ["event", "nodeIds"]
       }
     },
-    "selected": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" }
-    },
+    "selected": { "type": { "name": "any" } },
     "sx": {
       "type": {
         "name": "union",

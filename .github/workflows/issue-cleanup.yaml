@@ -1,0 +1,35 @@
+name: Cleanup issue comment
+
+on:
+  issues:
+    types:
+      - opened
+
+permissions: {}
+
+jobs:
+  issue_cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
+        with:
+          script: |
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const text =
+              '### Duplicates\r\n\r\n- [X] I have searched the existing issues\r\n\r\n### Latest version\r\n\r\n- [X] I have tested the latest version\r\n\r\n';
+
+            const body = issue.data.body.replace(text, '');
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            })
