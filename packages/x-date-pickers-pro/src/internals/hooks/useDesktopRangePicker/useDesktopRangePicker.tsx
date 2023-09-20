@@ -56,7 +56,6 @@ export const useDesktopRangePicker = <
     disableOpenPicker,
     localeText,
     reduceAnimations,
-    onViewChange,
   } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
@@ -69,7 +68,6 @@ export const useDesktopRangePicker = <
   const endInputRef = React.useRef<HTMLInputElement>(null);
   const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
   const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
-  const [currentView, setCurrentView] = React.useState<TView | null>(props.view ?? null);
 
   const slotProps: TExternalProps['slotProps'] = {
     ...inSlotProps,
@@ -78,14 +76,6 @@ export const useDesktopRangePicker = <
       inputRef: ownerState.position === 'start' ? startInputRef : endInputRef,
     }),
   };
-
-  const handleViewChange = React.useCallback(
-    (newView: TView) => {
-      onViewChange?.(newView);
-      setCurrentView(newView);
-    },
-    [onViewChange],
-  );
 
   const {
     open,
@@ -103,10 +93,7 @@ export const useDesktopRangePicker = <
     DesktopRangePickerAdditionalViewProps
   >({
     ...pickerParams,
-    props: {
-      ...props,
-      onViewChange: handleViewChange,
-    },
+    props,
     wrapperVariant: 'desktop',
     autoFocusView: false,
     additionalViewProps: {
@@ -116,15 +103,16 @@ export const useDesktopRangePicker = <
   });
 
   React.useEffect(() => {
-    if (!open) {
+    const view = layoutProps.view;
+    if (!view || !open) {
       return;
     }
     // handle field re-focusing and section selection after view and/or range position change
     const inputToFocus = rangePosition === 'start' ? startInputRef.current : endInputRef.current;
     const currentFieldRef = rangePosition === 'start' ? startFieldRef.current : endFieldRef.current;
     inputToFocus?.focus();
-    currentFieldRef?.setSelectedSections(currentView ?? 0);
-  }, [currentView, open, rangePosition]);
+    currentFieldRef?.setSelectedSections(view);
+  }, [layoutProps.view, open, rangePosition]);
 
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
