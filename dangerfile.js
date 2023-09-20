@@ -1,7 +1,5 @@
 const { danger, markdown } = require('danger');
 
-const dangerCommand = process.env.DANGER_COMMAND;
-
 function addDeployPreviewUrls() {
   /**
    * The incoming docsPath from danger does not start with `/`
@@ -26,24 +24,21 @@ function addDeployPreviewUrls() {
     .filter((file) => file.startsWith('docs/data') && file.endsWith('.md'))
     .slice(0, 5);
 
-  markdown(`
-## Netlify deploy preview
+  markdown(`**Deploy preview:** <a href="${netlifyPreview}">${netlifyPreview}</a>`);
 
-Netlify deploy preview: <a href="${netlifyPreview}">${netlifyPreview}</a>
+  if (docs.length) {
+    markdown(`
 
-### Updated pages
+**Updated pages:**
 
-${
-  docs.length
-    ? docs
-        .map((docsPath) => {
-          const formattedUrl = formatFileToLink(docsPath);
-          return `- [${docsPath}](${netlifyPreview}${formattedUrl})`;
-        })
-        .join('\n')
-    : 'No updates.'
-}
+${docs
+  .map((docsPath) => {
+    const formattedUrl = formatFileToLink(docsPath);
+    return `- [${docsPath}](${netlifyPreview}${formattedUrl})`;
+  })
+  .join('\n')}
 `);
+  }
 }
 
 function addL10nHelpMessage() {
@@ -79,13 +74,6 @@ function addL10nHelpMessage() {
 async function run() {
   addL10nHelpMessage();
   addDeployPreviewUrls();
-
-  switch (dangerCommand) {
-    case 'reportPerformance':
-      break;
-    default:
-      throw new TypeError(`Unrecognized danger command '${dangerCommand}'`);
-  }
 }
 
 run().catch((error) => {

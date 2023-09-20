@@ -269,7 +269,7 @@ jobs:
       - run:
           name: Upload screenshots to Argos CI
           command: yarn test:argos
-  test_performance:
+  run_danger:
     <<: *defaults
     docker:
       - image: mcr.microsoft.com/playwright:v1.37.1-focal
