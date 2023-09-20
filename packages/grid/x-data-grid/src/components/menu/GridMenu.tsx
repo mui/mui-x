@@ -70,6 +70,19 @@ function GridMenu(props: GridMenuProps) {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
+  const previousOpenRef = React.useRef(open);
+  const savedFocusRef = React.useRef<HTMLElement | null>(null);
+
+  if (previousOpenRef.current !== open) {
+    previousOpenRef.current = open;
+    if (open) {
+      savedFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    } else {
+      savedFocusRef.current?.focus?.();
+      savedFocusRef.current = null;
+    }
+  }
+
   React.useEffect(() => {
     // Emit menuOpen or menuClose events
     const eventName = open ? 'menuOpen' : 'menuClose';
