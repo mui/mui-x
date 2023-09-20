@@ -15,6 +15,5 @@
     "name": "MuiAreaElement"
   },
   "filename": "/packages/x-charts/src/LineChart/AreaElement.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "AreaElement" }]
+  "demos": "<ul></ul>"
 }

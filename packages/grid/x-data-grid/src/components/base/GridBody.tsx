@@ -91,7 +91,7 @@ function GridBody(props: GridBodyProps) {
     let animationFrame: number;
     const observer = new ResizeObserver(() => {
       // See https://github.com/mui/mui-x/issues/8733
-      animationFrame = window.requestAnimationFrame(() => {
+      animationFrame = requestAnimationFrame(() => {
         apiRef.current.computeSizeAndPublishResizeEvent();
       });
     });

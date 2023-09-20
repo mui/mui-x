@@ -341,6 +341,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         padding: 0,
         opacity: 0,
         width: 0,
+        border: 0,
       };
     }
     const cellStyle = {
@@ -672,6 +673,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
         padding: 0,
         opacity: 0,
         width: 0,
+        border: 0,
       };
     }
     const cellStyle = {

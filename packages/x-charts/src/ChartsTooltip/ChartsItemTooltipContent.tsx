@@ -51,7 +51,7 @@ export function DefaultChartsItemContent<T extends ChartSeriesType>(
   // @ts-ignore
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
-    <ChartsTooltipPaper sx={sx} variant="outlined" className={classes.root}>
+    <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable>
         <tbody>
           <ChartsTooltipRow>

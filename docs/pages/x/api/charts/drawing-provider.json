@@ -8,6 +8,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDrawingProvider" },
   "filename": "/packages/x-charts/src/context/DrawingProvider.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "DrawingProvider" }]
+  "demos": "<ul></ul>"
 }
