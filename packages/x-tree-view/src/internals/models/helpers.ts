@@ -23,3 +23,13 @@ export type ConvertPluginsIntoSignatures<TPlugins extends readonly any[]> =
       ? [TSignature, ...ConvertPluginsIntoSignatures<R>]
       : ConvertPluginsIntoSignatures<R>
     : [];
+
+export interface MergePlugins<TPlugins extends readonly any[]> {
+  state: MergePluginsProperty<TPlugins, 'state'>;
+  instance: MergePluginsProperty<TPlugins, 'instance'>;
+  params: MergePluginsProperty<TPlugins, 'params'>;
+  defaultizedParams: MergePluginsProperty<TPlugins, 'defaultizedParams'>;
+  dependantPlugins: MergePluginsProperty<TPlugins, 'dependantPlugins'>;
+  events: MergePluginsProperty<TPlugins, 'events'>;
+  models: MergePluginsProperty<TPlugins, 'models'>;
+}

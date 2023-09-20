@@ -39,6 +39,7 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<
   UseTreeViewExpansionDefaultizedParameters,
   UseTreeViewExpansionInstance,
   {},
+  {},
   'expanded',
   [UseTreeViewNodesSignature]
 >;

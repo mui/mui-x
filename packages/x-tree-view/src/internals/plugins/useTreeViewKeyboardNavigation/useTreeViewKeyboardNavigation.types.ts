@@ -13,6 +13,7 @@ export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<
   {},
   UseTreeViewKeyboardNavigationInstance,
   {},
+  {},
   never,
   [
     UseTreeViewNodesSignature,

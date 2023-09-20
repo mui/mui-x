@@ -60,6 +60,7 @@ export type UseTreeViewSelectionSignature<Multiple extends boolean | undefined> 
     UseTreeViewSelectionDefaultizedParameters<Multiple extends undefined ? false : Multiple>,
     UseTreeViewSelectionInstance,
     {},
+    {},
     'selected',
     [UseTreeViewNodesSignature, UseTreeViewExpansionSignature, UseTreeViewNodesSignature]
   >;

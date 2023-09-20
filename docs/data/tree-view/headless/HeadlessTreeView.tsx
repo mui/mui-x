@@ -43,9 +43,11 @@ type TreeViewLogExpandedSignature = TreeViewPluginSignature<
   TreeViewLogExpandedDefaultizedParameters,
   // Instance methods of this plugin: we don't have any
   {},
-  // State of this plugin: we don't have any
+  // Events defined by this plugin: we don't have any
   {},
-  // Models of this plugin: we don't have any
+  // State defined by this plugin: we don't have any
+  {},
+  // Models defined by plugin: we don't have any
   never,
   // Dependencies of this plugin (we need the expansion plugin to access its model)
   [UseTreeViewExpansionSignature]

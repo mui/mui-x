@@ -6,7 +6,6 @@ import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 export interface UseTreeViewFocusInstance {
   isNodeFocused: (nodeId: string) => boolean;
   focusNode: (event: React.SyntheticEvent, nodeId: string | null) => void;
-  setFocusedNodeId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export interface UseTreeViewFocusParameters {
@@ -29,6 +28,7 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<
   UseTreeViewFocusParameters,
   UseTreeViewFocusParameters,
   UseTreeViewFocusInstance,
+  {},
   UseTreeViewFocusState,
   never,
   [UseTreeViewNodesSignature, UseTreeViewSelectionSignature<any>]

@@ -41,6 +41,6 @@ export interface UseTreeViewReturnValue<TPlugins extends readonly TreeViewAnyPlu
   getRootProps: <TOther extends EventHandlers = {}>(
     otherHandlers?: TOther,
   ) => UseTreeViewRootSlotProps;
-  rootRef: React.Ref<HTMLUListElement>;
+  rootRef: React.RefCallback<HTMLUListElement> | null;
   contextValue: TreeViewContextValue<TPlugins>;
 }

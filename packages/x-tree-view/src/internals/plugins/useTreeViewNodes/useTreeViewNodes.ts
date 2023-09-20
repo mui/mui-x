@@ -1,16 +1,31 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import ownerDocument from '@mui/utils/ownerDocument';
-import { TreeViewPlugin, TreeViewNode } from '../../models';
+import { TreeViewNode, TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewNodesSignature } from './useTreeViewNodes.types';
+import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 
 export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   instance,
   params,
-  rootRef,
 }) => {
   const nodeMap = React.useRef<{ [nodeId: string]: TreeViewNode }>({});
+
+  const getNode = React.useCallback((nodeId: string) => nodeMap.current[nodeId], []);
+
+  const insertNode = React.useCallback((node: TreeViewNode) => {
+    nodeMap.current[node.id] = node;
+  }, []);
+
+  const removeNode = React.useCallback(
+    (nodeId: string) => {
+      const newMap = { ...nodeMap.current };
+      delete newMap[nodeId];
+      nodeMap.current = newMap;
+      publishTreeViewEvent(instance, 'removeNode', { id: nodeId });
+    },
+    [instance],
+  );
 
   const isNodeDisabled = React.useCallback(
     (nodeId: string | null): nodeId is string => {
@@ -57,35 +72,12 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     return childrenIds;
   };
 
-  const registerNode = useEventCallback((node: TreeViewNode) => {
-    const { id, index, parentId, expandable, idAttribute, disabled } = node;
-
-    nodeMap.current[id] = { id, index, parentId, expandable, idAttribute, disabled };
-
-    return () => {
-      const newMap = { ...nodeMap.current };
-      delete newMap[id];
-      nodeMap.current = newMap;
-
-      instance.setFocusedNodeId((oldFocusedNodeId) => {
-        if (
-          oldFocusedNodeId === id &&
-          rootRef.current === ownerDocument(rootRef.current).activeElement
-        ) {
-          return instance.getChildrenIds(null)[0];
-        }
-        return oldFocusedNodeId;
-      });
-    };
-  });
-
-  const getNode = React.useCallback((nodeId: string) => nodeMap.current[nodeId], []);
-
   populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,
+    updateNode: insertNode,
+    removeNode,
     getChildrenIds,
     getNavigableChildrenIds,
     isNodeDisabled,
-    registerNode,
   });
 };
