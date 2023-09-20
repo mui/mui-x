@@ -60,15 +60,19 @@ To capture changes in the width of a column there are two callbacks that are cal
 
 ## Autosizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-`DataGridPro` also allows for autosizing the columns' dimensions based on their content. It can be autosized by 3 methods:
+`DataGridPro` allows to autosize the columns' dimensions based on their content. Autosizing is enabled by default. To turn it off, pass the `disableAutosize` prop to the datagrid.
+
+Autosizing can be used by one of the following methods:
 
 - Adding the `autosizeOnMount` prop,
 - Double-clicking a column header separator on the grid,
 - Calling the `apiRef.current.autosizeColumns(options)` API method.
 
-You can pass options directly to the API method when you call it. If you need to configure autosize for the other two methods, you can provide the options in the `autosizeOptions` prop.
-Note that for the separator double-click method, the clicked column will be passed to the `.columns` option, overriding the value of if it exists in `autosizeOptions`.
-In all cases, the `.minWidth` and `.maxWidth` options of columns will always be respected.
+You can pass options directly to the API method when you call it. To configure autosize for the other two methods, provide the options in the `autosizeOptions` prop.
+
+Note that for the separator double-click method, the `autosizeOptions.columns` will be replaced by the respective column user double-clicked on.
+
+In all the cases, the `colDef.minWidth` and `colDef.maxWidth` options will be respected.
 
 ```tsx
 <DataGridPro
@@ -92,10 +96,6 @@ The data grid can only autosize based on the currently rendered cells.
 
 DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) to discuss it further.
 :::
-
-### Disable autosizing
-
-Autosizing is enabled by default. If you want to turn it off, you can pass the `disableAutosize` prop to the data grid.
 
 ## API
 
