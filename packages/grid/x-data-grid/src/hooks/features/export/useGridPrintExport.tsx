@@ -15,7 +15,7 @@ import {
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { getColumnsToExport, defaultGetRowsToExport } from './utils';
+import { getColumnsToExport } from './utils';
 import { mergeStateWithPaginationModel } from '../pagination/useGridPagination';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
@@ -43,8 +43,8 @@ type PrintWindowOnLoad = (
     | 'hideToolbar'
     | 'hideFooter'
     | 'includeCheckboxes'
+    | 'getRowsToExport'
   >,
-  hasRowsSelected?: boolean,
 ) => void;
 
 function buildPrintWindow(title?: string): HTMLIFrameElement {
@@ -104,8 +104,9 @@ export const useGridPrintExport = (
   );
 
   const updateGridRowsForPrint = React.useCallback(
-    (rowsToExport?: (params: GridPrintGetRowsToExportParams<GridApiCommunity>) => GridRowId[]) => {
-      const getRowsToExport = rowsToExport ?? defaultGetRowsToExport;
+    (
+      getRowsToExport: (params: GridPrintGetRowsToExportParams<GridApiCommunity>) => GridRowId[],
+    ) => {
       const rowsToExportIds = getRowsToExport({ apiRef });
 
       const newRows = rowsToExportIds.map((id) => apiRef.current.getRow(id));
@@ -116,7 +117,7 @@ export const useGridPrintExport = (
   );
 
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
-    (printWindow, options, hasRowsSelected): void => {
+    (printWindow, options): void => {
       const normalizeOptions = {
         copyStyles: true,
         hideToolbar: false,
@@ -177,8 +178,9 @@ export const useGridPrintExport = (
       gridClone.style.boxSizing = 'content-box';
 
       // the footer is always being placed at the bottom of the page as if all rows are exported
-      // so if there are rows selected it needs to be moved up to the correct position
-      if (hasRowsSelected) {
+      // so if getRowsToExport is being used to only export a subset of rows then we need to
+      // adjust the footer position to be correctly placed at the bottom of the grid
+      if (options?.getRowsToExport) {
         const gridFooterElement: HTMLElement | null = gridClone.querySelector(
           `.${gridClasses.footerContainer}`,
         );
@@ -325,9 +327,8 @@ export const useGridPrintExport = (
         options?.includeCheckboxes,
       );
 
-      const hasSelectedRows = apiRef.current.getSelectedRows().size > 0;
-      if (hasSelectedRows) {
-        await updateGridRowsForPrint(options?.getRowsToExport);
+      if (options?.getRowsToExport) {
+        updateGridRowsForPrint(options.getRowsToExport);
       }
 
       apiRef.current.unstable_disableVirtualization();
@@ -336,11 +337,11 @@ export const useGridPrintExport = (
       if (process.env.NODE_ENV === 'test') {
         doc.current!.body.appendChild(printWindow);
         // In test env, run the all pipeline without waiting for loading
-        handlePrintWindowLoad(printWindow, options, hasSelectedRows);
+        handlePrintWindowLoad(printWindow, options);
         handlePrintWindowAfterPrint(printWindow);
       } else {
         printWindow.onload = () => {
-          handlePrintWindowLoad(printWindow, options, hasSelectedRows);
+          handlePrintWindowLoad(printWindow, options);
 
           const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
           mediaQueryList.addEventListener('change', (mql) => {

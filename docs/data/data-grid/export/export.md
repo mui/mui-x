@@ -32,8 +32,8 @@ By default, the export menu displays all the available export formats, according
 
 - [Print](#print-export)
 - [CSV](#csv-export)
-- [Excel](#excel-export) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
-- [Clipboard](#clipboard) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') (🚧 Not delivered yet)
+- [Excel](#excel-export) [`<span class="plan-premium">`](/x/introduction/licensing/#premium-plan "Premium plan")
+- [Clipboard](#clipboard) [`<span class="plan-premium">`](/x/introduction/licensing/#premium-plan "Premium plan") (🚧 Not delivered yet)
 
 You can customize their respective behavior by passing an options object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
@@ -89,8 +89,7 @@ There are a few ways to include or hide other columns.
 ## Exported rows
 
 :::warning
-This section only applies to the CSV and the Excel export.
-The print export always prints rows in their current state.
+The print export always prints all rows regardless of whether or not some rows are selected. To export only selected rows via print see the demo below.
 :::
 
 By default, the data grid exports the selected rows if there are any.
@@ -99,12 +98,12 @@ If not, it exports all rows except the footers (filtered and sorted rows, accord
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
 
-| Selector                                       | Behavior                                                                                                                                                                                                                   |
-| :--------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `gridRowIdsSelector`                           | The rows in their original order.                                                                                                                                                                                          |
-| `gridSortedRowIdsSelector`                     | The rows after applying the sorting rules.                                                                                                                                                                                 |
-| `gridFilteredSortedRowIdsSelector`             | The rows after applying the sorting rules, and the filtering rules.                                                                                                                                                        |
-| `gridExpandedSortedRowIdsSelector`             | The rows after applying the sorting rules, the filtering rules, and without the collapsed rows.                                                                                                                            |
+| Selector                                         | Behavior                                                                                                                                                                                                                             |
+| :----------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gridRowIdsSelector`                           | The rows in their original order.                                                                                                                                                                                                    |
+| `gridSortedRowIdsSelector`                     | The rows after applying the sorting rules.                                                                                                                                                                                           |
+| `gridFilteredSortedRowIdsSelector`             | The rows after applying the sorting rules, and the filtering rules.                                                                                                                                                                  |
+| `gridExpandedSortedRowIdsSelector`             | The rows after applying the sorting rules, the filtering rules, and without the collapsed rows.                                                                                                                                      |
 | `gridPaginatedVisibleSortedGridRowIdsSelector` | The rows after applying the sorting rules, the filtering rules, without the collapsed rows and only for the current page (**Note**: If the pagination is disabled, it will still take the value of `page` and `pageSize`). |
 
 {{"demo": "CsvGetRowsToExport.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -112,6 +111,10 @@ The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) t
 When using [Row grouping](/x/react-data-grid/row-grouping/), it can be useful to remove the groups from the CSV export.
 
 {{"demo": "CsvGetRowsToExportRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
+
+To export only selected rows via print you can use the `getRowsToExport` function.
+
+{{"demo": "PrintExportSelectedRows.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## CSV export
 
@@ -229,7 +232,7 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+## Excel export [`<span class="plan-premium">`](/x/introduction/licensing/#premium-plan "Premium plan")
 
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
 The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
@@ -419,7 +422,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-### Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+### Excel [`<span class="plan-premium">`](/x/introduction/licensing/#premium-plan "Premium plan")
 
 {{"demo": "ExcelExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
