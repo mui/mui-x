@@ -13,7 +13,7 @@ body:
   - type: input
     attributes:
       label: Search keywords
-      description: Your issue may have already been reported. Please list the keywords you've used to search the [existing issues](https://github.com/mui/mui-x/issues). This will allow us to improve the experience for other users.
+      description: Your issue may have already been reported! List the keywords you've used to search the [existing issues](https://github.com/mui/mui-x/issues). This will allow make your issue searchable for others.
       placeholder: e.g. datagrid column resizing
     validations:
       required: true
