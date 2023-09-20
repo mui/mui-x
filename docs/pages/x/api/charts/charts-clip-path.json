@@ -8,6 +8,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsClipPath" },
   "filename": "/packages/x-charts/src/ChartsClipPath/ChartsClipPath.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsClipPath" }]
+  "demos": "<ul></ul>"
 }

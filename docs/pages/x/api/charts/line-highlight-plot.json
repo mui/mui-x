@@ -11,6 +11,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLineHighlightPlot" },
   "filename": "/packages/x-charts/src/LineChart/LineHighlightPlot.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "LineHighlightPlot" }]
+  "demos": "<ul></ul>"
 }

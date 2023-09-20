@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
+import { refType } from '@mui/utils';
 import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
@@ -159,12 +160,7 @@ DateRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    * Ignored if the field has several inputs.

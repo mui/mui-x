@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
-  props: SingleInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+  props: SingleInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
 
 const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField<
   TDate,
->(inProps: SingleInputDateTimeRangeFieldProps<TDate>, ref: React.Ref<HTMLInputElement>) {
+>(inProps: SingleInputDateTimeRangeFieldProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiSingleInputDateTimeRangeField',
@@ -180,12 +181,7 @@ SingleInputDateTimeRangeField.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */

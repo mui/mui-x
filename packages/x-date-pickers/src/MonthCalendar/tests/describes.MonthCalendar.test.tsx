@@ -55,7 +55,7 @@ describe('<MonthCalendar /> - Describes', () => {
       const newValue = adapterToUse.addMonths(value, 1);
 
       userEvent.mousePress(
-        screen.getByRole('button', { name: adapterToUse.format(newValue, 'monthShort') }),
+        screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }),
       );
 
       return newValue;

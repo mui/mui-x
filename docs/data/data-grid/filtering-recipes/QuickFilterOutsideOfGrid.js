@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { Portal } from '@mui/base/Portal';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { DataGrid, GridToolbarQuickFilter, GridToolbar } from '@mui/x-data-grid';
@@ -8,10 +8,9 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 function MyCustomToolbar(props) {
   return (
     <React.Fragment>
-      {ReactDOM.createPortal(
-        <GridToolbarQuickFilter />,
-        document.getElementById('filter-panel'),
-      )}
+      <Portal container={() => document.getElementById('filter-panel')}>
+        <GridToolbarQuickFilter />
+      </Portal>
       <GridToolbar {...props} />
     </React.Fragment>
   );
