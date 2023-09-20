@@ -53,7 +53,7 @@ const GridMenuRoot = styled(Popper, {
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown' | 'children'> {
   open: boolean;
   target: HTMLElement | null;
-  onClickAway: ClickAwayListenerProps['onClickAway'];
+  onClose: (event?: Event) => void;
   position?: MenuPosition;
   onExited?: GrowProps['onExited'];
   children: React.ReactNode;
@@ -65,7 +65,7 @@ const transformOrigin = {
 };
 
 function GridMenu(props: GridMenuProps) {
-  const { open, target, onClickAway, children, position, className, onExited, ...other } = props;
+  const { open, target, onClose, children, position, className, onExited, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
@@ -86,6 +86,13 @@ function GridMenu(props: GridMenuProps) {
     }
   };
 
+  const handleClickAway: ClickAwayListenerProps['onClickAway'] = (event) => {
+    if (event.target && (target === event.target || target?.contains(event.target as Node))) {
+      return;
+    }
+    onClose(event);
+  };
+
   return (
     <GridMenuRoot
       as={rootProps.slots.basePopper}
@@ -99,7 +106,7 @@ function GridMenu(props: GridMenuProps) {
       {...rootProps.slotProps?.basePopper}
     >
       {({ TransitionProps, placement }) => (
-        <ClickAwayListener onClickAway={onClickAway} mouseEvent="onMouseDown">
+        <ClickAwayListener onClickAway={handleClickAway} mouseEvent="onMouseDown">
           <Grow
             {...TransitionProps}
             style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
@@ -119,7 +126,7 @@ GridMenu.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
-  onClickAway: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   onExited: PropTypes.func,
   /**
    * If `true`, the component is shown.

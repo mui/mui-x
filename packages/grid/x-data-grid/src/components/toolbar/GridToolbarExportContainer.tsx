@@ -37,17 +37,6 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
       }
     };
 
-    const handleMenuClickAway: GridMenuProps['onClickAway'] = (event) => {
-      if (
-        buttonRef.current === event.target ||
-        // if user clicked on the icon
-        buttonRef.current?.contains(event.target as Element)
-      ) {
-        return;
-      }
-      setOpen(false);
-    };
-
     if (children == null) {
       return null;
     }
@@ -72,7 +61,7 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
         <GridMenu
           open={open}
           target={buttonRef.current}
-          onClickAway={handleMenuClickAway}
+          onClose={handleMenuClose}
           position="bottom-start"
         >
           <MenuList

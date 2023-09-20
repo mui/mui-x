@@ -60,14 +60,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
       setOpen((prevOpen) => !prevOpen);
       onClick?.(event);
     };
-    const handleDensitySelectorClickAway: GridMenuProps['onClickAway'] = (event) => {
-      if (
-        buttonRef.current === event.target ||
-        // if user clicked on the icon
-        buttonRef.current?.contains(event.target as Element)
-      ) {
-        return;
-      }
+    const handleDensitySelectorClose = () => {
       setOpen(false);
     };
     const handleDensityUpdate = (newDensity: GridDensity) => {
@@ -120,7 +113,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
         <GridMenu
           open={open}
           target={buttonRef.current}
-          onClickAway={handleDensitySelectorClickAway}
+          onClose={handleDensitySelectorClose}
           position="bottom-start"
         >
           <MenuList
