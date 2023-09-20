@@ -4,7 +4,7 @@ import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridMenu, GridMenuProps } from '../menu/GridMenu';
+import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../constants/gridClasses';
 
