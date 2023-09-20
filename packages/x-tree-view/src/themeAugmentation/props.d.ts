@@ -3,7 +3,7 @@ import { TreeViewProps } from '../TreeView';
 
 export interface PickersComponentsPropsList {
   MuiTreeItem: TreeItemProps;
-  MuiTreeView: TreeViewProps;
+  MuiTreeView: TreeViewProps<any>;
 }
 
 declare module '@mui/material/styles' {
