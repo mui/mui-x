@@ -394,6 +394,7 @@
   { "name": "GridPrintExportMenuItem", "kind": "Function" },
   { "name": "GridPrintExportMenuItemProps", "kind": "TypeAlias" },
   { "name": "GridPrintExportOptions", "kind": "Interface" },
+  { "name": "GridPrintGetRowsToExportParams", "kind": "Interface" },
   { "name": "GridPrivateApiPro", "kind": "Interface" },
   { "name": "GridProIconSlotsComponent", "kind": "Interface" },
   { "name": "GridProSlotsComponent", "kind": "Interface" },

@@ -307,16 +307,16 @@ const pages: MuiPage[] = [
         subheader: 'Localization',
         children: [
           {
+            pathname: '/x/react-date-pickers/localization',
+            title: 'Translated components',
+          },
+          {
             pathname: '/x/react-date-pickers/adapters-locale',
-            title: 'Date localization',
+            title: 'Date format and localization',
           },
           {
             pathname: '/x/react-date-pickers/timezone',
             title: 'UTC and timezone',
-          },
-          {
-            pathname: '/x/react-date-pickers/localization',
-            title: 'Component localization',
           },
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],
@@ -396,9 +396,10 @@ const pages: MuiPage[] = [
         title: 'API Reference',
         children: [...chartsComponentApi],
       },
-      { pathname: '/x/react-charts/heat-map', title: 'Heat map 🚧' },
       { pathname: '/x/react-charts/funnel', title: 'Funnel 🚧' },
       { pathname: '/x/react-charts/gantt', title: 'Gantt 🚧' },
+      { pathname: '/x/react-charts/gauge', title: 'Gauge 🚧' },
+      { pathname: '/x/react-charts/heat-map', title: 'Heat map 🚧' },
       { pathname: '/x/react-charts/radar', title: 'Radar 🚧' },
       { pathname: '/x/react-charts/sankey', title: 'Sankey 🚧' },
       { pathname: '/x/react-charts/tree-map', title: 'Tree map 🚧' },
