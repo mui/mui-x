@@ -66,7 +66,9 @@ To capture changes in the width of a column there are two callbacks that are cal
 - Double-clicking a column header separator on the grid,
 - Calling the `apiRef.current.autosizeColumns(options)` API method.
 
-You can pass options directly to the API method when you call it. If you need to configure autosize for the other two methods, you can provide the options in the `autosizeOptions` prop. Note that for the separator double-click method, the clicked column will be passed to the `.columns` option, overriding the value of if it exists in `autosizeOptions`. In all cases, the `.minWidth` and `.maxWidth` options of columns will always be respected.
+You can pass options directly to the API method when you call it. If you need to configure autosize for the other two methods, you can provide the options in the `autosizeOptions` prop.
+Note that for the separator double-click method, the clicked column will be passed to the `.columns` option, overriding the value of if it exists in `autosizeOptions`.
+In all cases, the `.minWidth` and `.maxWidth` options of columns will always be respected.
 
 ```tsx
 <DataGridPro
