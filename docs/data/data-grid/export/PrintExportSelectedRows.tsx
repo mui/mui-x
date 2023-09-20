@@ -5,18 +5,20 @@ import {
   GridToolbar,
   GridPrintGetRowsToExportParams,
   gridFilteredSortedRowIdsSelector,
-  GridRowId
+  GridRowId,
 } from '@mui/x-data-grid';
 
-const getSelectedRowsToExport = ({ apiRef }: GridPrintGetRowsToExportParams): GridRowId[] => {
-  const selectedRows = Array.from(apiRef.current.getSelectedRows().keys());
-  
-  if (selectedRows.length > 0) {
-    return selectedRows;
+const getSelectedRowsToExport = ({
+  apiRef,
+}: GridPrintGetRowsToExportParams): GridRowId[] => {
+  const selectedRowIds = Array.from(apiRef.current.getSelectedRows().keys());
+
+  if (selectedRowIds.length > 0) {
+    return selectedRowIds;
   }
-  
+
   return gridFilteredSortedRowIdsSelector(apiRef);
-}
+};
 
 export default function PrintExportSelectedRows() {
   const { data, loading } = useDemoData({
@@ -32,7 +34,9 @@ export default function PrintExportSelectedRows() {
         checkboxSelection
         loading={loading}
         slots={{ toolbar: GridToolbar }}
-        slotProps={{ toolbar: { printOptions: { getRowsToExport: getSelectedRowsToExport } } }}
+        slotProps={{
+          toolbar: { printOptions: { getRowsToExport: getSelectedRowsToExport } },
+        }}
       />
     </div>
   );

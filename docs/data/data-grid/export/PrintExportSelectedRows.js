@@ -7,10 +7,10 @@ import {
 } from '@mui/x-data-grid';
 
 const getSelectedRowsToExport = ({ apiRef }) => {
-  const selectedRows = Array.from(apiRef.current.getSelectedRows().keys());
+  const selectedRowIds = Array.from(apiRef.current.getSelectedRows().keys());
 
-  if (selectedRows.length > 0) {
-    return selectedRows;
+  if (selectedRowIds.length > 0) {
+    return selectedRowIds;
   }
 
   return gridFilteredSortedRowIdsSelector(apiRef);
