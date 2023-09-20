@@ -101,8 +101,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
           borderBottom: 0,
           width: 'auto',
           [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-            // subtract time range position controls height with it's border
-            maxHeight: VIEW_HEIGHT - 33,
+            maxHeight: VIEW_HEIGHT,
           },
           ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
         },
