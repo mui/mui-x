@@ -1,12 +1,10 @@
 import * as React from 'react';
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Rating,
-  Stack,
-  TextField,
-} from '@mui/material';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Rating from '@mui/material/Rating';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import { useGridApiRef } from '@mui/x-data-grid';
 import {
   DataGridPro,
@@ -80,14 +78,12 @@ export default function ColumnAutosizing() {
         alignItems="center"
         sx={{ marginBottom: '1em' }}
       >
-        <div>
-          <Button
-            variant="outlined"
-            onClick={() => apiRef.current.autosizeColumns(autosizeOptions)}
-          >
-            Autosize columns
-          </Button>
-        </div>
+        <Button
+          variant="outlined"
+          onClick={() => apiRef.current.autosizeColumns(autosizeOptions)}
+        >
+          Autosize columns
+        </Button>
         <FormControlLabel
           control={
             <Checkbox
@@ -107,6 +103,7 @@ export default function ColumnAutosizing() {
           label="Include outliers"
         />
         <TextField
+          size="small"
           label="Outliers factor"
           value={outliersFactor}
           onChange={(ev) => setOutliersFactor(ev.target.value)}
