@@ -88,12 +88,19 @@ There are a few ways to include or hide other columns.
 
 ## Exported rows
 
-:::warning
-The print export always prints all rows regardless of whether or not some rows are selected. To export only selected rows via print see the demo below.
-:::
+### Print export
+
+The print export always prints all rows regardless of whether or not some rows are selected.
+To export only selected rows via print you can use the `getRowsToExport` function.
+
+{{"demo": "PrintExportSelectedRows.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### CSV and Excel export
 
 By default, the data grid exports the selected rows if there are any.
 If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
+
+### Customizing the rows to export
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
@@ -111,10 +118,6 @@ The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) t
 When using [Row grouping](/x/react-data-grid/row-grouping/), it can be useful to remove the groups from the CSV export.
 
 {{"demo": "CsvGetRowsToExportRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
-
-To export only selected rows via print you can use the `getRowsToExport` function.
-
-{{"demo": "PrintExportSelectedRows.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## CSV export
 
