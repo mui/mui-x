@@ -1,7 +1,7 @@
 import { GridColDef } from '@mui/x-data-grid';
 
 export const DEFAULT_GRID_AUTOSIZE_OPTIONS = {
-  includeHeaders: false,
+  includeHeaders: true,
   includeOutliers: false,
   outliersFactor: 1.5,
   expand: false,
