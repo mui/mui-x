@@ -4,13 +4,13 @@ import {
   DataGrid,
   GridToolbar,
   gridFilteredSortedRowIdsSelector,
+  selectedGridRowsSelector,
 } from '@mui/x-data-grid';
 
 const getSelectedRowsToExport = ({ apiRef }) => {
-  const selectedRowIds = Array.from(apiRef.current.getSelectedRows().keys());
-
-  if (selectedRowIds.length > 0) {
-    return selectedRowIds;
+  const selectedRowIds = selectedGridRowsSelector(apiRef);
+  if (selectedRowIds.size > 0) {
+    return Array.from(selectedRowIds.keys());
   }
 
   return gridFilteredSortedRowIdsSelector(apiRef);
