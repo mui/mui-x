@@ -35,6 +35,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     clearButton,
     tabIndex,
     label: labelProp,
+    InputLabelProps,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
