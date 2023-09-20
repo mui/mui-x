@@ -26,7 +26,7 @@ describe('<AdapterDateFns />', () => {
       const adapter = new AdapterDateFns({ locale: enUS });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
-      // TODO@v7: can be removed after v7 release
+      // TODO v7: can be removed after v7 release
       it('getWeekdays: should start on Sunday', () => {
         const result = adapter.getWeekdays();
         expect(result).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);

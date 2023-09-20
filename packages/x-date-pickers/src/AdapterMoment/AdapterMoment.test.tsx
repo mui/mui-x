@@ -43,7 +43,7 @@ describe('<AdapterMoment />', () => {
       const adapter = new AdapterMoment({ locale: 'en' });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
-      // TODO@v7: can be removed after v7 release
+      // TODO v7: can be removed after v7 release
       it('getWeekdays: should start on Monday', () => {
         const result = adapter.getWeekdays();
         expect(result).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
