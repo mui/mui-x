@@ -2,9 +2,6 @@ import * as React from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const experimentalFeatures = { ariaV7: true };
-const slots = { toolbar: GridToolbar };
-
 export default function GridAriaV7() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
@@ -12,20 +9,21 @@ export default function GridAriaV7() {
     maxColumns: 6,
   });
 
-  const initialState = React.useMemo(() => {
-    return {
+  const initialState = React.useMemo(
+    () => ({
       ...data.initialState,
       pagination: { paginationModel: { pageSize: 10 } },
-    };
-  }, [data.initialState]);
+    }),
+    [data.initialState],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        slots={slots}
+        slots={{ toolbar: GridToolbar }}
         initialState={initialState}
-        experimentalFeatures={experimentalFeatures}
+        experimentalFeatures={{ ariaV7: true }}
       />
     </div>
   );
