@@ -450,7 +450,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} />);
       await apiRef.current.autosizeColumns();
       await microtasks();
-      expect(getWidths()).to.deep.equal([50, 65]);
+      expect(getWidths()).to.deep.equal([155, 177]);
     });
 
     it('should work through double-clicking the separator', async () => {
@@ -460,20 +460,20 @@ describe('<DataGridPro /> - Columns', () => {
       )[1];
       fireEvent.doubleClick(separator);
       await microtasks();
-      expect(getWidths()).to.deep.equal([100, 65]);
+      expect(getWidths()).to.deep.equal([100, 177]);
     });
 
     it('should work on mount', async () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
-      expect(getWidths()).to.deep.equal([50, 65]);
+      expect(getWidths()).to.deep.equal([155, 177]);
     });
 
     describe('options', () => {
       const autosize = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
         render(<Test rows={rows} columns={columns} />);
-        await apiRef.current.autosizeColumns(options);
+        await apiRef.current.autosizeColumns({ includeHeaders: false, ...options });
         await microtasks();
         expect(getWidths()).to.deep.equal(widths);
       };
