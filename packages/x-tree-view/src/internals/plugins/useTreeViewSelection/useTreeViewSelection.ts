@@ -200,11 +200,11 @@ useTreeViewSelection.models = {
   selected: { controlledProp: 'selected', defaultProp: 'defaultSelected' },
 };
 
-const defaultDefaultSelected: string[] = [];
+const DEFAULT_SELECTED: string[] = [];
 
 useTreeViewSelection.getDefaultizedParams = (params) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,
-  defaultSelected: params.defaultSelected ?? (params.multiSelect ? defaultDefaultSelected : null),
+  defaultSelected: params.defaultSelected ?? (params.multiSelect ? DEFAULT_SELECTED : null),
 });

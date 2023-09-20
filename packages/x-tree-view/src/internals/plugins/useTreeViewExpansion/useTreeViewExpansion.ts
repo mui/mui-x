@@ -79,9 +79,9 @@ useTreeViewExpansion.models = {
   },
 };
 
-const defaultDefaultExpanded: string[] = [];
+const DEFAULT_EXPANDED: string[] = [];
 
 useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
-  defaultExpanded: params.defaultExpanded ?? defaultDefaultExpanded,
+  defaultExpanded: params.defaultExpanded ?? DEFAULT_EXPANDED,
 });

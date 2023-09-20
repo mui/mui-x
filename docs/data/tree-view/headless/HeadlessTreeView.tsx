@@ -37,7 +37,7 @@ interface TreeViewLogExpandedDefaultizedParameters {
 }
 
 type TreeViewLogExpandedSignature = TreeViewPluginSignature<
-  // The parameters of this plugin as they are passed to `usedTreeView`
+  // The parameters of this plugin as they are passed to `useTreeView`
   TreeViewLogExpandedParameters,
   // The parameters of this plugin as they are passed to the plugin after calling `plugin.getDefaultizedParams`
   TreeViewLogExpandedDefaultizedParameters,

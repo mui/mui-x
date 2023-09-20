@@ -9,6 +9,6 @@ packageName: '@mui/x-tree-view'
 
 <p class="description">Experiment with headless tree view</p>
 
-Open the console and interact with the tree view to see the expanded items being logged:
+Interact with the tree view to see the expanded items being logged:
 
 {{"demo": "HeadlessTreeView.js"}}

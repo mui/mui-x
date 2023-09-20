@@ -10,7 +10,7 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
 };
 
 /**
- * Plugin responsible for the registering of the nodes defined as JSX children of the TreeView.
+ * Plugin responsible for the registration of the nodes defined as JSX children of the TreeView.
  * When we will have both a SimpleTreeView using JSX children and a TreeView using a data prop,
  * this plugin will only be used by SimpleTreeView.
  */
