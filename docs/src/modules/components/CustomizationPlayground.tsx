@@ -183,7 +183,7 @@ interface Props extends ToggleButtonProps {
 
 const StyledToggleButton = styled(ToggleButton, {
   shouldForwardProp: (prop) => prop !== 'selectedColor',
-})(({ theme, selectedColor = 'deepPurple' }: Props & { theme: Theme }) => ({
+})(({ theme, selectedColor = 'blue' }: Props & { theme: Theme }) => ({
   height: theme.spacing(3),
   minWidth: theme.spacing(3),
   color: theme.palette.primary.contrastText,

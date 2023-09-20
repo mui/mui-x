@@ -1,6 +1,6 @@
 import * as React from 'react';
 import pick from 'lodash/pick';
-import { blue, grey, deepPurple, amber, pink } from '@mui/material/colors';
+import { blue, pink } from '@mui/material/colors';
 import { BoxProps } from '@mui/material/Box';
 import { createTheme, ThemeProvider, styled, useTheme, Theme } from '@mui/material/styles';
 
@@ -32,7 +32,7 @@ export const customizationLabels: CustomizationLabelType = {
   sxProp: 'sx prop',
 };
 
-export const DEFAULT_COLORS = { deepPurple, amber, pink, blue, grey };
+export const DEFAULT_COLORS = { pink, blue };
 export type ColorKey = keyof typeof DEFAULT_COLORS;
 
 export type StyleTokensType = {
@@ -41,7 +41,7 @@ export type StyleTokensType = {
   borderWidth: number;
 };
 const styleTokens: StyleTokensType = {
-  color: 'deepPurple',
+  color: 'blue',
   borderRadius: 2,
   borderWidth: 1,
 };
