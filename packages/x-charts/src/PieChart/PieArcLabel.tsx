@@ -54,7 +54,7 @@ const PieArcLabelRoot = styled('text', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
-  fill: theme.palette.text.primary,
+  fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',
 }));
 
