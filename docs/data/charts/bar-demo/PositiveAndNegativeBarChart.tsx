@@ -34,8 +34,6 @@ export default function PositiveAndNegativeBarChart() {
         {
           data: xLabels,
           scaleType: 'band',
-          categoryGapRatio: 0.2,
-          barGapRatio: 0.1,
         } as Omit<AxisConfig, 'id'>,
       ]}
       yAxis={[{ max: 10000 }]}

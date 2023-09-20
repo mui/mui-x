@@ -307,6 +307,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     readOnly,
     disabled,
     timezone,
+    gridLabelId,
   };
 
   const prevOpenViewRef = React.useRef(view);
@@ -384,7 +385,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
-              gridLabelId={gridLabelId}
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}

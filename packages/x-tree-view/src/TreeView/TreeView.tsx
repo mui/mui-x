@@ -63,11 +63,11 @@ const defaultDefaultSelected: string[] = [];
  *
  * Demos:
  *
- * - [Tree View](https://mui.com/material-ui/react-tree-view/)
+ * - [Tree View](https://mui.com/x/react-tree-view/)
  *
  * API:
  *
- * - [TreeView API](https://mui.com/material-ui/api/tree-view/)
+ * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
  */
 const TreeView = React.forwardRef(function TreeView(
   inProps: TreeViewProps,
