@@ -210,7 +210,7 @@ const useDragRangeEvents = <TDate>({
     setRangeDragDay(null);
     setIsDragging(false);
 
-    const target = resolveElementFromTouch(event, true);
+    const target = resolveElementFromTouch(event, false);
     if (!target) {
       return;
     }
