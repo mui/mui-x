@@ -130,7 +130,8 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     const measurementSpanStyle: Record<string, any> = { ...SPAN_STYLE, ...style };
 
     Object.keys(measurementSpanStyle).map((styleKey) => {
-      (measurementSpan!.style as Record<string, any>)[styleKey] = measurementSpanStyle[styleKey];
+      (measurementSpan!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
+        autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
       return styleKey;
     });
 

@@ -13,8 +13,7 @@ import {
 } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { LegendParams } from '../models/seriesType/config';
-import { getStringSize } from '../internals/domUtils';
-import { Text } from '../internals/components/Text';
+import { Text, getWordsByLines } from '../internals/components/Text';
 import { CardinalDirections } from '../models/layout';
 
 export interface ChartsLegendSlotsComponent {
@@ -162,11 +161,11 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   const padding = React.useMemo(() => getStandardizedPadding(paddingProps), [paddingProps]);
 
   const getItemSpace = React.useCallback(
-    (label: string) => {
-      const size = getStringSize(label);
+    (label: string, style?: React.CSSProperties) => {
+      const linesSize = getWordsByLines({ style, needsComputation: true, text: label });
       const innerSize = {
-        innerWidth: itemMarkWidth + markGap + size.width,
-        innerHeight: Math.max(itemMarkHeight, size.height),
+        innerWidth: itemMarkWidth + markGap + Math.max(...linesSize.map((size) => size.width)),
+        innerHeight: Math.max(itemMarkHeight, linesSize.length * linesSize[0].height),
       };
 
       return {
@@ -188,46 +187,68 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     let x = 0;
     let y = 0;
 
-    // max values used to align legend latter.
-    let maxWidth = 0;
-    let maxHeight = 0;
+    // total values used to align legend latter.
+    let totalWidthUsed = 0;
+    let totalHeightUsed = 0;
+    let rowIndex = 0;
+    const rowMaxHeight = [0];
 
-    const seriesWithRawPosition = seriesToDisplay.map(({ label, ...other }) => {
-      const itemSpace = getItemSpace(label);
-      const rep = {
-        ...other,
-        label,
-        positionX: x,
-        positionY: y,
-      };
+    const seriesWithRawPosition = seriesToDisplay
+      .map(({ label, ...other }) => {
+        const itemSpace = getItemSpace(label, {  });
+        const rep = {
+          ...other,
+          label,
+          positionX: x,
+          positionY: y,
+          innerHeight: itemSpace.innerHeight,
+          innerWidth: itemSpace.innerWidth,
+          rowIndex,
+        };
 
-      if (direction === 'row') {
-        if (x + itemSpace.innerWidth > availableWidth) {
-          x = 0;
+        if (direction === 'row') {
+          if (x + itemSpace.innerWidth > availableWidth) {
+            x = 0;
+            y += itemSpace.outerHeight;
+            rowIndex += 1;
+            if (rowMaxHeight.length <= rowIndex) {
+              rowMaxHeight.push(0);
+            }
+            rep.positionX = x;
+            rep.positionY = y;
+            rep.rowIndex = rowIndex;
+          }
+          totalWidthUsed = Math.max(totalWidthUsed, x + itemSpace.innerWidth);
+          totalHeightUsed = Math.max(totalHeightUsed, y + itemSpace.innerHeight);
+          rowMaxHeight[rowIndex] = Math.max(rowMaxHeight[rowIndex], itemSpace.innerHeight);
+
+          x += itemSpace.outerWidth;
+        }
+
+        if (direction === 'column') {
+          if (y + itemSpace.innerHeight > availableHeight) {
+            x = totalWidthUsed + itemGap;
+            y = 0;
+            rowIndex = 0;
+            rep.positionX = x;
+            rep.positionY = y;
+            rep.rowIndex = rowIndex;
+          }
+          rowIndex += 1;
+          if (rowMaxHeight.length <= rowIndex) {
+            rowMaxHeight.push(0);
+          }
+          totalWidthUsed = Math.max(totalWidthUsed, x + itemSpace.innerWidth);
+          totalHeightUsed = Math.max(totalHeightUsed, y + itemSpace.innerHeight);
           y += itemSpace.outerHeight;
-          rep.positionX = x;
-          rep.positionY = y;
-        }
-        maxWidth = Math.max(maxWidth, x + itemSpace.innerWidth);
-        maxHeight = Math.max(maxHeight, y + itemSpace.innerHeight);
-        x += itemSpace.outerWidth;
-      }
-
-      if (direction === 'column') {
-        if (y + itemSpace.innerHeight > availableHeight) {
-          x = maxWidth + itemGap;
-          y = 0;
-          rep.positionX = x;
-          rep.positionY = y;
         }
 
-        maxWidth = Math.max(maxWidth, x + itemSpace.innerWidth);
-        maxHeight = Math.max(maxHeight, y + itemSpace.innerHeight);
-        y += itemSpace.outerHeight;
-      }
-
-      return rep;
-    });
+        return rep;
+      })
+      .map((item) => ({
+        ...item,
+        positionY: item.positionY + (rowMaxHeight[item.rowIndex] - itemMarkHeight) / 2,
+      }));
 
     // Move the legend accroding to padding and position
     let gapX = 0;
@@ -237,10 +258,10 @@ function DefaultChartsLegend(props: LegendRendererProps) {
         gapX = padding.left;
         break;
       case 'right':
-        gapX = totalWidth - padding.right - maxWidth;
+        gapX = totalWidth - padding.right - totalWidthUsed;
         break;
       default:
-        gapX = (totalWidth - maxWidth) / 2;
+        gapX = (totalWidth - totalWidthUsed) / 2;
         break;
     }
     switch (position.vertical) {
@@ -248,10 +269,10 @@ function DefaultChartsLegend(props: LegendRendererProps) {
         gapY = padding.top;
         break;
       case 'bottom':
-        gapY = totalHeight - padding.bottom - maxHeight;
+        gapY = totalHeight - padding.bottom - totalHeightUsed;
         break;
       default:
-        gapY = (totalHeight - maxHeight) / 2;
+        gapY = (totalHeight - totalHeightUsed) / 2;
         break;
     }
     return seriesWithRawPosition.map((item) => ({
@@ -268,6 +289,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     availableWidth,
     availableHeight,
     itemGap,
+    itemMarkHeight,
     padding.left,
     padding.right,
     padding.top,
@@ -283,10 +305,11 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   return (
     <NoSsr>
       <ChartsLegendRoot className={classes.root}>
-        {seriesWithPosition.map(({ id, label, color, positionX, positionY }) => (
+        {seriesWithPosition.map(({ id, label, color, positionX, positionY, innerHeight }) => (
           <g key={id} className={classes.series} transform={`translate(${positionX} ${positionY})`}>
             <rect
               className={classes.mark}
+              y={(innerHeight - itemMarkHeight) / 2}
               width={itemMarkWidth}
               height={itemMarkHeight}
               fill={color}

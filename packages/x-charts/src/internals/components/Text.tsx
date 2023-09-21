@@ -27,27 +27,29 @@ export interface TextProps
   ownerState?: any;
 }
 
-function getWordsByLines({ style, needsComputation, text }: GetWordsByLinesParams) {
+export function getWordsByLines({ style, needsComputation, text }: GetWordsByLinesParams) {
   return text.split('\n').map((subText) => ({
     text: subText,
-    width: needsComputation ? getStringSize(subText, style) : null,
+    ...getStringSize(needsComputation ? subText : '', style),
   }));
 }
 
-function Text(props: TextProps) {
+export function Text(props: TextProps) {
   const {
     x,
     y,
     textAnchor = 'start',
     dominantBaseline = 'central',
-    lineHeight = 1,
     style,
     text,
     ownerState,
     ...textProps
   } = props;
 
-  const wordsByLines = React.useMemo(() => getWordsByLines({ style, text }), [style, text]);
+  const wordsByLines = React.useMemo(
+    () => getWordsByLines({ style, needsComputation: text.includes('\n'), text }),
+    [style, text],
+  );
 
   let startDy: number;
   switch (dominantBaseline) {
@@ -55,10 +57,10 @@ function Text(props: TextProps) {
       startDy = 0;
       break;
     case 'central':
-      startDy = ((wordsByLines.length - 1) / 2) * -lineHeight;
+      startDy = ((wordsByLines.length - 1) / 2) * -wordsByLines[0].height;
       break;
     default:
-      startDy = (wordsByLines.length - 1) * -lineHeight;
+      startDy = (wordsByLines.length - 1) * -wordsByLines[0].height;
       break;
   }
 
@@ -84,12 +86,10 @@ function Text(props: TextProps) {
       style={style}
     >
       {wordsByLines.map((line, index) => (
-        <tspan x={x} dy={`${index === 0 ? startDy : lineHeight}em`} key={index}>
+        <tspan x={x} dy={`${index === 0 ? startDy : wordsByLines[0].height}px`} key={index}>
           {line.text}
         </tspan>
       ))}
     </text>
   );
 }
-
-export { Text };

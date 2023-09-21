@@ -64,7 +64,7 @@ export default function LegendCustomizationNoSnap() {
           series={[
             {
               type: 'scatter',
-              label: 'variable\nnumber 1',
+              label: 'variable A\ntest',
               data: data.slice(0, 10),
             },
             {
@@ -84,7 +84,7 @@ export default function LegendCustomizationNoSnap() {
             },
             {
               type: 'scatter',
-              label: 'variable E',
+              label: 'variable\nnumber 1',
               data: data.slice(40),
             },
           ]}
