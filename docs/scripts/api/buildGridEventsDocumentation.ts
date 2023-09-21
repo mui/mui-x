@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import path from 'path';
-import { renderMarkdown } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/markdown';
 import {
   DocumentedInterfaces,
   getSymbolDescription,

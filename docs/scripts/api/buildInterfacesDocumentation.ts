@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import * as prettier from 'prettier';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderMarkdown } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/markdown';
 import {
   escapeCell,
   getSymbolDescription,
@@ -348,7 +348,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
-    import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
+    import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
     import * as pageProps from './${slug}.md?@mui/markdown';
 
     export default function Page() {

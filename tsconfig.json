@@ -26,6 +26,20 @@
       "@mui/x-tree-view/*": ["./packages/x-tree-view/src/*"],
       "@mui/x-license-pro": ["./packages/x-license-pro/src"],
       "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"],
+      "@mui/markdown": ["./node_modules/@mui/monorepo/packages/markdown"],
+      "@mui/markdown/*": ["./node_modules/@mui/monorepo/packages/markdown/*"],
+      "@mui-internal/api-docs-builder": ["./node_modules/@mui/monorepo/packages/api-docs-builder"],
+      "@mui-internal/api-docs-builder/*": [
+        "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
+      ],
+      "@mui-internal/docs-utilities": ["./node_modules/@mui/monorepo/packages/docs-utilities"],
+      "@mui-internal/docs-utilities/*": ["./node_modules/@mui/monorepo/packages/docs-utilities/*"],
+      "typescript-to-proptypes": [
+        "./node_modules/@mui/monorepo/packages/typescript-to-proptypes/src"
+      ],
+      "typescript-to-proptypes/*": [
+        "./node_modules/@mui/monorepo/packages/typescript-to-proptypes/src/*"
+      ],
       "test/*": ["./test/*"],
       "docs/*": ["./node_modules/@mui/monorepo/docs"],
       "docsx/*": ["./docs/*"]

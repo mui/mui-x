@@ -2,11 +2,8 @@ import * as yargs from 'yargs';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
-import {
-  getPropTypesFromFile,
-  injectPropTypesInFile,
-} from '@mui/monorepo/packages/typescript-to-proptypes';
-import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/monorepo/packages/docs-utilities';
+import { getPropTypesFromFile, injectPropTypesInFile } from 'typescript-to-proptypes';
+import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-utilities';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
 const prettierConfig = prettier.resolveConfig.sync(process.cwd(), {

@@ -19,7 +19,7 @@ import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
-} from 'packages/x-date-pickers/src/tests/describeGregorianAdapter';
+} from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';

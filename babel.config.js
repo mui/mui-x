@@ -16,13 +16,18 @@ const defaultAlias = {
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
-  '@mui/markdown': '@mui/monorepo/packages/markdown',
-  '@mui-internal/api-docs-builder': '@mui/monorepo/packages/api-docs-builder',
-  '@mui-internal/docs-utilities': '@mui/monorepo/packages/docs-utilities',
-  'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
+  '@mui/markdown': resolveAliasPath('./node_modules/@mui/monorepo/packages/markdown'),
+  '@mui-internal/api-docs-builder': resolveAliasPath(
+    './node_modules/@mui/monorepo/packages/api-docs-builder',
+  ),
+  '@mui-internal/docs-utilities': resolveAliasPath(
+    './node_modules/@mui/monorepo/packages/docs-utilities',
+  ),
+  'typescript-to-proptypes': resolveAliasPath(
+    './node_modules/@mui/monorepo/packages/typescript-to-proptypes',
+  ),
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
   test: resolveAliasPath('./test'),
-  packages: resolveAliasPath('./packages'),
 };
 
 const productionPlugins = [

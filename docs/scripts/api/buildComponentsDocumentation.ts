@@ -1,31 +1,28 @@
-import { getPropTypesFromFile } from '@mui/monorepo/packages/typescript-to-proptypes';
-import {
-  UnionType,
-  InterfaceType,
-} from '@mui/monorepo/packages/typescript-to-proptypes/src/models';
+import { getPropTypesFromFile } from 'typescript-to-proptypes';
+import { UnionType, InterfaceType } from 'typescript-to-proptypes/models';
 import * as fse from 'fs-extra';
 import fs from 'fs';
 import path from 'path';
-import parseStyles from '@mui/monorepo/packages/api-docs-builder/utils/parseStyles';
+import parseStyles from '@mui-internal/api-docs-builder/utils/parseStyles';
 import fromPairs from 'lodash/fromPairs';
 import createDescribeableProp, {
   DescribeablePropDescriptor,
-} from '@mui/monorepo/packages/api-docs-builder/utils/createDescribeableProp';
-import generatePropDescription from '@mui/monorepo/packages/api-docs-builder/utils/generatePropDescription';
+} from '@mui-internal/api-docs-builder/utils/createDescribeableProp';
+import generatePropDescription from '@mui-internal/api-docs-builder/utils/generatePropDescription';
 import { parse as parseDoctrine } from 'doctrine';
 import generatePropTypeDescription, {
   getChained,
-} from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
-import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
+} from '@mui-internal/api-docs-builder/utils/generatePropTypeDescription';
+import parseTest from '@mui-internal/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
 import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
-import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
+import findPagesMarkdownNew from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse } from 'react-docgen';
-import { renderMarkdown, getHeaders, getTitle } from '@mui/monorepo/packages/markdown';
-import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
-import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
-import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-builder/ApiBuilders/ComponentApiBuilder';
+import { renderMarkdown, getHeaders, getTitle } from '@mui/markdown';
+import { getLineFeed } from '@mui-internal/docs-utilities';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import type { ReactApi as CoreReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/ComponentApiBuilder';
 import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
 import { XTypeScriptProject, XTypeScriptProjects } from '../createXTypeScriptProjects';
 import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';

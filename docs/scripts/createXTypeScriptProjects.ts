@@ -3,7 +3,7 @@ import {
   createTypeScriptProject,
   CreateTypeScriptProjectOptions,
   TypeScriptProject,
-} from '@mui/monorepo/packages/api-docs-builder/utils/createTypeScriptProject';
+} from '@mui-internal/api-docs-builder/utils/createTypeScriptProject';
 import { getComponentFilesInFolder } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../');
