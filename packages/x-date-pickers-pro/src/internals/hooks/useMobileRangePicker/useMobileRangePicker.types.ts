@@ -1,64 +1,46 @@
 import {
-  UsePickerParams,
-  BasePickerProps,
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
-  ExportedBaseToolbarProps,
   UsePickerViewsProps,
   UncapitalizeObjectKeys,
-  BaseNonStaticPickerProps,
-  UsePickerValueNonStaticProps,
-  UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
-import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
-import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
-import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
-import {
-  RangePickerFieldSlotsComponent,
-  RangePickerFieldSlotsComponentsProps,
-} from '../useEnrichedRangePickerFieldProps';
 import { ExportedDateTimeRangePickerTabsProps } from '../../../DateTimeRangePicker/DateTimeRangePickerTabs';
+import {
+  RangeOnlyPickerProps,
+  RangePickerAdditionalViewProps,
+  UseRangePickerParams,
+  UseRangePickerProps,
+  UseRangePickerSlotsComponent,
+  UseRangePickerSlotsComponentsProps,
+} from '../models';
 
 export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersModalDialogSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponent {}
+  extends UseRangePickerSlotsComponent<TDate, TView>,
+    PickersModalDialogSlotsComponent {}
 
 export interface UseMobileRangePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends PickersModalDialogSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponentsProps<TDate> {
-  toolbar?: ExportedBaseToolbarProps;
+> extends UseRangePickerSlotsComponentsProps<TDate, TView>,
+    PickersModalDialogSlotsComponentsProps {
   tabs?: ExportedDateTimeRangePickerTabsProps;
 }
 
-export interface MobileRangeOnlyPickerProps<TDate>
-  extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null, RangeFieldSection>,
-    UsePickerViewsNonStaticProps,
-    BaseRangeNonStaticPickerProps,
-    UseRangePositionProps {}
+export interface MobileRangeOnlyPickerProps<TDate> extends RangeOnlyPickerProps<TDate> {}
 
 export interface UseMobileRangePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
-> extends MobileRangeOnlyPickerProps<TDate>,
-    BasePickerProps<
-      DateRange<TDate>,
-      TDate,
-      TView,
-      TError,
-      TExternalProps,
-      MobileRangePickerAdditionalViewProps
-    > {
+> extends UseRangePickerProps<
+    TDate,
+    TView,
+    TError,
+    TExternalProps,
+    MobileRangePickerAdditionalViewProps
+  > {
   /**
    * Overridable component slots.
    * @default {}
@@ -71,23 +53,15 @@ export interface UseMobileRangePickerProps<
   slotProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
-export interface MobileRangePickerAdditionalViewProps
-  extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+export interface MobileRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
 
 export interface UseMobileRangePickerParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
-> extends Pick<
-    UsePickerParams<
-      DateRange<TDate>,
-      TDate,
-      TView,
-      RangeFieldSection,
-      TExternalProps,
-      MobileRangePickerAdditionalViewProps
-    >,
-    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
-  > {
-  props: TExternalProps;
-}
+> extends UseRangePickerParams<
+    TDate,
+    TView,
+    TExternalProps,
+    MobileRangePickerAdditionalViewProps
+  > {}
