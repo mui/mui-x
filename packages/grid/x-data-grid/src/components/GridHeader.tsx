@@ -4,6 +4,10 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 export function GridHeader() {
   const rootProps = useGridRootProps();
 
+  if (rootProps.hideHeader) {
+    return null;
+  }
+
   return (
     <React.Fragment>
       <rootProps.slots.preferencesPanel {...rootProps.slotProps?.preferencesPanel} />

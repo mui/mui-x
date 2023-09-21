@@ -147,25 +147,28 @@ function GridBody(props: GridBodyProps) {
 
   return (
     <GridMainContainer ref={rootRef}>
-      <rootProps.slots.columnHeaders
-        ref={columnsContainerRef}
-        innerRef={columnHeadersRef}
-        visibleColumns={visibleColumns}
-        filterColumnLookup={filterColumnLookup}
-        sortColumnLookup={sortColumnLookup}
-        columnPositions={columnPositions}
-        columnHeaderTabIndexState={columnHeaderTabIndexState}
-        columnGroupHeaderTabIndexState={columnGroupHeaderTabIndexState}
-        columnHeaderFocus={columnHeaderFocus}
-        columnGroupHeaderFocus={columnGroupHeaderFocus}
-        densityFactor={densityFactor}
-        headerGroupingMaxDepth={headerGroupingMaxDepth}
-        columnMenuState={columnMenuState}
-        columnVisibility={columnVisibility}
-        columnGroupsHeaderStructure={columnGroupsHeaderStructure}
-        hasOtherElementInTabSequence={hasOtherElementInTabSequence}
-        {...ColumnHeadersProps}
-      />
+      {!rootProps.hideHeader && (
+        <rootProps.slots.columnHeaders
+          ref={columnsContainerRef}
+          innerRef={columnHeadersRef}
+          visibleColumns={visibleColumns}
+          filterColumnLookup={filterColumnLookup}
+          sortColumnLookup={sortColumnLookup}
+          columnPositions={columnPositions}
+          columnHeaderTabIndexState={columnHeaderTabIndexState}
+          columnGroupHeaderTabIndexState={columnGroupHeaderTabIndexState}
+          columnHeaderFocus={columnHeaderFocus}
+          columnGroupHeaderFocus={columnGroupHeaderFocus}
+          densityFactor={densityFactor}
+          headerGroupingMaxDepth={headerGroupingMaxDepth}
+          columnMenuState={columnMenuState}
+          columnVisibility={columnVisibility}
+          columnGroupsHeaderStructure={columnGroupsHeaderStructure}
+          hasOtherElementInTabSequence={hasOtherElementInTabSequence}
+          {...ColumnHeadersProps}
+        />
+      )}
+
       {hasDimensions && (
         <VirtualScrollerComponent
           // The content is only rendered after dimensions are computed because
