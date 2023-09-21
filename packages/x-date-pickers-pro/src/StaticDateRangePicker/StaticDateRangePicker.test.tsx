@@ -2,9 +2,10 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-import { describeConformance, screen } from '@mui/monorepo/test/utils';
+import { describeConformance, screen, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
 import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
+import { spy } from 'sinon';
 
 describe('<StaticDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -75,5 +76,61 @@ describe('<StaticDateRangePicker />', () => {
         '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
       ),
     ).to.have.text('1');
+  });
+
+  it('should be able to set same date twice as range', () => {
+    const onChangeHandler = spy();
+    render(
+      <StaticDateRangePicker
+        defaultValue={[
+          adapterToUse.date(new Date(2022, 0, 17)),
+          adapterToUse.date(new Date(2022, 0, 21)),
+        ]}
+        onChange={onChangeHandler}
+      />,
+    );
+
+    const startDay = screen.getAllByMuiTest('DateRangePickerDay')[16];
+    const { x, y } = startDay.getBoundingClientRect();
+    const touchPoint = { clientX: x + 10, clientY: y + 10 };
+
+    expect(onChangeHandler.callCount).to.equal(0);
+
+    // fire event twice to simulate selecting the day as start and end of range
+    fireTouchChangedEvent(startDay, 'touchstart', {
+      changedTouches: [touchPoint],
+    });
+    fireTouchChangedEvent(startDay, 'touchmove', {
+      changedTouches: [touchPoint],
+    });
+    fireTouchChangedEvent(startDay, 'touchend', {
+      changedTouches: [touchPoint],
+    });
+
+    fireTouchChangedEvent(startDay, 'touchstart', {
+      changedTouches: [touchPoint],
+    });
+    fireTouchChangedEvent(startDay, 'touchmove', {
+      changedTouches: [touchPoint],
+    });
+    fireTouchChangedEvent(startDay, 'touchend', {
+      changedTouches: [touchPoint],
+    });
+
+    expect(onChangeHandler.callCount).to.equal(2);
+
+    expect(onChangeHandler.firstCall.args[0]).to.equal([
+      adapterToUse.date(new Date(2022, 0, 17)),
+      adapterToUse.date(new Date(2022, 0, 21)),
+    ]);
+
+    expect(onChangeHandler.secondCall.args[0]).to.equal([
+      adapterToUse.date(new Date(2022, 0, 17)),
+      adapterToUse.date(new Date(2022, 0, 17)),
+    ]);
+
+    const toolbarButtons = screen.getAllByMuiTest('toolbar-button');
+    expect(toolbarButtons[0]).to.have.text('Jan 17');
+    expect(toolbarButtons[1]).to.have.text('Jan 17');
   });
 });

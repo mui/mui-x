@@ -12,6 +12,7 @@ interface UseDragRangeParams<TDate> {
   setIsDragging: (value: boolean) => void;
   isDragging: boolean;
   onDatePositionChange: (position: DateRangePosition) => void;
+  draggingDatePosition: DateRangePosition | null;
   onDrop: (newDate: TDate) => void;
   dateRange: DateRange<TDate>;
   timezone: PickersTimezone;
@@ -66,7 +67,10 @@ const resolveButtonElement = (element: Element | null): HTMLButtonElement | null
   return element;
 };
 
-const resolveElementFromTouch = (event: React.TouchEvent<HTMLButtonElement>) => {
+const resolveElementFromTouch = (
+  event: React.TouchEvent<HTMLButtonElement>,
+  ignoreTouchTarget?: boolean,
+) => {
   // don't parse multi-touch result
   if (event.changedTouches?.length === 1 && event.touches.length <= 1) {
     const element = document.elementFromPoint(
@@ -75,7 +79,11 @@ const resolveElementFromTouch = (event: React.TouchEvent<HTMLButtonElement>) => 
     );
     // `elementFromPoint` could have resolved preview div or wrapping div
     // might need to recursively find the nested button
-    return resolveButtonElement(element);
+    const buttonElement = resolveButtonElement(element);
+    if (ignoreTouchTarget && buttonElement === event.changedTouches[0].target) {
+      return null;
+    }
+    return buttonElement;
   }
   return null;
 };
@@ -90,6 +98,7 @@ const useDragRangeEvents = <TDate>({
   disableDragEditing,
   dateRange,
   timezone,
+  draggingDatePosition,
 }: UseDragRangeParams<TDate>): UseDragRangeEvents => {
   const emptyDragImgRef = React.useRef<HTMLImageElement | null>(null);
   React.useEffect(() => {
@@ -146,17 +155,6 @@ const useDragRangeEvents = <TDate>({
 
     setRangeDragDay(newDate);
     setIsDragging(true);
-
-    // return early if it is the initial target
-    if (target === event.changedTouches[0].target) {
-      return;
-    }
-
-    const button = event.target as HTMLButtonElement;
-    const buttonDataset = button.dataset;
-    if (buttonDataset.position) {
-      onDatePositionChange(buttonDataset.position as DateRangePosition);
-    }
   });
 
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -214,16 +212,17 @@ const useDragRangeEvents = <TDate>({
       return;
     }
 
+    const buttonDataset = target.dataset;
+    if (buttonDataset.position) {
+      onDatePositionChange(buttonDataset.position as DateRangePosition);
+    }
+
     // make sure the focused element is the element where touch ended
     target.focus();
 
-    // return early if it is the initial target
-    if (target === event.changedTouches[0].target) {
-      return;
-    }
-
+    const preventOnDrop = buttonDataset.position === draggingDatePosition;
     const newDate = resolveDateFromTarget(target, utils, timezone);
-    if (newDate) {
+    if (newDate && !preventOnDrop) {
       onDrop(newDate);
     }
   });
@@ -315,6 +314,7 @@ export const useDragRange = <TDate>({
     disableDragEditing,
     dateRange,
     timezone,
+    draggingDatePosition,
   });
 
   return React.useMemo(
