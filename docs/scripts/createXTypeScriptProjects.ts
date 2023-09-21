@@ -1,35 +1,34 @@
 import path from 'path';
-import fs from 'fs';
-import * as ts from 'typescript';
+import {
+  createTypeScriptProject,
+  CreateTypeScriptProjectOptions,
+  TypeScriptProject,
+} from '@mui/monorepo/packages/api-docs-builder/utils/createTypeScriptProject';
 import { getComponentFilesInFolder } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../');
 
-export interface Project {
-  name: ProjectNames;
-  exports: Record<string, ts.Symbol>;
-  program: ts.Program;
-  checker: ts.TypeChecker;
+export interface XTypeScriptProject extends Omit<TypeScriptProject, 'name'> {
+  name: XProjectNames;
   workspaceRoot: string;
-  rootPath: string;
   prettierConfigPath: string;
   /**
    * @param {Project} project The project to generate the prop-types from.
    * @returns {string[]} Path to the component files from which we want to generate the prop-types.
    */
-  getComponentsWithPropTypes?: (project: Project) => string[];
+  getComponentsWithPropTypes?: (project: XTypeScriptProject) => string[];
   /**
    * @param {Project} project The project to generate the components api from.
    * @returns {string[]} Path to the component files from which we want to generate the api doc.
    */
-  getComponentsWithApiDoc?: (project: Project) => string[];
+  getComponentsWithApiDoc?: (project: XTypeScriptProject) => string[];
   /**
    * Name of the folder inside the documentation.
    */
   documentationFolderName: string;
 }
 
-export type ProjectNames =
+export type XProjectNames =
   | 'x-license-pro'
   | 'x-data-grid'
   | 'x-data-grid-pro'
@@ -40,80 +39,30 @@ export type ProjectNames =
   | 'x-charts'
   | 'x-tree-view';
 
-export type Projects = Map<ProjectNames, Project>;
+export type XTypeScriptProjects = Map<XProjectNames, XTypeScriptProject>;
 
-interface CreateProgramOptions
-  extends Pick<
-    Project,
-    | 'name'
-    | 'rootPath'
-    | 'documentationFolderName'
-    | 'getComponentsWithPropTypes'
-    | 'getComponentsWithApiDoc'
-  > {
-  /**
-   * Config to use to build this package.
-   * The path must be relative to the root path.
-   * @default 'tsconfig.build.json`
-   */
-  tsConfigPath?: string;
-  /**
-   * File used as root of the package.
-   * The path must be relative to the root path.
-   * @default 'src/index.ts'
-   */
-  entryPointPath?: string;
-}
+interface CreateXTypeScriptProjectOptions
+  extends Omit<CreateTypeScriptProjectOptions, 'name'>,
+    Pick<
+      XTypeScriptProject,
+      'name' | 'documentationFolderName' | 'getComponentsWithPropTypes' | 'getComponentsWithApiDoc'
+    > {}
 
-const createProject = (options: CreateProgramOptions): Project => {
-  const {
+const createXTypeScriptProject = (options: CreateXTypeScriptProjectOptions): XTypeScriptProject => {
+  const { name, rootPath, tsConfigPath, entryPointPath, files, ...rest } = options;
+
+  const baseProject = createTypeScriptProject({
+    name,
     rootPath,
-    tsConfigPath: inputTsConfigPath = 'tsconfig.build.json',
-    entryPointPath: inputEntryPointPath = 'src/index.ts',
-    ...rest
-  } = options;
-
-  const tsConfigPath = path.join(rootPath, inputTsConfigPath);
-  const entryPointPath = path.join(rootPath, inputEntryPointPath);
-
-  const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
-    fs.readFileSync(filePath).toString(),
-  );
-
-  if (tsConfigFile.error) {
-    throw tsConfigFile.error;
-  }
-
-  const tsConfigFileContent = ts.parseJsonConfigFileContent(
-    tsConfigFile.config,
-    ts.sys,
-    path.dirname(tsConfigPath),
-  );
-
-  if (tsConfigFileContent.errors.length > 0) {
-    throw tsConfigFileContent.errors[0];
-  }
-
-  const program = ts.createProgram({
-    rootNames: [entryPointPath],
-    options: tsConfigFileContent.options,
+    tsConfigPath,
+    entryPointPath,
+    files,
   });
 
-  const checker = program.getTypeChecker();
-  const sourceFile = program.getSourceFile(entryPointPath);
-
-  const exports = Object.fromEntries(
-    checker.getExportsOfModule(checker.getSymbolAtLocation(sourceFile!)!).map((symbol) => {
-      return [symbol.name, symbol];
-    }),
-  );
-
   return {
+    ...baseProject,
     ...rest,
-    rootPath,
-    exports,
-    program,
-    checker,
+    name,
     workspaceRoot,
     prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
   };
@@ -135,7 +84,7 @@ const getComponentPaths =
     files?: string[];
     includeUnstableComponents?: boolean;
   }) =>
-  (project: Project) => {
+  (project: XTypeScriptProject) => {
     const paths: string[] = [];
 
     files.forEach((file) => {
@@ -164,23 +113,25 @@ const getComponentPaths =
     return paths;
   };
 
-export const getTypeScriptProjects = () => {
-  const projects: Projects = new Map();
+export const createXTypeScriptProjects = () => {
+  const projects: XTypeScriptProjects = new Map();
 
   projects.set(
     'x-license-pro',
-    createProject({
+    createXTypeScriptProject({
       name: 'x-license-pro',
       rootPath: path.join(workspaceRoot, 'packages/x-license-pro'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'license',
     }),
   );
 
   projects.set(
     'x-data-grid',
-    createProject({
+    createXTypeScriptProject({
       name: 'x-data-grid',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src/components'],
@@ -199,9 +150,10 @@ export const getTypeScriptProjects = () => {
 
   projects.set(
     'x-data-grid-pro',
-    createProject({
+    createXTypeScriptProject({
       name: 'x-data-grid-pro',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src/components'],
@@ -215,9 +167,10 @@ export const getTypeScriptProjects = () => {
 
   projects.set(
     'x-data-grid-premium',
-    createProject({
+    createXTypeScriptProject({
       name: 'x-data-grid-premium',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-premium'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src/components'],
@@ -231,18 +184,20 @@ export const getTypeScriptProjects = () => {
 
   projects.set(
     'x-data-grid-generator',
-    createProject({
+    createXTypeScriptProject({
       name: 'x-data-grid-generator',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-generator'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
     }),
   );
 
   projects.set(
     'x-date-pickers',
-    createProject({
+    createXTypeScriptProject({
       name: 'x-date-pickers',
       rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
@@ -257,9 +212,10 @@ export const getTypeScriptProjects = () => {
 
   projects.set(
     'x-date-pickers-pro',
-    createProject({
+    createXTypeScriptProject({
       name: 'x-date-pickers-pro',
       rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
@@ -274,9 +230,10 @@ export const getTypeScriptProjects = () => {
 
   projects.set(
     'x-charts',
-    createProject({
+    createXTypeScriptProject({
       name: 'x-charts',
       rootPath: path.join(workspaceRoot, 'packages/x-charts'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'charts',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
@@ -291,9 +248,10 @@ export const getTypeScriptProjects = () => {
 
   projects.set(
     'x-tree-view',
-    createProject({
+    createXTypeScriptProject({
       name: 'x-tree-view',
       rootPath: path.join(workspaceRoot, 'packages/x-tree-view'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'tree-view',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],

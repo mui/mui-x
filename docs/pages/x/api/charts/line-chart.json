@@ -43,6 +43,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLineChart" },
   "filename": "/packages/x-charts/src/LineChart/LineChart.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "LineChart" }]
+  "demos": "<ul></ul>"
 }

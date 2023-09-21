@@ -58,7 +58,7 @@ function GridHeaderFilterMenu({
     <GridMenu
       placement="bottom-end"
       open={open}
-      target={target as HTMLElement}
+      target={target}
       onClickAway={hideMenu}
       onExited={hideMenu}
     >

@@ -204,7 +204,7 @@ export function DescendantProvider(props: DescendantProviderProps) {
 DescendantProvider.propTypes = {
   children: PropTypes.node,
   id: PropTypes.string,
-};
+} as any;
 
 export interface TreeItemDescendant {
   element: HTMLLIElement;

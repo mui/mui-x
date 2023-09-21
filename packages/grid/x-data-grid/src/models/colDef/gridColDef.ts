@@ -13,7 +13,7 @@ import {
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn, GridSortDirection } from '../gridSortModel';
-import { GridColType, GridNativeColTypes } from './gridColType';
+import { GridColType } from './gridColType';
 import { GridRowParams } from '../params/gridRowParams';
 import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
@@ -327,9 +327,7 @@ export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridActionsColDef<R, V, F>
   | GridSingleSelectColDef<R, V, F>;
 
-export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'> & {
-  extendType?: GridNativeColTypes;
-};
+export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'>;
 
 export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridColDef<
   R,

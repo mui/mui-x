@@ -79,7 +79,7 @@ export const ChartsLegendRoot = styled('g', {
     [`& .${legendClasses.label}`]: {
       ...theme.typography.body1,
       color: 'inherit',
-      fill: theme.palette.text.primary,
+      fill: (theme.vars || theme).palette.text.primary,
     },
     [`& .${legendClasses.mark}`]: {
       x: 0,

@@ -38,9 +38,7 @@
     "InputLabelProps": { "type": { "name": "object" } },
     "inputProps": { "type": { "name": "object" } },
     "InputProps": { "type": { "name": "object" } },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current: any }" }
-    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "margin": {
       "type": {
@@ -140,7 +138,7 @@
     {
       "class": null,
       "name": "textField",
-      "description": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     }
   ],
@@ -155,9 +153,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateField/DateField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-field/\">Date Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateField" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DateField" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-field/\">Date Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
 }
