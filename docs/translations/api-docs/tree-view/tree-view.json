@@ -27,7 +27,7 @@
       "typeDescriptions": {}
     },
     "defaultExpanded": {
-      "description": "Expanded node ids. Used when the item&#39;s expansion are not controlled.",
+      "description": "Expanded node ids. Used when the item&#39;s expansion is not controlled.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -57,7 +57,7 @@
       "typeDescriptions": {}
     },
     "expanded": {
-      "description": "Expanded node ids. Used when the item&#39;s expansion are controlled.",
+      "description": "Expanded node ids. Used when the item&#39;s expansion is controlled.",
       "deprecated": "",
       "typeDescriptions": {}
     },

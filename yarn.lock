@@ -2689,10 +2689,10 @@
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-5.0.1.tgz#3286741fb8f1e1580ac28784add4c7a1d49bdfbc"
   integrity sha512-XTIieEY+gvJ39ChLcB4If5zHtPxt3Syj5rgZR+e1ctpmK8NjPf0zFqsz4JpLJT0xla9GFDKjy8Cpu331nrmE1Q==
 
-"@types/babel__core@^7.1.12", "@types/babel__core@^7.20.1":
-  version "7.20.1"
-  resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.20.1.tgz#916ecea274b0c776fec721e333e55762d3a9614b"
-  integrity sha512-aACu/U/omhdk15O4Nfb+fHgH/z3QsfQzpnvRZhYhThms83ZnAOZz7zZAWO7mn2yyNQaA4xTO8GLK3uqFU4bYYw==
+"@types/babel__core@^7.1.12", "@types/babel__core@^7.20.2":
+  version "7.20.2"
+  resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.20.2.tgz#215db4f4a35d710256579784a548907237728756"
+  integrity sha512-pNpr1T1xLUc2l3xJKuPtsEky3ybxN3m4fJkknfIpTCTfIZCDW57oAg+EfCgIIp2rvCe0Wn++/FfodDS4YXxBwA==
   dependencies:
     "@babel/parser" "^7.20.7"
     "@babel/types" "^7.20.7"
@@ -2930,10 +2930,10 @@
   dependencies:
     moment ">=2.14.0"
 
-"@types/node@*", "@types/node@>= 8", "@types/node@>=10.0.0", "@types/node@^14.0.1", "@types/node@^18.17.15":
-  version "18.17.15"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.17.15.tgz#31301a273b9ca7d568fe6d1c35ae52e0fb3f8d6a"
-  integrity sha512-2yrWpBk32tvV/JAd3HNHWuZn/VDN1P+72hWirHnvsvTGSqbANi+kSeuQR9yAHnbvaBvHDsoTdXV0Fe+iRtHLKA==
+"@types/node@*", "@types/node@>= 8", "@types/node@>=10.0.0", "@types/node@^14.0.1", "@types/node@^18.17.18":
+  version "18.17.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.17.18.tgz#acae19ad9011a2ab3d792232501c95085ba1838f"
+  integrity sha512-/4QOuy3ZpV7Ya1GTRz5CYSz3DgkKpyUptXuQ5PPce7uuyJAOR7r9FhkmxJfvcNUXyklbC63a+YvB3jxy7s9ngw==
 
 "@types/normalize-package-data@^2.4.0", "@types/normalize-package-data@^2.4.1":
   version "2.4.1"
@@ -6358,10 +6358,10 @@ eslint-plugin-import@^2.28.1:
     semver "^6.3.1"
     tsconfig-paths "^3.14.2"
 
-eslint-plugin-jsdoc@^46.5.1:
-  version "46.5.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-46.5.1.tgz#79be44c9f7b3bbc52917cae12f356979b7d58e8a"
-  integrity sha512-CPbvKprmEuJYoxMj5g8gXfPqUGgcqMM6jpH06Kp4pn5Uy5MrPkFKzoD7UFp2E4RBzfXbJz1+TeuEivwFVMkXBg==
+eslint-plugin-jsdoc@^46.8.2:
+  version "46.8.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-46.8.2.tgz#3e6b1c93e91e38fe01874d45da121b56393c54a5"
+  integrity sha512-5TSnD018f3tUJNne4s4gDWQflbsgOycIKEUBoCLn6XtBMgNHxQFmV8vVxUtiPxAQq8lrX85OaSG/2gnctxw9uQ==
   dependencies:
     "@es-joy/jsdoccomment" "~0.40.1"
     are-docs-informative "^0.0.2"
@@ -9688,27 +9688,27 @@ markdownlint-cli2-formatter-default@0.0.4:
   resolved "https://registry.yarnpkg.com/markdownlint-cli2-formatter-default/-/markdownlint-cli2-formatter-default-0.0.4.tgz#81e26b0a50409c0357c6f0d38d8246946b236fab"
   integrity sha512-xm2rM0E+sWgjpPn1EesPXx5hIyrN2ddUnUwnbCsD/ONxYtw3PX6LydvdH6dciWAoFDpwzbHM1TO7uHfcMd6IYg==
 
-markdownlint-cli2@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/markdownlint-cli2/-/markdownlint-cli2-0.9.2.tgz#ed714905e0e4ce583e5c3d95134ba1e2d0287552"
-  integrity sha512-ndijEHIOikcs29W8068exHXlfkFviGFT/mPhREia7zSfQzHvTDkL2s+tWizvELjLHiKRO4KGTkkJyR3oeR8A5g==
+markdownlint-cli2@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/markdownlint-cli2/-/markdownlint-cli2-0.10.0.tgz#4ba94b6cc648eb62475432ebcc19557afcdd487b"
+  integrity sha512-kVxjPyKFC+eW7iqcxiNI50RDzwugpXkEX5eQlDso/0IUs9M73jXYguLFHDzgi5KatcxU/57Fu8KoGtkFft9lfA==
   dependencies:
     globby "13.2.2"
-    markdownlint "0.30.0"
+    markdownlint "0.31.1"
     markdownlint-cli2-formatter-default "0.0.4"
     micromatch "4.0.5"
     strip-json-comments "5.0.1"
-    yaml "2.3.1"
+    yaml "2.3.2"
 
 markdownlint-micromark@0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/markdownlint-micromark/-/markdownlint-micromark-0.1.7.tgz#c465091b30d61a56027ccbfb981c80c96448c165"
   integrity sha512-BbRPTC72fl5vlSKv37v/xIENSRDYL/7X/XoFzZ740FGEbs9vZerLrIkFRY0rv7slQKxDczToYuMmqQFN61fi4Q==
 
-markdownlint@0.30.0:
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/markdownlint/-/markdownlint-0.30.0.tgz#e5b43f794c6810299cd4be86f8d54108e9169860"
-  integrity sha512-nInuFvI/rEzanAOArW5490Ez4EYpB5ODqVM0mcDYCPx9DKJWCQqCgejjiCvbSeE7sjbDscVtZmwr665qpF5xGA==
+markdownlint@0.31.1:
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/markdownlint/-/markdownlint-0.31.1.tgz#f014ed2d3614c5dbc351b7f65641ccc0a5facdb7"
+  integrity sha512-CKMR2hgcIBrYlIUccDCOvi966PZ0kJExDrUi1R+oF9PvqQmCrTqjOsgIvf2403OmJ+CWomuzDoylr6KbuMyvHA==
   dependencies:
     markdown-it "13.0.1"
     markdownlint-micromark "0.1.7"
@@ -12664,10 +12664,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-sinon@^15.2.0:
-  version "15.2.0"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-15.2.0.tgz#5e44d4bc5a9b5d993871137fd3560bebfac27565"
-  integrity sha512-nPS85arNqwBXaIsFCkolHjGIkFo+Oxu9vbgmBJizLAhqe6P2o3Qmj3KCUoRkfhHtvgDhZdWD3risLHAUJ8npjw==
+sinon@^16.0.0:
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-16.0.0.tgz#06da4e63624b946c9d7e67cce21c2f67f40f23a9"
+  integrity sha512-B8AaZZm9CT5pqe4l4uWJztfD/mOTa7dL8Qo0W4+s+t74xECOgSZDDQCBjNgIK3+n4kyxQrSTv2V5ul8K25qkiQ==
   dependencies:
     "@sinonjs/commons" "^3.0.0"
     "@sinonjs/fake-timers" "^10.3.0"
@@ -14395,10 +14395,10 @@ yallist@^4.0.0:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
-yaml@2.3.1, yaml@^2.2.2:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
-  integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
+yaml@2.3.2, yaml@^2.2.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.2.tgz#f522db4313c671a0ca963a75670f1c12ea909144"
+  integrity sha512-N/lyzTPaJasoDmfV7YTrYCI0G/3ivm/9wdG0aHuheKowWQwGTsK0Eoiw6utmzAnI6pkJa0DUVygvp3spqqEKXg==
 
 yaml@^1.10.0:
   version "1.10.2"

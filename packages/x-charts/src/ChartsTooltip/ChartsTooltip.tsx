@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import Popper from '@mui/material/Popper';
-import NoSsr from '@mui/material/NoSsr';
+import { Popper } from '@mui/base/Popper';
+import { NoSsr } from '@mui/base/NoSsr';
 import {
   AxisInteractionData,
   InteractionContext,
