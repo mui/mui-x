@@ -1,10 +1,10 @@
 ---
 productId: x-date-pickers
-title: Date and Time Pickers - Custom subcomponents
+title: Date and Time Pickers - Custom slots and subcomponents
 components: DateTimePickerTabs
 ---
 
-# Custom subcomponents
+# Custom slots and subcomponents
 
 <p class="description">The date picker lets you customize subcomponents.</p>
 
