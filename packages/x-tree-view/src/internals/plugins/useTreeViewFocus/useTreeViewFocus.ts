@@ -58,10 +58,23 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
       // if the event bubbled (which is React specific) we don't want to steal focus
       if (event.target === event.currentTarget) {
-        const firstSelected = Array.isArray(models.selected.value)
-          ? models.selected.value[0]
-          : models.selected.value;
-        instance.focusNode(event, firstSelected || instance.getNavigableChildrenIds(null)[0]);
+        const isNodeVisible = (nodeId: string) => {
+          const node = instance.getNode(nodeId);
+          return node && (node.parentId == null || instance.isNodeExpanded(node.parentId));
+        };
+
+        let nodeToFocusId: string | null | undefined;
+        if (Array.isArray(models.selected.value)) {
+          nodeToFocusId = models.selected.value.find(isNodeVisible);
+        } else if (models.selected.value != null && isNodeVisible(models.selected.value)) {
+          nodeToFocusId = models.selected.value;
+        }
+
+        if (nodeToFocusId == null) {
+          nodeToFocusId = instance.getNavigableChildrenIds(null)[0];
+        }
+
+        instance.focusNode(event, nodeToFocusId);
       }
     };
 
