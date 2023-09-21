@@ -2,7 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAwayListener';
-import { unstable_composeClasses as composeClasses, HTMLElementType } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+  HTMLElementType,
+} from '@mui/utils';
 import Grow, { GrowProps } from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
@@ -69,6 +73,17 @@ function GridMenu(props: GridMenuProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
+
+  const savedFocusRef = React.useRef<HTMLElement | null>(null);
+  useEnhancedEffect(() => {
+    if (open) {
+      savedFocusRef.current =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    } else {
+      savedFocusRef.current?.focus?.();
+      savedFocusRef.current = null;
+    }
+  }, [open]);
 
   React.useEffect(() => {
     // Emit menuOpen or menuClose events
