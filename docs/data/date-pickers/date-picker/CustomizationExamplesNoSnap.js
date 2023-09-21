@@ -9,7 +9,7 @@ import CustomizationPlayground from 'docsx/src/modules/components/CustomizationP
 import CircularProgress from '@mui/material/CircularProgress';
 import { pickerExamples } from './examplesConfig';
 
-export default function CustomizationExamples() {
+export default function CustomizationExamplesNoSnap() {
   const [selectedPicker, setSelectedPicker] = React.useState(0);
 
   const handleSelectedPickerChange = (_e, newValue) => {
