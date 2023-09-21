@@ -247,6 +247,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   columnHeaderHeight: number;
   /**
+   * If `true`, the header component is hidden.
+   * @default false
+   */
+  hideHeader: boolean;
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */

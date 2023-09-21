@@ -407,6 +407,11 @@ DataGridPremiumRaw.propTypes = {
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
+   * If `true`, the header component is hidden.
+   * @default false
+   */
+  hideHeader: PropTypes.bool,
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */

@@ -58,6 +58,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   filterMode: 'client',
   filterDebounceMs: 150,
   columnHeaderHeight: 56,
+  hideHeader: false,
   hideFooter: false,
   hideFooterPagination: false,
   hideFooterRowCount: false,

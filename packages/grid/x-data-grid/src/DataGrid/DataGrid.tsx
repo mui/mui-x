@@ -280,6 +280,11 @@ DataGridRaw.propTypes = {
    */
   getRowSpacing: PropTypes.func,
   /**
+   * If `true`, the header component is hidden.
+   * @default false
+   */
+  hideHeader: PropTypes.bool,
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */
