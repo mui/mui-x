@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { getStringSize } from '../domUtils';
 
 interface GetWordsByLinesParams {
   /**
@@ -10,9 +11,10 @@ interface GetWordsByLinesParams {
    */
   style?: React.SVGAttributes<'text'>['style'];
   /**
-   * The max width per line (in px).
+   * If true, the line width is computed.
+   * @default false
    */
-  width?: number;
+  needsComputation?: boolean;
 }
 export interface TextProps
   extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width' | 'ref'>,
@@ -25,8 +27,11 @@ export interface TextProps
   ownerState?: any;
 }
 
-function getWordsByLines({ style, width, text }: GetWordsByLinesParams) {
-  return text.split('\n').map((subText) => ({ text: subText, width: 50 }));
+function getWordsByLines({ style, needsComputation, text }: GetWordsByLinesParams) {
+  return text.split('\n').map((subText) => ({
+    text: subText,
+    width: needsComputation ? getStringSize(subText, style) : null,
+  }));
 }
 
 function Text(props: TextProps) {
@@ -37,16 +42,12 @@ function Text(props: TextProps) {
     dominantBaseline = 'central',
     lineHeight = 1,
     style,
-    width,
     text,
     ownerState,
     ...textProps
   } = props;
 
-  const wordsByLines = React.useMemo(
-    () => getWordsByLines({ style, width, text }),
-    [style, width, text],
-  );
+  const wordsByLines = React.useMemo(() => getWordsByLines({ style, text }), [style, text]);
 
   let startDy: number;
   switch (dominantBaseline) {
