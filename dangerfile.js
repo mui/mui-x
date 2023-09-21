@@ -3,6 +3,8 @@ const fse = require('fs-extra');
 const path = require('path');
 const prettier = require('prettier');
 
+const dangerCommand = process.env.DANGER_COMMAND;
+
 async function reportBundleSize() {
   const snapshotPath = path.join(__dirname, './performance-snapshot.json');
   const prettierConfigPath = path.join(__dirname, './prettier.config.js');
@@ -110,6 +112,14 @@ function addL10nHelpMessage() {
 async function run() {
   addL10nHelpMessage();
   addDeployPreviewUrls();
+
+  switch (dangerCommand) {
+    case 'reportPerformance':
+      await reportBundleSize();
+      break;
+    default:
+      throw new TypeError(`Unrecognized danger command '${dangerCommand}'`);
+  }
 }
 
 run().catch((error) => {
