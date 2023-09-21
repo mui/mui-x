@@ -1,0 +1,4 @@
+<DataGrid
+  {...data}
+  hideHeader
+/>

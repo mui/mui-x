@@ -92,6 +92,16 @@ const getTogglableColumns = (columns: GridColDef[]) => {
 
 {{"demo": "ColumnSelectorGridCustomizeColumns.js", "bg": "inline"}}
 
+### Hide headers panel
+
+To completely remove the headers panel, use the `hideHeader` prop.
+
+```tsx
+<DataGrid {...data} hideHeader />
+```
+
+{{"demo": "ColumnHeaderVisibility.js", "bg": "inline"}}
+
 ### Disable action buttons
 
 To disable `Hide all` or `Show all` buttons in the column visibility panel, pass `disableHideAllButton` or `disableShowAllButton` to `slotProps.columnsPanel`.
