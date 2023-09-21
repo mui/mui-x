@@ -95,7 +95,6 @@
     "@babel/preset-typescript": "^7.22.15",
     "@types/doctrine": "^0.0.6",
     "cpy-cli": "^5.0.0",
-    "gm": "^1.25.0",
-    "typescript-to-proptypes": "^2.2.1"
+    "gm": "^1.25.0"
   }
 }
