@@ -17,7 +17,7 @@
   "devDependencies": {
     "react-scripts": "latest"
   },
-  "main": "index.tsx",
+  "main": "src/index.tsx",
   "scripts": {
     "start": "react-scripts start"
   }
