@@ -147,6 +147,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     height: null,
   });
   const prevTotalWidth = React.useRef(columnsTotalWidth);
+  // Each visible row (not to be confused with a filter result) is composed of a central row element
+  // and up to two additional row elements for pinned columns (left and right).
+  // When hovering any of these elements, the :hover styles are applied only to the row element that
+  // was actually hovered, not its additional siblings. To make it look like a contiguous row,
+  // we add/remove the .Mui-hovered class to all of the row elements inside one visible row.
+  const [hoveredRowId, setHoveredRowId] = React.useState<GridRowId | null>(null);
 
   const rowStyleCache = React.useRef<Record<GridRowId, any>>(Object.create(null));
   const prevGetRowProps = React.useRef<UseGridVirtualScrollerProps['getRowProps']>();
@@ -498,6 +504,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return -1;
   }, [cellFocus, currentPage.rows]);
 
+  useGridApiEventHandler(apiRef, 'rowMouseEnter', (params) => {
+    setHoveredRowId(params.id ?? null);
+  });
+  useGridApiEventHandler(apiRef, 'rowMouseLeave', () => {
+    setHoveredRowId(null);
+  });
+
   const getRows = (
     params: {
       renderContext: GridRenderContext | null;
@@ -704,6 +717,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           position={position}
           {...rowProps}
           {...rootRowProps}
+          hovered={hoveredRowId === id}
           style={rowStyleCache.current[id]}
         />,
       );
