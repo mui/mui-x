@@ -68,6 +68,9 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
       ? `Kies tijd, geselecteerde tijd is ${utils.format(value, 'fullTime')}`
       : 'Kies tijd',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'kies tijd',
   dateTableLabel: 'kies datum',

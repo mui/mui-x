@@ -66,6 +66,9 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
       ? `Saat seçin, seçilen saat: ${utils.format(value, 'fullTime')}`
       : 'Saat seç',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'saat seç',
   dateTableLabel: 'tarih seç',

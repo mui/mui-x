@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { useSlotProps } from '@mui/base/utils';
 import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -8,6 +7,7 @@ import {
   FieldSlotsComponents,
   FieldSlotsComponentsProps,
   FieldsTextFieldProps,
+  useLocaleText,
 } from '../internals';
 
 type UseClearableFieldProps<
@@ -42,6 +42,8 @@ export const useClearableField = <
   TFieldSlotsComponents,
   TFieldSlotsComponentsProps
 >) => {
+  const localeText = useLocaleText();
+
   const IconButton = slots?.clearButton ?? MuiIconButton;
   const iconButtonProps = useSlotProps({
     elementType: MuiIconButton,
@@ -64,7 +66,7 @@ export const useClearableField = <
           sx={{ marginRight: ForwardedInputProps?.endAdornment ? -1 : -1.5 }}
         >
           <IconButton
-            aria-label="clear button"
+            aria-label={localeText.clearLabel}
             {...iconButtonProps}
             className="clearButton"
             onClick={onClear}
@@ -81,22 +83,26 @@ export const useClearableField = <
 
   const fieldProps: TFieldProps = {
     ...forwardedFieldProps,
-    sx: {
-      '& .clearButton': {
-        visibility: 'visible',
-      },
-      '@media (pointer: fine)': {
+    sx: [
+      {
         '& .clearButton': {
-          visibility: 'hidden',
+          visibility: 'visible',
         },
-        '&:hover, &:focus-within': {
-          '.clearButton': {
-            visibility: 'visible',
+        '@media (pointer: fine)': {
+          '& .clearButton': {
+            visibility: 'hidden',
+          },
+          '&:hover, &:focus-within': {
+            '.clearButton': {
+              visibility: 'visible',
+            },
           },
         },
       },
-      ...forwardedFieldProps.sx,
-    },
+      ...(Array.isArray(forwardedFieldProps.sx)
+        ? forwardedFieldProps.sx
+        : [forwardedFieldProps.sx]),
+    ],
   };
 
   return { InputProps, fieldProps };

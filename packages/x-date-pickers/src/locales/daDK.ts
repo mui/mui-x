@@ -69,6 +69,9 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
       ? `Vælg tidspunkt, valgte tidspunkt er ${utils.format(value, 'fullTime')}`
       : 'Vælg tidspunkt',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'vælg tidspunkt',
   dateTableLabel: 'vælg dato',

@@ -289,8 +289,8 @@ const BrowserDateRangePicker = React.forwardRef(
     return (
       <DateRangePicker
         ref={ref}
-        slots={{ field: BrowserMultiInputDateRangeField }}
         {...props}
+        slots={{ field: BrowserMultiInputDateRangeField }}
       />
     );
   },
@@ -355,8 +355,8 @@ const BrowserDatePicker = React.forwardRef(
     return (
       <DatePicker
         ref={ref}
-        slots={{ field: BrowserDateField, ...props.slots }}
         {...props}
+        slots={{ field: BrowserDateField, ...props.slots }}
       />
     );
   },
@@ -376,9 +376,6 @@ export default function PickerWithBrowserField() {
         <BrowserSingleInputDateRangePicker
           slotProps={{
             field: { clearable: true },
-          }}
-          sx={{
-            width: '100%',
           }}
         />
         <BrowserDateRangePicker />

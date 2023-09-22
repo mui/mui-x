@@ -68,6 +68,9 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
       ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${utils.format(value, 'fullTime')}`
       : 'Επιλέξτε ώρα',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'επιλέξτε ώρα',
   dateTableLabel: 'επιλέξτε ημερομηνία',

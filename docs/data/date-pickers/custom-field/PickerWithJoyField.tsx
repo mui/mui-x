@@ -367,8 +367,8 @@ const JoyDateRangePicker = React.forwardRef(
     return (
       <DateRangePicker
         ref={ref}
-        slots={{ field: JoyMultiInputDateRangeField }}
         {...props}
+        slots={{ field: JoyMultiInputDateRangeField }}
       />
     );
   },

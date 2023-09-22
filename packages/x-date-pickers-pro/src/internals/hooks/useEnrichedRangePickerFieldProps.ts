@@ -17,6 +17,8 @@ import {
   UncapitalizeObjectKeys,
   UsePickerProps,
   getActiveElement,
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
@@ -29,7 +31,7 @@ import {
 } from '../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
-export interface RangePickerFieldSlotsComponent {
+export interface RangePickerFieldSlotsComponent extends FieldSlotsComponents {
   Field: React.ElementType;
   /**
    * Element rendered at the root.
@@ -50,7 +52,7 @@ export interface RangePickerFieldSlotsComponent {
   TextField?: React.ElementType<TextFieldProps>;
 }
 
-export interface RangePickerFieldSlotsComponentsProps<TDate> {
+export interface RangePickerFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
   field?: SlotComponentProps<
     React.ElementType<
       BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, unknown>
@@ -319,6 +321,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
   const slots: ReturnType['slots'] = {
     ...fieldProps.slots,
     textField: pickerSlots?.textField,
+    clearIcon: pickerSlots?.clearIcon,
   };
 
   const slotProps: ReturnType['slotProps'] = {

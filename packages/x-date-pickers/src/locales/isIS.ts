@@ -66,6 +66,9 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
       ? `Velja tíma, valinn tími er ${utils.format(value, 'fullTime')}`
       : 'Velja tíma',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'velja tíma',
   dateTableLabel: 'velja dagsetningu',

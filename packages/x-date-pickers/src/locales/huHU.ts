@@ -69,6 +69,9 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
       ? `Válasszon időt, a kiválasztott idő: ${utils.format(value, 'fullTime')}`
       : 'Válasszon időt',
 
+  // Clear button label
+  clearLabel: 'Tartalom ürítése gomb',
+
   // Table labels
   timeTableLabel: 'válasszon időt',
   dateTableLabel: 'válasszon dátumot',

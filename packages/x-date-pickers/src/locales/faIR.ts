@@ -68,6 +68,9 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
       ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${utils.format(value, 'fullTime')} می باشد`
       : 'ساعت را انتخاب کنید',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'انتخاب تاریخ',
   dateTableLabel: 'انتخاب ساعت',

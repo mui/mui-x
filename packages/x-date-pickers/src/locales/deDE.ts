@@ -69,6 +69,9 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
       ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${utils.format(value, 'fullTime')}`
       : 'Uhrzeit auswählen',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'Uhrzeit auswählen',
   dateTableLabel: 'Datum auswählen',

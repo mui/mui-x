@@ -66,6 +66,9 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
       ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${utils.format(value, 'fullTime')}`
       : 'وقت منتخب کریں',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'وقت منتخب کریں',
   dateTableLabel: 'تاریخ منتخب کریں',

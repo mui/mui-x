@@ -68,6 +68,9 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
       ? `Choisir l'heure, l'heure sélectionnée est ${utils.format(value, 'fullTime')}`
       : "Choisir l'heure",
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: "choix de l'heure",
   dateTableLabel: 'choix de la date',

@@ -67,6 +67,9 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
       ? `Vyberte čas, vybraný čas je ${utils.format(value, 'fullTime')}`
       : 'Vyberte čas',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'vyberte čas',
   dateTableLabel: 'vyberte datum',

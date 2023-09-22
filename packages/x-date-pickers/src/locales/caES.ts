@@ -68,6 +68,9 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
       ? `Tria l'hora, l'hora triada és ${utils.format(value, 'fullTime')}`
       : "Tria l'hora",
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'tria la data',
   dateTableLabel: "tria l'hora",

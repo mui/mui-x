@@ -68,6 +68,9 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
       ? `Scegli l'ora, l'ora selezionata è ${utils.format(value, 'fullTime')}`
       : "Scegli l'ora",
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: "scegli un'ora",
   dateTableLabel: 'scegli una data',

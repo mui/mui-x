@@ -66,6 +66,9 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
       ? `Valitse aika, valittu aika on ${utils.format(value, 'fullTime')}`
       : 'Valitse aika',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: 'valitse aika',
   dateTableLabel: 'valitse päivä',

@@ -68,6 +68,9 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
       ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(value, 'fullTime')}입니다.`
       : '시간을 선택하세요',
 
+  // Clear button label
+  // clearLabel: 'Clear button',
+
   // Table labels
   timeTableLabel: '선택한 시간',
   dateTableLabel: '선택한 날짜',

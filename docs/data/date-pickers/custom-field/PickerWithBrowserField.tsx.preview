@@ -7,8 +7,5 @@
   slotProps={{
     field: { clearable: true },
   }}
-  sx={{
-    width: '100%',
-  }}
 />
 <BrowserDateRangePicker />
