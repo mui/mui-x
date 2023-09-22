@@ -226,6 +226,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "gridReady",
+    "description": "Fired when the grid is mounted.",
+    "params": "",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "headerSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of the header is changed.",
     "params": "GridHeaderSelectionCheckboxParams",

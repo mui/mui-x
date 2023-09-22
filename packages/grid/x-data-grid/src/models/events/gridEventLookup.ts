@@ -362,6 +362,10 @@ export interface GridEventLookup
     GridCellEventLookup,
     GridControlledStateEventLookup {
   /**
+   * Fired when the grid is mounted.
+   */
+  gridReady: {};
+  /**
    * Fired when the grid is unmounted.
    */
   unmount: {};
