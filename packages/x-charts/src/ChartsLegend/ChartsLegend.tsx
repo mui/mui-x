@@ -247,12 +247,14 @@ function DefaultChartsLegend(props: LegendRendererProps) {
             rep.positionY = y;
             rep.rowIndex = rowIndex;
           }
-          rowIndex += 1;
           if (rowMaxHeight.length <= rowIndex) {
             rowMaxHeight.push(0);
           }
           totalWidthUsed = Math.max(totalWidthUsed, x + itemSpace.innerWidth);
           totalHeightUsed = Math.max(totalHeightUsed, y + itemSpace.innerHeight);
+          rowMaxHeight[rowIndex] = Math.max(rowMaxHeight[rowIndex], itemSpace.innerHeight);
+
+          rowIndex += 1;
           y += itemSpace.outerHeight;
         }
 
