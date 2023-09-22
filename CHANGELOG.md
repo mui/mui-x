@@ -67,7 +67,7 @@ Same changes as in `@mui/x-date-pickers@6.15.0`.
 - [docs] Fix `301` to Material UI @oliviertassinari
 - [docs] Improve the column visibility section (#10327) @MBilalShafi
 - [docs] Improve the documentation section `rowIdentifier` (#10326) @MBilalShafi
-- [docs] Improve the localization doc (#10202) @flaviendelangle
+- [docs] Improve pickers localization documentation (#10202) @flaviendelangle
 - [docs] Polish typescript ref use (#10359) @oliviertassinari
 - [docs] Slack feedback on wording (#10406) @alexfauquette
 
