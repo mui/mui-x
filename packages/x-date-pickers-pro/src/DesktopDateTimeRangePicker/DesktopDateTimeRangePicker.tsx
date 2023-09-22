@@ -28,6 +28,58 @@ const DesktopDateTimeRangeContainer = styled('div')({
   '.MuiDateTimeRangePickerTimeWrapper-inactive': { opacity: 0.6 },
 });
 
+const rendererInterceptor = function rendererInterceptor<TDate>(
+  inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerViews, any, any>,
+  popperView: DateTimeRangePickerViews,
+  rendererProps: any,
+) {
+  const finalProps = {
+    ...rendererProps,
+    focusedView: null,
+    sx: {
+      borderBottom: 0,
+      width: 'auto',
+      [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+        maxHeight: VIEW_HEIGHT,
+      },
+      // ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+    },
+  };
+  const isTimeViewActive = isInternalTimeView(popperView);
+  return (
+    <DesktopDateTimeRangeContainer>
+      {isTimeViewActive ? (
+        <React.Fragment>
+          {inViewRenderers.day?.({
+            ...rendererProps,
+            view: isDatePickerView(popperView) ? popperView : 'day',
+          })}
+          <Divider orientation="vertical" />
+        </React.Fragment>
+      ) : null}
+      {isTimeViewActive ? (
+        <DateTimeRangePickerTimeWrapper
+          {...finalProps}
+          viewRenderer={inViewRenderers[popperView]}
+        />
+      ) : (
+        inViewRenderers[popperView]?.(finalProps)
+      )}
+      {!isTimeViewActive ? (
+        <React.Fragment>
+          <Divider orientation="vertical" />
+          <DateTimeRangePickerTimeWrapper
+            {...finalProps}
+            view="hours"
+            viewRenderer={inViewRenderers.hours}
+            className="MuiDateTimeRangePickerTimeWrapper-inactive"
+          />
+        </React.Fragment>
+      ) : null}
+    </DesktopDateTimeRangeContainer>
+  );
+};
+
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
@@ -93,53 +145,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     valueManager: rangeValueManager,
     valueType: 'date-time',
     validator: validateDateRange,
-    rendererInterceptor(inViewRenderers, popperView, rendererProps) {
-      const finalProps = {
-        ...rendererProps,
-        focusedView: null,
-        sx: {
-          borderBottom: 0,
-          width: 'auto',
-          [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-            maxHeight: VIEW_HEIGHT,
-          },
-          ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-        },
-      };
-      const isTimeViewActive = isInternalTimeView(popperView);
-      return (
-        <DesktopDateTimeRangeContainer>
-          {isTimeViewActive ? (
-            <React.Fragment>
-              {inViewRenderers.day?.({
-                ...rendererProps,
-                view: isDatePickerView(popperView) ? popperView : 'day',
-              })}
-              <Divider orientation="vertical" />
-            </React.Fragment>
-          ) : null}
-          {isTimeViewActive ? (
-            <DateTimeRangePickerTimeWrapper
-              {...finalProps}
-              viewRenderer={inViewRenderers[popperView]}
-            />
-          ) : (
-            inViewRenderers[popperView]?.(finalProps)
-          )}
-          {!isTimeViewActive ? (
-            <React.Fragment>
-              <Divider orientation="vertical" />
-              <DateTimeRangePickerTimeWrapper
-                {...finalProps}
-                view="hours"
-                viewRenderer={inViewRenderers.hours}
-                className="MuiDateTimeRangePickerTimeWrapper-inactive"
-              />
-            </React.Fragment>
-          ) : null}
-        </DesktopDateTimeRangeContainer>
-      );
-    },
+    rendererInterceptor,
   });
 
   return renderPicker();
