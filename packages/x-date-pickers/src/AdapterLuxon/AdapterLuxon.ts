@@ -238,13 +238,13 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public expandFormat = (format: string) => {
     // Extract escaped section to avoid extending them
-    const catchEcapedSectionsRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
+    const catchEscapedSectionsRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
 
-    // Extract words to test if they are a Regexp.
+    // Extract words to test if they are a token or a word to escape.
     const catchWordsRegexp = /(?:^|[^a-z])([a-z]+)(?:[^a-z]|$)|([a-z]+)/gi;
     return (
       format
-        .match(catchEcapedSectionsRegexp)!
+        .match(catchEscapedSectionsRegexp)!
         .map((token: string) => {
           const firstCharacter = token[0];
           if (firstCharacter === "'") {
