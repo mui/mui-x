@@ -97,7 +97,12 @@ export interface LegendRendererProps
   series: FormattedSeries;
   seriesToDisplay: LegendParams[];
   drawingArea: DrawingArea;
-  classes: Record<'label' | 'mark' | 'series' | 'root', string>;
+  classes: Record<'mark' | 'series' | 'root', string>;
+  /**
+   * Style applied to legend labels
+   * @default theme.
+   */
+  labelStyle?: React.CSSProperties;
   /**
    * Width of the item mark (in px)
    * @default 20
@@ -143,6 +148,7 @@ const getStandardizedPadding = (padding: LegendRendererProps['padding']) => {
     ...padding,
   };
 };
+
 function DefaultChartsLegend(props: LegendRendererProps) {
   const {
     hidden,
@@ -156,7 +162,14 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     markGap = 5,
     itemGap = 10,
     padding: paddingProps = 10,
+    labelStyle: inLabelStyle,
   } = props;
+  const theme = useTheme();
+
+  const labelStyle = React.useMemo(
+    () => ({ ...theme.typography.caption, lineHeight: 1, ...inLabelStyle }),
+    [inLabelStyle, theme.typography.caption],
+  );
 
   const padding = React.useMemo(() => getStandardizedPadding(paddingProps), [paddingProps]);
 
@@ -195,7 +208,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
 
     const seriesWithRawPosition = seriesToDisplay
       .map(({ label, ...other }) => {
-        const itemSpace = getItemSpace(label, {  });
+        const itemSpace = getItemSpace(label, labelStyle);
         const rep = {
           ...other,
           label,
@@ -285,6 +298,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     position.horizontal,
     position.vertical,
     getItemSpace,
+    labelStyle,
     direction,
     availableWidth,
     availableHeight,
@@ -315,7 +329,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
               fill={color}
             />
             <Text
-              className={classes.label}
+              style={labelStyle}
               dominantBaseline="central"
               textAnchor="start"
               text={label}

@@ -34,7 +34,6 @@ const STYLE_LIST = [
   'top',
   'left',
   'fontSize',
-  'lineHeight',
   'padding',
   'margin',
   'paddingLeft',
