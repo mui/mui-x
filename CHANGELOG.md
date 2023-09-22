@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.15.0
+
+_Sep 22, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for `getRowsToExport` option to print export on the data grid (#10084) @zreecespieces
+- 🌍 Improve Finnish (fi-FI) locale on the data grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.15.0`
+
+- [DataGrid] Add support for `getRowsToExport` option to print export (#10084) @zreecespieces
+- [DataGrid] Fix dev warning about `InputLabelProps` (#10413) @romgrk
+- [DataGrid] Refactor `GridMenu` prop `onClickAway` to `onClose` (#10411) @romgrk
+- [DataGrid] Restore focus after `GridMenu` closes (#10412) @romgrk
+- [DataGrid] Fix typing of `GridActionsCellItem` (#10344) @romgrk
+- [DataGrid] Hide `eval` from bundlers (#10329) @romgrk
+- [DataGrid] Add `border: 0` to unmounted focused cell to avoid layout shifts in that row (#10318) @lauri865
+- [l10n] Improve Finnish (fi-FI) locale (#10346) @samijouppila
+
+#### `@mui/x-data-grid-pro@6.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.15.0`, plus:
+
+- [DataGridPro] Fix keyboard navigation issue in header filters (#10358) @MBilalShafi
+- [DataGridPro] Add missing row hover styles (#10252) @cherniavskii
+- [DataGridPro] Make default filter items have stable references in header filters (#10338) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@6.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.15.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.15.0`
+
+- [pickers] Support tokens without spaces (#10185) @alexfauquette
+
+#### `@mui/x-date-pickers-pro@6.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.15.0`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.12`
+
+- [charts] Fix sparkline scale and rendering (#10402) @alexfauquette
+- [charts] Remove components from `@mui/material` (#10115) @alexfauquette
+
+### Tree View / `@mui/x-tree-view@6.0.0-alpha.4`
+
+- [TreeView] Split features into plugins to prepare for Pro version (#10123) @flaviendelangle
+
+### Docs
+
+- [docs] Add docs pages to complete pricing table (#10394) @alexfauquette
+- [docs] Add missing MIT package on the Licensing page (#10348) @flaviendelangle
+- [docs] Clearer component pattern @oliviertassinari
+- [docs] Easier to understand demo (#10370) @oliviertassinari
+- [docs] Fix `301` to Material UI @oliviertassinari
+- [docs] Improve the column visibility section (#10327) @MBilalShafi
+- [docs] Improve the documentation section `rowIdentifier` (#10326) @MBilalShafi
+- [docs] Improve the localization doc (#10202) @flaviendelangle
+- [docs] Polish typescript ref use (#10359) @oliviertassinari
+- [docs] Slack feedback on wording (#10406) @alexfauquette
+
+### Core
+
+- [core] Cleanup GitHub issues template (#10372) @romgrk
+- [core] Fix Circle CI OOM (#10385) @romgrk
+- [core] Improve sleep test helper @oliviertassinari
+- [core] Remove unwanted prefixes @oliviertassinari
+- [core] Remove duplicat label @oliviertassinari
+- [core] Simplify source @oliviertassinari
+- [core] Upgrade monorepo (#10425) @cherniavskii
+- [core] Upgrade monorepo to have the new typescript-to-proptype (#10224) @flaviendelangle
+- [test] Do not use deprecated adapter methods (#10416) @flaviendelangle
+- [test] Name test suites according to sentence case (#10429) @alexfauquette
+
 ## 6.14.0
 
 _Sep 14, 2023_
