@@ -43,6 +43,7 @@ Same changes as in `@mui/x-data-grid-pro@6.15.0`.
 #### `@mui/x-date-pickers@6.15.0`
 
 - [pickers] Support tokens without spaces (#10185) @alexfauquette
+- [l10n] Improve Finnish (fi-FI) locale (#10346) @samijouppila
 
 #### `@mui/x-date-pickers-pro@6.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
