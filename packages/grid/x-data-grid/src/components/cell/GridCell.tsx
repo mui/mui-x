@@ -549,7 +549,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps<GridCellV7RootProps>();
+  const rootProps = (useGridRootProps as () => GridCellV7RootProps)();
 
   const field = column.field;
 
