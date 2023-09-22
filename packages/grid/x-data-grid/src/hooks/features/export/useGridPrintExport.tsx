@@ -281,7 +281,7 @@ export const useGridPrintExport = (
         apiRef.current.setColumnVisibilityModel(previousColumnVisibility.current);
       }
 
-      apiRef.current.unstable_enableVirtualization();
+      apiRef.current.unstable_setVirtualization(true);
       apiRef.current.setRows(previousRows.current);
 
       // Clear local state
@@ -329,7 +329,7 @@ export const useGridPrintExport = (
         updateGridRowsForPrint(options.getRowsToExport);
       }
 
-      apiRef.current.unstable_disableVirtualization();
+      apiRef.current.unstable_setVirtualization(false);
       await raf(); // wait for the state changes to take action
       const printWindow = buildPrintWindow(options?.fileName);
       if (process.env.NODE_ENV === 'test') {
