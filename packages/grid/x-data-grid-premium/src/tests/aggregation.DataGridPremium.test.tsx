@@ -275,7 +275,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe('Tree Data', () => {
+  describe('Tree data', () => {
     function TreeDataTest(props: Omit<DataGridPremiumProps, 'columns'>) {
       return (
         <Test
@@ -355,7 +355,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe('Column Menu', () => {
+  describe('Column menu', () => {
     it('should render select on aggregable column', () => {
       render(<Test />);
 

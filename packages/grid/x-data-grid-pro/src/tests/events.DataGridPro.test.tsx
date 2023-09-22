@@ -20,7 +20,7 @@ import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Events Params', () => {
+describe('<DataGridPro /> - Events params', () => {
   const { render, clock } = createRenderer();
 
   const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {

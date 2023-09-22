@@ -215,11 +215,11 @@ function GridActionsCell(props: GridActionsCellProps) {
 
       {menuButtons.length > 0 && (
         <GridMenu
-          onClickAway={hideMenu}
-          onClick={hideMenu}
           open={open}
           target={buttonRef.current}
           position={position}
+          onClose={hideMenu}
+          onClick={hideMenu}
         >
           <MenuList
             id={menuId}

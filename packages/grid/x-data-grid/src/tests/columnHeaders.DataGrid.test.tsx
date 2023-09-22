@@ -6,7 +6,7 @@ import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/hel
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Column Headers', () => {
+describe('<DataGrid /> - Column headers', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
@@ -50,7 +50,7 @@ describe('<DataGrid /> - Column Headers', () => {
     });
   });
 
-  describe('Column Menu', () => {
+  describe('Column menu', () => {
     it('should allow to hide column', () => {
       render(
         <div style={{ width: 300, height: 300 }}>

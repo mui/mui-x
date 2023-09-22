@@ -1,12 +1,12 @@
 ---
 productId: x-date-pickers
-title: Date and Time Pickers - Date localization
+title: Date and Time Pickers - Date format and localization
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Date localization
+# Date format and localization
 
 <p class="description">Date and Time Pickers support formats from different locales.</p>
 
@@ -65,16 +65,6 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
 {{"demo": "LocalizationLuxon.js"}}
 
-:::warning
-The Date and Time Pickers are not working well with Luxon macro-token (`D`, `DD`, `T`, `TT`, ...),
-because of [how they are expanded](https://github.com/mui/mui-x/issues/7615).
-
-If your application is using only a single locale, the easiest solution is to manually provide a format that does not contain any macro-token
-(e.g. `M/d/yyyy` instead of `D` for the english locale).
-
-As soon as a solution is found the built-in support will be improved.
-:::
-
 ### With `moment`
 
 For `moment`, import the locale and then pass its name to `LocalizationProvider`:
@@ -115,7 +105,7 @@ function App({ children }) {
 
 :::
 
-## 12h/24h format
+## Meridiem — 12h/24h format
 
 All the time and datetime components will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
 You can override the default setting with the `ampm` prop:
