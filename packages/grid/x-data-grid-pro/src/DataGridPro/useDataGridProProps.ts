@@ -22,6 +22,8 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   scrollEndThreshold: 80,
   treeData: false,
   defaultGroupingExpansionDepth: 0,
+  autosizeOnMount: false,
+  disableAutosize: false,
   disableColumnPinning: false,
   keepColumnPositionIfDraggedOutside: false,
   disableChildrenFiltering: false,

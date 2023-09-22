@@ -152,7 +152,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   const columnHeaderSeparatorProps = React.useMemo(
-    () => ({ onMouseDown: publish('columnSeparatorMouseDown') }),
+    () => ({
+      onMouseDown: publish('columnSeparatorMouseDown'),
+      onDoubleClick: publish('columnSeparatorDoubleClick'),
+    }),
     [publish],
   );
 
