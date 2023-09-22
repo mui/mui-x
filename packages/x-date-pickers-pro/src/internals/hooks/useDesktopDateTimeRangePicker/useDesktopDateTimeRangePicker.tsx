@@ -110,8 +110,11 @@ export const useDesktopDateTimeRangePicker = <
     const inputToFocus = rangePosition === 'start' ? startInputRef.current : endInputRef.current;
     const currentFieldRef = rangePosition === 'start' ? startFieldRef.current : endFieldRef.current;
     inputToFocus?.focus();
-    currentFieldRef?.setSelectedSections(view);
-  }, [layoutProps.view, open, rangePosition]);
+    // avoid moving section on initial field focus
+    if (view !== props.openTo) {
+      currentFieldRef?.setSelectedSections(view);
+    }
+  }, [layoutProps.view, open, props.openTo, rangePosition]);
 
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
