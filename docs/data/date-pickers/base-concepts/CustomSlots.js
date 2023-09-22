@@ -22,13 +22,11 @@ export default function CustomSlots() {
           }}
           slotProps={{
             openPickerIcon: { fontSize: 'large' },
-            openPickerButton: { color: 'error' },
-            field: {
-              label: 'My picker',
-            },
+            openPickerButton: { color: 'secondary' },
             textField: {
               variant: 'filled',
-              error: true,
+              focused: true,
+              color: 'secondary',
             },
           }}
         />

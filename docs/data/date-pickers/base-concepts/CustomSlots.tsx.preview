@@ -1,0 +1,15 @@
+<DatePicker
+  slots={{
+    openPickerIcon: EditCalendarRoundedIcon,
+    openPickerButton: StyledButton,
+  }}
+  slotProps={{
+    openPickerIcon: { fontSize: 'large' },
+    openPickerButton: { color: 'secondary' },
+    textField: {
+      variant: 'filled',
+      focused: true,
+      color: 'secondary',
+    },
+  }}
+/>
