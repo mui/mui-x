@@ -16,7 +16,7 @@ import { spyApi } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPremium /> - Export Excel', () => {
+describe('<DataGridPremium /> - Export excel', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
