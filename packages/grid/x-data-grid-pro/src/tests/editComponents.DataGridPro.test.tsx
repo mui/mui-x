@@ -37,7 +37,7 @@ const generateDate = (
   return rawDate.getTime();
 };
 
-describe('<DataGridPro /> - Edit Components', () => {
+describe('<DataGridPro /> - Edit components', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;

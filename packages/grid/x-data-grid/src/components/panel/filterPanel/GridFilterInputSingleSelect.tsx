@@ -77,6 +77,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     label: labelProp,
     isFilterActive,
     clearButton,
+    InputLabelProps,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');

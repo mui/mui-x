@@ -13,6 +13,13 @@
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },
     "autoPageSize": { "type": { "name": "bool" } },
+    "autosizeOnMount": { "type": { "name": "bool" } },
+    "autosizeOptions": {
+      "type": {
+        "name": "shape",
+        "description": "{ columns?: Array&lt;string&gt;, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+      }
+    },
     "cellModesModel": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" } },
     "checkboxSelectionVisibleOnly": {
@@ -46,6 +53,7 @@
     "detailPanelExpandedRowIds": {
       "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
     },
+    "disableAutosize": { "type": { "name": "bool" } },
     "disableChildrenFiltering": { "type": { "name": "bool" } },
     "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
