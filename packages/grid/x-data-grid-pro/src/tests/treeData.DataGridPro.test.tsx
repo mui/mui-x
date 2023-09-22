@@ -56,7 +56,7 @@ const baselineProps: DataGridProProps = {
   getRowId: (row) => row.name,
 };
 
-describe('<DataGridPro /> - Tree Data', () => {
+describe('<DataGridPro /> - Tree data', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;

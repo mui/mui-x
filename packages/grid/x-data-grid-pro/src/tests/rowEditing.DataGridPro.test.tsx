@@ -16,7 +16,7 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/monorepo/test/utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 
-describe('<DataGridPro /> - Row Editing', () => {
+describe('<DataGridPro /> - Row editing', () => {
   const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
