@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
+import { useDesktopDateTimeRangePicker } from '../internals/hooks/useDesktopDateTimeRangePicker';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 import { DateRange, DateTimeRangePickerViews } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
@@ -88,7 +88,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, DateTimeRangePickerViews, typeof props>({
+  const { renderPicker } = useDesktopDateTimeRangePicker<TDate, typeof props>({
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',

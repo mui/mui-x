@@ -5,7 +5,6 @@ import {
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
-import { ExportedDateTimeRangePickerTabsProps } from '../../../DateTimeRangePicker/DateTimeRangePickerTabs';
 import {
   RangeOnlyPickerProps,
   RangePickerAdditionalViewProps,
@@ -25,9 +24,7 @@ export interface UseDesktopRangePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
 > extends UseRangePickerSlotsComponentsProps<TDate, TView>,
-    PickersPopperSlotsComponentsProps {
-  tabs?: ExportedDateTimeRangePickerTabsProps;
-}
+    PickersPopperSlotsComponentsProps {}
 
 export interface DesktopRangeOnlyPickerProps<TDate> extends RangeOnlyPickerProps<TDate> {
   /**

@@ -15,33 +15,33 @@ import {
   ExportedBaseToolbarProps,
   BaseFieldProps,
 } from '@mui/x-date-pickers/internals';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import {
-  DesktopRangePickerAdditionalViewProps,
-  UseDesktopRangePickerParams,
-  UseDesktopRangePickerProps,
-} from './useDesktopRangePicker.types';
+  DesktopDateTimeRangePickerAdditionalViewProps,
+  UseDesktopDateTimeRangePickerParams,
+  UseDesktopDateTimeRangePickerProps,
+} from './useDesktopDateTimeRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
 import { RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
+import { DateTimeRangePickerViews } from '../../models/dateTimeRange';
 
 const releaseInfo = getReleaseInfo();
 
-export const useDesktopRangePicker = <
+export const useDesktopDateTimeRangePicker = <
   TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+  TExternalProps extends UseDesktopDateTimeRangePickerProps<TDate, any, TExternalProps>,
 >({
   props,
   ...pickerParams
-}: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
+}: UseDesktopDateTimeRangePickerParams<TDate, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
     slots,
-    slotProps,
+    slotProps: inSlotProps,
     className,
     sx,
     format,
@@ -63,6 +63,19 @@ export const useDesktopRangePicker = <
 
   const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
 
+  const startInputRef = React.useRef<HTMLInputElement>(null);
+  const endInputRef = React.useRef<HTMLInputElement>(null);
+  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+
+  const slotProps: TExternalProps['slotProps'] = {
+    ...inSlotProps,
+    textField: (ownerState) => ({
+      ...inSlotProps?.textField,
+      inputRef: ownerState.position === 'start' ? startInputRef : endInputRef,
+    }),
+  };
+
   const {
     open,
     actions,
@@ -73,10 +86,10 @@ export const useDesktopRangePicker = <
   } = usePicker<
     DateRange<TDate>,
     TDate,
-    TView,
+    DateTimeRangePickerViews,
     RangeFieldSection,
     TExternalProps,
-    DesktopRangePickerAdditionalViewProps
+    DesktopDateTimeRangePickerAdditionalViewProps
   >({
     ...pickerParams,
     props,
@@ -87,6 +100,18 @@ export const useDesktopRangePicker = <
       onRangePositionChange,
     },
   });
+
+  React.useEffect(() => {
+    const view = layoutProps.view;
+    if (!view || !open) {
+      return;
+    }
+    // handle field re-focusing and section selection after view and/or range position change
+    const inputToFocus = rangePosition === 'start' ? startInputRef.current : endInputRef.current;
+    const currentFieldRef = rangePosition === 'start' ? startFieldRef.current : endFieldRef.current;
+    inputToFocus?.focus();
+    currentFieldRef?.setSelectedSections(view);
+  }, [layoutProps.view, open, rangePosition]);
 
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
@@ -123,6 +148,8 @@ export const useDesktopRangePicker = <
       timezone,
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
+      unstableStartFieldRef: startFieldRef,
+      unstableEndFieldRef: endFieldRef,
       ...(fieldType === 'single-input' && { inputRef }),
     },
     ownerState: props,
@@ -130,7 +157,7 @@ export const useDesktopRangePicker = <
 
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,
-    TView,
+    DateTimeRangePickerViews,
     InferError<TExternalProps>
   >({
     wrapperVariant: 'desktop',
@@ -151,8 +178,17 @@ export const useDesktopRangePicker = <
     anchorRef,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<
+    DateRange<TDate>,
+    TDate,
+    DateTimeRangePickerViews
+  > = {
     ...slotProps,
+    tabs: {
+      ...slotProps?.tabs,
+      rangePosition,
+      onRangePositionChange,
+    },
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,
