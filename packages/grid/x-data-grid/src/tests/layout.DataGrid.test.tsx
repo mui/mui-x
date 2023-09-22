@@ -35,7 +35,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
     columns: [{ field: 'brand' }],
   };
 
-  describe('Immutable rows', () => {
+  describe('immutable rows', () => {
     it('should throw an error if rows props is being mutated', () => {
       expect(() => {
         // We don't want to freeze baselineProps.rows
