@@ -217,17 +217,18 @@ const useDragRangeEvents = <TDate>({
     }
 
     const targetDataset = target.dataset;
+    const targetsAreIdentical = target === event.changedTouches[0].target;
 
     // make sure the focused element is the element where touch ended
     target.focus();
 
     const newDate = resolveDateFromTarget(target, utils, timezone);
-    const newDateIsStart =
-      targetDataset.position === 'end' && isStartOfRange(utils, newDate, dateRange);
-    const newDateIsEnd =
-      targetDataset.position === 'start' && isEndOfRange(utils, newDate, dateRange);
-    if (newDate && !(newDateIsStart || newDateIsEnd)) {
+    if (newDate && !targetsAreIdentical) {
       onDrop(newDate);
+    }
+
+    if (targetsAreIdentical) {
+      onDatePositionChange(targetDataset.position === 'start' ? 'end' : 'start');
     }
   });
 
