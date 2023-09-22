@@ -504,14 +504,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return -1;
   }, [cellFocus, currentPage.rows]);
 
-  const handleRowMouseEnter = useEventCallback<GridEventListener<'rowMouseEnter'>>((params) => {
+  useGridApiEventHandler(apiRef, 'rowMouseEnter', (params) => {
     setHoveredRowId(params.id ?? null);
   });
-  const handleRowMouseLeave = useEventCallback<GridEventListener<'rowMouseLeave'>>(() => {
+  useGridApiEventHandler(apiRef, 'rowMouseLeave', () => {
     setHoveredRowId(null);
   });
-  useGridApiEventHandler(apiRef, 'rowMouseEnter', handleRowMouseEnter);
-  useGridApiEventHandler(apiRef, 'rowMouseLeave', handleRowMouseLeave);
 
   const getRows = (
     params: {
