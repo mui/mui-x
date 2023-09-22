@@ -77,7 +77,7 @@ Same changes as in `@mui/x-date-pickers@6.15.0`.
 - [core] Fix Circle CI OOM (#10385) @romgrk
 - [core] Improve sleep test helper @oliviertassinari
 - [core] Remove unwanted prefixes @oliviertassinari
-- [core] Remove duplicat label @oliviertassinari
+- [core] Remove duplicate label @oliviertassinari
 - [core] Simplify source @oliviertassinari
 - [core] Upgrade monorepo (#10425) @cherniavskii
 - [core] Upgrade monorepo to have the new typescript-to-proptype (#10224) @flaviendelangle
