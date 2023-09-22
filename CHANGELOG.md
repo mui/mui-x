@@ -25,7 +25,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Fix typing of `GridActionsCellItem` (#10344) @romgrk
 - [DataGrid] Hide `eval` from bundlers (#10329) @romgrk
 - [DataGrid] Add `border: 0` to unmounted focused cell to avoid layout shifts in that row (#10318) @lauri865
-- [l10n] Improve Finnish (fi-FI) locale (#10346) @samijouppila
 
 #### `@mui/x-data-grid-pro@6.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
