@@ -9,6 +9,7 @@ _Sep 22, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
+- 🚀 Implement columns auto-sizing (#10180) @romgrk
 - 🎁 Add support for `getRowsToExport` option to print export on the data grid (#10084) @zreecespieces
 - 🌍 Improve Finnish (fi-FI) locale
 - 🐞 Bugfixes
@@ -30,6 +31,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 Same changes as in `@mui/x-data-grid@6.15.0`, plus:
 
+- [DataGridPro] Implement columns auto-sizing (#10180) @romgrk
 - [DataGridPro] Fix keyboard navigation issue in header filters (#10358) @MBilalShafi
 - [DataGridPro] Add missing row hover styles (#10252) @cherniavskii
 - [DataGridPro] Make default filter items have stable references in header filters (#10338) @MBilalShafi
