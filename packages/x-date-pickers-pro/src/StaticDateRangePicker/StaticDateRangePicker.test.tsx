@@ -78,6 +78,13 @@ describe('<StaticDateRangePicker />', () => {
   });
 
   it('should be able to set same date twice as range', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Needs layout
+        this.skip();
+      }
+    });
+
     // arrange
     render(
       <StaticDateRangePicker
