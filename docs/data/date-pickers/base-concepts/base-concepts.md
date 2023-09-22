@@ -177,20 +177,14 @@ expect(cleanText(input.value)).to.equal('04-17-2022');
 
 ## Overriding `slots` and `slotProps`
 
-**Slots** are the internal building blocks of the components. These internal elements can be overriden using the `slots` prop, allowing for easy customization of Date and Time Pickers. You can also pass additional props to the available `slots`, using the `slotProps` prop.
+Date and Time Pickers are complex components built using many subcomponents. These internal elements can be overridden using the `slots` prop, allowing for easy customization. You can also pass additional props to the available `slots`, using the `slotProps` prop.
 
-The list of available `slots` for each component can be found in the [API References](/x/api/date-pickers/).
-
-You can easily cutomize simple slots as the `openPickerIcon` just by replacing the slot like this:
-
-```jsx
-<DatePicker slots={{ openPickerIcon: EditCalendarRoundedIcon }} />
-```
+The list of available `slots` for each component can be found on the component's [API Reference](/x/api/date-pickers/date-picker/#slots) page.
 
 The subcomponents of the pickers are often built on more nested structures, and you can go as deep into the customization of the nested elements as you want. For instance, you can customize the `IconButton` used as the `openPickerButton`, as well as the `openPickerIcon` inside of it. You can do the same for the `field` and the `textField`.
 
 {{"demo": "CustomSlots.js"}}
 
 :::info
-More information about overriding `slots` can be found on the [**dedicated documentation page**](/x/react-date-pickers/custom-components/)
+More information about overriding `slots` can be found on the [**dedicated documentation page**](/x/react-date-pickers/custom-components/).
 :::
