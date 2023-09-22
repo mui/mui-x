@@ -60,7 +60,7 @@ Same changes as in `@mui/x-date-pickers@6.15.0`.
 
 ### Docs
 
-- [docs] Add docs pages to complete pricing table (#10394) @alexfauquette
+- [docs] Add charts documentation pages to complete pricing table (#10394) @alexfauquette
 - [docs] Add missing MIT package on the Licensing page (#10348) @flaviendelangle
 - [docs] Clearer component pattern @oliviertassinari
 - [docs] Easier to understand demo (#10370) @oliviertassinari
