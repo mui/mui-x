@@ -10,7 +10,7 @@ _Sep 22, 2023_
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add support for `getRowsToExport` option to print export on the data grid (#10084) @zreecespieces
-- 🌍 Improve Finnish (fi-FI) locale on the data grid
+- 🌍 Improve Finnish (fi-FI) locale
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
