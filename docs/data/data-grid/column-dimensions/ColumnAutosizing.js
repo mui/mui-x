@@ -70,10 +70,12 @@ export default function ColumnAutosizing() {
   return (
     <div style={{ width: '100%' }}>
       <Stack
-        spacing={2}
+        spacing={1}
         direction="row"
         alignItems="center"
-        sx={{ marginBottom: '1em' }}
+        sx={{ mb: 1 }}
+        useFlexGap
+        flexWrap="wrap"
       >
         <Button
           variant="outlined"
@@ -82,6 +84,7 @@ export default function ColumnAutosizing() {
           Autosize columns
         </Button>
         <FormControlLabel
+          sx={{ ml: 0 }}
           control={
             <Checkbox
               checked={includeHeaders}
@@ -91,6 +94,7 @@ export default function ColumnAutosizing() {
           label="Include headers"
         />
         <FormControlLabel
+          sx={{ ml: 0 }}
           control={
             <Checkbox
               checked={includeOutliers}
@@ -107,6 +111,7 @@ export default function ColumnAutosizing() {
           sx={{ width: '12ch' }}
         />
         <FormControlLabel
+          sx={{ ml: 0 }}
           control={
             <Checkbox
               checked={expand}
