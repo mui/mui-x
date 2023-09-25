@@ -167,8 +167,14 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   const theme = useTheme();
 
   const labelStyle = React.useMemo(
-    () => ({ ...theme.typography.caption, lineHeight: 1, ...inLabelStyle }),
-    [inLabelStyle, theme.typography.caption],
+    () => ({
+      ...theme.typography.caption,
+      color: 'inherit',
+      fill: (theme.vars || theme).palette.text.primary,
+      lineHeight: 1,
+      ...inLabelStyle,
+    }),
+    [inLabelStyle, theme],
   );
 
   const padding = React.useMemo(() => getStandardizedPadding(paddingProps), [paddingProps]);
