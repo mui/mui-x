@@ -30,7 +30,7 @@ export interface TextProps
 export function getWordsByLines({ style, needsComputation, text }: GetWordsByLinesParams) {
   return text.split('\n').map((subText) => ({
     text: subText,
-    ...getStringSize(needsComputation ? subText : '', style),
+    ...(needsComputation ? getStringSize(subText, style) : { width: 0, height: 0 }),
   }));
 }
 

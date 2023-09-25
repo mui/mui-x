@@ -133,7 +133,6 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
         autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
       return styleKey;
     });
-
     measurementSpan.textContent = str;
 
     const rect = measurementSpan.getBoundingClientRect();
