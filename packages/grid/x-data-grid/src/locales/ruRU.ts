@@ -55,7 +55,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Очистить фильтр',
   filterPanelDeleteIconLabel: 'Удалить',
   filterPanelLogicOperator: 'Логические операторы',
   filterPanelOperator: 'Операторы',
