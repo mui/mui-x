@@ -113,3 +113,9 @@ You can find the documentation in the [Validation page](/x/react-date-pickers/va
 ## Localization
 
 You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).
+
+## Customization
+
+You can check out multiple examples of how to customize the date pickers and their subcomponents.
+
+{{"demo": "CustomizationExamplesNoSnap.js", "hideToolbar": true, "bg": "inline"}}
