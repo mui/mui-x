@@ -199,17 +199,17 @@
     {
       "class": null,
       "name": "fieldRoot",
-      "description": "Element rendered at the root.\nIgnored if the field has only one input."
+      "description": "Element rendered at the root. Ignored if the field has only one input."
     },
     {
       "class": null,
       "name": "fieldSeparator",
-      "description": "Element rendered between the two inputs.\nIgnored if the field has only one input."
+      "description": "Element rendered between the two inputs. Ignored if the field has only one input."
     },
     {
       "class": null,
       "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
     },
     {
       "class": null,
@@ -262,7 +262,7 @@
     {
       "class": null,
       "name": "textField",
-      "description": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     },
     {

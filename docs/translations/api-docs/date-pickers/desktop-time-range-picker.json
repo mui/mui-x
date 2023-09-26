@@ -259,16 +259,16 @@
     "desktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "desktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
     "field": "",
-    "fieldRoot": "Element rendered at the root.\nIgnored if the field has only one input.",
-    "fieldSeparator": "Element rendered between the two inputs.\nIgnored if the field has only one input.",
-    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+    "fieldRoot": "Element rendered at the root. Ignored if the field has only one input.",
+    "fieldSeparator": "Element rendered between the two inputs. Ignored if the field has only one input.",
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "popper": "Custom component for the popper inside which the views are rendered on desktop.",
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
-    "textField": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.\nReceives the same props as <code>@mui/material/TextField</code>.",
+    "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element. Receives the same props as <code>@mui/material/TextField</code>.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }
