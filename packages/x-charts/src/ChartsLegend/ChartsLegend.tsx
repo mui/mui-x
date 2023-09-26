@@ -6,11 +6,7 @@ import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
 import { AnchorPosition, SizingParams, getSeriesToDisplay } from './utils';
 import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
-import {
-  ChartsLegendClasses,
-  getChartsLegendUtilityClass,
-  legendClasses,
-} from './chartsLegendClasses';
+import { ChartsLegendClasses, getChartsLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { LegendParams } from '../models/seriesType/config';
 import { Text, getWordsByLines } from '../internals/components/Text';
@@ -73,19 +69,7 @@ export const ChartsLegendRoot = styled('g', {
   name: 'MuiChartsLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => {
-  return {
-    [`& .${legendClasses.label}`]: {
-      ...theme.typography.body1,
-      color: 'inherit',
-      fill: (theme.vars || theme).palette.text.primary,
-    },
-    [`& .${legendClasses.mark}`]: {
-      x: 0,
-      y: 0,
-    },
-  };
-});
+})({});
 
 const defaultProps = {
   position: { horizontal: 'middle', vertical: 'top' },
@@ -131,6 +115,9 @@ export interface LegendRendererProps
   padding?: number | Partial<CardinalDirections<number>>;
 }
 
+/**
+ * Transforms number or partial padding object to a defaultized padding object.
+ */
 const getStandardizedPadding = (padding: LegendRendererProps['padding']) => {
   if (typeof padding === 'number') {
     return {
@@ -202,11 +189,11 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   const availableHeight = totalHeight - padding.top - padding.bottom;
 
   const seriesWithPosition = React.useMemo(() => {
-    // Start at 0, 0. Will be modified latter by padding and position.
+    // Start at 0, 0. Will be modified later by padding and position.
     let x = 0;
     let y = 0;
 
-    // total values used to align legend latter.
+    // total values used to align legend later.
     let totalWidthUsed = 0;
     let totalHeightUsed = 0;
     let rowIndex = 0;
@@ -227,6 +214,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
 
         if (direction === 'row') {
           if (x + itemSpace.innerWidth > availableWidth) {
+            // This legend item will create overflow along the x axis, so we start a new row.
             x = 0;
             y += itemSpace.outerHeight;
             rowIndex += 1;
@@ -246,6 +234,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
 
         if (direction === 'column') {
           if (y + itemSpace.innerHeight > availableHeight) {
+            // This legend item will create overflow along the y axis, so we start a new column.
             x = totalWidthUsed + itemGap;
             y = 0;
             rowIndex = 0;
@@ -268,6 +257,8 @@ function DefaultChartsLegend(props: LegendRendererProps) {
       })
       .map((item) => ({
         ...item,
+        // Add a y shift such that `positionY` corresponds to the middle of the row.
+        // It's usefull to align items if they don't all have the same height. For example labels with breaking spaces.
         positionY: item.positionY + (rowMaxHeight[item.rowIndex] - itemMarkHeight) / 2,
       }));
 
