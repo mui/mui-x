@@ -42,7 +42,7 @@ describe('<TreeView />', () => {
 
     it('should warn when switching from controlled to uncontrolled of the selected prop', () => {
       const { setProps } = render(
-        <TreeView selected={[]}>
+        <TreeView selected={null}>
           <TreeItem nodeId="1" label="one" />
         </TreeView>,
       );
