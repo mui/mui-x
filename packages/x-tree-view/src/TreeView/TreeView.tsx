@@ -32,7 +32,7 @@ const TreeViewRoot = styled('ul', {
   outline: 0,
 });
 
-type TreeViewComponent = (<Multiple extends boolean | undefined>(
+type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
   props: TreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -46,10 +46,9 @@ type TreeViewComponent = (<Multiple extends boolean | undefined>(
  *
  * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
  */
-const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | undefined>(
-  inProps: TreeViewProps<Multiple>,
-  ref: React.Ref<HTMLUListElement>,
-) {
+const TreeView = React.forwardRef(function TreeView<
+  Multiple extends boolean | undefined = undefined,
+>(inProps: TreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
   const ownerState = themeProps as TreeViewProps<any>;
 

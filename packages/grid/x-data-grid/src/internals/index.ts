@@ -39,6 +39,7 @@ export {
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
 export { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
+export { gridColumnsStateSelector } from '../hooks/features/columns/gridColumnsSelector';
 export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
@@ -113,6 +114,7 @@ export {
   useGridVirtualScroller,
   getRenderableIndexes,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
+export * from '../hooks/features/virtualization';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
@@ -128,6 +130,7 @@ export type {
 } from '../models/props/DataGridProps';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
+export * from '../utils/createControllablePromise';
 export {
   createSelector,
   createSelectorMemoized,
@@ -140,6 +143,7 @@ export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
 export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+export * from '../hooks/utils/useOnMount';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';

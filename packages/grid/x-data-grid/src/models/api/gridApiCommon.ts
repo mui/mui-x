@@ -10,7 +10,6 @@ import { GridLocaleTextApi } from './gridLocaleTextApi';
 import type { GridParamsApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
-import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from './gridRowsMetaApi';
 import { GridRowSelectionApi } from './gridRowSelectionApi';
@@ -18,7 +17,7 @@ import { GridSortApi } from './gridSortApi';
 import { GridStateApi, GridStatePrivateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
-import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
+import { GridVirtualizationApi, GridVirtualizationPrivateApi } from './gridVirtualizationApi';
 import type {
   GridPipeProcessingApi,
   GridPipeProcessingPrivateApi,
@@ -56,7 +55,7 @@ export interface GridApiCommon<
     GridColumnMenuApi,
     GridPreferencesPanelApi,
     GridPrintExportApi,
-    GridDisableVirtualizationApi,
+    GridVirtualizationApi,
     GridLocaleTextApi,
     GridScrollApi,
     GridColumnSpanningApi,
@@ -75,11 +74,11 @@ export interface GridPrivateOnlyApiCommon<
     GridColumnSpanningPrivateApi,
     GridRowsMetaPrivateApi,
     GridDimensionsPrivateApi,
-    GridVirtualScrollerApi,
     GridEditingPrivateApi,
     GridLoggerApi,
     GridFocusPrivateApi,
-    GridHeaderFilteringPrivateApi {}
+    GridHeaderFilteringPrivateApi,
+    GridVirtualizationPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,
