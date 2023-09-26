@@ -47,7 +47,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
 };
 
-describe('<DataGridPremium /> - State Persistence', () => {
+describe('<DataGridPremium /> - State persistence', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;

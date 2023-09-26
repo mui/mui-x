@@ -7,10 +7,10 @@ import {
   resolveExportSpecifier,
   writePrettifiedFile,
 } from './utils';
-import { Project } from '../getTypeScriptProjects';
+import { XTypeScriptProject } from '../createXTypeScriptProjects';
 
 interface BuildSelectorsDocumentationOptions {
-  project: Project;
+  project: XTypeScriptProject;
   apiPagesFolder: string;
 }
 

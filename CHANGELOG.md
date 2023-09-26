@@ -3,6 +3,166 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.15.0
+
+_Sep 22, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Implement columns auto-sizing (#10180) @romgrk
+- 🎁 Add support for `getRowsToExport` option to print export on the data grid (#10084) @zreecespieces
+- 🌍 Improve Finnish (fi-FI) locale
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.15.0`
+
+- [DataGrid] Add support for `getRowsToExport` option to print export (#10084) @zreecespieces
+- [DataGrid] Fix dev warning about `InputLabelProps` (#10413) @romgrk
+- [DataGrid] Refactor `GridMenu` prop `onClickAway` to `onClose` (#10411) @romgrk
+- [DataGrid] Restore focus after `GridMenu` closes (#10412) @romgrk
+- [DataGrid] Fix typing of `GridActionsCellItem` (#10344) @romgrk
+- [DataGrid] Hide `eval` from bundlers (#10329) @romgrk
+- [DataGrid] Add `border: 0` to unmounted focused cell to avoid layout shifts in that row (#10318) @lauri865
+
+#### `@mui/x-data-grid-pro@6.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.15.0`, plus:
+
+- [DataGridPro] Implement columns auto-sizing (#10180) @romgrk
+- [DataGridPro] Fix keyboard navigation issue in header filters (#10358) @MBilalShafi
+- [DataGridPro] Add missing row hover styles (#10252) @cherniavskii
+- [DataGridPro] Make default filter items have stable references in header filters (#10338) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@6.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.15.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.15.0`
+
+- [pickers] Support tokens without spaces (#10185) @alexfauquette
+- [l10n] Improve Finnish (fi-FI) locale (#10346) @samijouppila
+
+#### `@mui/x-date-pickers-pro@6.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.15.0`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.12`
+
+- [charts] Fix sparkline scale and rendering (#10402) @alexfauquette
+- [charts] Remove components from `@mui/material` (#10115) @alexfauquette
+
+### Tree View / `@mui/x-tree-view@6.0.0-alpha.4`
+
+- [TreeView] Split features into plugins to prepare for Pro version (#10123) @flaviendelangle
+
+### Docs
+
+- [docs] Add charts documentation pages to complete pricing table (#10394) @alexfauquette
+- [docs] Add missing MIT packages on the Licensing page (#10348) @flaviendelangle
+- [docs] Clearer component pattern @oliviertassinari
+- [docs] Easier to understand demo (#10370) @oliviertassinari
+- [docs] Fix `301` to Material UI @oliviertassinari
+- [docs] Improve the column visibility section (#10327) @MBilalShafi
+- [docs] Improve the documentation section `rowIdentifier` (#10326) @MBilalShafi
+- [docs] Improve pickers localization documentation (#10202) @flaviendelangle
+- [docs] Polish typescript ref usage (#10359) @oliviertassinari
+- [docs] Improve charts tooltip wording (#10406) @alexfauquette
+
+### Core
+
+- [core] Cleanup GitHub issues template (#10372) @romgrk
+- [core] Fix Circle CI OOM (#10385) @romgrk
+- [core] Improve sleep test helper @oliviertassinari
+- [core] Remove unwanted prefixes @oliviertassinari
+- [core] Remove duplicate label @oliviertassinari
+- [core] Simplify source @oliviertassinari
+- [core] Upgrade monorepo (#10425) @cherniavskii
+- [core] Upgrade monorepo to have the new typescript-to-proptype (#10224) @flaviendelangle
+- [test] Do not use deprecated adapter methods (#10416) @flaviendelangle
+- [test] Name test suites according to sentence case (#10429) @alexfauquette
+
+## 6.14.0
+
+_Sep 14, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Fix `YearCalendar` and `MonthCalendar` accessibility (#10312) @LukasTy
+
+  The `YearCalendar` and `MonthCalendar` items role has been changed from `button` to `radio` in order to improve the component's a11y support.
+  If you were relying on the mentioned components having a `button` role for items, you will need to update your usage to expect a `radio` role instead.
+
+- 🌍 Improve Japanese (ja-JP), Persian (fa-IR), and Vietnamese (vi-VN) locales on the data grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.14.0`
+
+- [l10n] Improve Japanese (ja-JP) locale (#10299) @makoto14
+- [l10n] Improve Persian (fa-IR) locale (#10277) @aminsaedi
+- [l10n] Improve Vietnamese (vi-VN) locale (#10280) @khangnguyen2100
+
+#### `@mui/x-data-grid-pro@6.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.14.0`.
+
+#### `@mui/x-data-grid-premium@6.14.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.14.0`, plus:
+
+- [DataGridPremium] Fix clipboard import cutting off at 100 rows (#9930) @gitstart
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.14.0`
+
+- [pickers] Fix `YearCalendar` and `MonthCalendar` a11y (#10312) @LukasTy
+- [pickers] Localize `TimeClock` meridiem text (#10324) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.14.0`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.11`
+
+- [charts] Add default `barGapRatio` and increase `categoryGapRatio` (#10317) @LukasTy
+- [charts] Enable `eslint` on the package (#10330) @LukasTy
+
+### Tree View / `@mui/x-tree-view@6.0.0-alpha.3`
+
+- [TreeView] Fix box-sizing dependency (#10255) @oliviertassinari
+
+### Docs
+
+- [docs] Add conditional range picker props example (#10227) @LukasTy
+- [docs] Add toolbar to the multi-filters demo (#10223) @MBilalShafi
+- [docs] Avoid the use of "We" @oliviertassinari
+- [docs] Clarify MUI vs. MUI Core difference @oliviertassinari
+- [docs] Enable `ariaV7` flag for demos using `useDemoData` hook (#10204) @cherniavskii
+- [docs] Fix Tree View link to API references (#10282) @oliviertassinari
+- [docs] Fix image layout shift (#10313) @oliviertassinari
+- [docs] Fix link to MUI X from readme logo @oliviertassinari
+- [docs] Fix redirection to Base UI URLs @oliviertassinari
+- [docs] Improve Tree View demos (#10268) @oliviertassinari
+- [docs] Improve docs for ref type props (#10273) @michelengelen
+- [docs] Improve npm package README (#10269) @oliviertassinari
+- [docs] Improve the clarity of the npm links @oliviertassinari
+- [docs] Keep installation readme simple @oliviertassinari
+- [docs] Make each component feel more standalone @oliviertassinari
+
+### Core
+
+- [core] Add types extension for clarity @oliviertassinari
+- [core] Set logo height to fix layout shift in GitHub @oliviertassinari
+- [core] TrapFocus was renamed to FocusTrap @oliviertassinari
+
 ## 6.13.0
 
 _Sep 8, 2023_
@@ -12,6 +172,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 🎁 Fix `anchorRef` behavior on range pickers (#10077) @LukasTy
 
   The range picker popup will now be anchored to the first input element and left aligned like other pickers.
+
 - 🌍 Improve Slovak (sk-SK) locale on the data grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
