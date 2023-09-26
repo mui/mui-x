@@ -2,6 +2,7 @@
   slots={{
     openPickerIcon: EditCalendarRoundedIcon,
     openPickerButton: StyledButton,
+    day: StyledDay,
   }}
   slotProps={{
     openPickerIcon: { fontSize: 'large' },

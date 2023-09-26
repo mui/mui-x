@@ -175,16 +175,16 @@ const cleanText = (string) =>
 expect(cleanText(input.value)).to.equal('04-17-2022');
 ```
 
-## Overriding `slots` and `slotProps`
+## Overriding slots and slot props
 
-Date and Time Pickers are complex components built using many subcomponents. These internal elements can be overridden using the `slots` prop, allowing for easy customization. You can also pass additional props to the available `slots`, using the `slotProps` prop.
+Date and Time Pickers are complex components built using many subcomponents, known as **slots**. Slots are commonly filled by HTML tags or by React components and you can easily override them using the `slots` prop. You can also pass additional props to the available `slots`, using the `slotProps` prop. You can explore a more in-depth walkthrough of the mental model of **slots** on [this page](/base-ui/guides/overriding-component-structure/).
 
-The list of available `slots` for each component can be found on the component's [API Reference](/x/api/date-pickers/date-picker/#slots) page.
+You can find the list of available `slots` for each component in its respective [API reference](/x/api/date-pickers/date-picker/#slots) doc.
 
-The subcomponents of the pickers are often built on more nested structures, and you can go as deep into the customization of the nested elements as you want. For instance, you can customize the `IconButton` used as the `openPickerButton`, as well as the `openPickerIcon` inside of it. You can do the same for the `field` and the `textField`.
+Some parts of the pickers' UI are built on several nested slots. For instance, the adornment of the `TextField` contains three slots (`inputAdornment`, `openPickerButton` and `openPickerIcon`) that you can use depending on the React element you are trying to customize.
 
 {{"demo": "CustomSlots.js"}}
 
 :::info
-More information about overriding `slots` can be found on the [**dedicated documentation page**](/x/react-date-pickers/custom-components/).
+Visit the [**dedicated documentation page**](/x/react-date-pickers/custom-components/) for more information about overriding `slots`.
 :::
