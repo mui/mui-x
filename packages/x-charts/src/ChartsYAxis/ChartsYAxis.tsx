@@ -100,7 +100,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         transform: `rotate(${positionSigne * 90}deg)`,
         transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
       },
-      className: classes.label,
     } as const,
     ownerState: {},
   });
@@ -145,7 +144,11 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         );
       })}
 
-      {label && <Label {...labelRefPoint} {...axisLabelProps} text={label} />}
+      {label && (
+        <g className={classes.label}>
+          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
+        </g>
+      )}
     </AxisRoot>
   );
 }

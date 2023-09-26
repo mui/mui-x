@@ -36,6 +36,9 @@ export interface BarChartProps
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend?: ChartsLegendProps;
   /**
    * Overridable component slots.

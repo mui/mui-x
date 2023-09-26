@@ -40,12 +40,15 @@ function getGaussianSeriesData(
 }
 
 const legendPlacement = {
-  legend: {
-    position: {
-      vertical: 'middle',
-      horizontal: 'right',
+  slotProps: {
+    legend: {
+      position: {
+        vertical: 'middle',
+        horizontal: 'right',
+      },
+      direction: 'column',
+      itemGap: 2,
     },
-    direction: 'column',
   },
   margin: {
     top: 20,

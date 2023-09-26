@@ -35,6 +35,9 @@ export interface PieChartProps
   series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend?: ChartsLegendProps;
 
   slots?: PieChartSlotsComponent;

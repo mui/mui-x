@@ -98,7 +98,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         fontSize: labelFontSize,
         transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
       },
-      className: classes.label,
     } as const,
     ownerState: {},
   });
@@ -143,7 +142,11 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         );
       })}
 
-      {label && <Label {...labelRefPoint} {...axisLabelProps} text={label} />}
+      {label && (
+        <g className={classes.label}>
+          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
+        </g>
+      )}
     </AxisRoot>
   );
 }

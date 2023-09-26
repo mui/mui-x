@@ -37,6 +37,9 @@ export interface ScatterChartProps
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend?: ChartsLegendProps;
   /**
    * Overridable component slots.

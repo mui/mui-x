@@ -49,6 +49,9 @@ export interface LineChartProps
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend?: ChartsLegendProps;
   /**
    * If `true`, render the line highlight item.
