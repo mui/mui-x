@@ -10,11 +10,9 @@ import {
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
-} from 'test/utils/pickers';
-import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
-} from '@mui/x-date-pickers/tests/describeGregorianAdapter';
+} from 'test/utils/pickers';
 
 describe('<AdapterLuxon />', () => {
   describeGregorianAdapter(AdapterLuxon, {
