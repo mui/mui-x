@@ -721,7 +721,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   mergeDateAndTime(dateParam: TDate, timeParam: TDate): TDate;
   /**
    * Get the label of each day of a week.
-   * @deprecated Will be removed in v7. Use `getWeek` from date-utils and format the dates.
+   * @deprecated Will be removed in v7. Use `getWeekdays` from date-utils and format the dates.
    * @returns {string[]} The label of each day of a week.
    */
   getWeekdays(): string[];

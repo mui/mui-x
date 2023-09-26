@@ -8,7 +8,6 @@ import {
   unstable_useControlled as useControlled,
 } from '@mui/utils';
 import clsx from 'clsx';
-import { getWeekdays } from '@mui/x-date-pickers-pro/internals/utils/date-utils';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
@@ -25,7 +24,7 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 import { useIsDateDisabled } from './useIsDateDisabled';
-import { findClosestEnabledDate } from '../internals/utils/date-utils';
+import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
 import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 import { TimezoneProps } from '../models';
