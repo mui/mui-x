@@ -65,9 +65,7 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `בחירת שעה, השעה שנבחרה היא ${utils.format(value, 'fullTime')}`
       : 'בחירת שעה',
-
-  // Clear button label
-  // clearLabel: 'Clear button',
+  // clearIconButtonLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'בחירת שעה',

@@ -192,6 +192,7 @@ const BrowserSingleInputDateRangePicker = React.forwardRef(
         onOpen={handleOpen}
         slots={{ field: BrowserSingleInputDateRangeField }}
         slotProps={{
+          ...props?.slotProps,
           field: {
             onAdornmentClick: toggleOpen,
             ...props?.slotProps?.field,
@@ -290,7 +291,7 @@ const BrowserDateRangePicker = React.forwardRef(
       <DateRangePicker
         ref={ref}
         {...props}
-        slots={{ field: BrowserMultiInputDateRangeField }}
+        slots={{ ...props?.slots, field: BrowserMultiInputDateRangeField }}
       />
     );
   },

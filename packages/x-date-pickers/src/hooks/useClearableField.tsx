@@ -45,16 +45,21 @@ export const useClearableField = <
   const localeText = useLocaleText();
 
   const IconButton = slots?.clearButton ?? MuiIconButton;
-  const iconButtonProps = useSlotProps({
-    elementType: MuiIconButton,
+  // The spread is here to avoid this bug mui/material-ui#34056
+  const { ownerState, ...iconButtonProps } = useSlotProps({
+    elementType: IconButton,
     externalSlotProps: slotProps?.clearButton,
     ownerState: {},
   });
   const EndClearIcon = slots?.clearIcon ?? ClearIcon;
   const endClearIconProps = useSlotProps({
-    elementType: ClearIcon,
+    elementType: EndClearIcon,
     externalSlotProps: slotProps?.clearIcon,
     ownerState: {},
+    className: 'clearButton',
+    additionalProps: {
+      title: localeText.clearIconButtonLabel,
+    },
   });
 
   const InputProps = {
@@ -65,12 +70,7 @@ export const useClearableField = <
           position="end"
           sx={{ marginRight: ForwardedInputProps?.endAdornment ? -1 : -1.5 }}
         >
-          <IconButton
-            aria-label={localeText.clearLabel}
-            {...iconButtonProps}
-            className="clearButton"
-            onClick={onClear}
-          >
+          <IconButton {...iconButtonProps} onClick={onClear}>
             <EndClearIcon fontSize="small" {...endClearIconProps} />
           </IconButton>
         </InputAdornment>

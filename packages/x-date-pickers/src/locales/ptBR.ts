@@ -67,9 +67,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Escolha uma hora, hora selecionada ${utils.format(value, 'fullTime')}`
       : 'Escolha uma hora',
-
-  // Clear button label
-  // clearLabel: 'Clear button',
+  // clearIconButtonLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'escolha uma hora',

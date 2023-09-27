@@ -66,9 +66,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Выберите время, выбрано время ${utils.format(value, 'fullTime')}`
       : 'Выберите время',
-
-  // Clear button label
-  // clearLabel: 'Clear button',
+  // clearIconButtonLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'выбрать время',

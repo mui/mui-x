@@ -147,7 +147,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
       Dayjs,
       JoyFieldProps & { inputRef: React.Ref<HTMLInputElement> }
     > = useSlotProps({
-      elementType: 'input',
+      elementType: FormControl,
       externalSlotProps: slotProps?.textField,
       externalForwardedProps: other,
       ownerState: props as any,
@@ -229,10 +229,10 @@ const JoySingleInputDateRangePicker = React.forwardRef(
         onOpen={handleOpen}
         slots={{ field: JoySingleInputDateRangeField }}
         slotProps={{
+          ...props?.slotProps,
           field: {
             ...props?.slotProps?.field,
             onAdornmentClick: toggleOpen,
-            name: 'test',
           } as any,
         }}
       />
@@ -368,7 +368,7 @@ const JoyDateRangePicker = React.forwardRef(
       <DateRangePicker
         ref={ref}
         {...props}
-        slots={{ field: JoyMultiInputDateRangeField }}
+        slots={{ ...props?.slots, field: JoyMultiInputDateRangeField }}
       />
     );
   },

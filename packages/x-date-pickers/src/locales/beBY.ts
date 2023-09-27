@@ -66,9 +66,7 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Абраць час, абрыны час  ${utils.format(value, 'fullTime')}`
       : 'Абраць час',
-
-  // Clear button label
-  // clearLabel: 'Clear button',
+  // clearIconButtonLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'абраць час',

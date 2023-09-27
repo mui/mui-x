@@ -321,12 +321,15 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
   const slots: ReturnType['slots'] = {
     ...fieldProps.slots,
     textField: pickerSlots?.textField,
+    clearButton: pickerSlots?.clearButton,
     clearIcon: pickerSlots?.clearIcon,
   };
 
   const slotProps: ReturnType['slotProps'] = {
     ...fieldProps.slotProps,
     textField: pickerSlotProps?.textField,
+    clearButton: pickerSlots?.clearButton,
+    clearIcon: pickerSlots?.clearIcon,
   };
 
   const enrichedFieldProps: ReturnType = {

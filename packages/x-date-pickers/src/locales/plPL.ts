@@ -65,9 +65,7 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Wybierz czas, obecnie wybrany czas to ${utils.format(value, 'fullTime')}`
       : 'Wybierz czas',
-
-  // Clear button label
-  // clearLabel: 'Clear button',
+  // clearIconButtonLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'wybierz czas',

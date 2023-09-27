@@ -68,9 +68,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `時間を選択してください。選択した時間は ${utils.format(value, 'fullTime')} です`
       : '時間を選択してください',
-
-  // Clear button label
-  // clearLabel: 'Clear button',
+  // clearIconButtonLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: '時間を選択',
