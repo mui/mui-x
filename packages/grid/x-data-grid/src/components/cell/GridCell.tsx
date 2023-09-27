@@ -58,8 +58,6 @@ type GridCellV7Props = {
 
 type GridCellWrapperProps = GridCellV7Props;
 
-type GridCellV7RootProps = DataGridProcessedProps & { unstable_cellSelection: boolean };
-
 export type GridCellProps<V = any, F = V> = GridCellWrapperProps & {
   field: string;
   formattedValue?: F;
@@ -549,7 +547,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = (useGridRootProps as () => GridCellV7RootProps)();
+  const rootProps = useGridRootProps();
 
   const field = column.field;
 
@@ -614,7 +612,8 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  const isSelectionMode = rootProps.unstable_cellSelection;
+  // @ts-expect-error
+  const isSelectionMode = rootProps.unstable_cellSelection ?? false;
   const ownerState = {
     align,
     showRightBorder,
