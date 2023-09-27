@@ -13,14 +13,11 @@ import {
   expectInputPlaceholder,
   expectInputValue,
   createPickerRenderer,
+  describeGregorianAdapter,
+  TEST_DATE_ISO_STRING,
 } from 'test/utils/pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
-import {
-  describeGregorianAdapter,
-  TEST_DATE_ISO_STRING,
-} from 'packages/x-date-pickers/src/tests/describeGregorianAdapter';
-
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
 // We import the plugins here just to have the typing

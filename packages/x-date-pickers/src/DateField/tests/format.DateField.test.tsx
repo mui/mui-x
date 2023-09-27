@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { expectInputPlaceholder, expectInputValue, getTextbox } from 'test/utils/pickers';
+import {
+  expectInputPlaceholder,
+  expectInputValue,
+  getTextbox,
+  describeAdapters,
+} from 'test/utils/pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
   it('should support escaped characters in start separator', () => {
