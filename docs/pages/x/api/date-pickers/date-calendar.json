@@ -78,7 +78,7 @@
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
       "type": { "name": "any" },
@@ -153,13 +153,13 @@
     {
       "class": null,
       "name": "calendarHeader",
-      "description": "Custom component for calendar header.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
       "default": "PickersCalendarHeader"
     },
     {
       "class": null,
       "name": "day",
-      "description": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+      "description": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
       "default": "PickersDay"
     },
     {
@@ -200,6 +200,11 @@
     }
   ],
   "name": "DateCalendar",
+  "imports": [
+    "import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';",
+    "import { DateCalendar } from '@mui/x-date-pickers';",
+    "import { DateCalendar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "viewTransitionContainer"],
     "globalClasses": {},
@@ -209,9 +214,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateCalendar/DateCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateCalendar" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DateCalendar" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
 }

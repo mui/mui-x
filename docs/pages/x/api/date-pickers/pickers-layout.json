@@ -28,7 +28,7 @@
     {
       "class": null,
       "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
     },
     {
       "class": null,
@@ -40,19 +40,20 @@
     {
       "class": null,
       "name": "toolbar",
-      "description": "Custom component for the toolbar.\nIt is placed above the picker views."
+      "description": "Custom component for the toolbar. It is placed above the picker views."
     }
   ],
   "name": "PickersLayout",
+  "imports": [
+    "import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';",
+    "import { PickersLayout } from '@mui/x-date-pickers';",
+    "import { PickersLayout } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs", "shortcuts"],
     "globalClasses": {},
     "name": "MuiPickersLayout"
   },
   "filename": "/packages/x-date-pickers/src/PickersLayout/PickersLayout.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersLayout" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersLayout" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>"
 }

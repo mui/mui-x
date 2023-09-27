@@ -9,7 +9,7 @@ function RenderDate(props) {
 
   React.useLayoutEffect(() => {
     if (hasFocus) {
-      const input = buttonElement.current?.querySelector('input');
+      const input = buttonElement.current.querySelector('input');
       input?.focus();
     } else if (rippleRef.current) {
       // Only available in @mui/material v5.4.1 or later
@@ -21,7 +21,6 @@ function RenderDate(props) {
     <strong>
       {value?.getFullYear() ?? ''}
       <Button
-        component="button"
         ref={buttonElement}
         touchRippleRef={rippleRef}
         variant="contained"

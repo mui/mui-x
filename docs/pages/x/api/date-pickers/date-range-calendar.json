@@ -69,7 +69,11 @@
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
+    },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`."
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -108,7 +112,7 @@
     {
       "class": null,
       "name": "day",
-      "description": "Custom component for day in range pickers.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
+      "description": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
       "default": "DateRangePickersDay"
     },
     {
@@ -149,6 +153,10 @@
     }
   ],
   "name": "DateRangeCalendar",
+  "imports": [
+    "import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';",
+    "import { DateRangeCalendar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "monthContainer", "dayDragging"],
     "globalClasses": {},
@@ -158,6 +166,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar </a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li></ul>",
-  "packages": [{ "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangeCalendar" }]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <span class=\"plan-pro\"></span></a></li></ul>"
 }

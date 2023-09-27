@@ -1,6 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
@@ -124,15 +125,20 @@
     {
       "class": null,
       "name": "textField",
-      "description": "Form control with an input to render a time.\nIt is rendered twice: once for the start time and once for the end time.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render a time. It is rendered twice: once for the start time and once for the end time. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     }
   ],
   "name": "MultiInputTimeRangeField",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputTimeRangeField" },
+  "imports": [
+    "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';",
+    "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": {
+    "classes": ["root", "separator"],
+    "globalClasses": {},
+    "name": "MuiMultiInputTimeRangeField"
+  },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputTimeRangeField/MultiInputTimeRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field </a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiInputTimeRangeField" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field <span class=\"plan-pro\"></span></a></li></ul>"
 }

@@ -18,12 +18,13 @@
   },
   "slots": [],
   "name": "PickersActionBar",
+  "imports": [
+    "import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';",
+    "import { PickersActionBar } from '@mui/x-date-pickers';",
+    "import { PickersActionBar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root", "spacing"], "globalClasses": {}, "name": "MuiPickersActionBar" },
   "filename": "/packages/x-date-pickers/src/PickersActionBar/PickersActionBar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersActionBar" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersActionBar" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>"
 }

@@ -5,12 +5,15 @@
   },
   "slots": [],
   "name": "AreaElement",
+  "imports": [
+    "import { AreaElement } from '@mui/x-charts/LineChart';",
+    "import { AreaElement } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": ["root", "highlighted", "faded"],
     "globalClasses": {},
     "name": "MuiAreaElement"
   },
   "filename": "/packages/x-charts/src/LineChart/AreaElement.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "AreaElement" }]
+  "demos": "<ul></ul>"
 }

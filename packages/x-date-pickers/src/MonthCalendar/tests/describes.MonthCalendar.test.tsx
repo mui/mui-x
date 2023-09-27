@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { describeConformance, userEvent, screen } from '@mui/monorepo/test/utils';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
@@ -55,7 +55,7 @@ describe('<MonthCalendar /> - Describes', () => {
       const newValue = adapterToUse.addMonths(value, 1);
 
       userEvent.mousePress(
-        screen.getByRole('button', { name: adapterToUse.format(newValue, 'monthShort') }),
+        screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }),
       );
 
       return newValue;

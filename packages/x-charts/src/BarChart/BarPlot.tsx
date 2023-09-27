@@ -68,29 +68,44 @@ function BarPlot(props: BarPlotProps) {
 
           const xAxisConfig = xAxis[xAxisKey];
           const yAxisConfig = yAxis[yAxisKey];
-          if (!isBandScaleConfig(xAxisConfig)) {
-            throw new Error(
-              `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
-            );
-          }
 
-          if (xAxis[xAxisKey].data === undefined) {
-            throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
+          const verticalLayout = series[seriesId].layout === 'vertical';
+          let baseScaleConfig;
+          if (verticalLayout) {
+            if (!isBandScaleConfig(xAxisConfig)) {
+              throw new Error(
+                `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
+              );
+            }
+            if (xAxis[xAxisKey].data === undefined) {
+              throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
+            }
+            baseScaleConfig = xAxisConfig;
+          } else {
+            if (!isBandScaleConfig(yAxisConfig)) {
+              throw new Error(
+                `Axis with id "${yAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
+              );
+            }
+
+            if (yAxis[yAxisKey].data === undefined) {
+              throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
+            }
+            baseScaleConfig = yAxisConfig;
           }
 
           const xScale = xAxisConfig.scale;
           const yScale = yAxisConfig.scale;
 
-          // Currently assuming all bars are vertical
-          const bandWidth = xScale.bandwidth();
+          const bandWidth = baseScaleConfig.scale.bandwidth();
 
           const { barWidth, offset } = getBandSize({
             bandWidth,
             numberOfGroups: stackingGroups.length,
-            gapRatio: xAxisConfig.barGapRatio,
+            gapRatio: baseScaleConfig.barGapRatio,
           });
+          const barOffset = groupIndex * (barWidth + offset);
 
-          // @ts-ignore TODO: fix when adding a correct API for customisation
           const { stackedData, color } = series[seriesId];
 
           return stackedData.map((values, dataIndex: number) => {
@@ -101,11 +116,20 @@ function BarPlot(props: BarPlotProps) {
                 key={`${seriesId}-${dataIndex}`}
                 id={seriesId}
                 dataIndex={dataIndex}
-                x={xScale(xAxis[xAxisKey].data?.[dataIndex])! + groupIndex * (barWidth + offset)}
-                y={yScale(value)}
+                x={
+                  verticalLayout
+                    ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
+                    : xScale(baseline)
+                }
+                y={
+                  verticalLayout
+                    ? yScale(value)
+                    : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset
+                }
+                xOrigine={xScale(0)}
                 yOrigine={yScale(0)}
-                height={yScale(baseline) - yScale(value)}
-                width={barWidth}
+                height={verticalLayout ? Math.abs(yScale(baseline) - yScale(value)) : barWidth}
+                width={verticalLayout ? barWidth : Math.abs(xScale(baseline) - xScale(value))}
                 color={color}
                 highlightScope={series[seriesId].highlightScope}
                 {...props}

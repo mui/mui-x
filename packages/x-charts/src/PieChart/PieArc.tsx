@@ -25,7 +25,7 @@ export interface PieArcClasses {
 
 export type PieArcClassKey = keyof PieArcClasses;
 
-export interface PieArcOwnerState {
+interface PieArcOwnerState {
   id: string;
   dataIndex: number;
   color: string;
@@ -58,7 +58,7 @@ const PieArcRoot = styled('path', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
 })<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
-  stroke: theme.palette.background.paper,
+  stroke: (theme.vars || theme).palette.background.paper,
   strokeWidth: 1,
   strokeLinejoin: 'round',
   fill: ownerState.color,

@@ -12,10 +12,17 @@
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "stroke": { "type": { "name": "string" }, "default": "'currentColor'" },
     "tickFontSize": { "type": { "name": "number" }, "default": "12" },
+    "tickMaxStep": { "type": { "name": "number" } },
+    "tickMinStep": { "type": { "name": "number" } },
+    "tickNumber": { "type": { "name": "number" } },
     "tickSize": { "type": { "name": "number" }, "default": "6" }
   },
   "slots": [],
   "name": "ChartsXAxis",
+  "imports": [
+    "import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';",
+    "import { ChartsXAxis } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": [
       "root",
@@ -35,6 +42,5 @@
     "name": "MuiChartsXAxis"
   },
   "filename": "/packages/x-charts/src/ChartsXAxis/ChartsXAxis.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsXAxis" }]
+  "demos": "<ul></ul>"
 }

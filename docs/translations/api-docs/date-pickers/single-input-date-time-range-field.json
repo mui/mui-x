@@ -269,6 +269,6 @@
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
-    "textField": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "textField": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>."
   }
 }

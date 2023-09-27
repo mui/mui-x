@@ -35,7 +35,8 @@ export type CartesianContextProviderProps = {
   children: React.ReactNode;
 };
 
-const DEFAULT_CATEGORY_GAP_RATIO = 0.1;
+const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
+const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 // TODO: those might be better placed in a distinct file
 const xExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
@@ -174,9 +175,10 @@ function CartesianContextProvider({
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+        const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
         completedXAxis[axis.id] = {
           categoryGapRatio,
-          barGapRatio: 0,
+          barGapRatio,
           ...axis,
           scale: scaleBand(axis.data!, range)
             .paddingInner(categoryGapRatio)
@@ -199,7 +201,7 @@ function CartesianContextProvider({
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range });
+      const ticksNumber = getTicksNumber({ ...axis, range, domain: extremums });
 
       const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
       const niceDomain = niceScale.domain();
@@ -228,21 +230,20 @@ function CartesianContextProvider({
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-
-        completedXAxis[axis.id] = {
+        completedYAxis[axis.id] = {
           categoryGapRatio,
           barGapRatio: 0,
           ...axis,
-          scale: scaleBand(axis.data!, range)
+          scale: scaleBand(axis.data!, [range[1], range[0]])
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
           ticksNumber: axis.data!.length,
         };
       }
       if (isPointScaleConfig(axis)) {
-        completedXAxis[axis.id] = {
+        completedYAxis[axis.id] = {
           ...axis,
-          scale: scalePoint(axis.data!, range),
+          scale: scalePoint(axis.data!, [range[1], range[0]]),
           ticksNumber: axis.data!.length,
         };
       }
@@ -254,7 +255,7 @@ function CartesianContextProvider({
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range });
+      const ticksNumber = getTicksNumber({ ...axis, range, domain: extremums });
 
       const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
       const niceDomain = niceScale.domain();
@@ -309,17 +310,17 @@ CartesianContextProvider.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      maxTicks: PropTypes.number,
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),
@@ -337,17 +338,17 @@ CartesianContextProvider.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      maxTicks: PropTypes.number,
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),

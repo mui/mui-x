@@ -24,15 +24,16 @@
   },
   "slots": [],
   "name": "PickersShortcuts",
+  "imports": [
+    "import { PickersShortcuts } from '@mui/x-date-pickers/PickersShortcuts';",
+    "import { PickersShortcuts } from '@mui/x-date-pickers';",
+    "import { PickersShortcuts } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "padding", "dense", "subheader"],
     "globalClasses": {},
     "name": "MuiPickersShortcuts"
   },
   "filename": "/packages/x-date-pickers/src/PickersShortcuts/PickersShortcuts.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/shortcuts/\">Shortcuts</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersShortcuts" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersShortcuts" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/shortcuts/\">Shortcuts</a></li></ul>"
 }

@@ -40,6 +40,11 @@
   },
   "slots": [],
   "name": "PickersDay",
+  "imports": [
+    "import { PickersDay } from '@mui/x-date-pickers/PickersDay';",
+    "import { PickersDay } from '@mui/x-date-pickers';",
+    "import { PickersDay } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": [
       "root",
@@ -57,9 +62,5 @@
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers/src/PickersDay/PickersDay.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersDay" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersDay" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
 }

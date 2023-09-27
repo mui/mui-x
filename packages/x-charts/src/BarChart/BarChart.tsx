@@ -9,7 +9,7 @@ import {
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
 import {
   ChartsLegend,
@@ -47,6 +47,7 @@ export interface BarChartProps
    * @default {}
    */
   slotProps?: BarChartSlotComponentProps;
+  layout?: BarSeriesType['layout'];
 }
 
 const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
@@ -60,6 +61,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     colors,
     dataset,
     sx,
+    layout,
     tooltip,
     axisHighlight,
     legend,
@@ -75,26 +77,41 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
+  const hasHorizontalSeries =
+    layout === 'horizontal' ||
+    (layout === undefined && series.some((item) => item.layout === 'horizontal'));
+
+  const defaultAxisConfig = {
+    scaleType: 'band',
+    data: Array.from(
+      { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+      (_, index) => index,
+    ),
+  } as const;
+
+  const defaultizedAxisHighlight = {
+    ...(hasHorizontalSeries ? ({ y: 'band' } as const) : ({ x: 'band' } as const)),
+    ...axisHighlight,
+  };
   return (
     <ResponsiveChartContainer
       ref={ref}
-      series={series.map((s) => ({ type: 'bar', ...s }))}
+      series={series.map((s) => ({
+        type: 'bar',
+        ...s,
+        layout: hasHorizontalSeries ? 'horizontal' : 'vertical',
+      }))}
       width={width}
       height={height}
       margin={margin}
       xAxis={
-        xAxis ?? [
-          {
-            id: DEFAULT_X_AXIS_KEY,
-            scaleType: 'band',
-            data: Array.from(
-              { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-              (_, index) => index,
-            ),
-          },
-        ]
+        xAxis ??
+        (hasHorizontalSeries ? undefined : [{ id: DEFAULT_X_AXIS_KEY, ...defaultAxisConfig }])
       }
-      yAxis={yAxis}
+      yAxis={
+        yAxis ??
+        (hasHorizontalSeries ? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultAxisConfig }] : undefined)
+      }
       colors={colors}
       dataset={dataset}
       sx={sx}
@@ -114,7 +131,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
         slotProps={slotProps}
       />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      <ChartsAxisHighlight x="band" {...axisHighlight} />
+      <ChartsAxisHighlight {...defaultizedAxisHighlight} />
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
       <ChartsClipPath id={clipPathId} />
       {children}
@@ -129,7 +146,7 @@ BarChart.propTypes = {
   // ----------------------------------------------------------------------
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
+    y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Indicate which axis to display the bottom of the charts.
@@ -150,6 +167,9 @@ BarChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -164,6 +184,7 @@ BarChart.propTypes = {
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
+  layout: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -183,6 +204,9 @@ BarChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -230,6 +254,9 @@ BarChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -245,6 +272,7 @@ BarChart.propTypes = {
       }),
       id: PropTypes.string,
       label: PropTypes.string,
+      layout: PropTypes.oneOf(['horizontal', 'vertical']),
       stack: PropTypes.string,
       stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
       stackOrder: PropTypes.oneOf([
@@ -302,6 +330,9 @@ BarChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -327,17 +358,17 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      maxTicks: PropTypes.number,
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),
@@ -355,17 +386,17 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      maxTicks: PropTypes.number,
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),

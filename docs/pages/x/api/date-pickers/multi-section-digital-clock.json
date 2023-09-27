@@ -120,14 +120,15 @@
     }
   ],
   "name": "MultiSectionDigitalClock",
+  "imports": [
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';",
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers';",
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMultiSectionDigitalClock" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MultiSectionDigitalClock/MultiSectionDigitalClock.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiSectionDigitalClock" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "MultiSectionDigitalClock" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li></ul>"
 }

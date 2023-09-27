@@ -31,33 +31,26 @@ export interface PickersProComponents<Theme = unknown> {
   // Single input range fields
   MuiSingleInputDateRangeField?: {
     defaultProps?: ComponentsProps['MuiSingleInputDateRangeField'];
-    styleOverrides?: ComponentsOverrides['MuiSingleInputDateRangeField'];
   };
   MuiSingleInputDateTimeRangeField?: {
     defaultProps?: ComponentsProps['MuiSingleInputDateTimeRangeField'];
-    styleOverrides?: ComponentsOverrides['MuiSingleInputDateTimeRangeField'];
   };
   MuiSingleInputTimeRangeField?: {
     defaultProps?: ComponentsProps['MuiSingleInputTimeRangeField'];
-    styleOverrides?: ComponentsOverrides['MuiSingleInputTimeRangeField'];
   };
 
   // Date Range Pickers
   MuiDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePicker'];
   };
   MuiDesktopDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiDesktopDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopDateRangePicker'];
   };
   MuiMobileDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiMobileDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMobileDateRangePicker'];
   };
   MuiStaticDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiStaticDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiStaticDateRangePicker'];
   };
 }
 

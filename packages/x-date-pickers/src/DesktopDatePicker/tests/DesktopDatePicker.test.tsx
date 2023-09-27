@@ -11,8 +11,7 @@ import {
   openPicker,
   expectInputValue,
   getTextbox,
-} from 'test/utils/pickers-utils';
-import { DatePicker } from '@mui/x-date-pickers';
+} from 'test/utils/pickers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -105,7 +104,7 @@ describe('<DesktopDatePicker />', () => {
       if (isJSDOM) {
         this.skip();
       }
-      render(<DatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
+      render(<DesktopDatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
       openPicker({ type: 'date', variant: 'desktop' });
       expect(document.activeElement).to.have.text('2019');
@@ -221,7 +220,7 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Select year
-      userEvent.mousePress(screen.getByRole('button', { name: '2025' }));
+      userEvent.mousePress(screen.getByRole('radio', { name: '2025' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onAccept.callCount).to.equal(0);

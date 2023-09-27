@@ -6,7 +6,7 @@ import {
   GridLogicOperator,
   GridPreferencePanelsValue,
   GridRowModel,
-  SUBMIT_FILTER_STROKE_TIME,
+  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   useGridApiRef,
   DataGridPro,
   GetColumnForNewFilterArgs,
@@ -20,6 +20,8 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+
+const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -881,7 +883,7 @@ describe('<DataGridPro /> - Filter', () => {
       const filterCell = getColumnHeaderCell(0, 1);
       const filterCellInput = filterCell.querySelector('input')!;
       expect(filterCellInput).not.toHaveFocus();
-      fireEvent.mouseDown(filterCell);
+      fireEvent.mouseDown(filterCellInput);
       expect(filterCellInput).toHaveFocus();
       fireEvent.change(filterCellInput, { target: { value: 'ad' } });
       clock.tick(SUBMIT_FILTER_STROKE_TIME);

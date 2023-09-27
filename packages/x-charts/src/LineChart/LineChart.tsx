@@ -22,18 +22,25 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlotComponentProps, ChartsAxisSlotsComponent } from '../models/axis';
+import {
+  LineHighlightPlot,
+  LineHighlightPlotSlotsComponent,
+  LineHighlightPlotSlotComponentProps,
+} from './LineHighlightPlot';
 
 export interface LineChartSlotsComponent
   extends ChartsAxisSlotsComponent,
     AreaPlotSlotsComponent,
     LinePlotSlotsComponent,
     MarkPlotSlotsComponent,
+    LineHighlightPlotSlotsComponent,
     ChartsLegendSlotsComponent {}
 export interface LineChartSlotComponentProps
   extends ChartsAxisSlotComponentProps,
     AreaPlotSlotComponentProps,
     LinePlotSlotComponentProps,
     MarkPlotSlotComponentProps,
+    LineHighlightPlotSlotComponentProps,
     ChartsLegendSlotComponentProps {}
 
 export interface LineChartProps
@@ -43,6 +50,10 @@ export interface LineChartProps
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
+  /**
+   * If `true`, render the line highlight item.
+   */
+  disableLineItemHighlight?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -67,6 +78,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     sx,
     tooltip,
     axisHighlight = { x: 'line' },
+    disableLineItemHighlight,
     legend,
     topAxis,
     leftAxis,
@@ -83,7 +95,11 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
   return (
     <ResponsiveChartContainer
       ref={ref}
-      series={series.map((s) => ({ type: 'line', ...s }))}
+      series={series.map((s) => ({
+        disableHighlight: !!disableLineItemHighlight,
+        type: 'line',
+        ...s,
+      }))}
       width={width}
       height={height}
       margin={margin}
@@ -119,9 +135,10 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         slots={slots}
         slotProps={slotProps}
       />
-      <MarkPlot slots={slots} slotProps={slotProps} />
-      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
+      <MarkPlot slots={slots} slotProps={slotProps} />
+      <LineHighlightPlot slots={slots} slotProps={slotProps} />
+      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsTooltip {...tooltip} />
       <ChartsClipPath id={clipPathId} />
       {children}
@@ -136,7 +153,7 @@ LineChart.propTypes = {
   // ----------------------------------------------------------------------
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
+    y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Indicate which axis to display the bottom of the charts.
@@ -157,6 +174,9 @@ LineChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -170,6 +190,10 @@ LineChart.propTypes = {
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
+  /**
+   * If `true`, render the line highlight item.
+   */
+  disableLineItemHighlight: PropTypes.bool,
   height: PropTypes.number,
   /**
    * Indicate which axis to display the left of the charts.
@@ -190,6 +214,9 @@ LineChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -237,6 +264,9 @@ LineChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -257,12 +287,14 @@ LineChart.propTypes = {
       ]),
       data: PropTypes.arrayOf(PropTypes.number),
       dataKey: PropTypes.string,
+      disableHighlight: PropTypes.bool,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
       }),
       id: PropTypes.string,
       label: PropTypes.string,
+      showMark: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
       stack: PropTypes.string,
       stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
       stackOrder: PropTypes.oneOf([
@@ -320,6 +352,9 @@ LineChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -345,17 +380,17 @@ LineChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      maxTicks: PropTypes.number,
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),
@@ -373,17 +408,17 @@ LineChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      maxTicks: PropTypes.number,
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),

@@ -5,8 +5,11 @@
   },
   "slots": [],
   "name": "MarkPlot",
+  "imports": [
+    "import { MarkPlot } from '@mui/x-charts/LineChart';",
+    "import { MarkPlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMarkPlot" },
   "filename": "/packages/x-charts/src/LineChart/MarkPlot.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "MarkPlot" }]
+  "demos": "<ul></ul>"
 }

@@ -7,24 +7,24 @@ export const AxisRoot = styled('g', {
   overridesResolver: (props, styles) => styles.root,
 })({
   [`&.${axisClasses.directionY}`]: {
-    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'middle' },
-    [`.${axisClasses.label}`]: { alignmentBaseline: 'baseline', textAnchor: 'middle' },
+    [`.${axisClasses.tickLabel}`]: { dominantBaseline: 'middle' },
+    [`.${axisClasses.label}`]: { dominantBaseline: 'auto', textAnchor: 'middle' },
   },
   [`&.${axisClasses.left}`]: {
-    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'central', textAnchor: 'end' },
+    [`.${axisClasses.tickLabel}`]: { dominantBaseline: 'central', textAnchor: 'end' },
   },
   [`&.${axisClasses.right}`]: {
-    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'central', textAnchor: 'start' },
+    [`.${axisClasses.tickLabel}`]: { dominantBaseline: 'central', textAnchor: 'start' },
   },
   [`&.${axisClasses.bottom}`]: {
     [`.${axisClasses.tickLabel}, .${axisClasses.label}`]: {
-      alignmentBaseline: 'hanging',
+      dominantBaseline: 'hanging',
       textAnchor: 'middle',
     },
   },
   [`&.${axisClasses.top}`]: {
     [`.${axisClasses.tickLabel}, .${axisClasses.label}`]: {
-      alignmentBaseline: 'baseline',
+      dominantBaseline: 'baseline',
       textAnchor: 'middle',
     },
   },
@@ -35,7 +35,7 @@ export const ChartsLine = styled('line', {
   slot: 'Line',
   overridesResolver: (props, styles) => styles.line,
 })(({ theme }) => ({
-  stroke: theme.palette.text.primary,
+  stroke: (theme.vars || theme).palette.text.primary,
   shapeRendering: 'crispEdges',
   strokeWidth: 1,
 }));
@@ -45,7 +45,7 @@ export const ChartsTick = styled('line', {
   slot: 'Tick',
   overridesResolver: (props, styles) => styles.tick,
 })(({ theme }) => ({
-  stroke: theme.palette.text.primary,
+  stroke: (theme.vars || theme).palette.text.primary,
   shapeRendering: 'crispEdges',
 }));
 
@@ -55,7 +55,7 @@ export const ChartsTickLabel = styled('text', {
   overridesResolver: (props, styles) => styles.tickLabel,
 })(({ theme }) => ({
   ...theme.typography.caption,
-  fill: theme.palette.text.primary,
+  fill: (theme.vars || theme).palette.text.primary,
 }));
 
 export const ChartsLabel = styled('text', {
@@ -64,5 +64,5 @@ export const ChartsLabel = styled('text', {
   overridesResolver: (props, styles) => styles.label,
 })(({ theme }) => ({
   ...theme.typography.body1,
-  fill: theme.palette.text.primary,
+  fill: (theme.vars || theme).palette.text.primary,
 }));

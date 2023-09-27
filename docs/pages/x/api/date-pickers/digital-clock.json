@@ -94,14 +94,15 @@
     }
   ],
   "name": "DigitalClock",
+  "imports": [
+    "import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';",
+    "import { DigitalClock } from '@mui/x-date-pickers';",
+    "import { DigitalClock } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root", "list", "item"], "globalClasses": {}, "name": "MuiDigitalClock" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DigitalClock/DigitalClock.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DigitalClock" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DigitalClock" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li></ul>"
 }

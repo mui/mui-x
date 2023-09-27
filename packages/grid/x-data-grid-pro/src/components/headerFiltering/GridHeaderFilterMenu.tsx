@@ -58,8 +58,8 @@ function GridHeaderFilterMenu({
     <GridMenu
       placement="bottom-end"
       open={open}
-      target={target as HTMLElement}
-      onClickAway={hideMenu}
+      target={target}
+      onClose={hideMenu}
       onExited={hideMenu}
     >
       <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown}>

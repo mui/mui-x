@@ -1,17 +1,13 @@
 import * as React from 'react';
 import moment from 'moment';
+import { expect } from 'chai';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
+import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import {
-  createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
 import { describeHijriAdapter } from '@mui/x-date-pickers/tests/describeHijriAdapter';
 import 'moment/locale/ar';
-import { AdapterFormats } from '@mui/x-date-pickers';
-import { expect } from 'chai';
 
 describe('<AdapterMomentHijri />', () => {
   describeHijriAdapter(AdapterMomentHijri, {

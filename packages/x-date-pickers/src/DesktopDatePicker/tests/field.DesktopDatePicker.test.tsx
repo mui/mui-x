@@ -3,12 +3,12 @@ import { fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
+  buildFieldInteractions,
   getTextbox,
+  expectInputValue,
   expectInputPlaceholder,
   adapterToUse,
-  expectInputValue,
-  buildFieldInteractions,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<DesktopDatePicker /> - Field', () => {
@@ -24,7 +24,11 @@ describe('<DesktopDatePicker /> - Field', () => {
     });
 
     it('should be able to reset a single section', () => {
-      render(<DesktopDatePicker format={adapterToUse.formats.monthAndDate} />);
+      render(
+        <DesktopDatePicker
+          format={`${adapterToUse.formats.month} ${adapterToUse.formats.dayOfMonth}`}
+        />,
+      );
 
       const input = getTextbox();
       expectInputPlaceholder(input, 'MMMM DD');
@@ -66,7 +70,7 @@ describe('<DesktopDatePicker /> - Field', () => {
           <DesktopDatePicker
             value={value}
             onChange={setValue}
-            format={adapter.formats.monthAndYear}
+            format={`${adapter.formats.month} ${adapter.formats.year}`}
             timezone="America/Chicago"
           />
         );

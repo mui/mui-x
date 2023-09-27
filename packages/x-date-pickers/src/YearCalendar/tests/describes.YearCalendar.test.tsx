@@ -6,7 +6,7 @@ import {
   YearCalendar,
   yearCalendarClasses as classes,
 } from '@mui/x-date-pickers/YearCalendar';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 
@@ -52,7 +52,7 @@ describe('<YearCalendar /> - Describes', () => {
     setNewValue: (value) => {
       const newValue = adapterToUse.addYears(value, 1);
       userEvent.mousePress(
-        screen.getByRole('button', { name: adapterToUse.getYear(newValue).toString() }),
+        screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),
       );
 
       return newValue;

@@ -67,6 +67,25 @@ xAxis={[{ min: 10, max: 50,  }]}
 
 {{"demo": "MinMaxExample.js"}}
 
+### Ticks positions
+
+You can customize the number of ticks with the property `tickNumber`.
+
+:::info
+This number is not the exact number of ticks displayed.
+
+Thanks to d3, ticks are placed to be human-readable.
+For example, ticks for time axes will be placed on special values (years, days, half-days, ...).
+
+If you set `tickNumber=5` but there are only 4 years to display in the axis, the component might chose to render ticks on the 4 years, instead of putting 5 ticks on some months.
+:::
+
+As a helper, you can also provide `tickMinStep` and `tickMaxStep` which will compute `tickNumber` such that the step between two ticks respect those min/max values.
+
+Here the top axis has a `tickMinStep` of half a day, and the bottom axis a `tickMinStep` of a full day.
+
+{{"demo": "TickNumber.js"}}
+
 ## Axis customization
 
 You can further customize the axis rendering besides the axis definition.

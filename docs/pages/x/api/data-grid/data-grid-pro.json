@@ -70,6 +70,7 @@
         "description": "{ ariaV7?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
+    "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
       "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -836,6 +837,12 @@
     },
     {
       "class": null,
+      "name": "footerRowCount",
+      "description": "Row count component rendered in the footer",
+      "default": "GridRowCount"
+    },
+    {
+      "class": null,
       "name": "groupingCriteriaCollapseIcon",
       "description": "Icon displayed on the grouping column when the children are expanded",
       "default": "GridExpandMoreIcon"
@@ -962,6 +969,11 @@
     }
   ],
   "name": "DataGridPro",
+  "imports": [
+    "import { DataGridPro } from '@mui/x-data-grid-pro/DataGridPro';",
+    "import { DataGridPro } from '@mui/x-data-grid-pro';",
+    "import { DataGridPro } from '@mui/x-data-grid-premium';"
+  ],
   "styles": {
     "classes": [
       "actionsCell",
@@ -1101,6 +1113,5 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li></ul>",
-  "packages": [{ "packageName": "@mui/x-data-grid-pro", "componentName": "DataGridPro" }]
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li></ul>"
 }

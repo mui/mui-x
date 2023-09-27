@@ -170,8 +170,8 @@ export const ChartsLegendLabel = styled('text', {
       calc(var(--ChartsLegend-itemMarkSize) + var(--ChartsLegend-labelSpacing)),
       calc(0.5 * var(--ChartsLegend-itemMarkSize))
       )`,
-  fill: theme.palette.text.primary,
-  alignmentBaseline: 'central',
+  fill: (theme.vars || theme).palette.text.primary,
+  dominantBaseline: 'central',
 }));
 
 const defaultProps = {

@@ -5,8 +5,11 @@
   },
   "slots": [],
   "name": "ScatterPlot",
+  "imports": [
+    "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
+    "import { ScatterPlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatterPlot" },
   "filename": "/packages/x-charts/src/ScatterChart/ScatterPlot.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ScatterPlot" }]
+  "demos": "<ul></ul>"
 }

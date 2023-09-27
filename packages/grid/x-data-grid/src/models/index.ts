@@ -31,6 +31,7 @@ export type {
   GridFileExportOptions,
   GridGetRowsToExportParams,
   GridCsvGetRowsToExportParams,
+  GridPrintGetRowsToExportParams,
   GridCsvExportOptions,
   GridPrintExportOptions,
 } from './gridExport';

@@ -37,7 +37,7 @@ export interface ChartsAxisSlotComponentProps {
   axisLabel?: Partial<React.SVGAttributes<SVGTextElement>>;
 }
 
-export interface ChartsAxisProps {
+export interface ChartsAxisProps extends TickParams {
   /**
    * Id of the axis to render.
    */
@@ -121,13 +121,13 @@ interface AxisScaleConfig {
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
      * 0 means no gap, and 1 no data.
-     * @default 0.1
+     * @default 0.2
      */
     categoryGapRatio: number;
     /**
      * The ratio between the width of a bar, and the gap between two bars.
      * 0 means no gap, and 1 no bar.
-     * @default 0
+     * @default 0.1
      */
     barGapRatio: number;
   };

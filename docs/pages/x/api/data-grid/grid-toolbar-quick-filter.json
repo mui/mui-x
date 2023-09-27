@@ -1,6 +1,6 @@
 {
   "props": {
-    "debounceMs": { "type": { "name": "number" }, "default": "500" },
+    "debounceMs": { "type": { "name": "number" }, "default": "150" },
     "quickFilterFormatter": {
       "type": { "name": "func" },
       "signature": {
@@ -20,13 +20,14 @@
   },
   "slots": [],
   "name": "GridToolbarQuickFilter",
+  "imports": [
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid/components';",
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid';",
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid-pro';",
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid-premium';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/toolbar/GridToolbarQuickFilter.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-data-grid-premium", "componentName": "GridToolbarQuickFilter" },
-    { "packageName": "@mui/x-data-grid-pro", "componentName": "GridToolbarQuickFilter" },
-    { "packageName": "@mui/x-data-grid", "componentName": "GridToolbarQuickFilter" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>"
 }

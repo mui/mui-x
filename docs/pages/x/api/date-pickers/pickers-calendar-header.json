@@ -14,15 +14,16 @@
   },
   "slots": [],
   "name": "PickersCalendarHeader",
+  "imports": [
+    "import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';",
+    "import { PickersCalendarHeader } from '@mui/x-date-pickers';",
+    "import { PickersCalendarHeader } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
     "globalClasses": {},
     "name": "MuiPickersCalendarHeader"
   },
   "filename": "/packages/x-date-pickers/src/PickersCalendarHeader/PickersCalendarHeader.tsx",
-  "demos": "<ul></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersCalendarHeader" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersCalendarHeader" }
-  ]
+  "demos": "<ul></ul>"
 }

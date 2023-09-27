@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({
@@ -41,7 +41,7 @@ describe('<DesktopDateTimePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Select year
-      userEvent.mousePress(screen.getByRole('button', { name: '2025' }));
+      userEvent.mousePress(screen.getByRole('radio', { name: '2025' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1, 11, 55));
       expect(onAccept.callCount).to.equal(0);

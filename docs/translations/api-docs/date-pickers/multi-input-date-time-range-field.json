@@ -6,6 +6,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "classes": {
+      "description": "Override or extend the styles applied to the component.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "components": {
       "description": "Overridable components.",
       "deprecated": "",
@@ -200,10 +205,16 @@
       "typeDescriptions": {}
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "separator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the separator element"
+    }
+  },
   "slotDescriptions": {
     "root": "Element rendered at the root.",
     "separator": "Element rendered between the two inputs.",
-    "textField": "Form control with an input to render a date and time.\nIt is rendered twice: once for the start date time and once for the end date time.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "textField": "Form control with an input to render a date and time. It is rendered twice: once for the start date time and once for the end date time. Receives the same props as <code>@mui/material/TextField</code>."
   }
 }

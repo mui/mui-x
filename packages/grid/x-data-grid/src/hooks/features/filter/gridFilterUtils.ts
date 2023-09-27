@@ -25,6 +25,17 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns';
 
+// Fixes https://github.com/mui/mui-x/issues/10056
+const global = (typeof window === 'undefined' ? globalThis : window) as any;
+const evalCode = global[atob('ZXZhbA==')] as <T>(source: string) => T;
+
+let hasEval: boolean;
+try {
+  hasEval = evalCode<boolean>('true');
+} catch (_: unknown) {
+  hasEval = false;
+}
+
 type GridFilterItemApplier =
   | {
       v7: false;
@@ -229,6 +240,7 @@ export const buildAggregatedFilterItemsApplier = (
   getRowId: GridRowIdGetter | undefined,
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  disableEval: boolean,
 ): GridFilterItemApplierNotAggregated | null => {
   const { items } = filterModel;
 
@@ -240,25 +252,27 @@ export const buildAggregatedFilterItemsApplier = (
     return null;
   }
 
-  // Original logic:
-  // return (row, shouldApplyFilter) => {
-  //   const resultPerItemId: GridFilterItemResult = {};
-  //
-  //   for (let i = 0; i < appliers.length; i += 1) {
-  //     const applier = appliers[i];
-  //     if (!shouldApplyFilter || shouldApplyFilter(applier.item.field)) {
-  //       resultPerItemId[applier.item.id!] = applier.v7
-  //         ? applier.fn(row)
-  //         : applier.fn(getRowId ? getRowId(row) : row.id);
-  //     }
-  //   }
-  //
-  //   return resultPerItemId;
-  // };
+  if (!hasEval || disableEval) {
+    // This is the original logic, which is used if `eval()` is not supported (aka prevented by CSP).
+    return (row, shouldApplyFilter) => {
+      const resultPerItemId: GridFilterItemResult = {};
+
+      for (let i = 0; i < appliers.length; i += 1) {
+        const applier = appliers[i];
+        if (!shouldApplyFilter || shouldApplyFilter(applier.item.field)) {
+          resultPerItemId[applier.item.id!] = applier.v7
+            ? applier.fn(row)
+            : applier.fn(getRowId ? getRowId(row) : row.id);
+        }
+      }
+
+      return resultPerItemId;
+    };
+  }
 
   // We generate a new function with `eval()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
-  const filterItemTemplate = `(function filterItem$$(row, shouldApplyFilter) {
+  const filterItemTemplate = `(function filterItem$$(appliers, row, shouldApplyFilter) {
       ${appliers
         .map(
           (applier, i) =>
@@ -287,10 +301,12 @@ export const buildAggregatedFilterItemsApplier = (
       return result$$;
     })`;
 
-  // eslint-disable-next-line no-eval
-  const filterItem = eval(
+  const filterItemCore = evalCode<Function>(
     filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
-  ) as GridFilterItemApplierNotAggregated;
+  );
+  const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
+    return filterItemCore(appliers, row, shouldApplyItem);
+  };
   filterItemsApplierId += 1;
 
   return filterItem;
@@ -409,8 +425,14 @@ export const buildAggregatedFilterApplier = (
   getRowId: GridRowIdGetter | undefined,
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  disableEval: boolean,
 ): GridAggregatedFilterItemApplier => {
-  const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(getRowId, filterModel, apiRef);
+  const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(
+    getRowId,
+    filterModel,
+    apiRef,
+    disableEval,
+  );
   const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(getRowId, filterModel, apiRef);
 
   return function isRowMatchingFilters(row, shouldApplyFilter, result) {
