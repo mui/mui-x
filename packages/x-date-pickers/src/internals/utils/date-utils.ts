@@ -183,3 +183,8 @@ export const resolveDateFormat = (
 
   return formats.keyboardDate;
 };
+
+export const getWeekdays = <TDate>(utils: MuiPickersAdapter<TDate>, date: TDate) => {
+  const start = utils.startOfWeek(date);
+  return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
+};

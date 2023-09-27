@@ -5,8 +5,6 @@ import {
   userEvent,
   fireTouchChangedEvent,
 } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   createPickerRenderer,
   wrapPickerMount,
@@ -16,9 +14,11 @@ import {
   openPicker,
   getClockTouchEvent,
   getTextbox,
+  describeValidation,
+  describeValue,
+  describePicker,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

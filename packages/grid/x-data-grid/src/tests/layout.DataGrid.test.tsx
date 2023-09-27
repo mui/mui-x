@@ -14,7 +14,7 @@ import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow, sleep } from 'test/utils/helperFn';
 
-describe('<DataGrid /> - Layout & Warnings', () => {
+describe('<DataGrid /> - Layout & warnings', () => {
   const { clock, render } = createRenderer();
 
   const baselineProps = {
