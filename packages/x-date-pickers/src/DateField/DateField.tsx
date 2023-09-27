@@ -68,6 +68,8 @@ const DateField = React.forwardRef(function DateField<TDate>(
     InputProps: fieldProps.InputProps,
     slots,
     slotProps,
+    components,
+    componentsProps,
   });
 
   return (

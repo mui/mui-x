@@ -70,6 +70,8 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
     InputProps: fieldProps.InputProps,
     slots,
     slotProps,
+    components,
+    componentsProps,
   });
   return (
     <TextField

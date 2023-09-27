@@ -70,6 +70,8 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
     InputProps: fieldProps.InputProps,
     slots,
     slotProps,
+    components,
+    componentsProps,
   });
 
   return (

@@ -69,6 +69,8 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     InputProps: fieldProps.InputProps,
     slots,
     slotProps,
+    components,
+    componentsProps,
   });
 
   return (
