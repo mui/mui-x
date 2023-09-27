@@ -4,6 +4,7 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementProps } from './BarElement';
 import { isBandScaleConfig } from '../models/axis';
+import { FormatterResult } from '../models/seriesType/config';
 
 /**
  * Solution of the equations
@@ -47,98 +48,132 @@ export interface BarPlotSlotComponentProps {
 
 export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {}
 
-function BarPlot(props: BarPlotProps) {
-  const seriesData = React.useContext(SeriesContext).bar;
+const useCompletData = () => {
+  const seriesData =
+    React.useContext(SeriesContext).bar ??
+    ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
   const axisData = React.useContext(CartesianContext);
 
-  if (seriesData === undefined) {
-    return null;
-  }
   const { series, stackingGroups } = seriesData;
   const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
+  const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
+    return groupIds.flatMap((seriesId) => {
+      const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
+      const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;
+
+      const xAxisConfig = xAxis[xAxisKey];
+      const yAxisConfig = yAxis[yAxisKey];
+
+      const verticalLayout = series[seriesId].layout === 'vertical';
+      let baseScaleConfig;
+      if (verticalLayout) {
+        if (!isBandScaleConfig(xAxisConfig)) {
+          throw new Error(
+            `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
+          );
+        }
+        if (xAxis[xAxisKey].data === undefined) {
+          throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
+        }
+        baseScaleConfig = xAxisConfig;
+      } else {
+        if (!isBandScaleConfig(yAxisConfig)) {
+          throw new Error(
+            `Axis with id "${yAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
+          );
+        }
+
+        if (yAxis[yAxisKey].data === undefined) {
+          throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
+        }
+        baseScaleConfig = yAxisConfig;
+      }
+
+      const xScale = xAxisConfig.scale;
+      const yScale = yAxisConfig.scale;
+
+      const bandWidth = baseScaleConfig.scale.bandwidth();
+
+      const { barWidth, offset } = getBandSize({
+        bandWidth,
+        numberOfGroups: stackingGroups.length,
+        gapRatio: baseScaleConfig.barGapRatio,
+      });
+      const barOffset = groupIndex * (barWidth + offset);
+
+      const { stackedData, color } = series[seriesId];
+
+      return stackedData.map((values, dataIndex: number) => {
+        const baseline = Math.min(...values);
+        const value = Math.max(...values);
+
+        return {
+          baseline,
+          value,
+          seriesId,
+          dataIndex,
+          layout: series[seriesId].layout,
+          x: verticalLayout
+            ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
+            : xScale(baseline),
+          y: verticalLayout
+            ? yScale(value)
+            : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
+          xOrigine: xScale(0),
+          yOrigine: yScale(0),
+          height: verticalLayout ? Math.abs(yScale(baseline) - yScale(value)) : barWidth,
+          width: verticalLayout ? barWidth : Math.abs(xScale(baseline) - xScale(value)),
+          color,
+          highlightScope: series[seriesId].highlightScope,
+        };
+      });
+    });
+  });
+
+  return data;
+};
+
+function BarPlot(props: BarPlotProps) {
+  const completedData = useCompletData();
+
   return (
     <React.Fragment>
-      {stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
-        return groupIds.flatMap((seriesId) => {
-          const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
-          const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;
-
-          const xAxisConfig = xAxis[xAxisKey];
-          const yAxisConfig = yAxis[yAxisKey];
-
-          const verticalLayout = series[seriesId].layout === 'vertical';
-          let baseScaleConfig;
-          if (verticalLayout) {
-            if (!isBandScaleConfig(xAxisConfig)) {
-              throw new Error(
-                `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
-              );
-            }
-            if (xAxis[xAxisKey].data === undefined) {
-              throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
-            }
-            baseScaleConfig = xAxisConfig;
-          } else {
-            if (!isBandScaleConfig(yAxisConfig)) {
-              throw new Error(
-                `Axis with id "${yAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
-              );
-            }
-
-            if (yAxis[yAxisKey].data === undefined) {
-              throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
-            }
-            baseScaleConfig = yAxisConfig;
-          }
-
-          const xScale = xAxisConfig.scale;
-          const yScale = yAxisConfig.scale;
-
-          const bandWidth = baseScaleConfig.scale.bandwidth();
-
-          const { barWidth, offset } = getBandSize({
-            bandWidth,
-            numberOfGroups: stackingGroups.length,
-            gapRatio: baseScaleConfig.barGapRatio,
-          });
-          const barOffset = groupIndex * (barWidth + offset);
-
-          const { stackedData, color } = series[seriesId];
-
-          return stackedData.map((values, dataIndex: number) => {
-            const baseline = Math.min(...values);
-            const value = Math.max(...values);
-            return (
-              <BarElement
-                key={`${seriesId}-${dataIndex}`}
-                id={seriesId}
-                dataIndex={dataIndex}
-                x={
-                  verticalLayout
-                    ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
-                    : xScale(baseline)
-                }
-                y={
-                  verticalLayout
-                    ? yScale(value)
-                    : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset
-                }
-                xOrigine={xScale(0)}
-                yOrigine={yScale(0)}
-                verticalLayout={verticalLayout}
-                height={verticalLayout ? Math.abs(yScale(baseline) - yScale(value)) : barWidth}
-                width={verticalLayout ? barWidth : Math.abs(xScale(baseline) - xScale(value))}
-                color={color}
-                highlightScope={series[seriesId].highlightScope}
-                {...props}
-              />
-            );
-          });
-        });
-      })}
+      {completedData.map(
+        ({
+          baseline,
+          value,
+          seriesId,
+          dataIndex,
+          layout,
+          x,
+          y,
+          xOrigine,
+          yOrigine,
+          height,
+          width,
+          color,
+          highlightScope,
+        }) => (
+          <BarElement
+            key={`${seriesId}-${dataIndex}`}
+            id={seriesId}
+            dataIndex={dataIndex}
+            x={x}
+            y={y}
+            verticalLayout={layout === 'vertical'}
+            xOrigine={xOrigine}
+            yOrigine={yOrigine}
+            height={height}
+            width={width}
+            color={color}
+            highlightScope={highlightScope}
+            {...props}
+          />
+        ),
+      )}
     </React.Fragment>
   );
 }
