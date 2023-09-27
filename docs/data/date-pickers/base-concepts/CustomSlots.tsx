@@ -21,6 +21,7 @@ export default function CustomSlots() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker']}>
         <DatePicker
+          label="Styled picker"
           slots={{
             openPickerIcon: EditCalendarRoundedIcon,
             openPickerButton: StyledButton,
