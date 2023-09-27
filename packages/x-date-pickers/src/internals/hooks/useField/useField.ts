@@ -194,6 +194,12 @@ export const useField = <
     }
 
     const targetValue = event.target.value;
+    if (targetValue === '') {
+      resetCharacterQuery();
+      clearValue();
+      return;
+    }
+
     const eventData = (event.nativeEvent as InputEvent).data;
     // Calling `.fill(04/11/2022)` in playwright will trigger a change event with the requested content to insert in `event.nativeEvent.data`
     // usual changes have only the currently typed character in the `event.nativeEvent.data`
@@ -259,8 +265,14 @@ export const useField = <
       );
     }
 
-    if (isAndroid() && keyPressed.length === 0) {
-      setTempAndroidValueStr(valueStr);
+    if (keyPressed.length === 0) {
+      if (isAndroid()) {
+        setTempAndroidValueStr(valueStr);
+      } else {
+        resetCharacterQuery();
+        clearActiveSection();
+      }
+
       return;
     }
 
@@ -318,7 +330,7 @@ export const useField = <
       }
 
       // Reset the value of the selected section
-      case ['Backspace', 'Delete'].includes(event.key): {
+      case event.key === 'Delete': {
         event.preventDefault();
 
         if (readOnly) {
@@ -404,7 +416,7 @@ export const useField = <
       // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
       const currentScrollTop = inputRef.current.scrollTop;
       // On multi input range pickers we want to update selection range only for the active input
-      // This helps avoiding the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
+      // This helps to avoid the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
       // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
       if (inputRef.current === getActiveElement(document)) {
         inputRef.current.setSelectionRange(selectionStart, selectionEnd);

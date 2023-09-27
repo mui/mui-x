@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fireEvent, userEvent } from '@mui/monorepo/test/utils';
+import { fireEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
@@ -40,7 +40,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       fireEvent.change(input, { target: { value: 'November 4' } }); // Press "1"
       expectInputValue(input, 'November 04');
 
-      userEvent.keyPress(input, { key: 'Backspace' });
+      fireEvent.change(input, { target: { value: 'November ' } });
       expectInputValue(input, 'November DD');
     });
 
@@ -81,7 +81,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       expectInputValue(input, 'June 2022');
       clickOnInput(input, 0);
 
-      userEvent.keyPress(input, { key: 'Backspace' });
+      fireEvent.change(input, { target: { value: ' 2022' } });
       expectInputValue(input, 'MMMM 2022');
     });
   });
