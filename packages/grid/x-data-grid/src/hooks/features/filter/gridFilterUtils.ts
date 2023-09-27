@@ -26,8 +26,8 @@ import {
 } from '../columns';
 
 // Fixes https://github.com/mui/mui-x/issues/10056
-const global = (typeof window === 'undefined' ? globalThis : window) as any;
-const evalCode = global[atob('ZXZhbA==')] as <T>(source: string) => T;
+const globalScope = (typeof window === 'undefined' ? globalThis : window) as any;
+const evalCode = globalScope[atob('ZXZhbA==')] as <T>(source: string) => T;
 
 let hasEval: boolean;
 try {

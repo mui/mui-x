@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { describeConformance, userEvent, screen } from '@mui/monorepo/test/utils';
-import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import {
+  wrapPickerMount,
+  createPickerRenderer,
+  adapterToUse,
+  describeValidation,
+  describeValue,
+} from 'test/utils/pickers';
 import {
   MonthCalendar,
   monthCalendarClasses as classes,
