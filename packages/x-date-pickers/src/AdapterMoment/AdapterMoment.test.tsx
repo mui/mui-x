@@ -7,14 +7,16 @@ import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  expectInputPlaceholder,
+  expectInputValue,
+  describeGregorianAdapter,
+  TEST_DATE_ISO_STRING,
+} from 'test/utils/pickers';
 import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
-import {
-  describeGregorianAdapter,
-  TEST_DATE_ISO_STRING,
-} from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {
@@ -43,6 +45,7 @@ describe('<AdapterMoment />', () => {
       const adapter = new AdapterMoment({ locale: 'en' });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
+      // TODO v7: can be removed after v7 release
       it('getWeekdays: should start on Monday', () => {
         const result = adapter.getWeekdays();
         expect(result).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
@@ -142,6 +145,15 @@ describe('<AdapterMoment />', () => {
       expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
       expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
+    });
+
+    it('should respect the adapter locale in getWeekdays method even when the current locale is different', () => {
+      const adapter = new AdapterMoment({ locale: 'fr' });
+      moment.locale('de');
+      expect(adapter.getWeekdays()[0]).to.equal('lun.');
+
+      // Reset for the next tests
+      moment.locale('en');
     });
   });
 

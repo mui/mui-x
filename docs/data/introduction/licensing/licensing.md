@@ -27,6 +27,8 @@ MIT licensed npm packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
+- [`@mui/x-charts`](https://www.npmjs.com/package/@mui/x-charts)
+- [`@mui/x-tree-view`](https://www.npmjs.com/package/@mui/x-tree-view)
 
 ### Pro plan <span class="plan-pro"></span>
 
@@ -261,10 +263,10 @@ This error indicates that your license key is missing. You might not be allowed 
 The component will look something like this:
 
 <div class="only-light-mode">
-  <img src="/static/x/watermark-light.png" style="width: 653px; margin-bottom: 2rem;" alt="" loading="lazy">
+  <img src="/static/x/watermark-light.png" width="1306" height="536" style="width: 653px; margin-bottom: 2rem;" alt="" loading="lazy">
 </div>
 <div class="only-dark-mode">
-  <img src="/static/x/watermark-dark.png" style="width: 645px; margin-bottom: 2rem;" alt="" loading="lazy">
+  <img src="/static/x/watermark-dark.png" width="1290" height="548" style="width: 645px; margin-bottom: 2rem;" alt="" loading="lazy">
 </div>
 
 To solve the issue, you can check the [free trial conditions](#evaluation-trial-licenses), if you are eligible no actions are required.

@@ -9,7 +9,7 @@
     },
     {
       "name": "getDataAsExcel",
-      "description": "Returns the grid data as an exceljs workbook.\nThis method is used internally by <code>exportDataAsExcel</code>.",
+      "description": "Returns the grid data as an exceljs workbook. This method is used internally by <code>exportDataAsExcel</code>.",
       "type": "(options?: GridExcelExportOptions) => Promise<Excel.Workbook> | null"
     }
   ]

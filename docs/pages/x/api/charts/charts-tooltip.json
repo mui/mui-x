@@ -23,6 +23,5 @@
     "name": "MuiChartsTooltip"
   },
   "filename": "/packages/x-charts/src/ChartsTooltip/ChartsTooltip.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsTooltip" }]
+  "demos": "<ul></ul>"
 }

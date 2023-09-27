@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import TrapFocus, { TrapFocusProps } from '@mui/material/Unstable_TrapFocus';
+import FocusTrap, { TrapFocusProps } from '@mui/material/Unstable_TrapFocus';
 import { styled, Theme } from '@mui/material/styles';
 import { MUIStyledCommonProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -51,7 +51,7 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
     const classes = useUtilityClasses(rootProps);
 
     return (
-      <TrapFocus open disableEnforceFocus isEnabled={isEnabled} {...slotProps.TrapFocus}>
+      <FocusTrap open disableEnforceFocus isEnabled={isEnabled} {...slotProps.TrapFocus}>
         <GridPanelWrapperRoot
           ref={ref}
           tabIndex={-1}
@@ -59,7 +59,7 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
           ownerState={rootProps}
           {...other}
         />
-      </TrapFocus>
+      </FocusTrap>
     );
   },
 );

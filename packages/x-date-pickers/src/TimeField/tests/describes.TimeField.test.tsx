@@ -1,4 +1,3 @@
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { userEvent } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
@@ -6,8 +5,9 @@ import {
   expectInputPlaceholder,
   expectInputValue,
   getTextbox,
+  describeValidation,
+  describeValue,
 } from 'test/utils/pickers';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 describe('<TimeField /> - Describes', () => {

@@ -10,11 +10,9 @@ import {
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
-} from 'test/utils/pickers';
-import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
-} from '@mui/x-date-pickers/tests/describeGregorianAdapter';
+} from 'test/utils/pickers';
 
 describe('<AdapterLuxon />', () => {
   describeGregorianAdapter(AdapterLuxon, {
@@ -38,6 +36,7 @@ describe('<AdapterLuxon />', () => {
     describe('Russian', () => {
       const adapter = new AdapterLuxon({ locale: 'ru' });
 
+      // TODO v7: can be removed after v7 release
       it('getWeekDays: should start on Monday', () => {
         const result = adapter.getWeekdays();
         expect(result).to.deep.equal(['П', 'В', 'С', 'Ч', 'П', 'С', 'В']);

@@ -18,6 +18,12 @@ In the following demo, the "username" column cannot be hidden.
 
 To initialize the visible columns without controlling them, provide the model to the `initialState` prop.
 
+:::info
+
+Passing the visible columns to the `initialState` prop will only have an impact when the data grid is rendered for the first time. In order to update the visible columns after the first render, you need to use the [`columnVisibilityModel`](#controlled-visible-columns) prop.
+
+:::
+
 ```tsx
 <DataGrid
   initialState={{

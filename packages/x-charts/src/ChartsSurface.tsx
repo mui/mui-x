@@ -1,4 +1,4 @@
-import { styled, SxProps, Theme } from '@mui/system';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { useAxisEvents } from './hooks/useAxisEvents';
 

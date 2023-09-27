@@ -145,7 +145,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
       xAxis={[
         {
           id: DEFAULT_X_AXIS_KEY,
-          scaleType: plotType === 'bar' ? 'band' : 'linear',
+          scaleType: plotType === 'bar' ? 'band' : 'point',
           data: Array.from({ length: data.length }, (_, index) => index),
           hideTooltip: xAxis === undefined,
           ...xAxis,
@@ -159,7 +159,10 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
         axisHighlight?.y === 'none'
       }
     >
-      {plotType === 'bar' && <BarPlot slots={slots} slotProps={slotProps} />}
+      {plotType === 'bar' && (
+        <BarPlot slots={slots} slotProps={slotProps} sx={{ shapeRendering: 'auto' }} />
+      )}
+
       {plotType === 'line' && (
         <React.Fragment>
           <AreaPlot slots={slots} slotProps={slotProps} />

@@ -26,6 +26,9 @@ export default function UpdateRowsProp() {
   ]);
 
   const handleUpdateRow = () => {
+    if (rows.length === 0) {
+      return;
+    }
     setRows((prevRows) => {
       const rowToUpdateIndex = randomInt(0, rows.length - 1);
 
@@ -40,6 +43,9 @@ export default function UpdateRowsProp() {
   };
 
   const handleDeleteRow = () => {
+    if (rows.length === 0) {
+      return;
+    }
     setRows((prevRows) => {
       const rowToDeleteIndex = randomInt(0, prevRows.length - 1);
       return [

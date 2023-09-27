@@ -32,4 +32,4 @@ Including your Order ID (or Support key) in the issue helps us prioritize the is
 
 1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
 2. MUI X Premium: The same as MUI X Pro, but with higher priority.
-3. MUI X Priority support add-on (coming soon): Provides a 24h SLA for the first answer.
+3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
