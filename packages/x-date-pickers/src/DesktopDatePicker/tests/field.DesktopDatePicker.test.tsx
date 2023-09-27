@@ -8,8 +8,8 @@ import {
   expectInputValue,
   expectInputPlaceholder,
   adapterToUse,
+  describeAdapters,
 } from 'test/utils/pickers';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<DesktopDatePicker /> - Field', () => {
   describe('Basic behaviors', () => {

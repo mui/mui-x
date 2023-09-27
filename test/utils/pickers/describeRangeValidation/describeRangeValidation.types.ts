@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  DescribeValidationInputOptions,
-  DescribeValidationOptions,
-} from '@mui/x-date-pickers/tests/describeValidation';
+import { DescribeValidationInputOptions, DescribeValidationOptions } from '../describeValidation';
 
 interface DescribeRangeValidationKeyboardOptions {
   inputValue?: (

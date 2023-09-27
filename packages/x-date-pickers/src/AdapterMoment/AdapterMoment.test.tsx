@@ -7,14 +7,16 @@ import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  expectInputPlaceholder,
+  expectInputValue,
+  describeGregorianAdapter,
+  TEST_DATE_ISO_STRING,
+} from 'test/utils/pickers';
 import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
-import {
-  describeGregorianAdapter,
-  TEST_DATE_ISO_STRING,
-} from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {
