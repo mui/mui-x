@@ -128,6 +128,7 @@ function BarPlot(props: BarPlotProps) {
                 }
                 xOrigine={xScale(0)}
                 yOrigine={yScale(0)}
+                verticalLayout={verticalLayout}
                 height={verticalLayout ? Math.abs(yScale(baseline) - yScale(value)) : barWidth}
                 width={verticalLayout ? barWidth : Math.abs(xScale(baseline) - xScale(value))}
                 color={color}

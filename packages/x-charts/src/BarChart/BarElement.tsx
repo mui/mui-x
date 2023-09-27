@@ -64,6 +64,8 @@ export const BarElementPath = styled(animated.rect, {
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     highlightScope?: Partial<HighlightScope>;
+    verticalLayout: boolean;
+    xOrigine: number;
     yOrigine: number;
     /**
      * The props used for each component slot.
@@ -92,6 +94,8 @@ export function BarElement(props: BarElementProps) {
     classes: innerClasses,
     color,
     highlightScope,
+    verticalLayout,
+    xOrigine,
     yOrigine,
     x,
     y,
@@ -124,12 +128,9 @@ export function BarElement(props: BarElementProps) {
   const classes = useUtilityClasses(ownerState);
 
   const spring = useSpring({
-    from: {
-      x,
-      y: yOrigine,
-      height: 0,
-      width,
-    },
+    from: verticalLayout
+      ? { y: yOrigine, x, height: 0, width }
+      : { y, x: xOrigine, height, width: 0 },
     to: {
       x,
       y,
