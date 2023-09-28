@@ -1,6 +1,11 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "animate": {
+      "description": "If <code>true</code>, the bar update will be animated.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "slotProps": {
       "description": "The props used for each component slot.",
       "deprecated": "",

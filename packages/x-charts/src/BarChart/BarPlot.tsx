@@ -49,7 +49,12 @@ export interface BarPlotSlotComponentProps {
   bar?: Partial<BarElementProps>;
 }
 
-export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {}
+export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
+  /**
+   * If `true`, the bar update will be animated.
+   */
+  animate?: boolean;
+}
 
 interface CompletedBarData {
   baseline: number;
@@ -178,6 +183,7 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
 });
 function BarPlot(props: BarPlotProps) {
   const completedData = useCompletData();
+  const { animate, ...other } = props;
 
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
@@ -185,6 +191,7 @@ function BarPlot(props: BarPlotProps) {
     leave: getOutStyle,
     enter: getInStyle,
     update: getInStyle,
+    immediate: !animate,
   });
   return (
     <React.Fragment>
@@ -194,7 +201,7 @@ function BarPlot(props: BarPlotProps) {
           dataIndex={dataIndex}
           highlightScope={highlightScope}
           color={color}
-          {...props}
+          {...other}
           style={style}
         />
       ))}
@@ -207,6 +214,10 @@ BarPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the bar update will be animated.
+   */
+  animate: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

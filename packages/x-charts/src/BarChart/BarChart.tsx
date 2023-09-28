@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { BarPlot, BarPlotSlotComponentProps, BarPlotSlotsComponent } from './BarPlot';
+import { BarPlot, BarPlotProps, BarPlotSlotComponentProps, BarPlotSlotsComponent } from './BarPlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -32,7 +32,8 @@ export interface BarChartSlotComponentProps
 
 export interface BarChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Pick<BarPlotProps, 'animate'> {
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
@@ -69,6 +70,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     leftAxis,
     rightAxis,
     bottomAxis,
+    animate,
     children,
     slots,
     slotProps,
@@ -120,7 +122,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
-        <BarPlot slots={slots} slotProps={slotProps} />
+        <BarPlot slots={slots} slotProps={slotProps} animate={animate} />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -144,6 +146,10 @@ BarChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the bar update will be animated.
+   */
+  animate: PropTypes.bool,
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),

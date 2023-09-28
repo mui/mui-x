@@ -1,5 +1,6 @@
 {
   "props": {
+    "animate": { "type": { "name": "bool" } },
     "bottomAxis": {
       "type": {
         "name": "union",

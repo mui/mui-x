@@ -2,11 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function BarAnimation() {
   const [seriesNb, setSeriesNb] = React.useState(2);
   const [itemNb, setItemNb] = React.useState(5);
+  const [animate, setAnimate] = React.useState(true);
 
   const handleItemNbChange = (event, newValue) => {
     if (typeof newValue !== 'number') {
@@ -28,6 +31,13 @@ export default function BarAnimation() {
         series={series
           .slice(0, seriesNb)
           .map((s) => ({ ...s, data: s.data.slice(0, itemNb) }))}
+        animate={animate}
+      />
+      <FormControlLabel
+        checked={animate}
+        control={<Checkbox onChange={(event) => setAnimate(event.target.checked)} />}
+        label="animate"
+        labelPlacement="end"
       />
       <Typography id="input-item-number" gutterBottom>
         Number of items

@@ -1,6 +1,11 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "animate": {
+      "description": "If <code>true</code>, the bar update will be animated.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "bottomAxis": {
       "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>.",
       "deprecated": "",
