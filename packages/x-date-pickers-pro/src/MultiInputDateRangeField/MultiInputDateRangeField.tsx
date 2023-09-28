@@ -328,6 +328,8 @@ MultiInputDateRangeField.propTypes = {
   ]),
   /**
    * Disable specific date.
+   *
+   * Warning: This validation will run on every rendered date. Expensive computations can impact performance.
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.

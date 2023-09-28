@@ -221,7 +221,7 @@
       "typeDescriptions": {}
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.",
+      "description": "Disable specific date.<br>Warning: This validation will run on every rendered date. Expensive computations can impact performance.",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The date to test.",
