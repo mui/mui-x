@@ -9,7 +9,10 @@ _Sep 28, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Added `clearable` prop to DatePickers (#9095) @noraleonte
+- 🎁 Add `clearable` behavior to the Pickers (#9095) @noraleonte
+
+The Pickers now have an out-of-the box implementation for clearing the field value. You can see the documentation for this behavior on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#clearing-the-value).
+
 - 🚀 Fix header filters menu auto closing on render (#10483) @MBilalShafi
 - 🎯 Fix column headers scroll when theme scoping is used (#10437) @cherniavskii
 - 💫 Add Date Picker customization playground (#9581) @noraleonte
