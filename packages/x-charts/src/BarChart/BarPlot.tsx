@@ -57,8 +57,8 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
 }
 
 interface CompletedBarData {
-  baseline: number;
-  value: number;
+  bottom: number;
+  top: number;
   seriesId: string;
   dataIndex: number;
   layout: BarSeriesType['layout'];
@@ -130,25 +130,23 @@ const useCompletData = (): CompletedBarData[] => {
       const { stackedData, color } = series[seriesId];
 
       return stackedData.map((values, dataIndex: number) => {
-        const baseline = Math.min(...values);
-        const value = Math.max(...values);
+        const bottom = Math.min(...values);
+        const top = Math.max(...values);
 
         return {
-          baseline,
-          value,
+          bottom,
+          top,
           seriesId,
           dataIndex,
           layout: series[seriesId].layout,
           x: verticalLayout
             ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
-            : xScale(baseline),
-          y: verticalLayout
-            ? yScale(value)
-            : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
+            : xScale(bottom),
+          y: verticalLayout ? yScale(top) : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
           xOrigine: xScale(0),
           yOrigine: yScale(0),
-          height: verticalLayout ? Math.abs(yScale(baseline) - yScale(value)) : barWidth,
-          width: verticalLayout ? barWidth : Math.abs(xScale(baseline) - xScale(value)),
+          height: verticalLayout ? Math.abs(yScale(bottom) - yScale(top)) : barWidth,
+          width: verticalLayout ? barWidth : Math.abs(xScale(bottom) - xScale(top)),
           color,
           highlightScope: series[seriesId].highlightScope,
         };
@@ -181,6 +179,7 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
   height,
   width,
 });
+
 function BarPlot(props: BarPlotProps) {
   const completedData = useCompletData();
   const { animate, ...other } = props;
