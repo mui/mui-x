@@ -108,7 +108,7 @@ If you know that all days of some months are disabled—you can provide the [`sh
 Same with the [`shouldDisableYear`](#disable-specific-years) prop for the `year` view.
 :::
 
-:::info
+:::success
 Please note that `shouldDisableDate` will execute on every date rendered in the `day` view. Expensive computations in this validation function can impact performance.
 :::
 
