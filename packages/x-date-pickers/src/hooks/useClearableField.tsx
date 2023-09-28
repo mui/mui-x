@@ -62,7 +62,7 @@ export const useClearableField = <
     ownerState: {},
     className: 'clearButton',
     additionalProps: {
-      title: localeText.clearIconButtonLabel,
+      title: localeText.fieldClearLabel,
     },
   });
 

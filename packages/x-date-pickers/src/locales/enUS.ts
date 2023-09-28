@@ -60,7 +60,7 @@ const enUSPickers: PickersLocaleText<any> = {
       ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
       : 'Choose time',
 
-  clearIconButtonLabel: 'Clear value',
+  fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'pick time',

@@ -68,7 +68,7 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Válasszon időt, a kiválasztott idő: ${utils.format(value, 'fullTime')}`
       : 'Válasszon időt',
-  clearIconButtonLabel: 'Tartalom ürítése',
+  fieldClearLabel: 'Tartalom ürítése',
 
   // Table labels
   timeTableLabel: 'válasszon időt',

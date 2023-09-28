@@ -65,7 +65,7 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Оберіть час, обраний час  ${utils.format(value, 'fullTime')}`
       : 'Оберіть час',
-  // clearIconButtonLabel: 'Clear value',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'оберіть час',

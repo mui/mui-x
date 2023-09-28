@@ -67,7 +67,7 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Elige la hora, la hora elegido es ${utils.format(value, 'fullTime')}`
       : 'Elige la hora',
-  // clearIconButtonLabel: 'Clear value',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'elige la fecha',

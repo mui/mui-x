@@ -66,7 +66,7 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Vyberte čas, vybraný čas je ${utils.format(value, 'fullTime')}`
       : 'Vyberte čas',
-  // clearIconButtonLabel: 'Clear value',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'vyberte čas',

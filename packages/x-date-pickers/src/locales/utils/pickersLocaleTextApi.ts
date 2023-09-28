@@ -64,7 +64,7 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   openTimePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
 
   // Clear button label
-  clearIconButtonLabel: string;
+  fieldClearLabel: string;
 
   // Table labels
   timeTableLabel: string;
