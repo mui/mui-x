@@ -189,5 +189,5 @@ Some parts of the Pickers' UI are built on several nested slots. For instance, t
 {{"demo": "CustomSlots.js"}}
 
 :::info
-Learn more about overriding slots in the doc page about [Overriding component structure](/x/react-date-pickers/custom-components/).
+Learn more about overriding slots in the doc page about [Custom slots and subcomponents](/x/react-date-pickers/custom-components/).
 :::

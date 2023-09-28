@@ -327,7 +327,7 @@ const pages: MuiPage[] = [
         children: [
           {
             pathname: '/x/react-date-pickers/custom-components',
-            title: 'Overriding component structure',
+            title: 'Custom slots and subcomponents',
           },
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
