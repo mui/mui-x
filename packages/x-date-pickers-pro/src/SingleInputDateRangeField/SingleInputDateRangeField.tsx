@@ -266,7 +266,8 @@ SingleInputDateRangeField.propTypes = {
   /**
    * Disable specific date.
    *
-   * Warning: This validation will run on every rendered date. Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
