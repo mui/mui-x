@@ -9,18 +9,18 @@ _Sep 28, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Add `clearable` behavior to the Pickers (#9095) @noraleonte
+- 🎁 Add a clearable behavior to all the single input pickers and fields (#9095) @noraleonte
 
-The Pickers now have an out-of-the box implementation for clearing the field value. You can see the documentation for this behavior on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#clearing-the-value).
+  The pickers and fields now have an out-of-the box implementation for clearing the field value. You can see the documentation for this behavior on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#clearing-the-value).
+
+- 💫 Add Date Picker customization playground (#9581) @noraleonte
+
+  You can play around with style customization options on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#customization).
+
+  We are thrilled to hear your feedback about this functionality!
 
 - 🚀 Fix header filters menu auto closing on render (#10483) @MBilalShafi
 - 🎯 Fix column headers scroll when theme scoping is used (#10437) @cherniavskii
-- 💫 Add Date Picker customization playground (#9581) @noraleonte
-
-You can play around with style customization options on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#customization).
-
-We are thrilled to hear your feedback about this functionality!
-
 - 🌍 Improve Russian (ru-RU) locale
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -80,7 +80,7 @@ Same changes as in `@mui/x-date-pickers@6.16.0`.
 - [core] Move the pickers describes to the test utils folder (#10490) @flaviendelangle
 - [core] Priority Support casing normalization @oliviertassinari
 - [core] Remove automated DataGrid performance tests (#10414) @romgrk
-- [core] Sync prism-okaidia.css with docs-infra @oliviertassinari
+- [core] Sync `prism-okaidia.css` with docs-infra @oliviertassinari
 - [core] Update issue actions & templates (#10375) @romgrk
 - [core] Update release guide (#10468) @DanailH
 
