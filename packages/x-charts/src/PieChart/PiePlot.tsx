@@ -102,6 +102,7 @@ function PiePlot(props: PiePlotProps) {
                     cornerRadius={cornerRadius}
                     id={seriesId}
                     onClick={() => item.onClick?.(item)}
+                    isClickable={!!item.onClick}
                     color={item.color}
                     dataIndex={index}
                     highlightScope={series[seriesId].highlightScope}

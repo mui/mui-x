@@ -1,17 +1,17 @@
-import * as React from 'react';
-import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
-import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
+import PropTypes from 'prop-types';
+import * as React from 'react';
+import { HighlightScope } from '../context/HighlightProvider';
 import { InteractionContext } from '../context/InteractionProvider';
 import {
   getIsFaded,
   getIsHighlighted,
   useInteractionItemProps,
 } from '../hooks/useInteractionItemProps';
-import { HighlightScope } from '../context/HighlightProvider';
 import { PieSeriesType } from '../models/seriesType/pie';
 
 export interface PieArcClasses {
@@ -57,13 +57,16 @@ const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
-})<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
-  stroke: (theme.vars || theme).palette.background.paper,
-  strokeWidth: 1,
-  strokeLinejoin: 'round',
-  fill: ownerState.color,
-  opacity: ownerState.isFaded ? 0.3 : 1,
-}));
+})<{ ownerState: PieArcOwnerState; isClickable?: boolean }>(
+  ({ ownerState, theme, isClickable }) => ({
+    stroke: (theme.vars || theme).palette.background.paper,
+    strokeWidth: 1,
+    strokeLinejoin: 'round',
+    fill: ownerState.color,
+    cursor: isClickable ? 'pointer' : 'unset',
+    opacity: ownerState.isFaded ? 0.3 : 1,
+  }),
+);
 
 export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> &
@@ -74,6 +77,7 @@ export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
     cornerRadius: PieSeriesType['cornerRadius'];
     highlighted: PieSeriesType['highlighted'];
     faded: PieSeriesType['faded'];
+    isClickable?: boolean;
   };
 
 export default function PieArc(props: PieArcProps) {
@@ -89,6 +93,7 @@ export default function PieArc(props: PieArcProps) {
     highlighted,
     faded = { additionalRadius: -5 },
     onClick,
+    isClickable,
     ...other
   } = props;
 
@@ -136,6 +141,7 @@ export default function PieArc(props: PieArcProps) {
           outerRadius,
         })!
       }
+      isClickable={isClickable}
       onClick={onClick}
       ownerState={ownerState}
       className={classes.root}
