@@ -6,7 +6,6 @@ import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
@@ -17,6 +16,7 @@ import {
   UncapitalizeObjectKeys,
   UsePickerProps,
   getActiveElement,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
