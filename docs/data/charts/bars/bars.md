@@ -61,3 +61,7 @@ Bar charts can be rendered with a horizontal layout by providing the `layout="ho
 If you're using [composition](/x/react-charts/#multiple-charts), you should set the property `layout: 'horizontal'` to each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
+
+## Animation
+
+{{"demo": "BarAnimation.js"}}
