@@ -26,5 +26,5 @@
   ],
   "styles": { "classes": ["root", "title"], "globalClasses": {}, "name": "MuiDatePickerToolbar" },
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx",
-  "demos": "<ul></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Overriding component structure</a></li></ul>"
 }

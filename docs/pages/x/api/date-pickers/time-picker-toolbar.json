@@ -39,5 +39,5 @@
     "name": "MuiTimePickerToolbar"
   },
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
-  "demos": "<ul></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Overriding component structure</a></li></ul>"
 }

@@ -25,5 +25,5 @@
     "name": "MuiPickersCalendarHeader"
   },
   "filename": "/packages/x-date-pickers/src/PickersCalendarHeader/PickersCalendarHeader.tsx",
-  "demos": "<ul></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Overriding component structure</a></li></ul>"
 }

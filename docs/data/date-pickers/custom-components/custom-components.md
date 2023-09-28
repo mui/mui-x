@@ -1,10 +1,10 @@
 ---
 productId: x-date-pickers
-title: Date and Time Pickers - Custom slots and subcomponents
+title: Date and Time Pickers - Overriding component structure
 components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickersCalendarHeader, PickersShortcuts
 ---
 
-# Custom slots and subcomponents
+# Overriding component structure
 
 <p class="description">The date picker lets you customize subcomponents.</p>
 
