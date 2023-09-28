@@ -79,7 +79,7 @@ export default function DateRangePickerWithButtonField() {
         label={
           value[0] === null && value[1] === null
             ? null
-            : value.map((v) => (v ? v.format('MM/DD/YYYY') : 'null')).join(' - ')
+            : value.map((date) => (date ? date.format('MM/DD/YYYY') : 'null')).join(' - ')
         }
         value={value}
         onChange={(newValue) => setValue(newValue)}
