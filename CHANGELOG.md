@@ -8,10 +8,16 @@ _Sep 28, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🧹 Added `clearable` prop to DatePickers (#9095) @noraleonte
-- 🧰 Fix header filters menu auto closing on render (#10483) @MBilalShafi
-- 🌳 Fix focusing of a collapsed node when the TreeView is re-focused (#10422) @flaviendelangle
+- 🎁 Added `clearable` prop to DatePickers (#9095) @noraleonte
+- 🚀 Fix header filters menu auto closing on render (#10483) @MBilalShafi
 - 🎯 Fix column headers scroll when theme scoping is used (#10437) @cherniavskii
+- 💫 Add customization playground (#9581) @noraleonte
+
+You can play around with style customization options on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#customization).
+
+We are thrilled to hear your feedback about this functionality!
+
+- 🌍 Improve Russian (ru-RU) locale
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -57,7 +63,7 @@ Same changes as in `@mui/x-date-pickers@6.16.0`.
 ### Docs
 
 - [docs] Correct the typo in data grid api docs (#10477) @MBilalShafi
-- [docs] Customization playground (#9581) @noraleonte
+- [docs] Add customization playground (#9581) @noraleonte
 - [docs] Fix Tree View product ID (#10428) @oliviertassinari
 - [docs] Fix demo crashing when all rows are deleted (#10438) @cherniavskii
 - [docs] Fix mobile scrollbar column resize (#10455) @oliviertassinari
