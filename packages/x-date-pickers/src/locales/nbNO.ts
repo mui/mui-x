@@ -65,6 +65,7 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Velg tid, valgt tid er ${utils.format(value, 'fullTime')}`
       : 'Velg tid',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'velg tid',

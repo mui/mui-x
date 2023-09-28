@@ -66,6 +66,7 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Vyberte čas, vybraný čas je ${utils.format(value, 'fullTime')}`
       : 'Vyberte čas',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'vyberte čas',

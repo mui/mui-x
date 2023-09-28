@@ -75,7 +75,10 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const { internalProps: dateFieldInternalProps, forwardedProps } =
     splitFieldInternalAndForwardedProps<
       typeof themeProps,
-      keyof Omit<UseDateRangeFieldProps<any>, 'unstableFieldRef' | 'disabled'>
+      keyof Omit<
+        UseDateRangeFieldProps<any>,
+        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
+      >
     >(themeProps, 'date');
 
   const {
