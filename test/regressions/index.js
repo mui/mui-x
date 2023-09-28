@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@mui/x-license-pro';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
+import { useReducedMotion } from '@react-spring/web';
 
 // This license key is only valid for use with Material UI SAS's projects
 // See the terms: https://mui.com/r/x-license-eula
@@ -90,6 +91,8 @@ if (unusedBlacklistPatterns.size > 0) {
 }
 
 function App() {
+  const reducedMotion = useReducedMotion();
+
   function computeIsDev() {
     if (window.location.hash === '#dev') {
       return true;
@@ -147,6 +150,7 @@ function App() {
           Devtools can be enabled by appending <code>#dev</code> in the addressbar or disabled by
           appending <code>#no-dev</code>.
         </p>
+        {reducedMotion ? <p>You're using reduced motion!</p> : <p>no reduce motion</p>}
         <a href="#no-dev">Hide devtools</a>
         <details>
           <summary id="my-test-summary">nav for all tests</summary>

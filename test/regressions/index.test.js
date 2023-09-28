@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
+import { Globals } from '@react-spring/web';
 
 function sleep(timeoutMS) {
   return new Promise((resolve) => {
@@ -70,6 +71,12 @@ async function main() {
   describe('visual regressions', () => {
     after(async () => {
       await browser.close();
+    });
+
+    before(() => {
+      Globals.assign({
+        skipAnimation: true,
+      });
     });
 
     it('should have no errors after the initial render', () => {
