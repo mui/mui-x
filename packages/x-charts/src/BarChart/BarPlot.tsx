@@ -1,10 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementProps } from './BarElement';
 import { isBandScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
+import { HighlightScope } from '../context/HighlightProvider';
+import { BarSeriesType } from '../models';
 
 /**
  * Solution of the equations
@@ -48,7 +51,22 @@ export interface BarPlotSlotComponentProps {
 
 export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {}
 
-const useCompletData = () => {
+interface CompletedBarData {
+  baseline: number;
+  value: number;
+  seriesId: string;
+  dataIndex: number;
+  layout: BarSeriesType['layout'];
+  x: number;
+  y: number;
+  xOrigine: number;
+  yOrigine: number;
+  height: number;
+  width: number;
+  color: string;
+  highlightScope?: Partial<HighlightScope>;
+}
+const useCompletData = (): CompletedBarData[] => {
   const seriesData =
     React.useContext(SeriesContext).bar ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
@@ -136,44 +154,50 @@ const useCompletData = () => {
   return data;
 };
 
+const getOutStyle = ({ layout, yOrigine, x, width, y, xOrigine, height }: CompletedBarData) => ({
+  ...(layout === 'vertical'
+    ? {
+        y: yOrigine,
+        x,
+        height: 0,
+        width,
+      }
+    : {
+        y,
+        x: xOrigine,
+        height,
+        width: 0,
+      }),
+});
+
+const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
+  y,
+  x,
+  height,
+  width,
+});
 function BarPlot(props: BarPlotProps) {
   const completedData = useCompletData();
 
+  const transition = useTransition(completedData, {
+    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
+    from: getOutStyle,
+    leave: getOutStyle,
+    enter: getInStyle,
+    update: getInStyle,
+  });
   return (
     <React.Fragment>
-      {completedData.map(
-        ({
-          baseline,
-          value,
-          seriesId,
-          dataIndex,
-          layout,
-          x,
-          y,
-          xOrigine,
-          yOrigine,
-          height,
-          width,
-          color,
-          highlightScope,
-        }) => (
-          <BarElement
-            key={`${seriesId}-${dataIndex}`}
-            id={seriesId}
-            dataIndex={dataIndex}
-            x={x}
-            y={y}
-            verticalLayout={layout === 'vertical'}
-            xOrigine={xOrigine}
-            yOrigine={yOrigine}
-            height={height}
-            width={width}
-            color={color}
-            highlightScope={highlightScope}
-            {...props}
-          />
-        ),
-      )}
+      {transition((style, { seriesId, dataIndex, color, highlightScope }) => (
+        <BarElement
+          id={seriesId}
+          dataIndex={dataIndex}
+          highlightScope={highlightScope}
+          color={color}
+          {...props}
+          style={style}
+        />
+      ))}
     </React.Fragment>
   );
 }

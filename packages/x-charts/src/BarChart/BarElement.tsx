@@ -5,7 +5,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { useSpring, animated } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 import {
   getIsFaded,
   getIsHighlighted,
@@ -64,9 +64,6 @@ export const BarElementPath = styled(animated.rect, {
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     highlightScope?: Partial<HighlightScope>;
-    verticalLayout: boolean;
-    xOrigine: number;
-    yOrigine: number;
     /**
      * The props used for each component slot.
      * @default {}
@@ -94,15 +91,9 @@ export function BarElement(props: BarElementProps) {
     classes: innerClasses,
     color,
     highlightScope,
-    verticalLayout,
-    xOrigine,
-    yOrigine,
-    x,
-    y,
-    height,
-    width,
     slots,
     slotProps,
+    style,
     ...other
   } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
@@ -127,26 +118,14 @@ export function BarElement(props: BarElementProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const spring = useSpring({
-    from: verticalLayout
-      ? { y: yOrigine, x, height: 0, width }
-      : { y, x: xOrigine, height, width: 0 },
-    to: {
-      x,
-      y,
-      height,
-      width,
-    },
-  });
-
   const Bar = slots?.bar ?? BarElementPath;
   const barProps = useSlotProps({
     elementType: Bar,
     externalSlotProps: slotProps?.bar,
     additionalProps: {
       ...other,
-      ...spring,
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
+      style,
       className: classes.root,
     },
     ownerState,
