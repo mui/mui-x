@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 6.16.0
+
 _Sep 28, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
@@ -11,7 +12,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 🎁 Added `clearable` prop to DatePickers (#9095) @noraleonte
 - 🚀 Fix header filters menu auto closing on render (#10483) @MBilalShafi
 - 🎯 Fix column headers scroll when theme scoping is used (#10437) @cherniavskii
-- 💫 Add customization playground (#9581) @noraleonte
+- 💫 Add Date Picker customization playground (#9581) @noraleonte
 
 You can play around with style customization options on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#customization).
 
@@ -32,6 +33,7 @@ We are thrilled to hear your feedback about this functionality!
 #### `@mui/x-data-grid-pro@6.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@6.16.0`, plus:
+
 - [DataGridPro] Fix header filters menu auto closing on render (#10483) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@6.16.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
@@ -49,7 +51,6 @@ Same changes as in `@mui/x-data-grid-pro@6.16.0`.
 
 Same changes as in `@mui/x-date-pickers@6.16.0`.
 
-
 ### Charts / `@mui/x-charts@6.0.0-beta.0`
 
 - [charts] Share upfront future Pro features (#10465) @oliviertassinari
@@ -58,7 +59,6 @@ Same changes as in `@mui/x-date-pickers@6.16.0`.
 
 - [TreeView] Do not try to focus a collapsed node when re-focusing the TreeView (#10422) @flaviendelangle
 - [TreeView] Fix the typing of the Multiple generic (#10478) @flaviendelangle
-
 
 ### Docs
 
@@ -80,7 +80,6 @@ Same changes as in `@mui/x-date-pickers@6.16.0`.
 - [core] Sync prism-okaidia.css with docs-infra @oliviertassinari
 - [core] Update issue actions & templates (#10375) @romgrk
 - [core] Update release guide (#10468) @DanailH
-
 
 ## 6.15.0
 
