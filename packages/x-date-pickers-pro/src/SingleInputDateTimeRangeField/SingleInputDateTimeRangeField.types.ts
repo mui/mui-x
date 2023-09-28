@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import { UncapitalizeObjectKeys, FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,

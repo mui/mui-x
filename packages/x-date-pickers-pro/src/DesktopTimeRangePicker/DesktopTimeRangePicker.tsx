@@ -43,15 +43,15 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   const shouldRenderTimeInASingleColumn =
     (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
 
-  const renderTimeView = shouldRenderTimeInASingleColumn
+  const renderTimeRangeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeRangeView
     : renderMultiSectionDigitalClockTimeRangeView;
 
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, TimeViewWithMeridiem, any, {}> = {
-    hours: renderTimeView,
-    minutes: renderTimeView,
-    seconds: renderTimeView,
-    meridiem: renderTimeView,
+    hours: renderTimeRangeView,
+    minutes: renderTimeRangeView,
+    seconds: renderTimeRangeView,
+    meridiem: renderTimeRangeView,
     ...defaultizedProps.viewRenderers,
   };
 

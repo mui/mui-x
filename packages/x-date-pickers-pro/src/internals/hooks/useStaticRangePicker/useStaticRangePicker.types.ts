@@ -5,12 +5,12 @@ import {
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
   UncapitalizeObjectKeys,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRange } from '../../models/range';
 import { UseRangePositionProps } from '../useRangePosition';
 import { RangeFieldSection } from '../../models/fields';

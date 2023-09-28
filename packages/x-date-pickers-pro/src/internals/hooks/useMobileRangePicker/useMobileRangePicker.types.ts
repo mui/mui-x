@@ -9,12 +9,12 @@ import {
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {

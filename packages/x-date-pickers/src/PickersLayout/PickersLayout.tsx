@@ -64,7 +64,7 @@ export const PickersLayoutContentWrapper = styled('div', {
   slot: 'ContentWrapper',
   overridesResolver: (props, styles) => styles.contentWrapper,
 })({
-  gridColumn: 2,
+  gridColumn: '2 / 4',
   gridRow: 2,
   display: 'flex',
   flexDirection: 'column',

@@ -12,7 +12,10 @@ import { refType } from '@mui/utils';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
-import { renderTimeRangeViewClock } from '../timeRangeViewRenderers';
+import {
+  renderDigitalClockTimeRangeView,
+  renderMultiSectionDigitalClockTimeRangeView,
+} from '../timeRangeViewRenderers';
 import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
@@ -35,10 +38,20 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<TD
     MobileTimeRangePickerProps<TDate>
   >(inProps, 'MuiMobileTimeRangePicker');
 
+  const thresholdToRenderTimeInASingleColumn =
+    defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
+  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
+  const shouldRenderTimeInASingleColumn =
+    (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
+
+  const renderTimeRangeView = shouldRenderTimeInASingleColumn
+    ? renderDigitalClockTimeRangeView
+    : renderMultiSectionDigitalClockTimeRangeView;
+
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, TimeView, any, {}> = {
-    hours: renderTimeRangeViewClock,
-    minutes: renderTimeRangeViewClock,
-    seconds: renderTimeRangeViewClock,
+    hours: renderTimeRangeView,
+    minutes: renderTimeRangeView,
+    seconds: renderTimeRangeView,
     ...defaultizedProps.viewRenderers,
   };
 

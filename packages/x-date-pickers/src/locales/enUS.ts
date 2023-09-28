@@ -20,6 +20,10 @@ const enUSPickers: PickersLocaleText<any> = {
   start: 'Start',
   end: 'End',
 
+  // Generic range placeholders
+  from: 'From',
+  to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Cancel',
   clearButtonLabel: 'Clear',

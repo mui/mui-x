@@ -49,6 +49,10 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   start: string;
   end: string;
 
+  // Generic range placeholders
+  from: string;
+  to: string;
+
   // Action bar
   cancelButtonLabel: string;
   clearButtonLabel: string;

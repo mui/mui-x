@@ -51,7 +51,9 @@ const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: TimeRangePickerToolbarProps<any>;
-}>({});
+}>(({ theme }) => ({
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+}));
 
 const TimeRangePickerToolbarContainer = styled('div', {
   name: 'MuiTimeRangePickerToolbar',

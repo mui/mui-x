@@ -111,7 +111,11 @@ export type {
 } from './models/props/clock';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
-export type { WrapperVariant, TimeViewWithMeridiem } from './models/common';
+export type {
+  WrapperVariant,
+  TimeViewWithMeridiem,
+  DateOrTimeViewWithMeridiem,
+} from './models/common';
 export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,

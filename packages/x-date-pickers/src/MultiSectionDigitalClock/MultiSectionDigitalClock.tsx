@@ -88,6 +88,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     disabled,
     readOnly,
     skipDisabled = false,
+    fitWidth = false,
     timezone: timezoneProp,
     ...other
   } = props;
@@ -405,6 +406,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           slots={slots ?? components}
           slotProps={slotProps ?? componentsProps}
           skipDisabled={skipDisabled}
+          fitWidth={fitWidth}
           aria-label={localeText.selectViewText(timeView as TimeViewWithMeridiem)}
         />
       ))}
