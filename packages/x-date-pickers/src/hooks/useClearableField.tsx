@@ -90,15 +90,15 @@ export const useClearableField = <
     sx: [
       {
         '& .clearButton': {
-          visibility: 'visible',
+          opacity: 1
         },
         '@media (pointer: fine)': {
           '& .clearButton': {
-            visibility: 'hidden',
+            opacity: 0,
           },
           '&:hover, &:focus-within': {
             '.clearButton': {
-              visibility: 'visible',
+              opacity: 1,
             },
           },
         },
