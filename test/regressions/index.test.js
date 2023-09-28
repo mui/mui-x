@@ -124,6 +124,11 @@ async function main() {
           );
         }
 
+        if (/^\docs-charts-.*/.test(pathURL)) {
+          // Run one tickc of the clock to get animation final state
+          await sleep(1);
+        }
+
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
 
