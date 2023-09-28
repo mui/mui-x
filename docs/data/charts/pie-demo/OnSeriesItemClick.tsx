@@ -22,7 +22,7 @@ export default function OnSeriesItemClick() {
           {
             data: [
               { id: 0, value: 10, label: 'series A', onClick: setClickedItem },
-              { id: 1, value: 15, label: 'series B' },
+              { id: 1, value: 15, label: 'series B', onClick: setClickedItem },
               { id: 2, value: 20, label: 'series C', onClick: setClickedItem },
             ],
           },
