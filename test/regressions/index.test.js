@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
-import { Globals } from '@react-spring/web';
 
 function sleep(timeoutMS) {
   return new Promise((resolve) => {
@@ -73,12 +72,6 @@ async function main() {
       await browser.close();
     });
 
-    before(() => {
-      Globals.assign({
-        skipAnimation: true,
-      });
-    });
-
     it('should have no errors after the initial render', () => {
       const msg = errorConsole;
       errorConsole = undefined;
@@ -133,7 +126,7 @@ async function main() {
 
         if (/^\docs-charts-.*/.test(pathURL)) {
           // Run one tickc of the clock to get animation final state
-          await sleep(1);
+          await sleep(10);
         }
 
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
