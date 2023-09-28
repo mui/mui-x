@@ -127,6 +127,14 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
+    "timeSteps": {
+      "type": {
+        "name": "shape",
+        "description": "{ hours?: number, minutes?: number, seconds?: number }"
+      },
+      "default": "{ hours: 1, minutes: 5, seconds: 5 }"
+    },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."

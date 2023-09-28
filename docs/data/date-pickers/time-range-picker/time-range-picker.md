@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: React Time Range Picker component
-components: TimeRangePicker, DesktopTimeRangePicker, MobileTimeRangePicker, StaticTimeRangePicker
+components: TimeRangePicker, DesktopTimeRangePicker, MobileTimeRangePicker
 githubLabel: 'component: TimeRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -55,8 +55,6 @@ The component is available in four variants:
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
 - The `TimeRangePicker` component which renders `DesktopTimeRangePicker` or `MobileTimeRangePicker` depending on the device it runs on.
-
-- The `StaticTimeRangePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveTimeRangePickers.js"}}
 

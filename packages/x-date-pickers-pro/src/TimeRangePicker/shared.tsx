@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
+import { TimeStepOptions } from '@mui/x-date-pickers/models';
 import {
   DefaultizedProps,
   BasePickerInputProps,
@@ -26,7 +27,6 @@ import {
 } from './TimeRangePickerToolbar';
 import { TimeRangeValidationError } from '../models';
 import { DateRange } from '../internals/models';
-import { TimeStepOptions } from '@mui/x-date-pickers';
 
 export interface BaseTimeRangePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**

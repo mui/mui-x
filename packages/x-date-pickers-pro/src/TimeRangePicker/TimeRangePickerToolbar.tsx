@@ -41,8 +41,8 @@ export interface TimeRangePickerToolbarProps<TDate>
 }
 
 export interface ExportedTimeRangePickerToolbarProps extends ExportedBaseToolbarProps {
-  ampm: boolean;
-  ampmInClock: boolean;
+  ampm?: boolean;
+  ampmInClock?: boolean;
 }
 
 const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
@@ -104,7 +104,6 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
     <TimeRangePickerToolbarRoot
       {...other}
       toolbarTitle={localeText.timeRangePickerToolbarTitle}
-      isLandscape={false}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
       ref={ref}

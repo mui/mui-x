@@ -20,6 +20,7 @@
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "fitWidth": { "type": { "name": "bool" } },
     "focusedView": {
       "type": {
         "name": "enum",

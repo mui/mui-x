@@ -51,6 +51,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "fitWidth": {
+      "description": "If <code>true</code>, the component will take all the width of its parent.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "focusedView": {
       "description": "Controlled focused view.",
       "deprecated": "",
