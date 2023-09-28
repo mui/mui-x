@@ -74,6 +74,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<TD
       }),
       toolbar: {
         hidden: false,
+        toolbarVariant: 'mobile',
         ...defaultizedProps.slotProps?.toolbar,
       },
     },

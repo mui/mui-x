@@ -14,6 +14,7 @@ import {
   ExportedBaseToolbarProps,
   TimeViewWithMeridiem,
   resolveTimeFormat,
+  WrapperVariant,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../internals/models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
@@ -37,6 +38,7 @@ export interface TimeRangePickerToolbarProps<TDate>
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
   ampm: boolean;
   ampmInClock: boolean;
+  toolbarVariant?: WrapperVariant;
   classes?: Partial<TimeRangePickerToolbarClasses>;
 }
 
@@ -51,8 +53,10 @@ const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: TimeRangePickerToolbarProps<any>;
-}>(({ theme }) => ({
-  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+}>(({ theme, ownerState }) => ({
+  ...(ownerState.toolbarVariant === 'mobile'
+    ? { borderBottom: `1px solid ${(theme.vars || theme).palette.divider}` }
+    : { padding: 0 }),
 }));
 
 const TimeRangePickerToolbarContainer = styled('div', {
@@ -64,6 +68,12 @@ const TimeRangePickerToolbarContainer = styled('div', {
   justifyContent: 'space-between',
   width: '100%',
 });
+
+const TimeRangePickerToolbarMobileRoot = styled('div', {
+  name: 'MuiTimeRangePickerToolbar',
+  slot: 'MobileRoot',
+  overridesResolver: (_, styles) => styles.container,
+})({ padding: '16px 24px' });
 
 const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
   TDate extends unknown,
@@ -80,6 +90,8 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
     ampm,
     ampmInClock,
     views,
+    toolbarVariant = 'mobile',
+    toolbarPlaceholder = '--:--',
     ...other
   } = props;
 
@@ -93,12 +105,47 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
     return resolveTimeFormat(utils, { format: undefined, ampm, views: views as TimeView[] });
   }, [utils, toolbarFormat, ampm, views]);
 
-  const startDateValue = start ? utils.formatByString(start, format) : localeText.start;
-
-  const endDateValue = end ? utils.formatByString(end, format) : localeText.end;
-
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
+
+  if (toolbarVariant === 'desktop') {
+    const startDateValue = start ? utils.formatByString(start, format) : toolbarPlaceholder;
+    const endDateValue = end ? utils.formatByString(end, format) : toolbarPlaceholder;
+
+    return (
+      <TimeRangePickerToolbarMobileRoot className={className}>
+        <TimeRangePickerToolbarRoot
+          {...other}
+          toolbarTitle={localeText.from}
+          ownerState={ownerState}
+          ref={ref}
+        >
+          <PickersToolbarButton
+            variant={start !== null ? 'h5' : 'h6'}
+            value={startDateValue}
+            selected={rangePosition === 'start'}
+            onClick={() => onRangePositionChange('start')}
+          />
+        </TimeRangePickerToolbarRoot>
+        <TimeRangePickerToolbarRoot
+          {...other}
+          toolbarTitle={localeText.to}
+          ownerState={ownerState}
+          ref={ref}
+        >
+          <PickersToolbarButton
+            variant={end !== null ? 'h5' : 'h6'}
+            value={endDateValue}
+            selected={rangePosition === 'end'}
+            onClick={() => onRangePositionChange('end')}
+          />
+        </TimeRangePickerToolbarRoot>
+      </TimeRangePickerToolbarMobileRoot>
+    );
+  }
+
+  const startDateValue = start ? utils.formatByString(start, format) : localeText.start;
+  const endDateValue = end ? utils.formatByString(end, format) : localeText.end;
 
   return (
     <TimeRangePickerToolbarRoot
@@ -171,6 +218,7 @@ TimeRangePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
+  toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
   value: PropTypes.arrayOf(PropTypes.any).isRequired,
   /**
    * Currently visible picker view.
