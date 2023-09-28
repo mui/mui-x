@@ -7,6 +7,7 @@ import { BaseTimeValidationProps, TimeValidationProps } from '../internals/model
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { FieldSection, TimeValidationError } from '../models';
+import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../internals';
 
 export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseTimeFieldComponentProps<TDate, TChildProps>;
@@ -66,7 +67,7 @@ export interface TimeFieldProps<TDate>
 
 export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;
 
-export interface TimeFieldSlotsComponent {
+export interface TimeFieldSlotsComponent extends FieldSlotsComponents {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -75,6 +76,6 @@ export interface TimeFieldSlotsComponent {
   TextField?: React.ElementType;
 }
 
-export interface TimeFieldSlotsComponentsProps<TDate> {
+export interface TimeFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
   textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate>>;
 }

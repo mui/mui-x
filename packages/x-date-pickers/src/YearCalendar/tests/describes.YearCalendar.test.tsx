@@ -6,9 +6,13 @@ import {
   YearCalendar,
   yearCalendarClasses as classes,
 } from '@mui/x-date-pickers/YearCalendar';
-import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import {
+  wrapPickerMount,
+  createPickerRenderer,
+  adapterToUse,
+  describeValidation,
+  describeValue,
+} from 'test/utils/pickers';
 
 describe('<YearCalendar /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

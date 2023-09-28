@@ -5,6 +5,7 @@ import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,6 +15,8 @@ import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField }
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
+
+import { useClearableField } from '@mui/x-date-pickers/hooks';
 
 const BrowserField = React.forwardRef((props, ref) => {
   const {
@@ -26,6 +29,7 @@ const BrowserField = React.forwardRef((props, ref) => {
     error,
     focused,
     ownerState,
+    sx,
     ...other
   } = props;
 
@@ -33,7 +37,7 @@ const BrowserField = React.forwardRef((props, ref) => {
 
   return (
     <Box
-      sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
+      sx={{ ...(sx || {}), display: 'flex', alignItems: 'center', flexGrow: 1 }}
       id={id}
       ref={handleRef}
     >
@@ -48,33 +52,51 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, onAdornmentClick, ...other } = props;
 
   const { inputRef: externalInputRef, ...textFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState: props,
   });
 
-  const { ref: inputRef, ...response } = useSingleInputDateRangeField({
+  const {
+    ref: inputRef,
+    onClear,
+    clearable,
+    ...fieldProps
+  } = useSingleInputDateRangeField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
+  /* If you don't need a clear button, you can skip the use of this hook */
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
+    useClearableField({
+      onClear,
+      clearable,
+      fieldProps,
+      InputProps: {
+        ...fieldProps.InputProps,
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton onClick={onAdornmentClick}>
+              <DateRangeIcon />
+            </IconButton>
+          </InputAdornment>
+        ),
+      },
+      slots,
+      slotProps,
+    });
+
   return (
     <BrowserField
-      {...response}
+      {...processedFieldProps}
       ref={ref}
       style={{
         minWidth: 300,
       }}
       inputRef={inputRef}
-      InputProps={{
-        ...response.InputProps,
-        endAdornment: (
-          <IconButton onClick={onAdornmentClick}>
-            <DateRangeIcon />
-          </IconButton>
-        ),
-      }}
+      InputProps={{ ...ProcessedInputProps }}
     />
   );
 });
@@ -93,14 +115,18 @@ const BrowserSingleInputDateRangePicker = React.forwardRef((props, ref) => {
   return (
     <DateRangePicker
       ref={ref}
+      {...props}
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
       slots={{ field: BrowserSingleInputDateRangeField }}
       slotProps={{
-        field: { onAdornmentClick: toggleOpen },
+        ...props?.slotProps,
+        field: {
+          onAdornmentClick: toggleOpen,
+          ...props?.slotProps?.field,
+        },
       }}
-      {...props}
     />
   );
 });
@@ -126,13 +152,13 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   } = props;
 
   const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'start' },
   });
 
   const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'end' },
   });
@@ -176,8 +202,8 @@ const BrowserDateRangePicker = React.forwardRef((props, ref) => {
   return (
     <DateRangePicker
       ref={ref}
-      slots={{ field: BrowserMultiInputDateRangeField }}
       {...props}
+      slots={{ ...props?.slots, field: BrowserMultiInputDateRangeField }}
     />
   );
 });
@@ -185,20 +211,42 @@ const BrowserDateRangePicker = React.forwardRef((props, ref) => {
 const BrowserDateField = React.forwardRef((props, ref) => {
   const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
 
-  const { ref: inputRef, ...other } = useDateField({
+  const {
+    onClear,
+    clearable,
+    ref: inputRef,
+    ...fieldProps
+  } = useDateField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
-  return <BrowserField ref={ref} inputRef={inputRef} {...other} />;
+  /* If you don't need a clear button, you can skip the use of this hook */
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
+    useClearableField({
+      onClear,
+      clearable,
+      fieldProps,
+      InputProps: fieldProps.InputProps,
+      slots,
+      slotProps,
+    });
+  return (
+    <BrowserField
+      ref={ref}
+      inputRef={inputRef}
+      {...processedFieldProps}
+      InputProps={ProcessedInputProps}
+    />
+  );
 });
 
 const BrowserDatePicker = React.forwardRef((props, ref) => {
   return (
     <DatePicker
       ref={ref}
-      slots={{ field: BrowserDateField, ...props.slots }}
       {...props}
+      slots={{ field: BrowserDateField, ...props.slots }}
     />
   );
 });
@@ -209,8 +257,16 @@ export default function PickerWithBrowserField() {
       <DemoContainer
         components={['DatePicker', 'SingleInputDateRangeField', 'DateRangePicker']}
       >
-        <BrowserDatePicker />
-        <BrowserSingleInputDateRangePicker />
+        <BrowserDatePicker
+          slotProps={{
+            field: { clearable: true },
+          }}
+        />
+        <BrowserSingleInputDateRangePicker
+          slotProps={{
+            field: { clearable: true },
+          }}
+        />
         <BrowserDateRangePicker />
       </DemoContainer>
     </LocalizationProvider>

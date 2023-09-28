@@ -1,10 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useClearableField } from '@mui/x-date-pickers/hooks';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
+import {
+  SingleInputTimeRangeFieldProps,
+  SingleInputTimeRangeFieldSlotsComponent,
+  SingleInputTimeRangeFieldSlotsComponentsProps,
+} from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
@@ -44,17 +49,35 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     onKeyDown,
     inputMode,
     readOnly,
+    clearable,
+    onClear,
     ...fieldProps
   } = useSingleInputTimeRangeField<TDate, typeof textFieldProps>({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
+    typeof fieldProps,
+    typeof fieldProps.InputProps,
+    SingleInputTimeRangeFieldSlotsComponent,
+    SingleInputTimeRangeFieldSlotsComponentsProps<TDate>
+  >({
+    onClear,
+    clearable,
+    fieldProps,
+    InputProps: fieldProps.InputProps,
+    slots,
+    slotProps,
+    components,
+    componentsProps,
+  });
+
   return (
     <TextField
       ref={ref}
-      {...fieldProps}
-      InputProps={{ ...fieldProps.InputProps, readOnly }}
+      {...processedFieldProps}
+      InputProps={{ ...ProcessedInputProps, readOnly }}
       inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
     />
   );
@@ -78,6 +101,11 @@ SingleInputTimeRangeField.propTypes = {
    */
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable: PropTypes.bool,
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
@@ -218,6 +246,10 @@ SingleInputTimeRangeField.propTypes = {
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when the clear button is clicked.
+   */
+  onClear: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
