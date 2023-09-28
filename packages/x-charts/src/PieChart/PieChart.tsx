@@ -247,6 +247,7 @@ PieChart.propTypes = {
           color: PropTypes.string,
           id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
           label: PropTypes.string,
+          onClick: PropTypes.func,
           value: PropTypes.number.isRequired,
         }),
       ).isRequired,

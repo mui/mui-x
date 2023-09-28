@@ -88,6 +88,7 @@ export default function PieArc(props: PieArcProps) {
     cornerRadius: baseCornerRadius = 0,
     highlighted,
     faded = { additionalRadius: -5 },
+    onClick,
     ...other
   } = props;
 
@@ -135,6 +136,7 @@ export default function PieArc(props: PieArcProps) {
           outerRadius,
         })!
       }
+      onClick={onClick}
       ownerState={ownerState}
       className={classes.root}
       {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
