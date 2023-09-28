@@ -343,6 +343,22 @@ MobileTimeRangePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * Amount of time options below or at which the single column time renderer is used.
+   * @default 24
+   */
+  thresholdToRenderTimeInASingleColumn: PropTypes.number,
+  /**
+   * The time steps between two time unit options.
+   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * @default{ hours: 1, minutes: 5, seconds: 5 }
+   */
+  timeSteps: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
+  }),
+  /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.

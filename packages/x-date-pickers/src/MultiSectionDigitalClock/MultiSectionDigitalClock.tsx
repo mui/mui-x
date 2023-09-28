@@ -474,6 +474,10 @@ MultiSectionDigitalClock.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * If `true`, the component will take all the width of its parent.
+   */
+  fitWidth: PropTypes.bool,
+  /**
    * Controlled focused view.
    */
   focusedView: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
