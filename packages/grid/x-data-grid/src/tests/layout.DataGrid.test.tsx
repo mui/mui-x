@@ -14,7 +14,7 @@ import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow, sleep } from 'test/utils/helperFn';
 
-describe('<DataGrid /> - Layout & Warnings', () => {
+describe('<DataGrid /> - Layout & warnings', () => {
   const { clock, render } = createRenderer();
 
   const baselineProps = {
@@ -728,6 +728,22 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
         expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
           rowHeight * 2,
+        );
+      });
+
+      it('should allow to override the noRows overlay height', () => {
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              rows={[]}
+              autoHeight
+              sx={{ '--DataGrid-overlayHeight': '300px' }}
+            />
+          </div>,
+        );
+        expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
+          300,
         );
       });
 

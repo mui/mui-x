@@ -92,6 +92,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     onFocusedViewChange,
     monthsPerRow = 3,
     timezone: timezoneProp,
+    gridLabelId,
     ...other
   } = props;
 
@@ -253,11 +254,14 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      role="radiogroup"
+      aria-labelledby={gridLabelId}
       {...other}
     >
       {getMonthsInYear(utils, value ?? referenceDate).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
+        const monthLabel = utils.format(month, 'month');
         const isSelected = monthNumber === selectedMonth;
         const isDisabled = disabled || isMonthDisabled(month);
 
@@ -274,6 +278,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
+            aria-label={monthLabel}
             monthsPerRow={monthsPerRow}
           >
             {monthText}
@@ -322,6 +327,7 @@ MonthCalendar.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  gridLabelId: PropTypes.string,
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.

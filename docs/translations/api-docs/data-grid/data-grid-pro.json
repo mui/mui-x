@@ -26,6 +26,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "autosizeOnMount": {
+      "description": "If <code>true</code>, columns are autosized after the datagrid is mounted.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "autosizeOptions": {
+      "description": "The options for autosize when user-initiated.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "cellModesModel": {
       "description": "Controls the modes of the cells.",
       "deprecated": "",
@@ -98,6 +108,11 @@
     },
     "detailPanelExpandedRowIds": {
       "description": "The row ids to show the detail panel.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "disableAutosize": {
+      "description": "If <code>true</code>, column autosizing on header separator double-click is disabled.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -1428,6 +1443,7 @@
     "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter panel.",
     "filterPanelRemoveAllIcon": "Icon displayed for deleting all the active filters from filter panel.",
     "footer": "Footer component rendered at the bottom of the grid viewport.",
+    "footerRowCount": "Row count component rendered in the footer",
     "groupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "headerFilterCell": "Component responsible for showing menu adornment in Header filter row",

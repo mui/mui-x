@@ -6,7 +6,7 @@ import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Column Spanning', () => {
+describe('<DataGrid /> - Column spanning', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {

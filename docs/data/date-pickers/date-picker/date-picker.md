@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Picker
 
-<p class="description">The Date Picker component lets the user select a date.</p>
+<p class="description">The Date Picker component lets users select a date.</p>
 
 ## Basic usage
 
@@ -112,4 +112,10 @@ You can find the documentation in the [Validation page](/x/react-date-pickers/va
 
 ## Localization
 
-You can find the documentation about localization in the [Date localization](/x/react-date-pickers/adapters-locale/) and [Component localization](/x/react-date-pickers/localization/).
+You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).
+
+## Customization
+
+You can check out multiple examples of how to customize the date pickers and their subcomponents.
+
+{{"demo": "CustomizationExamplesNoSnap.js", "hideToolbar": true, "bg": "inline"}}

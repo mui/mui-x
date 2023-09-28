@@ -1,7 +1,7 @@
-# @mui/x-charts
+# MUI X Charts
 
 This package is the community edition of the chart components.
-It's part of MUI X, an open-core extension of MUI, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
 
 ## Installation
 
@@ -9,12 +9,6 @@ Install the package in your project directory with:
 
 ```bash
 npm install @mui/x-charts
-```
-
-or
-
-```bash
-yarn add @mui/x-charts
 ```
 
 This component has the following peer dependencies that you will need to install as well.
@@ -30,4 +24,4 @@ This component has the following peer dependencies that you will need to install
 
 ## Documentation
 
-[The documentation](https://mui.com/x/react-charts/)
+Visit [https://mui.com/x/react-charts/](https://mui.com/x/react-charts/) to view the full documentation.

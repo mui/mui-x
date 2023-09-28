@@ -4,11 +4,6 @@ import pickersComponentApi from './date-pickers-component-api-pages';
 import chartsComponentApi from './charts-component-api-pages';
 import treeViewComponentApi from './tree-view-component-api-pages';
 
-// const isPreview =
-//   process.env.NODE_ENV === 'development' ||
-//   process.env.CONTEXT === 'deploy-preview' ||
-//   process.env.CONTEXT === 'branch-deploy';
-
 const pages: MuiPage[] = [
   {
     pathname: '/blog/mui-x-v6/',
@@ -198,7 +193,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
-
       {
         pathname: '/x/react-date-pickers-components',
         subheader: 'Components',
@@ -299,7 +293,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
         ],
       },
-
       {
         pathname: '/x/react-date-pickers/common-features',
         subheader: 'Common features',
@@ -309,27 +302,25 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/shortcuts' },
         ],
       },
-
       {
         pathname: '/x/react-date-pickers/localization-group',
         subheader: 'Localization',
         children: [
           {
+            pathname: '/x/react-date-pickers/localization',
+            title: 'Translated components',
+          },
+          {
             pathname: '/x/react-date-pickers/adapters-locale',
-            title: 'Date localization',
+            title: 'Date format and localization',
           },
           {
             pathname: '/x/react-date-pickers/timezone',
             title: 'UTC and timezone',
           },
-          {
-            pathname: '/x/react-date-pickers/localization',
-            title: 'Component localization',
-          },
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],
       },
-
       {
         pathname: '/x/react-date-pickers/visual-customization',
         subheader: 'Visual customization',
@@ -340,10 +331,10 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
+          { pathname: '/x/react-date-pickers/custom-opening-button' },
         ],
       },
-
-      { pathname: '/x/react-date-pickers/playground', title: 'Playground' },
+      { pathname: '/x/react-date-pickers/playground' },
       {
         pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
@@ -405,12 +396,13 @@ const pages: MuiPage[] = [
         title: 'API Reference',
         children: [...chartsComponentApi],
       },
-      { pathname: '/x/react-charts/heat-map', title: 'Heat map 🚧' },
-      { pathname: '/x/react-charts/funnel', title: 'Funnel 🚧' },
-      { pathname: '/x/react-charts/gantt', title: 'Gantt 🚧' },
-      { pathname: '/x/react-charts/radar', title: 'Radar 🚧' },
-      { pathname: '/x/react-charts/sankey', title: 'Sankey 🚧' },
+      { pathname: '/x/react-charts/gauge', title: 'Gauge 🚧' },
       { pathname: '/x/react-charts/tree-map', title: 'Tree map 🚧' },
+      { pathname: '/x/react-charts/heat-map', title: 'Heat map 🚧' },
+      { pathname: '/x/react-charts/radar', title: 'Radar 🚧' },
+      { pathname: '/x/react-charts/funnel', title: 'Funnel 🚧', plan: 'pro' },
+      { pathname: '/x/react-charts/sankey', title: 'Sankey 🚧', plan: 'pro' },
+      { pathname: '/x/react-charts/gantt', title: 'Gantt 🚧', plan: 'pro' },
     ],
   },
   {
@@ -418,6 +410,7 @@ const pages: MuiPage[] = [
     title: 'Tree View',
     newFeature: true,
     children: [
+      { pathname: '/x/react-tree-view/getting-started' },
       { pathname: '/x/react-tree-view', title: 'Overview' },
       {
         pathname: '/x/api/tree-view-group',
