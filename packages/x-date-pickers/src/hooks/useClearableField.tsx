@@ -90,7 +90,7 @@ export const useClearableField = <
     sx: [
       {
         '& .clearButton': {
-          opacity: 1
+          opacity: 1,
         },
         '@media (pointer: fine)': {
           '& .clearButton': {
