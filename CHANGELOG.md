@@ -12,6 +12,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 🎁 Add a clearable behavior to all the single input pickers and fields (#9095) @noraleonte
 
   The pickers and fields now have an out-of-the box implementation for clearing the field value. You can see the documentation for this behavior on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#clearing-the-value).
+  <img width="380" alt="Clearable behavior" src="https://github.com/mui/mui-x/assets/72460825/e4a66169-83b5-4579-b9f6-6e15bb528411">
 
 - 💫 Add Date Picker customization playground (#9581) @noraleonte
 
@@ -54,11 +55,11 @@ Same changes as in `@mui/x-data-grid-pro@6.16.0`.
 
 Same changes as in `@mui/x-date-pickers@6.16.0`.
 
-### Charts / `@mui/x-charts@6.0.0-beta.0`
+### Charts / `@mui/x-charts@6.0.0-alpha.13`
 
 - [charts] Share upfront future Pro features (#10465) @oliviertassinari
 
-### Tree View / `@mui/x-tree-view@6.0.0-alpha.5`
+### Tree View / `@mui/x-tree-view@6.0.0-beta.0`
 
 - [TreeView] Do not try to focus a collapsed node when re-focusing the TreeView (#10422) @flaviendelangle
 - [TreeView] Fix the typing of the Multiple generic (#10478) @flaviendelangle
