@@ -3,54 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 6.15.1
+## 6.16.0
 _Sep 28, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
+- 🧹 Added `clearable` prop to DatePickers (#9095) @noraleonte
 - 🧰 Fix header filters menu auto closing on render (#10483) @MBilalShafi
-- 🌳 Do not try to focus a collapsed node when re-focusing the TreeView (#10422) @flaviendelangle
+- 🌳 Fix focusing of a collapsed node when the TreeView is re-focused (#10422) @flaviendelangle
 - 🎯 Fix column headers scroll when theme scoping is used (#10437) @cherniavskii
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 ### Data Grid
 
-#### `@mui/x-data-grid@6.15.1`
+#### `@mui/x-data-grid@6.16.0`
 
 - [DataGrid] Fix column headers scroll when theme scoping is used (#10437) @cherniavskii
 - [DataGrid] Rename `global` to `globalScope` due to Jest issue (#10470) @romgrk
-- [l10n] Improve Russian (ru-RU) locale (#10464) @NKodos
-- [l10n] Improve Russian (ru-RU) locale on the DataGrid (#10407) @NKodos
+- [l10n] Improve Russian (ru-RU) locale (#10464 and #10407) @NKodos
 
-#### `@mui/x-data-grid-pro@6.15.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@6.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@6.15.1`, plus:
+Same changes as in `@mui/x-data-grid@6.16.0`, plus:
 - [DataGridPro] Fix header filters menu auto closing on render (#10483) @MBilalShafi
 
-#### `@mui/x-data-grid-premium@6.15.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@6.16.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@6.15.1`.
+Same changes as in `@mui/x-data-grid-pro@6.16.0`.
 
 ### Date Pickers
 
-#### `@mui/x-date-pickers@6.15.1`
+#### `@mui/x-date-pickers@6.16.0`
 
-- [pickers] refactor dayOfWeekFormatter (#10345) @michelengelen
+- [pickers] Implement `clearable` field behavior (#9095) @noraleonte
+- [pickers] Refactor `dayOfWeekFormatter` (#10345) @michelengelen
 
-#### `@mui/x-date-pickers-pro@6.15.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@6.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@6.15.1`.
+Same changes as in `@mui/x-date-pickers@6.16.0`.
 
 
-### Charts / `@mui/x-charts@6.0.0-alpha.13`
+### Charts / `@mui/x-charts@6.0.0-beta.0`
 
 - [charts] Share upfront future Pro features (#10465) @oliviertassinari
 
 ### Tree View / `@mui/x-tree-view@6.0.0-alpha.5`
 
 - [TreeView] Do not try to focus a collapsed node when re-focusing the TreeView (#10422) @flaviendelangle
-- [TreeView] Fix typing of the Multiple generic (#10478) @flaviendelangle
+- [TreeView] Fix the typing of the Multiple generic (#10478) @flaviendelangle
 
 
 ### Docs
