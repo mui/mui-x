@@ -54,16 +54,16 @@ export const useClearableField = <
     elementType: IconButton,
     externalSlotProps: slotProps?.clearButton ?? componentsProps?.clearButton,
     ownerState: {},
+    className: 'clearButton',
+    additionalProps: {
+      title: localeText.fieldClearLabel,
+    },
   });
   const EndClearIcon = slots?.clearIcon ?? components?.ClearIcon ?? ClearIcon;
   const endClearIconProps = useSlotProps({
     elementType: EndClearIcon,
     externalSlotProps: slotProps?.clearIcon ?? componentsProps?.clearIcon,
     ownerState: {},
-    className: 'clearButton',
-    additionalProps: {
-      title: localeText.fieldClearLabel,
-    },
   });
 
   const InputProps = {
