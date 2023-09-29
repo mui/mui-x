@@ -918,9 +918,13 @@ describe('<DataGridPro /> - Column pinning', () => {
         />,
       );
 
-      const firstNameLastNameColumnGroupHeader = document.querySelector('[role="columnheader"][data-fields="|-firstName-|-lastName-|"]')!;
+      const firstNameLastNameColumnGroupHeader = document.querySelector(
+        '[role="columnheader"][data-fields="|-firstName-|-lastName-|"]',
+      )!;
       expect(firstNameLastNameColumnGroupHeader.textContent).to.equal('Basic info');
-      const ageCellColumnGroupHeader = document.querySelector('[role="columnheader"][data-fields="|-age-|"]')!;
+      const ageCellColumnGroupHeader = document.querySelector(
+        '[role="columnheader"][data-fields="|-age-|"]',
+      )!;
       expect(ageCellColumnGroupHeader.textContent).to.equal('Basic info');
     });
   });
