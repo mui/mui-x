@@ -250,6 +250,8 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "clearButton": "Button to clear the value.",
+    "clearIcon": "Icon to display inside the clear button.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "field": "",
     "fieldRoot": "Element rendered at the root. Ignored if the field has only one input.",

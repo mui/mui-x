@@ -165,6 +165,18 @@
     },
     {
       "class": null,
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon"
+    },
+    {
+      "class": null,
       "name": "dialog",
       "description": "Custom component for the dialog inside which the views are rendered on mobile.",
       "default": "PickersModalDialogRoot"

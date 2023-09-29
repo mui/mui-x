@@ -173,6 +173,18 @@
     },
     {
       "class": null,
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon"
+    },
+    {
+      "class": null,
       "name": "desktopPaper",
       "description": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
       "default": "PickersPopperPaper"
