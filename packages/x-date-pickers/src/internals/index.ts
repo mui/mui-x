@@ -66,6 +66,8 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';

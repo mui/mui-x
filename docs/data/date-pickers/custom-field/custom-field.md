@@ -75,6 +75,10 @@ You can also use any other input:
 
 {{"demo": "PickerWithBrowserField.js", "defaultCodeOpen": false}}
 
+:::warning
+You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
+:::
+
 ### Using an `Autocomplete`
 
 If your user can only select a value in a small list of available dates,

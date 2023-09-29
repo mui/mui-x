@@ -177,7 +177,7 @@
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.",
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The date to test.",

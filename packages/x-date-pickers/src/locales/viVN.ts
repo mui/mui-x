@@ -68,6 +68,7 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Chọn giờ, giờ đã chọn là ${utils.format(value, 'fullTime')}`
       : 'Chọn giờ',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'chọn giờ',

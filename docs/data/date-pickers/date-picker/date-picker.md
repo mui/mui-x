@@ -106,6 +106,12 @@ You can show a helper text with the date format accepted:
 
 {{"demo": "HelperText.js"}}
 
+## Clearing the value
+
+You can enable the clearable behavior:
+
+{{"demo": "ClearableProp.js"}}
+
 ## Validation
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).

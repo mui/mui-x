@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { UncapitalizeObjectKeys, FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
+import {
+  UncapitalizeObjectKeys,
+  FieldsTextFieldProps,
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
+} from '@mui/x-date-pickers/internals';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
@@ -55,7 +60,7 @@ export interface SingleInputDateTimeRangeFieldProps<TDate>
 export type SingleInputDateTimeRangeFieldOwnerState<TDate> =
   SingleInputDateTimeRangeFieldProps<TDate>;
 
-export interface SingleInputDateTimeRangeFieldSlotsComponent {
+export interface SingleInputDateTimeRangeFieldSlotsComponent extends FieldSlotsComponents {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -64,7 +69,8 @@ export interface SingleInputDateTimeRangeFieldSlotsComponent {
   TextField?: React.ElementType;
 }
 
-export interface SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate> {
+export interface SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate>
+  extends FieldSlotsComponentsProps {
   textField?: SlotComponentProps<
     typeof TextField,
     {},

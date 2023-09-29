@@ -68,6 +68,7 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Choisir l'heure, l'heure sélectionnée est ${utils.format(value, 'fullTime')}`
       : "Choisir l'heure",
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: "choix de l'heure",

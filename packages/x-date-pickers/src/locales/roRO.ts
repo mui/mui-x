@@ -69,6 +69,7 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Selectați ora, ora selectată este ${utils.format(value, 'fullTime')}`
       : 'Selectați ora',
+  fieldClearLabel: 'Golire conținut',
 
   // Table labels
   timeTableLabel: 'Selectați ora',

@@ -66,6 +66,7 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Välj tid, vald tid är ${utils.format(value, 'fullTime')}`
       : 'Välj tid',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'välj tid',
