@@ -62,7 +62,7 @@ The user can then choose which columns are visible using the _Columns_ button.
 
 ### Disable the column visibility panel
 
-Sometimes, we may want to disable the columns panel or control the visible columns programmatically based on the application state.
+Sometimes, the intention is to disable the columns panel or control the visible columns programmatically based on the application state.
 To disable the column visibility panel, set the prop `disableColumnSelector={true}` and use the [`columnVisibilityModel`](#controlled-visible-columns) prop to control the visible columns.
 
 ```tsx
