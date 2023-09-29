@@ -26,6 +26,10 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   start: 'Başlangıç',
   end: 'Bitiş',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'iptal',
   clearButtonLabel: 'Temizle',

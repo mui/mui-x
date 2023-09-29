@@ -26,6 +26,10 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   start: 'Start',
   end: 'Slut',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Avbryt',
   clearButtonLabel: 'Rensa',

@@ -26,6 +26,10 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   start: 'Start',
   end: 'Slutt',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Avbryt',
   clearButtonLabel: 'Fjern',

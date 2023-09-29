@@ -27,6 +27,10 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   start: 'Začiatok',
   end: 'Koniec',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Zrušiť',
   clearButtonLabel: 'Vymazať',

@@ -26,6 +26,10 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   start: 'Alku',
   end: 'Loppu',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Peruuta',
   clearButtonLabel: 'Tyhjennä',

@@ -26,6 +26,10 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   start: 'Début',
   end: 'Fin',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Annuler',
   clearButtonLabel: 'Vider',

@@ -27,6 +27,10 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   start: '開始',
   end: '終了',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'キャンセル',
   clearButtonLabel: 'クリア',

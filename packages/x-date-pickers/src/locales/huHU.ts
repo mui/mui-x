@@ -27,6 +27,10 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   start: 'Kezdő dátum',
   end: 'Záró dátum',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Mégse',
   clearButtonLabel: 'Törlés',

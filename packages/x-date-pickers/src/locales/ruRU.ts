@@ -27,6 +27,10 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   start: 'Начало',
   end: 'Конец',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Отмена',
   clearButtonLabel: 'Очистить',

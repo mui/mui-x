@@ -26,6 +26,10 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   start: 'Початок',
   end: 'Кінець',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Відміна',
   clearButtonLabel: 'Очистити',

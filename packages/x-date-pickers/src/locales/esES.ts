@@ -26,6 +26,10 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   start: 'Empezar',
   end: 'Terminar',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Cancelar',
   clearButtonLabel: 'Limpiar',

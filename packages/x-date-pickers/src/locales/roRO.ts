@@ -27,6 +27,10 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
   start: 'Început',
   end: 'Sfârșit',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Anulare',
   clearButtonLabel: 'Ștergere',

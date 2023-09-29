@@ -26,6 +26,10 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   start: 'Començar',
   end: 'Terminar',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Cancel·lar',
   clearButtonLabel: 'Netejar',

@@ -26,6 +26,10 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   start: 'شروع',
   end: 'ختم',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'کینسل',
   clearButtonLabel: 'کلئیر',

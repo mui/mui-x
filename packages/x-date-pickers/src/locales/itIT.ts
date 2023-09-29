@@ -26,6 +26,10 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   start: 'Inizio',
   end: 'Fine',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Cancellare',
   clearButtonLabel: 'Sgomberare',

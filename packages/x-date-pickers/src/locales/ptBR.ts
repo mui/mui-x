@@ -26,6 +26,10 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   start: 'Início',
   end: 'Fim',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Cancelar',
   clearButtonLabel: 'Limpar',

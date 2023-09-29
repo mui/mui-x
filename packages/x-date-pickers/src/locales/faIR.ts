@@ -26,6 +26,10 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   start: 'شروع',
   end: 'پایان',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'لغو',
   clearButtonLabel: 'پاک کردن',

@@ -26,6 +26,10 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   start: 'Bắt đầu',
   end: 'Kết thúc',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Hủy',
   clearButtonLabel: 'Xóa',

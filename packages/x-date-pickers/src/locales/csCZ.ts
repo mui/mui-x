@@ -27,6 +27,10 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   start: 'Začátek',
   end: 'Konec',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Zrušit',
   clearButtonLabel: 'Vymazat',

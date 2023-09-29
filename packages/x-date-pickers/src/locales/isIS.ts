@@ -26,6 +26,10 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   start: 'Upphaf',
   end: 'Endir',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Hætta við',
   clearButtonLabel: 'Hreinsa',

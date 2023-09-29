@@ -26,6 +26,10 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   start: 'Αρχή',
   end: 'Τέλος',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Άκυρο',
   clearButtonLabel: 'Καθαρισμός',

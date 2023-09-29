@@ -26,6 +26,10 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   start: 'Start',
   end: 'Einde',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Annuleren',
   clearButtonLabel: 'Resetten',

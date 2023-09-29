@@ -27,6 +27,10 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   start: 'Бастау',
   end: 'Cоңы',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Бас тарту',
   clearButtonLabel: 'Тазарту',
