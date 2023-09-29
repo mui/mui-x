@@ -2,7 +2,7 @@ import * as React from 'react';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import Box from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -163,7 +163,7 @@ const blogs: Blog[] = [
 function BlogCard(props: { blog: Blog }) {
   return (
     <Card
-      sx={(theme) => ({
+      sx={{
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -177,7 +177,7 @@ function BlogCard(props: { blog: Blog }) {
             ? 'primaryDark.700'
             : `${alpha(theme.palette.grey[50], 0.4)}`,
         borderColor: 'divider',
-      })}
+      }}
       variant="outlined"
     >
       <CardContent sx={{ p: 0 }}>
@@ -217,7 +217,7 @@ function BlogCard(props: { blog: Blog }) {
               >
                 <Typography sx={{ pl: 1 }} variant="body2">
                   <Link
-                    sx={{ cursor: 'pointer' /*, color: '#818181'*/ }}
+                    sx={{ cursor: 'pointer' }}
                     href={item.url}
                   >
                     {item.title}
@@ -239,7 +239,7 @@ function BlogCard(props: { blog: Blog }) {
   );
 }
 
-export default function PickersPlaygroundWrapper() {
+export default function WhatsNewLayout() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
       {blogs.map((blog) => (
