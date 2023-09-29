@@ -49,6 +49,7 @@ Same changes as in `@mui/x-data-grid-pro@6.16.0`.
 
 #### `@mui/x-date-pickers@6.16.0`
 
+- [pickers] Add warning to `shouldDisableDate` validation (#10502) @michelengelen
 - [pickers] Implement `clearable` field behavior (#9095) @noraleonte
 - [pickers] Refactor `dayOfWeekFormatter` (#10345) @michelengelen
 
