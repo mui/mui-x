@@ -1,8 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { Popper } from '@mui/base/Popper';
+import Popper, { PopperProps } from '@mui/material/Popper';
 import { NoSsr } from '@mui/base/NoSsr';
+import { useSlotProps } from '@mui/base/utils';
 import {
   AxisInteractionData,
   InteractionContext,
@@ -13,6 +14,18 @@ import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipClasses, getTooltipUtilityClass } from './tooltipClasses';
+
+export interface ChartsTooltipSlotsComponent {
+  popper?: React.JSXElementConstructor<PopperProps>;
+  axisContent?: React.ElementType<ChartsAxisContentProps>;
+  itemContent?: React.ElementType<ChartsItemContentProps>;
+}
+
+export interface ChartsTooltipSlotComponentProps {
+  popper?: Partial<PopperProps>;
+  axisContent?: Partial<ChartsAxisContentProps>;
+  itemContent?: Partial<ChartsItemContentProps>;
+}
 
 export type ChartsTooltipProps = {
   /**
@@ -25,16 +38,28 @@ export type ChartsTooltipProps = {
   trigger?: TriggerOptions;
   /**
    * Component to override the tooltip content when triger is set to 'item'.
+   * @deprecated Use slots.itemContent instead
    */
   itemContent?: React.ElementType<ChartsItemContentProps<any>>;
   /**
    * Component to override the tooltip content when triger is set to 'axis'.
+   * * @deprecated Use slots.axisContent instead
    */
   axisContent?: React.ElementType<ChartsAxisContentProps>;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsTooltipClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: ChartsTooltipSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: ChartsTooltipSlotComponentProps;
 };
 
 const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] }) => {
@@ -51,7 +76,7 @@ const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] 
 };
 
 function ChartsTooltip(props: ChartsTooltipProps) {
-  const { trigger = 'axis', itemContent, axisContent } = props;
+  const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = props;
 
   const mousePosition = useMouseTracker();
 
@@ -64,34 +89,45 @@ function ChartsTooltip(props: ChartsTooltipProps) {
 
   const classes = useUtilityClasses({ classes: props.classes });
 
+  const PopperComponent = slots?.popper ?? Popper;
+  const popperProps = useSlotProps({
+    elementType: PopperComponent,
+    externalSlotProps: slotProps?.popper,
+    additionalProps: {
+      open: popperOpen,
+      placement: 'right-start' as const,
+      anchorEl: generateVirtualElement(mousePosition),
+      style: { pointerEvents: 'none' },
+    },
+    ownerState: {},
+  });
+
   if (trigger === 'none') {
     return null;
   }
+
   return (
     <NoSsr>
       {popperOpen && (
-        <Popper
-          open={popperOpen}
-          placement="right-start"
-          anchorEl={generateVirtualElement(mousePosition)}
-          style={{ pointerEvents: 'none' }}
-        >
+        <PopperComponent {...popperProps}>
           {trigger === 'item' ? (
             <ChartsItemTooltipContent
               itemData={displayedData as ItemInteractionData<ChartSeriesType>}
-              content={itemContent}
+              content={slots?.itemContent ?? itemContent}
+              contentProps={slotProps?.itemContent}
               sx={{ mx: 2 }}
               classes={classes}
             />
           ) : (
             <ChartsAxisTooltipContent
               axisData={displayedData as AxisInteractionData}
-              content={axisContent}
+              content={slots?.axisContent ?? axisContent}
+              contentProps={slotProps?.axisContent}
               sx={{ mx: 2 }}
               classes={classes}
             />
           )}
-        </Popper>
+        </PopperComponent>
       )}
     </NoSsr>
   );
