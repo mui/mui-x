@@ -1,5 +1,5 @@
 # ✨ What's new in MUI X ✨
 
-<p class="description">Discover the new features on the latest major version.</p>
+<p class="description">Discover what's new in the latest versions.</p>
 
 {{"demo": "WhatsNewLayout.js", "hideToolbar": true, "bg": "inline"}}
