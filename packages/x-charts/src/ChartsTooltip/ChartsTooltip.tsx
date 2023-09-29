@@ -140,6 +140,7 @@ ChartsTooltip.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Component to override the tooltip content when triger is set to 'axis'.
+   * * @deprecated Use slots.axisContent instead
    */
   axisContent: PropTypes.elementType,
   /**
@@ -148,8 +149,19 @@ ChartsTooltip.propTypes = {
   classes: PropTypes.object,
   /**
    * Component to override the tooltip content when triger is set to 'item'.
+   * @deprecated Use slots.itemContent instead
    */
   itemContent: PropTypes.elementType,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.

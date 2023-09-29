@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "axisContent": {
-      "description": "Component to override the tooltip content when triger is set to &#39;axis&#39;.",
+      "description": "Component to override the tooltip content when triger is set to &#39;axis&#39;. * @deprecated Use slots.axisContent instead",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -13,6 +13,16 @@
     },
     "itemContent": {
       "description": "Component to override the tooltip content when triger is set to &#39;item&#39;.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
       "deprecated": "",
       "typeDescriptions": {}
     },
