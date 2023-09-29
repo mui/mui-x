@@ -62,14 +62,14 @@ The user can then choose which columns are visible using the _Columns_ button.
 
 ### Disable the column visibility panel
 
-Sometimes, you may want to simply disable the columns panel or control the visible columns programatically based on the application state like the type of user logged in.
+Sometimes, we may want to disable the columns panel or control the visible columns programmatically based on the application state.
 To disable the column visibility panel, set the prop `disableColumnSelector={true}` and use the [`columnVisibilityModel`](#controlled-visible-columns) prop to control the visible columns.
 
 ```tsx
 <DataGrid disableColumnSelector columnVisibilityModel={columnVisibilityModel} />
 ```
 
-In the following demo, columns panel is disabled and access to columns `id`, `quantity`, and `filledQuantity` is only allowed to the user type `Admin`. Try changing the user type to see how the visible columns change.
+In the following demo, the columns panel is disabled, and access to columns `id`, `quantity`, and `filledQuantity` is only allowed for the `Admin` type user.
 
 {{"demo": "ColumnSelectorDisabledGrid.js", "bg": "inline"}}
 
