@@ -8,7 +8,12 @@ import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { PieSeriesType } from '../models/seriesType';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  ChartsTooltip,
+  ChartsTooltipProps,
+  ChartsTooltipSlotComponentProps,
+  ChartsTooltipSlotsComponent,
+} from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
@@ -23,11 +28,13 @@ import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../model
 export interface PieChartSlotsComponent
   extends ChartsAxisSlotsComponent,
     PiePlotSlotsComponent,
-    ChartsLegendSlotsComponent {}
+    ChartsLegendSlotsComponent,
+    ChartsTooltipSlotsComponent {}
 export interface PieChartSlotComponentProps
   extends ChartsAxisSlotComponentProps,
     PiePlotSlotComponentProps,
-    ChartsLegendSlotComponentProps {}
+    ChartsLegendSlotComponentProps,
+    ChartsTooltipSlotComponentProps {}
 
 export interface PieChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
