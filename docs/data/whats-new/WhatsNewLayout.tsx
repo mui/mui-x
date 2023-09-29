@@ -16,7 +16,7 @@ type Blog = {
   announcementDate: string;
   description: string;
   url: string;
-  highlightList: { name: string; link: string }[];
+  highlightList: { title: string; url: string }[];
 };
 
 const blogs: Blog[] = [
@@ -27,28 +27,28 @@ const blogs: Blog[] = [
     url: 'https://mui.com/blog/mui-x-mid-v6-features/',
     highlightList: [
       {
-        name: 'Support for timezone on Date and Time Pickers',
-        link: 'https://mui.com/blog/mui-x-mid-v6-features/#support-for-time-zones',
+        title: 'Support for timezone on Date and Time Pickers',
+        url: 'https://mui.com/blog/mui-x-mid-v6-features/#support-for-time-zones',
       },
       {
-        name: 'Digital Clock',
-        link: 'https://mui.com/blog/mui-x-mid-v6-features/#digital-clock',
+        title: 'Digital Clock',
+        url: 'https://mui.com/blog/mui-x-mid-v6-features/#digital-clock',
       },
       {
-        name: 'Filters on Data Grid column headers',
-        link: 'https://mui.com/blog/mui-x-mid-v6-features/#filter-on-column-headers',
+        title: 'Filters on Data Grid column headers',
+        url: 'https://mui.com/blog/mui-x-mid-v6-features/#filter-on-column-headers',
       },
       {
-        name: 'Copy and Paste on Data Grid',
-        link: 'https://mui.com/blog/mui-x-mid-v6-features/#copy-and-paste',
+        title: 'Copy and Paste on Data Grid',
+        url: 'https://mui.com/blog/mui-x-mid-v6-features/#copy-and-paste',
       },
       {
-        name: 'Charts Alpha 🧪',
-        link: 'https://mui.com/blog/mui-x-mid-v6-features/#charts-alpha-version',
+        title: 'Charts Alpha 🧪',
+        url: 'https://mui.com/blog/mui-x-mid-v6-features/#charts-alpha-version',
       },
       {
-        name: 'TreeView migration from lab',
-        link: 'https://mui.com/blog/mui-x-mid-v6-features/#tree-view-is-moving-to-mui-x',
+        title: 'TreeView migration from lab',
+        url: 'https://mui.com/blog/mui-x-mid-v6-features/#tree-view-is-moving-to-mui-x',
       },
     ],
   },
@@ -60,32 +60,32 @@ const blogs: Blog[] = [
     url: 'https://mui.com/blog/mui-x-v6/',
     highlightList: [
       {
-        name: 'Date and time fields',
-        link: 'https://mui.com/blog/mui-x-v6/#fields-the-new-default-input-gt-for-pickers',
+        title: 'Date and time fields',
+        url: 'https://mui.com/blog/mui-x-v6/#fields-the-new-default-input-gt-for-pickers',
       },
       {
-        name: 'Date Range shortcuts',
-        link: 'https://mui.com/blog/mui-x-v6/#shortcuts-for-picking-specific-dates-in-a-calendar',
+        title: 'Date Range shortcuts',
+        url: 'https://mui.com/blog/mui-x-v6/#shortcuts-for-picking-specific-dates-in-a-calendar',
       },
       {
-        name: 'Improved layout customization',
-        link: 'https://mui.com/blog/mui-x-v6/#improved-layout-customization',
+        title: 'Improved layout customization',
+        url: 'https://mui.com/blog/mui-x-v6/#improved-layout-customization',
       },
       {
-        name: 'Edit ranges with drag and drop',
-        link: 'https://mui.com/blog/mui-x-v6/#edit-date-ranges-with-drag-and-drop',
+        title: 'Edit ranges with drag and drop',
+        url: 'https://mui.com/blog/mui-x-v6/#edit-date-ranges-with-drag-and-drop',
       },
       {
-        name: 'New Column menu',
-        link: 'https://mui.com/blog/mui-x-v6/#improved-column-menu',
+        title: 'New Column menu',
+        url: 'https://mui.com/blog/mui-x-v6/#improved-column-menu',
       },
       {
-        name: 'ApiRef in community',
-        link: 'https://mui.com/blog/mui-x-v6/#apiref-moved-to-the-mit-community-version',
+        title: 'ApiRef in community',
+        url: 'https://mui.com/blog/mui-x-v6/#apiref-moved-to-the-mit-community-version',
       },
       {
-        name: 'Cell selection',
-        link: 'https://mui.com/blog/mui-x-v6/#cell-selection',
+        title: 'Cell selection',
+        url: 'https://mui.com/blog/mui-x-v6/#cell-selection',
       },
     ],
   },
@@ -97,16 +97,16 @@ const blogs: Blog[] = [
     url: 'https://mui.com/blog/date-pickers-stable-v5/',
     highlightList: [
       {
-        name: 'Better APIs',
-        link: 'https://mui.com/blog/date-pickers-stable-v5/#better-apis-and-improved-customization',
+        title: 'Better APIs',
+        url: 'https://mui.com/blog/date-pickers-stable-v5/#better-apis-and-improved-customization',
       },
       {
-        name: 'Easier customization',
-        link: 'https://mui.com/blog/date-pickers-stable-v5/#better-apis-and-improved-customization',
+        title: 'Easier customization',
+        url: 'https://mui.com/blog/date-pickers-stable-v5/#better-apis-and-improved-customization',
       },
       {
-        name: 'Integrated localization',
-        link: 'https://mui.com/blog/date-pickers-stable-v5/#integrated-localization',
+        title: 'Integrated localization',
+        url: 'https://mui.com/blog/date-pickers-stable-v5/#integrated-localization',
       },
     ],
   },
@@ -118,12 +118,12 @@ const blogs: Blog[] = [
     url: 'https://mui.com/blog/aggregation-functions/',
     highlightList: [
       {
-        name: 'Aggregation in summary rows and row groups',
-        link: 'https://mui.com/blog/aggregation-functions/#wait-what-is-an-aggregation-function',
+        title: 'Aggregation in summary rows and row groups',
+        url: 'https://mui.com/blog/aggregation-functions/#wait-what-is-an-aggregation-function',
       },
       {
-        name: 'Row pinning',
-        link: 'https://mui.com/blog/aggregation-functions/#row-pinning',
+        title: 'Row pinning',
+        url: 'https://mui.com/blog/aggregation-functions/#row-pinning',
       },
     ],
   },
@@ -134,8 +134,8 @@ const blogs: Blog[] = [
     announcementDate: 'Thursday, May 12, 2022',
     url: 'https://mui.com/blog/premium-plan-release/',
     highlightList: [
-      { name: 'Row Grouping', link: '/x/react-data-grid/row-grouping/' },
-      { name: 'Excel export', link: '/x/react-data-grid/export/#exported-rows' },
+      { title: 'Row Grouping', url: '/x/react-data-grid/row-grouping/' },
+      { title: 'Excel export', url: '/x/react-data-grid/export/#exported-rows' },
     ],
   },
   {
@@ -145,16 +145,16 @@ const blogs: Blog[] = [
     url: 'https://mui.com/blog/mui-x-v5/',
     highlightList: [
       {
-        name: 'New virtualization engine',
-        link: 'https://mui.com/blog/mui-x-v5/#a-new-virtualization-engine',
+        title: 'New virtualization engine',
+        url: 'https://mui.com/blog/mui-x-v5/#a-new-virtualization-engine',
       },
       {
-        name: 'Improved state management',
-        link: 'https://mui.com/blog/mui-x-v5/#improved-state-management',
+        title: 'Improved state management',
+        url: 'https://mui.com/blog/mui-x-v5/#improved-state-management',
       },
       {
-        name: 'Simplified style customization',
-        link: 'https://mui.com/blog/mui-x-v5/#simplified-style-customization',
+        title: 'Simplified style customization',
+        url: 'https://mui.com/blog/mui-x-v5/#simplified-style-customization',
       },
     ],
   },
@@ -218,9 +218,9 @@ function BlogCard(props: { blog: Blog }) {
                 <Typography sx={{ pl: 1 }} variant="body2">
                   <Link
                     sx={{ cursor: 'pointer' /*, color: '#818181'*/ }}
-                    href={item.link}
+                    href={item.url}
                   >
-                    {item.name}
+                    {item.title}
                   </Link>
                 </Typography>
               </ListItem>
