@@ -57,19 +57,16 @@ const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
-})<{ ownerState: PieArcOwnerState; isClickable?: boolean }>(
-  ({ ownerState, theme, isClickable }) => ({
-    stroke: (theme.vars || theme).palette.background.paper,
-    strokeWidth: 1,
-    strokeLinejoin: 'round',
-    fill: ownerState.color,
-    cursor: isClickable ? 'pointer' : 'unset',
-    opacity: ownerState.isFaded ? 0.3 : 1,
-  }),
-);
+})<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
+  stroke: (theme.vars || theme).palette.background.paper,
+  strokeWidth: 1,
+  strokeLinejoin: 'round',
+  fill: ownerState.color,
+  opacity: ownerState.isFaded ? 0.3 : 1,
+}));
 
 export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> &
+  Omit<React.ComponentPropsWithoutRef<'path'>, 'onClick'> &
   D3PieArcDatum<any> & {
     highlightScope?: Partial<HighlightScope>;
     innerRadius: PieSeriesType['innerRadius'];
@@ -77,7 +74,7 @@ export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
     cornerRadius: PieSeriesType['cornerRadius'];
     highlighted: PieSeriesType['highlighted'];
     faded: PieSeriesType['faded'];
-    isClickable?: boolean;
+    onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
   };
 
 export default function PieArc(props: PieArcProps) {
@@ -93,7 +90,6 @@ export default function PieArc(props: PieArcProps) {
     highlighted,
     faded = { additionalRadius: -5 },
     onClick,
-    isClickable,
     ...other
   } = props;
 
@@ -141,8 +137,8 @@ export default function PieArc(props: PieArcProps) {
           outerRadius,
         })!
       }
-      isClickable={isClickable}
       onClick={onClick}
+      cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={classes.root}
       {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}

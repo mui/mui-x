@@ -7,7 +7,6 @@ export type PieValueType = {
   value: number;
   label?: string;
   color?: string;
-  onClick?: (item: DefaultizedPieValueType) => void;
 };
 
 export type DefaultizedPieValueType = PieValueType &
