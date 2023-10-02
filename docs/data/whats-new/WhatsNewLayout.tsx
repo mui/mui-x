@@ -202,26 +202,24 @@ function BlogCard(props: { blog: Blog }) {
             {props.blog.description}
           </Typography>
 
-          <List sx={{ listStyle: 'circle', pb: 0 }}>
+          <List sx={{ pb: 0 }}>
             {props.blog.highlightList.map((item) => (
               <ListItem
                 sx={{
                   py: 0.5,
                   px: 0.5,
-
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  lineHeight: '20px',
                   [`&:before`]: {
                     content: '"•"',
                     color: 'grey',
+                    lineHeight: '20px',
                   },
                 }}
               >
                 <Typography sx={{ pl: 1 }} variant="body2">
-                  <Link
-                    sx={{ cursor: 'pointer' }}
-                    href={item.url}
-                  >
-                    {item.title}
-                  </Link>
+                  <Link href={item.url}>{item.title}</Link>
                 </Typography>
               </ListItem>
             ))}
