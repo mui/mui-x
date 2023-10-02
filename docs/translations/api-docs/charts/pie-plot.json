@@ -5,9 +5,9 @@
       "description": "Callback fired when a pie item is clicked.",
       "deprecated": "",
       "typeDescriptions": {
+        "event": "The event source of the callback.",
         "pieItemIdentifier": "The pie item identifier.",
-        "item": "The pie item.",
-        "event": "The event source of the callback."
+        "item": "The pie item."
       }
     },
     "slotProps": {

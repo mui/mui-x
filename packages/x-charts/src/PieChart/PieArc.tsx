@@ -1,10 +1,10 @@
-import { styled } from '@mui/material/styles';
-import composeClasses from '@mui/utils/composeClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import * as React from 'react';
 import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
 import PropTypes from 'prop-types';
-import * as React from 'react';
+import composeClasses from '@mui/utils/composeClasses';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import { styled } from '@mui/material/styles';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { HighlightScope } from '../context/HighlightProvider';
 import { InteractionContext } from '../context/InteractionProvider';
 import {
@@ -66,7 +66,7 @@ const PieArcRoot = styled('path', {
 }));
 
 export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.ComponentPropsWithoutRef<'path'>, 'onClick'> &
+  React.ComponentPropsWithoutRef<'path'> &
   D3PieArcDatum<any> & {
     highlightScope?: Partial<HighlightScope>;
     innerRadius: PieSeriesType['innerRadius'];

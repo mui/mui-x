@@ -4,7 +4,11 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import PieArc, { PieArcProps } from './PieArc';
 import PieArcLabel, { PieArcLabelProps } from './PieArcLabel';
 import { DrawingContext } from '../context/DrawingProvider';
-import { DefaultizedPieValueType, PieSeriesType } from '../models/seriesType/pie';
+import {
+  DefaultizedPieValueType,
+  PieItemIdentifier,
+  PieSeriesType,
+} from '../models/seriesType/pie';
 
 const RATIO = 180 / Math.PI;
 
@@ -51,14 +55,14 @@ export interface PiePlotProps {
   slotProps?: PiePlotSlotComponentProps;
   /**
    * Callback fired when a pie item is clicked.
-   * @param {string | number} pieItemIdentifier The pie item identifier.
-   * @param {DefaultizedPieValueType} item The pie item.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
+   * @param {DefaultizedPieValueType} item The pie item.
    */
   onClick?: (
-    pieItemIdentifier: string | number | undefined,
-    item: DefaultizedPieValueType,
     event: React.MouseEvent<SVGPathElement, MouseEvent>,
+    pieItemIdentifier: PieItemIdentifier,
+    item: DefaultizedPieValueType,
   ) => void;
 }
 
@@ -118,15 +122,8 @@ function PiePlot(props: PiePlotProps) {
                     highlightScope={series[seriesId].highlightScope}
                     highlighted={highlighted}
                     faded={faded}
-                    onClick={
-                      onClick
-                        ? (event) =>
-                            onClick(
-                              item.id,
-                              item,
-                              event as React.MouseEvent<SVGPathElement, MouseEvent>,
-                            )
-                        : undefined
+                    onClick={(event) =>
+                      onClick?.(event, { type: 'pie', seriesId, dataIndex: index }, item)
                     }
                     {...slotProps?.pieArc}
                   />
@@ -141,7 +138,6 @@ function PiePlot(props: PiePlotProps) {
                     outerRadius={outerRadius ?? availableRadius}
                     cornerRadius={cornerRadius}
                     id={seriesId}
-                    onClick={() => null}
                     color={item.color}
                     dataIndex={index}
                     highlightScope={series[seriesId].highlightScope}
@@ -165,9 +161,9 @@ PiePlot.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a pie item is clicked.
-   * @param {string | number} pieItemIdentifier The pie item identifier.
-   * @param {DefaultizedPieValueType} item The pie item.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
+   * @param {DefaultizedPieValueType} item The pie item.
    */
   onClick: PropTypes.func,
   /**

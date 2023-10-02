@@ -3,8 +3,8 @@
     "onClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(pieItemIdentifier: string | number, item: DefaultizedPieValueType, event: React.MouseEvent<SVGPathElement, MouseEvent>) => void",
-        "describedArgs": ["pieItemIdentifier", "item", "event"]
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, pieItemIdentifier: PieItemIdentifier, item: DefaultizedPieValueType) => void",
+        "describedArgs": ["event", "pieItemIdentifier", "item"]
       }
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
