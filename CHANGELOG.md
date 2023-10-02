@@ -13,7 +13,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
   The pickers and fields now have an out-of-the box implementation for clearing the field value. You can see the documentation for this behavior on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#clearing-the-value).
 
-  <img width="380" alt="Clearable behavior" src="https://github.com/mui/mui-x/assets/72460825/e4a66169-83b5-4579-b9f6-6e15bb528411">
+  <img width="337" height="139" alt="Clearable behavior" src="https://github.com/mui/mui-x/assets/3165635/a5407cb6-0b8a-443c-b4b9-1f81ceb4d087">
 
 - 💫 Add Date Picker customization playground (#9581) @noraleonte
 
