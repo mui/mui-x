@@ -1,43 +1,53 @@
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
+
 import { Typography, Stack } from '@mui/material';
 
+const items = [
+  { value: 10, label: 'series A ( no Id )' },
+  { id: 'id_B', value: 15, label: 'series B' },
+  { id: 'id_C', value: 20, label: 'series C' },
+];
+
+const formatObject = (obj) => {
+  if (obj === null) {
+    return '  undefined';
+  }
+  return JSON.stringify(obj, null, 2)
+    .split('\n')
+    .map((l) => `  ${l}`)
+    .join('\n');
+};
 export default function OnSeriesItemClick() {
-  const [itemId, setItemId] = React.useState();
+  const [identifier, setIdentifier] = React.useState(null);
+  const [id, setId] = React.useState(undefined);
 
-  const items = React.useMemo(
-    () => [
-      { id: 12, value: 10, label: 'series A' },
-      { id: 1, value: 15, label: 'series B' },
-      { id: 2, value: 20, label: 'series C' },
-    ],
-    [],
-  );
-
-  const clickedItem = React.useMemo(
-    () => items.find((item) => item.id === itemId),
-    [itemId, items],
-  );
+  const handleClick = (event, itemIdentifier, item) => {
+    setId(item.id);
+    setIdentifier(itemIdentifier);
+  };
 
   return (
-    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-      <Stack>
-        <Typography variant="h6">
-          {clickedItem ? `Clicked on ${clickedItem.label},` : 'Missing itemId'}
-        </Typography>
-        <Typography variant="h6">
-          {clickedItem ? `value: ${clickedItem.value}` : ''}
-        </Typography>
-      </Stack>
+    <Stack
+      direction={{ xs: 'column', md: 'row' }}
+      alignItems={'center'}
+      justifyContent={'space-between'}
+      sx={{ width: '100%' }}
+    >
+      <Typography
+        component="pre"
+        sx={{ maxWidth: { xs: '100%', md: '50%' }, overflow: 'auto' }}
+      >
+        {`item id: ${id ?? 'undefined'}
+
+item identifier:
+${formatObject(identifier)}`}
+      </Typography>
 
       <PieChart
         series={[
           {
-            data: [
-              { value: 10, label: 'series A ( No id )' },
-              { id: 1, value: 15, label: 'series B' },
-              { id: 2, value: 20, label: 'series C' },
-            ],
+            data: items,
             cx: 100,
           },
         ]}
@@ -46,7 +56,7 @@ export default function OnSeriesItemClick() {
             offset: { x: -50 },
           },
         }}
-        onClick={(pieItemIdentifier) => setItemId(pieItemIdentifier)}
+        onClick={handleClick}
         width={400}
         height={200}
       />
