@@ -78,7 +78,7 @@ export function withStyles(
     const defaultTheme = useTheme();
 
     const tokens = {
-      borderRadius: selectedTokens.borderRadius,
+      borderRadius: `${selectedTokens.borderRadius}px`,
       borderColor: DEFAULT_COLORS[selectedTokens.color][500],
       border: `${selectedTokens.borderWidth}px solid`,
       backgroundColor:
@@ -252,19 +252,17 @@ const getCodeExample = ({
 />`;
   } else if (selectedCustomizationOption === 'customTheme') {
     code = `import { createTheme } from '@mui/material/styles'\n${code}
-<ThemeProvider
-  theme={
-    createTheme({
-      components: {
-        Mui${selectedDemo}: {
-          styleOverrides: {
-            ${selectedSlot}: {${getTokensString(7)}
-            }
-          }
+const newTheme = (theme) => createTheme({
+  ...theme,
+  components: {
+    Mui${selectedDemo}: {
+      styleOverrides: {
+        ${selectedSlot}: {${getTokensString(5)}
         }
-    })
-  }
->
+      }
+    }
+})
+<ThemeProvider theme={newTheme}>
   <${componentName}${formatComponentProps(examples.componentProps, 2)} />
 </ThemeProvider>`;
   } else if (selectedCustomizationOption === 'styledComponents') {
