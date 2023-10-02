@@ -69,6 +69,10 @@ A higher-level solution for _Joy UI_ will be provided in the near future for eve
 
 {{"demo": "PickerWithJoyField.js", "defaultCodeOpen": false}}
 
+{{"demo": "RangePickerWithSingleInputJoyField.js", "defaultCodeOpen": false}}
+
+{{"demo": "RangePickerWithJoyField.js", "defaultCodeOpen": false}}
+
 #### With the browser input
 
 You can also use any other input:
