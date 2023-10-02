@@ -170,6 +170,7 @@ function BlogCard(props) {
             : `${alpha(theme.palette.grey[50], 0.4)}`,
         borderColor: 'divider',
       }}
+      component="article"
       variant="outlined"
     >
       <CardContent sx={{ p: 0 }}>
