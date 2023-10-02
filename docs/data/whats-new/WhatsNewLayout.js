@@ -159,7 +159,7 @@ function BlogCard(props) {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        px: 2,
+        px: 1,
         pt: 2,
         pb: 0,
         gap: 1.5,
