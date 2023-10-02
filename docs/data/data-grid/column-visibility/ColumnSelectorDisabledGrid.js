@@ -8,12 +8,12 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const UserType = {
-  Admin: 0,
-  Regular: 1,
+  Regular: 0,
+  Admin: 1,
 };
 
 export default function ColumnSelectorDisabledGrid() {
-  const [userType, setUserType] = React.useState(UserType.Admin);
+  const [userType, setUserType] = React.useState(UserType.Regular);
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
@@ -48,8 +48,8 @@ export default function ColumnSelectorDisabledGrid() {
             setUserType(event.target.value);
           }}
         >
-          <MenuItem value={UserType.Admin}>Admin</MenuItem>
           <MenuItem value={UserType.Regular}>Regular User</MenuItem>
+          <MenuItem value={UserType.Admin}>Admin</MenuItem>
         </Select>
       </FormControl>
       <div style={{ height: 400, width: '100%' }}>
