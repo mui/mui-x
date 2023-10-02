@@ -35,7 +35,7 @@ function useYearCalendarDefaultizedProps<TDate>(
   name: string,
 ): DefaultizedProps<
   YearCalendarProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'yearsPerRow'
 > {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -48,6 +48,7 @@ function useYearCalendarDefaultizedProps<TDate>(
     disablePast: false,
     disableFuture: false,
     ...themeProps,
+    yearsPerRow: themeProps.yearsPerRow ?? 3,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -57,19 +58,19 @@ const YearCalendarRoot = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: YearCalendarProps<any> }>({
+})<{ ownerState: YearCalendarProps<any> }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
   overflowY: 'auto',
   height: '100%',
-  padding: '0 4px',
+  padding: `0 ${ownerState.yearsPerRow === 3 ? 24 : 12}px`,
   width: DIALOG_WIDTH,
   maxHeight: MAX_CALENDAR_HEIGHT,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
   position: 'relative',
-});
+}));
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.JSX.Element) & {
   propTypes?: any;
@@ -98,7 +99,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
-    yearsPerRow = 3,
+    yearsPerRow,
     timezone: timezoneProp,
     gridLabelId,
     ...other
