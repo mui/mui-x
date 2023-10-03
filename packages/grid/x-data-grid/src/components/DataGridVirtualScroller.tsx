@@ -15,7 +15,6 @@ const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtual
   function DataGridVirtualScroller(props, ref) {
     const { className, ColumnHeadersProps, ...other } = props;
 
-    // XXX: handle disable virtualization
     const { getRootProps, getContentProps, getRenderZoneProps, getRows } = useGridVirtualScroller({
       ref,
     });
