@@ -246,7 +246,7 @@ const getCodeExample = ({
   if (selectedCustomizationOption === 'sxProp') {
     code = `${code}\n<${componentName}${formatComponentProps(examples.componentProps, 1)}
   sx={{
-    '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+    '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
     },
   }}
 />`;
@@ -261,6 +261,7 @@ const newTheme = (theme) => createTheme({
         }
       }
     }
+  }
 })
 <ThemeProvider theme={newTheme}>
   <${componentName}${formatComponentProps(examples.componentProps, 2)} />
@@ -268,7 +269,7 @@ const newTheme = (theme) => createTheme({
   } else if (selectedCustomizationOption === 'styledComponents') {
     return `import { styled } from '@mui/material/styles'\n${code}
 const Styled${componentName} = styled(${componentName})({
-  '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
+  '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
 }))
 
 export default function StyledPickerContainer() {
