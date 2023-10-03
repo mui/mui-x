@@ -270,6 +270,7 @@ const newTheme = (theme) => createTheme({
     return `import { styled } from '@mui/material/styles'\n${code}
 const Styled${componentName} = styled(${componentName})({
   '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+  }
 }))
 
 export default function StyledPickerContainer() {
