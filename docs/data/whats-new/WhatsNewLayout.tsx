@@ -23,7 +23,7 @@ const blogs: Blog[] = [
   {
     title: 'MUI X v6.11.0',
     description: 'A roundup of all new features since v6.0.0.',
-    announcementDate: 'Mon, Aug 14, 2023',
+    announcementDate: 'Monday, Aug 14, 2023',
     url: 'https://mui.com/blog/mui-x-mid-v6-features/',
     highlightList: [
       {
@@ -174,7 +174,7 @@ function BlogCard(props: { blog: Blog }) {
         borderRadius: '12px',
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark'
-            ? 'primaryDark.700'
+            ? 'rgba(0, 27, 55, 0.2)'
             : `${alpha(theme.palette.grey[50], 0.4)}`,
         borderColor: 'divider',
       }}
