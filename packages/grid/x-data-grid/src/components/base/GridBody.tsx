@@ -3,23 +3,25 @@ import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridMainContainer } from '../containers/GridMainContainer';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridVirtualScrollerProps } from '../DataGridVirtualScroller';
+import { GridVirtualScroller } from '../virtualization/GridVirtualScroller';
 
 interface GridBodyProps {
   children?: React.ReactNode;
-  ColumnHeadersProps?: Record<string, any>;
-  VirtualScrollerComponent: React.JSXElementConstructor<DataGridVirtualScrollerProps>;
 }
 
 function GridBody(props: GridBodyProps) {
-  const { VirtualScrollerComponent, ColumnHeadersProps, children } = props;
+  const { children } = props;
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
+
+  apiRef.current.register('private', {
+    virtualScrollerRef,
+    mainElementRef: rootRef,
+  });
 
   useEnhancedEffect(() => {
-    apiRef.current.computeSizeAndPublishResizeEvent();
+    apiRef.current.resize();
 
     const elementToObserve = rootRef.current;
     if (typeof ResizeObserver === 'undefined') {
@@ -30,7 +32,7 @@ function GridBody(props: GridBodyProps) {
     const observer = new ResizeObserver(() => {
       // See https://github.com/mui/mui-x/issues/8733
       animationFrame = requestAnimationFrame(() => {
-        apiRef.current.computeSizeAndPublishResizeEvent();
+        apiRef.current.resize();
       });
     });
 
@@ -49,26 +51,18 @@ function GridBody(props: GridBodyProps) {
     };
   }, [apiRef]);
 
-  const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
-
-  apiRef.current.register('private', {
-    virtualScrollerRef,
-    mainElementRef: rootRef,
-  });
-
-  const hasDimensions = !!apiRef.current.getRootDimensions();
+  const hasDimensions = apiRef.current.getDimensions().isReady;
 
   return (
     <GridMainContainer ref={rootRef}>
       {hasDimensions && (
-        <VirtualScrollerComponent
+        <GridVirtualScroller
           // The content is only rendered after dimensions are computed because
           // the lazy-loading hook is listening to `renderedRowsIntervalChange`,
           // but only does something if the dimensions are also available.
           // If this event is published while dimensions haven't been computed,
           // the `onFetchRows` prop won't be called during mount.
           ref={virtualScrollerRef}
-          ColumnHeadersProps={ColumnHeadersProps}
         />
       )}
 
@@ -83,8 +77,6 @@ GridBody.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
-  ColumnHeadersProps: PropTypes.object,
-  VirtualScrollerComponent: PropTypes.elementType.isRequired,
 } as any;
 
 export { GridBody };

@@ -16,6 +16,7 @@ import {
 import { GridCellV7 } from '../components/cell/GridCell';
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
+import { GridPinnedRows } from '../components/GridPinnedRows';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import materialSlots from '../material';
 
@@ -31,6 +32,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   Footer: GridFooter,
   FooterRowCount: GridRowCount,
   Toolbar: null,
+  PinnedRows: GridPinnedRows,
   PreferencesPanel: GridPreferencesPanel,
   LoadingOverlay: GridLoadingOverlay,
   NoResultsOverlay: GridNoResultsOverlay,

@@ -87,7 +87,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     (newScrollPosition) => {
       scrollPosition.current = newScrollPosition;
 
-      const dimensions = apiRef.current.getRootDimensions();
+      const dimensions = apiRef.current.getDimensions();
 
       setCanScrollMore(() => {
         if (scrollDirection === 'left') {
@@ -97,7 +97,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
 
         if (scrollDirection === 'right') {
           // Only render if the user has not reached yet the end of the list
-          const maxScrollLeft = columnsTotalWidth - dimensions!.viewportInnerSize.width;
+          const maxScrollLeft = columnsTotalWidth - dimensions.viewportInnerSize.width;
           return scrollPosition.current.left < maxScrollLeft;
         }
 

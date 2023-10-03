@@ -26,11 +26,10 @@ import type { useGridVirtualScroller } from '../hooks/features/virtualization/us
 
 type Props = {
   contentProps: ReturnType<ReturnType<typeof useGridVirtualScroller>['getContentProps']>;
-  ColumnHeadersProps?: Record<string, any>;
 };
 
 export function GridHeaders(props: Props) {
-  const { contentProps, ColumnHeadersProps } = props;
+  const { contentProps } = props;
 
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -100,7 +99,6 @@ export function GridHeaders(props: Props) {
       columnVisibility={columnVisibility}
       columnGroupsHeaderStructure={columnGroupsHeaderStructure}
       hasOtherElementInTabSequence={hasOtherElementInTabSequence}
-      {...ColumnHeadersProps}
     />
   );
 }

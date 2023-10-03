@@ -5,6 +5,13 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
+import { GridOverlays } from '../base/GridOverlays';
+import { GridHeaders } from '../GridHeaders';
+import { GridVirtualScrollerContent } from './GridVirtualScrollerContent';
+import { GridVirtualScrollerRenderZone } from './GridVirtualScrollerRenderZone';
+import { GridTopContainer } from './GridTopContainer';
+import { GridBottomContainer } from './GridBottomContainer';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -18,7 +25,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const VirtualScrollerRoot = styled('div', {
+const StyledDiv = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
   overridesResolver: (props, styles) => styles.virtualScroller,
@@ -32,7 +39,7 @@ const VirtualScrollerRoot = styled('div', {
   },
 });
 
-const GridVirtualScroller = React.forwardRef<
+const Root = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScroller(props, ref) {
@@ -40,7 +47,7 @@ const GridVirtualScroller = React.forwardRef<
   const classes = useUtilityClasses(rootProps);
 
   return (
-    <VirtualScrollerRoot
+    <StyledDiv
       ref={ref}
       {...props}
       className={clsx(classes.root, props.className)}
@@ -48,5 +55,41 @@ const GridVirtualScroller = React.forwardRef<
     />
   );
 });
+
+export interface GridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
+  ref: React.Ref<HTMLDivElement>;
+}
+
+const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScrollerProps>(
+  function GridVirtualScroller(props, ref) {
+    const { className, ...other } = props;
+    const rootProps = useGridRootProps();
+
+    const virtualScroller = useGridVirtualScroller({
+      ref,
+    });
+    const { getRootProps, getContentProps, getRenderZoneProps, getRows } = virtualScroller;
+
+    const contentProps = getContentProps();
+
+    return (
+      <Root className={className} {...getRootProps(other)}>
+        <GridTopContainer>
+          <GridHeaders contentProps={contentProps} />
+          <GridOverlays />
+          <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
+        </GridTopContainer>
+        <GridVirtualScrollerContent {...contentProps}>
+          <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
+            {getRows()}
+          </GridVirtualScrollerRenderZone>
+        </GridVirtualScrollerContent>
+        <GridBottomContainer>
+          <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+        </GridBottomContainer>
+      </Root>
+    );
+  },
+);
 
 export { GridVirtualScroller };

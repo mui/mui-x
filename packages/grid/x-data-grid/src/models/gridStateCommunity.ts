@@ -4,6 +4,7 @@ import type {
   GridColumnsState,
   GridColumnsGroupingState,
   GridDensityState,
+  GridDimensionsState,
   GridFilterInitialState,
   GridFilterState,
   GridFocusState,
@@ -27,6 +28,7 @@ import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFi
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
+  dimensions: GridDimensionsState,
   rows: GridRowsState;
   visibleRowsLookup: GridVisibleRowsLookupState;
   rowsMeta: GridRowsMetaState;

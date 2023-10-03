@@ -23,9 +23,6 @@ const GridColumnHeadersRoot = styled('div', {
   slot: 'ColumnHeaders',
   overridesResolver: (props, styles) => styles.columnHeaders,
 })<{ ownerState: OwnerState }>({
-  position: 'sticky',
-  top: 0,
-  zIndex: 2,
   display: 'flex',
   alignItems: 'center',
   boxSizing: 'border-box',

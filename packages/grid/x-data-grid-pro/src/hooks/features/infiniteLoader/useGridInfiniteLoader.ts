@@ -34,10 +34,10 @@ export const useGridInfiniteLoader = (
 
   const handleRowsScrollEnd = React.useCallback(
     (scrollPosition: GridScrollParams) => {
-      const dimensions = apiRef.current.getRootDimensions();
+      const dimensions = apiRef.current.getDimensions();
 
       // Prevent the infite loading working in combination with lazy loading
-      if (!dimensions || props.rowsLoadingMode !== 'client') {
+      if (!dimensions.isReady || props.rowsLoadingMode !== 'client') {
         return;
       }
 

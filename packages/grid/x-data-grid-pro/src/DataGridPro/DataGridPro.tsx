@@ -9,14 +9,11 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
-  useGridSelector,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
-import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { getReleaseInfo } from '../utils/releaseInfo';
-import { gridPinnedColumnsSelector } from '../hooks/features/columnPinning/gridColumnPinningSelector';
 
 const releaseInfo = getReleaseInfo();
 
@@ -28,8 +25,6 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
-  const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
-
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
@@ -40,10 +35,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         {...props.forwardedProps}
       >
         <GridHeader />
-        <GridBody
-          VirtualScrollerComponent={DataGridProVirtualScroller}
-          ColumnHeadersProps={{ pinnedColumns }}
-        >
+        <GridBody>
           <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
         </GridBody>
         <GridFooterPlaceholder />

@@ -392,7 +392,7 @@ export const createColumnsState = ({
 
   return hydrateColumnsWidth(
     columnsStateWithPortableColumns,
-    apiRef.current.getRootDimensions?.()?.viewportInnerSize.width ?? 0,
+    apiRef.current.getDimensions?.().viewportInnerSize.width ?? 0,
   );
 };
 

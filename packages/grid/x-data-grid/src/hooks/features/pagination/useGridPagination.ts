@@ -243,11 +243,11 @@ export const useGridPagination = (
   };
 
   const handleUpdateAutoPageSize = React.useCallback(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    if (!props.autoPageSize || !dimensions) {
+    if (!props.autoPageSize) {
       return;
     }
 
+    const dimensions = apiRef.current.getDimensions();
     const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
     const maximumPageSizeWithoutScrollBar = Math.floor(

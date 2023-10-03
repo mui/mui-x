@@ -23,10 +23,7 @@ import {
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import {
-  gridPinnedColumnsSelector,
-  GridPinnedColumns,
-} from '../hooks/features/columnPinning';
+import { gridPinnedColumnsSelector, GridPinnedColumns } from '../hooks/features/columnPinning';
 import {
   gridDetailPanelExpandedRowsContentCacheSelector,
   gridDetailPanelExpandedRowsHeightCacheSelector,
@@ -157,13 +154,19 @@ const DataGridProVirtualScroller = React.forwardRef<
   HTMLDivElement,
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
-  const { className, ColumnHeadersProps, ...other } = props;
+  const { className, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
-  const detailPanelsContent = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
-  const detailPanelsHeights = useGridSelector(apiRef, gridDetailPanelExpandedRowsHeightCacheSelector);
+  const detailPanelsContent = useGridSelector(
+    apiRef,
+    gridDetailPanelExpandedRowsContentCacheSelector,
+  );
+  const detailPanelsHeights = useGridSelector(
+    apiRef,
+    gridDetailPanelExpandedRowsHeightCacheSelector,
+  );
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const topPinnedRowsRenderZoneRef = React.useRef<HTMLDivElement>(null);
@@ -189,7 +192,10 @@ const DataGridProVirtualScroller = React.forwardRef<
   );
 
   // Create a lookup for faster check if the row is expanded
-  const expandedRowIdsLookup = React.useMemo(() => new Set<GridRowId>(expandedRowIds), [expandedRowIds]);
+  const expandedRowIdsLookup = React.useMemo(
+    () => new Set<GridRowId>(expandedRowIds),
+    [expandedRowIds],
+  );
 
   const getRowProps = React.useCallback(
     (id: GridRowId) => {
@@ -313,9 +319,9 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   return (
     <GridVirtualScroller {...getRootProps(other)}>
-      <GridHeaders contentProps={contentProps} ColumnHeadersProps={ColumnHeadersProps} />
+      <GridHeaders contentProps={contentProps} />
       <GridOverlays />
-      {topPinnedRowsData.length > 0 &&
+      {topPinnedRowsData.length > 0 && (
         <VirtualScrollerPinnedRows
           className={classes.topPinnedRows}
           ownerState={{ ...ownerState, position: PinnedRowsPosition.top }}
@@ -330,7 +336,7 @@ const DataGridProVirtualScroller = React.forwardRef<
             {topPinnedRows}
           </VirtualScrollerPinnedRowsRenderZone>
         </VirtualScrollerPinnedRows>
-      }
+      )}
 
       <GridVirtualScrollerContent {...contentProps}>
         <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
@@ -344,7 +350,7 @@ const DataGridProVirtualScroller = React.forwardRef<
         )}
       </GridVirtualScrollerContent>
 
-      {bottomPinnedRowsData.length > 0 &&
+      {bottomPinnedRowsData.length > 0 && (
         <VirtualScrollerPinnedRows
           className={classes.bottomPinnedRows}
           ownerState={{ ...ownerState, position: PinnedRowsPosition.bottom }}
@@ -359,7 +365,7 @@ const DataGridProVirtualScroller = React.forwardRef<
             {bottomPinnedRows}
           </VirtualScrollerPinnedRowsRenderZone>
         </VirtualScrollerPinnedRows>
-      }
+      )}
     </GridVirtualScroller>
   );
 });

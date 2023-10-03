@@ -130,7 +130,7 @@ export const useGridLazyLoader = (
     GridEventListener<'renderedRowsIntervalChange'>
   >(
     (params) => {
-      const dimensions = privateApiRef.current.getRootDimensions();
+      const dimensions = privateApiRef.current.getDimensions();
 
       if (
         isLazyLoadingDisabled({
@@ -183,7 +183,7 @@ export const useGridLazyLoader = (
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
-      const dimensions = privateApiRef.current.getRootDimensions();
+      const dimensions = privateApiRef.current.getDimensions();
       if (
         isLazyLoadingDisabled({
           lazyLoadingFeatureFlag: lazyLoading,
@@ -211,7 +211,7 @@ export const useGridLazyLoader = (
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
-      const dimensions = privateApiRef.current.getRootDimensions();
+      const dimensions = privateApiRef.current.getDimensions();
 
       if (
         isLazyLoadingDisabled({

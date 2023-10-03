@@ -2,6 +2,14 @@ import type { ElementSize } from '../../../models/elementSize';
 
 export interface GridDimensions {
   /**
+   * Indicates that the dimensions have been initialized.
+   */
+  isReady: boolean;
+  /**
+   * The root container size.
+   */
+  root: ElementSize;
+  /**
    * The viewport size including scrollbars.
    */
   viewportOuterSize: ElementSize;
@@ -31,9 +39,9 @@ export interface GridDimensionsApi {
   resize: () => void;
   /**
    * Returns the dimensions of the grid
-   * @returns {GridDimensions | null} The dimension information of the grid. If `null`, the grid is not ready yet.
+   * @returns {GridDimensions} The dimension information of the grid. If `null`, the grid is not ready yet.
    */
-  getRootDimensions: () => GridDimensions | null;
+  getDimensions: () => GridDimensions;
 }
 
 export interface GridDimensionsPrivateApi {
@@ -42,12 +50,4 @@ export interface GridDimensionsPrivateApi {
    * @returns {number} The amount of rows visible in the viewport
    */
   getViewportPageSize: () => number;
-  /**
-   * Forces a recalculation of all dimensions.
-   */
-  updateGridDimensionsRef: () => void;
-  /**
-   * Computes the size and publishes a `resize` event with the new value.
-   */
-  computeSizeAndPublishResizeEvent: () => void;
 }

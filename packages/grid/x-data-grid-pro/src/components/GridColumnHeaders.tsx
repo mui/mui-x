@@ -11,6 +11,7 @@ import {
   gridClasses,
   useGridApiEventHandler,
   GridColumnHeaderSeparatorSides,
+  useGridSelector,
 } from '@mui/x-data-grid';
 import {
   GridBaseColumnHeaders,
@@ -20,7 +21,11 @@ import {
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridPinnedPosition, GridPinnedColumns } from '../hooks/features/columnPinning';
+import {
+  GridPinnedPosition,
+  GridPinnedColumns,
+  gridPinnedColumnsSelector,
+} from '../hooks/features/columnPinning';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { filterColumns } from './DataGridProVirtualScroller';
 import { GridScrollArea } from './GridScrollArea';
@@ -116,7 +121,6 @@ interface DataGridProColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
     Omit<UseGridColumnHeadersProps, 'innerRef'> {
   innerRef?: React.Ref<HTMLDivElement>;
-  pinnedColumns: GridPinnedColumns;
 }
 
 const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHeadersProps>(
@@ -139,21 +143,17 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       columnVisibility,
       columnGroupsHeaderStructure,
       hasOtherElementInTabSequence,
-      pinnedColumns,
       ...other
     } = props;
     const rootProps = useGridRootProps();
     const apiRef = useGridApiContext();
     const [scrollbarSize, setScrollbarSize] = React.useState(0);
     const theme = useTheme();
+    const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
 
     const handleContentSizeChange = useEventCallback(() => {
-      const rootDimensions = apiRef.current.getRootDimensions();
-      if (!rootDimensions) {
-        return;
-      }
-
-      const newScrollbarSize = rootDimensions.hasScrollY ? rootDimensions.scrollBarSize : 0;
+      const dimensions = apiRef.current.getDimensions();
+      const newScrollbarSize = dimensions.hasScrollY ? dimensions.scrollBarSize : 0;
       if (scrollbarSize !== newScrollbarSize) {
         setScrollbarSize(newScrollbarSize);
       }
@@ -360,10 +360,6 @@ GridColumnHeaders.propTypes = {
   headerGroupingMaxDepth: PropTypes.number.isRequired,
   innerRef: refType,
   minColumnIndex: PropTypes.number,
-  pinnedColumns: PropTypes.shape({
-    left: PropTypes.arrayOf(PropTypes.string),
-    right: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
   sortColumnLookup: PropTypes.object.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;

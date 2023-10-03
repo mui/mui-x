@@ -60,11 +60,11 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{ overlayType: string
   const rootProps = useGridRootProps();
 
   const [viewportInnerSize, setViewportInnerSize] = React.useState(
-    () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
+    () => apiRef.current.getDimensions().viewportInnerSize,
   );
 
   const handleViewportSizeChange = React.useCallback(() => {
-    setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
+    setViewportInnerSize(apiRef.current.getDimensions().viewportInnerSize);
   }, [apiRef]);
 
   useEnhancedEffect(() => {

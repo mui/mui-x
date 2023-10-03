@@ -190,11 +190,6 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
-        return;
-      }
-
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
       const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : null;
@@ -309,11 +304,6 @@ export const useGridKeyboardNavigation = (
 
   const handleHeaderFilterKeyDown = React.useCallback<GridEventListener<'headerFilterKeyDown'>>(
     (params, event) => {
-      const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
-        return;
-      }
-
       const isEditing = unstable_gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
       const isHeaderMenuOpen = unstable_gridHeaderFilteringMenuSelector(apiRef) === params.field;
 
@@ -424,11 +414,6 @@ export const useGridKeyboardNavigation = (
     GridEventListener<'columnGroupHeaderKeyDown'>
   >(
     (params, event) => {
-      const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
-        return;
-      }
-
       const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
       if (focusedColumnGroup === null) {
         return;
@@ -542,8 +527,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const dimensions = apiRef.current.getRootDimensions();
-      if (currentPageRows.length === 0 || !dimensions) {
+      if (currentPageRows.length === 0) {
         return;
       }
 

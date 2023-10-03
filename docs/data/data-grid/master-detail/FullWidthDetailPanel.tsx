@@ -25,13 +25,13 @@ import {
 function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   const apiRef = useGridApiContext();
   const [width, setWidth] = React.useState(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    return dimensions!.viewportInnerSize.width;
+    const dimensions = apiRef.current.getDimensions();
+    return dimensions.viewportInnerSize.width;
   });
 
   const handleViewportInnerSizeChange = React.useCallback(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    setWidth(dimensions!.viewportInnerSize.width);
+    const dimensions = apiRef.current.getDimensions();
+    setWidth(dimensions.viewportInnerSize.width);
   }, [apiRef]);
 
   React.useEffect(() => {

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 
 export interface GridBaseSlots {
   /**
@@ -121,6 +122,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * @default null
    */
   Toolbar: React.JSXElementConstructor<any> | null;
+  /**
+   * PreferencesPanel component rendered inside the Header component.
+   * @ignore - do not document
+   */
+  PinnedRows: React.JSXElementConstructor<GridPinnedRowsProps>;
   /**
    * PreferencesPanel component rendered inside the Header component.
    * @default GridPreferencesPanel

@@ -9,10 +9,7 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
-  useGridSelector,
-  gridPinnedColumnsSelector,
 } from '@mui/x-data-grid-pro';
-import { DataGridProVirtualScroller } from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import { DataGridPremiumProps } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
@@ -29,8 +26,6 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-  const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
-
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
@@ -41,10 +36,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
         {...props.forwardedProps}
       >
         <GridHeader />
-        <GridBody
-          VirtualScrollerComponent={DataGridProVirtualScroller}
-          ColumnHeadersProps={{ pinnedColumns }}
-        >
+        <GridBody>
           <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
         </GridBody>
         <GridFooterPlaceholder />
