@@ -26,7 +26,6 @@ import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridPinnedColumnsSelector,
   GridPinnedColumns,
-  GridPinnedPosition,
 } from '../hooks/features/columnPinning';
 import {
   gridDetailPanelExpandedRowsContentCacheSelector,
@@ -49,7 +48,7 @@ export const filterColumns = (
     return [[], []];
   }
 
-  const filter = (newPinnedColumns: any[] | undefined, remainingColumns: string[]) => {
+  const filter = (newPinnedColumns: string[] | undefined, remainingColumns: string[]) => {
     if (!Array.isArray(newPinnedColumns)) {
       return [];
     }
@@ -86,11 +85,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface VirtualScrollerPinnedColumnsProps {
-  side: GridPinnedPosition;
-  showCellVerticalBorder: boolean;
-}
-
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
 const getOverlayAlpha = (elevation: number) => {
   let alphaValue: number;
@@ -118,42 +112,6 @@ const darkModeBackgroundImage = `linear-gradient(${alpha('#fff', getOverlayAlpha
   '#fff',
   getOverlayAlpha(2),
 )})`;
-
-const VirtualScrollerPinnedColumns = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'PinnedColumns',
-  overridesResolver: (props, styles) => [
-    { [`&.${gridClasses['pinnedColumns--left']}`]: styles['pinnedColumns--left'] },
-    { [`&.${gridClasses['pinnedColumns--right']}`]: styles['pinnedColumns--right'] },
-    styles.pinnedColumns,
-  ],
-})<{ ownerState: OwnerState & VirtualScrollerPinnedColumnsProps }>(({ theme, ownerState }) => {
-  const boxShadowColor = getBoxShadowColor(theme);
-  return {
-    position: 'sticky',
-    overflow: 'hidden',
-    zIndex: 1,
-    backgroundColor: (theme.vars || theme).palette.background.default,
-    ...(theme.vars
-      ? { backgroundImage: theme.vars.overlays?.[2] }
-      : { ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }) }),
-    ...(ownerState.side === GridPinnedPosition.left && {
-      left: 0,
-      float: 'left',
-      boxShadow: `2px 0px 4px -2px ${boxShadowColor}`,
-    }),
-    ...(ownerState.side === GridPinnedPosition.right && {
-      right: 0,
-      float: 'right',
-      boxShadow: `-2px 0px 4px -2px ${boxShadowColor}`,
-    }),
-    ...(ownerState.side === GridPinnedPosition.right &&
-      ownerState.showCellVerticalBorder && {
-        borderLeftWidth: '1px',
-        borderLeftStyle: 'solid',
-      }),
-  };
-});
 
 enum PinnedRowsPosition {
   top = 'top',
@@ -193,25 +151,19 @@ const VirtualScrollerPinnedRowsRenderZone = styled('div')({
   position: 'absolute',
 });
 
-type DataGridProVirtualScrollerProps = DataGridVirtualScrollerProps;
+type DataGridProVirtualScrollerProps = Omit<DataGridVirtualScrollerProps, 'ref'>;
 
 const DataGridProVirtualScroller = React.forwardRef<
   HTMLDivElement,
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
-  const { className, disableVirtualization, ColumnHeadersProps, ...other } = props;
+  const { className, ColumnHeadersProps, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
-  const detailPanelsContent = useGridSelector(
-    apiRef,
-    gridDetailPanelExpandedRowsContentCacheSelector,
-  );
-  const detailPanelsHeights = useGridSelector(
-    apiRef,
-    gridDetailPanelExpandedRowsHeightCacheSelector,
-  );
+  const detailPanelsContent = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
+  const detailPanelsHeights = useGridSelector(apiRef, gridDetailPanelExpandedRowsHeightCacheSelector);
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const topPinnedRowsRenderZoneRef = React.useRef<HTMLDivElement>(null);
@@ -237,13 +189,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   );
 
   // Create a lookup for faster check if the row is expanded
-  const expandedRowIdsLookup = React.useMemo(() => {
-    const lookup: Set<GridRowId> = new Set();
-    expandedRowIds.forEach((id: GridRowId) => {
-      lookup.add(id);
-    });
-    return lookup;
-  }, [expandedRowIds]);
+  const expandedRowIdsLookup = React.useMemo(() => new Set<GridRowId>(expandedRowIds), [expandedRowIds]);
 
   const getRowProps = React.useCallback(
     (id: GridRowId) => {
@@ -296,24 +242,6 @@ const DataGridProVirtualScroller = React.forwardRef<
   useGridApiEventHandler(apiRef, 'columnOrderChange', refreshRenderZonePosition);
   useGridApiEventHandler(apiRef, 'rowOrderChange', refreshRenderZonePosition);
 
-  const leftRenderContext =
-    renderContext && leftPinnedColumns.length > 0
-      ? {
-          ...renderContext,
-          firstColumnIndex: 0,
-          lastColumnIndex: leftPinnedColumns.length,
-        }
-      : null;
-
-  const rightRenderContext =
-    renderContext && rightPinnedColumns.length > 0
-      ? {
-          ...renderContext,
-          firstColumnIndex: visibleColumnFields.length - rightPinnedColumns.length,
-          lastColumnIndex: visibleColumnFields.length,
-        }
-      : null;
-
   const getDetailPanel = (rowId: GridRowId): React.ReactNode => {
     const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
     const content = detailPanelsContent[rowId];
@@ -322,28 +250,29 @@ const DataGridProVirtualScroller = React.forwardRef<
     const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
     const exists = rowIndex !== undefined;
 
-    if (React.isValidElement(content) && exists) {
-      const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(rowId);
-      const height = hasAutoHeight ? 'auto' : detailPanelsHeights[rowId];
-
-      const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
-      const spacingTop = sizes?.spacingTop || 0;
-      const top =
-        rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(rowId) + spacingTop;
-
-      return (
-        <GridDetailPanel
-          key={rowId}
-          rowId={rowId}
-          style={{ top }}
-          height={height}
-          className={classes.detailPanel}
-        >
-          {content}
-        </GridDetailPanel>
-      );
+    if (!React.isValidElement(content) || !exists) {
+      return null;
     }
-    return null;
+
+    const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(rowId);
+    const height = hasAutoHeight ? 'auto' : detailPanelsHeights[rowId];
+
+    const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
+    const spacingTop = sizes?.spacingTop || 0;
+    const top =
+      rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(rowId) + spacingTop;
+
+    return (
+      <GridDetailPanel
+        key={rowId}
+        rowId={rowId}
+        style={{ top }}
+        height={height}
+        className={classes.detailPanel}
+      >
+        {content}
+      </GridDetailPanel>
+    );
   };
 
   const detailPanels: React.ReactNode[] = [];
@@ -378,10 +307,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   });
 
   const contentProps = getContentProps();
-
-  const pinnedColumnsStyle = { minHeight: contentProps.style.minHeight };
-
-  if (contentProps.style.minHeight && contentProps.style.minHeight === '100%') {
+  if (contentProps.style.minHeight === '100%') {
     contentProps.style.minHeight = `calc(100% - ${pinnedRowsHeight.top}px - ${pinnedRowsHeight.bottom}px)`;
   }
 
@@ -389,32 +315,13 @@ const DataGridProVirtualScroller = React.forwardRef<
     <GridVirtualScroller {...getRootProps(other)}>
       <GridHeaders contentProps={contentProps} ColumnHeadersProps={ColumnHeadersProps} />
       <GridOverlays />
-      {topPinnedRowsData.length > 0 ? (
+      {topPinnedRowsData.length > 0 &&
         <VirtualScrollerPinnedRows
           className={classes.topPinnedRows}
           ownerState={{ ...ownerState, position: PinnedRowsPosition.top }}
           style={{ width: contentProps.style.width, height: pinnedRowsHeight.top }}
           role="rowgroup"
         >
-          {leftRenderContext && (
-            <VirtualScrollerPinnedColumns
-              className={classes.leftPinnedColumns}
-              ownerState={{
-                ...ownerState,
-                side: GridPinnedPosition.left,
-                showCellVerticalBorder: rootProps.showCellVerticalBorder,
-              }}
-            >
-              {getRows({
-                renderContext: leftRenderContext,
-                minFirstColumn: leftRenderContext.firstColumnIndex,
-                maxLastColumn: leftRenderContext.lastColumnIndex,
-                availableSpace: 0,
-                rows: topPinnedRowsData,
-                position: 'left',
-              })}
-            </VirtualScrollerPinnedColumns>
-          )}
           <VirtualScrollerPinnedRowsRenderZone
             className={classes.pinnedRowsRenderZone}
             ref={topPinnedRowsRenderZoneRef}
@@ -422,106 +329,28 @@ const DataGridProVirtualScroller = React.forwardRef<
           >
             {topPinnedRows}
           </VirtualScrollerPinnedRowsRenderZone>
-          {rightRenderContext && (
-            <VirtualScrollerPinnedColumns
-              className={classes.rightPinnedColumns}
-              ownerState={{
-                ...ownerState,
-                side: GridPinnedPosition.right,
-                showCellVerticalBorder: rootProps.showCellVerticalBorder,
-              }}
-            >
-              {getRows({
-                renderContext: rightRenderContext,
-                minFirstColumn: rightRenderContext.firstColumnIndex,
-                maxLastColumn: rightRenderContext.lastColumnIndex,
-                availableSpace: 0,
-                rows: topPinnedRowsData,
-                position: 'right',
-              })}
-            </VirtualScrollerPinnedColumns>
-          )}
         </VirtualScrollerPinnedRows>
-      ) : null}
+      }
+
       <GridVirtualScrollerContent {...contentProps}>
-        {leftRenderContext && (
-          <VirtualScrollerPinnedColumns
-            ref={leftColumns}
-            className={classes.leftPinnedColumns}
-            ownerState={{
-              ...ownerState,
-              side: GridPinnedPosition.left,
-              showCellVerticalBorder: rootProps.showCellVerticalBorder,
-            }}
-            style={pinnedColumnsStyle}
-          >
-            {getRows({
-              renderContext: leftRenderContext,
-              minFirstColumn: leftRenderContext.firstColumnIndex,
-              maxLastColumn: leftRenderContext.lastColumnIndex,
-              availableSpace: 0,
-              rowIndexOffset: topPinnedRowsData.length,
-              position: 'left',
-            })}
-          </VirtualScrollerPinnedColumns>
-        )}
         <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
           {mainRows}
         </GridVirtualScrollerRenderZone>
-        {rightRenderContext && (
-          <VirtualScrollerPinnedColumns
-            ref={rightColumns}
-            ownerState={{
-              ...ownerState,
-              side: GridPinnedPosition.right,
-              showCellVerticalBorder: rootProps.showCellVerticalBorder,
-            }}
-            className={classes.rightPinnedColumns}
-            style={pinnedColumnsStyle}
-          >
-            {getRows({
-              renderContext: rightRenderContext,
-              minFirstColumn: rightRenderContext.firstColumnIndex,
-              maxLastColumn: rightRenderContext.lastColumnIndex,
-              availableSpace: 0,
-              rowIndexOffset: topPinnedRowsData.length,
-              position: 'right',
-            })}
-          </VirtualScrollerPinnedColumns>
-        )}
+
         {detailPanels.length > 0 && (
           <VirtualScrollerDetailPanels className={classes.detailPanels} ownerState={ownerState}>
             {detailPanels}
           </VirtualScrollerDetailPanels>
         )}
       </GridVirtualScrollerContent>
-      {bottomPinnedRowsData.length > 0 ? (
+
+      {bottomPinnedRowsData.length > 0 &&
         <VirtualScrollerPinnedRows
           className={classes.bottomPinnedRows}
           ownerState={{ ...ownerState, position: PinnedRowsPosition.bottom }}
           style={{ width: contentProps.style.width, height: pinnedRowsHeight.bottom }}
           role="rowgroup"
         >
-          {leftRenderContext && (
-            <VirtualScrollerPinnedColumns
-              className={classes.leftPinnedColumns}
-              ownerState={{
-                ...ownerState,
-                side: GridPinnedPosition.left,
-                showCellVerticalBorder: rootProps.showCellVerticalBorder,
-              }}
-            >
-              {getRows({
-                renderContext: leftRenderContext,
-                minFirstColumn: leftRenderContext.firstColumnIndex,
-                maxLastColumn: leftRenderContext.lastColumnIndex,
-                availableSpace: 0,
-                rows: bottomPinnedRowsData,
-                rowIndexOffset: topPinnedRowsData.length + (mainRows ? mainRows.length : 0),
-                position: 'left',
-              })}
-            </VirtualScrollerPinnedColumns>
-          )}
           <VirtualScrollerPinnedRowsRenderZone
             className={classes.pinnedRowsRenderZone}
             ref={bottomPinnedRowsRenderZoneRef}
@@ -529,28 +358,8 @@ const DataGridProVirtualScroller = React.forwardRef<
           >
             {bottomPinnedRows}
           </VirtualScrollerPinnedRowsRenderZone>
-          {rightRenderContext && (
-            <VirtualScrollerPinnedColumns
-              className={classes.rightPinnedColumns}
-              ownerState={{
-                ...ownerState,
-                side: GridPinnedPosition.right,
-                showCellVerticalBorder: rootProps.showCellVerticalBorder,
-              }}
-            >
-              {getRows({
-                renderContext: rightRenderContext,
-                minFirstColumn: rightRenderContext.firstColumnIndex,
-                maxLastColumn: rightRenderContext.lastColumnIndex,
-                availableSpace: 0,
-                rows: bottomPinnedRowsData,
-                rowIndexOffset: topPinnedRowsData.length + (mainRows ? mainRows.length : 0),
-                position: 'right',
-              })}
-            </VirtualScrollerPinnedColumns>
-          )}
         </VirtualScrollerPinnedRows>
-      ) : null}
+      }
     </GridVirtualScroller>
   );
 });

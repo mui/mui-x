@@ -66,7 +66,7 @@ function exponentialSearch(offset: number, positions: number[], index: number): 
   return binarySearch(offset, positions, Math.floor(index / 2), Math.min(index, positions.length));
 }
 
-export const getRenderableIndexes = ({
+export const getRowIndexesToRender = ({
   firstIndex,
   lastIndex,
   buffer,
@@ -267,7 +267,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     if (enabledForColumns) {
       let hasRowWithAutoHeight = false;
 
-      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      const [firstRowToRender, lastRowToRender] = getRowIndexesToRender({
         firstIndex: firstRowIndex,
         lastIndex: lastRowIndex,
         minFirstIndex: 0,
@@ -339,7 +339,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const updateRenderZonePosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
-      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      const [firstRowToRender, lastRowToRender] = getRowIndexesToRender({
         firstIndex: nextRenderContext.firstRowIndex,
         lastIndex: nextRenderContext.lastRowIndex,
         minFirstIndex: 0,
@@ -347,7 +347,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         buffer: rootProps.rowBuffer,
       });
 
-      const [initialFirstColumnToRender] = getRenderableIndexes({
+      const [initialFirstColumnToRender] = getRowIndexesToRender({
         firstIndex: nextRenderContext.firstColumnIndex,
         lastIndex: nextRenderContext.lastColumnIndex,
         minFirstIndex: renderZoneMinColumnIndex,
@@ -366,11 +366,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const direction = theme.direction === 'ltr' ? 1 : -1;
       const top = gridRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
       const left = direction * gridColumnPositionsSelector(apiRef)[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
-      renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
 
-      if (typeof onRenderZonePositioning === 'function') {
-        onRenderZonePositioning({ top, left });
-      }
+      renderZoneRef.current!.style.transform = `translate3d(0, ${top}px, 0)`;
+
+      onRenderZonePositioning?.({ top, left });
     },
     [
       apiRef,
@@ -399,7 +398,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       updateRenderZonePosition(nextRenderContext);
 
-      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      const [firstRowToRender, lastRowToRender] = getRowIndexesToRender({
         firstIndex: nextRenderContext.firstRowIndex,
         lastIndex: nextRenderContext.lastRowIndex,
         minFirstIndex: 0,
@@ -416,7 +415,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     },
     [
       apiRef,
-      setRenderContextState,
       prevRenderContext,
       currentPage.rows.length,
       rootProps.rowBuffer,
@@ -551,7 +549,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const rowBuffer = enabled ? rootProps.rowBuffer : 0;
     const columnBuffer = enabled ? rootProps.columnBuffer : 0;
 
-    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+    const [firstRowToRender, lastRowToRender] = getRowIndexesToRender({
       firstIndex: nextRenderContext.firstRowIndex,
       lastIndex: nextRenderContext.lastRowIndex,
       minFirstIndex: 0,
@@ -614,7 +612,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       }
     }
 
-    const [initialFirstColumnToRender, lastColumnToRender] = getRenderableIndexes({
+    const [initialFirstColumnToRender, lastColumnToRender] = getRowIndexesToRender({
       firstIndex: nextRenderContext.firstColumnIndex,
       lastIndex: nextRenderContext.lastColumnIndex,
       minFirstIndex: minFirstColumn,
@@ -811,8 +809,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       style: inputProps.style ? { ...inputProps.style, ...rootStyle } : rootStyle,
       role: 'presentation',
     }),
-    getContentProps: ({ style }: { style?: object } = {}) => ({
-      style: style ? { ...style, ...contentSize } : contentSize,
+    getContentProps: () => ({
+      style: contentSize,
       role: 'presentation',
     }),
     getRenderZoneProps: () => ({ ref: renderZoneRef, role: 'rowgroup' }),

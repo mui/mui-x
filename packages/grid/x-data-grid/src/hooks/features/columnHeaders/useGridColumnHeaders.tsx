@@ -14,7 +14,7 @@ import { getFirstColumnIndexToRender, getTotalHeaderHeight } from '../columns/gr
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import {
   areRenderContextsEqual,
-  getRenderableIndexes,
+  getRowIndexesToRender,
 } from '../virtualization/useGridVirtualScroller';
 import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
@@ -132,7 +132,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const updateInnerPosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
-      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      const [firstRowToRender, lastRowToRender] = getRowIndexesToRender({
         firstIndex: nextRenderContext.firstRowIndex,
         lastIndex: nextRenderContext.lastRowIndex,
         minFirstIndex: 0,
@@ -211,7 +211,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       return null;
     }
 
-    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+    const [firstRowToRender, lastRowToRender] = getRowIndexesToRender({
       firstIndex: nextRenderContext.firstRowIndex,
       lastIndex: nextRenderContext.lastRowIndex,
       minFirstIndex: 0,

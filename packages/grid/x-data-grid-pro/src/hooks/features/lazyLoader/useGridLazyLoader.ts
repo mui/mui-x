@@ -11,7 +11,7 @@ import {
   GridDimensions,
   GridFeatureMode,
 } from '@mui/x-data-grid';
-import { useGridVisibleRows, getRenderableIndexes } from '@mui/x-data-grid/internals';
+import { useGridVisibleRows, getRowIndexesToRender } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import {
   DataGridProProcessedProps,
@@ -112,7 +112,7 @@ export const useGridLazyLoader = (
 
   const getCurrentIntervalToRender = React.useCallback(() => {
     const currentRenderContext = privateApiRef.current.getRenderContext();
-    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+    const [firstRowToRender, lastRowToRender] = getRowIndexesToRender({
       firstIndex: currentRenderContext.firstRowIndex,
       lastIndex: currentRenderContext.lastRowIndex,
       minFirstIndex: 0,

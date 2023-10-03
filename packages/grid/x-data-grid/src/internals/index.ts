@@ -114,7 +114,7 @@ export { useGridStatePersistence } from '../hooks/features/statePersistence/useG
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
 export {
   useGridVirtualScroller,
-  getRenderableIndexes,
+  getRowIndexesToRender,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
 export * from '../hooks/features/virtualization';
 
