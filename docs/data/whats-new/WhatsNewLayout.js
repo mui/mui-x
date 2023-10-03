@@ -206,11 +206,11 @@ function BlogCard(props) {
                   px: 0.5,
                   display: 'flex',
                   alignItems: 'flex-start',
-                  lineHeight: '20px',
+                  lineHeight: '22px',
                   [`&:before`]: {
                     content: '"•"',
                     color: 'grey',
-                    lineHeight: '20px',
+                    lineHeight: '22px',
                   },
                 }}
               >
