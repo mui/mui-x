@@ -10,6 +10,8 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
+// @ts-ignore
+import BrandingProvider from 'docs/src/BrandingProvider';
 
 const blogs = [
   {
@@ -154,80 +156,87 @@ const blogs = [
 
 function BlogCard(props) {
   return (
-    <Card
-      sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        px: 2,
-        pt: 2,
-        pb: 0,
-        gap: 1.5,
-        borderRadius: '12px',
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(0, 27, 55, 0.2)'
-            : `${alpha(theme.palette.grey[50], 0.4)}`,
-        borderColor: 'divider',
-      }}
-      component="article"
-      variant="outlined"
-    >
-      <CardContent sx={{ p: 0 }}>
-        <Box
+    <BrandingProvider>
+      <Card
+        sx={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          px: 2,
+          pt: 2,
+          pb: 0,
+          gap: 1.5,
+          borderRadius: '12px',
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(0, 27, 55, 0.2)'
+              : `${alpha(theme.palette.grey[50], 0.4)}`,
+          borderColor: 'divider',
+        }}
+        component="article"
+        variant="outlined"
+      >
+        <CardContent sx={{ p: 0 }}>
+          <Box
+            sx={{
+              borderBottom: '1px solid',
+              borderColor: 'divider',
+              marginBottom: 1,
+              px: 1,
+            }}
+          >
+            <Typography variant="caption" color="text.secondary">
+              {props.blog.announcementDate}
+            </Typography>
+            <Typography gutterBottom variant="h6" component="div">
+              {props.blog.title}
+            </Typography>
+          </Box>
+
+          <Box sx={{ p: 1 }}>
+            <Typography variant="body2" component="div" color="text.secondary">
+              {props.blog.description}
+            </Typography>
+
+            <List sx={{ pb: 0 }}>
+              {props.blog.highlightList.map((item) => (
+                <ListItem
+                  key={item.title}
+                  sx={{
+                    py: 0.5,
+                    px: 0.5,
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    lineHeight: '20px',
+                    [`&:before`]: {
+                      content: '"•"',
+                      color: 'grey',
+                      lineHeight: '20px',
+                    },
+                  }}
+                >
+                  <Typography sx={{ pl: 1 }} variant="body2">
+                    <Link href={item.url}>{item.title}</Link>
+                  </Typography>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </CardContent>
+        <CardActions
           sx={{
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-            marginBottom: 1,
-            px: 1,
+            justifyContent: 'center',
+            flex: '1 1 auto',
+            m: 0,
+            alignItems: 'end',
           }}
         >
-          <Typography variant="caption" color="text.secondary">
-            {props.blog.announcementDate}
-          </Typography>
-          <Typography gutterBottom variant="h6" component="div">
-            {props.blog.title}
-          </Typography>
-        </Box>
-
-        <Box sx={{ p: 1 }}>
-          <Typography variant="body2" component="div" color="text.secondary">
-            {props.blog.description}
-          </Typography>
-
-          <List sx={{ pb: 0 }}>
-            {props.blog.highlightList.map((item) => (
-              <ListItem
-                key={item.title}
-                sx={{
-                  py: 0.5,
-                  px: 0.5,
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  lineHeight: '20px',
-                  [`&:before`]: {
-                    content: '"•"',
-                    color: 'grey',
-                    lineHeight: '20px',
-                  },
-                }}
-              >
-                <Typography sx={{ pl: 1 }} variant="body2">
-                  <Link href={item.url}>{item.title}</Link>
-                </Typography>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </CardContent>
-      <CardActions
-        sx={{ justifyContent: 'center', flex: '1 1 auto', m: 0, alignItems: 'end' }}
-      >
-        <Button sx={{ width: '100%' }} href={props.blog.url}>
-          Read more
-        </Button>
-      </CardActions>
-    </Card>
+          <Button sx={{ width: '100%' }} href={props.blog.url}>
+            Read more
+          </Button>
+        </CardActions>
+      </Card>
+    </BrandingProvider>
   );
 }
 
