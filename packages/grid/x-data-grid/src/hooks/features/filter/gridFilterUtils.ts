@@ -372,18 +372,28 @@ export const buildAggregatedQuickFilterApplier = (
     if (getApplyQuickFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
       appliersPerField.push({
         column,
-        appliers: quickFilterValues.map((value) => ({
-          v7: true,
-          fn: getApplyQuickFilterFnV7(value, column, apiRef),
-        })),
+        appliers: quickFilterValues.map((quickFilterValue) => {
+          const value = column.ignoreDiacritics
+            ? removeDiacritics(quickFilterValue)
+            : quickFilterValue;
+          return {
+            v7: true,
+            fn: getApplyQuickFilterFnV7(value, column, apiRef),
+          };
+        }),
       });
     } else if (getApplyQuickFilterFn) {
       appliersPerField.push({
         column,
-        appliers: quickFilterValues.map((value) => ({
-          v7: false,
-          fn: getApplyQuickFilterFn(value, column, apiRef),
-        })),
+        appliers: quickFilterValues.map((quickFilterValue) => {
+          const value = column.ignoreDiacritics
+            ? removeDiacritics(quickFilterValue)
+            : quickFilterValue;
+          return {
+            v7: false,
+            fn: getApplyQuickFilterFn(value, column, apiRef),
+          };
+        }),
       });
     }
   });
@@ -405,13 +415,16 @@ export const buildAggregatedQuickFilterApplier = (
         }
 
         const applier = appliers[v];
-        const value = apiRef.current.getRowFormattedValue(row, column);
+        let value = apiRef.current.getRowFormattedValue(row, column);
 
         if (applier.fn === null) {
           continue;
         }
 
         if (applier.v7) {
+          if (column.ignoreDiacritics) {
+            value = removeDiacritics(value);
+          }
           const isMatching = applier.fn(value, row, column, apiRef);
           if (isMatching) {
             result[filterValue] = true;
@@ -421,6 +434,9 @@ export const buildAggregatedQuickFilterApplier = (
           const cellParams =
             usedCellParams[field] ??
             apiRef.current.getCellParams(getRowId ? getRowId(row) : row.id, field);
+          if (column.ignoreDiacritics) {
+            cellParams.value = removeDiacritics(cellParams.value);
+          }
           usedCellParams[field] = cellParams;
 
           const isMatching = applier.fn(cellParams);
