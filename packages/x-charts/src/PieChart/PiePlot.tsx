@@ -122,10 +122,12 @@ function PiePlot(props: PiePlotProps) {
                     highlightScope={series[seriesId].highlightScope}
                     highlighted={highlighted}
                     faded={faded}
-                    {...(onClick && {
-                      onClick: (event) =>
-                        onClick?.(event, { type: 'pie', seriesId, dataIndex: index }, item),
-                    })}
+                    onClick={
+                      onClick &&
+                      ((event) => {
+                        onClick(event, { type: 'pie', seriesId, dataIndex: index }, item);
+                      })
+                    }
                     {...slotProps?.pieArc}
                   />
                 );
