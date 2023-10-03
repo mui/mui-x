@@ -206,6 +206,7 @@ function BlogCard(props: { blog: Blog }) {
           <List sx={{ pb: 0 }}>
             {props.blog.highlightList.map((item) => (
               <ListItem
+                key={item.title}
                 sx={{
                   py: 0.5,
                   px: 0.5,
@@ -242,7 +243,7 @@ export default function WhatsNewLayout() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
       {blogs.map((blog) => (
-        <Grid item xs={12} sm={4} sx={{ flexGrow: 1 }} key={blog.title}>
+        <Grid item xs={12} sm={6} md={4} sx={{ flexGrow: 1 }} key={blog.title}>
           <BlogCard blog={blog} />
         </Grid>
       ))}
