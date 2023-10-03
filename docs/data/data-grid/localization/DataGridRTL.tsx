@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, urPK } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, arSD } from '@mui/x-data-grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import useTheme from '@mui/system/useTheme';
 import rtlPlugin from 'stylis-plugin-rtl';
 import { prefixer } from 'stylis';
 import { CacheProvider } from '@emotion/react';
@@ -54,7 +53,7 @@ const theme = createTheme(
   {
     direction: 'rtl', // Both here and <body dir="rtl">
   },
-  urPK,
+  arSD,
 );
 
 export default function DataGridRTL() {
