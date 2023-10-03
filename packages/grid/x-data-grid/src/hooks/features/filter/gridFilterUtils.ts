@@ -405,7 +405,7 @@ export const buildAggregatedQuickFilterApplier = (
         }
 
         const applier = appliers[v];
-        const value = apiRef.current.getRowValue(row, column);
+        const value = apiRef.current.getRowFormattedValue(row, column);
 
         if (applier.fn === null) {
           continue;
