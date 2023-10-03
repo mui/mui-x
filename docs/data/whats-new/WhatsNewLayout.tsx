@@ -222,7 +222,13 @@ function BlogCard(props: { blog: Blog }) {
                   },
                 }}
               >
-                <Link href={item.url} sx={{ pl: 1 }} variant="body2">{item.title}</Link>>
+                <Link
+                  href={item.url}
+                  sx={{ pl: 1, fontWeight: 500 }}
+                  variant="body2"
+                >
+                  {item.title}
+                </Link>
               </ListItem>
             ))}
           </List>
