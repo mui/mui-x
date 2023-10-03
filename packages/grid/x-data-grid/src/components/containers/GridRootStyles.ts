@@ -56,6 +56,7 @@ export const GridRootStyles = styled('div', {
       [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]:
         styles['root--disableUserSelection'],
     },
+    { [`&.${gridClasses.autosizing}`]: styles.autosizing },
     { [`& .${gridClasses.editBooleanCell}`]: styles.editBooleanCell },
     { [`& .${gridClasses['cell--editing']}`]: styles['cell--editing'] },
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
@@ -148,6 +149,14 @@ export const GridRootStyles = styled('div', {
       height: 'auto',
       [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
         borderBottomColor: 'transparent',
+      },
+    },
+    [`&.${gridClasses.autosizing}`]: {
+      [`& .${gridClasses.columnHeaderTitleContainerContent} > *`]: {
+        overflow: 'visible !important',
+      },
+      [`& .${gridClasses.cell} > *`]: {
+        overflow: 'visible !important',
       },
     },
     [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:

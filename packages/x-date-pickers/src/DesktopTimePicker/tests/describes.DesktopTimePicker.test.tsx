@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { screen, userEvent, describeConformance } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   createPickerRenderer,
   wrapPickerMount,
@@ -9,9 +7,11 @@ import {
   expectInputValue,
   expectInputPlaceholder,
   getTextbox,
+  describeValidation,
+  describeValue,
+  describePicker,
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

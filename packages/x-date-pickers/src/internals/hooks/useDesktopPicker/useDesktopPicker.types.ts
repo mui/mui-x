@@ -23,13 +23,15 @@ import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types'
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../useField';
 
 export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<
       PickersPopperSlotsComponent,
       'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper'
     >,
-    ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {
+    ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView>,
+    FieldSlotsComponents {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -66,7 +68,8 @@ export interface ExportedUseDesktopPickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
 > extends PickersPopperSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>,
+    FieldSlotsComponentsProps {
   field?: SlotComponentProps<
     React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,
     {},

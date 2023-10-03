@@ -29,3 +29,7 @@ title: Charts - Pie demonstration
 ## PieChartWithCenterLabel
 
 {{"demo": "PieChartWithCenterLabel.js"}}
+
+## OnSeriesItemClick
+
+{{"demo": "OnSeriesItemClick.js"}}

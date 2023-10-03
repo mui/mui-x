@@ -2,7 +2,7 @@
 title: React Sankey chart
 ---
 
-# Charts - Sankey 🚧
+# Charts - Sankey 🚧[<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Chart lines can express flows between different entities.</p>
 

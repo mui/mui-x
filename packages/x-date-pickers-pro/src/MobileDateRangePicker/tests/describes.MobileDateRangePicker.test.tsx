@@ -6,9 +6,6 @@ import {
   fireDiscreteEvent,
 } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
-import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -16,6 +13,9 @@ import {
   openPicker,
   expectInputPlaceholder,
   expectInputValue,
+  describeRangeValidation,
+  describeValue,
+  describePicker,
 } from 'test/utils/pickers';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
