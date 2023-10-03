@@ -67,7 +67,14 @@ const JoyField = React.forwardRef((props, ref) => {
 
 const MultiInputJoyDateRangeFieldRoot = styled(
   React.forwardRef((props, ref) => (
-    <Stack ref={ref} spacing={2} direction="row" alignItems="center" {...props} />
+    <Stack
+      ref={ref}
+      spacing={2}
+      direction="row"
+      alignItems="center"
+      overflow="auto"
+      {...props}
+    />
   )),
   {
     name: 'MuiMultiInputDateRangeField',

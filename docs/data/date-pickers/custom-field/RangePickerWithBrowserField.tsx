@@ -144,7 +144,13 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
     });
 
     return (
-      <Stack ref={ref} spacing={2} direction="row" className={className}>
+      <Stack
+        ref={ref}
+        spacing={2}
+        direction="row"
+        overflow="auto"
+        className={className}
+      >
         <BrowserField {...startDateProps} inputRef={startRef} />
         <span> — </span>
         <BrowserField {...endDateProps} inputRef={endRef} />
