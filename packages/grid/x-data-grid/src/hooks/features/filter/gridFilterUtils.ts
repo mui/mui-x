@@ -153,6 +153,13 @@ export const mergeStateWithFilterModel =
     filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
   });
 
+const removeDiacritics = (str: unknown) => {
+  if (typeof str === 'string') {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+  return str;
+};
+
 const getFilterCallbackFromItem = (
   filterItem: GridFilterItem,
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -175,6 +182,11 @@ const getFilterCallbackFromItem = (
   } else {
     parsedValue = filterItem.value;
   }
+
+  if (column.ignoreDiacritics) {
+    parsedValue = removeDiacritics(parsedValue);
+  }
+
   const newFilterItem: GridFilterItem = { ...filterItem, value: parsedValue };
 
   const filterOperators = column.filterOperators;
@@ -203,7 +215,10 @@ const getFilterCallbackFromItem = (
       v7: true,
       item: newFilterItem,
       fn: (row: GridValidRowModel) => {
-        const value = apiRef.current.getRowValue(row, column);
+        let value = apiRef.current.getRowValue(row, column);
+        if (column.ignoreDiacritics) {
+          value = removeDiacritics(value);
+        }
         return applyFilterOnRow(value, row, column, apiRef);
       },
     };
@@ -220,6 +235,9 @@ const getFilterCallbackFromItem = (
     fn: (rowId: GridRowId) => {
       const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
       GLOBAL_API_REF.current = apiRef;
+      if (column.ignoreDiacritics) {
+        params.value = removeDiacritics(params.value);
+      }
       const result = applyFilterOnRow(params);
       GLOBAL_API_REF.current = null;
       return result;
