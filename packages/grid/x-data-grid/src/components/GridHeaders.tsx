@@ -100,7 +100,6 @@ export function GridHeaders(props: Props) {
       columnVisibility={columnVisibility}
       columnGroupsHeaderStructure={columnGroupsHeaderStructure}
       hasOtherElementInTabSequence={hasOtherElementInTabSequence}
-      // style={{ width: contentProps.style.width }}
       {...ColumnHeadersProps}
     />
   );
