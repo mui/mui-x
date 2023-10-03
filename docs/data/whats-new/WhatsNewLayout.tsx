@@ -205,7 +205,7 @@ function BlogCard(props: { blog: Blog }) {
             {props.blog.description}
           </Typography>
 
-          <List sx={{ pb: 0 }}>
+          <List sx={{ pb: 0, mt: 0.5 }}>
             {props.blog.highlightList.map((item) => (
               <ListItem
                 key={item.title}
