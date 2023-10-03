@@ -127,6 +127,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "referenceDate": {
+      "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "shouldDisableClock": {
       "description": "Disable specific clock time.",
       "deprecated": "",
@@ -185,7 +190,7 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
-    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "previousIconButton": "Button allowing to switch to the left view.",

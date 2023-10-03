@@ -5,8 +5,12 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
-import { describeHijriAdapter } from '@mui/x-date-pickers/tests/describeHijriAdapter';
+import {
+  createPickerRenderer,
+  expectInputPlaceholder,
+  expectInputValue,
+  describeHijriAdapter,
+} from 'test/utils/pickers';
 import 'moment/locale/ar';
 
 describe('<AdapterMomentHijri />', () => {

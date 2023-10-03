@@ -2,7 +2,12 @@ import { PieArcDatum as D3PieArcDatum } from 'd3-shape';
 import { DefaultizedProps } from '../helpers';
 import { CommonDefaultizedProps, CommonSeriesType } from './common';
 
-export type PieValueType = { id: string | number; value: number; label?: string; color?: string };
+export type PieValueType = {
+  id: string | number;
+  value: number;
+  label?: string;
+  color?: string;
+};
 
 export type DefaultizedPieValueType = PieValueType &
   D3PieArcDatum<any> & { color: string; formattedValue: string };

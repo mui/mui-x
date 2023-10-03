@@ -85,7 +85,7 @@ export const useDesktopPicker = <
     externalSlotProps: innerSlotProps?.openPickerButton,
     additionalProps: {
       disabled: disabled || readOnly,
-      onClick: actions.onOpen,
+      onClick: open ? actions.onClose : actions.onOpen,
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
       edge: inputAdornmentProps.position,
     },
@@ -142,6 +142,8 @@ export const useDesktopPicker = <
     unknown
   >['slots'] = {
     textField: slots.textField,
+    clearIcon: slots.clearIcon,
+    clearButton: slots.clearButton,
     ...fieldProps.slots,
   };
 

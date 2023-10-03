@@ -16,7 +16,7 @@ import {
   ChartsLegendSlotsComponent,
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { PiePlot, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
+import { PiePlot, PiePlotProps, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
 import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
 
@@ -36,6 +36,7 @@ export interface PieChartProps
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
+  onClick?: PiePlotProps['onClick'];
 
   slots?: PieChartSlotsComponent;
   /**
@@ -66,6 +67,7 @@ function PieChart(props: PieChartProps) {
     children,
     slots,
     slotProps,
+    onClick,
   } = props;
 
   const margin = { ...defaultMargin, ...marginProps };
@@ -101,7 +103,7 @@ function PieChart(props: PieChartProps) {
         slots={slots}
         slotProps={slotProps}
       />
-      <PiePlot slots={slots} slotProps={slotProps} />
+      <PiePlot slots={slots} slotProps={slotProps} onClick={onClick} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       <ChartsTooltip {...tooltip} />
@@ -117,7 +119,7 @@ PieChart.propTypes = {
   // ----------------------------------------------------------------------
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
+    y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Indicate which axis to display the bottom of the charts.
@@ -205,6 +207,7 @@ PieChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  onClick: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.

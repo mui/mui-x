@@ -35,7 +35,8 @@ export type CartesianContextProviderProps = {
   children: React.ReactNode;
 };
 
-const DEFAULT_CATEGORY_GAP_RATIO = 0.1;
+const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
+const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 // TODO: those might be better placed in a distinct file
 const xExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
@@ -174,9 +175,10 @@ function CartesianContextProvider({
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+        const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
         completedXAxis[axis.id] = {
           categoryGapRatio,
-          barGapRatio: 0,
+          barGapRatio,
           ...axis,
           scale: scaleBand(axis.data!, range)
             .paddingInner(categoryGapRatio)
@@ -228,21 +230,20 @@ function CartesianContextProvider({
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-
-        completedXAxis[axis.id] = {
+        completedYAxis[axis.id] = {
           categoryGapRatio,
           barGapRatio: 0,
           ...axis,
-          scale: scaleBand(axis.data!, range)
+          scale: scaleBand(axis.data!, [range[1], range[0]])
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
           ticksNumber: axis.data!.length,
         };
       }
       if (isPointScaleConfig(axis)) {
-        completedXAxis[axis.id] = {
+        completedYAxis[axis.id] = {
           ...axis,
-          scale: scalePoint(axis.data!, range),
+          scale: scalePoint(axis.data!, [range[1], range[0]]),
           ticksNumber: axis.data!.length,
         };
       }

@@ -56,6 +56,5 @@
   "forwardsRefTo": "HTMLLIElement",
   "filename": "/packages/x-tree-view/src/TreeItem/TreeItem.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/\">Tree View</a></li></ul>",
-  "packages": [{ "packageName": "@mui/x-tree-view", "componentName": "TreeItem" }]
+  "demos": "<ul><li><a href=\"/x/react-tree-view/\">Tree View</a></li></ul>"
 }

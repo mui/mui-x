@@ -86,7 +86,7 @@ export default function LegendCustomizationNoSnap() {
           '  margin={{ top: 70, bottom: 70, left: 100, right:100 }}',
           '  {/** ... */}',
           '  legend={{',
-          `    directon: "${props.direction}"`,
+          `    direction: "${props.direction}"`,
           '    position: {',
           `      vertical: "${props.vertical}",`,
           `      horizontal: "${props.horizontal}"`,

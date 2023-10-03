@@ -1,9 +1,11 @@
 import * as React from 'react';
 
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,24 +16,30 @@ import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } f
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 
-const BrowserField = React.forwardRef((props, inputRef) => {
+import { useClearableField } from '@mui/x-date-pickers/hooks';
+
+const BrowserField = React.forwardRef((props, ref) => {
   const {
     disabled,
     id,
     label,
+    inputRef,
     InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
     // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
     error,
     focused,
     ownerState,
+    sx,
     ...other
   } = props;
 
+  const handleRef = useForkRef(containerRef, ref);
+
   return (
     <Box
-      sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
+      sx={{ ...(sx || {}), display: 'flex', alignItems: 'center', flexGrow: 1 }}
       id={id}
-      ref={containerRef}
+      ref={handleRef}
     >
       {startAdornment}
       <input disabled={disabled} ref={inputRef} {...other} />
@@ -44,39 +52,58 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, onAdornmentClick, ...other } = props;
 
   const { inputRef: externalInputRef, ...textFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState: props,
   });
 
-  const response = useSingleInputDateRangeField({
+  const {
+    ref: inputRef,
+    onClear,
+    clearable,
+    ...fieldProps
+  } = useSingleInputDateRangeField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
+  /* If you don't need a clear button, you can skip the use of this hook */
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
+    useClearableField({
+      onClear,
+      clearable,
+      fieldProps,
+      InputProps: {
+        ...fieldProps.InputProps,
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton onClick={onAdornmentClick}>
+              <DateRangeIcon />
+            </IconButton>
+          </InputAdornment>
+        ),
+      },
+      slots,
+      slotProps,
+    });
+
   return (
     <BrowserField
-      {...response}
+      {...processedFieldProps}
+      ref={ref}
       style={{
         minWidth: 300,
       }}
-      InputProps={{
-        ...response.InputProps,
-        ref,
-        endAdornment: (
-          <IconButton onClick={onAdornmentClick}>
-            <DateRangeIcon />
-          </IconButton>
-        ),
-      }}
+      inputRef={inputRef}
+      InputProps={{ ...ProcessedInputProps }}
     />
   );
 });
 
 BrowserSingleInputDateRangeField.fieldType = 'single-input';
 
-function BrowserSingleInputDateRangePicker(props) {
+const BrowserSingleInputDateRangePicker = React.forwardRef((props, ref) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const toggleOpen = () => setIsOpen((currentOpen) => !currentOpen);
@@ -87,17 +114,22 @@ function BrowserSingleInputDateRangePicker(props) {
 
   return (
     <DateRangePicker
+      ref={ref}
+      {...props}
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
       slots={{ field: BrowserSingleInputDateRangeField }}
       slotProps={{
-        field: { onAdornmentClick: toggleOpen },
+        ...props?.slotProps,
+        field: {
+          onAdornmentClick: toggleOpen,
+          ...props?.slotProps?.field,
+        },
       }}
-      {...props}
     />
   );
-}
+});
 
 const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const {
@@ -120,18 +152,21 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   } = props;
 
   const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'start' },
   });
 
   const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'end' },
   });
 
-  const { startDate, endDate } = useMultiInputDateRangeField({
+  const {
+    startDate: { ref: startRef, ...startDateProps },
+    endDate: { ref: endRef, ...endDateProps },
+  } = useMultiInputDateRangeField({
     sharedProps: {
       value,
       defaultValue,
@@ -156,35 +191,65 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
 
   return (
     <Stack ref={ref} spacing={2} direction="row" className={className}>
-      <BrowserField {...startDate} />
+      <BrowserField {...startDateProps} inputRef={startRef} />
       <span> — </span>
-      <BrowserField {...endDate} />
+      <BrowserField {...endDateProps} inputRef={endRef} />
     </Stack>
   );
 });
 
-function BrowserDateRangePicker(props) {
+const BrowserDateRangePicker = React.forwardRef((props, ref) => {
   return (
-    <DateRangePicker slots={{ field: BrowserMultiInputDateRangeField }} {...props} />
+    <DateRangePicker
+      ref={ref}
+      {...props}
+      slots={{ ...props?.slots, field: BrowserMultiInputDateRangeField }}
+    />
   );
-}
+});
 
-function BrowserDateField(props) {
+const BrowserDateField = React.forwardRef((props, ref) => {
   const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
 
-  const response = useDateField({
+  const {
+    onClear,
+    clearable,
+    ref: inputRef,
+    ...fieldProps
+  } = useDateField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
-  return <BrowserField {...response} />;
-}
-
-function BrowserDatePicker(props) {
+  /* If you don't need a clear button, you can skip the use of this hook */
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
+    useClearableField({
+      onClear,
+      clearable,
+      fieldProps,
+      InputProps: fieldProps.InputProps,
+      slots,
+      slotProps,
+    });
   return (
-    <DatePicker slots={{ field: BrowserDateField, ...props.slots }} {...props} />
+    <BrowserField
+      ref={ref}
+      inputRef={inputRef}
+      {...processedFieldProps}
+      InputProps={ProcessedInputProps}
+    />
   );
-}
+});
+
+const BrowserDatePicker = React.forwardRef((props, ref) => {
+  return (
+    <DatePicker
+      ref={ref}
+      {...props}
+      slots={{ field: BrowserDateField, ...props.slots }}
+    />
+  );
+});
 
 export default function PickerWithBrowserField() {
   return (
@@ -192,8 +257,16 @@ export default function PickerWithBrowserField() {
       <DemoContainer
         components={['DatePicker', 'SingleInputDateRangeField', 'DateRangePicker']}
       >
-        <BrowserDatePicker />
-        <BrowserSingleInputDateRangePicker />
+        <BrowserDatePicker
+          slotProps={{
+            field: { clearable: true },
+          }}
+        />
+        <BrowserSingleInputDateRangePicker
+          slotProps={{
+            field: { clearable: true },
+          }}
+        />
         <BrowserDateRangePicker />
       </DemoContainer>
     </LocalizationProvider>

@@ -5,13 +5,13 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { HighlightScope } from '../context/HighlightProvider';
 import { InteractionContext } from '../context/InteractionProvider';
 import {
   getIsFaded,
   getIsHighlighted,
   useInteractionItemProps,
 } from '../hooks/useInteractionItemProps';
-import { HighlightScope } from '../context/HighlightProvider';
 import { PieSeriesType } from '../models/seriesType/pie';
 
 export interface PieArcClasses {
@@ -25,7 +25,7 @@ export interface PieArcClasses {
 
 export type PieArcClassKey = keyof PieArcClasses;
 
-export interface PieArcOwnerState {
+interface PieArcOwnerState {
   id: string;
   dataIndex: number;
   color: string;
@@ -58,7 +58,7 @@ const PieArcRoot = styled('path', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
 })<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
-  stroke: theme.palette.background.paper,
+  stroke: (theme.vars || theme).palette.background.paper,
   strokeWidth: 1,
   strokeLinejoin: 'round',
   fill: ownerState.color,
@@ -74,6 +74,7 @@ export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
     cornerRadius: PieSeriesType['cornerRadius'];
     highlighted: PieSeriesType['highlighted'];
     faded: PieSeriesType['faded'];
+    onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
   };
 
 export default function PieArc(props: PieArcProps) {
@@ -88,6 +89,7 @@ export default function PieArc(props: PieArcProps) {
     cornerRadius: baseCornerRadius = 0,
     highlighted,
     faded = { additionalRadius: -5 },
+    onClick,
     ...other
   } = props;
 
@@ -135,6 +137,8 @@ export default function PieArc(props: PieArcProps) {
           outerRadius,
         })!
       }
+      onClick={onClick}
+      cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={classes.root}
       {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}

@@ -1,13 +1,22 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { styled } from '@mui/system';
+import { styled, useTheme } from '@mui/material/styles';
+import { defaultMemoize } from 'reselect';
+import { useGridSelector } from '../../utils';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
-import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
+import { getFirstColumnIndexToRender, getTotalHeaderHeight } from '../columns/gridColumnsUtils';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import {
+  areRenderContextsEqual,
+  getRenderableIndexes,
+} from '../virtualization/useGridVirtualScroller';
+import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -64,6 +73,10 @@ export interface GetHeadersParams {
   maxLastColumn?: number;
 }
 
+function isUIEvent(event: any): event is React.UIEvent {
+  return !!event.target;
+}
+
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const {
     innerRef: innerRefProp,
@@ -71,6 +84,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     visibleColumns,
     sortColumnLookup,
     filterColumnLookup,
+    columnPositions,
     columnHeaderTabIndexState,
     columnGroupHeaderTabIndexState,
     columnHeaderFocus,
@@ -82,17 +96,85 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     columnGroupsHeaderStructure,
     hasOtherElementInTabSequence,
   } = props;
+  const theme = useTheme();
 
   const [dragCol, setDragCol] = React.useState('');
   const [resizeCol, setResizeCol] = React.useState('');
 
   const apiRef = useGridPrivateApiContext();
+  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
 
   const rootProps = useGridRootProps();
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
+  const renderContext = React.useMemo<GridRenderContext>(() => ({
+    firstRowIndex: 0,
+    lastRowIndex: 0,
+    firstColumnIndex: 0,
+    lastColumnIndex: visibleColumns.length
+  }), [visibleColumns.length])
+  const prevScrollLeft = React.useRef(0);
+  const currentPage = useGridVisibleRows(apiRef, rootProps);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
+
+  React.useEffect(() => {
+    apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
+  }, [apiRef]);
+
+  // memoize `getFirstColumnIndexToRender`, since it's called on scroll
+  const getFirstColumnIndexToRenderRef = React.useRef<typeof getFirstColumnIndexToRender>(
+    defaultMemoize(getFirstColumnIndexToRender, {
+      equalityCheck: (a, b) =>
+        ['firstColumnIndex', 'minColumnIndex', 'columnBuffer'].every((key) => a[key] === b[key]),
+    }),
+  );
+
+  const updateInnerPosition = React.useCallback(
+    (nextRenderContext: GridRenderContext) => {
+      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+        firstIndex: nextRenderContext.firstRowIndex,
+        lastIndex: nextRenderContext.lastRowIndex,
+        minFirstIndex: 0,
+        maxLastIndex: currentPage.rows.length,
+        buffer: rootProps.rowBuffer,
+      });
+
+      const firstColumnToRender = getFirstColumnIndexToRenderRef.current({
+        firstColumnIndex: nextRenderContext!.firstColumnIndex,
+        minColumnIndex,
+        columnBuffer: rootProps.columnBuffer,
+        firstRowToRender,
+        lastRowToRender,
+        apiRef,
+        visibleRows: currentPage.rows,
+      });
+
+      const direction = theme.direction === 'ltr' ? 1 : -1;
+
+      const offset =
+        firstColumnToRender > 0
+          ? prevScrollLeft.current - direction * columnPositions[firstColumnToRender]
+          : prevScrollLeft.current;
+
+      innerRef!.current!.style.transform = `translate3d(${-offset}px, 0px, 0px)`;
+    },
+    [
+      columnPositions,
+      minColumnIndex,
+      rootProps.columnBuffer,
+      apiRef,
+      currentPage.rows,
+      rootProps.rowBuffer,
+      theme.direction,
+    ],
+  );
+
+  React.useLayoutEffect(() => {
+    if (renderContext) {
+      updateInnerPosition(renderContext);
+    }
+  }, [renderContext, updateInnerPosition]);
 
   const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     (params) => setResizeCol(params.field),
@@ -107,7 +189,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     (params) => setDragCol(params.field),
     [],
   );
-
   const handleColumnReorderStop = React.useCallback<GridEventListener<'columnHeaderDragEnd'>>(
     () => setDragCol(''),
     [],
@@ -120,14 +201,46 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
   const getColumnsToRender = (params?: GetHeadersParams) => {
-    const { minFirstColumn = minColumnIndex, maxLastColumn = visibleColumns.length } = params || {};
+    const {
+      renderContext: nextRenderContext = renderContext,
+      minFirstColumn = minColumnIndex,
+      maxLastColumn = visibleColumns.length,
+    } = params || {};
 
-    const renderedColumns = visibleColumns;
+    if (!nextRenderContext) {
+      return null;
+    }
+
+    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      firstIndex: nextRenderContext.firstRowIndex,
+      lastIndex: nextRenderContext.lastRowIndex,
+      minFirstIndex: 0,
+      maxLastIndex: currentPage.rows.length,
+      buffer: rootProps.rowBuffer,
+    });
+
+    const firstColumnToRender = !hasVirtualization
+      ? 0
+      : getFirstColumnIndexToRenderRef.current({
+          firstColumnIndex: nextRenderContext!.firstColumnIndex,
+          minColumnIndex: minFirstColumn,
+          columnBuffer: rootProps.columnBuffer,
+          apiRef,
+          firstRowToRender,
+          lastRowToRender,
+          visibleRows: currentPage.rows,
+        });
+
+    const lastColumnToRender = !hasVirtualization
+      ? maxLastColumn
+      : Math.min(nextRenderContext.lastColumnIndex! + rootProps.columnBuffer, maxLastColumn);
+
+    const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     return {
       renderedColumns,
-      firstColumnToRender: 0,
-      lastColumnToRender: renderedColumns.length - 1,
+      firstColumnToRender,
+      lastColumnToRender,
       minFirstColumn,
       maxLastColumn,
     };
@@ -286,6 +399,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         <GridColumnHeaderRow
           style={{
             height: `${headerHeight}px`,
+            transform: `translateX(-${depthInfo.leftOverflow}px)`,
           }}
           key={depthIndex}
           role="row"
@@ -324,6 +438,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   };
 
   return {
+    renderContext,
     getColumnHeaders,
     getColumnsToRender,
     getColumnGroupHeaders,

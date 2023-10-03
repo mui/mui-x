@@ -17,6 +17,8 @@ import {
   UncapitalizeObjectKeys,
   UsePickerProps,
   getActiveElement,
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
@@ -29,7 +31,7 @@ import {
 } from '../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
-export interface RangePickerFieldSlotsComponent {
+export interface RangePickerFieldSlotsComponent extends FieldSlotsComponents {
   Field: React.ElementType;
   /**
    * Element rendered at the root.
@@ -50,13 +52,13 @@ export interface RangePickerFieldSlotsComponent {
   TextField?: React.ElementType<TextFieldProps>;
 }
 
-export interface RangePickerFieldSlotsComponentsProps<TDate> {
+export interface RangePickerFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
   field?: SlotComponentProps<
     React.ElementType<
       BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, unknown>
     >,
     {},
-    UsePickerProps<DateRange<TDate>, any, RangeFieldSection, any, any, any>
+    UsePickerProps<DateRange<TDate>, TDate, any, RangeFieldSection, any, any, any>
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
@@ -95,6 +97,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   pickerSlotProps: RangePickerFieldSlotsComponentsProps<TDate> | undefined;
   pickerSlots: UncapitalizeObjectKeys<RangePickerFieldSlotsComponent> | undefined;
   fieldProps: FieldProps;
+  anchorRef?: React.Ref<HTMLDivElement>;
 }
 
 const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
@@ -111,6 +114,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   pickerSlotProps,
   pickerSlots,
   fieldProps,
+  anchorRef,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -179,7 +183,9 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   } = {
     ...fieldProps.slotProps,
     textField: (ownerState) => {
+      const resolvedComponentProps = resolveComponentProps(pickerSlotProps?.textField, ownerState);
       let inputProps: MultiInputFieldSlotTextFieldProps;
+      let InputProps: MultiInputFieldSlotTextFieldProps['InputProps'];
       if (ownerState.position === 'start') {
         inputProps = {
           inputRef: startRef,
@@ -192,6 +198,12 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeStartSelection }),
           ...(wrapperVariant === 'mobile' && { readOnly: true }),
         };
+        if (anchorRef) {
+          InputProps = {
+            ...resolvedComponentProps?.InputProps,
+            ref: anchorRef,
+          };
+        }
       } else {
         inputProps = {
           inputRef: endRef,
@@ -210,6 +222,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
         ...(labelId != null && { id: `${labelId}-${ownerState.position!}` }),
         ...inputProps,
         ...resolveComponentProps(pickerSlotProps?.textField, ownerState),
+        InputProps,
       };
     },
     root: (ownerState) => {
@@ -225,7 +238,14 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
     separator: pickerSlotProps?.fieldSeparator,
   };
 
-  const enrichedFieldProps: ReturnType = { ...fieldProps, slots, slotProps };
+  /* TODO: remove this when a clearable behavior for multiple input range fields is implemented */
+  const { clearable, onClear, ...restFieldProps } = fieldProps;
+
+  const enrichedFieldProps: ReturnType = {
+    ...restFieldProps,
+    slots,
+    slotProps,
+  };
 
   return enrichedFieldProps;
 };
@@ -246,6 +266,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
   pickerSlots,
   pickerSlotProps,
   fieldProps,
+  anchorRef,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -300,11 +321,15 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
   const slots: ReturnType['slots'] = {
     ...fieldProps.slots,
     textField: pickerSlots?.textField,
+    clearButton: pickerSlots?.clearButton,
+    clearIcon: pickerSlots?.clearIcon,
   };
 
   const slotProps: ReturnType['slotProps'] = {
     ...fieldProps.slotProps,
     textField: pickerSlotProps?.textField,
+    clearButton: pickerSlots?.clearButton,
+    clearIcon: pickerSlots?.clearIcon,
   };
 
   const enrichedFieldProps: ReturnType = {
@@ -317,6 +342,10 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
     onSelectedSectionsChange: handleSelectedSectionsChange,
     onBlur,
+    InputProps: {
+      ref: anchorRef,
+      ...fieldProps?.InputProps,
+    },
     focused: open,
     ...(labelId != null && { id: labelId }),
     ...(wrapperVariant === 'mobile' && { readOnly: true }),

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import TextField from '@mui/material/TextField';
 import { describeConformance, userEvent } from '@mui/monorepo/test/utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
@@ -10,8 +9,9 @@ import {
   expectInputValue,
   expectInputPlaceholder,
   getTextbox,
+  describeValidation,
+  describeValue,
 } from 'test/utils/pickers';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 
 describe('<DateTimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

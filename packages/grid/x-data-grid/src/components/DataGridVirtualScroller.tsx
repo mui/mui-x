@@ -8,17 +8,16 @@ import { GridHeaders } from './GridHeaders';
 
 export interface DataGridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
   ref: React.Ref<HTMLDivElement>;
-  disableVirtualization: boolean;
   ColumnHeadersProps?: Record<string, any>;
 }
 
 const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtualScrollerProps>(
   function DataGridVirtualScroller(props, ref) {
-    const { className, disableVirtualization, ColumnHeadersProps, ...other } = props;
+    const { className, ColumnHeadersProps, ...other } = props;
 
+    // XXX: handle disable virtualization
     const { getRootProps, getContentProps, getRenderZoneProps, getRows } = useGridVirtualScroller({
       ref,
-      disableVirtualization,
     });
 
     const contentProps = getContentProps();

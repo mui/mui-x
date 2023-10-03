@@ -25,7 +25,7 @@ export interface MarkElementClasses {
 
 export type MarkElementClassKey = keyof MarkElementClasses;
 
-export interface MarkElementOwnerState {
+interface MarkElementOwnerState {
   id: string;
   color: string;
   isFaded: boolean;
@@ -61,12 +61,9 @@ const MarkElementPath = styled('path', {
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
   transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
   transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
-  fill: theme.palette.background.paper,
+  fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
-  '&.MuiMarkElement-highlighted': {
-    fill: ownerState.color,
-  },
 }));
 
 MarkElementPath.propTypes = {

@@ -1,5 +1,5 @@
 ---
-title: Charts - Bars
+title: React Bar chart
 ---
 
 # Charts - Bars
@@ -54,3 +54,10 @@ You can use the `stackOffset` and `stackOrder` properties to define how the seri
 By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
+
+## Layout
+
+Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
+If you're using [composition](/x/react-charts/#multiple-charts), you should set the property `layout: 'horizontal'` to each bar series object.
+
+{{"demo": "HorizontalBars.js"}}

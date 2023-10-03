@@ -17,6 +17,7 @@ const defaultAlias = {
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/markdown': '@mui/monorepo/packages/markdown',
+  '@mui-internal/api-docs-builder': '@mui/monorepo/packages/api-docs-builder',
   '@mui-internal/docs-utilities': '@mui/monorepo/packages/docs-utilities',
   'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
@@ -93,19 +94,15 @@ module.exports = function getBabelConfig(api) {
       ]);
     }
   }
-  if (process.env.NODE_ENV === 'test') {
-    plugins.push([
-      'babel-plugin-module-resolver',
-      {
-        alias: defaultAlias,
-        root: ['./'],
-      },
-    ]);
-  }
 
   return {
     assumptions: {
       noDocumentAll: true,
+      // TODO: Replace "loose" mode with these:
+      // setPublicClassFields: true,
+      // privateFieldsAsProperties: true,
+      // objectRestNoSymbols: true,
+      // setSpreadProperties: true,
     },
     presets,
     plugins,

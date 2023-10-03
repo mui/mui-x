@@ -19,6 +19,10 @@
       "matchPackagePatterns": "@babel/*"
     },
     {
+      "groupName": "D3",
+      "matchPackagePatterns": ["d3-*", "@types/d3-*"]
+    },
+    {
       "groupName": "Emotion",
       "matchPackagePatterns": "@emotion/*"
     },

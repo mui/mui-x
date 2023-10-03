@@ -3,8 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
-import { getDateOffset } from 'test/utils/pickers';
+import { getDateOffset, describeAdapters } from 'test/utils/pickers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -28,7 +27,7 @@ describe('<DigitalClock /> - Timezone', () => {
 
       userEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
 
-      const expectedDate = adapter.setHours(adapter.dateWithTimezone(undefined, 'default')!, 8);
+      const expectedDate = adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 8);
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
@@ -48,7 +47,7 @@ describe('<DigitalClock /> - Timezone', () => {
           userEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
 
           const expectedDate = adapter.setHours(
-            adapter.startOfDay(adapter.dateWithTimezone(undefined, timezone)!),
+            adapter.startOfDay(adapter.dateWithTimezone(undefined, timezone)),
             8,
           );
 

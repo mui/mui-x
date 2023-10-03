@@ -425,6 +425,27 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridVirtualizationColumnEnabledSelector",
+    "returnType": "boolean",
+    "category": "Virtualization",
+    "description": "Get the enabled state for virtualization",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridVirtualizationEnabledSelector",
+    "returnType": "boolean",
+    "category": "Virtualization",
+    "description": "Get the enabled state for virtualization",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridVirtualizationSelector",
+    "returnType": "GridVirtualizationState",
+    "category": "Virtualization",
+    "description": "Get the columns state",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridVisibleColumnDefinitionsSelector",
     "returnType": "GridStateColDef[]",
     "category": "Visible Columns",

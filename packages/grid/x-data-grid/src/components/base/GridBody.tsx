@@ -18,10 +18,6 @@ function GridBody(props: GridBodyProps) {
   const rootProps = useGridRootProps();
   const rootRef = React.useRef<HTMLDivElement>(null);
 
-  const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
-    rootProps.disableVirtualization,
-  );
-
   useEnhancedEffect(() => {
     apiRef.current.computeSizeAndPublishResizeEvent();
 
@@ -33,7 +29,7 @@ function GridBody(props: GridBodyProps) {
     let animationFrame: number;
     const observer = new ResizeObserver(() => {
       // See https://github.com/mui/mui-x/issues/8733
-      animationFrame = window.requestAnimationFrame(() => {
+      animationFrame = requestAnimationFrame(() => {
         apiRef.current.computeSizeAndPublishResizeEvent();
       });
     });
@@ -52,27 +48,6 @@ function GridBody(props: GridBodyProps) {
       }
     };
   }, [apiRef]);
-
-  const disableVirtualization = React.useCallback(() => {
-    setIsVirtualizationDisabled(true);
-  }, []);
-
-  const enableVirtualization = React.useCallback(() => {
-    setIsVirtualizationDisabled(false);
-  }, []);
-
-  React.useEffect(() => {
-    setIsVirtualizationDisabled(rootProps.disableVirtualization);
-  }, [rootProps.disableVirtualization]);
-
-  // The `useGridApiMethod` hook can't be used here, because it only installs the
-  // method if it doesn't exist yet. Once installed, it's never updated again.
-  // This break the methods above, since their closure comes from the first time
-  // they were installed. Which means that calling `setIsVirtualizationDisabled`
-  // will trigger a re-render, but it won't update the state. That can be solved
-  // by migrating the virtualization status to the global state.
-  apiRef.current.unstable_disableVirtualization = disableVirtualization;
-  apiRef.current.unstable_enableVirtualization = enableVirtualization;
 
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
@@ -93,7 +68,6 @@ function GridBody(props: GridBodyProps) {
           // If this event is published while dimensions haven't been computed,
           // the `onFetchRows` prop won't be called during mount.
           ref={virtualScrollerRef}
-          disableVirtualization={isVirtualizationDisabled}
           ColumnHeadersProps={ColumnHeadersProps}
         />
       )}
