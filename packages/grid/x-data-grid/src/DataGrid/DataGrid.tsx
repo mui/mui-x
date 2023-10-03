@@ -705,7 +705,7 @@ DataGridRaw.propTypes = {
   /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default: false
+   * @default
    */
   unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
     PropTypes.shape({
