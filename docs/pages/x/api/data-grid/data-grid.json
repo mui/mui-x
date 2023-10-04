@@ -429,7 +429,7 @@
         "name": "union",
         "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
       },
-      "default": ": false"
+      "default": "false"
     }
   },
   "slots": [
