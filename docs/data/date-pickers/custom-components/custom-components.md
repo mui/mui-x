@@ -6,7 +6,7 @@ components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerT
 
 # Custom slots and subcomponents
 
-<p class="description">The date picker lets you customize subcomponents.</p>
+<p class="description">Learn how to override the default DOM structure of the Date and Time Pickers.</p>
 
 :::info
 The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
