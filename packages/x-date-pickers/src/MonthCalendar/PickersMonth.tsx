@@ -64,15 +64,15 @@ const PickersMonthButton = styled('button', {
   ],
 })<{
   ownerState: PickersMonthProps;
-}>(({ theme, ownerState }) => ({
+}>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
   border: 0,
   outline: 0,
   ...theme.typography.subtitle1,
-  margin: `${ownerState.monthsPerRow === 3 ? 6 : 3}px 0`,
-  height: ownerState.monthsPerRow === 3 ? 36 : 32,
-  width: ownerState.monthsPerRow === 3 ? 72 : 62,
+  margin: '6px 0',
+  height: 36,
+  width: 72,
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus': {

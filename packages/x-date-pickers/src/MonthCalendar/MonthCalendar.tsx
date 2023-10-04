@@ -56,15 +56,15 @@ const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: MonthCalendarProps<any> }>(({ ownerState }) => ({
+})<{ ownerState: MonthCalendarProps<any> }>({
   display: 'flex',
   flexWrap: 'wrap',
   alignContent: 'stretch',
-  padding: `0 ${ownerState.monthsPerRow === 3 ? 24 : 12}px`,
+  padding: '0 4px',
   width: DIALOG_WIDTH,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
-}));
+});
 
 type MonthCalendarComponent = (<TDate>(
   props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,

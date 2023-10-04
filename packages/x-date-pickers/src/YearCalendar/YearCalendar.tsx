@@ -58,19 +58,19 @@ const YearCalendarRoot = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: YearCalendarProps<any> }>(({ ownerState }) => ({
+})<{ ownerState: YearCalendarProps<any> }>({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
   overflowY: 'auto',
   height: '100%',
-  padding: `0 ${ownerState.yearsPerRow === 3 ? 24 : 12}px`,
+  padding: '0 4px',
   width: DIALOG_WIDTH,
   maxHeight: MAX_CALENDAR_HEIGHT,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
   position: 'relative',
-}));
+});
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.JSX.Element) & {
   propTypes?: any;

@@ -58,15 +58,15 @@ const PickersYearButton = styled('button', {
     { [`&.${pickersYearClasses.disabled}`]: styles.disabled },
     { [`&.${pickersYearClasses.selected}`]: styles.selected },
   ],
-})<{ ownerState: PickersYearProps }>(({ theme, ownerState }) => ({
+})<{ ownerState: PickersYearProps }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
   border: 0,
   outline: 0,
   ...theme.typography.subtitle1,
-  margin: `${ownerState.yearsPerRow === 3 ? 6 : 2}px 0`,
-  height: ownerState.yearsPerRow === 3 ? 36 : 32,
-  width: ownerState.yearsPerRow === 3 ? 72 : 62,
+  margin: '6px 0',
+  height: 36,
+  width: 72,
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus': {
