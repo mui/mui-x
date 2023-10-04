@@ -98,7 +98,7 @@
     "@types/mocha": "^10.0.2",
     "@types/node": "^18.18.0",
     "@types/prettier": "^2.7.3",
-    "@types/react": "^18.2.22",
+    "@types/react": "^18.2.24",
     "@types/react-dom": "^18.2.7",
     "@types/react-test-renderer": "^18.0.2",
     "@types/requestidlecallback": "^0.3.5",
