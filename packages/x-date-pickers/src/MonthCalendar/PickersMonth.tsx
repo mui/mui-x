@@ -70,7 +70,7 @@ const PickersMonthButton = styled('button', {
   border: 0,
   outline: 0,
   ...theme.typography.subtitle1,
-  margin: '6px 0',
+  margin: '8px 0',
   height: 36,
   width: 72,
   borderRadius: 18,
