@@ -17,6 +17,7 @@ import { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -60,7 +61,9 @@ const MonthCalendarRoot = styled('div', {
   flexWrap: 'wrap',
   alignContent: 'stretch',
   padding: '0 4px',
-  width: 320,
+  width: DIALOG_WIDTH,
+  // avoid padding increasing width over defined
+  boxSizing: 'border-box',
 });
 
 type MonthCalendarComponent = (<TDate>(
