@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, arSD } from '@mui/x-data-grid';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme, Theme } from '@mui/material/styles';
 import rtlPlugin from 'stylis-plugin-rtl';
 import { prefixer } from 'stylis';
 import { CacheProvider } from '@emotion/react';
@@ -43,27 +43,20 @@ const rows = [
   { id: 5, name: 'ایندریو', age: 65, occupation: 'مهندس', gender: 'ذكر' },
 ];
 
-// Create rtl cache
-const cacheRtl = createCache({
-  key: 'muirtl',
-  stylisPlugins: [prefixer, rtlPlugin],
-});
-
-const theme = createTheme(
-  {
-    direction: 'rtl', // Both here and <body dir="rtl">
-  },
-  arSD,
-);
-
 export default function DataGridRTL() {
+  const existingTheme = useTheme();
+  const theme = React.useMemo(
+    () =>
+      createTheme({}, arSD, existingTheme, {
+        direction: 'rtl',
+      }),
+    [existingTheme],
+  );
   return (
-    <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>
-        <div dir="rtl" style={{ height: 400, width: '100%' }}>
-          <DataGrid rows={rows} columns={columns} />
-        </div>
-      </ThemeProvider>
-    </CacheProvider>
+    <ThemeProvider theme={theme}>
+      <div dir="rtl" style={{ height: 400, width: '100%' }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>
+    </ThemeProvider>
   );
 }
