@@ -1,19 +1,19 @@
 ---
 productId: x-date-pickers
-title: Date and Time Pickers - Custom subcomponents
-components: DateTimePickerTabs
+title: Date and Time Pickers - Custom slots and subcomponents
+components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickersCalendarHeader, PickersShortcuts
 ---
 
-# Custom subcomponents
+# Custom slots and subcomponents
 
-<p class="description">The date picker lets you customize subcomponents.</p>
+<p class="description">Learn how to override the default DOM structure of the Date and Time Pickers.</p>
 
 :::info
 The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
 For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
 :::
 
-## Overriding components
+## Overriding slot components
 
 You can override the internal elements of the component (known as "slots") using the `slots` prop.
 
