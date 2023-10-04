@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, arSD } from '@mui/x-data-grid';
-import { createTheme, ThemeProvider, useTheme, Theme } from '@mui/material/styles';
-import rtlPlugin from 'stylis-plugin-rtl';
-import { prefixer } from 'stylis';
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 
 const columns: GridColDef[] = [
   {
