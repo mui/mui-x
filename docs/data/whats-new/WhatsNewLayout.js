@@ -10,8 +10,6 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
-// @ts-ignore
-import BrandingProvider from 'docs/src/BrandingProvider';
 
 const blogs = [
   {
@@ -171,6 +169,9 @@ function BlogCard(props) {
             ? 'rgba(0, 27, 55, 0.2)'
             : `${alpha(theme.palette.grey[50], 0.4)}`,
         borderColor: 'divider',
+        [`& .MuiTypography-root`]: {
+          fontFamily: 'IBM Plex Sans',
+        },
       }}
       component="article"
       variant="outlined"
@@ -244,14 +245,12 @@ function BlogCard(props) {
 
 export default function WhatsNewLayout() {
   return (
-    <BrandingProvider>
-      <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
-        {blogs.map((blog) => (
-          <Grid item xs={12} sm={6} md={4} sx={{ flexGrow: 1 }} key={blog.title}>
-            <BlogCard blog={blog} />
-          </Grid>
-        ))}
-      </Grid>
-    </BrandingProvider>
+    <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
+      {blogs.map((blog) => (
+        <Grid item xs={12} sm={6} md={4} sx={{ flexGrow: 1 }} key={blog.title}>
+          <BlogCard blog={blog} />
+        </Grid>
+      ))}
+    </Grid>
   );
 }
