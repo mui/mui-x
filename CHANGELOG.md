@@ -47,6 +47,10 @@ Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
 - [charts] Display cursor pointer for pie chart only if `onClick` is provided (#10551) @giladappsforce
 - [charts] PieChart onClick prop in the series data and demo (#10506) @giladappsforce
 
+### Tree View / `@mui/x-tree-view@6.0.0-beta.1`
+
+- Update dependencies
+
 ### Docs
 
 - [docs] Add `DateRangePicker` example with a `Button` trigger (#10485) @LukasTy
