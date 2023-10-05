@@ -25,6 +25,8 @@ const VirtualScrollerRoot = styled('div', {
 })<{ ownerState: OwnerState }>({
   overflow: 'auto',
   height: '100%',
+  flex: '1 1 0',
+  overflowY: 'auto',
   // See https://github.com/mui/mui-x/issues/4360
   position: 'relative',
   '@media print': {
