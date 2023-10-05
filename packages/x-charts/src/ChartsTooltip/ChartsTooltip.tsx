@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import Popper, { PopperProps } from '@mui/material/Popper';
+import composeClasses from '@mui/utils/composeClasses';
+import { Popper, PopperProps } from '@mui/base/Popper';
 import { NoSsr } from '@mui/base/NoSsr';
 import { useSlotProps } from '@mui/base/utils';
 import {
@@ -16,7 +16,7 @@ import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTo
 import { ChartsTooltipClasses, getTooltipUtilityClass } from './tooltipClasses';
 
 export interface ChartsTooltipSlotsComponent {
-  popper?: React.JSXElementConstructor<PopperProps>;
+  popper?: React.ElementType<PopperProps>;
   axisContent?: React.ElementType<ChartsAxisContentProps>;
   itemContent?: React.ElementType<ChartsItemContentProps>;
 }
@@ -43,7 +43,7 @@ export type ChartsTooltipProps = {
   itemContent?: React.ElementType<ChartsItemContentProps<any>>;
   /**
    * Component to override the tooltip content when triger is set to 'axis'.
-   * * @deprecated Use slots.axisContent instead
+   * @deprecated Use slots.axisContent instead
    */
   axisContent?: React.ElementType<ChartsAxisContentProps>;
   /**
