@@ -49,10 +49,6 @@ Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
 - [charts] Add `onClick` prop to PieChart (#10506) @giladappsforce
 - [charts] Support `slots`/`slotProps` for the tooltip (#10515) @alexfauquette
 
-### Tree View / `@mui/x-tree-view@6.0.0-beta.1`
-
-- Update dependencies
-
 ### Docs
 
 - [docs] Add `DateRangePicker` example with a `Button` trigger (#10485) @LukasTy
