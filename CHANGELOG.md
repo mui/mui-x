@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.16.1
+
+_Oct 5, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.16.1`
+
+- [DataGrid] Add a new demo with sparklines (#9228) @flaviendelangle
+- [DataGrid] Fix autosize missing a few pixels (#10471) @romgrk
+- [DataGrid] Make `disableColumnSelector` demo idempotent (#10548) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@6.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.16.1`.
+
+#### `@mui/x-data-grid-premium@6.16.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.16.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.16.1`
+
+- [pickers] Avoid calendar layout shifting when changing views (#10541) @LukasTy
+- [pickers] Fix clearable behavior when disabled (#10542) @noraleonte
+- [pickers] Improve customization playground examples (#10544) @noraleonte
+
+#### `@mui/x-date-pickers-pro@6.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
+
+- [DateRangePicker] Fix `InputProps` propagation in multi input (#10564) @alexfauquette
+
+### Charts / `@mui/x-charts@6.0.0-alpha.14`
+
+- [charts] Display cursor pointer for pie chart only if `onClick` is provided (#10551) @giladappsforce
+- [charts] PieChart onClick prop in the series data and demo (#10506) @giladappsforce
+
+### Tree View / `@mui/x-tree-view@__TREE_VIEW_VERSION__`
+
+No changes
+
+### Docs
+
+- [docs] Add `DateRangePicker` example with a `Button` trigger (#10485) @LukasTy
+- [docs] Add section about disabling columns panel (#10328) @MBilalShafi
+- [docs] Add section about overriding slots to base concepts (#10421) @noraleonte
+- [docs] Add whats new page listing all release announcements (#9727) @joserodolfofreitas
+- [docs] Update RTL Support section of the grid localization docs (#10561) @MBilalShafi
+
+### Core
+
+- [core] Consistent casing with Legal and marketing content @oliviertassinari
+- [core] Revert the link in the priority support ticket description (#10517) @michelengelen
+- [CHANGELOG] Polish image @oliviertassinari
+
 ## 6.16.0
 
 _Sep 29, 2023_
