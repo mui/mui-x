@@ -1,6 +1,81 @@
-# Data Grid - Server-side data source
+# Data Grid - Server-side data
 
-<p class="description">The data grid server-side data interface.</p>
+<p class="description">The data grid server-side data</p>
+
+## Overview
+
+Managing server-side data efficiently in a React application can become complex as the dataset grows.
+
+Without a dedicated module that abstracts it's complexities, developers often face challenges related to manual data fetching, pagination, sorting, filtering, and it's often gets trickier to tackle performance issues, which can lead to a poor user experience.
+
+Let's take a look at an example:
+
+### Example scenario
+
+Let's say you have a data grid that displays a list of users. The data grid has pagination enabled and the user can sort the data by clicking on the column headers and also apply filters.
+
+The data grid is configured to fetch data from the server whenever the user changes the page or updates filtering or sorting.
+
+```tsx
+const [rows, setRows] = React.useState([]);
+const [paginationModel, setPaginationModel] = React.useState({
+  page: 0,
+  pageSize: 10,
+});
+const [filterModel, setFilterModel] = React.useState({
+  items: [],
+});
+const [sortModel, setSortModel] = React.useState([]);
+
+React.useEffect(() => {
+  const fetcher = async () => {
+    // fetch data from server
+    const data = await fetch('https://my-api.com/data', {
+      method: 'GET',
+      body: JSON.stringify({
+        page: paginationModel.page,
+        pageSize: paginationModel.pageSize,
+        sortModel,
+        filterModel,
+      }),
+    });
+    setRows(data.rows);
+  };
+  fetcher();
+}, [page, sortModel, filterModel]);
+
+<DataGridPro
+  columns={columns}
+  pagination
+  sortingMode="server"
+  filterMode="server"
+  paginationMode="server"
+  onPaginationModelChange={(newPaginationModel) => {
+    setPaginationModel(newPaginationModel);
+  }}
+  onSortModelChange={(newSortModel) => {
+    setSortModel(newSortModel);
+  }}
+  onFilterModelChange={(newFilterModel) => {
+    setFilterModel(newFilterModel);
+  }}
+/>;
+```
+
+We only scratched the surface in the above example with a lot of problems still unsolved like:
+
+- Performance optimization
+- Caching data/deduping requests
+- More complex use-cases on the server like grouping, tree data, etc.
+- Server side row editing
+- Lazy loading of data
+- Handling updates to the data like row editing, row deletion, etc.
+
+Trying to solve these problems one after the other can make the code complex and hard to maintain.
+
+## Data source
+
+A very common pattern to solve these problems is to use a centralized data source. A data source is an abstraction layer that sits between the data grid and the server. It provides a simple interface to the data grid to fetch data and update it. It handles a lot of the complexities related to server side data fetching. We will talk more about the data source in the next section.
 
 :::warning
 
@@ -8,15 +83,15 @@ This feature is still <b>under development</b> and the information shared on thi
 
 :::
 
-## Overview
+### Overview
 
-The Data Grid already supports server-side data fetching. In order to make it more powerful and simple to use, we provide a data source interface that you can implement with your existing data fetching logic.
+The Data Grid already supports manual server-side data fetching for features like sorting, filtering, etc. In order to make it more powerful and simple to use, we provide a data source interface that you can implement with your existing data fetching logic.
 
-The datasource will work with all the major data grid features which require server-side data fetching out , such as sorting, filtering, pagination, and grouping.
+The datasource will work with all the major data grid features which require server-side data fetching such as sorting, filtering, pagination, grouping, etc.
 
-## Working
+### Usage
 
-The data grid server-side data source has an initial set of required methods that you need to implement. The data grid will call these methods when it needs to fetch data.
+The data grid server-side data source has an initial set of required methods that you need to implement. The data grid will call these methods internally when the data is required for a specific page.
 
 ```tsx
 interface DataSource {
@@ -34,7 +109,7 @@ interface DataSource {
 }
 ```
 
-Here's how you can configure the data grid to use your data source with most basic configuration:
+Here's how the code will look like for the above example:
 
 ```tsx
 const myCustomDataSource = {
@@ -56,10 +131,15 @@ const myCustomDataSource = {
 <DataGridPro
   columns={columns}
   dataSource={myCustomDataSource}
+  pagination
 />
 ```
 
-### Loading data
+Not only the code has been reduced to less than 50%, it has removed the hassle of managing controlled states and data fetching logic.
+
+On top of that, the data source will also handle a lot of other aspects like caching and deduping of requests.
+
+#### Loading data
 
 The method `dataSource.getRows` will be called with the `GetRowsParams` object whenever some data from the server is needed. This object contains all the information that you need to fetch the data from the server.
 
@@ -92,11 +172,11 @@ interface GetRowsResponse {
 }
 ```
 
-### Updating data
+#### Updating data
 
 If provided, the method `dataSource.updateRow` will be called with the `GridRowModel` object whenever the user edits a row. This method is optional and you can skip it if you don't need to update the data on the server. It will work in a similar way as the `processRowUpdate` prop.
 
-### Data grid props
+#### Data grid props
 
 These data grid props will work with the server-side data source:
 
@@ -128,7 +208,7 @@ Props related to grouped data (`treeData` and `rowGrouping`):
 
   Will be used by the grid to determine the number of children of a row on server
 
-### Existing server-side features
+#### Existing server-side features
 
 The server-side `dataSource` will change a bit the way existing server-side features work. Whenever a valid data source is passed the features `filtering`, `sorting`, `pagination` will automatically be set to `server`.
 
@@ -142,13 +222,15 @@ However, if for some reason, you want to explicitly work one or more of these fe
 />
 ```
 
-### Caching
+#### Caching
 
 The data grid will cache the data it receives from the server. This means that if the user navigates to a page that has already been fetched, the grid will not call the `getRows` function again. This is to avoid unnecessary calls to the server.
 
-By default, the data grid will use the tanstack react-query library to cache the data. A `QueryClient` is created internally and used with the data source. You can also pass your own instance of `QueryClient` in order to have access to the cached data outside the data grid. You can also use this client to invalidate the cache when you need to.
+By default, the data grid will use the tanstack query library to cache the data. A `QueryClient` will be created internally and used with the data source. You can also pass your own instance of `QueryClient` with a optional custom configuration and use it to play with the cached data. You can also use this client to invalidate the cache when you need to.
 
-In order to access the current keys for the `QueryClient`, you can wrap the application into the `DataSourceProvider`.
+**Cache key sharing**:
+
+In order to subscribe to the new additions of the keys to the `QueryClient`, you can wrap the application into the `DataSourceProvider`.
 
 ```tsx
 <DataSourceProvider>

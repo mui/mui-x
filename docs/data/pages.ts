@@ -94,6 +94,11 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/accessibility' },
       { pathname: '/x/react-data-grid/performance' },
       {
+        pathname: '/x/react-data-grid/server-side-data',
+        title: 'Server-side data 🚧',
+        plan: 'pro',
+      },
+      {
         pathname: '/x/react-data-grid-group-pivot',
         title: 'Group & Pivot',
         plan: 'pro',
