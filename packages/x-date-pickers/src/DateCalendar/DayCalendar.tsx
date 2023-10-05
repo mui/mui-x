@@ -159,7 +159,7 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
 }));
 
 const PickersCalendarWeekNumberLabel = styled(Typography, {
-  name: 'MuiDayPicker',
+  name: 'MuiDayCalendar',
   slot: 'WeekNumberLabel',
   overridesResolver: (_, styles) => styles.weekNumberLabel,
 })(({ theme }) => ({
@@ -174,7 +174,7 @@ const PickersCalendarWeekNumberLabel = styled(Typography, {
 }));
 
 const PickersCalendarWeekNumber = styled(Typography, {
-  name: 'MuiDayPicker',
+  name: 'MuiDayCalendar',
   slot: 'WeekNumber',
   overridesResolver: (_, styles) => styles.weekNumber,
 })(({ theme }) => ({

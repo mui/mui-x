@@ -48,7 +48,6 @@
 /:lang/x/api/date-pickers/clock-picker/ /:lang/x/api/date-pickers/time-clock/ 301
 /:lang/x/* /x/:splat 301
 # 2023
-/x/whats-new/ https://mui.com/blog/mui-x-v6/ 301
 /x/api/date-pickers/calendar-picker/ /x/api/date-pickers/date-calendar/ 301
 /x/api/date-pickers/calendar-picker-skeleton/ /x/api/date-pickers/day-calendar-skeleton/ 301
 /x/api/date-pickers/month-picker/ /x/api/date-pickers/month-calendar/ 301
