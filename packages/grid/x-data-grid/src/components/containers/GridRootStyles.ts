@@ -151,9 +151,9 @@ export const GridRootStyles = styled('div', {
       },
     },
     [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
-      {
-        borderBottomColor: 'transparent',
-      },
+    {
+      borderBottomColor: 'transparent',
+    },
     [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
       lineHeight: null,
@@ -161,11 +161,10 @@ export const GridRootStyles = styled('div', {
       boxSizing: 'border-box',
     },
     [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
-      outline: `solid ${
-        theme.vars
+      outline: `solid ${theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.5)`
           : alpha(theme.palette.primary.main, 0.5)
-      } 1px`,
+        } 1px`,
       outlineWidth: 1,
       outlineOffset: -1,
     },
@@ -183,17 +182,17 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
     },
     [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}, & .${gridClasses['columnHeader--filtered']} .${gridClasses.iconButtonContainer}`]:
-      {
-        visibility: 'visible',
-        width: 'auto',
-      },
+    {
+      visibility: 'visible',
+      width: 'auto',
+    },
     [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}) .${gridClasses.sortIcon}`]:
-      {
-        opacity: 0,
-        transition: theme.transitions.create(['opacity'], {
-          duration: theme.transitions.duration.shorter,
-        }),
-      },
+    {
+      opacity: 0,
+      transition: theme.transitions.create(['opacity'], {
+        duration: theme.transitions.duration.shorter,
+      }),
+    },
     [`& .${gridClasses.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -215,15 +214,15 @@ export const GridRootStyles = styled('div', {
       boxSizing: 'border-box',
     },
     [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']} .${gridClasses.columnHeaderTitleContainer}`]:
-      {
-        borderBottom: `none`,
-      },
+    {
+      borderBottom: `none`,
+    },
     [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']}`]:
-      {
-        borderBottomWidth: '1px',
-        borderBottomStyle: 'solid',
-        boxSizing: 'border-box',
-      },
+    {
+      borderBottomWidth: '1px',
+      borderBottomStyle: 'solid',
+      boxSizing: 'border-box',
+    },
     [`& .${gridClasses.headerFilterRow}`]: {
       borderTop: `1px solid ${borderColor}`,
     },
@@ -237,19 +236,19 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
     },
     [`& .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderDraggableContainer}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderTitleContainer}`]:
-      {
-        flexDirection: 'row-reverse',
-      },
+    {
+      flexDirection: 'row-reverse',
+    },
     [`& .${gridClasses['columnHeader--alignCenter']} .${gridClasses.menuIcon}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}`]:
-      {
-        marginRight: 'auto',
-        marginLeft: -6,
-      },
+    {
+      marginRight: 'auto',
+      marginLeft: -6,
+    },
     [`& .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}`]:
-      {
-        marginRight: 'auto',
-        marginLeft: -10,
-      },
+    {
+      marginRight: 'auto',
+      marginLeft: -10,
+    },
     [`& .${gridClasses['columnHeader--moving']}`]: {
       backgroundColor: (theme.vars || theme).palette.action.hover,
     },
@@ -266,9 +265,9 @@ export const GridRootStyles = styled('div', {
       [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
       [`& .${gridClasses.columnHeader}:hover`]: columnHeaderStyles,
       [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]:
-        {
-          opacity: 0.5,
-        },
+      {
+        opacity: 0.5,
+      },
     },
     '@media (hover: none)': {
       [`& .${gridClasses.columnHeaders}`]: columnHeadersStyles,
@@ -334,9 +333,9 @@ export const GridRootStyles = styled('div', {
                 ${theme.vars.palette.action.hoverOpacity}
               ))`
             : alpha(
-                theme.palette.primary.main,
-                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-              ),
+              theme.palette.primary.main,
+              theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+            ),
           // Reset on touch devices, it doesn't add specificity
           '@media (hover: none)': {
             backgroundColor: theme.vars
@@ -356,13 +355,12 @@ export const GridRootStyles = styled('div', {
           : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
         '&:hover, &.Mui-hovered': {
           backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${
-                theme.vars.palette.action.selectedOpacity + theme.palette.action.hoverOpacity
-              })`
+            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity + theme.palette.action.hoverOpacity
+            })`
             : alpha(
-                theme.palette.primary.main,
-                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-              ),
+              theme.palette.primary.main,
+              theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+            ),
           // Reset on touch devices, it doesn't add specificity
           '@media (hover: none)': {
             backgroundColor: theme.vars

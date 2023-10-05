@@ -1,12 +1,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled, SxProps, Theme } from '@mui/system';
+import { SxProps, Theme } from '@mui/system';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridDimensions } from '../../hooks/features/dimensions/gridDimensionsApi';
+import styled from '../../styles/styled';
 
 type OwnerState = DataGridProcessedProps &
   Pick<GridColumnHeadersInnerProps, 'isDragging'> & { hasScrollX: GridDimensions['hasScrollX'] };

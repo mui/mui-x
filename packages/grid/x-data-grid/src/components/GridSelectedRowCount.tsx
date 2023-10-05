@@ -2,11 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled, SxProps, Theme, useTheme } from '@mui/system';
+import { SxProps, Theme } from '@mui/system';
+
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
+import styled from '../styles/styled';
 
 interface SelectedRowCountProps {
   selectedRowCount: number;
@@ -54,19 +56,11 @@ const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCou
     const ownerState = useGridRootProps();
     const classes = useUtilityClasses(ownerState);
     const rowSelectedText = apiRef.current.getLocaleText('footerRowSelected')(selectedRowCount);
-    const theme: any = useTheme();
-    const themeId = React.useMemo(() => {
-      if (Object.keys(theme).length === 1) {
-        return Object.keys(theme)[0];
-      }
-      return undefined;
-    }, [theme]);
     return (
       <GridSelectedRowCountRoot
         ref={ref}
         className={clsx(classes.root, className)}
         ownerState={ownerState}
-        theme={themeId ? theme[themeId] || theme : theme}
         {...other}
       >
         {rowSelectedText}
