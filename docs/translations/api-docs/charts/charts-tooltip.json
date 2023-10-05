@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "axisContent": {
-      "description": "Component to override the tooltip content when triger is set to &#39;axis&#39;. * @deprecated Use slots.axisContent instead",
+      "description": "Component to override the tooltip content when triger is set to &#39;axis&#39;.",
       "deprecated": "",
       "typeDescriptions": {}
     },

@@ -149,7 +149,7 @@ ChartsTooltip.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Component to override the tooltip content when triger is set to 'axis'.
-   * * @deprecated Use slots.axisContent instead
+   * @deprecated Use slots.axisContent instead
    */
   axisContent: PropTypes.elementType,
   /**
