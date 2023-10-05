@@ -128,7 +128,20 @@ export const GridRootStyles = styled('div', {
     '--unstable_DataGrid-overlayBackground': theme.vars
       ? `rgba(${theme.vars.palette.background.defaultChannel} / ${theme.vars.palette.action.disabledOpacity})`
       : alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
+    '--unstable_DataGrid-containerBackground': theme.vars
+      ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.8)`
+      : alpha(theme.palette.background.default, 0.8),
+    '--unstable_DataGrid-pinnedBackground':
+      // FIXME: Adapt for light & dark themes
+      lighten(
+        theme.vars
+          ? theme.vars.palette.background.defaultChannel
+          : theme.palette.background.default,
+        0.1,
+      ),
     '--DataGrid-cellOffsetMultiplier': 2,
+    '--private_DataGrid-offsetTop': `0px`,
+    '--private_DataGrid-offsetLeft': `0px`,
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
@@ -355,6 +368,11 @@ export const GridRootStyles = styled('div', {
         },
       },
     },
+    [`& .${gridClasses['container--top']}, & .${gridClasses['container--bottom']}`]: {
+      '[role=row]': {
+        background: 'var(--unstable_DataGrid-containerBackground)',
+      },
+    },
     [`& .${gridClasses.cell}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -485,6 +503,15 @@ export const GridRootStyles = styled('div', {
       [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
         display: 'flex',
       },
+    },
+    [`& .${gridClasses['cell--pinnedLeft']}, & .${gridClasses['cell--pinnedRight']}`]: {
+      position: 'sticky',
+      zIndex: 3,
+      background: 'var(--unstable_DataGrid-pinnedBackground)',
+      transform: 'translateX(calc(-1 * var(--private_DataGrid-offsetLeft)))',
+    },
+    [`& .${gridClasses.pinnedRows}`]: {
+      transform: 'translateX(var(--private_DataGrid-offsetLeft))',
     },
     [`& .${gridClasses.treeDataGroupingCell}`]: {
       display: 'flex',

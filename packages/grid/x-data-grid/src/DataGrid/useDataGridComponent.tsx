@@ -34,7 +34,10 @@ import { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection
 import { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 import { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../hooks/features/events/useGridEvents';
-import { dimensionsStateInitializer, useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
+import {
+  dimensionsStateInitializer,
+  useGridDimensions,
+} from '../hooks/features/dimensions/useGridDimensions';
 import { rowsMetaStateInitializer, useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';

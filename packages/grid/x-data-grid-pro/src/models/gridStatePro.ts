@@ -8,6 +8,7 @@ import type {
   GridColumnReorderState,
   GridColumnResizeState,
   GridColumnPinningState,
+  GridPinnedColumns,
 } from '../hooks';
 
 /**
@@ -24,6 +25,6 @@ export interface GridStatePro extends GridStateCommunity {
  * The initial state of `DataGridPro`.
  */
 export interface GridInitialStatePro extends GridInitialStateCommunity {
-  pinnedColumns?: GridColumnPinningState;
+  pinnedColumns?: GridPinnedColumns;
   detailPanel?: GridDetailPanelInitialState;
 }

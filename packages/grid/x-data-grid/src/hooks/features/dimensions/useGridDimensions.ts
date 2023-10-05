@@ -55,18 +55,17 @@ const hasScroll = ({
   return { hasScrollX, hasScrollY };
 };
 
-type RootProps =
-  Pick<
-    DataGridProcessedProps,
-    | 'onResize'
-    | 'scrollbarSize'
-    | 'pagination'
-    | 'paginationMode'
-    | 'autoHeight'
-    | 'getRowHeight'
-    | 'rowHeight'
-    | 'columnHeaderHeight'
-  >;
+type RootProps = Pick<
+  DataGridProcessedProps,
+  | 'onResize'
+  | 'scrollbarSize'
+  | 'pagination'
+  | 'paginationMode'
+  | 'autoHeight'
+  | 'getRowHeight'
+  | 'rowHeight'
+  | 'columnHeaderHeight'
+>;
 
 export type GridDimensionsState = GridDimensions;
 
@@ -105,10 +104,10 @@ export function useGridDimensions(
   const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
   const previousSize = React.useRef<ElementSize>();
 
-  const getDimensions = () => apiRef.current.state.dimensions ?? null;
+  const getDimensions = () => apiRef.current.state.dimensions;
 
   const setDimensions = useEventCallback((dimensions: GridDimensions) => {
-    apiRef.current.setState(state => ({ ...state, dimensions }))
+    apiRef.current.setState((state) => ({ ...state, dimensions }));
   });
 
   const resize = React.useCallback(() => {
@@ -175,7 +174,7 @@ export function useGridDimensions(
     } else if (!columnsTotalWidth || !rootElement) {
       scrollBarSize = 0;
     } else {
-      scrollBarSize = measureScrollbarSize(rootElement)
+      scrollBarSize = measureScrollbarSize(rootElement);
     }
 
     let viewportOuterSize: ElementSize;
@@ -333,5 +332,5 @@ function measureScrollbarSize(rootElement: Element) {
   rootElement.appendChild(scrollDiv);
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
   rootElement.removeChild(scrollDiv);
-  return size
+  return size;
 }

@@ -26,23 +26,17 @@ export function GridPinnedRows({ position, virtualScroller, ...other }: GridPinn
   const classes = useUtilityClasses();
   const apiRef = useGridPrivateApiContext();
 
-  const mainRowsLength = virtualScroller.renderContext.lastRowIndex - virtualScroller.renderContext.firstRowIndex;
+  const mainRowsLength =
+    virtualScroller.renderContext.lastRowIndex - virtualScroller.renderContext.firstRowIndex;
 
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedRows = virtualScroller.getRows({
-    renderContext: virtualScroller.renderContext,
     rows: pinnedRowsData[position],
     rowIndexOffset: position === 'top' ? 0 : pinnedRowsData.top.length + mainRowsLength,
-    position: 'center'
   });
 
-
   return (
-    <Element
-      {...other}
-      className={clsx(classes.root, other.className)}
-      role="presentation"
-    >
+    <Element {...other} className={clsx(classes.root, other.className)} role="presentation">
       {pinnedRows}
     </Element>
   );

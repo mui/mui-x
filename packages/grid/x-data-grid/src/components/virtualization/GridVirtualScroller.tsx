@@ -68,7 +68,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const virtualScroller = useGridVirtualScroller({
       ref,
     });
-    const { getRootProps, getContentProps, getRenderZoneProps, getRows } = virtualScroller;
+    const { getRootProps, getContentProps, getRenderZoneProps } = virtualScroller;
 
     const contentProps = getContentProps();
 
@@ -77,15 +77,17 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
         <GridTopContainer>
           <GridHeaders contentProps={contentProps} />
           <GridOverlays />
-          <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
+          <rootProps.slots.pinnedRows virtualScroller={virtualScroller} position="top" />
         </GridTopContainer>
+
         <GridVirtualScrollerContent {...contentProps}>
           <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
-            {getRows()}
+            <rootProps.slots.mainRows virtualScroller={virtualScroller} />
           </GridVirtualScrollerRenderZone>
         </GridVirtualScrollerContent>
+
         <GridBottomContainer>
-          <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+          <rootProps.slots.pinnedRows virtualScroller={virtualScroller} position="bottom" />
         </GridBottomContainer>
       </Root>
     );

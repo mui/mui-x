@@ -81,6 +81,14 @@ export interface GridClasses {
    */
   'cell--rangeRight': string;
   /**
+   * Styles applied to the cell element if it is pinned to the left.
+   */
+  'cell--pinnedLeft': string;
+  /**
+   * Styles applied to the cell element if it is pinned to the right.
+   */
+  'cell--pinnedRight': string;
+  /**
    * Styles applied to the cell element.
    */
   cell: string;
@@ -224,6 +232,14 @@ export interface GridClasses {
    * Styles applied to the columns panel row element.
    */
   columnsPanelRow: string;
+  /**
+   * Styles applied to the top container.
+   */
+  'container--top': string;
+  /**
+   * Styles applied to the bottom container.
+   */
+  'container--bottom': string;
   /**
    * Styles applied to the detail panel element.
    */
@@ -562,6 +578,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--rangeBottom',
   'cell--rangeLeft',
   'cell--rangeRight',
+  'cell--pinnedLeft',
+  'cell--pinnedRight',
   'cell',
   'cellContent',
   'cellCheckbox',
@@ -597,6 +615,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnSeparator',
   'columnsPanel',
   'columnsPanelRow',
+  'container--top',
+  'container--bottom',
   'detailPanel',
   'detailPanels',
   'detailPanelToggleCell',

@@ -27,7 +27,6 @@ export function useGridVirtualization(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: RootProps,
 ): void {
-
   /*
    * API METHODS
    */

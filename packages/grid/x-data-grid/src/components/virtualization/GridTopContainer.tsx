@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 
 const useUtilityClasses = () => {
   const slots = {
@@ -19,8 +19,7 @@ const StyledDiv = styled('div', {
   position: 'sticky',
   top: 0,
   zIndex: 2,
-  // FIXME: remove
-  background: 'rgba(127, 127, 127, 0.5)',
+  width: '100%',
 });
 
 export const GridTopContainer = React.forwardRef<
@@ -33,7 +32,7 @@ export const GridTopContainer = React.forwardRef<
     <StyledDiv
       ref={ref}
       {...props}
-      className={clsx(classes.root, props.className)}
+      className={clsx(classes.root, props.className, gridClasses['container--top'])}
       role="presentation"
     />
   );

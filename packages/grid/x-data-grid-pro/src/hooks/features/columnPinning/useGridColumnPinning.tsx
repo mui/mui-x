@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, Theme } from '@mui/material/styles';
 import {
+  gridColumnLookupSelector,
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
@@ -12,21 +13,30 @@ import {
   gridColumnFieldsSelector,
 } from '@mui/x-data-grid';
 import {
+  useOnMount,
   useGridRegisterPipeProcessor,
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
+import { GridInitialStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   GridColumnPinningApi,
   GridPinnedPosition,
   GridPinnedColumns,
+  GridColumnPinningState,
 } from './gridColumnPinningInterface';
-import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
-import { filterColumns } from '../../../components/DataGridProVirtualScroller';
+import {
+  gridPinnedColumnsSelector,
+  gridVisiblePinnedColumnsSelector,
+} from './gridColumnPinningSelector';
+
+const EMPTY_VISIBLE = {
+  left: [],
+  right: [],
+};
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
@@ -41,20 +51,54 @@ export const columnPinningStateInitializer: GridStateInitializer<
   } else if (props.pinnedColumns) {
     model = props.pinnedColumns;
   } else if (props.initialState?.pinnedColumns) {
-    model = props.initialState?.pinnedColumns;
+    model = props.initialState.pinnedColumns;
   } else {
     model = {};
   }
 
+  const pinnedColumns: GridColumnPinningState = {
+    model,
+    visible: EMPTY_VISIBLE,
+  };
+
   return {
     ...state,
-    pinnedColumns: model,
+    pinnedColumns,
   };
 };
 
-const mergeStateWithPinnedColumns =
-  (pinnedColumns: GridPinnedColumns) =>
-  (state: GridStatePro): GridStatePro => ({ ...state, pinnedColumns });
+function deriveState(
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  model: GridPinnedColumns,
+  theme: Theme,
+) {
+  const columnLookup = gridColumnLookupSelector(apiRef);
+  const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
+  const visiblePinnedFields = filterVisibleColumns(
+    model,
+    visibleColumnFields,
+    theme.direction === 'rtl',
+  );
+  const visible = {
+    left: visiblePinnedFields.left.map((field) => columnLookup[field]),
+    right: visiblePinnedFields.right.map((field) => columnLookup[field]),
+  };
+  return {
+    model,
+    visible,
+  };
+}
+
+function updateState(
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  model: GridPinnedColumns,
+  theme: Theme,
+) {
+  apiRef.current.setState((state) => ({
+    ...state,
+    pinnedColumns: deriveState(apiRef, model, theme),
+  }));
+}
 
 export const useGridColumnPinning = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
@@ -80,14 +124,12 @@ export const useGridColumnPinning = (
         return initialValue;
       }
 
-      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
-      const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
-        pinnedColumns,
-        visibleColumnFields,
-        theme.direction === 'rtl',
-      );
+      const visiblePinnedColumns = gridVisiblePinnedColumnsSelector(apiRef.current.state);
 
-      if (!params.colIndex || (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0)) {
+      if (
+        !params.colIndex ||
+        (visiblePinnedColumns.left.length === 0 && visiblePinnedColumns.right.length === 0)
+      ) {
         return initialValue;
       }
 
@@ -101,9 +143,10 @@ export const useGridColumnPinning = (
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
       const offsetLeft = columnPositions[params.colIndex];
 
-      const leftPinnedColumnsWidth = columnPositions[leftPinnedColumns.length];
+      const leftPinnedColumnsWidth = columnPositions[visiblePinnedColumns.left.length];
       const rightPinnedColumnsWidth =
-        columnsTotalWidth - columnPositions[columnPositions.length - rightPinnedColumns.length];
+        columnsTotalWidth -
+        columnPositions[columnPositions.length - visiblePinnedColumns.right.length];
 
       const elementBottom = offsetLeft + offsetWidth;
       if (elementBottom - (clientWidth - rightPinnedColumnsWidth) > scrollLeft) {
@@ -116,7 +159,7 @@ export const useGridColumnPinning = (
       }
       return initialValue;
     },
-    [apiRef, pinnedColumns, props.disableColumnPinning, theme.direction],
+    [apiRef, props.disableColumnPinning],
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
@@ -136,30 +179,26 @@ export const useGridColumnPinning = (
 
   const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(
     (initialValue, { targetIndex }) => {
-      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
-      const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
-        pinnedColumns,
-        visibleColumnFields,
-        theme.direction === 'rtl',
-      );
+      const visiblePinnedColumns = gridVisiblePinnedColumnsSelector(apiRef.current.state);
 
-      if (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0) {
+      if (visiblePinnedColumns.left.length === 0 && visiblePinnedColumns.right.length === 0) {
         return initialValue;
       }
 
-      if (leftPinnedColumns.length > 0 && targetIndex < leftPinnedColumns.length) {
+      if (visiblePinnedColumns.left.length > 0 && targetIndex < visiblePinnedColumns.left.length) {
         return false;
       }
 
-      if (rightPinnedColumns.length > 0) {
+      if (visiblePinnedColumns.right.length > 0) {
         const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
-        const firstRightPinnedColumnIndex = visibleColumns.length - rightPinnedColumns.length;
+        const firstRightPinnedColumnIndex =
+          visibleColumns.length - visiblePinnedColumns.right.length;
         return targetIndex >= firstRightPinnedColumnIndex ? false : initialValue;
       }
 
       return initialValue;
     },
-    [apiRef, pinnedColumns, theme.direction],
+    [apiRef],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
@@ -193,7 +232,7 @@ export const useGridColumnPinning = (
     (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
       const newPinnedColumns = context.stateToRestore.pinnedColumns;
       if (newPinnedColumns != null) {
-        apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));
+        updateState(apiRef, newPinnedColumns, theme);
       }
 
       return params;
@@ -266,7 +305,7 @@ export const useGridColumnPinning = (
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
       checkIfEnabled('setPinnedColumns');
-      apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));
+      updateState(apiRef, newPinnedColumns, theme);
       apiRef.current.forceUpdate();
     },
     [apiRef, checkIfEnabled],
@@ -362,7 +401,6 @@ export const useGridColumnPinning = (
       apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns =
         newOrderedFieldsBeforePinningColumns;
     },
-
     [apiRef],
   );
 
@@ -373,4 +411,42 @@ export const useGridColumnPinning = (
       apiRef.current.setPinnedColumns(props.pinnedColumns);
     }
   }, [apiRef, props.pinnedColumns]);
+
+  useOnMount(() => {
+    updateState(apiRef, gridPinnedColumnsSelector(apiRef.current.state), theme);
+  });
 };
+
+function filterVisibleColumns(
+  pinnedColumns: GridPinnedColumns,
+  columns: string[],
+  invert?: boolean,
+) {
+  if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
+    return EMPTY_VISIBLE;
+  }
+
+  if (pinnedColumns.left?.length === 0 && pinnedColumns.right?.length === 0) {
+    return EMPTY_VISIBLE;
+  }
+
+  const filter = (newPinnedColumns: string[] | undefined, remainingColumns: string[]) => {
+    if (!Array.isArray(newPinnedColumns)) {
+      return [];
+    }
+    return newPinnedColumns.filter((field) => remainingColumns.includes(field));
+  };
+
+  const leftPinnedColumns = filter(pinnedColumns.left, columns);
+  const columnsWithoutLeftPinnedColumns = columns.filter(
+    // Filter out from the remaining columns those columns already pinned to the left
+    (field) => !leftPinnedColumns.includes(field),
+  );
+  const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
+
+  if (invert) {
+    return { left: rightPinnedColumns, right: leftPinnedColumns };
+  }
+
+  return { left: leftPinnedColumns, right: rightPinnedColumns };
+}

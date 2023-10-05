@@ -28,7 +28,7 @@ import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFi
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
-  dimensions: GridDimensionsState,
+  dimensions: GridDimensionsState;
   rows: GridRowsState;
   visibleRowsLookup: GridVisibleRowsLookupState;
   rowsMeta: GridRowsMetaState;

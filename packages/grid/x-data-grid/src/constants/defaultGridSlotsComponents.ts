@@ -13,9 +13,10 @@ import {
   GridColumnHeaderFilterIconButton,
   GridRowCount,
 } from '../components';
-import { GridCellV7 } from '../components/cell/GridCell';
+import { GridCell } from '../components/cell/GridCell';
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
+import { GridMainRows } from '../components/GridMainRows';
 import { GridPinnedRows } from '../components/GridPinnedRows';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import materialSlots from '../material';
@@ -24,7 +25,7 @@ import materialSlots from '../material';
 // Remove then need to call `uncapitalizeObjectKeys`.
 export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...materialSlots,
-  Cell: GridCellV7,
+  Cell: GridCell,
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
@@ -32,6 +33,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   Footer: GridFooter,
   FooterRowCount: GridRowCount,
   Toolbar: null,
+  MainRows: GridMainRows,
   PinnedRows: GridPinnedRows,
   PreferencesPanel: GridPreferencesPanel,
   LoadingOverlay: GridLoadingOverlay,

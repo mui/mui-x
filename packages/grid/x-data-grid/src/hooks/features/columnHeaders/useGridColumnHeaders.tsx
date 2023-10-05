@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled, useTheme } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
@@ -12,10 +11,7 @@ import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import { getFirstColumnIndexToRender, getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
-import {
-  areRenderContextsEqual,
-  getRowIndexesToRender,
-} from '../virtualization/useGridVirtualScroller';
+import { getIndexesToRender } from '../virtualization/useGridVirtualScroller';
 import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
@@ -135,7 +131,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const updateInnerPosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
-      const [firstRowToRender, lastRowToRender] = getRowIndexesToRender({
+      const [firstRowToRender, lastRowToRender] = getIndexesToRender({
         firstIndex: nextRenderContext.firstRowIndex,
         lastIndex: nextRenderContext.lastRowIndex,
         minFirstIndex: 0,
@@ -214,7 +210,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       return null;
     }
 
-    const [firstRowToRender, lastRowToRender] = getRowIndexesToRender({
+    const [firstRowToRender, lastRowToRender] = getIndexesToRender({
       firstIndex: nextRenderContext.firstRowIndex,
       lastIndex: nextRenderContext.lastRowIndex,
       minFirstIndex: 0,

@@ -58,17 +58,6 @@ interface GridColumnHeadersPinnedColumnHeadersProps {
   showCellVerticalBorder: boolean;
 }
 
-// Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
-const getOverlayAlpha = (elevation: number) => {
-  let alphaValue;
-  if (elevation < 1) {
-    alphaValue = 5.11916 * elevation ** 2;
-  } else {
-    alphaValue = 4.5 * Math.log(elevation + 1) + 2;
-  }
-  return alphaValue / 100;
-};
-
 const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PinnedColumnHeaders',
@@ -86,19 +75,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     boxShadow: theme.shadows[2],
-    backgroundColor: (theme.vars || theme).palette.background.default,
-    ...(theme.vars
-      ? {
-          backgroundImage: theme.vars.overlays?.[2],
-        }
-      : {
-          ...(theme.palette.mode === 'dark' && {
-            backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
-              '#fff',
-              getOverlayAlpha(2),
-            )})`,
-          }),
-        }),
+    backgroundColor: 'var(--unstable_DataGrid-pinnedBackground)',
     ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
     ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
     ...(ownerState.side === GridPinnedPosition.right &&

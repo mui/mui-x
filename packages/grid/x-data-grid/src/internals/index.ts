@@ -6,6 +6,7 @@ export type {
 export { GridVirtualScroller } from '../components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent } from '../components/virtualization/GridVirtualScrollerContent';
 export { GridVirtualScrollerRenderZone } from '../components/virtualization/GridVirtualScrollerRenderZone';
+export type { GridMainRowsProps } from '../components/GridMainRows';
 export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
@@ -109,12 +110,15 @@ export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorti
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
-export { dimensionsStateInitializer, useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
+export {
+  dimensionsStateInitializer,
+  useGridDimensions,
+} from '../hooks/features/dimensions/useGridDimensions';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
 export {
   useGridVirtualScroller,
-  getRowIndexesToRender,
+  getIndexesToRender,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
 export * from '../hooks/features/virtualization';
 

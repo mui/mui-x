@@ -1,9 +1,17 @@
+import { GridStateColDef } from '@mui/x-data-grid/internals';
+
 export interface GridPinnedColumns {
   left?: string[];
   right?: string[];
 }
 
-export type GridColumnPinningState = GridPinnedColumns;
+export type GridColumnPinningState = {
+  model: GridPinnedColumns;
+  visible: {
+    left: GridStateColDef[];
+    right: GridStateColDef[];
+  };
+};
 
 enum GridPinnedPosition {
   left = 'left',
