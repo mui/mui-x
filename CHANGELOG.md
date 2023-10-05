@@ -9,6 +9,7 @@ _Oct 5, 2023_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
+- 🥧 Support interaction with pie chart
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -45,7 +46,8 @@ Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
 ### Charts / `@mui/x-charts@6.0.0-alpha.14`
 
 - [charts] Display cursor pointer for pie chart only if `onClick` is provided (#10551) @giladappsforce
-- [charts] PieChart onClick prop in the series data and demo (#10506) @giladappsforce
+- [charts] Add `onClick` prop to PieChart (#10506) @giladappsforce
+- [charts] Support `slots`/`slotProps` for the tooltip (#10515) @alexfauquette
 
 ### Tree View / `@mui/x-tree-view@6.0.0-beta.1`
 
@@ -56,7 +58,7 @@ Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
 - [docs] Add `DateRangePicker` example with a `Button` trigger (#10485) @LukasTy
 - [docs] Add section about disabling columns panel (#10328) @MBilalShafi
 - [docs] Add section about overriding slots to base concepts (#10421) @noraleonte
-- [docs] Add whats new page listing all release announcements (#9727) @joserodolfofreitas
+- [docs] Add "What's new" page listing all release announcements (#9727) @joserodolfofreitas
 - [docs] Update RTL Support section of the grid localization docs (#10561) @MBilalShafi
 
 ### Core
