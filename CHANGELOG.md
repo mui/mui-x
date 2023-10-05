@@ -63,7 +63,7 @@ Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
 
 ### Core
 
-- [core] Consistent casing with Legal and marketing content @oliviertassinari
+- [core] Fix casing consistency with legal and marketing content @oliviertassinari
 - [core] Revert the link in the priority support ticket description (#10517) @michelengelen
 - [CHANGELOG] Polish image @oliviertassinari
 
