@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled } from '@mui/material/styles';
 import { Popper, PopperProps } from '@mui/base/Popper';
 import { NoSsr } from '@mui/base/NoSsr';
 import { useSlotProps } from '@mui/base/utils';
@@ -75,6 +76,15 @@ const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] 
   return composeClasses(slots, getTooltipUtilityClass, classes);
 };
 
+const ChartsTooltipRoot = styled(Popper, {
+  name: 'MuiChartsTooltip',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})(({ theme }) => ({
+  pointerEvents: 'none',
+  zIndex: theme.zIndex.modal,
+}));
+
 function ChartsTooltip(props: ChartsTooltipProps) {
   const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = props;
 
@@ -89,7 +99,7 @@ function ChartsTooltip(props: ChartsTooltipProps) {
 
   const classes = useUtilityClasses({ classes: props.classes });
 
-  const PopperComponent = slots?.popper ?? Popper;
+  const PopperComponent = slots?.popper ?? ChartsTooltipRoot;
   const popperProps = useSlotProps({
     elementType: PopperComponent,
     externalSlotProps: slotProps?.popper,
@@ -97,7 +107,6 @@ function ChartsTooltip(props: ChartsTooltipProps) {
       open: popperOpen,
       placement: 'right-start' as const,
       anchorEl: generateVirtualElement(mousePosition),
-      style: { pointerEvents: 'none' },
     },
     ownerState: {},
   });
