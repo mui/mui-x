@@ -91,7 +91,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const axisLabelProps = useSlotProps({
     elementType: Label,
-    externalSlotProps: slotProps?.axisTickLabel,
+    externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       textAnchor: 'middle',
       dominantBaseline: 'central',

@@ -90,7 +90,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const axisLabelProps = useSlotProps({
     elementType: Label,
-    externalSlotProps: slotProps?.axisTickLabel,
+    externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       textAnchor: 'middle',
       dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
