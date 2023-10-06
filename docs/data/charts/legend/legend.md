@@ -23,10 +23,10 @@ It can also be moved with the `position: { vertical, horizontal }` property whic
 - `vertical` can be `'top'`, `'middle'`, or `'bottom'`.
 - `horizontal` can be `'left'`, `'middle'`, or `'right'`.
 
-You can add some space to a given `position` with a `padding` property which can be either a number or an object `{ top, bottom, left, right }`.
+You can add spacing to a given `position` with the `padding` property, which can be either a number or an object `{ top, bottom, left, right }`.
 This `padding` will add space between the SVG borders and the legend.
 
-Defaults are such that the legend is placed on top of the charts.
+By default, the legend is placed above the charts.
 
 {{"demo": "LegendPositionNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
