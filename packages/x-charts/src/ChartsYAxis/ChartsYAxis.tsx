@@ -8,7 +8,7 @@ import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { Text } from '../internals/components/Text';
+import { ChartsText } from '../internals/components/ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
@@ -74,8 +74,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const Line = slots?.axisLine ?? 'line';
   const Tick = slots?.axisTick ?? 'line';
-  const TickLabel = slots?.axisTickLabel ?? Text;
-  const Label = slots?.axisLabel ?? Text;
+  const TickLabel = slots?.axisTickLabel ?? ChartsText;
+  const Label = slots?.axisLabel ?? ChartsText;
 
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,

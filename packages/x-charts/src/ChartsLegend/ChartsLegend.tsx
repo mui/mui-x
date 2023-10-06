@@ -9,7 +9,7 @@ import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider
 import { ChartsLegendClasses, getChartsLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { LegendParams } from '../models/seriesType/config';
-import { Text, getWordsByLines } from '../internals/components/Text';
+import { ChartsText, getWordsByLines } from '../internals/components/ChartsText';
 import { CardinalDirections } from '../models/layout';
 
 export interface ChartsLegendSlotsComponent {
@@ -327,7 +327,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
               height={itemMarkHeight}
               fill={color}
             />
-            <Text
+            <ChartsText
               style={labelStyle}
               dominantBaseline="central"
               textAnchor="start"

@@ -16,7 +16,7 @@ interface GetWordsByLinesParams {
    */
   needsComputation?: boolean;
 }
-export interface TextProps
+export interface ChartsTextProps
   extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width' | 'ref'>,
     GetWordsByLinesParams {
   /**
@@ -34,7 +34,7 @@ export function getWordsByLines({ style, needsComputation, text }: GetWordsByLin
   }));
 }
 
-export function Text(props: TextProps) {
+export function ChartsText(props: ChartsTextProps) {
   const {
     x,
     y,
