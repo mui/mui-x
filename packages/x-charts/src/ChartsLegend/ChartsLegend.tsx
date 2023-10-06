@@ -83,27 +83,27 @@ export interface LegendRendererProps
   drawingArea: DrawingArea;
   classes: Record<'mark' | 'series' | 'root', string>;
   /**
-   * Style applied to legend labels
+   * Style applied to legend labels.
    * @default theme.
    */
   labelStyle?: React.CSSProperties;
   /**
-   * Width of the item mark (in px)
+   * Width of the item mark (in px).
    * @default 20
    */
   itemMarkWidth?: number;
   /**
-   * Height of the item mark (in px)
+   * Height of the item mark (in px).
    * @default 20
    */
   itemMarkHeight?: number;
   /**
-   * Space between the mark and the label (in px)
+   * Space between the mark and the label (in px).
    * @default 5
    */
   markGap?: number;
   /**
-   * Space between two legend items (in px)
+   * Space between two legend items (in px).
    * @default 10
    */
   itemGap?: number;
@@ -215,7 +215,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
 
       if (direction === 'row') {
         if (x + itemSpace.innerWidth > availableWidth) {
-          // This legend item will create overflow along the x axis, so we start a new row.
+          // This legend item would create overflow along the x-axis, so we start a new row.
           x = 0;
           y += rowMaxHeight[rowIndex];
           rowIndex += 1;
@@ -235,7 +235,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
 
       if (direction === 'column') {
         if (y + itemSpace.innerHeight > availableHeight) {
-          // This legend item will create overflow along the y axis, so we start a new column.
+          // This legend item would create overflow along the y-axis, so we start a new column.
           x = totalWidthUsed + itemGap;
           y = 0;
           rowIndex = 0;
@@ -256,7 +256,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
       return rep;
     });
 
-    // Move the legend accroding to padding and position
+    // Move the legend according to padding and position
     let gapX = 0;
     let gapY = 0;
     switch (position.horizontal) {
