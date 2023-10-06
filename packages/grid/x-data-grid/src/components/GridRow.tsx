@@ -476,6 +476,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     >
       {leftCells}
       {cells}
+      {rightCells.length > 0 && <div role="presentation" style={{ flex: '1' }} />}
       {rightCells}
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
     </div>

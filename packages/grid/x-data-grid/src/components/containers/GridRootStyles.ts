@@ -336,7 +336,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses.row}`]: {
       display: 'flex',
-      width: 'fit-content',
+      width: 'var(--private_DataGrid--columnsTotalWidth, fit-content)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
       '&:hover, &.Mui-hovered': {
         backgroundColor: (theme.vars || theme).palette.action.hover,
@@ -511,10 +511,9 @@ export const GridRootStyles = styled('div', {
       position: 'sticky',
       zIndex: 3,
       background: 'var(--unstable_DataGrid-pinnedBackground)',
-      transform: 'translateX(calc(-1 * var(--private_DataGrid-offsetLeft)))',
     },
-    [`& .${gridClasses.pinnedRows}`]: {
-      transform: 'translateX(var(--private_DataGrid-offsetLeft))',
+    [`& .${gridClasses.cell}:not(.${gridClasses['cell--pinnedLeft']}):not(.${gridClasses['cell--pinnedRight']})`]: {
+      transform: 'translate3d(var(--private_DataGrid-offsetLeft), 0, 0)',
     },
     [`& .${gridClasses.treeDataGroupingCell}`]: {
       display: 'flex',

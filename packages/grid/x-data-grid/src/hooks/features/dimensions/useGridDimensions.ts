@@ -95,11 +95,13 @@ export function useGridDimensions(
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
+  const rootElement = apiRef.current.rootElementRef?.current;
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
   const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
@@ -260,6 +262,10 @@ export function useGridDimensions(
       apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
     }
   }, [apiRef, savedSize, updateDimensions]);
+
+  useEnhancedEffect(() => {
+    rootElement?.style.setProperty('--private_DataGrid--columnsTotalWidth', `${columnsTotalWidth}px`);
+  }, [rootElement, columnsTotalWidth]);
 
   const isFirstSizing = React.useRef(true);
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
