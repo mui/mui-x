@@ -32,10 +32,9 @@ Defaults are such that the legend is placed on top of the charts.
 
 ### Dimensions
 
-Inside the legend, the mark can be customized with `itemMarkWidth` and `itemMarkHeight` which are the width/height in pixels.
+Inside the legend, you can customize the pixel value of the width and height of the mark with the `itemMarkWidth` and `itemMarkHeight` props.
 
-You also have access to the `markGap` which is the gap between the mark and its label given in pixels.
-And `itemGap` which is the gap between two legend items.
+You can also access the `markGap` prop to change the gap between the mark and its label, or the  `itemGap` to change the gap between two legend items. Both props impact the values defined in pixels.
 
 ### Label styling
 
