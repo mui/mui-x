@@ -153,11 +153,11 @@ export const mergeStateWithFilterModel =
     filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
   });
 
-const removeDiacritics = (str: unknown) => {
-  if (typeof str === 'string') {
-    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const removeDiacritics = (value: unknown) => {
+  if (typeof value === 'string') {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
-  return str;
+  return value;
 };
 
 const getFilterCallbackFromItem = (
