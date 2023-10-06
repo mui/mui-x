@@ -100,6 +100,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         transform: `rotate(${positionSigne * 90}deg)`,
         transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
       },
+      className: classes.label,
     } as const,
     ownerState: {},
   });

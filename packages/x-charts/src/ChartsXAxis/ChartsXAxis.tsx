@@ -85,6 +85,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: { fontSize: tickFontSize },
       className: classes.tickLabel,
     } as const,
+    className: classes.tickLabel,
     ownerState: {},
   });
 
@@ -98,6 +99,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         fontSize: labelFontSize,
         transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
       },
+      className: classes.label,
     } as const,
     ownerState: {},
   });
