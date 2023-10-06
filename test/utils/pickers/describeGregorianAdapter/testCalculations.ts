@@ -169,6 +169,14 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     setDefaultTimezone(undefined);
   });
 
+  it.only('should not mix Europe/London and UTC in winter', () => {
+    if (!adapter.isTimezoneCompatible) {
+      return;
+    }
+    const dateWithZone = adapter.dateWithTimezone('2023-10-30T11:44:00.000Z', 'Europe/London');
+    expect(adapter.getTimezone(dateWithZone)).to.equal('Europe/London');
+  });
+
   it('Method: setTimezone', () => {
     if (adapter.isTimezoneCompatible) {
       const test = (timezone: PickersTimezone) => {
