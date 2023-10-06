@@ -169,7 +169,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     setDefaultTimezone(undefined);
   });
 
-  it.only('should not mix Europe/London and UTC in winter', () => {
+  it('should not mix Europe/London and UTC in winter', () => {
     if (!adapter.isTimezoneCompatible) {
       return;
     }
