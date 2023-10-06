@@ -142,6 +142,8 @@ export const useDesktopPicker = <
     unknown
   >['slots'] = {
     textField: slots.textField,
+    clearIcon: slots.clearIcon,
+    clearButton: slots.clearButton,
     ...fieldProps.slots,
   };
 

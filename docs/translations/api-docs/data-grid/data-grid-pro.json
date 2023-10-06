@@ -26,6 +26,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "autosizeOnMount": {
+      "description": "If <code>true</code>, columns are autosized after the datagrid is mounted.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "autosizeOptions": {
+      "description": "The options for autosize when user-initiated.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "cellModesModel": {
       "description": "Controls the modes of the cells.",
       "deprecated": "",
@@ -98,6 +108,11 @@
     },
     "detailPanelExpandedRowIds": {
       "description": "The row ids to show the detail panel.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "disableAutosize": {
+      "description": "If <code>true</code>, column autosizing on header separator double-click is disabled.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -869,6 +884,10 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "<code>autoHeight={true}</code>"
+    },
+    "autosizing": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element while it is being autosized"
     },
     "booleanCell": {
       "description": "Styles applied to {{nodeName}}.",

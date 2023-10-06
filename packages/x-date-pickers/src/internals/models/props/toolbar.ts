@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import { DateOrTimeViewWithMeridiem } from '../common';
 
 export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
@@ -41,4 +43,6 @@ export interface ExportedBaseToolbarProps {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden?: boolean;
+
+  sx?: SxProps<Theme>;
 }

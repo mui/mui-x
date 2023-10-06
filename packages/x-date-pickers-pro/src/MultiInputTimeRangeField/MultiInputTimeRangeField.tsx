@@ -75,7 +75,10 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   const { internalProps: timeFieldInternalProps, forwardedProps } =
     splitFieldInternalAndForwardedProps<
       typeof themeProps,
-      keyof Omit<UseTimeRangeFieldProps<any>, 'unstableFieldRef' | 'disabled'>
+      keyof Omit<
+        UseTimeRangeFieldProps<any>,
+        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
+      >
     >(themeProps, 'time');
 
   const {

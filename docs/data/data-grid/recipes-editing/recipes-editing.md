@@ -106,21 +106,6 @@ The following demo implements this behavior.
 
 {{"demo": "SingleClickEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Usage with `@mui/x-date-pickers`
-
-By default, the data grid uses native browser inputs for editing `date` and `dateTime` columns.
-
-While [MUI X Date / Time Pickers](/x/react-date-pickers/getting-started/) are not supported by the data grid out of the box yet, it is easy to integrate them by creating [custom edit components](/x/react-data-grid/editing/#create-your-own-edit-component) and [custom filter operators](/x/react-data-grid/filtering/customization/#create-a-custom-operator).
-
-The example below uses `@mui/x-date-pickers` for both `date` and `dateTime` column types:
-
-{{"demo": "EditingWithDatePickers.js", "bg": "inline", "defaultCodeOpen": false }}
-
-:::warning
-You can change date format by importing different locale (`en-US` locale is used in the example above).
-See [Localization](/x/react-date-pickers/localization/) for more information.
-:::
-
 ## Bulk editing
 
 {{"demo": "BulkEditingNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
