@@ -69,11 +69,12 @@ type RootProps = Pick<
 
 export type GridDimensionsState = GridDimensions;
 
+const EMPTY_SIZE: ElementSize = { width: 0, height: 0 };
 const EMPTY_DIMENSIONS: GridDimensions = {
   isReady: false,
-  root: { width: 0, height: 0 },
-  viewportOuterSize: { width: 0, height: 0 },
-  viewportInnerSize: { width: 0, height: 0 },
+  root: EMPTY_SIZE,
+  viewportOuterSize: EMPTY_SIZE,
+  viewportInnerSize: EMPTY_SIZE,
   hasScrollX: false,
   hasScrollY: false,
   scrollBarSize: 0,
@@ -94,7 +95,7 @@ export function useGridDimensions(
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
-  const rootDimensionsRef = React.useRef<ElementSize | null>(null);
+  const rootDimensionsRef = React.useRef(EMPTY_SIZE);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);

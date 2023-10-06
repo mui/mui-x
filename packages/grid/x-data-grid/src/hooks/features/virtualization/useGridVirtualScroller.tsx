@@ -112,7 +112,7 @@ const EMPTY_RENDER_CONTEXT = {
   lastColumnIndex: 0,
 };
 
-const EMPTY_PINNED_COLUMNS = {
+export const EMPTY_PINNED_COLUMNS = {
   left: [] as GridStateColDef[],
   right: [] as GridStateColDef[],
 };
@@ -282,8 +282,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
         firstIndex: nextRenderContext.firstColumnIndex,
         lastIndex: nextRenderContext.lastColumnIndex,
-        minFirstIndex: 0,
-        maxLastIndex: visibleColumns.length,
+        minFirstIndex: visiblePinnedColumns.left.length,
+        maxLastIndex: visibleColumns.length - visiblePinnedColumns.right.length,
         buffer: rootProps.columnBuffer,
       });
 
@@ -308,11 +308,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const updateRenderZonePosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
       const direction = theme.direction === 'ltr' ? 1 : -1;
+      const columnPositions = gridColumnPositionsSelector(apiRef);
+
       const top = gridRowsMetaSelector(apiRef.current.state).positions[
         nextRenderContext.firstRowIndex
       ];
-      const left =
-        direction * gridColumnPositionsSelector(apiRef)[nextRenderContext.firstColumnIndex]; // Call directly the selector because it might be outdated when this method is called
+      const left = direction * columnPositions[nextRenderContext.firstColumnIndex] - columnPositions[visiblePinnedColumns.left.length];
 
       gridRootRef.current!.style.setProperty('--private_DataGrid-offsetTop', `${top}px`);
       gridRootRef.current!.style.setProperty('--private_DataGrid-offsetLeft', `${left}px`);

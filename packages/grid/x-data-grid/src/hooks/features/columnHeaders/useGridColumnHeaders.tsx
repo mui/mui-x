@@ -48,6 +48,10 @@ export interface UseGridColumnHeadersProps {
   innerRef?: React.Ref<HTMLDivElement>;
   minColumnIndex?: number;
   visibleColumns: GridStateColDef[];
+  visiblePinnedColumns: {
+    left: GridStateColDef[];
+    right: GridStateColDef[];
+  };
   sortColumnLookup: GridSortColumnLookup;
   filterColumnLookup: GridFilterActiveItemsLookup;
   columnPositions: number[];
@@ -69,15 +73,12 @@ export interface GetHeadersParams {
   maxLastColumn?: number;
 }
 
-function isUIEvent(event: any): event is React.UIEvent {
-  return !!event.target;
-}
-
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const {
     innerRef: innerRefProp,
     minColumnIndex = 0,
     visibleColumns,
+    visiblePinnedColumns,
     sortColumnLookup,
     filterColumnLookup,
     columnPositions,
@@ -112,7 +113,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }),
     [visibleColumns.length],
   );
-  const prevScrollLeft = React.useRef(0);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
@@ -130,50 +130,18 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   );
 
   const updateInnerPosition = React.useCallback(
-    (nextRenderContext: GridRenderContext) => {
-      const [firstRowToRender, lastRowToRender] = getIndexesToRender({
-        firstIndex: nextRenderContext.firstRowIndex,
-        lastIndex: nextRenderContext.lastRowIndex,
-        minFirstIndex: 0,
-        maxLastIndex: currentPage.rows.length,
-        buffer: rootProps.rowBuffer,
-      });
+    () => {
+      const offset = columnPositions[visiblePinnedColumns.left.length];
 
-      const firstColumnToRender = getFirstColumnIndexToRenderRef.current({
-        firstColumnIndex: nextRenderContext!.firstColumnIndex,
-        minColumnIndex,
-        columnBuffer: rootProps.columnBuffer,
-        firstRowToRender,
-        lastRowToRender,
-        apiRef,
-        visibleRows: currentPage.rows,
-      });
-
-      const direction = theme.direction === 'ltr' ? 1 : -1;
-
-      const offset =
-        firstColumnToRender > 0
-          ? prevScrollLeft.current - direction * columnPositions[firstColumnToRender]
-          : prevScrollLeft.current;
-
-      innerRef!.current!.style.transform = `translate3d(${-offset}px, 0px, 0px)`;
+      // innerRef!.current!.style.transform = `translate3d(${offset}px, 0px, 0px)`;
     },
     [
       columnPositions,
-      minColumnIndex,
-      rootProps.columnBuffer,
-      apiRef,
-      currentPage.rows,
-      rootProps.rowBuffer,
-      theme.direction,
+      visiblePinnedColumns.left.length,
     ],
   );
 
-  React.useLayoutEffect(() => {
-    if (renderContext) {
-      updateInnerPosition(renderContext);
-    }
-  }, [renderContext, updateInnerPosition]);
+  React.useLayoutEffect(updateInnerPosition, [updateInnerPosition]);
 
   const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     (params) => setResizeCol(params.field),

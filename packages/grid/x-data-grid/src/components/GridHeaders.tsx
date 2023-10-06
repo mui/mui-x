@@ -22,10 +22,11 @@ import {
   gridColumnGroupsHeaderStructureSelector,
 } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { gridColumnMenuSelector } from '../hooks/features/columnMenu/columnMenuSelector';
-import type { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
+import { EMPTY_PINNED_COLUMNS } from '../hooks/features/virtualization/useGridVirtualScroller';
+import type { VirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
 
 type Props = {
-  contentProps: ReturnType<ReturnType<typeof useGridVirtualScroller>['getContentProps']>;
+  contentProps: ReturnType<VirtualScroller['getContentProps']>;
 };
 
 export function GridHeaders(props: Props) {
@@ -35,6 +36,7 @@ export function GridHeaders(props: Props) {
   const rootProps = useGridRootProps();
 
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const visiblePinnedColumns = EMPTY_PINNED_COLUMNS;
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
@@ -86,6 +88,7 @@ export function GridHeaders(props: Props) {
       ref={columnsContainerRef}
       innerRef={columnHeadersRef}
       visibleColumns={visibleColumns}
+      visiblePinnedColumns={visiblePinnedColumns}
       filterColumnLookup={filterColumnLookup}
       sortColumnLookup={sortColumnLookup}
       columnPositions={columnPositions}

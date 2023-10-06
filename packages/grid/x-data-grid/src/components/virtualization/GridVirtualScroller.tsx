@@ -25,7 +25,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const StyledDiv = styled('div', {
+const Element = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
   overridesResolver: (props, styles) => styles.virtualScroller,
@@ -47,7 +47,7 @@ const Root = React.forwardRef<
   const classes = useUtilityClasses(rootProps);
 
   return (
-    <StyledDiv
+    <Element
       ref={ref}
       {...props}
       className={clsx(classes.root, props.className)}

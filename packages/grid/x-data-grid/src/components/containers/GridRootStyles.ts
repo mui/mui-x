@@ -372,6 +372,9 @@ export const GridRootStyles = styled('div', {
       '[role=row]': {
         background: 'var(--unstable_DataGrid-containerBackground)',
       },
+      [`.${gridClasses.pinnedColumnHeaders} [role=row]`]: {
+        background: 'var(--unstable_DataGrid-pinnedBackground)',
+      },
     },
     [`& .${gridClasses.cell}`]: {
       display: 'flex',

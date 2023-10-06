@@ -25,6 +25,7 @@ import {
   GridPinnedPosition,
   GridPinnedColumns,
   gridPinnedColumnsSelector,
+  gridVisiblePinnedColumnsSelector,
 } from '../hooks/features/columnPinning';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { filterColumns } from './DataGridProVirtualScroller';
@@ -68,10 +69,9 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   ],
 })<{ ownerState: OwnerState & GridColumnHeadersPinnedColumnHeadersProps }>(
   ({ theme, ownerState }) => ({
-    position: 'absolute',
+    position: 'sticky',
+    zIndex: 5,
     top: 0,
-    overflow: 'hidden',
-    zIndex: 1,
     display: 'flex',
     flexDirection: 'column',
     boxShadow: theme.shadows[2],
@@ -83,6 +83,12 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
         borderLeftWidth: '1px',
         borderLeftStyle: 'solid',
       }),
+    [`&.${gridClasses['pinnedColumnHeaders--left']}`]: {
+      left: 0,
+    },
+    [`&.${gridClasses['pinnedColumnHeaders--right']}`]: {
+      right: 0,
+    },
   }),
 );
 
@@ -94,19 +100,19 @@ GridColumnHeadersPinnedColumnHeaders.propTypes = {
   ownerState: PropTypes.object.isRequired,
 } as any;
 
-interface DataGridProColumnHeadersProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+interface Props extends React.HTMLAttributes<HTMLDivElement>,
     Omit<UseGridColumnHeadersProps, 'innerRef'> {
   innerRef?: React.Ref<HTMLDivElement>;
 }
 
-const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHeadersProps>(
+const GridColumnHeaders = React.forwardRef<HTMLDivElement, Props>(
   function GridColumnHeaders(props, ref) {
     const {
       style,
       className,
       innerRef,
       visibleColumns,
+      visiblePinnedColumns: _,
       sortColumnLookup,
       filterColumnLookup,
       columnPositions,
@@ -127,6 +133,8 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     const [scrollbarSize, setScrollbarSize] = React.useState(0);
     const theme = useTheme();
     const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
+    const visiblePinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnsSelector);
+    // const scrollbarSize = useGridSelector(apiRef, (state: GridStatePro) => state.dimensions.hasScrollY ? state.dimensions.scrollBarSize : 0);
 
     const handleContentSizeChange = useEventCallback(() => {
       const dimensions = apiRef.current.getDimensions();
@@ -160,6 +168,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     } = useGridColumnHeaders({
       innerRef,
       visibleColumns,
+      visiblePinnedColumns,
       sortColumnLookup,
       filterColumnLookup,
       columnPositions,

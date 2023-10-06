@@ -9,18 +9,18 @@ import {
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
-interface GridColumnHeadersProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+interface Props extends React.HTMLAttributes<HTMLDivElement>,
     Omit<UseGridColumnHeadersProps, 'innerRef'> {
   innerRef?: React.Ref<HTMLDivElement>;
 }
 
-const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProps>(
-  function GridColumnsHeaders(props, ref) {
+const GridColumnHeaders = React.forwardRef<HTMLDivElement, Props>(
+  function GridColumnHeaders(props, ref) {
     const {
       innerRef,
       className,
       visibleColumns,
+      visiblePinnedColumns,
       sortColumnLookup,
       filterColumnLookup,
       columnPositions,
@@ -41,6 +41,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       useGridColumnHeaders({
         innerRef,
         visibleColumns,
+        visiblePinnedColumns,
         sortColumnLookup,
         filterColumnLookup,
         columnPositions,
