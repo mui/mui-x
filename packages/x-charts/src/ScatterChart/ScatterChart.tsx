@@ -174,6 +174,9 @@ ScatterChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),

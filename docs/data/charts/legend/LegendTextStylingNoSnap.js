@@ -15,7 +15,7 @@ const data = [
 
 const itemsNumber = 15;
 
-export default function LegendTextStyling() {
+export default function LegendTextStylingNoSnap() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
