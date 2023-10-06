@@ -41,11 +41,13 @@ Both props impact the values defined in pixels.
 
 ### Label styling
 
-To break lines in legend labels, use the special `\n` character.
-
-To customize the label style, you should not use CSS.
+To break lines in legend labels, use the special `\n` character. To customize the label style, you should not use CSS.
 Instead, pass a styling object to the `labelStyle` property.
 
-The `labelStyle` property is needed to measure text size, and then place legend items at the correct position.
-
 {{"demo": "LegendTextStyling.js", "hideToolbar": true, "bg": "inline"}}
+
+:::info
+The `labelStyle` property is needed to measure text size, and then place legend items at the correct position.
+Style applied by other means will not be taken into account.
+Which can lead to label overflow.
+:::
