@@ -84,7 +84,7 @@ export interface LegendRendererProps
   classes: Record<'mark' | 'series' | 'root', string>;
   /**
    * Style applied to legend labels.
-   * @default theme.
+   * @default theme.typography.subtitle1
    */
   labelStyle?: React.CSSProperties;
   /**
@@ -155,7 +155,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
 
   const labelStyle = React.useMemo(
     () => ({
-      ...theme.typography.caption,
+      ...theme.typography.subtitle1,
       color: 'inherit',
       fill: (theme.vars || theme).palette.text.primary,
       lineHeight: 1,
