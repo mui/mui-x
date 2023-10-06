@@ -199,68 +199,62 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     let rowIndex = 0;
     const rowMaxHeight = [0];
 
-    const seriesWithRawPosition = seriesToDisplay
-      .map(({ label, ...other }) => {
-        const itemSpace = getItemSpace(label, labelStyle);
-        const rep = {
-          ...other,
-          label,
-          positionX: x,
-          positionY: y,
-          innerHeight: itemSpace.innerHeight,
-          innerWidth: itemSpace.innerWidth,
-          rowIndex,
-        };
+    const seriesWithRawPosition = seriesToDisplay.map(({ label, ...other }) => {
+      const itemSpace = getItemSpace(label, labelStyle);
+      const rep = {
+        ...other,
+        label,
+        positionX: x,
+        positionY: y,
+        innerHeight: itemSpace.innerHeight,
+        innerWidth: itemSpace.innerWidth,
+        outerHeight: itemSpace.outerHeight,
+        outerWidth: itemSpace.outerWidth,
+        rowIndex,
+      };
 
-        if (direction === 'row') {
-          if (x + itemSpace.innerWidth > availableWidth) {
-            // This legend item will create overflow along the x axis, so we start a new row.
-            x = 0;
-            y += itemSpace.outerHeight;
-            rowIndex += 1;
-            if (rowMaxHeight.length <= rowIndex) {
-              rowMaxHeight.push(0);
-            }
-            rep.positionX = x;
-            rep.positionY = y;
-            rep.rowIndex = rowIndex;
-          }
-          totalWidthUsed = Math.max(totalWidthUsed, x + itemSpace.innerWidth);
-          totalHeightUsed = Math.max(totalHeightUsed, y + itemSpace.innerHeight);
-          rowMaxHeight[rowIndex] = Math.max(rowMaxHeight[rowIndex], itemSpace.innerHeight);
-
-          x += itemSpace.outerWidth;
-        }
-
-        if (direction === 'column') {
-          if (y + itemSpace.innerHeight > availableHeight) {
-            // This legend item will create overflow along the y axis, so we start a new column.
-            x = totalWidthUsed + itemGap;
-            y = 0;
-            rowIndex = 0;
-            rep.positionX = x;
-            rep.positionY = y;
-            rep.rowIndex = rowIndex;
-          }
+      if (direction === 'row') {
+        if (x + itemSpace.innerWidth > availableWidth) {
+          // This legend item will create overflow along the x axis, so we start a new row.
+          x = 0;
+          y += rowMaxHeight[rowIndex];
+          rowIndex += 1;
           if (rowMaxHeight.length <= rowIndex) {
             rowMaxHeight.push(0);
           }
-          totalWidthUsed = Math.max(totalWidthUsed, x + itemSpace.innerWidth);
-          totalHeightUsed = Math.max(totalHeightUsed, y + itemSpace.innerHeight);
-          rowMaxHeight[rowIndex] = Math.max(rowMaxHeight[rowIndex], itemSpace.innerHeight);
-
-          rowIndex += 1;
-          y += itemSpace.outerHeight;
+          rep.positionX = x;
+          rep.positionY = y;
+          rep.rowIndex = rowIndex;
         }
+        totalWidthUsed = Math.max(totalWidthUsed, x + itemSpace.outerWidth);
+        totalHeightUsed = Math.max(totalHeightUsed, y + itemSpace.outerHeight);
+        rowMaxHeight[rowIndex] = Math.max(rowMaxHeight[rowIndex], itemSpace.outerHeight);
 
-        return rep;
-      })
-      .map((item) => ({
-        ...item,
-        // Add a y shift such that `positionY` corresponds to the middle of the row.
-        // It's usefull to align items if they don't all have the same height. For example labels with breaking spaces.
-        positionY: item.positionY + (rowMaxHeight[item.rowIndex] - itemMarkHeight) / 2,
-      }));
+        x += itemSpace.outerWidth;
+      }
+
+      if (direction === 'column') {
+        if (y + itemSpace.innerHeight > availableHeight) {
+          // This legend item will create overflow along the y axis, so we start a new column.
+          x = totalWidthUsed + itemGap;
+          y = 0;
+          rowIndex = 0;
+          rep.positionX = x;
+          rep.positionY = y;
+          rep.rowIndex = rowIndex;
+        }
+        if (rowMaxHeight.length <= rowIndex) {
+          rowMaxHeight.push(0);
+        }
+        totalWidthUsed = Math.max(totalWidthUsed, x + itemSpace.outerWidth);
+        totalHeightUsed = Math.max(totalHeightUsed, y + itemSpace.outerHeight);
+
+        rowIndex += 1;
+        y += itemSpace.outerHeight;
+      }
+
+      return rep;
+    });
 
     // Move the legend accroding to padding and position
     let gapX = 0;
@@ -289,8 +283,15 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     }
     return seriesWithRawPosition.map((item) => ({
       ...item,
+      // Add the gap due to the position
       positionX: item.positionX + gapX,
-      positionY: item.positionY + gapY,
+      // Add the gap due to the position
+      positionY:
+        item.positionY +
+        gapY +
+        (direction === 'row'
+          ? rowMaxHeight[item.rowIndex] / 2 // Get the center of the entire row
+          : item.outerHeight / 2), // Get the center of the item
     }));
   }, [
     seriesToDisplay,
@@ -302,7 +303,6 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     availableWidth,
     availableHeight,
     itemGap,
-    itemMarkHeight,
     padding.left,
     padding.right,
     padding.top,
@@ -318,11 +318,11 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   return (
     <NoSsr>
       <ChartsLegendRoot className={classes.root}>
-        {seriesWithPosition.map(({ id, label, color, positionX, positionY, innerHeight }) => (
+        {seriesWithPosition.map(({ id, label, color, positionX, positionY }) => (
           <g key={id} className={classes.series} transform={`translate(${positionX} ${positionY})`}>
             <rect
               className={classes.mark}
-              y={(innerHeight - itemMarkHeight) / 2}
+              y={-itemMarkHeight / 2}
               width={itemMarkWidth}
               height={itemMarkHeight}
               fill={color}
@@ -333,7 +333,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
               textAnchor="start"
               text={label}
               x={itemMarkWidth + markGap}
-              y={itemMarkHeight / 2}
+              y={0}
             />
           </g>
         ))}
