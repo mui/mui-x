@@ -161,10 +161,10 @@ export default function BulkEditingNoSnap() {
           unstable_ignoreValueFormatterDuringExport
           sx={{
             '& .MuiDataGrid-row.row--removed': {
-              backgroundColor: 'rgba(200, 0, 0, 0.3)',
+              backgroundColor: 'rgba(255, 170, 170, 0.3)',
             },
             '& .MuiDataGrid-row.row--edited': {
-              backgroundColor: 'rgba(0, 100, 0, 0.3)',
+              backgroundColor: 'rgba(255, 254, 176, 0.3)',
             },
           }}
           loading={isSaving}
