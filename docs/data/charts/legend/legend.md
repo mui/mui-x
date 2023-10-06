@@ -37,6 +37,8 @@ Inside the legend, you can customize the pixel value of the width and height of 
 You can also access the `markGap` prop to change the gap between the mark and its label, or the  `itemGap` to change the gap between two legend items.
 Both props impact the values defined in pixels.
 
+{{"demo": "LegendDimensionNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+
 ### Label styling
 
 To break lines in legend labels, use the special `\n` character.
@@ -45,3 +47,5 @@ To customize the label style, you should not use CSS.
 Instead, pass a styling object to the `labelStyle` property.
 
 The `labelStyle` property is needed to measure text size, and then place legend items at the correct position.
+
+{{"demo": "LegendTextStyling.js", "hideToolbar": true, "bg": "inline"}}
