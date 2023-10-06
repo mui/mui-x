@@ -18,12 +18,12 @@ In chart components, the legend links series with `label` properties and their c
 
 The legend can either be displayed in a `'column'` or `'row'` layout controlled with the `direction` property.
 
-It can also be moved by the property `position: { vertical, horizontal }` which defines how the legend aligns into the SVG.
+It can also be moved with the `position: { vertical, horizontal }` property which defines how the legend aligns within the SVG.
 
 - `vertical` can be `'top'`, `'middle'`, or `'bottom'`.
 - `horizontal` can be `'left'`, `'middle'`, or `'right'`.
 
-From a given `position`, you can add some space with `padding` which can either be a number, or an object `{ top, bottom, left, right }`.
+You can add some space to a given `position` with a `padding` property which can be either a number or an object `{ top, bottom, left, right }`.
 This `padding` will add space between the SVG borders and the legend.
 
 Defaults are such that the legend is placed on top of the charts.
@@ -39,8 +39,8 @@ And `itemGap` which is the gap between two legend items.
 
 ### Label styling
 
-To break line in legend labels, use the special character `\n`.
+To break lines in legend labels, use the special `\n` character.
 
-To customize its style, you should not use CSS. Instead pass a styling object to the `labelStyle` property.
+To customize the label style, you should not use CSS. Instead, pass a styling object to the `labelStyle` property.
 
 The `labelStyle` property is needed to measure text size, and then place legend items at the correct position.
