@@ -4,7 +4,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
-import styled from '../../styles/styled';
+import styled from '../../utils/styled';
 
 type OwnerState = DataGridProcessedProps;
 

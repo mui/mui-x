@@ -4,7 +4,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import styled from '../../styles/styled';
+import styled from '../../utils/styled';
 
 export type GridIconButtonContainerProps = React.HTMLAttributes<HTMLDivElement>;
 

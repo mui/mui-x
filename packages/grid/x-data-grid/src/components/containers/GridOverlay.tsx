@@ -6,7 +6,7 @@ import { Theme, SxProps } from '@mui/system';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import styled from '../../styles/styled';
+import styled from '../../utils/styled';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;

@@ -6,7 +6,7 @@ import { isOverflown } from '../../utils/domUtils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import styled from '../../styles/styled';
+import styled from '../../utils/styled';
 
 type OwnerState = DataGridProcessedProps;
 
