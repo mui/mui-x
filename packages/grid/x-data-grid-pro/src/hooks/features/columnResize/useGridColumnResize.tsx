@@ -203,6 +203,9 @@ function extractColumnWidths(
 ) {
   const widthByField = {} as Record<string, number>;
 
+  const root = apiRef.current.rootElementRef!.current!;
+  root.classList.add(gridClasses.autosizing);
+
   columns.forEach((column) => {
     const cells = findGridCells(apiRef.current, column.field);
 
@@ -214,7 +217,7 @@ function extractColumnWidths(
       }
       const style = window.getComputedStyle(cell, null);
       const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-      const contentWidth = (cell.firstElementChild?.scrollWidth ?? -1) + 1;
+      const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0;
       return paddingWidth + contentWidth;
     });
 
@@ -247,6 +250,8 @@ function extractColumnWidths(
 
     widthByField[column.field] = clamp(maxContent, min, max);
   });
+
+  root.classList.remove(gridClasses.autosizing);
 
   return widthByField;
 }

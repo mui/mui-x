@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
+import { useSlotProps } from '@mui/base/utils';
 import { ItemInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
@@ -12,7 +13,7 @@ import {
 } from './ChartsTooltipTable';
 import { ChartsTooltipClasses } from './tooltipClasses';
 
-export type ChartsItemContentProps<T extends ChartSeriesType> = {
+export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
   /**
    * The data used to identify the triggered item.
    */
@@ -28,7 +29,7 @@ export type ChartsItemContentProps<T extends ChartSeriesType> = {
   sx?: SxProps<Theme>;
 };
 
-export function DefaultChartsItemContent<T extends ChartSeriesType>(
+export function DefaultChartsItemContent<T extends ChartSeriesType = ChartSeriesType>(
   props: ChartsItemContentProps<T>,
 ) {
   const { series, itemData, sx, classes } = props;
@@ -72,16 +73,27 @@ export function DefaultChartsItemContent<T extends ChartSeriesType>(
 export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
   itemData: ItemInteractionData<T>;
   content?: React.ElementType<ChartsItemContentProps<T>>;
+  contentProps?: Partial<ChartsItemContentProps<T>>;
   sx?: SxProps<Theme>;
   classes: ChartsItemContentProps<T>['classes'];
 }) {
-  const { content, itemData, sx, classes } = props;
+  const { content, itemData, sx, classes, contentProps } = props;
 
   const series = React.useContext(SeriesContext)[itemData.type]!.series[
     itemData.seriesId
   ] as ChartSeriesDefaultized<T>;
 
   const Content = content ?? DefaultChartsItemContent<T>;
-
-  return <Content itemData={itemData} series={series} sx={sx} classes={classes} />;
+  const chartTooltipContentProps = useSlotProps({
+    elementType: Content,
+    externalSlotProps: contentProps,
+    additionalProps: {
+      itemData,
+      series,
+      sx,
+      classes,
+    },
+    ownerState: {},
+  });
+  return <Content {...chartTooltipContentProps} />;
 }

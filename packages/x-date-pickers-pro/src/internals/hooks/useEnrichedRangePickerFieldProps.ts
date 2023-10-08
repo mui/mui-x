@@ -216,6 +216,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeEndSelection }),
           ...(wrapperVariant === 'mobile' && { readOnly: true }),
         };
+        InputProps = resolvedComponentProps?.InputProps;
       }
 
       return {
