@@ -124,5 +124,4 @@ Other props are similar to the ones defined in the [previous section](/x/react-c
 The `<ChartsReferenceLine />` component add a reference line to the charts.
 You can provide a `x` (resp. `y`) prop to get a vertical (resp. horizontal) line at this value.
 
-
 {{"demo": "ReferenceLine.js"}}

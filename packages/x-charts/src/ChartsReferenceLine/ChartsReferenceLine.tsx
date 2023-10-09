@@ -1,3 +1,4 @@
+import * as React from 'react';
 import ChartsXReferenceLine, { ChartsXReferenceLineProps } from './ChartsXReferenceLine';
 import ChartsYReferenceLine, { ChartsYReferenceLineProps } from './ChartsYReferenceLine';
 import { XOR } from '../internals/utils';
@@ -7,7 +8,7 @@ type ChartsReferenceLineProps<TValue extends string | number | Date = string | n
   ChartsYReferenceLineProps<TValue>
 >;
 
-export const ChartsReferenceLine = (props: ChartsReferenceLineProps) => {
+export function ChartsReferenceLine(props: ChartsReferenceLineProps) {
   if (props.x !== undefined && props.y !== undefined) {
     throw new Error('MUI-X: The ChartsReferenceLine can not have both `x` and `y` props set.');
   }
@@ -20,4 +21,4 @@ export const ChartsReferenceLine = (props: ChartsReferenceLineProps) => {
     return <ChartsXReferenceLine {...props} />;
   }
   return <ChartsYReferenceLine {...props} />;
-};
+}

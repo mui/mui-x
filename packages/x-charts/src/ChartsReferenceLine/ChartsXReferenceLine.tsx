@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { useDrawingArea, useXScale, useYScale } from '../hooks';
+import { useDrawingArea, useXScale } from '../hooks';
 import { CommonChartsReferenceLineProps } from './common';
 
-export type ChartsXReferenceLineProps<TValue extends string | number | Date = string | number | Date> =
-  CommonChartsReferenceLineProps & {
-    /**
-     * The x value associated to the reference line.
-     * If defined the reference line will be vertical.
-     */
-    x: TValue;
-  };
+export type ChartsXReferenceLineProps<
+  TValue extends string | number | Date = string | number | Date,
+> = CommonChartsReferenceLineProps & {
+  /**
+   * The x value associated to the reference line.
+   * If defined the reference line will be vertical.
+   */
+  x: TValue;
+};
 
 type GetTextPlacementParams = {
   top: number;
@@ -41,9 +42,9 @@ const getTextParams = ({ top, height, labelAlign = 'middle' }: GetTextPlacementP
   }
 };
 
-const ChartsXReferenceLine = (props: ChartsXReferenceLineProps) => {
+function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const { x, color = 'red', lineWidth = 1, label = '', labelAlign = 'middle', axisId } = props;
-  let { top, height } = useDrawingArea();
+  const { top, height } = useDrawingArea();
   const xAxisScale = useXScale(axisId) as any;
 
   const xPosition = xAxisScale(x);
@@ -70,6 +71,6 @@ const ChartsXReferenceLine = (props: ChartsXReferenceLineProps) => {
       <text {...textParams}>{label}</text>
     </React.Fragment>
   );
-};
+}
 
 export default ChartsXReferenceLine;

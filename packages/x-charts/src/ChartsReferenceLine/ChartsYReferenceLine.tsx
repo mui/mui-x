@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDrawingArea, useXScale, useYScale } from '../hooks';
+import { useDrawingArea, useYScale } from '../hooks';
 import { CommonChartsReferenceLineProps } from './common';
 
 export type ChartsYReferenceLineProps<
@@ -42,9 +42,9 @@ const getTextParams = ({ left, width, labelAlign = 'middle' }: GetTextPlacementP
   }
 };
 
-const ChartsYReferenceLine = (props: ChartsYReferenceLineProps) => {
+function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   const { y, color = 'red', lineWidth = 1, label = '', labelAlign = 'middle', axisId } = props;
-  let { left, width } = useDrawingArea();
+  const { left, width } = useDrawingArea();
   const yAxisScale = useYScale(axisId) as any;
 
   const yPosition = yAxisScale(y);
@@ -71,6 +71,6 @@ const ChartsYReferenceLine = (props: ChartsYReferenceLineProps) => {
       <text {...textParams}>{label}</text>
     </React.Fragment>
   );
-};
+}
 
 export default ChartsYReferenceLine;
