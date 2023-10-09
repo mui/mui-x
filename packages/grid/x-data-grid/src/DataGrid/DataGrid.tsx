@@ -33,6 +33,16 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   );
 });
 
+/**
+ *
+ * Demos:
+ *
+ * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ *
+ * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
+ */
 interface DataGridComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,

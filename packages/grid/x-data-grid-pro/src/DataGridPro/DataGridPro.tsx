@@ -59,6 +59,16 @@ interface DataGridProComponent {
   propTypes?: any;
 }
 
+/**
+ *
+ * Demos:
+ *
+ * - [DataGridPro](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ *
+ * - [DataGridPro API](https://mui.com/x/api/data-grid/data-grid-pro/)
+ */
 export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
 DataGridProRaw.propTypes = {
