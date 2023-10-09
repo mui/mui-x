@@ -4,7 +4,11 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import PieArc, { PieArcProps } from './PieArc';
 import PieArcLabel, { PieArcLabelProps } from './PieArcLabel';
 import { DrawingContext } from '../context/DrawingProvider';
-import { DefaultizedPieValueType, PieSeriesType } from '../models/seriesType/pie';
+import {
+  DefaultizedPieValueType,
+  PieItemIdentifier,
+  PieSeriesType,
+} from '../models/seriesType/pie';
 
 const RATIO = 180 / Math.PI;
 
@@ -49,10 +53,21 @@ export interface PiePlotProps {
    * @default {}
    */
   slotProps?: PiePlotSlotComponentProps;
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
+   * @param {DefaultizedPieValueType} item The pie item.
+   */
+  onClick?: (
+    event: React.MouseEvent<SVGPathElement, MouseEvent>,
+    pieItemIdentifier: PieItemIdentifier,
+    item: DefaultizedPieValueType,
+  ) => void;
 }
 
 function PiePlot(props: PiePlotProps) {
-  const { slots, slotProps } = props;
+  const { slots, slotProps, onClick } = props;
   const seriesData = React.useContext(SeriesContext).pie;
   const { left, top, width, height } = React.useContext(DrawingContext);
 
@@ -69,6 +84,7 @@ function PiePlot(props: PiePlotProps) {
 
   const Arc = slots?.pieArc ?? PieArc;
   const ArcLabel = slots?.pieArcLabel ?? PieArcLabel;
+
   return (
     <g>
       {seriesOrder.map((seriesId) => {
@@ -106,6 +122,12 @@ function PiePlot(props: PiePlotProps) {
                     highlightScope={series[seriesId].highlightScope}
                     highlighted={highlighted}
                     faded={faded}
+                    onClick={
+                      onClick &&
+                      ((event) => {
+                        onClick(event, { type: 'pie', seriesId, dataIndex: index }, item);
+                      })
+                    }
                     {...slotProps?.pieArc}
                   />
                 );
@@ -140,6 +162,13 @@ PiePlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
+   * @param {DefaultizedPieValueType} item The pie item.
+   */
+  onClick: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

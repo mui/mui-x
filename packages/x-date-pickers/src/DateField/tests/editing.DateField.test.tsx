@@ -3,8 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue, getTextbox } from 'test/utils/pickers';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
+import { expectInputValue, getTextbox, describeAdapters } from 'test/utils/pickers';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {

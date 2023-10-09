@@ -5,9 +5,13 @@ import jMoment from 'moment-jalaali';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  expectInputPlaceholder,
+  expectInputValue,
+  describeJalaliAdapter,
+} from 'test/utils/pickers';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { describeJalaliAdapter } from '@mui/x-date-pickers/tests/describeJalaliAdapter';
 import 'moment/locale/fa';
 
 describe('<AdapterMomentJalaali />', () => {

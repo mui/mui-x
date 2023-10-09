@@ -8,13 +8,14 @@ body:
         Please provide a searchable summary of the issue in the title above ⬆️.
 
         Thanks for contributing by creating an issue! ❤️
-  - type: checkboxes
+
+  - type: input
     attributes:
-      label: Duplicates
-      description: Please [search the history](https://github.com/mui/mui-x/issues) to see if an issue already exists for the same problem.
-      options:
-        - label: I have searched the existing issues
-          required: true
+      label: Search keywords
+      description: Your issue may have already been reported! List the keywords you've used to search the [existing issues](https://github.com/mui/mui-x/issues). This will also make your issue searchable for others.
+      placeholder: e.g. datagrid column resizing
+    validations:
+      required: true
   - type: checkboxes
     attributes:
       label: Latest version
@@ -22,6 +23,7 @@ body:
       options:
         - label: I have tested the latest version
           required: true
+
   - type: textarea
     attributes:
       label: Summary 💡
@@ -37,6 +39,6 @@ body:
   - type: input
     id: contact
     attributes:
-      label: Order ID 💳 (optional)
+      label: Order ID or Support key 💳 (optional)
       description: The [Pro plan](https://mui.com/pricing/) comes with priority over the Community plan. Providing your order ID might give your problem more attention.
       placeholder: 'e.g. 11111'

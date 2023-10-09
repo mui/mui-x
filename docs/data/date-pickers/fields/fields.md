@@ -74,3 +74,17 @@ Please only use it if needed.
 :::
 
 {{"demo": "ControlledSelectedSectionsSingleInputRangeField.js", "defaultCodeOpen": false }}
+
+### Clearable behavior
+
+You can use the `clearable` prop to enable the clearing behavior on a field. You can also add an event handler using the `onClear` callback prop.
+
+:::info
+For **multi-input** range fields the clearable behavior is not supported yet.
+:::
+
+{{"demo": "ClearableBehavior.js"}}
+
+You can also customize the icon you want to be displayed inside the clear `IconButton`.
+
+{{"demo": "CustomizeClearIcon.js"}}

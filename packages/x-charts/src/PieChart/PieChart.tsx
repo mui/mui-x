@@ -8,7 +8,12 @@ import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { PieSeriesType } from '../models/seriesType';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  ChartsTooltip,
+  ChartsTooltipProps,
+  ChartsTooltipSlotComponentProps,
+  ChartsTooltipSlotsComponent,
+} from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
@@ -16,18 +21,20 @@ import {
   ChartsLegendSlotsComponent,
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { PiePlot, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
+import { PiePlot, PiePlotProps, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
 import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
 
 export interface PieChartSlotsComponent
   extends ChartsAxisSlotsComponent,
     PiePlotSlotsComponent,
-    ChartsLegendSlotsComponent {}
+    ChartsLegendSlotsComponent,
+    ChartsTooltipSlotsComponent {}
 export interface PieChartSlotComponentProps
   extends ChartsAxisSlotComponentProps,
     PiePlotSlotComponentProps,
-    ChartsLegendSlotComponentProps {}
+    ChartsLegendSlotComponentProps,
+    ChartsTooltipSlotComponentProps {}
 
 export interface PieChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -39,6 +46,7 @@ export interface PieChartProps
    * @deprecated Consider using `slotProps.legend` instead.
    */
   legend?: ChartsLegendProps;
+  onClick?: PiePlotProps['onClick'];
 
   slots?: PieChartSlotsComponent;
   /**
@@ -69,6 +77,7 @@ function PieChart(props: PieChartProps) {
     children,
     slots,
     slotProps,
+    onClick,
   } = props;
 
   const margin = { ...defaultMargin, ...marginProps };
@@ -104,7 +113,7 @@ function PieChart(props: PieChartProps) {
         slots={slots}
         slotProps={slotProps}
       />
-      <PiePlot slots={slots} slotProps={slotProps} />
+      <PiePlot slots={slots} slotProps={slotProps} onClick={onClick} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       <ChartsTooltip {...tooltip} />
@@ -204,6 +213,7 @@ PieChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  onClick: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -295,6 +305,8 @@ PieChart.propTypes = {
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
     itemContent: PropTypes.elementType,
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**

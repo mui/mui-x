@@ -44,13 +44,11 @@ describe('<DataGrid /> - Filter', () => {
   let disableEval = false;
 
   function testEval(fn: Function) {
-    return () => {
-      disableEval = false;
-      fn();
-      disableEval = true;
-      fn();
-      disableEval = false;
-    };
+    disableEval = false;
+    fn();
+    disableEval = true;
+    fn();
+    disableEval = false;
   }
 
   function TestCase(props: Partial<DataGridProps>) {

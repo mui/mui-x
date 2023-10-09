@@ -14,7 +14,7 @@ import { getColumnValues, sleep } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Quick Filter', () => {
+describe('<DataGrid /> - Quick filter', () => {
   const { render, clock } = createRenderer();
 
   const baselineProps = {

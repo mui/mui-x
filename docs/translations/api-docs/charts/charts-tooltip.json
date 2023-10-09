@@ -16,6 +16,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "trigger": {
       "description": "Select the kind of tooltip to display - &#39;item&#39;: Shows data about the item below the mouse. - &#39;axis&#39;: Shows values associated with the hovered x value - &#39;none&#39;: Does not display tooltip",
       "deprecated": "",

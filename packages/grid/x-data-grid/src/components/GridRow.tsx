@@ -103,6 +103,7 @@ function EmptyCell({ width }: { width: number }) {
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
     selected,
+    hovered,
     rowId,
     row,
     index,
@@ -141,6 +142,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const ownerState = {
     selected,
+    hovered,
     isLastVisible,
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
@@ -456,7 +458,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       data-id={rowId}
       data-rowindex={index}
       role="row"
-      className={clsx(...rowClassNames, classes.root, className)}
+      className={clsx(...rowClassNames, classes.root, hovered ? 'Mui-hovered' : null, className)}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}

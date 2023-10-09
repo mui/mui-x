@@ -6,8 +6,8 @@ import treeViewComponentApi from './tree-view-component-api-pages';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/blog/mui-x-v6/',
-    title: "✨ What's new in v6? ✨",
+    pathname: '/x/whats-new',
+    title: "What's new in MUI X",
   },
   {
     pathname: '/x/introduction-group',
@@ -36,6 +36,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/column-definition' },
           { pathname: '/x/react-data-grid/column-dimensions' },
           { pathname: '/x/react-data-grid/column-visibility' },
+          { pathname: '/x/react-data-grid/custom-columns' },
           { pathname: '/x/react-data-grid/column-header' },
           { pathname: '/x/react-data-grid/column-menu' },
           { pathname: '/x/react-data-grid/column-spanning' },
@@ -327,7 +328,7 @@ const pages: MuiPage[] = [
         children: [
           {
             pathname: '/x/react-date-pickers/custom-components',
-            title: 'Custom subcomponents',
+            title: 'Custom slots and subcomponents',
           },
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
@@ -396,13 +397,13 @@ const pages: MuiPage[] = [
         title: 'API Reference',
         children: [...chartsComponentApi],
       },
-      { pathname: '/x/react-charts/funnel', title: 'Funnel 🚧' },
-      { pathname: '/x/react-charts/gantt', title: 'Gantt 🚧' },
       { pathname: '/x/react-charts/gauge', title: 'Gauge 🚧' },
+      { pathname: '/x/react-charts/tree-map', title: 'Tree map 🚧' },
       { pathname: '/x/react-charts/heat-map', title: 'Heat map 🚧' },
       { pathname: '/x/react-charts/radar', title: 'Radar 🚧' },
-      { pathname: '/x/react-charts/sankey', title: 'Sankey 🚧' },
-      { pathname: '/x/react-charts/tree-map', title: 'Tree map 🚧' },
+      { pathname: '/x/react-charts/funnel', title: 'Funnel 🚧', plan: 'pro' },
+      { pathname: '/x/react-charts/sankey', title: 'Sankey 🚧', plan: 'pro' },
+      { pathname: '/x/react-charts/gantt', title: 'Gantt 🚧', plan: 'pro' },
     ],
   },
   {

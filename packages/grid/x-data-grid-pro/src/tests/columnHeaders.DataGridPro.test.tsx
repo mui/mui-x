@@ -6,7 +6,7 @@ import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Column Headers', () => {
+describe('<DataGridPro /> - Column headers', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {

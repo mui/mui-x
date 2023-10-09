@@ -10,7 +10,12 @@ import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  ChartsTooltip,
+  ChartsTooltipProps,
+  ChartsTooltipSlotComponentProps,
+  ChartsTooltipSlotsComponent,
+} from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
@@ -24,11 +29,13 @@ import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../model
 export interface BarChartSlotsComponent
   extends ChartsAxisSlotsComponent,
     BarPlotSlotsComponent,
-    ChartsLegendSlotsComponent {}
+    ChartsLegendSlotsComponent,
+    ChartsTooltipSlotsComponent {}
 export interface BarChartSlotComponentProps
   extends ChartsAxisSlotComponentProps,
     BarPlotSlotComponentProps,
-    ChartsLegendSlotComponentProps {}
+    ChartsLegendSlotComponentProps,
+    ChartsTooltipSlotComponentProps {}
 
 export interface BarChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -308,6 +315,8 @@ BarChart.propTypes = {
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
     itemContent: PropTypes.elementType,
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**

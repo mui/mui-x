@@ -34,6 +34,8 @@
   { "name": "ChartsPieSorting", "kind": "TypeAlias" },
   { "name": "ChartsTooltip", "kind": "Function" },
   { "name": "ChartsTooltipProps", "kind": "TypeAlias" },
+  { "name": "ChartsTooltipSlotComponentProps", "kind": "Interface" },
+  { "name": "ChartsTooltipSlotsComponent", "kind": "Interface" },
   { "name": "ChartsXAxis", "kind": "Function" },
   { "name": "ChartsXAxisProps", "kind": "Interface" },
   { "name": "ChartsYAxis", "kind": "Function" },
