@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { userEvent, screen } from '@mui/monorepo/test/utils';
+import { userEvent, screen } from '@mui-internal/test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { adapterToUse, buildFieldInteractions, createPickerRenderer } from 'test/utils/pickers';
 
