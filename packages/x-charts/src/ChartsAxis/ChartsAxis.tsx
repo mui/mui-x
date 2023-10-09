@@ -55,7 +55,7 @@ const getAxisId = (
     return null;
   }
   if (typeof propsValue === 'object') {
-    return propsValue.axisId;
+    return propsValue.axisId ?? null;
   }
   return propsValue;
 };
