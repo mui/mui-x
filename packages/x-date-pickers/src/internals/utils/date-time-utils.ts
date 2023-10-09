@@ -1,6 +1,7 @@
 import { DateOrTimeView, DateView, MuiPickersAdapter, TimeView } from '../../models';
-import { resolveTimeFormat, isTimeView } from './time-utils';
+import { resolveTimeFormat, isTimeView, isInternalTimeView } from './time-utils';
 import { resolveDateFormat } from './date-utils';
+import { DateOrTimeViewWithMeridiem } from '../models';
 
 export const resolveDateTimeFormat = (
   utils: MuiPickersAdapter<any>,
@@ -33,4 +34,15 @@ export const resolveDateTimeFormat = (
   const dateFormat = resolveDateFormat(utils, { views: dateViews, ...other }, false);
 
   return `${dateFormat} ${timeFormat}`;
+};
+
+export const resolveViews = (
+  ampm: boolean,
+  views: readonly DateOrTimeView[],
+  shouldUseSingleColumn: boolean,
+): DateOrTimeViewWithMeridiem[] => {
+  if (shouldUseSingleColumn) {
+    return views.filter((view) => !isInternalTimeView(view) || view === 'hours');
+  }
+  return (ampm ? [...views, 'meridiem'] : views) as DateOrTimeViewWithMeridiem[];
 };

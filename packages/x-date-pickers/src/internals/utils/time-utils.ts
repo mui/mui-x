@@ -1,4 +1,4 @@
-import { MuiPickersAdapter, TimeView } from '../../models';
+import { MuiPickersAdapter, TimeStepOptions, TimeView } from '../../models';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
@@ -92,3 +92,8 @@ export const resolveTimeFormat = (
     ? `${formats.hours12h}:${formats.minutes} ${formats.meridiem}`
     : `${formats.hours24h}:${formats.minutes}`;
 };
+
+export const resolveShouldRenderTimeInASingleColumn = (
+  timeSteps: TimeStepOptions,
+  threshold: number,
+) => (24 * 60) / ((timeSteps.hours ?? 1) * (timeSteps.minutes ?? 5)) <= threshold;

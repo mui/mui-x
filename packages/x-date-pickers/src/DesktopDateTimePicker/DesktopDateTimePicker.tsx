@@ -15,8 +15,9 @@ import { CalendarIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
+import { resolveDateTimeFormat, resolveViews } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
+import { resolveShouldRenderTimeInASingleColumn } from '../internals/utils/time-utils';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -36,9 +37,15 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     DesktopDateTimePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimePicker');
 
+  const thresholdToRenderTimeInASingleColumn =
+    defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
   const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
   const shouldUseNewRenderer =
     !defaultizedProps.viewRenderers || Object.keys(defaultizedProps.viewRenderers).length === 0;
+  const shouldRenderTimeInASingleColumn = resolveShouldRenderTimeInASingleColumn(
+    timeSteps,
+    thresholdToRenderTimeInASingleColumn,
+  );
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeViewWithMeridiem, any, {}> =
     // we can only ensure the expected two-column layout if none of the renderers are overridden
@@ -71,12 +78,16 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     ...defaultizedProps,
     viewRenderers,
     format: resolveDateTimeFormat(utils, defaultizedProps),
-    views: (defaultizedProps.ampm
-      ? [...defaultizedProps.views, 'meridiem']
-      : defaultizedProps.views) as DateOrTimeViewWithMeridiem[],
+    views: resolveViews(
+      defaultizedProps.ampm,
+      defaultizedProps.views,
+      shouldRenderTimeInASingleColumn,
+    ),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
     timeSteps,
+    thresholdToRenderTimeInASingleColumn,
+    shouldRenderTimeInASingleColumn,
     slots: {
       field: DateTimeField,
       openPickerIcon: CalendarIcon,

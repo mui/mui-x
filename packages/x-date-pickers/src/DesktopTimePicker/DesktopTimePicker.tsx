@@ -18,7 +18,10 @@ import {
 } from '../timeViewRenderers';
 import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { resolveTimeFormat } from '../internals/utils/time-utils';
+import {
+  resolveShouldRenderTimeInASingleColumn,
+  resolveTimeFormat,
+} from '../internals/utils/time-utils';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -41,8 +44,10 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const thresholdToRenderTimeInASingleColumn =
     defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
   const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
-  const shouldRenderTimeInASingleColumn =
-    (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
+  const shouldRenderTimeInASingleColumn = resolveShouldRenderTimeInASingleColumn(
+    timeSteps,
+    thresholdToRenderTimeInASingleColumn,
+  );
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
