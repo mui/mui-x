@@ -16,6 +16,9 @@ interface GetWordsByLinesParams {
    */
   needsComputation?: boolean;
 }
+
+export type ChartsTextBaseline = 'hanging' | 'central' | 'auto';
+
 export interface ChartsTextProps
   extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width' | 'ref'>,
     GetWordsByLinesParams {
@@ -23,7 +26,11 @@ export interface ChartsTextProps
    * Height of a text line (in `em`).
    */
   lineHeight?: number;
-  dominantBaseline?: 'hanging' | 'central' | 'auto';
+  /**
+   * The text baseline
+   * @default 'central'
+   */
+  dominantBaseline?: ChartsTextBaseline;
   ownerState?: any;
 }
 

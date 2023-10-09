@@ -4,7 +4,7 @@ import { NoSsr } from '@mui/base/NoSsr';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
-import { AnchorPosition, SizingParams, getSeriesToDisplay } from './utils';
+import { AnchorPosition, Directions, getSeriesToDisplay } from './utils';
 import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
 import { ChartsLegendClasses, getChartsLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
@@ -31,6 +31,11 @@ export type ChartsLegendProps = {
    */
   hidden?: boolean;
   /**
+   * The rirection of the legend layout.
+   * The default depends on the chart
+   */
+  direction?: Directions;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -40,7 +45,7 @@ export type ChartsLegendProps = {
    * @default {}
    */
   slotProps?: ChartsLegendSlotComponentProps;
-} & SizingParams;
+};
 
 type DefaultizedChartsLegendProps = DefaultizedProps<ChartsLegendProps, 'direction' | 'position'>;
 
@@ -58,7 +63,7 @@ const useUtilityClasses = (ownerState: DefaultizedChartsLegendProps & { theme: T
 
 export type ChartsLegendRootOwnerState = {
   position: AnchorPosition;
-  direction: 'row' | 'column';
+  direction: Directions;
   drawingArea: DrawingArea;
   offsetX?: number;
   offsetY?: number;
