@@ -15,6 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreIcon from '@mui/icons-material/Restore';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
+import { darken } from '@mui/material/styles';
 
 export default function BulkEditingNoSnap() {
   const { data } = useDemoData({
@@ -171,10 +172,20 @@ export default function BulkEditingNoSnap() {
           unstable_ignoreValueFormatterDuringExport
           sx={{
             '& .MuiDataGrid-row.row--removed': {
-              backgroundColor: 'rgba(255, 170, 170, 0.3)',
+              backgroundColor: (theme) => {
+                if (theme.palette.mode === 'light') {
+                  return 'rgba(255, 170, 170, 0.3)';
+                }
+                return darken('rgba(255, 170, 170, 1)', 0.7);
+              },
             },
             '& .MuiDataGrid-row.row--edited': {
-              backgroundColor: 'rgba(255, 254, 176, 0.3)',
+              backgroundColor: (theme) => {
+                if (theme.palette.mode === 'light') {
+                  return 'rgba(255, 254, 176, 0.3)';
+                }
+                return darken('rgba(255, 254, 176, 1)', 0.6);
+              },
             },
           }}
           loading={isSaving}
