@@ -63,4 +63,25 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
   });
+
+  describe('prop: timeSteps', () => {
+    it('should use "DigitalClock" view renderer, when "timeSteps.minutes" = 60', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      render(
+        <DesktopDateTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          timeSteps={{ minutes: 60 }}
+        />,
+      );
+
+      userEvent.mousePress(screen.getByLabelText(/Choose date/));
+
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
+      userEvent.mousePress(screen.getByRole('option', { name: '03:00 AM' }));
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 3, 0, 0));
+      expect(onAccept.callCount).to.equal(1);
+    });
+  });
 });
