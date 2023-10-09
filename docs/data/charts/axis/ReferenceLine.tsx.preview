@@ -1,0 +1,7 @@
+<ResponsiveChartContainer {...config}>
+  <LinePlot />
+  <ChartsReferenceLine x={new Date(2023, 8, 2, 5)} />
+  <ChartsReferenceLine y={50} />
+  <ChartsXAxis />
+  <ChartsYAxis />
+</ResponsiveChartContainer>

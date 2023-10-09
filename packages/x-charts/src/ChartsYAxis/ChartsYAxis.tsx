@@ -40,9 +40,10 @@ const defaultProps = {
 
 function ChartsYAxis(inProps: ChartsYAxisProps) {
   const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
+  const { yAxisIds } = React.useContext(CartesianContext);
   const {
     yAxis: {
-      [props.axisId]: { scale: yScale, ticksNumber, ...settings },
+      [props.axisId ?? yAxisIds[0]]: { scale: yScale, ticksNumber, ...settings },
     },
   } = React.useContext(CartesianContext);
 
@@ -150,9 +151,10 @@ ChartsYAxis.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Id of the axis to render.
+   * The id of the axis to render.
+   * If undefined, it will be the first axis defined.
    */
-  axisId: PropTypes.string.isRequired,
+  axisId: PropTypes.string,
   /**
    * Override or extend the styles applied to the component.
    */

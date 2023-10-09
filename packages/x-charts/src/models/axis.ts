@@ -39,9 +39,10 @@ export interface ChartsAxisSlotComponentProps {
 
 export interface ChartsAxisProps extends TickParams {
   /**
-   * Id of the axis to render.
+   * The id of the axis to render.
+   * If undefined, it will be the first axis defined.
    */
-  axisId: string;
+  axisId?: string;
   /**
    * If true, the axis line is disabled.
    * @default false
