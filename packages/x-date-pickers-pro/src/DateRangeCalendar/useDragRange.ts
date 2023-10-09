@@ -166,12 +166,13 @@ const useDragRangeEvents = <TDate>({
   });
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
+    // on mobile we should only initialize dragging state after move is detected
+    setIsDragging(true);
     const target = resolveElementFromTouch(event);
     if (!target) {
       return;
     }
 
-    event.stopPropagation();
     setIsDragging(true);
 
     const button = event.target as HTMLButtonElement;
