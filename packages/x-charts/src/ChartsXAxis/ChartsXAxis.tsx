@@ -9,7 +9,7 @@ import useTicks from '../hooks/useTicks';
 import { ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText } from '../internals/components/ChartsText';
+import { ChartsText, ChartsTextProps } from '../internals/components/ChartsText';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -84,7 +84,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
       style: { fontSize: tickFontSize },
       className: classes.tickLabel,
-    } as const,
+    } as Partial<ChartsTextProps>,
     className: classes.tickLabel,
     ownerState: {},
   });
@@ -100,7 +100,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
       },
       className: classes.label,
-    } as const,
+    } as Partial<ChartsTextProps>,
     ownerState: {},
   });
 

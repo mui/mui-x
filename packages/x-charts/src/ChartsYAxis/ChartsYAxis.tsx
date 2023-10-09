@@ -8,7 +8,7 @@ import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText } from '../internals/components/ChartsText';
+import { ChartsText, ChartsTextProps } from '../internals/components/ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
@@ -85,7 +85,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
       dominantBaseline: 'central',
       style: { fontSize: tickFontSize },
       className: classes.tickLabel,
-    } as const,
+    } as Partial<ChartsTextProps>,
     ownerState: {},
   });
 
@@ -94,14 +94,14 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       textAnchor: 'middle',
-      dominantBaseline: 'central',
+      dominantBaseline: 'auto',
       style: {
         fontSize: labelFontSize,
         transform: `rotate(${positionSigne * 90}deg)`,
         transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
       },
       className: classes.label,
-    } as const,
+    } as Partial<ChartsTextProps>,
     ownerState: {},
   });
 
