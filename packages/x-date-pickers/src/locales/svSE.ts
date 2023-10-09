@@ -65,21 +65,21 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Välj tid, vald tid är ${utils.format(value, 'fullTime')}`
       : 'Välj tid',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Rensa fält',
 
   // Table labels
   timeTableLabel: 'välj tid',
   dateTableLabel: 'välj datum',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: params => 'Å'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldHoursPlaceholder: () => 'tt',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const svSE = getPickersLocalization(svSEPickers);
