@@ -274,4 +274,12 @@ StaticTimePicker.propTypes = {
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;
 
+/**
+ * Demos:
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ * - [StaticTimePicker API](https://mui.com/x/api/date-pickers/static-time-picker/)
+ */
 export { StaticTimePicker };
