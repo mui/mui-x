@@ -272,7 +272,7 @@ export const buildAggregatedFilterItemsApplier = (
 
   // We generate a new function with `eval()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
-  const filterItemTemplate = `(function filterItem$$(appliers, row, shouldApplyFilter) {
+  const filterItemTemplate = `(function filterItem$$(getRowId, appliers, row, shouldApplyFilter) {
       ${appliers
         .map(
           (applier, i) =>
@@ -305,7 +305,7 @@ export const buildAggregatedFilterItemsApplier = (
     filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
   );
   const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
-    return filterItemCore(appliers, row, shouldApplyItem);
+    return filterItemCore(getRowId, appliers, row, shouldApplyItem);
   };
   filterItemsApplierId += 1;
 
