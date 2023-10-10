@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "Demos:\n- [DateRangeField](http://mui.com/x/react-date-pickers/date-range-field/)\n- [Fields](https://mui.com/x/react-date-pickers/fields/)\n\nAPI:\n- [SingleInputDateRangeField API](https://mui.com/x/api/single-input-date-range-field/)",
   "propDescriptions": {
     "autoFocus": {
       "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount.",
