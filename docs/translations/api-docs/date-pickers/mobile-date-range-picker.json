@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "Demos:\n- [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)\n- [Validation](https://mui.com/x/react-date-pickers/validation/)\n\nAPI:\n- [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)",
   "propDescriptions": {
     "autoFocus": {
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered.",
