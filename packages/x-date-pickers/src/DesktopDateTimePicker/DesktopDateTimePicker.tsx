@@ -533,7 +533,7 @@ DesktopDateTimePicker.propTypes = {
 
 /**
  * Demos:
- * - [TimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
  * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
