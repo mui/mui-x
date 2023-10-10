@@ -182,4 +182,11 @@ GridToolbarQuickFilter.propTypes = {
   quickFilterParser: PropTypes.func,
 } as any;
 
+/**
+ * Demos:
+ * - [Filtering - overview](https://mui.com/x/react-data-grid/filtering/)
+ *
+ * API:
+ * - [GridToolbarQuickFilter API](https://mui.com/x/api/data-grid/grid-toolbar-quick-filter/)
+ */
 export { GridToolbarQuickFilter };
