@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "Demos:\n- [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)\n- [Validation](https://mui.com/x/react-date-pickers/validation/)\n\nAPI:\n- [MonthCalendar API](https://mui.com/x/api/date-pickers/month-calendar/)",
   "propDescriptions": {
     "classes": {
       "description": "Override or extend the styles applied to the component.",
