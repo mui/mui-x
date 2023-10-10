@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "Demos:\n- [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)\n- [Validation](https://mui.com/x/react-date-pickers/validation/)\n\nAPI:\n- [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)",
   "propDescriptions": {
     "ampm": {
       "description": "12h/24h view for hour selection clock.",
