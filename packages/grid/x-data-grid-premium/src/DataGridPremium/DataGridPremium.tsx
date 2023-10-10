@@ -60,6 +60,13 @@ interface DataGridPremiumComponent {
   propTypes?: any;
 }
 
+/**
+ * Demos:
+ * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)
+ */
 export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremiumComponent;
 
 DataGridPremiumRaw.propTypes = {
