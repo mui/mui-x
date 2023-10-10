@@ -383,4 +383,12 @@ DesktopDateRangePicker.propTypes = {
   }),
 } as any;
 
+/**
+ * Demos:
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ * - [DesktopDateRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-range-picker/)
+ */
 export { DesktopDateRangePicker };
