@@ -364,4 +364,12 @@ SingleInputDateRangeField.propTypes = {
   variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
 } as any;
 
+/**
+ * Demos:
+ * - [DateRangeField](http://mui.com/x/react-date-pickers/date-range-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ * - [SingleInputDateRangeField API](https://mui.com/x/api/single-input-date-range-field/)
+ */
 export { SingleInputDateRangeField };
