@@ -424,4 +424,12 @@ DateTimeField.propTypes = {
   variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
 } as any;
 
+/**
+ * Demos:
+ * - [DateTimeField](http://mui.com/x/react-date-pickers/date-time-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ * - [DateTimeField API](https://mui.com/x/api/date-pickers/date-time-field/)
+ */
 export { DateTimeField };
