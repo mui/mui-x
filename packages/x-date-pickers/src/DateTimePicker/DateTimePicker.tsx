@@ -449,4 +449,12 @@ DateTimePicker.propTypes = {
   yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
+/**
+ * Demos:
+ * - [TimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
+ */
 export { DateTimePicker };
