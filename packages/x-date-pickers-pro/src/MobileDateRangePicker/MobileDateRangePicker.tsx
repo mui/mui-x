@@ -16,6 +16,14 @@ type MobileDateRangePickerComponent = (<TDate>(
   props: MobileDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ * - [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)
+ */
 const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TDate>(
   inProps: MobileDateRangePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -383,12 +391,4 @@ MobileDateRangePicker.propTypes = {
   }),
 } as any;
 
-/**
- * Demos:
- * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
- * - [Validation](https://mui.com/x/react-date-pickers/validation/)
- *
- * API:
- * - [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)
- */
 export { MobileDateRangePicker };
