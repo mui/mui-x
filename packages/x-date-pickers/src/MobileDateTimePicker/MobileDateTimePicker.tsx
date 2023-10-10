@@ -20,6 +20,14 @@ type MobileDateTimePickerComponent = (<TDate>(
   props: MobileDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
+ */
 const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDate>(
   inProps: MobileDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -482,12 +490,4 @@ MobileDateTimePicker.propTypes = {
   yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
-/**
- * Demos:
- * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
- * - [Validation](https://mui.com/x/react-date-pickers/validation/)
- *
- * API:
- * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
- */
 export { MobileDateTimePicker };

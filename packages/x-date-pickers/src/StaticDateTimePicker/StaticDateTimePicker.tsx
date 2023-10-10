@@ -14,6 +14,14 @@ type StaticDateTimePickerComponent = (<TDate>(
   props: StaticDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ * - [StaticDateTimePicker API](https://mui.com/x/api/date-pickers/static-date-time-picker/)
+ */
 const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDate>(
   inProps: StaticDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -400,12 +408,4 @@ StaticDateTimePicker.propTypes = {
   yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
-/**
- * Demos:
- * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
- * - [Validation](https://mui.com/x/react-date-pickers/validation/)
- *
- * API:
- * - [StaticDateTimePicker API](https://mui.com/x/api/date-pickers/static-date-time-picker/)
- */
 export { StaticDateTimePicker };
