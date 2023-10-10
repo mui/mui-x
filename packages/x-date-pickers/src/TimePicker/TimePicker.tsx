@@ -337,4 +337,11 @@ TimePicker.propTypes = {
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;
 
+/**
+ * Demos:
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ *
+ * API:
+ * - [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)
+ */
 export { TimePicker };
