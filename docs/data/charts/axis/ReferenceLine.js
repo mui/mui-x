@@ -1,11 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  ResponsiveChartContainer,
-  LinePlot,
-  ChartsXAxis,
-  ChartsYAxis,
-} from '@mui/x-charts';
+import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { LinePlot } from '@mui/x-charts/LineChart';
+
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 
 const timeData = [
