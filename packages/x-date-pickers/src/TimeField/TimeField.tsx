@@ -383,4 +383,12 @@ TimeField.propTypes = {
   variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
 } as any;
 
+/**
+ * Demos:
+ * - [TimeField](http://mui.com/x/react-date-pickers/time-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ * - [TimeField API](https://mui.com/x/api/date-pickers/time-field/)
+ */
 export { TimeField };
