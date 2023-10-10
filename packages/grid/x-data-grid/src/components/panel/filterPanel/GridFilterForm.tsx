@@ -652,15 +652,10 @@ GridFilterForm.propTypes = {
 } as any;
 
 /**
- *
  * Demos:
- *
- * - [DataGrid](https://mui.com/x/react-data-grid/)
- * - [DataGridPro](https://mui.com/x/react-data-grid/#pro-plan)
- * - [DataGridPremium](https://mui.com/x/react-data-grid/#premium-plan)
+ * - [Filtering - overview](https://mui.com/x/react-data-grid/filtering/)
  *
  * API:
- *
  * - [GridFilterForm API](https://mui.com/x/api/data-grid/grid-filter-form/)
  */
 export { GridFilterForm };
