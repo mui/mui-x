@@ -16,6 +16,14 @@ type DateTimeFieldComponent = (<TDate>(
   props: DateTimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ * - [DateTimeField](http://mui.com/x/react-date-pickers/date-time-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ * - [DateTimeField API](https://mui.com/x/api/date-pickers/date-time-field/)
+ */
 const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
   inProps: DateTimeFieldProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -424,12 +432,4 @@ DateTimeField.propTypes = {
   variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
 } as any;
 
-/**
- * Demos:
- * - [DateTimeField](http://mui.com/x/react-date-pickers/date-time-field/)
- * - [Fields](https://mui.com/x/react-date-pickers/fields/)
- *
- * API:
- * - [DateTimeField API](https://mui.com/x/api/date-pickers/date-time-field/)
- */
 export { DateTimeField };

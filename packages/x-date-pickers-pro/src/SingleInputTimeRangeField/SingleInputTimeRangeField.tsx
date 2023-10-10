@@ -16,6 +16,14 @@ type DateRangeFieldComponent = (<TDate>(
   props: SingleInputTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
 
+/**
+ * Demos:
+ * - [TimeRangeField](http://mui.com/x/react-date-pickers/time-range-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ * - [SingleInputTimeRangeField API](https://mui.com/x/api/single-input-time-range-field/)
+ */
 const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<TDate>(
   inProps: SingleInputTimeRangeFieldProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -386,12 +394,4 @@ SingleInputTimeRangeField.propTypes = {
   variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
 } as any;
 
-/**
- * Demos:
- * - [TimeRangeField](http://mui.com/x/react-date-pickers/time-range-field/)
- * - [Fields](https://mui.com/x/react-date-pickers/fields/)
- *
- * API:
- * - [SingleInputTimeRangeField API](https://mui.com/x/api/single-input-time-range-field/)
- */
 export { SingleInputTimeRangeField };

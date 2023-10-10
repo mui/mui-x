@@ -61,6 +61,14 @@ type MultiInputDateTimeRangeFieldComponent = (<TDate>(
   props: MultiInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ * - [DateTimeRangeField](http://mui.com/x/react-date-pickers/date-time-range-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ * - [MultiInputDateTimeRangeField API](https://mui.com/x/api/multi-input-date-time-range-field/)
+ */
 const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<TDate>(
   inProps: MultiInputDateTimeRangeFieldProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -458,12 +466,4 @@ MultiInputDateTimeRangeField.propTypes = {
   value: PropTypes.arrayOf(PropTypes.any),
 } as any;
 
-/**
- * Demos:
- * - [DateTimeRangeField](http://mui.com/x/react-date-pickers/date-time-range-field/)
- * - [Fields](https://mui.com/x/react-date-pickers/fields/)
- *
- * API:
- * - [MultiInputDateTimeRangeField API](https://mui.com/x/api/multi-input-date-time-range-field/)
- */
 export { MultiInputDateTimeRangeField };
