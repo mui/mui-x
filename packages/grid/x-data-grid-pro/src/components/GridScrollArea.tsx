@@ -5,8 +5,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
-import { styled } from '@mui/system';
-import { getTotalHeaderHeight, useTimeout } from '@mui/x-data-grid/internals';
+import { getTotalHeaderHeight, useTimeout, styled } from '@mui/x-data-grid/internals';
 import {
   GridEventListener,
   GridScrollParams,
