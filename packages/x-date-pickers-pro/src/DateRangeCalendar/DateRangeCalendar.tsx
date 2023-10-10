@@ -155,6 +155,15 @@ type DateRangeCalendarComponent = (<TDate>(
   props: DateRangeCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [DateRangeCalendar](https://mui.com/x/react-date-pickers/date-range-calendar/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ * - [DateRangeCalendar API](https://mui.com/x/api/date-pickers/date-range-calendar/)
+ */
 const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   inProps: DateRangeCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
