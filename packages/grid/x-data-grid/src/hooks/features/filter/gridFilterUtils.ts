@@ -374,7 +374,7 @@ export const buildAggregatedQuickFilterApplier = (
     const result = {} as GridQuickFilterValueResult;
     const usedCellParams = {} as { [field: string]: GridCellParams };
 
-    /* eslint-disable no-restricted-syntax, no-labels, no-continue */
+    /* eslint-disable no-restricted-syntax, no-labels */
     outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
       const filterValue = quickFilterValues[v];
 
@@ -415,7 +415,7 @@ export const buildAggregatedQuickFilterApplier = (
 
       result[filterValue] = false;
     }
-    /* eslint-enable no-restricted-syntax, no-labels, no-continue */
+    /* eslint-enable no-restricted-syntax, no-labels */
 
     return result;
   };
