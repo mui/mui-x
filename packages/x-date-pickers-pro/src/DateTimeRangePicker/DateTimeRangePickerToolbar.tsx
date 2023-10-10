@@ -8,6 +8,7 @@ import {
   useLocaleText,
   ExportedBaseToolbarProps,
   useUtils,
+  pickersToolbarTextClasses,
 } from '@mui/x-date-pickers/internals';
 import {
   DateTimePickerToolbarProps,
@@ -65,7 +66,7 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   DateTimePickerToolbarProps<any> & {
     ownerState?: DateTimeRangePickerToolbarProps<any>;
   }
->(({ ownerState }) => ({
+>(({ theme, ownerState }) => ({
   borderBottom: 'none',
   ...(ownerState?.toolbarVariant !== 'desktop'
     ? {
@@ -74,19 +75,27 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
     : {
         paddingBottom: 0,
       }),
+  [`& .${pickersToolbarTextClasses.selected}`]: {
+    color: (theme.vars || theme).palette.primary.main,
+    fontWeight: theme.typography.fontWeightBold,
+  },
 })) as typeof DateTimePickerToolbar;
 
 const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
-  slot: 'StartToolbar',
+  slot: 'EndToolbar',
   overridesResolver: (_, styles) => styles.endToolbar,
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<
   DateTimePickerToolbarProps<any> & {
     ownerState?: DateTimeRangePickerToolbarProps<any>;
   }
->(({ ownerState }) => ({
+>(({ theme, ownerState }) => ({
   padding: ownerState?.toolbarVariant !== 'desktop' ? '12px 8px 12px 12px' : undefined,
+  [`& .${pickersToolbarTextClasses.selected}`]: {
+    color: (theme.vars || theme).palette.primary.main,
+    fontWeight: theme.typography.fontWeightBold,
+  },
 })) as typeof DateTimePickerToolbar;
 
 const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar<
