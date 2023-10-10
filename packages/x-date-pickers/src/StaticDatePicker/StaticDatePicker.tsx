@@ -329,4 +329,12 @@ StaticDatePicker.propTypes = {
   yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
+/**
+ * Demos:
+ * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ * - [StaticDatePicker API](https://mui.com/x/api/date-pickers/static-date-picker/)
+ */
 export { StaticDatePicker };
