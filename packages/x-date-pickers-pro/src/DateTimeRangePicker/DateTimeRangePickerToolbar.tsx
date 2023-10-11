@@ -62,7 +62,6 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'StartToolbar',
   overridesResolver: (_, styles) => styles.startToolbar,
-  shouldForwardProp: (prop) => prop !== 'ownerState',
 })<
   DateTimePickerToolbarProps<any> & {
     ownerState?: DateTimeRangePickerToolbarProps<any>;
@@ -86,7 +85,6 @@ const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'EndToolbar',
   overridesResolver: (_, styles) => styles.endToolbar,
-  shouldForwardProp: (prop) => prop !== 'ownerState',
 })<
   DateTimePickerToolbarProps<any> & {
     ownerState?: DateTimeRangePickerToolbarProps<any>;
