@@ -22,9 +22,13 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
       ? 'vuosinäkymä on auki, vaihda kalenterinäkymään'
       : 'kalenterinäkymä on auki, vaihda vuosinäkymään',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Alku',
   end: 'Loppu',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Peruuta',

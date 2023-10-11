@@ -105,21 +105,6 @@ const DateTimeRangePickerTabFiller = styled('div', {
 
 const tabOptions: TabValue[] = ['start-date', 'start-time', 'end-date', 'end-time'];
 
-const resolveTabLabel = (tab: TabValue) => {
-  switch (tab) {
-    case 'start-date':
-      return 'Start date';
-    case 'start-time':
-      return 'Start time';
-    case 'end-date':
-      return 'End date';
-    case 'end-time':
-      return 'End time';
-    default:
-      return '';
-  }
-};
-
 const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   inProps: DateTimeRangePickerTabsProps,
 ) {
@@ -137,8 +122,22 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   const localeText = useLocaleText();
   const classes = useUtilityClasses(props);
   const value = React.useMemo(() => viewToTab(view, rangePosition), [view, rangePosition]);
-  const isPreviousHidden = React.useMemo(() => value === 'start-date', [value]);
-  const isNextHidden = React.useMemo(() => value === 'end-time', [value]);
+  const isPreviousHidden = value === 'start-date';
+  const isNextHidden = value === 'end-time';
+  const tabLabel = React.useMemo(() => {
+    switch (value) {
+      case 'start-date':
+        return localeText.startDate;
+      case 'start-time':
+        return localeText.startTime;
+      case 'end-date':
+        return localeText.endDate;
+      case 'end-time':
+        return localeText.endTime;
+      default:
+        return '';
+    }
+  }, [localeText.endDate, localeText.endTime, localeText.startDate, localeText.startTime, value]);
 
   const handleRangePositionChange = useEventCallback((newTab: TabValue) => {
     if (newTab.includes('start')) {
@@ -149,13 +148,13 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   });
 
   const changeToPreviousTab = useEventCallback(() => {
-    const previousTab = tabOptions[tabOptions.findIndex((option) => option === value) - 1];
+    const previousTab = tabOptions[tabOptions.indexOf(value) - 1];
     onViewChange(tabToView(previousTab));
     handleRangePositionChange(previousTab);
   });
 
   const changeToNextTab = useEventCallback(() => {
-    const nextTab = tabOptions[tabOptions.findIndex((option) => option === value) + 1];
+    const nextTab = tabOptions[tabOptions.indexOf(value) + 1];
     onViewChange(tabToView(nextTab));
     handleRangePositionChange(nextTab);
   });
@@ -174,12 +173,11 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
         <DateTimeRangePickerTabFiller className={classes.filler} />
       )}
       <DateTimeRangePickerTab
-        aria-label={localeText.dateTableLabel}
-        startIcon={value === 'start-date' || value === 'end-date' ? dateIcon : timeIcon}
+        startIcon={isDatePickerView(view) ? dateIcon : timeIcon}
         className={classes.tabButton}
         size="large"
       >
-        {resolveTabLabel(value)}
+        {tabLabel}
       </DateTimeRangePickerTab>
       {!isNextHidden ? (
         <IconButton onClick={changeToNextTab} className={classes.navigationButton}>

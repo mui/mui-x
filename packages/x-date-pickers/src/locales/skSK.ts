@@ -23,9 +23,13 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
       ? 'ročné zobrazenie otvorené, prepnite do zobrazenia kalendára'
       : 'zobrazenie kalendára otvorené, prepnite do zobrazenia roka',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Začiatok',
   end: 'Koniec',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Zrušiť',

@@ -22,9 +22,13 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
       ? 'otwarty jest widok roku, przełącz na widok kalendarza'
       : 'otwarty jest widok kalendarza, przełącz na widok roku',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Początek',
   end: 'Koniec',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Anuluj',

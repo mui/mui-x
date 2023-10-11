@@ -22,9 +22,13 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
       ? "la vista dell'anno è aperta, passare alla vista del calendario"
       : "la vista dell'calendario è aperta, passare alla vista dell'anno",
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Inizio',
   end: 'Fine',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Cancellare',

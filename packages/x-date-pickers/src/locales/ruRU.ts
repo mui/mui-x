@@ -23,9 +23,13 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
       ? 'открыт годовой вид, переключить на календарный вид'
       : 'открыт календарный вид, переключить на годовой вид',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Начало',
   end: 'Конец',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Отмена',

@@ -22,9 +22,13 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
       ? 'Seleção de ano está aberta, alternando para seleção de calendário'
       : 'Seleção de calendários está aberta, alternando para seleção de ano',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Início',
   end: 'Fim',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',

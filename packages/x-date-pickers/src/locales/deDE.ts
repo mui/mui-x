@@ -23,9 +23,13 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
       ? 'Jahresansicht ist geöffnet, zur Kalenderansicht wechseln'
       : 'Kalenderansicht ist geöffnet, zur Jahresansicht wechseln',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Beginn',
   end: 'Ende',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Abbrechen',

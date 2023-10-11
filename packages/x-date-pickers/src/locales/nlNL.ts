@@ -22,9 +22,13 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
       ? 'jaarweergave is geopend, schakel over naar kalenderweergave'
       : 'kalenderweergave is geopend, switch naar jaarweergave',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Einde',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Annuleren',

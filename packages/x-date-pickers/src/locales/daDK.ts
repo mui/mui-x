@@ -23,9 +23,13 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
       ? 'årsvisning er åben, skift til kalendervisning'
       : 'kalendervisning er åben, skift til årsvisning',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Slut',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Annuller',

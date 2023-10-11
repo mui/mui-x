@@ -22,9 +22,13 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
       ? 'årsvyn är öppen, byt till kalendervy'
       : 'kalendervyn är öppen, byt till årsvy',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Slut',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Avbryt',

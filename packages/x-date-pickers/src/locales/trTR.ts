@@ -22,9 +22,13 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
       ? 'yıl görünümü açık, takvim görünümüne geç'
       : 'takvim görünümü açık, yıl görünümüne geç',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Başlangıç',
   end: 'Bitiş',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'iptal',

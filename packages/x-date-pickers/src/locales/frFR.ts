@@ -22,9 +22,13 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
       ? 'La vue année est ouverte, ouvrir la vue calendrier'
       : 'La vue calendrier est ouverte, ouvrir la vue année',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Début',
   end: 'Fin',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Annuler',

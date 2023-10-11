@@ -22,9 +22,13 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
       ? 'årsvisning er åpen, bytt til kalendervisning'
       : 'kalendervisning er åpen, bytt til årsvisning',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Slutt',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Avbryt',

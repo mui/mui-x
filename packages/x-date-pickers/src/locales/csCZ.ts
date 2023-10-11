@@ -23,9 +23,13 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
       ? 'roční zobrazení otevřeno, přepněte do zobrazení kalendáře'
       : 'zobrazení kalendáře otevřeno, přepněte do zobrazení roku',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Začátek',
   end: 'Konec',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Zrušit',

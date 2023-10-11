@@ -22,9 +22,13 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
       ? 'річний вигляд відкрито, перейти до календарного вигляду'
       : 'календарний вигляд відкрито, перейти до річного вигляду',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Початок',
   end: 'Кінець',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Відміна',

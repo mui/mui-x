@@ -22,9 +22,13 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
       ? 'سال والا ویو کھلا ہے۔ کیلنڈر والا ویو کھولیں'
       : 'کیلنڈر والا ویو کھلا ہے۔ سال والا ویو کھولیں',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'شروع',
   end: 'ختم',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'کینسل',

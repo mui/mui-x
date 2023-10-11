@@ -22,9 +22,13 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
       ? '연도 선택 화면에서 달력 화면으로 전환하기'
       : '달력 화면에서 연도 선택 화면으로 전환하기',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '시작',
   end: '종료',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: '취소',

@@ -20,9 +20,13 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year' ? '年视图已打开，切换为日历视图' : '日历视图已打开，切换为年视图',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '开始',
   end: '结束',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: '取消',

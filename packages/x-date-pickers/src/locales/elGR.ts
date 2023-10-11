@@ -22,9 +22,13 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
       ? 'η προβολή έτους είναι ανοιχτή, μεταβείτε στην προβολή ημερολογίου'
       : 'η προβολή ημερολογίου είναι ανοιχτή, μεταβείτε στην προβολή έτους',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Αρχή',
   end: 'Τέλος',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Άκυρο',
