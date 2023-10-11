@@ -86,7 +86,8 @@ const DateTimeRangePickerTabsRoot = styled('div', {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  minHeight: 48,
 }));
 
 const DateTimeRangePickerTab = styled(Button, {
