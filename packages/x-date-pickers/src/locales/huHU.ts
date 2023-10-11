@@ -23,7 +23,7 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
       ? 'az évválasztó már nyitva, váltson a naptárnézetre'
       : 'a naptárnézet már nyitva, váltson az évválasztóra',
 
-  // DateRange label
+  // DateRange labels
   start: 'Kezdő dátum',
   end: 'Záró dátum',
   // startDate: 'Start date',
