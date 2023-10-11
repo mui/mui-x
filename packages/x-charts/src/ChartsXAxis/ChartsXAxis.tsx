@@ -38,7 +38,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsXAxis' });
   const {
     xAxis: {
-      [props.axisId]: { scale: xScale, ticksNumber, ...settings },
+      [props.axisId]: { scale: xScale, tickNumber, ...settings },
     },
   } = React.useContext(CartesianContext);
 
@@ -63,7 +63,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const xTicks = useTicks({ scale: xScale, ticksNumber, valueFormatter });
+  const xTicks = useTicks({ scale: xScale, tickNumber, valueFormatter });
   const positionSigne = position === 'bottom' ? 1 : -1;
 
   const labelRefPoint = {
