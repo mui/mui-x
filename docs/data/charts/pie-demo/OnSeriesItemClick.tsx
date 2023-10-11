@@ -4,9 +4,9 @@ import { PieItemIdentifier, DefaultizedPieValueType } from '@mui/x-charts/models
 import { Typography, Stack } from '@mui/material';
 
 const items = [
-  { value: 10, label: 'series A ( no Id )' },
-  { id: 'id_B', value: 15, label: 'series B' },
-  { id: 'id_C', value: 20, label: 'series C' },
+  { value: 10, label: 'Series A ( no Id )' },
+  { id: 'id_B', value: 15, label: 'Series B' },
+  { id: 'id_C', value: 20, label: 'Series C' },
 ];
 
 const formatObject = (obj: null | PieItemIdentifier) => {
