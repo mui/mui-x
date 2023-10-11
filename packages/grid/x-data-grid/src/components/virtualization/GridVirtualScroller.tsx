@@ -40,7 +40,7 @@ const GridVirtualScroller = React.forwardRef<
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const styles = React.useMemo(
-    () => (rootProps.autoHeight ? { flex: 'none' } : {}),
+    () => (rootProps.autoHeight ? {} : { flex: '1 1 0' }),
     [rootProps.autoHeight],
   );
 
