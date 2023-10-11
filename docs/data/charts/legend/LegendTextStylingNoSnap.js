@@ -24,7 +24,7 @@ export default function LegendTextStylingNoSnap() {
         {
           propName: 'fill',
           knob: 'select',
-          defaultValue: 'black',
+          defaultValue: 'blue',
           options: ['black', 'blue', 'red', 'green'],
         },
         { propName: 'breakLine', knob: 'switch', defaultValue: false },
