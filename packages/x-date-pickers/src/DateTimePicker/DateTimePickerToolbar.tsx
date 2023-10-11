@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import clsx from 'clsx';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
@@ -205,6 +206,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
     toolbarVariant = 'mobile',
     markSelected = true,
     toolbarTitle: inToolbarTitle,
+    className,
     ...other
   } = props;
   const ownerState = props;
@@ -237,7 +239,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
   return (
     <DateTimePickerToolbarRoot
       isLandscape={isLandscape}
-      className={classes.root}
+      className={clsx(classes.root, className)}
       toolbarTitle={toolbarTitle}
       {...other}
       ownerState={ownerState}

@@ -13,6 +13,7 @@ import {
 import {
   DateTimePickerToolbarProps,
   DateTimePickerToolbar,
+  dateTimePickerToolbarClasses,
 } from '@mui/x-date-pickers/DateTimePicker';
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '@mui/x-date-pickers/internals/models';
 import { DateRange } from '../internals/models';
@@ -75,7 +76,7 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
     : {
         paddingBottom: 0,
       }),
-  [`& .${pickersToolbarTextClasses.selected}`]: {
+  [`&.${dateTimePickerToolbarClasses.root} .${pickersToolbarTextClasses.selected}`]: {
     color: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightBold,
   },
@@ -92,7 +93,7 @@ const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   }
 >(({ theme, ownerState }) => ({
   padding: ownerState?.toolbarVariant !== 'desktop' ? '12px 8px 12px 12px' : undefined,
-  [`& .${pickersToolbarTextClasses.selected}`]: {
+  [`&.${dateTimePickerToolbarClasses.root} .${pickersToolbarTextClasses.selected}`]: {
     color: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightBold,
   },
