@@ -101,11 +101,12 @@ const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder'> & {
   isEditable?: boolean;
   isSelected?: boolean;
+  isSelectionMode?: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { align, showRightBorder, isEditable, isSelected, classes } = ownerState;
+  const { align, showRightBorder, isEditable, isSelected, isSelectionMode, classes } = ownerState;
 
   const slots = {
     root: [
@@ -114,6 +115,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEditable && 'cell--editable',
       isSelected && 'selected',
       showRightBorder && 'cell--withRightBorder',
+      isSelectionMode && !isEditable && 'cell--selectionMode',
       'withBorderColor',
     ],
     content: ['cellContent'],
@@ -610,7 +612,16 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected };
+  // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
+  const isSelectionMode = rootProps.unstable_cellSelection ?? false;
+  const ownerState = {
+    align,
+    showRightBorder,
+    isEditable,
+    classes: rootProps.classes,
+    isSelected,
+    isSelectionMode,
+  };
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(

@@ -392,6 +392,9 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
     },
+    [`& .${gridClasses.cell}.${gridClasses['cell--selectionMode']}`]: {
+      cursor: 'default',
+    },
     [`& .${gridClasses.cell}.${gridClasses['cell--editing']}`]: {
       padding: 1,
       display: 'flex',
