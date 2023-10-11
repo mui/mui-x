@@ -91,7 +91,8 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
           width: DIALOG_WIDTH,
           [`.${multiSectionDigitalClockSectionClasses.root}`]: {
             flex: 1,
-            maxHeight: VIEW_HEIGHT,
+            // account for the border on `MultiSectionDigitalClock`
+            maxHeight: VIEW_HEIGHT - 1,
             [`.${multiSectionDigitalClockSectionClasses.item}`]: {
               width: 'auto',
             },
