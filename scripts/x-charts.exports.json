@@ -16,6 +16,7 @@
   { "name": "blueberryTwilightPalette", "kind": "Variable" },
   { "name": "blueberryTwilightPaletteDark", "kind": "Variable" },
   { "name": "blueberryTwilightPaletteLight", "kind": "Variable" },
+  { "name": "CardinalDirections", "kind": "Interface" },
   { "name": "CartesianContextProvider", "kind": "Function" },
   { "name": "CartesianSeriesType", "kind": "TypeAlias" },
   { "name": "ChartContainer", "kind": "Variable" },
