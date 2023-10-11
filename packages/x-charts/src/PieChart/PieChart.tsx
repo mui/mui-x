@@ -19,6 +19,7 @@ import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHigh
 import { PiePlot, PiePlotProps, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
 import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+import OnCLick from '../OnClickHandler';
 
 export interface PieChartSlotsComponent
   extends ChartsAxisSlotsComponent,
@@ -107,6 +108,7 @@ function PieChart(props: PieChartProps) {
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       <ChartsTooltip {...tooltip} />
+      <OnCLick {...tooltip} onClick={() => {}} />
       {children}
     </ResponsiveChartContainer>
   );

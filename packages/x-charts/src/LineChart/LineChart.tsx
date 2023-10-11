@@ -27,6 +27,7 @@ import {
   LineHighlightPlotSlotsComponent,
   LineHighlightPlotSlotComponentProps,
 } from './LineHighlightPlot';
+import OnCLick from '../OnClickHandler';
 
 export interface LineChartSlotsComponent
   extends ChartsAxisSlotsComponent,
@@ -139,6 +140,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       <MarkPlot slots={slots} slotProps={slotProps} />
       <LineHighlightPlot slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
+      <OnCLick {...tooltip} />
       <ChartsTooltip {...tooltip} />
       <ChartsClipPath id={clipPathId} />
       {children}
