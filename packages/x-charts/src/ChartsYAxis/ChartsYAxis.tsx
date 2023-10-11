@@ -38,7 +38,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
   const {
     yAxis: {
-      [props.axisId]: { scale: yScale, ticksNumber, ...settings },
+      [props.axisId]: { scale: yScale, tickNumber, ...settings },
     },
   } = React.useContext(CartesianContext);
 
@@ -63,7 +63,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const yTicks = useTicks({ scale: yScale, ticksNumber, valueFormatter });
+  const yTicks = useTicks({ scale: yScale, tickNumber, valueFormatter });
 
   const positionSigne = position === 'right' ? 1 : -1;
 
