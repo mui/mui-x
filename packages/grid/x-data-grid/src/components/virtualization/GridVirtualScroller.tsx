@@ -22,16 +22,16 @@ const VirtualScrollerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
   overridesResolver: (props, styles) => styles.virtualScroller,
-})<{ ownerState: OwnerState }>(({ ownerState }) => ({
+})<{ ownerState: OwnerState }>({
   overflow: 'auto',
   height: '100%',
-  flex: ownerState.autoHeight ? 'none' : '1 1 0',
+
   // See https://github.com/mui/mui-x/issues/4360
   position: 'relative',
   '@media print': {
     overflow: 'hidden',
   },
-}));
+});
 
 const GridVirtualScroller = React.forwardRef<
   HTMLDivElement,
@@ -39,11 +39,16 @@ const GridVirtualScroller = React.forwardRef<
 >(function GridVirtualScroller(props, ref) {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
+  const styles = React.useMemo(
+    () => (rootProps.autoHeight ? { flex: 'none' } : {}),
+    [rootProps.autoHeight],
+  );
 
   return (
     <VirtualScrollerRoot
       ref={ref}
       {...props}
+      style={{ ...props.style, ...styles }}
       className={clsx(classes.root, props.className)}
       ownerState={rootProps}
     />
