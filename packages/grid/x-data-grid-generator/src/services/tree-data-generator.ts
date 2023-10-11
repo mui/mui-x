@@ -14,7 +14,6 @@ export interface AddPathToDemoDataOptions {
    * @default 1
    */
   maxDepth?: number;
-
   /**
    * The average amount of children in a node
    * @default 2
