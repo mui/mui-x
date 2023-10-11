@@ -57,6 +57,7 @@ export const useField = <
       error,
       clearable,
       onClear,
+      disabled,
       ...otherForwardedProps
     },
     fieldValueManager,
@@ -521,6 +522,7 @@ export const useField = <
   return {
     placeholder,
     autoComplete: 'off',
+    disabled: Boolean(disabled),
     ...otherForwardedProps,
     value: shouldShowPlaceholder ? '' : valueStr,
     inputMode,
@@ -535,6 +537,6 @@ export const useField = <
     onClear: handleClearValue,
     error: inputError,
     ref: handleRef,
-    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly),
+    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 };

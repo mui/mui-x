@@ -3,6 +3,150 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.16.1
+
+_Oct 6, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🥧 Support interaction with pie chart
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.16.1`
+
+- [DataGrid] Add a new demo with sparklines (#9228) @flaviendelangle
+- [DataGrid] Fix autosize missing a few pixels (#10471) @romgrk
+- [DataGrid] Make `disableColumnSelector` demo idempotent (#10548) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@6.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.16.1`.
+
+#### `@mui/x-data-grid-premium@6.16.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.16.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.16.1`
+
+- [pickers] Avoid calendar layout shifting when changing views (#10541) @LukasTy
+- [pickers] Fix clearable behavior when disabled (#10542) @noraleonte
+- [pickers] Improve customization playground examples (#10544) @noraleonte
+
+#### `@mui/x-date-pickers-pro@6.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
+
+- [DateRangePicker] Fix `InputProps` propagation in multi input (#10564) @alexfauquette
+
+### Charts / `@mui/x-charts@6.0.0-alpha.14`
+
+- [charts] Display cursor pointer for pie chart only if `onClick` is provided (#10551) @giladappsforce
+- [charts] Add `onClick` prop to PieChart (#10506) @giladappsforce
+- [charts] Support `slots`/`slotProps` for the tooltip (#10515) @alexfauquette
+
+### Docs
+
+- [docs] Add `DateRangePicker` example with a `Button` trigger (#10485) @LukasTy
+- [docs] Add section about disabling columns panel (#10328) @MBilalShafi
+- [docs] Add section about overriding slots to base concepts (#10421) @noraleonte
+- [docs] Add "What's new" page listing all release announcements (#9727) @joserodolfofreitas
+- [docs] Update RTL Support section of the grid localization docs (#10561) @MBilalShafi
+
+### Core
+
+- [core] Fix casing consistency with legal and marketing content @oliviertassinari
+- [core] Revert the link in the priority support ticket description (#10517) @michelengelen
+- [CHANGELOG] Polish image @oliviertassinari
+
+## 6.16.0
+
+_Sep 29, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add a clearable behavior to all the single input pickers and fields (#9095) @noraleonte
+
+  The pickers and fields now have an out-of-the box implementation for clearing the field value. You can see the documentation for this behavior on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#clearing-the-value).
+
+  <img width="337" height="139" alt="Clearable behavior" src="https://github.com/mui/mui-x/assets/3165635/a5407cb6-0b8a-443c-b4b9-1f81ceb4d087">
+
+- 💫 Add Date Picker customization playground (#9581) @noraleonte
+
+  You can play around with style customization options on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#customization).
+
+  We are thrilled to hear your feedback about this functionality!
+
+- 🚀 Fix header filters menu auto closing on render (#10483) @MBilalShafi
+- 🎯 Fix column headers scroll when theme scoping is used (#10437) @cherniavskii
+- 🌍 Improve Russian (ru-RU) locale on the data grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.16.0`
+
+- [DataGrid] Fix column headers scroll when theme scoping is used (#10437) @cherniavskii
+- [DataGrid] Rename `global` to `globalScope` due to Jest issue (#10470) @romgrk
+- [l10n] Improve Russian (ru-RU) locale (#10464 and #10407) @NKodos
+
+#### `@mui/x-data-grid-pro@6.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.16.0`, plus:
+
+- [DataGridPro] Fix header filters menu auto closing on render (#10483) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@6.16.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.16.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.16.0`
+
+- [pickers] Add warning to `shouldDisableDate` validation (#10502) @michelengelen
+- [pickers] Implement `clearable` field behavior (#9095) @noraleonte
+- [pickers] Refactor `dayOfWeekFormatter` (#10345) @michelengelen
+
+#### `@mui/x-date-pickers-pro@6.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.16.0`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.13`
+
+- [charts] Share upfront future Pro features (#10465) @oliviertassinari
+
+### Tree View / `@mui/x-tree-view@6.0.0-beta.0`
+
+- [TreeView] Do not try to focus a collapsed node when re-focusing the TreeView (#10422) @flaviendelangle
+- [TreeView] Fix the typing of the `Multiple` generic (#10478) @flaviendelangle
+
+### Docs
+
+- [docs] Correct the typo in data grid api docs (#10477) @MBilalShafi
+- [docs] Add customization playground (#9581) @noraleonte
+- [docs] Fix Tree View product ID (#10428) @oliviertassinari
+- [docs] Fix demo crashing when all rows are deleted (#10438) @cherniavskii
+- [docs] Fix mobile scrollbar column resize (#10455) @oliviertassinari
+- [docs] Fix usage of `GridRenderCellParams` interface (#10435) @cherniavskii
+
+### Core
+
+- [core] Fix typo in header data grid quick filter @oliviertassinari
+- [core] Group D3 renovate PRs (#10480) @flaviendelangle
+- [core] Link the priority support page (#10495) @michelengelen
+- [core] Move the pickers describes to the test utils folder (#10490) @flaviendelangle
+- [core] Priority Support casing normalization @oliviertassinari
+- [core] Remove automated DataGrid performance tests (#10414) @romgrk
+- [core] Sync `prism-okaidia.css` with docs-infra @oliviertassinari
+- [core] Update issue actions & templates (#10375) @romgrk
+- [core] Update release guide (#10468) @DanailH
+
 ## 6.15.0
 
 _Sep 22, 2023_

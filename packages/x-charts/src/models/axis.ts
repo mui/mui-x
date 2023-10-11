@@ -8,6 +8,7 @@ import type {
 } from 'd3-scale';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
+import { ChartsTextProps } from '../internals/components/ChartsText';
 
 export type D3Scale =
   | ScaleBand<any>
@@ -26,15 +27,15 @@ export type D3ContinuouseScale =
 export interface ChartsAxisSlotsComponent {
   axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
   axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
-  axisTickLabel?: React.JSXElementConstructor<React.SVGAttributes<SVGTextElement>>;
-  axisLabel?: React.JSXElementConstructor<React.SVGAttributes<SVGTextElement>>;
+  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
 }
 
 export interface ChartsAxisSlotComponentProps {
   axisLine?: Partial<React.SVGAttributes<SVGPathElement>>;
   axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTickLabel?: Partial<React.SVGAttributes<SVGTextElement>>;
-  axisLabel?: Partial<React.SVGAttributes<SVGTextElement>>;
+  axisTickLabel?: Partial<ChartsTextProps>;
+  axisLabel?: Partial<ChartsTextProps>;
 }
 
 export interface ChartsAxisProps extends TickParams {

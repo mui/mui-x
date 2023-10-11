@@ -485,13 +485,13 @@ describe('<DataGridPro /> - Columns', () => {
         await autosize({ includeHeaders: true }, [155, 177]);
       });
       it('.includeOutliers works', async () => {
-        await autosize({ includeOutliers: true }, [50, 145]);
+        await autosize({ includeOutliers: true }, [50, 144]);
       });
       it('.outliersFactor works', async () => {
-        await autosize({ outliersFactor: 40 }, [50, 145]);
+        await autosize({ outliersFactor: 40 }, [50, 144]);
       });
       it('.expand works', async () => {
-        await autosize({ expand: true }, [134, 149]);
+        await autosize({ expand: true }, [134, 148]);
       });
     });
   });
