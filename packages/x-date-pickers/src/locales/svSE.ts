@@ -15,8 +15,8 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Nästa månad',
 
   // View navigation
-  openPreviousView: 'öppna föregående vy',
-  openNextView: 'öppna nästa vy',
+  openPreviousView: 'Öppna föregående vy',
+  openNextView: 'Öppna nästa vy',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvyn är öppen, byt till kalendervy'

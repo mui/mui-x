@@ -15,8 +15,8 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Tháng sau',
 
   // View navigation
-  openPreviousView: 'mở xem trước',
-  openNextView: 'mở xem sau',
+  openPreviousView: 'Mở xem trước',
+  openNextView: 'Mở xem sau',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'đang mở xem năm, chuyển sang xem lịch'

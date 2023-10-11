@@ -16,8 +16,8 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Další měsíc',
 
   // View navigation
-  openPreviousView: 'otevřít předchozí zobrazení',
-  openNextView: 'otevřít další zobrazení',
+  openPreviousView: 'Otevřít předchozí zobrazení',
+  openNextView: 'Otevřít další zobrazení',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'roční zobrazení otevřeno, přepněte do zobrazení kalendáře'

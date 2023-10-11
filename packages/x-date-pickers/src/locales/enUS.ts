@@ -9,8 +9,8 @@ const enUSPickers: PickersLocaleText<any> = {
   nextMonth: 'Next month',
 
   // View navigation
-  openPreviousView: 'open previous view',
-  openNextView: 'open next view',
+  openPreviousView: 'Open previous view',
+  openNextView: 'Open next view',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'year view is open, switch to calendar view'

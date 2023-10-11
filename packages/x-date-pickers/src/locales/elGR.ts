@@ -15,8 +15,8 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Επόμενος μήνας',
 
   // View navigation
-  openPreviousView: 'ανοίγμα προηγούμενης προβολή',
-  openNextView: 'ανοίγμα επόμενης προβολή',
+  openPreviousView: 'Άνοίγμα προηγούμενης προβολή',
+  openNextView: 'Άνοίγμα επόμενης προβολή',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'η προβολή έτους είναι ανοιχτή, μεταβείτε στην προβολή ημερολογίου'

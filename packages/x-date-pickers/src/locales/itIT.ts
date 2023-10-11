@@ -15,8 +15,8 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Mese successivo',
 
   // View navigation
-  openPreviousView: 'apri la vista precedente',
-  openNextView: 'apri la vista successiva',
+  openPreviousView: 'Apri la vista precedente',
+  openNextView: 'Apri la vista successiva',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? "la vista dell'anno è aperta, passare alla vista del calendario"

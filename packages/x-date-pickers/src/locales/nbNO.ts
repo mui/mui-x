@@ -15,8 +15,8 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Neste måned',
 
   // View navigation
-  openPreviousView: 'åpne forrige visning',
-  openNextView: 'åpne neste visning',
+  openPreviousView: 'Åpne forrige visning',
+  openNextView: 'Åpne neste visning',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvisning er åpen, bytt til kalendervisning'

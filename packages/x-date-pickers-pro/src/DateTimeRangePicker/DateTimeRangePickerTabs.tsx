@@ -166,7 +166,11 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   return (
     <DateTimeRangePickerTabsRoot ownerState={props} className={classes.root}>
       {!isPreviousHidden ? (
-        <IconButton onClick={changeToPreviousTab} className={classes.navigationButton}>
+        <IconButton
+          onClick={changeToPreviousTab}
+          className={classes.navigationButton}
+          title={localeText.openPreviousView}
+        >
           <ArrowLeftIcon />
         </IconButton>
       ) : (
@@ -180,7 +184,11 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
         {tabLabel}
       </DateTimeRangePickerTab>
       {!isNextHidden ? (
-        <IconButton onClick={changeToNextTab} className={classes.navigationButton}>
+        <IconButton
+          onClick={changeToNextTab}
+          className={classes.navigationButton}
+          title={localeText.openNextView}
+        >
           <ArrowRightIcon />
         </IconButton>
       ) : (

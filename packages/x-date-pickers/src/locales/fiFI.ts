@@ -15,8 +15,8 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Seuraava kuukausi',
 
   // View navigation
-  openPreviousView: 'avaa edellinen kuukausi',
-  openNextView: 'avaa seuraava kuukausi',
+  openPreviousView: 'Avaa edellinen kuukausi',
+  openNextView: 'Avaa seuraava kuukausi',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'vuosinäkymä on auki, vaihda kalenterinäkymään'

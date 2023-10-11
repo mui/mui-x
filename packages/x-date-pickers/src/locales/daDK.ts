@@ -16,8 +16,8 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Næste måned',
 
   // View navigation
-  openPreviousView: 'åben forrige visning',
-  openNextView: 'åben næste visning',
+  openPreviousView: 'Åben forrige visning',
+  openNextView: 'Åben næste visning',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvisning er åben, skift til kalendervisning'

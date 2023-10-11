@@ -16,8 +16,8 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Predchádzajúci mesiac',
 
   // View navigation
-  openPreviousView: 'otvoriť predchádzajúce zobrazenie',
-  openNextView: 'otvoriť ďalšie zobrazenie',
+  openPreviousView: 'Otvoriť predchádzajúce zobrazenie',
+  openNextView: 'Otvoriť ďalšie zobrazenie',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'ročné zobrazenie otvorené, prepnite do zobrazenia kalendára'

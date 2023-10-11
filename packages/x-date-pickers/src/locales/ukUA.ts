@@ -15,8 +15,8 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Наступний місяць',
 
   // View navigation
-  openPreviousView: 'відкрити попередній вигляд',
-  openNextView: 'відкрити наступний вигляд',
+  openPreviousView: 'Відкрити попередній вигляд',
+  openNextView: 'Відкрити наступний вигляд',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'річний вигляд відкрито, перейти до календарного вигляду'

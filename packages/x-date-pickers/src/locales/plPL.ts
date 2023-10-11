@@ -15,8 +15,8 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Następny miesiąc',
 
   // View navigation
-  openPreviousView: 'otwórz poprzedni widok',
-  openNextView: 'otwórz następny widok',
+  openPreviousView: 'Otwórz poprzedni widok',
+  openNextView: 'Otwórz następny widok',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'otwarty jest widok roku, przełącz na widok kalendarza'

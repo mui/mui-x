@@ -15,8 +15,8 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Næsti mánuður',
 
   // View navigation
-  openPreviousView: 'opna fyrri skoðun',
-  openNextView: 'opna næstu skoðun',
+  openPreviousView: 'Opna fyrri skoðun',
+  openNextView: 'Opna næstu skoðun',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'ársskoðun er opin, skipta yfir í dagatalsskoðun'

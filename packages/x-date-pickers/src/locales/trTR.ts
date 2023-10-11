@@ -15,8 +15,8 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Sonraki ay',
 
   // View navigation
-  openPreviousView: 'sonraki görünüm',
-  openNextView: 'önceki görünüm',
+  openPreviousView: 'Sonraki görünüm',
+  openNextView: 'Önceki görünüm',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'yıl görünümü açık, takvim görünümüne geç'

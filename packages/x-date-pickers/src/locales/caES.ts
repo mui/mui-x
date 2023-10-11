@@ -15,7 +15,7 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Pròxim mes',
 
   // View navigation
-  openPreviousView: "obrir l'última vista",
+  openPreviousView: "Obrir l'última vista",
   openNextView: 'obrir la següent vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'

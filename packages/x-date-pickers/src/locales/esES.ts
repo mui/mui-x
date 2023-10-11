@@ -15,8 +15,8 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Próximo mes',
 
   // View navigation
-  openPreviousView: 'abrir la última vista',
-  openNextView: 'abrir la siguiente vista',
+  openPreviousView: 'Abrir la última vista',
+  openNextView: 'Abrir la siguiente vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'la vista del año está abierta, cambie a la vista de calendario'
