@@ -51,6 +51,16 @@ const HighlightElement = styled('circle', {
 export type LineHighlightElementProps = LineHighlightElementOwnerState &
   React.ComponentPropsWithoutRef<'circle'> & {};
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [LineHighlightElement API](https://mui.com/x/api/charts/line-highlight-element/)
+ */
 function LineHighlightElement(props: LineHighlightElementProps) {
   const { x, y, id, classes: innerClasses, color, ...other } = props;
 
