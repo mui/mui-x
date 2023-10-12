@@ -9,7 +9,7 @@ _Oct 12, 2023_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 📝 Add bulk editing demo (#10333) @cherniavskii
+- 📝 Add [Bulk editing](https://mui.com/x/react-data-grid/recipes-editing/#bulk-editing) demo (#10333) @cherniavskii
 - 🚀 Column grouping now works smoothly with column pinning (#10518) @MBilalShafi
 - 🌍 Improve Arabic (ar-SD) and Spanish (es-ES) locales
 - 🐞 Bugfixes
@@ -21,8 +21,8 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - [DataGrid] Fix `LazyLoading` demo crash (#10621) @MBilalShafi
 - [DataGrid] Fix cells overlapping the scrollbar in iOS Safari (#10633) @cherniavskii
-- [DataGrid] Fix: getRowId not defined (#10613) @romgrk
-- [DataGrid] Get quick filter to work OOTB with `date` and `datetime` fields (#10636) @MBilalShafi
+- [DataGrid] Fix `getRowId is not defined` error (#10613) @romgrk
+- [DataGrid] Get quick filter to work OOTB with `date` and `dateTime` fields (#10636) @MBilalShafi
 - [DataGrid] Make cursor for selectable cells to be `default` unless editable (#9997) @gitstart
 - [DataGrid] Remove unnecessary syntax in JSDoc (#10567) @Lev-Shapiro
 - [DataGrid] Update row hover behavior to match native hover (#10623) @cherniavskii
