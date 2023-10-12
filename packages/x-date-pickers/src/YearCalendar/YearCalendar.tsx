@@ -78,10 +78,12 @@ type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.
 
 /**
  * Demos:
+ *
  * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
  * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
+ *
  * - [YearCalendar API](https://mui.com/x/api/date-pickers/year-calendar/)
  */
 export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(

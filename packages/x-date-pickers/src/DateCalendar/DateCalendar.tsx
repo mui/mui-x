@@ -89,11 +89,13 @@ type DateCalendarComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
  * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
  * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
+ *
  * - [DateCalendar API](https://mui.com/x/api/date-pickers/date-calendar/)
  */
 export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(

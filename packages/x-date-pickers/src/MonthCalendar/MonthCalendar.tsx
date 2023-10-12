@@ -72,10 +72,12 @@ type MonthCalendarComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
  * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
+ *
  * - [MonthCalendar API](https://mui.com/x/api/date-pickers/month-calendar/)
  */
 export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
