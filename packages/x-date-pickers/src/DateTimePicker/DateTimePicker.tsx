@@ -14,10 +14,12 @@ type DateTimePickerComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
  * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
+ *
  * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
  */
 const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(

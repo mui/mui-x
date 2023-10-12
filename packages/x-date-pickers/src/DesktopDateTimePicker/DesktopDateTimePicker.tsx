@@ -24,10 +24,12 @@ type DesktopDateTimePickerComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
  * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
+ *
  * - [DesktopDateTimePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-picker/)
  */
 const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TDate>(

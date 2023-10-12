@@ -22,10 +22,12 @@ type MobileDateTimePickerComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
  * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
+ *
  * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
  */
 const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDate>(
