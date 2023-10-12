@@ -12,17 +12,17 @@ import { ChartsTextProps } from '../internals/components/ChartsText';
 
 export type D3Scale =
   | ScaleBand<any>
-  | ScaleLogarithmic<any, any>
+  | ScaleLogarithmic<any, number>
   | ScalePoint<any>
-  | ScalePower<any, any>
-  | ScaleTime<any, any>
-  | ScaleLinear<any, any>;
+  | ScalePower<any, number>
+  | ScaleTime<any, number>
+  | ScaleLinear<any, number>;
 
 export type D3ContinuouseScale =
-  | ScaleLogarithmic<any, any>
-  | ScalePower<any, any>
-  | ScaleTime<any, any>
-  | ScaleLinear<any, any>;
+  | ScaleLogarithmic<any, number>
+  | ScalePower<any, number>
+  | ScaleTime<any, number>
+  | ScaleLinear<any, number>;
 
 export interface ChartsAxisSlotsComponent {
   axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
