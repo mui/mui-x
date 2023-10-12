@@ -57,6 +57,7 @@ type DatePickerToolbarComponent = (<TDate>(
  * Demos:
  *
  * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
  *
  * API:
  *
