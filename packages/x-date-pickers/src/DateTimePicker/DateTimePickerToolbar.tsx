@@ -185,6 +185,15 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
   },
 }));
 
+/**
+ * Demos:
+ *
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ *
+ * API:
+ *
+ * - [DateTimePickerToolbar API](https://mui.com/x/api/date-pickers/date-time-picker-toolbar/)
+ */
 function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
