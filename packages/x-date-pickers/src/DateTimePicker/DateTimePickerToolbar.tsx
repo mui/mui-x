@@ -189,6 +189,7 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
  * Demos:
  *
  * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
  *
  * API:
  *
