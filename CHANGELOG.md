@@ -10,7 +10,8 @@ _Oct 12, 2023_
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 📝 Add bulk editing demo (#10333) @cherniavskii
-- 🌍 Improve Arabic (ar-SD) and Spanish (es-ES) locales on the data grid
+- 🚀 Column grouping now works smoothly with column pinning (#10518) @MBilalShafi
+- 🌍 Improve Arabic (ar-SD) and Spanish (es-ES) locales
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -26,7 +27,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Remove unnecessary syntax in JSDoc (#10567) @Lev-Shapiro
 - [DataGrid] Update row hover behavior to match native hover (#10623) @cherniavskii
 - [l10n] Improve Arabic (ar-SD) locale (#10625) @alabenyahia
-- [l10n] Improve Spanish (es-ES) locale (#10588) @eduardodallmann
 
 #### `@mui/x-data-grid-pro@6.16.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -44,6 +44,7 @@ Same changes as in `@mui/x-data-grid-pro@6.16.2`.
 
 - [fields] Bootstrap the multi-HTML input component (#10638) @flaviendelangle
 - [pickers] Fix timezone `UTC` false positive (#10586) @alexfauquette
+- [l10n] Improve Spanish (es-ES) locale (#10588) @eduardodallmann
 
 #### `@mui/x-date-pickers-pro@6.16.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
