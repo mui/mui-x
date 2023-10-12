@@ -85,6 +85,18 @@ const ChartsTooltipRoot = styled(Popper, {
   zIndex: theme.zIndex.modal,
 }));
 
+/**
+ * Demos:
+ *
+ * - [Bars demonstration](https://mui.com/x/react-charts/bar-demo/)
+ * - [Lines demonstration](https://mui.com/x/react-charts/line-demo/)
+ * - [Area demonstration](https://mui.com/x/react-charts/area-demo/)
+ * - [Pie demonstration](https://mui.com/x/react-charts/pie-demo/)
+ *
+ * API:
+ *
+ * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
+ */
 function ChartsTooltip(props: ChartsTooltipProps) {
   const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = props;
 
