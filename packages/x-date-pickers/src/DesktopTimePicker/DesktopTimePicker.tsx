@@ -18,10 +18,9 @@ import {
 } from '../timeViewRenderers';
 import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
-import {
-  resolveShouldRenderTimeInASingleColumn,
-  resolveTimeFormat,
-} from '../internals/utils/time-utils';
+import { resolveTimeFormat } from '../internals/utils/time-utils';
+import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
+import { TimeView } from '../models/views';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -41,13 +40,11 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     DesktopTimePickerProps<TDate>
   >(inProps, 'MuiDesktopTimePicker');
 
-  const thresholdToRenderTimeInASingleColumn =
-    defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
-  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
-  const shouldRenderTimeInASingleColumn = resolveShouldRenderTimeInASingleColumn(
+  const {
+    shouldRenderTimeInASingleColumn,
+    views: resolvedViews,
     timeSteps,
-    thresholdToRenderTimeInASingleColumn,
-  );
+  } = resolveTimeViewsResponse<TDate, TimeView, TimeViewWithMeridiem>(defaultizedProps);
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -68,10 +65,9 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   // Need to avoid adding the `meridiem` view when unexpected renderer is specified
   const shouldHoursRendererContainMeridiemView =
     viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
-  const views: readonly TimeViewWithMeridiem[] =
-    defaultizedProps.ampm && shouldHoursRendererContainMeridiemView
-      ? [...defaultizedProps.views, 'meridiem']
-      : defaultizedProps.views;
+  const views = !shouldHoursRendererContainMeridiemView
+    ? resolvedViews.filter((view) => view !== 'meridiem')
+    : resolvedViews;
 
   // Props with the default values specific to the desktop variant
   const props = {
