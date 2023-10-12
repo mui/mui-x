@@ -40,15 +40,15 @@ const GridVirtualScroller = React.forwardRef<
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const styles = React.useMemo(
-    () => (rootProps.autoHeight ? {} : { flex: '1 1 0' }),
-    [rootProps.autoHeight],
+    () => (rootProps.autoHeight ? props.style : { ...props.style, flex: '1 1 0' }),
+    [rootProps.autoHeight, props.style],
   );
 
   return (
     <VirtualScrollerRoot
       ref={ref}
       {...props}
-      style={{ ...props.style, ...styles }}
+      style={styles}
       className={clsx(classes.root, props.className)}
       ownerState={rootProps}
     />
