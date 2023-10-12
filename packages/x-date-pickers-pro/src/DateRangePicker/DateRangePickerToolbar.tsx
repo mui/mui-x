@@ -56,6 +56,15 @@ const DateRangePickerToolbarContainer = styled('div', {
   display: 'flex',
 });
 
+/**
+ * Demos:
+ *
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ *
+ * API:
+ *
+ * - [DateRangePickerToolbar API](https://mui.com/x/api/date-pickers/date-range-picker-toolbar/)
+ */
 const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
   TDate extends unknown,
 >(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
