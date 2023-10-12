@@ -160,7 +160,6 @@ type DateRangeCalendarComponent = (<TDate>(
  *
  * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
  * - [DateRangeCalendar](https://mui.com/x/react-date-pickers/date-range-calendar/)
- * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
  *
