@@ -15,7 +15,10 @@ import { CalendarIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
+import {
+  resolveDateTimeFormat,
+  resolveTimeViewsResponse,
+} from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDateTimePickerComponent = (<TDate>(
@@ -46,7 +49,12 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     DesktopDateTimePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimePicker');
 
-  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
+  const {
+    shouldRenderTimeInASingleColumn,
+    thresholdToRenderTimeInASingleColumn,
+    views,
+    timeSteps,
+  } = resolveTimeViewsResponse<TDate>(defaultizedProps);
   const shouldUseNewRenderer =
     !defaultizedProps.viewRenderers || Object.keys(defaultizedProps.viewRenderers).length === 0;
 
@@ -81,12 +89,12 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     ...defaultizedProps,
     viewRenderers,
     format: resolveDateTimeFormat(utils, defaultizedProps),
-    views: (defaultizedProps.ampm
-      ? [...defaultizedProps.views, 'meridiem']
-      : defaultizedProps.views) as DateOrTimeViewWithMeridiem[],
+    views,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
     timeSteps,
+    thresholdToRenderTimeInASingleColumn,
+    shouldRenderTimeInASingleColumn,
     slots: {
       field: DateTimeField,
       openPickerIcon: CalendarIcon,
@@ -484,6 +492,11 @@ DesktopDateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Amount of time options below or at which the single column time renderer is used.
+   * @default 24
+   */
+  thresholdToRenderTimeInASingleColumn: PropTypes.number,
   /**
    * The time steps between two time unit options.
    * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
