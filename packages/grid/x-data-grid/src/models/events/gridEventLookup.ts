@@ -45,6 +45,14 @@ export interface GridRowEventLookup {
    */
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   /**
+   * @ignore - do not document.
+   */
+  rowMouseOut: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
+   * @ignore - do not document.
+   */
+  rowMouseOver: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
    * Fired when the user starts dragging a row. It's mapped to the `dragstart` DOM event.
    * @ignore - do not document.
    */

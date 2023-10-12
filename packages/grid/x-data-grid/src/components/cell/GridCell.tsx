@@ -94,11 +94,12 @@ const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'pinnedPosition'> & {
   isEditable?: boolean;
   isSelected?: boolean;
+  isSelectionMode?: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { align, showRightBorder, pinnedPosition, isEditable, isSelected, classes } = ownerState;
+  const { align, showRightBorder, pinnedPosition, isEditable, isSelected, isSelectionMode, classes } = ownerState;
 
   const slots = {
     root: [
@@ -109,6 +110,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       showRightBorder && 'cell--withRightBorder',
       pinnedPosition === PinnedPosition.LEFT && 'cell--pinnedLeft',
       pinnedPosition === PinnedPosition.RIGHT && 'cell--pinnedRight',
+      isSelectionMode && !isEditable && 'cell--selectionMode',
       'withBorderColor',
     ],
     content: ['cellContent'],
@@ -218,14 +220,18 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  const classes = useUtilityClasses({
+  // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
+  const isSelectionMode = rootProps.unstable_cellSelection ?? false;
+  const ownerState = {
     align,
-    classes: rootProps.classes,
     showRightBorder,
-    pinnedPosition,
     isEditable,
+    classes: rootProps.classes,
+    pinnedPosition,
     isSelected,
-  });
+    isSelectionMode,
+  };
+  const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {

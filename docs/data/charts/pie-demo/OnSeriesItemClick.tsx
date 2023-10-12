@@ -4,9 +4,9 @@ import { PieItemIdentifier, DefaultizedPieValueType } from '@mui/x-charts/models
 import { Typography, Stack } from '@mui/material';
 
 const items = [
-  { value: 10, label: 'series A ( no Id )' },
-  { id: 'id_B', value: 15, label: 'series B' },
-  { id: 'id_C', value: 20, label: 'series C' },
+  { value: 10, label: 'Series A ( no Id )' },
+  { id: 'id_B', value: 15, label: 'Series B' },
+  { id: 'id_C', value: 20, label: 'Series C' },
 ];
 
 const formatObject = (obj: null | PieItemIdentifier) => {
@@ -34,13 +34,13 @@ export default function OnSeriesItemClick() {
   return (
     <Stack
       direction={{ xs: 'column', md: 'row' }}
-      alignItems={'center'}
-      justifyContent={'space-between'}
+      alignItems={{ xs: 'flex-start', md: 'center' }}
+      justifyContent="space-between"
       sx={{ width: '100%' }}
     >
       <Typography
         component="pre"
-        sx={{ maxWidth: { xs: '100%', md: '50%' }, overflow: 'auto' }}
+        sx={{ maxWidth: { xs: '100%', md: '50%', flexShrink: 1 }, overflow: 'auto' }}
       >
         {`item id: ${id ?? 'undefined'}
 
@@ -52,17 +52,12 @@ ${formatObject(identifier)}`}
         series={[
           {
             data: items,
-            cx: 100,
           },
         ]}
-        slotProps={{
-          legend: {
-            offset: { x: -50 },
-          },
-        }}
         onClick={handleClick}
         width={400}
         height={200}
+        margin={{ right: 200 }}
       />
     </Stack>
   );

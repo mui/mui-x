@@ -93,6 +93,10 @@ you can replace the field with a `Button`:
 
 {{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
 
+The same can be applied to the `DateRangePicker`:
+
+{{"demo": "DateRangePickerWithButtonField.js", "defaultCodeOpen": false}}
+
 ## How to build a custom field
 
 The main challenge when building a custom field, is to make sure that all the relevant props passed by the pickers are correctly handled.

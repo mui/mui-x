@@ -51,6 +51,13 @@ interface DataGridProComponent {
   propTypes?: any;
 }
 
+/**
+ * Demos:
+ * - [DataGridPro](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGridPro API](https://mui.com/x/api/data-grid/data-grid-pro/)
+ */
 export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
 DataGridProRaw.propTypes = {
@@ -916,7 +923,7 @@ DataGridProRaw.propTypes = {
   /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default: false
+   * @default false
    */
   unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
     PropTypes.shape({
