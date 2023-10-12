@@ -50,8 +50,6 @@ export const GRID_DATE_COL_DEF: GridColTypeDef<Date, string> = {
   valueFormatter: gridDateFormatter,
   filterOperators: getGridDateOperators(),
   renderEditCell: renderEditDateCell,
-  getApplyQuickFilterFn: undefined,
-  getApplyQuickFilterFnV7: undefined,
   // @ts-ignore
   pastedValueParser: (value) => new Date(value),
 };
@@ -63,8 +61,6 @@ export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date, string> = {
   valueFormatter: gridDateTimeFormatter,
   filterOperators: getGridDateOperators(true),
   renderEditCell: renderEditDateCell,
-  getApplyQuickFilterFn: undefined,
-  getApplyQuickFilterFnV7: undefined,
   // @ts-ignore
   pastedValueParser: (value) => new Date(value),
 };
