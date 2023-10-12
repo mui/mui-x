@@ -7,7 +7,7 @@ import {
 } from './context/InteractionProvider';
 import { TriggerOptions } from './ChartsTooltip/utils';
 import { CartesianChartSeriesType, ChartSeriesType } from './models/seriesType/config';
-import { FormattedSeries, SeriesContext } from './context/SeriesContextProvider';
+import { SeriesContext } from './context/SeriesContextProvider';
 import { CartesianContext } from './context/CartesianContextProvider';
 
 function getTootipHasData(
@@ -25,11 +25,11 @@ function getTootipHasData(
 }
 
 interface OnClickHandlerProps {
-  trigger: 'item' | 'none' | 'axis';
-  onClick: (event: MouseEvent, series: FormattedSeries, itemData: any) => void;
+  trigger: any;
+  onClick?: (event: any, series: any, itemData: any) => void;
 }
 
-function OnClick({ trigger, onClick }: OnClickHandlerProps) {
+function OnClickHandler({ trigger, onClick }: OnClickHandlerProps) {
   const svgRef = React.useContext(SVGContext);
   const { item, axis } = React.useContext(InteractionContext);
 
@@ -44,7 +44,9 @@ function OnClick({ trigger, onClick }: OnClickHandlerProps) {
     }
     const handleMouseDown = (event: MouseEvent) => {
       event.preventDefault();
-      // if (onClick == null) return;
+      if (onClick == null) {
+        return;
+      }
 
       if (trigger === 'item') {
         const displayedData = item as ItemInteractionData<ChartSeriesType>;
@@ -52,20 +54,10 @@ function OnClick({ trigger, onClick }: OnClickHandlerProps) {
 
         if (tooltipHasData) {
           const data = series[displayedData.type]!.series[displayedData.seriesId];
-          const result =
-            data.type === 'pie'
-              ? {
-                  color: data.data[displayedData.dataIndex!],
-                  displayedLabel: data.data[displayedData.dataIndex!],
-                }
-              : {
-                  color: data.color,
-                  displayedLabel: data.label,
-                };
+          const displayedLabel =
+            data.type === 'pie' ? data.data[displayedData.dataIndex!] : data.label;
 
-          console.log(displayedData);
-          console.log(result.displayedLabel);
-          onClick(event, result.displayedLabel, displayedData);
+          onClick(event, displayedLabel, displayedData);
         }
       } else {
         const displayedData = axis as AxisInteractionData;
@@ -76,14 +68,11 @@ function OnClick({ trigger, onClick }: OnClickHandlerProps) {
           const dataIndex = isXaxis
             ? displayedData.x && displayedData.x.index
             : displayedData.y && displayedData.y.index;
-          const axisValue = isXaxis
-            ? displayedData.x && displayedData.x.value
-            : displayedData.y && displayedData.y.value;
 
           if (dataIndex == null) {
             return;
           }
-          const rep: any[] = [];
+          const displayedLabel: any[] = [];
           (
             Object.keys(series).filter((seriesType) =>
               ['bar', 'line', 'scatter'].includes(seriesType),
@@ -93,12 +82,12 @@ function OnClick({ trigger, onClick }: OnClickHandlerProps) {
               const seriesItem = series[seriesType]!.series[seriesId];
               const axisKey = isXaxis ? seriesItem.xAxisKey : seriesItem.yAxisKey;
               if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-                rep.push(series[seriesType]!.series[seriesId]);
+                displayedLabel.push(series[seriesType]!.series[seriesId]);
               }
             });
           });
-          console.log(rep);
-          console.log(displayedData);
+
+          onClick(event, displayedLabel, displayedData);
         }
       }
     };
@@ -107,8 +96,8 @@ function OnClick({ trigger, onClick }: OnClickHandlerProps) {
     return () => {
       element.removeEventListener('mousedown', handleMouseDown);
     };
-  }, [axis, item, series, svgRef, trigger, xAxisIds, yAxisIds]);
+  }, [axis, item, series, svgRef, trigger, xAxisIds, yAxisIds, onClick]);
 
   return null;
 }
-export default OnClick;
+export default OnClickHandler;

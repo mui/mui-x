@@ -20,6 +20,7 @@ import {
   LineHighlightPlotSlotComponentProps,
 } from '../LineChart/LineHighlightPlot';
 import { BarPlotSlotsComponent, BarPlotSlotComponentProps } from '../BarChart/BarPlot';
+import OnClickHandler from '../OnClickHandler';
 
 export interface SparkLineChartSlotsComponent
   extends AreaPlotSlotsComponent,
@@ -90,6 +91,7 @@ export interface SparkLineChartProps
    * @default {}
    */
   slotProps?: SparkLineChartSlotComponentProps;
+  onClick?: (event: any, series: any, itemData: any) => void;
 }
 
 const SPARKLINE_DEFAULT_MARGIN = {
@@ -117,6 +119,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     data,
     plotType = 'line',
     valueFormatter = (v: number) => v.toString(),
+    onClick,
     area,
     curve = 'linear',
   } = props;
@@ -159,6 +162,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
         axisHighlight?.y === 'none'
       }
     >
+      <OnClickHandler trigger={tooltip?.trigger} onClick={onClick} />
+
       {plotType === 'bar' && (
         <BarPlot slots={slots} slotProps={slotProps} sx={{ shapeRendering: 'auto' }} />
       )}

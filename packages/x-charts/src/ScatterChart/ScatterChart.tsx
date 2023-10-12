@@ -21,6 +21,7 @@ import {
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+import OnClickHandler from '../OnClickHandler';
 
 export interface ScatterChartSlotsComponent
   extends ChartsAxisSlotsComponent,
@@ -48,6 +49,7 @@ export interface ScatterChartProps
    * @default {}
    */
   slotProps?: ScatterChartSlotComponentProps;
+  onClick?: (event: any, series: any, itemData: any) => void;
 }
 
 const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
@@ -70,6 +72,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     children,
     slots,
     slotProps,
+    onClick,
   } = props;
   return (
     <ResponsiveChartContainer
@@ -95,6 +98,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
       <ChartsTooltip trigger="item" {...tooltip} />
+      <OnClickHandler trigger={tooltip?.trigger} onClick={onClick} />
       {children}
     </ResponsiveChartContainer>
   );
