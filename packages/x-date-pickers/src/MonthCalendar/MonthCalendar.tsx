@@ -74,7 +74,6 @@ type MonthCalendarComponent = (<TDate>(
  * Demos:
  *
  * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
- * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
  *
