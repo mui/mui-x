@@ -51,6 +51,7 @@ function GridColumnHeaderMenu({
       target={target}
       onClose={hideMenu}
       onExited={onExited}
+      className="mui-fixed"
     >
       <ContentComponent
         colDef={colDef}

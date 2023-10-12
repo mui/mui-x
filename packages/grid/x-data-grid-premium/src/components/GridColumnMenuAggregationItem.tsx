@@ -1,13 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
-import MenuItem from '@mui/material/MenuItem';
+import MUIMenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/utils';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -17,6 +16,39 @@ import {
 } from '../hooks/features/aggregation/gridAggregationUtils';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregationInterfaces';
+
+const MenuItem = styled(MUIMenuItem)(() => ({
+  cursor: 'default',
+  '&:hover': {
+    backgroundColor: 'transparent',
+  },
+  '& .MuiFormControl-root': {
+    minWidth: 150,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  '& button': {
+    padding: 2,
+    marginLeft: 4,
+  },
+}));
+
+const iconSx = { marginRight: 1.5 };
+
+function ClearIcon({
+  handleChange,
+}: {
+  handleChange: (event: { target: { value: string } }) => void;
+}) {
+  const rootProps = useGridRootProps();
+
+  return (
+    <rootProps.slots.baseIconButton sx={iconSx} onClick={handleChange}>
+      <rootProps.slots.columnMenuClearIcon fontSize="small" color="action" />
+    </rootProps.slots.baseIconButton>
+  );
+}
 
 function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
@@ -53,7 +85,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
     return '';
   }, [rootProps.aggregationFunctions, aggregationModel, colDef]);
 
-  const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
+  const handleAggregationItemChange = (event: { target: { value: string } }) => {
     const newAggregationItem = event.target?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
     const { [colDef.field]: columnItem, ...otherColumnItems } = currentModel;
@@ -74,21 +106,25 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
         <rootProps.slots.columnMenuAggregationIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>
-        <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
+        <rootProps.slots.baseFormControl size="small" fullWidth>
           <InputLabel id={`${id}-label`}>{label}</InputLabel>
-          <Select
+          <rootProps.slots.baseSelect
+            aria-labelledby={`${id}-label`}
             labelId={`${id}-label`}
-            id={`${id}-input`}
             value={selectedAggregationRule}
             label={label}
             color="primary"
             onChange={handleAggregationItemChange}
-            onBlur={(e) => e.stopPropagation()}
+            onBlur={(e: FocusEvent) => e.stopPropagation()}
+            endAdornment={
+              selectedAggregationRule ? (
+                <ClearIcon handleChange={handleAggregationItemChange} />
+              ) : null
+            }
             fullWidth
           >
-            <MenuItem value="">...</MenuItem>
             {availableAggregationFunctions.map((aggFunc) => (
-              <MenuItem key={aggFunc} value={aggFunc}>
+              <rootProps.slots.baseSelectOption key={aggFunc} value={aggFunc}>
                 {getAggregationFunctionLabel({
                   apiRef,
                   aggregationRule: {
@@ -96,10 +132,10 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
                     aggregationFunction: rootProps.aggregationFunctions[aggFunc],
                   },
                 })}
-              </MenuItem>
+              </rootProps.slots.baseSelectOption>
             ))}
-          </Select>
-        </FormControl>
+          </rootProps.slots.baseSelect>
+        </rootProps.slots.baseFormControl>
       </ListItemText>
     </MenuItem>
   );

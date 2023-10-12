@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, userEvent, within, act } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, act, userEvent, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
@@ -362,17 +362,19 @@ describe('<DataGridPremium /> - Aggregation', () => {
       act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
 
-      expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
+      expect(screen.getByRole('button', { name: 'Aggregation' })).not.to.equal(null);
     });
 
     it('should update the aggregation when changing "Aggregation" select value', () => {
       render(<Test />);
 
+      // no aggregation by default
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
+      // open column menu
       act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
-      userEvent.mousePress(screen.getByLabelText('Aggregation'));
+      userEvent.mousePress(screen.getByRole('button', { name: 'Aggregation' }));
       userEvent.mousePress(
         within(
           screen.getByRole('listbox', {
@@ -381,6 +383,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         ).getByText('max'),
       );
 
+      // aggregation should be applied
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
     });
   });

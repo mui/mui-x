@@ -8,8 +8,10 @@ import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';
 
-const StyledMenuList = styled(MenuList)(() => ({
-  minWidth: 248,
+const StyledMenuList = styled(MenuList)(({ theme }) => ({
+  [theme.breakpoints.up('sm')]: {
+    minWidth: 248,
+  },
 }));
 
 const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
