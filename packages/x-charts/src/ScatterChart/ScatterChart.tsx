@@ -60,6 +60,16 @@ export interface ScatterChartProps
   slotProps?: ScatterChartSlotComponentProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Scatter](https://mui.com/x/react-charts/scatter/)
+ * - [Scatter demonstration](https://mui.com/x/react-charts/scatter-demo/)
+ *
+ * API:
+ *
+ * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
+ */
 const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
   const {
     xAxis,
