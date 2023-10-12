@@ -98,7 +98,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
       style: {
         fontSize: labelFontSize,
         angle: positionSigne * 90,
-        transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
         textAnchor: 'middle',
         dominantBaseline: 'auto',
       } as Partial<ChartsTextProps>['style'],
@@ -138,7 +137,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
-                transform-origin={`${xTickLabel}px ${yTickLabel}px`}
                 text={formattedValue.toString()}
                 {...axisTickLabelProps}
               />
