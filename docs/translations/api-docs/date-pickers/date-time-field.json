@@ -1,5 +1,5 @@
 {
-  "componentDescription": "Demos:\n- [DateTimeField](http://mui.com/x/react-date-pickers/date-time-field/)\n- [Fields](https://mui.com/x/react-date-pickers/fields/)\n\nAPI:\n- [DateTimeField API](https://mui.com/x/api/date-pickers/date-time-field/)",
+  "componentDescription": "",
   "propDescriptions": {
     "ampm": {
       "description": "12h/24h view for hour selection clock.",

@@ -63,10 +63,12 @@ type MultiInputDateTimeRangeFieldComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [DateTimeRangeField](http://mui.com/x/react-date-pickers/date-time-range-field/)
  * - [Fields](https://mui.com/x/react-date-pickers/fields/)
  *
  * API:
+ *
  * - [MultiInputDateTimeRangeField API](https://mui.com/x/api/multi-input-date-time-range-field/)
  */
 const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<TDate>(

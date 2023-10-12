@@ -18,10 +18,12 @@ type DateRangeFieldComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [TimeRangeField](http://mui.com/x/react-date-pickers/time-range-field/)
  * - [Fields](https://mui.com/x/react-date-pickers/fields/)
  *
  * API:
+ *
  * - [SingleInputTimeRangeField API](https://mui.com/x/api/single-input-time-range-field/)
  */
 const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<TDate>(

@@ -18,10 +18,12 @@ type DateTimeFieldComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [DateTimeField](http://mui.com/x/react-date-pickers/date-time-field/)
  * - [Fields](https://mui.com/x/react-date-pickers/fields/)
  *
  * API:
+ *
  * - [DateTimeField API](https://mui.com/x/api/date-pickers/date-time-field/)
  */
 const DateTimeField = React.forwardRef(function DateTimeField<TDate>(

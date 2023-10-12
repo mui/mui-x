@@ -65,10 +65,12 @@ type MultiInputTimeRangeFieldComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [TimeRangeField](http://mui.com/x/react-date-pickers/time-range-field/)
  * - [Fields](https://mui.com/x/react-date-pickers/fields/)
  *
  * API:
+ *
  * - [MultiInputTimeRangeField API](https://mui.com/x/api/multi-input-time-range-field/)
  */
 const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeField<TDate>(
