@@ -60,6 +60,7 @@ const DateRangePickerToolbarContainer = styled('div', {
  * Demos:
  *
  * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
  *
  * API:
  *
