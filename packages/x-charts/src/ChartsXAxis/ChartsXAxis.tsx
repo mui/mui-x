@@ -27,6 +27,20 @@ const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
 
 type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
 
+/**
+ * Return a rough approximate of the needed horizontal gap between two boxes to avoid overlap.
+ */
+function getDistance({ width, height, angle }: Record<string, number>) {
+  if (Math.abs(angle % 180) < 10 || Math.abs(angle % 180) > 170) {
+    // It's nearly horizontal
+    return width;
+  }
+  if (Math.abs(((angle % 180) - 90) % 180) < 10) {
+    // It's nearly vertical
+    return height;
+  }
+  return height / Math.sin(angle);
+}
 function addLabelDimension(
   xTicks: TickItemType[],
   {
@@ -52,18 +66,22 @@ function addLabelDimension(
       skipLabel: !tickLabelInterval(item.value, index),
     }));
   }
-  // TODO: add the filetering logic
+
+  // Filter label to avoid overlap
   let textStart = 0;
   let textEnd = 0;
+
   return withDimension.map((item, labelIndex) => {
-    const { width, offset, labelOffset } = item;
-    textStart = offset + labelOffset - (1.5 * width) / 2;
+    const { width, offset, labelOffset, height } = item;
+
+    const distance = getDistance({ width, height, angle: style?.angle ?? 0 });
+    textStart = offset + labelOffset - (1.8 * distance) / 2;
     if (labelIndex > 0 && textStart < textEnd) {
       // Except for the first label, we skip all label that overlap with the last accepted.
       // Notice that the early return prevent textEnd to be updated.
       return { ...item, skipLabel: true };
     }
-    textEnd = offset + labelOffset + width / 2;
+    textEnd = offset + labelOffset + distance / 2;
     return item;
   });
 }
@@ -119,9 +137,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
-      textAnchor: 'middle',
-      dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
-      style: { fontSize: tickFontSize ?? 12, ...tickLabelStyle },
+      style: {
+        textAnchor: 'middle',
+        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+        fontSize: tickFontSize ?? 12,
+        ...tickLabelStyle,
+      },
       className: classes.tickLabel,
     } as Partial<ChartsTextProps>,
     className: classes.tickLabel,
@@ -144,11 +165,10 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
-      textAnchor: 'middle',
-      dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
       style: {
         fontSize: labelFontSize ?? 14,
-        transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
+        textAnchor: 'middle',
+        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
         ...labelStyle,
       },
       className: classes.label,
@@ -187,7 +207,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
-                transform-origin={`${xTickLabel}px ${yTickLabel}px`}
                 {...axisTickLabelProps}
                 text={formattedValue.toString()}
               />
