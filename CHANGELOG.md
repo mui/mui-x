@@ -9,6 +9,7 @@ _Oct 12, 2023_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
+- 📊 Chart's legend text management has been reworked and contains breaking changes (#10138) @alexfauquette
 - 📝 Add [Bulk editing](https://mui.com/x/react-data-grid/recipes-editing/#bulk-editing) demo (#10333) @cherniavskii
 - 🚀 Column grouping now works smoothly with column pinning (#10518) @MBilalShafi
 - 🌍 Improve Arabic (ar-SD) and Spanish (es-ES) locales
@@ -42,6 +43,7 @@ Same changes as in `@mui/x-data-grid-pro@6.16.2`.
 
 #### `@mui/x-date-pickers@6.16.2`
 
+- [DateTimePicker] Add support for `DigitalClock` view renderer (#10624) @LukasTy
 - [fields] Bootstrap the multi-HTML input component (#10638) @flaviendelangle
 - [pickers] Fix timezone `UTC` false positive (#10586) @alexfauquette
 - [l10n] Improve Spanish (es-ES) locale (#10588) @eduardodallmann
@@ -54,7 +56,7 @@ Same changes as in `@mui/x-date-pickers@6.16.2`.
 
 #### Breaking changes
 
-The charts have a new text display mechanism. 
+The charts have a new text display mechanism.
 It adds line break support and avoids overlapping text in the legend.
 This comes with some breaking changes.
 
@@ -79,7 +81,7 @@ This comes with some breaking changes.
     }}
   />
   ```
-  Support for other text elements (axis labels and tick labels) will be implemented in follow-up PR. 
+  Support for other text elements (axis labels and tick labels) will be implemented in follow-up PR.
 
 #### Changes
 
@@ -89,6 +91,10 @@ This comes with some breaking changes.
 ### Docs
 
 - [docs] Add bulk editing demo (#10333) @cherniavskii
+- [docs] Add reference links to DateRangePicker components (#10629) @michelengelen
+- [docs] Add reference links to DateTimePicker components (#10628) @michelengelen
+- [docs] Add reference links to picker field components (#10631) @michelengelen
+- [docs] Added reference links to TimePicker components (#10627) @michelengelen
 - [docs] Avoid Pickers playground error due to empty views (#10654) @LukasTy
 - [docs] Fix DataGrid[Pro/Premium] reference links (#10620) @michelengelen
 
