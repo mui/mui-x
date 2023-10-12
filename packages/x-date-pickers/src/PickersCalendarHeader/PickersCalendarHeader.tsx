@@ -189,6 +189,15 @@ type PickersCalendarHeaderComponent = (<TDate>(
   props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [Custom slots and subcomponents](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [PickersCalendarHeader API](https://mui.com/x/api/date-pickers/pickers-calendar-header/)
+ */
 const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TDate>(
   inProps: PickersCalendarHeaderProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
