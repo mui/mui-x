@@ -47,6 +47,17 @@ export interface BarPlotSlotComponentProps {
 
 export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {}
 
+/**
+ * Demos:
+ *
+ * - [Bars](https://mui.com/x/react-charts/bars/)
+ * - [Bar demonstration](https://mui.com/x/react-charts/bar-demo/)
+ * - [Stacking](https://mui.com/x/react-charts/stacking/)
+ *
+ * API:
+ *
+ * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
+ */
 function BarPlot(props: BarPlotProps) {
   const seriesData = React.useContext(SeriesContext).bar;
   const axisData = React.useContext(CartesianContext);
