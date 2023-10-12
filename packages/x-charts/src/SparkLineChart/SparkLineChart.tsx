@@ -106,6 +106,15 @@ const SPARKLINE_DEFAULT_MARGIN = {
   right: 5,
 };
 
+/**
+ * Demos:
+ *
+ * - [SparkLine](https://mui.com/x/react-charts/sparkline/)
+ *
+ * API:
+ *
+ * - [SparkLineChart API](https://mui.com/x/api/charts/spark-line-chart/)
+ */
 const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLineChartProps, ref) {
   const {
     xAxis,
