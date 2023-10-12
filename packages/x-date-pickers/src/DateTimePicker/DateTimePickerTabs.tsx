@@ -83,6 +83,15 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   },
 }));
 
+/**
+ * Demos:
+ *
+ * - [Custom slots and subcomponents](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [DateTimePickerTabs API](https://mui.com/x/api/date-pickers/date-time-picker-tabs/)
+ */
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
