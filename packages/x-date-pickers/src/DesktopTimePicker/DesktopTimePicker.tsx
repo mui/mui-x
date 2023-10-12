@@ -24,6 +24,16 @@ type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
+ */
 const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   inProps: DesktopTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
