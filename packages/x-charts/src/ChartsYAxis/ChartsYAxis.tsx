@@ -189,8 +189,13 @@ ChartsYAxis.propTypes = {
   /**
    * The font size of the axis label.
    * @default 14
+   * @deprecated You can us `labelStyle.fontSize` instead.
    */
   labelFontSize: PropTypes.number,
+  /**
+   * The style applied to the axis label.
+   */
+  labelStyle: PropTypes.object,
   /**
    * Position of the axis.
    */
@@ -213,8 +218,27 @@ ChartsYAxis.propTypes = {
   /**
    * The font size of the axis ticks text.
    * @default 12
+   * @deprecated You can us `tickLabelStyle.fontSize` instead.
    */
   tickFontSize: PropTypes.number,
+  /**
+   * Defines which ticks are displayed. Its value can be:
+   * - 'auto' In such case the ticks are computed based on axis sacle and other paramteres.
+   * - a filtering function of the form (value, index) => boolean which is availabel only if the axis has a data property.
+   * @default 'auto'
+   */
+  tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+  /**
+   * Defines which ticks get its label displayed. Its value can be:
+   * - 'auto' In such case, labels are displayed if they do not overlap with the previous one.
+   * - a filtering function of the form (value, index) => boolean. Warning: the index is tick index, not data ones.
+   * @default 'auto'
+   */
+  tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+  /**
+   * The style applied to ticks text.
+   */
+  tickLabelStyle: PropTypes.object,
   /**
    * Maximal step between two ticks.
    * When using time data, the value is assumed to be in ms.

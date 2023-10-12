@@ -32,6 +32,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "labelStyle": {
+      "description": "The style applied to the axis label.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "position": {
       "description": "Position of the axis.",
       "deprecated": "",
@@ -54,6 +59,21 @@
     },
     "tickFontSize": {
       "description": "The font size of the axis ticks text.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickInterval": {
+      "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis sacle and other paramteres. - a filtering function of the form (value, index) =&gt; boolean which is availabel only if the axis has a data property.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickLabelInterval": {
+      "description": "Defines which ticks get its label displayed. Its value can be: - &#39;auto&#39; In such case, labels are displayed if they do not overlap with the previous one. - a filtering function of the form (value, index) =&gt; boolean. Warning: the index is tick index, not data ones.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickLabelStyle": {
+      "description": "The style applied to ticks text.",
       "deprecated": "",
       "typeDescriptions": {}
     },
