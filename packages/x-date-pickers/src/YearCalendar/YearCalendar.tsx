@@ -80,7 +80,6 @@ type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.
  * Demos:
  *
  * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
- * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
  *
