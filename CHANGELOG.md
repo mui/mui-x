@@ -64,7 +64,7 @@ This comes with some breaking changes.
   + <text><tspan>The label</tspan></text>
   ```
 
-- The top margin has been reduced from 100 to 50 to benefit form the denser legend.
+- The top margin has been reduced from 100 to 50 to benefit from the denser legend.
 
 - To accurately compute the text size and then place it, styling should be provided as a JS object. For example, to set the legend font size, you should do:
   ```jsx
