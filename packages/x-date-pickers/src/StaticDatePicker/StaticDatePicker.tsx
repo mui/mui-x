@@ -15,10 +15,12 @@ type StaticDatePickerComponent = (<TDate>(
 
 /**
  * Demos:
+ *
  * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
  * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
+ *
  * - [StaticDatePicker API](https://mui.com/x/api/date-pickers/static-date-picker/)
  */
 const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate>(
