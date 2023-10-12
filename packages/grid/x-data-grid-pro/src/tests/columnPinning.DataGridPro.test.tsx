@@ -20,7 +20,7 @@ import {
   createEvent,
   act,
   userEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 // TODO Move to utils

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, userEvent } from '@mui/monorepo/test/utils';
+import { act, userEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   expectInputValue,

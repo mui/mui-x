@@ -5,7 +5,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
   buildPickerDragInteractions,

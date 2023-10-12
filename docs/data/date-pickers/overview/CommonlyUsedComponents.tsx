@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Link from 'next/link';
 import Tooltip from '@mui/material/Tooltip';
 import Stack from '@mui/material/Stack';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
@@ -28,9 +29,9 @@ function Label({
     return (
       <Stack direction="row" spacing={0.5} component="span">
         <Tooltip title="Included on Pro package">
-          <a href="/x/introduction/licensing/#pro-plan">
+          <Link href="/x/introduction/licensing/#pro-plan">
             <span className="plan-pro" />
-          </a>
+          </Link>
         </Tooltip>
         {content}
       </Stack>

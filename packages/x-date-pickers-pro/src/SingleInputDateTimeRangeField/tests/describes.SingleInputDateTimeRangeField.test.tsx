@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance } from '@mui/monorepo/test/utils';
+import { describeConformance } from '@mui-internal/test-utils';
 import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
 import { createPickerRenderer, wrapPickerMount, describeRangeValidation } from 'test/utils/pickers';
 
