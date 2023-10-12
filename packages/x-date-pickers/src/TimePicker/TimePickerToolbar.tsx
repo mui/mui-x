@@ -147,6 +147,7 @@ TimePickerToolbarAmPmSelection.propTypes = {
  * Demos:
  *
  * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
  *
  * API:
  *
