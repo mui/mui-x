@@ -3,6 +3,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.16.2
+
+_Oct 12, 2023_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 📝 Add bulk editing demo (#10333) @cherniavskii
+- 🌍 Improve Arabic (ar-SD) and Spanish (es-ES) locales on the data grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.16.2`
+
+- [DataGrid] Fix `LazyLoading` demo crash (#10621) @MBilalShafi
+- [DataGrid] Fix: getRowId not defined (#10613) @romgrk
+- [DataGrid] Get quick filter to work OOTB with `date` and `datetime` fields (#10636) @MBilalShafi
+- [DataGrid] Make cursor for selectable cells to be `default` unless editable (#9997) @gitstart
+- [DataGrid] Remove unnecessary syntax in JSDoc (#10567) @Lev-Shapiro
+- [DataGrid] Update row hover behavior to match native hover (#10623) @cherniavskii
+- [l10n] Improve Arabic (ar-SD) locale (#10625) @alabenyahia
+- [l10n] Improve Spanish (es-ES) locale (#10588) @eduardodallmann
+
+#### `@mui/x-data-grid-pro@6.16.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.16.2`, plus:
+
+- [DataGridPro] Improve column grouping and column pinning friendship (#10518) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@6.16.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.16.2`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.16.2`
+
+- [fields] Bootstrap the multi-HTML input component (#10638) @flaviendelangle
+- [pickers] Fix timezone `UTC` false positive (#10586) @alexfauquette
+
+#### `@mui/x-date-pickers-pro@6.16.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.16.2`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.15`
+
+#### Breaking changes
+
+The charts have a new text display mechanism. 
+It adds line break support and avoids overlapping text in the legend.
+This comes with some breaking changes.
+
+- The DOM structure is modified. An intermediary `<tspan />` element has been added. This can impact how your style is applied.
+  ```diff
+  - <text>The label</text>
+  + <text><tspan>The label</tspan></text>
+  ```
+
+- The top margin has been reduced from 100 to 50 to benefit form the denser legend.
+
+- To accurately compute the text size and then place it, styling should be provided as a JS object. For example, to set the legend font size, you should do:
+  ```jsx
+  <PieChart
+    {/** ... */}
+    slotProps={{
+      legend: {
+        labelStyle: {
+          fontSize: 16,
+        },
+      },
+    }}
+  />
+  ```
+  Support for other text elements (axis labels and tick labels) will be implemented in follow-up PR. 
+
+#### Changes
+
+- [charts] Fix typo between internal/external variable (#10640) @alexfauquette
+- [charts] Improve the management of the text (#10138) @alexfauquette
+
+### Docs
+
+- [docs] Add bulk editing demo (#10333) @cherniavskii
+- [docs] Avoid Pickers playground error due to empty views (#10654) @LukasTy
+- [docs] Fix DataGrid[Pro/Premium] reference links (#10620) @michelengelen
+
+### Core
+
+- [core] Bump monorepo (#10619) @alexfauquette
+- [core] Update `no-response` workflow (#10491) @MBilalShafi
+- [core] Update the issue templates to reflect the new support workflow (#10651) @MBilalShafi
+- [test] Fix `testEval` not invoking test assertions (#10587) @cherniavskii
+- [test] Fix dev mode warning (#10610) @oliviertassinari
+- [test] Set UUID chance seed in visual tests (#10609) @oliviertassinari
+
 ## 6.16.1
 
 _Oct 6, 2023_
