@@ -34,6 +34,15 @@ const defaultProps = {
   tickSize: 6,
 } as const;
 
+/**
+ * Demos:
+ *
+ * - [Axis](https://mui.com/x/react-charts/axis/)
+ *
+ * API:
+ *
+ * - [ChartsYAxis API](https://mui.com/x/api/charts/charts-y-axis/)
+ */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
   const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
   const {
