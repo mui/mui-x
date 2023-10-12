@@ -19,6 +19,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 #### `@mui/x-data-grid@6.16.2`
 
 - [DataGrid] Fix `LazyLoading` demo crash (#10621) @MBilalShafi
+- [DataGrid] Fix cells overlapping the scrollbar in iOS Safari (#10633) @cherniavskii
 - [DataGrid] Fix: getRowId not defined (#10613) @romgrk
 - [DataGrid] Get quick filter to work OOTB with `date` and `datetime` fields (#10636) @MBilalShafi
 - [DataGrid] Make cursor for selectable cells to be `default` unless editable (#9997) @gitstart
