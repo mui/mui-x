@@ -402,7 +402,7 @@ export const buildAggregatedQuickFilterApplier = (
         } else {
           const cellParams =
             usedCellParams[field] ??
-            apiRef.current.getCellParams(getRowId ? getRowId(row) : row.id, field);
+            apiRef.current.getCellParams(apiRef.current.getRowId(row), field);
           usedCellParams[field] = cellParams;
 
           const isMatching = applier.fn(cellParams);
