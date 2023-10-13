@@ -171,7 +171,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
         ...labelStyle,
       },
-      className: classes.label,
     } as Partial<ChartsTextProps>,
     ownerState: {},
   });

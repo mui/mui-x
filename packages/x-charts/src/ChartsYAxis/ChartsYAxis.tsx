@@ -101,7 +101,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         textAnchor: 'middle',
         dominantBaseline: 'auto',
       } as Partial<ChartsTextProps>['style'],
-      className: classes.label,
     } as Partial<ChartsTextProps>,
     ownerState: {},
   });
