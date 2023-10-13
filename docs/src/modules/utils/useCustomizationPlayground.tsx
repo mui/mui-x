@@ -263,7 +263,7 @@ const getCodeExample = ({
     } else {
       code = `${code}\n<${componentName}${formatComponentProps(examples.componentProps, 1)}
   sx={{
-    '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
+    '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
     },
   }}
 />`;
