@@ -152,12 +152,6 @@ const useDragRangeEvents = <TDate>({
     }
 
     setRangeDragDay(newDate);
-    setIsDragging(true);
-    const button = event.target as HTMLButtonElement;
-    const buttonDataset = button.dataset;
-    if (buttonDataset.position) {
-      onDatePositionChange(buttonDataset.position as DateRangePosition);
-    }
   });
 
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -173,8 +167,17 @@ const useDragRangeEvents = <TDate>({
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
     const target = resolveElementFromTouch(event);
-    if (!isDragging || !target) {
+    if (!target) {
       return;
+    }
+
+    event.stopPropagation();
+    setIsDragging(true);
+
+    const button = event.target as HTMLButtonElement;
+    const buttonDataset = button.dataset;
+    if (buttonDataset.position) {
+      onDatePositionChange(buttonDataset.position as DateRangePosition);
     }
 
     const newDate = resolveDateFromTarget(target, utils, timezone);
