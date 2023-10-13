@@ -4,6 +4,7 @@ export * from './hooks';
 export * from './colorPalettes';
 export * from './models';
 export * from './ChartsClipPath';
+export * from './ChartsReferenceLine';
 export * from './ChartsAxis';
 export * from './ChartsXAxis';
 export * from './ChartsYAxis';

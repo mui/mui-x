@@ -50,8 +50,13 @@ export default function ReferenceLine() {
     <Box sx={{ width: '100%', maxWidth: 600 }}>
       <ResponsiveChartContainer {...config}>
         <LinePlot />
-        <ChartsReferenceLine x={new Date(2023, 8, 2, 5)} />
-        <ChartsReferenceLine y={50} />
+        <ChartsReferenceLine
+          x={new Date(2023, 8, 2, 9)}
+          lineStyle={{ strokeDasharray: '10 5' }}
+          label="Wake up\n9AM"
+          labelAlign="start"
+        />
+        <ChartsReferenceLine y={50} label="Middle value" labelAlign="end" />
         <ChartsXAxis />
         <ChartsYAxis />
       </ResponsiveChartContainer>

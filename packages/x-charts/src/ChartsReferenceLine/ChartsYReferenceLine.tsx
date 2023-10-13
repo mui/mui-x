@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { useDrawingArea, useYScale } from '../hooks';
-import { CommonChartsReferenceLineProps } from './common';
+import {
+  CommonChartsReferenceLineProps,
+  ReferenceLineRoot,
+  getReferenceLineClasses,
+} from './common';
+import { ChartsText } from '../internals/components/ChartsText';
 
 export type ChartsYReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
@@ -22,54 +27,61 @@ const getTextParams = ({ left, width, labelAlign = 'middle' }: GetTextPlacementP
     case 'start':
       return {
         x: left,
-        dominantBaseline: 'auto',
+        dominantBaseline: 'auto' as const,
         textAnchor: 'start',
       };
 
     case 'end':
       return {
         x: left + width,
-        dominantBaseline: 'auto',
+        dominantBaseline: 'auto' as const,
         textAnchor: 'end',
       };
 
     default:
       return {
         x: left + width / 2,
-        dominantBaseline: 'auto',
+        dominantBaseline: 'auto' as const,
         textAnchor: 'middle',
       };
   }
 };
 
 function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
-  const { y, color = 'red', lineWidth = 1, label = '', labelAlign = 'middle', axisId } = props;
+  const {
+    y,
+    label = '',
+    spacing = 5,
+    classes: classesProps,
+    labelAlign,
+    lineStyle,
+    labelStyle,
+    axisId,
+  } = props;
+
   const { left, width } = useDrawingArea();
   const yAxisScale = useYScale(axisId) as any;
 
   const yPosition = yAxisScale(y);
   const d = `M ${left} ${yPosition} l ${width} 0`;
 
+  const classes = getReferenceLineClasses(classesProps);
+
   const textParams = {
-    y: yPosition,
+    y: yPosition - spacing,
+    text: label,
     ...getTextParams({
       left,
       width,
       labelAlign,
     }),
+    className: classes.label,
   };
   return (
-    <React.Fragment>
-      <path
-        d={d}
-        fill="none"
-        stroke={color}
-        strokeWidth={lineWidth}
-        strokeDasharray={5}
-        opacity={0.5}
-      />
-      <text {...textParams}>{label}</text>
-    </React.Fragment>
+    <ReferenceLineRoot className={classes.root}>
+      <path d={d} className={classes.line} style={lineStyle} />
+      <ChartsText {...textParams} style={labelStyle} />
+    </ReferenceLineRoot>
   );
 }
 
