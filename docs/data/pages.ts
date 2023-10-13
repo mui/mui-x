@@ -287,7 +287,8 @@ const pages: MuiPage[] = [
             children: [
               {
                 pathname: '/x/react-date-pickers/date-time-range-picker',
-                title: 'Date Time Range Picker 🚧',
+                title: 'Date Time Range Picker',
+                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/date-time-range-field',
