@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent, describeConformance } from '@mui/monorepo/test/utils';
+import { screen, userEvent, describeConformance } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,

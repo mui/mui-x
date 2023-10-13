@@ -1,4 +1,4 @@
-import { screen, userEvent, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent, fireTouchChangedEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   adapterToUse,

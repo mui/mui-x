@@ -17,6 +17,7 @@ import {
   MultiSectionDigitalClockSlotsComponent,
   MultiSectionDigitalClockSlotsComponentsProps,
 } from '../MultiSectionDigitalClock';
+import { DigitalClockSlotsComponent, DigitalClockSlotsComponentsProps } from '../DigitalClock';
 
 export interface DesktopDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,
@@ -24,17 +25,19 @@ export interface DesktopDateTimePickerSlotsComponent<TDate>
       UseDesktopPickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem>,
       'Field' | 'OpenPickerIcon'
     >,
+    DigitalClockSlotsComponent,
     MultiSectionDigitalClockSlotsComponent {}
 
 export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
   extends BaseDateTimePickerSlotsComponentsProps<TDate>,
     ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateOrTimeViewWithMeridiem>,
+    DigitalClockSlotsComponentsProps,
     MultiSectionDigitalClockSlotsComponentsProps {}
 
 export interface DesktopDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps<TDate>,
-    Omit<DesktopOnlyTimePickerProps<TDate>, 'thresholdToRenderTimeInASingleColumn'> {
+    DesktopOnlyTimePickerProps<TDate> {
   /**
    * Available views.
    */

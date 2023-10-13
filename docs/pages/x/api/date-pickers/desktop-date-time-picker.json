@@ -184,6 +184,7 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
     "timeSteps": {
       "type": {
         "name": "shape",
@@ -267,6 +268,12 @@
       "name": "desktopTrapFocus",
       "description": "Custom component for trapping the focus inside the views on desktop.",
       "default": "FocusTrap from '@mui/base'."
+    },
+    {
+      "class": null,
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'"
     },
     {
       "class": null,

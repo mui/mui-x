@@ -105,3 +105,14 @@ Using the [controlled mode](/x/react-data-grid/editing/#controlled-model) and li
 The following demo implements this behavior.
 
 {{"demo": "SingleClickEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Bulk editing
+
+The data grid [Editing](/x/react-data-grid/editing/) API exposes [the `processRowUpdate` callback](/x/react-data-grid/editing/#the-processrowupdate-callback) which is commonly used to persist edits on per-row basis.
+You can utilize this callback to batch edits locally and then choose to either persist or discard them in bulk.
+
+The demo below stores edited and deleted rows in the `unsavedChangesRef`.
+These changes are saved or discarded when the user clicks the **Save** or **Discard** buttons respectively.
+Row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) are also batched, as [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data).
+
+{{"demo": "BulkEditingNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}

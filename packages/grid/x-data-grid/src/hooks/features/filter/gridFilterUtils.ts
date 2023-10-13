@@ -290,7 +290,7 @@ export const buildAggregatedFilterItemsApplier = (
 
   // We generate a new function with `eval()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
-  const filterItemTemplate = `(function filterItem$$(appliers, row, shouldApplyFilter) {
+  const filterItemTemplate = `(function filterItem$$(getRowId, appliers, row, shouldApplyFilter) {
       ${appliers
         .map(
           (applier, i) =>
@@ -323,7 +323,7 @@ export const buildAggregatedFilterItemsApplier = (
     filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
   );
   const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
-    return filterItemCore(appliers, row, shouldApplyItem);
+    return filterItemCore(getRowId, appliers, row, shouldApplyItem);
   };
   filterItemsApplierId += 1;
 
@@ -402,7 +402,7 @@ export const buildAggregatedQuickFilterApplier = (
     const result = {} as GridQuickFilterValueResult;
     const usedCellParams = {} as { [field: string]: GridCellParams };
 
-    /* eslint-disable no-restricted-syntax, no-labels, no-continue */
+    /* eslint-disable no-restricted-syntax, no-labels */
     outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
       const filterValue = quickFilterValues[v];
 
@@ -449,7 +449,7 @@ export const buildAggregatedQuickFilterApplier = (
 
       result[filterValue] = false;
     }
-    /* eslint-enable no-restricted-syntax, no-labels, no-continue */
+    /* eslint-enable no-restricted-syntax, no-labels */
 
     return result;
   };

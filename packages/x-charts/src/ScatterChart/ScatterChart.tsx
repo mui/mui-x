@@ -44,6 +44,9 @@ export interface ScatterChartProps
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
@@ -178,23 +181,19 @@ ScatterChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
     hidden: PropTypes.bool,
-    itemWidth: PropTypes.number,
-    markSize: PropTypes.number,
-    offset: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
     position: PropTypes.shape({
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
     }),
     slotProps: PropTypes.object,
     slots: PropTypes.object,
-    spacing: PropTypes.number,
   }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,

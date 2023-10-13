@@ -4,7 +4,7 @@ import {
   screen,
   userEvent,
   fireDiscreteEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   adapterToUse,

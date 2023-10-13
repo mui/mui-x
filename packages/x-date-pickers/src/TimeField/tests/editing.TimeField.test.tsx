@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { userEvent, fireEvent } from '@mui/monorepo/test/utils';
+import { userEvent, fireEvent } from '@mui-internal/test-utils';
 import { expectInputValue, getCleanedSelectedContent, describeAdapters } from 'test/utils/pickers';
 
 describe('<TimeField /> - Editing', () => {

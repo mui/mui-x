@@ -173,7 +173,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   });
 
   const handleValueChange = useEventCallback((newValue: TDate | null) =>
-    handleRawValueChange(newValue, 'finish'),
+    handleRawValueChange(newValue, 'finish', 'hours'),
   );
 
   const { setValueAndGoToNextView } = useViews<TDate | null, Extract<TimeView, 'hours'>>({
