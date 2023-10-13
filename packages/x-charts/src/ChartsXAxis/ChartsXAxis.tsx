@@ -75,13 +75,16 @@ function addLabelDimension(
     const { width, offset, labelOffset, height } = item;
 
     const distance = getDistance({ width, height, angle: style?.angle ?? 0 });
-    textStart = offset + labelOffset - (1.8 * distance) / 2;
+    const textPosition = offset + labelOffset;
+    const gapRatio = 1.2; // Ratio applied to the minimal distanc eto add some margin
+
+    textStart = textPosition - (gapRatio * distance) / 2;
     if (labelIndex > 0 && textStart < textEnd) {
       // Except for the first label, we skip all label that overlap with the last accepted.
       // Notice that the early return prevent textEnd to be updated.
       return { ...item, skipLabel: true };
     }
-    textEnd = offset + labelOffset + distance / 2;
+    textEnd = textPosition + (gapRatio * distance) / 2;
     return item;
   });
 }
