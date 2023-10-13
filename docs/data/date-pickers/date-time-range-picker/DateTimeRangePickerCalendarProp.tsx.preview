@@ -1,0 +1,9 @@
+<DemoItem label="1 calendar" component="DateTimeRangePicker">
+  <DateTimeRangePicker calendars={1} />
+</DemoItem>
+<DemoItem label="2 calendars" component="DateTimeRangePicker">
+  <DateTimeRangePicker calendars={2} />
+</DemoItem>
+<DemoItem label="3 calendars" component="DateTimeRangePicker">
+  <DateTimeRangePicker calendars={3} />
+</DemoItem>
