@@ -152,13 +152,6 @@ const useDragRangeEvents = <TDate>({
     }
 
     setRangeDragDay(newDate);
-    setIsDragging(true);
-
-    const button = event.target as HTMLButtonElement;
-    const buttonDataset = button.dataset;
-    if (buttonDataset.position) {
-      onDatePositionChange(buttonDataset.position as DateRangePosition);
-    }
   });
 
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -173,9 +166,17 @@ const useDragRangeEvents = <TDate>({
   });
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
+    // on mobile we should only initialize dragging state after move is detected
+    setIsDragging(true);
     const target = resolveElementFromTouch(event);
-    if (!isDragging || !target) {
+    if (!target) {
       return;
+    }
+
+    const button = event.target as HTMLButtonElement;
+    const buttonDataset = button.dataset;
+    if (buttonDataset.position) {
+      onDatePositionChange(buttonDataset.position as DateRangePosition);
     }
 
     const newDate = resolveDateFromTarget(target, utils, timezone);
@@ -211,24 +212,17 @@ const useDragRangeEvents = <TDate>({
     setRangeDragDay(null);
     setIsDragging(false);
 
-    const target = resolveElementFromTouch(event);
+    const target = resolveElementFromTouch(event, true);
     if (!target) {
       return;
     }
-
-    const targetDataset = target.dataset;
-    const targetsAreIdentical = target === event.changedTouches[0].target;
 
     // make sure the focused element is the element where touch ended
     target.focus();
 
     const newDate = resolveDateFromTarget(target, utils, timezone);
-    if (newDate && !targetsAreIdentical) {
+    if (newDate) {
       onDrop(newDate);
-    }
-
-    if (targetsAreIdentical) {
-      onDatePositionChange(targetDataset.position === 'start' ? 'end' : 'start');
     }
   });
 
