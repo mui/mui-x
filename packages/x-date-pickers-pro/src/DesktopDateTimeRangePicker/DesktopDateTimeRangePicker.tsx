@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   extractValidationProps,
-  isDatePickerView,
   isInternalTimeView,
   PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
@@ -25,7 +24,6 @@ import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeR
 const DesktopDateTimeRangeContainer = styled('div')({
   display: 'flex',
   margin: '0 auto',
-  '.MuiDateTimeRangePickerTimeWrapper-inactive': { opacity: 0.6 },
 });
 
 const rendererInterceptor = function rendererInterceptor<TDate>(
@@ -48,34 +46,16 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
   const isTimeViewActive = isInternalTimeView(popperView);
   return (
     <DesktopDateTimeRangeContainer>
-      {isTimeViewActive ? (
-        <React.Fragment>
-          {inViewRenderers.day?.({
-            ...rendererProps,
-            view: isDatePickerView(popperView) ? popperView : 'day',
-          })}
-          <Divider orientation="vertical" />
-        </React.Fragment>
-      ) : null}
-      {isTimeViewActive ? (
-        <DateTimeRangePickerTimeWrapper
-          {...finalProps}
-          viewRenderer={inViewRenderers[popperView]}
-        />
-      ) : (
-        inViewRenderers[popperView]?.(finalProps)
-      )}
-      {!isTimeViewActive ? (
-        <React.Fragment>
-          <Divider orientation="vertical" />
-          <DateTimeRangePickerTimeWrapper
-            {...finalProps}
-            view="hours"
-            viewRenderer={inViewRenderers.hours}
-            className="MuiDateTimeRangePickerTimeWrapper-inactive"
-          />
-        </React.Fragment>
-      ) : null}
+      {inViewRenderers.day?.({
+        ...rendererProps,
+        view: !isTimeViewActive ? popperView : 'day',
+      })}
+      <Divider orientation="vertical" />
+      <DateTimeRangePickerTimeWrapper
+        {...finalProps}
+        view={isTimeViewActive ? popperView : 'hours'}
+        viewRenderer={inViewRenderers[isTimeViewActive ? popperView : 'hours']}
+      />
     </DesktopDateTimeRangeContainer>
   );
 };
