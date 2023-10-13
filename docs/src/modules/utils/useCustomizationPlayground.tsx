@@ -11,7 +11,8 @@ export type CustomizationLabelType = {
 type CustomizationItemType = {
   type: 'warning' | 'success';
   comments?: string;
-  componentProps?: Object;
+  componentProps?: any;
+  parentSlot?: string;
 };
 export type CustomizationItemsType = Partial<{
   [k in keyof CustomizationLabelType]: CustomizationItemType;
@@ -95,6 +96,7 @@ export function withStyles(
       const sxProp = {
         [`& .Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
       };
+
       return <Component {...props} sx={{ ...sxProp, ...props?.sx }} />;
     }
 
@@ -131,6 +133,7 @@ interface Props
     Pick<UseCustomizationPlaygroundProps, 'componentName'> {
   theme: Theme;
   examples: CustomizationItemType;
+  selectedExample: CustomizationItemType | null;
 }
 
 /* I use this method to parse whatever component props are passed in and format them for the code example, 
@@ -166,7 +169,7 @@ function formatComponentProps(componentProps?: Object, spacing: number = 1) {
           )}]${separator === '=' ? '}' : ''}`;
         }
 
-        return `${indent}${key}${separator}${getValue(value)}`;
+        return `${indent}${key}${separator}${getValue(value)},`;
       })
       .join('\n');
   }
@@ -185,6 +188,7 @@ const getCodeExample = ({
   selectedTokens,
   componentName,
   examples,
+  selectedExample,
   theme,
 }: Props) => {
   const tokens = {
@@ -244,12 +248,26 @@ const getCodeExample = ({
   }
 
   if (selectedCustomizationOption === 'sxProp') {
-    code = `${code}\n<${componentName}${formatComponentProps(examples.componentProps, 1)}
+    if (selectedExample?.parentSlot) {
+      const componentProps = {
+        ...examples.componentProps,
+        slotProps: {
+          ...examples.componentProps?.slotProps,
+          [selectedExample?.parentSlot]: {
+            sx: { [`'& .Mui${selectedDemo}-${selectedSlot}'`]: tokens },
+          },
+        },
+      };
+      code = `${code}\n<${componentName}${formatComponentProps(componentProps, 1)}
+/>`;
+    } else {
+      code = `${code}\n<${componentName}${formatComponentProps(examples.componentProps, 1)}
   sx={{
     '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
     },
   }}
 />`;
+    }
   } else if (selectedCustomizationOption === 'customTheme') {
     code = `import { createTheme } from '@mui/material/styles'\n${code}
 const newTheme = (theme) => createTheme({
@@ -337,6 +355,12 @@ export function useCustomizationPlayground({
         examples: examples[selectedDemo].examples[
           selectedCustomizationOption
         ] as CustomizationItemType,
+        selectedExample:
+          selectedDemo && selectedCustomizationOption
+            ? (examples[selectedDemo]?.examples[
+                selectedCustomizationOption
+              ] as CustomizationItemType)
+            : null,
         theme,
       });
       if (code) {
