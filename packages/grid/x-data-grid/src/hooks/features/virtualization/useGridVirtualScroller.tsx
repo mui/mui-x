@@ -515,10 +515,16 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return -1;
   }, [cellFocus, currentPage.rows]);
 
-  useGridApiEventHandler(apiRef, 'rowMouseEnter', (params) => {
+  useGridApiEventHandler(apiRef, 'rowMouseOver', (params, event) => {
+    if (event.currentTarget.contains(event.relatedTarget as Node)) {
+      return;
+    }
     setHoveredRowId(params.id ?? null);
   });
-  useGridApiEventHandler(apiRef, 'rowMouseLeave', () => {
+  useGridApiEventHandler(apiRef, 'rowMouseOut', (params, event) => {
+    if (event.currentTarget.contains(event.relatedTarget as Node)) {
+      return;
+    }
     setHoveredRowId(null);
   });
 

@@ -12,6 +12,16 @@ type TimePickerComponent = (<TDate>(
   props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)
+ */
 const TimePicker = React.forwardRef(function TimePicker<TDate>(
   inProps: TimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,

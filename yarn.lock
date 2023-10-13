@@ -1877,8 +1877,8 @@
     react-transition-group "^4.4.5"
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
-  version "5.14.10"
-  resolved "https://github.com/mui/material-ui.git#f1401844507519e09814bf8ea3ac338ec8011044"
+  version "5.14.11"
+  resolved "https://github.com/mui/material-ui.git#7f9c09fea69759f0f621cbe3eb0f738d51c8201e"
 
 "@mui/private-theming@^5.14.11":
   version "5.14.11"
@@ -2015,6 +2015,13 @@
   version "13.4.19"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-13.4.19.tgz#46905b4e6f62da825b040343cbc233144e9578d3"
   integrity sha512-FsAT5x0jF2kkhNkKkukhsyYOrRqtSxrEhfliniIq0bwWbuXLgyt3Gv0Ml+b91XwjwArmuP7NxCiGd++GGKdNMQ==
+
+"@next/eslint-plugin-next@^13.5.4":
+  version "13.5.4"
+  resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-13.5.4.tgz#ec70af509f07dc4e545df25834ac94d2c341c36a"
+  integrity sha512-vI94U+D7RNgX6XypSyjeFrOzxGlZyxOplU0dVE5norIfZGn/LDjJYPHdvdsR5vN1eRtl6PDAsOHmycFEOljK5A==
+  dependencies:
+    glob "7.1.7"
 
 "@next/swc-darwin-arm64@13.4.19":
   version "13.4.19"
@@ -7531,6 +7538,18 @@ glob@7.1.6:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
+glob@7.1.7:
+  version "7.1.7"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.7.tgz#3b193e9233f01d42d0b3f78294bbeeb418f94a90"
+  integrity sha512-OvD9ENzPLbegENnYP5UUfJIirTg4+XwMWGaQfQTY0JenxNvvIKP3U3/tAQSPIu/lHxXYSZmpXlUHeqAIdKzBLQ==
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.0.4"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
 glob@7.2.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.0.tgz#d15535af7732e02e948f4c41628bd910293f6023"
@@ -12787,10 +12806,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-sinon@^16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-16.0.0.tgz#06da4e63624b946c9d7e67cce21c2f67f40f23a9"
-  integrity sha512-B8AaZZm9CT5pqe4l4uWJztfD/mOTa7dL8Qo0W4+s+t74xECOgSZDDQCBjNgIK3+n4kyxQrSTv2V5ul8K25qkiQ==
+sinon@^16.1.0:
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-16.1.0.tgz#645b836563c9bedb21defdbe48831cb2afb687f2"
+  integrity sha512-ZSgzF0vwmoa8pq0GEynqfdnpEDyP1PkYmEChnkjW0Vyh8IDlyFEJ+fkMhCP0il6d5cJjPl2PUsnUSAuP5sttOQ==
   dependencies:
     "@sinonjs/commons" "^3.0.0"
     "@sinonjs/fake-timers" "^10.3.0"

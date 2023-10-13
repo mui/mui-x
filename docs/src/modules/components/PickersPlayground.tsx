@@ -10,10 +10,11 @@ import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormCon
 import Radio from '@mui/material/Radio';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormGroup from '@mui/material/FormGroup';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -168,6 +169,31 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
+function DisabledCheckboxTooltip({ children }: { children: React.ReactElement }) {
+  return (
+    <Tooltip title="At least one view has to be provided to the components">{children}</Tooltip>
+  );
+}
+
+function ViewCheckbox({
+  onlyOneView,
+  name,
+  ...other
+}: Pick<CheckboxProps, 'onChange' | 'name' | 'checked'> & {
+  onlyOneView: boolean;
+}) {
+  const isDisabled = other.checked && onlyOneView;
+  const Wrapper = isDisabled ? DisabledCheckboxTooltip : React.Fragment;
+  return (
+    <Wrapper>
+      <FormControlLabel
+        control={<Checkbox name={name} {...other} disabled={isDisabled} />}
+        label={name}
+      />
+    </Wrapper>
+  );
+}
+
 function ViewSwitcher({
   showDateViews,
   showTimeViews,
@@ -179,6 +205,20 @@ function ViewSwitcher({
   views: ViewsMap;
   handleViewsChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }) {
+  const relevantViews = React.useMemo(
+    () =>
+      Object.entries(views).filter(
+        ([view]) =>
+          (showDateViews && isDatePickerView(view as DateOrTimeView)) ||
+          (showTimeViews && isTimeView(view as DateOrTimeView)),
+      ),
+    [showDateViews, showTimeViews, views],
+  );
+  const onlyOneView = React.useMemo(
+    () => relevantViews.filter(([, enabled]) => Boolean(enabled)).length === 1,
+    [relevantViews],
+  );
+
   return (
     <FormControl component="fieldset" variant="standard">
       <FormLabel id="views-label" component="legend">
@@ -196,37 +236,45 @@ function ViewSwitcher({
       >
         {showDateViews && (
           <React.Fragment>
-            <FormControlLabel
-              control={<Checkbox name="year" checked={views.year} onChange={handleViewsChange} />}
-              label="year"
+            <ViewCheckbox
+              name="year"
+              checked={views.year}
+              onlyOneView={onlyOneView}
+              onChange={handleViewsChange}
             />
-            <FormControlLabel
-              control={<Checkbox name="month" checked={views.month} onChange={handleViewsChange} />}
-              label="month"
+            <ViewCheckbox
+              name="month"
+              checked={views.month}
+              onlyOneView={onlyOneView}
+              onChange={handleViewsChange}
             />
-            <FormControlLabel
-              control={<Checkbox name="day" checked={views.day} onChange={handleViewsChange} />}
-              label="day"
+            <ViewCheckbox
+              name="day"
+              checked={views.day}
+              onlyOneView={onlyOneView}
+              onChange={handleViewsChange}
             />
           </React.Fragment>
         )}
         {showTimeViews && (
           <React.Fragment>
-            <FormControlLabel
-              control={<Checkbox name="hours" checked={views.hours} onChange={handleViewsChange} />}
-              label="hours"
+            <ViewCheckbox
+              name="hours"
+              checked={views.hours}
+              onlyOneView={onlyOneView}
+              onChange={handleViewsChange}
             />
-            <FormControlLabel
-              control={
-                <Checkbox name="minutes" checked={views.minutes} onChange={handleViewsChange} />
-              }
-              label="minutes"
+            <ViewCheckbox
+              name="minutes"
+              checked={views.minutes}
+              onlyOneView={onlyOneView}
+              onChange={handleViewsChange}
             />
-            <FormControlLabel
-              control={
-                <Checkbox name="seconds" checked={views.seconds} onChange={handleViewsChange} />
-              }
-              label="seconds"
+            <ViewCheckbox
+              name="seconds"
+              checked={views.seconds}
+              onlyOneView={onlyOneView}
+              onChange={handleViewsChange}
             />
           </React.Fragment>
         )}
