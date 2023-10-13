@@ -254,7 +254,7 @@ const getCodeExample = ({
         slotProps: {
           ...examples.componentProps?.slotProps,
           [selectedExample?.parentSlot]: {
-            sx: { [`'& .Mui${selectedDemo}-${selectedSlot}'`]: tokens },
+            sx: { [`'.Mui${selectedDemo}-${selectedSlot}'`]: tokens },
           },
         },
       };

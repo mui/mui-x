@@ -130,9 +130,9 @@ export const datePickerExamples: PickersSubcomponentType = {
       },
       sxProp: {
         type: 'warning',
-        parentSlot: 'desktopPaper',
+        parentSlot: 'layout',
         comments:
-          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `desktopPaper` slot',
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
       },
       styledComponents: {
         type: 'warning',
@@ -150,9 +150,9 @@ export const datePickerExamples: PickersSubcomponentType = {
       },
       sxProp: {
         type: 'warning',
-        parentSlot: 'desktopPaper',
+        parentSlot: 'layout',
         comments:
-          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `desktopPaper` slot',
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
       },
       styledComponents: {
         type: 'warning',
@@ -170,9 +170,9 @@ export const datePickerExamples: PickersSubcomponentType = {
       },
       sxProp: {
         type: 'warning',
-        parentSlot: 'desktopPaper',
+        parentSlot: 'layout',
         comments:
-          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `desktopPaper` slot',
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
       },
       styledComponents: {
         type: 'warning',
@@ -190,9 +190,9 @@ export const datePickerExamples: PickersSubcomponentType = {
       },
       sxProp: {
         type: 'warning',
-        parentSlot: 'desktopPaper',
+        parentSlot: 'layout',
         comments:
-          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `desktopPaper` slot',
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
       },
       styledComponents: {
         type: 'warning',
@@ -211,9 +211,9 @@ export const datePickerExamples: PickersSubcomponentType = {
       },
       sxProp: {
         type: 'warning',
-        parentSlot: 'desktopPaper',
+        parentSlot: 'layout',
         comments:
-          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `desktopPaper` slot',
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
         componentProps: { views: ['month'] },
       },
 
@@ -225,21 +225,6 @@ export const datePickerExamples: PickersSubcomponentType = {
       },
     },
     slots: ['root', 'monthButton'],
-  },
-  InputBase: {
-    examples: {
-      customTheme: {
-        type: 'success',
-      },
-      sxProp: {
-        type: 'success',
-      },
-
-      styledComponents: {
-        type: 'success',
-      },
-    },
-    slots: ['root'],
   },
 };
 
