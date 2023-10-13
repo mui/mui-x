@@ -51,7 +51,7 @@ export interface DateRangeCalendarSlotsComponentsProps<TDate>
 }
 
 export interface ExportedDateRangeCalendarProps<TDate>
-  extends ExportedDayCalendarProps,
+  extends ExportedDayCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
     TimezoneProps,

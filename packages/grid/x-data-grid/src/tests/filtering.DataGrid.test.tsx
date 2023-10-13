@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -44,13 +44,11 @@ describe('<DataGrid /> - Filter', () => {
   let disableEval = false;
 
   function testEval(fn: Function) {
-    return () => {
-      disableEval = false;
-      fn();
-      disableEval = true;
-      fn();
-      disableEval = false;
-    };
+    disableEval = false;
+    fn();
+    disableEval = true;
+    fn();
+    disableEval = false;
   }
 
   function TestCase(props: Partial<DataGridProps>) {

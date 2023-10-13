@@ -13,6 +13,13 @@
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },
     "autoPageSize": { "type": { "name": "bool" } },
+    "autosizeOnMount": { "type": { "name": "bool" } },
+    "autosizeOptions": {
+      "type": {
+        "name": "shape",
+        "description": "{ columns?: Array&lt;string&gt;, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+      }
+    },
     "cellModesModel": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" } },
     "checkboxSelectionVisibleOnly": {
@@ -46,6 +53,7 @@
     "detailPanelExpandedRowIds": {
       "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
     },
+    "disableAutosize": { "type": { "name": "bool" } },
     "disableChildrenFiltering": { "type": { "name": "bool" } },
     "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
@@ -549,7 +557,7 @@
         "name": "union",
         "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
       },
-      "default": ": false"
+      "default": "false"
     }
   },
   "slots": [
@@ -837,6 +845,12 @@
     },
     {
       "class": null,
+      "name": "footerRowCount",
+      "description": "Row count component rendered in the footer",
+      "default": "GridRowCount"
+    },
+    {
+      "class": null,
       "name": "groupingCriteriaCollapseIcon",
       "description": "Icon displayed on the grouping column when the children are expanded",
       "default": "GridExpandMoreIcon"
@@ -977,6 +991,7 @@
       "aggregationColumnHeader--alignRight",
       "aggregationColumnHeaderLabel",
       "autoHeight",
+      "autosizing",
       "booleanCell",
       "cell--editable",
       "cell--editing",
@@ -988,6 +1003,7 @@
       "cell--rangeBottom",
       "cell--rangeLeft",
       "cell--rangeRight",
+      "cell--selectionMode",
       "cell",
       "cellContent",
       "cellCheckbox",
@@ -1107,6 +1123,5 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li></ul>",
-  "packages": [{ "packageName": "@mui/x-data-grid-pro", "componentName": "DataGridPro" }]
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li></ul>"
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, userEvent, act, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, userEvent, act, fireEvent } from '@mui-internal/test-utils';
 import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
 import { expectInputValue } from './assertions';
 

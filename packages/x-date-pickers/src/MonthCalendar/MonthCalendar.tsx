@@ -17,6 +17,7 @@ import { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -60,7 +61,9 @@ const MonthCalendarRoot = styled('div', {
   flexWrap: 'wrap',
   alignContent: 'stretch',
   padding: '0 4px',
-  width: 320,
+  width: DIALOG_WIDTH,
+  // avoid padding increasing width over defined
+  boxSizing: 'border-box',
 });
 
 type MonthCalendarComponent = (<TDate>(
@@ -92,6 +95,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     onFocusedViewChange,
     monthsPerRow = 3,
     timezone: timezoneProp,
+    gridLabelId,
     ...other
   } = props;
 
@@ -253,11 +257,14 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      role="radiogroup"
+      aria-labelledby={gridLabelId}
       {...other}
     >
       {getMonthsInYear(utils, value ?? referenceDate).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
+        const monthLabel = utils.format(month, 'month');
         const isSelected = monthNumber === selectedMonth;
         const isDisabled = disabled || isMonthDisabled(month);
 
@@ -274,6 +281,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
+            aria-label={monthLabel}
             monthsPerRow={monthsPerRow}
           >
             {monthText}
@@ -322,6 +330,7 @@ MonthCalendar.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  gridLabelId: PropTypes.string,
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.

@@ -41,9 +41,7 @@
         "describedArgs": ["event", "nodeIds"]
       }
     },
-    "selected": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" }
-    },
+    "selected": { "type": { "name": "any" } },
     "sx": {
       "type": {
         "name": "union",
@@ -63,6 +61,5 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/TreeView/TreeView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/\">Tree View</a></li></ul>",
-  "packages": [{ "packageName": "@mui/x-tree-view", "componentName": "TreeView" }]
+  "demos": "<ul><li><a href=\"/x/react-tree-view/\">Tree View</a></li></ul>"
 }

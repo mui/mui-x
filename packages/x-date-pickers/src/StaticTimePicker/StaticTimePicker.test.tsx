@@ -7,10 +7,14 @@ import {
   screen,
   getAllByRole,
   fireEvent,
-} from '@mui/monorepo/test/utils';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers';
+} from '@mui-internal/test-utils';
+import {
+  adapterToUse,
+  wrapPickerMount,
+  createPickerRenderer,
+  describeValidation,
+} from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<StaticTimePicker />', () => {
   const { render, clock } = createPickerRenderer({

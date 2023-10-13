@@ -56,6 +56,7 @@ export const GridRootStyles = styled('div', {
       [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]:
         styles['root--disableUserSelection'],
     },
+    { [`&.${gridClasses.autosizing}`]: styles.autosizing },
     { [`& .${gridClasses.editBooleanCell}`]: styles.editBooleanCell },
     { [`& .${gridClasses['cell--editing']}`]: styles['cell--editing'] },
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
@@ -148,6 +149,14 @@ export const GridRootStyles = styled('div', {
       height: 'auto',
       [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
         borderBottomColor: 'transparent',
+      },
+    },
+    [`&.${gridClasses.autosizing}`]: {
+      [`& .${gridClasses.columnHeaderTitleContainerContent} > *`]: {
+        overflow: 'visible !important',
+      },
+      [`& .${gridClasses.cell} > *`]: {
+        overflow: 'visible !important',
       },
     },
     [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
@@ -329,9 +338,10 @@ export const GridRootStyles = styled('div', {
           : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
         '&:hover, &.Mui-hovered': {
           backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${
-                theme.vars.palette.action.selectedOpacity + theme.palette.action.hoverOpacity
-              })`
+            ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(
+                ${theme.vars.palette.action.selectedOpacity} + 
+                ${theme.vars.palette.action.hoverOpacity}
+              ))`
             : alpha(
                 theme.palette.primary.main,
                 theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
@@ -381,6 +391,9 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.cellContent}`]: {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
+    },
+    [`& .${gridClasses.cell}.${gridClasses['cell--selectionMode']}`]: {
+      cursor: 'default',
     },
     [`& .${gridClasses.cell}.${gridClasses['cell--editing']}`]: {
       padding: 1,

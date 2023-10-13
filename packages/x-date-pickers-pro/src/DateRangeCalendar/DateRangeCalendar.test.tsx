@@ -8,7 +8,7 @@ import {
   describeConformance,
   fireTouchChangedEvent,
   userEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,

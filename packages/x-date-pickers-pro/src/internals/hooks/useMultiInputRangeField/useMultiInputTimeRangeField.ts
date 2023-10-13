@@ -28,6 +28,7 @@ import type {
 } from '../../../MultiInputTimeRangeField/MultiInputTimeRangeField.types';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
+import { excludeProps } from './shared';
 
 export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseMultiInputTimeRangeFieldProps<TDate>,
@@ -162,5 +163,9 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     inputRef: endInputRef,
   }) as UseFieldResponse<TTextFieldSlotProps>;
 
-  return { startDate: startDateResponse, endDate: endDateResponse };
+  /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
+  return {
+    startDate: excludeProps(startDateResponse, ['clearable', 'onClear']),
+    endDate: excludeProps(endDateResponse, ['clearable', 'onClear']),
+  };
 };

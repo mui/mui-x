@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
@@ -18,11 +19,23 @@ import {
 import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
+import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
+import { TimeView } from '../models/views';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
+ */
 const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   inProps: DesktopTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -37,11 +50,11 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     DesktopTimePickerProps<TDate>
   >(inProps, 'MuiDesktopTimePicker');
 
-  const thresholdToRenderTimeInASingleColumn =
-    defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
-  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
-  const shouldRenderTimeInASingleColumn =
-    (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
+  const {
+    shouldRenderTimeInASingleColumn,
+    views: resolvedViews,
+    timeSteps,
+  } = resolveTimeViewsResponse<TDate, TimeView, TimeViewWithMeridiem>(defaultizedProps);
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -62,10 +75,9 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   // Need to avoid adding the `meridiem` view when unexpected renderer is specified
   const shouldHoursRendererContainMeridiemView =
     viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
-  const views: readonly TimeViewWithMeridiem[] =
-    defaultizedProps.ampm && shouldHoursRendererContainMeridiemView
-      ? [...defaultizedProps.views, 'meridiem']
-      : defaultizedProps.views;
+  const views = !shouldHoursRendererContainMeridiemView
+    ? resolvedViews.filter((view) => view !== 'meridiem')
+    : resolvedViews;
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -200,12 +212,7 @@ DesktopTimePicker.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */

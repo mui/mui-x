@@ -25,10 +25,13 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns';
 
+// Fixes https://github.com/mui/mui-x/issues/10056
+const globalScope = (typeof window === 'undefined' ? globalThis : window) as any;
+const evalCode = globalScope[atob('ZXZhbA==')] as <T>(source: string) => T;
+
 let hasEval: boolean;
 try {
-  // eslint-disable-next-line no-eval
-  hasEval = eval('true');
+  hasEval = evalCode<boolean>('true');
 } catch (_: unknown) {
   hasEval = false;
 }
@@ -269,7 +272,7 @@ export const buildAggregatedFilterItemsApplier = (
 
   // We generate a new function with `eval()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
-  const filterItemTemplate = `(function filterItem$$(row, shouldApplyFilter) {
+  const filterItemTemplate = `(function filterItem$$(getRowId, appliers, row, shouldApplyFilter) {
       ${appliers
         .map(
           (applier, i) =>
@@ -298,10 +301,12 @@ export const buildAggregatedFilterItemsApplier = (
       return result$$;
     })`;
 
-  // eslint-disable-next-line no-eval
-  const filterItem = eval(
+  const filterItemCore = evalCode<Function>(
     filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
-  ) as GridFilterItemApplierNotAggregated;
+  );
+  const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
+    return filterItemCore(getRowId, appliers, row, shouldApplyItem);
+  };
   filterItemsApplierId += 1;
 
   return filterItem;
@@ -369,7 +374,7 @@ export const buildAggregatedQuickFilterApplier = (
     const result = {} as GridQuickFilterValueResult;
     const usedCellParams = {} as { [field: string]: GridCellParams };
 
-    /* eslint-disable no-restricted-syntax, no-labels, no-continue */
+    /* eslint-disable no-restricted-syntax, no-labels */
     outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
       const filterValue = quickFilterValues[v];
 
@@ -410,7 +415,7 @@ export const buildAggregatedQuickFilterApplier = (
 
       result[filterValue] = false;
     }
-    /* eslint-enable no-restricted-syntax, no-labels, no-continue */
+    /* eslint-enable no-restricted-syntax, no-labels */
 
     return result;
   };

@@ -112,6 +112,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   Footer: React.JSXElementConstructor<any>;
   /**
+   * Row count component rendered in the footer
+   * @default GridRowCount
+   */
+  FooterRowCount: React.JSXElementConstructor<any>;
+  /**
    * Toolbar component rendered inside the Header component.
    * @default null
    */

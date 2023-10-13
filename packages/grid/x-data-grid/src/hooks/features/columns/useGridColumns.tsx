@@ -36,6 +36,7 @@ import {
 import { GridPreferencePanelsValue } from '../preferencesPanel';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { getGridDefaultColumnTypes } from '../../../colDef';
+import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 const defaultColumnTypes = getGridDefaultColumnTypes();
 
@@ -232,9 +233,22 @@ export function useGridColumns(
     (field, width) => {
       logger.debug(`Updating column ${field} width to ${width}`);
 
-      const column = apiRef.current.getColumn(field);
-      const newColumn = { ...column, width };
-      apiRef.current.updateColumns([newColumn]);
+      const columnsState = gridColumnsStateSelector(apiRef.current.state);
+      const column = columnsState.lookup[field];
+      const newColumn: GridStateColDef = { ...column, width, hasBeenResized: true };
+
+      setGridColumnsState(
+        hydrateColumnsWidth(
+          {
+            ...columnsState,
+            lookup: {
+              ...columnsState.lookup,
+              [field]: newColumn,
+            },
+          },
+          apiRef.current.getRootDimensions()?.viewportInnerSize.width ?? 0,
+        ),
+      );
 
       apiRef.current.publishEvent('columnWidthChange', {
         element: apiRef.current.getColumnHeaderElement(field),
@@ -242,7 +256,7 @@ export function useGridColumns(
         width,
       });
     },
-    [apiRef, logger],
+    [apiRef, logger, setGridColumnsState],
   );
 
   const columnApi: GridColumnApi = {

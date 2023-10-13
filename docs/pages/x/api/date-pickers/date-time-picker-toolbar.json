@@ -41,9 +41,5 @@
     "name": "MuiDateTimePickerToolbar"
   },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerToolbar.tsx",
-  "demos": "<ul></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerToolbar" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DateTimePickerToolbar" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
 }

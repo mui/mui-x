@@ -152,6 +152,23 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.locale(expectedLocale);
   };
 
+  /**
+   * Some methods from moment can't take the locale as a parameter and always use the current locale.
+   * To respect the adapter locale, we need to set it as the current locale and then reset the previous locale.
+   */
+  private syncMomentLocale = <R>(runner: () => R): R => {
+    const momentLocale = defaultMoment.locale();
+    const adapterLocale = this.locale ?? 'en-us';
+    if (momentLocale !== adapterLocale) {
+      defaultMoment.locale(adapterLocale);
+      const result = runner();
+      defaultMoment.locale(momentLocale);
+      return result;
+    }
+
+    return runner();
+  };
+
   private hasTimezonePlugin = () => typeof this.moment.tz !== 'undefined';
 
   private createSystemDate = (value: string | undefined): Moment => {
@@ -222,16 +239,13 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getTimezone = (value: Moment): string => {
-    if (value.isUTC()) {
-      return 'UTC';
-    }
-
     // @ts-ignore
     // eslint-disable-next-line no-underscore-dangle
     const zone = value._z?.name;
+    const defaultZone = value.isUTC() ? 'UTC' : 'system';
 
     // @ts-ignore
-    return zone ?? this.moment.defaultZone?.name ?? 'system';
+    return zone ?? this.moment.defaultZone?.name ?? defaultZone;
   };
 
   public setTimezone = (value: Moment, timezone: PickersTimezone): Moment => {
@@ -567,9 +581,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
       .second(timeParam.second());
   };
 
-  public getWeekdays = () => {
-    return defaultMoment.weekdaysShort(true);
-  };
+  public getWeekdays = () => this.syncMomentLocale(() => defaultMoment.weekdaysShort(true));
 
   public getWeekArray = (value: Moment) => {
     const cleanValue = this.setLocaleToValue(value);

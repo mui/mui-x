@@ -28,10 +28,10 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()",
+      "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(day: string) => string",
-        "describedArgs": ["day"],
+        "type": "function(day: string, date: TDate) => string",
+        "describedArgs": ["day", "date"],
         "returned": "string"
       }
     },
@@ -59,9 +59,7 @@
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
-    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
@@ -164,8 +162,20 @@
     },
     {
       "class": null,
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon"
+    },
+    {
+      "class": null,
       "name": "day",
-      "description": "Custom component for day in range pickers.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
+      "description": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
       "default": "DateRangePickersDay"
     },
     {
@@ -184,7 +194,7 @@
       "class": null,
       "name": "desktopTrapFocus",
       "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "TrapFocus from '@mui/material'."
+      "default": "FocusTrap from '@mui/base'."
     },
     {
       "class": null,
@@ -196,17 +206,17 @@
     {
       "class": null,
       "name": "fieldRoot",
-      "description": "Element rendered at the root.\nIgnored if the field has only one input."
+      "description": "Element rendered at the root. Ignored if the field has only one input."
     },
     {
       "class": null,
       "name": "fieldSeparator",
-      "description": "Element rendered between the two inputs.\nIgnored if the field has only one input."
+      "description": "Element rendered between the two inputs. Ignored if the field has only one input."
     },
     {
       "class": null,
       "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
     },
     {
       "class": null,
@@ -271,7 +281,7 @@
     {
       "class": null,
       "name": "textField",
-      "description": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     },
     {
@@ -291,6 +301,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
-  "packages": [{ "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangePicker" }]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }

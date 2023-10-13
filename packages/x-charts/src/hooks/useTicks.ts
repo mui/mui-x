@@ -22,7 +22,7 @@ export interface TickParams {
   tickNumber?: number;
 }
 
-export function getTicksNumber(
+export function getTickNumber(
   params: TickParams & {
     range: any[];
     domain: any[];
@@ -40,12 +40,13 @@ export function getTicksNumber(
   return Math.min(maxTicks, Math.max(minTicks, defaultizedTickNumber));
 }
 
-function useTicks(options: {
-  scale: D3Scale;
-  ticksNumber?: number;
-  valueFormatter?: (value: any) => string;
-}) {
-  const { scale, ticksNumber, valueFormatter } = options;
+function useTicks(
+  options: {
+    scale: D3Scale;
+    valueFormatter?: (value: any) => string;
+  } & Pick<TickParams, 'tickNumber'>,
+) {
+  const { scale, tickNumber, valueFormatter } = options;
 
   return React.useMemo(() => {
     // band scale
@@ -77,12 +78,12 @@ function useTicks(options: {
       }));
     }
 
-    return scale.ticks(ticksNumber).map((value: any) => ({
-      formattedValue: valueFormatter?.(value) ?? scale.tickFormat(ticksNumber)(value),
+    return scale.ticks(tickNumber).map((value: any) => ({
+      formattedValue: valueFormatter?.(value) ?? scale.tickFormat(tickNumber)(value),
       offset: scale(value),
       labelOffset: 0,
     }));
-  }, [ticksNumber, scale, valueFormatter]);
+  }, [tickNumber, scale, valueFormatter]);
 }
 
 export default useTicks;

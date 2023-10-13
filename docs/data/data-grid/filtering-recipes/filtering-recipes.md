@@ -6,7 +6,7 @@ title: Data Grid - Filtering customization recipes
 
 <p class="description">Advanced filtering customization recipes.</p>
 
-## Quck filter outside of the grid
+## Quick filter outside of the grid
 
 Currently if you want to use the [Quick filter](/x/react-data-grid/filtering/quick-filter/) feature you need to use from the toolbar component slot.
 

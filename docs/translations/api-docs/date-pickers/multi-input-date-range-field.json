@@ -103,7 +103,7 @@
       "typeDescriptions": {}
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.",
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The date to test.",
@@ -162,6 +162,6 @@
   "slotDescriptions": {
     "root": "Element rendered at the root.",
     "separator": "Element rendered between the two inputs.",
-    "textField": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "textField": "Form control with an input to render a date. It is rendered twice: once for the start date and once for the end date. Receives the same props as <code>@mui/material/TextField</code>."
   }
 }
