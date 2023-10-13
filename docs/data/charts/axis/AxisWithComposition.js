@@ -44,10 +44,10 @@ export default function AxisWithComposition() {
         margin={{ left: 70, right: 70 }}
         sx={{
           [`.${axisClasses.left} .${axisClasses.label}`]: {
-            transform: 'rotate(-90deg) translate(0px, -20px)',
+            transform: 'translate(-25px, 0)',
           },
           [`.${axisClasses.right} .${axisClasses.label}`]: {
-            transform: 'rotate(90deg) translate(0px, -25px)',
+            transform: 'translate(30px, 0)',
           },
         }}
       >

@@ -9,7 +9,7 @@ import {
   createRenderer,
   fireEvent,
   screen,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 

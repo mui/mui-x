@@ -120,7 +120,6 @@ export default function StackOrderDemo() {
                 transform: 'translateY(15px)',
               },
             },
-            '--ChartsLegend-itemWidth': '110px',
           }}
         />
       </Box>
