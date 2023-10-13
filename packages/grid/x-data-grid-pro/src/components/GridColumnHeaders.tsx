@@ -1,15 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  refType,
-  unstable_composeClasses as composeClasses,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import { refType, unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
   gridClasses,
-  useGridApiEventHandler,
   GridColumnHeaderSeparatorSides,
 } from '@mui/x-data-grid';
 import {
@@ -144,22 +139,11 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     } = props;
     const rootProps = useGridRootProps();
     const apiRef = useGridApiContext();
-    const [scrollbarSize, setScrollbarSize] = React.useState(0);
     const theme = useTheme();
+    const rootDimensions = apiRef.current.getRootDimensions();
 
-    const handleContentSizeChange = useEventCallback(() => {
-      const rootDimensions = apiRef.current.getRootDimensions();
-      if (!rootDimensions) {
-        return;
-      }
-
-      const newScrollbarSize = rootDimensions.hasScrollY ? rootDimensions.scrollBarSize : 0;
-      if (scrollbarSize !== newScrollbarSize) {
-        setScrollbarSize(newScrollbarSize);
-      }
-    });
-
-    useGridApiEventHandler(apiRef, 'virtualScrollerContentSizeChange', handleContentSizeChange);
+    const scrollbarSize =
+      rootDimensions && rootDimensions.hasScrollY ? rootDimensions.scrollBarSize : 0;
 
     const visibleColumnFields = React.useMemo(
       () => visibleColumns.map(({ field }) => field),
