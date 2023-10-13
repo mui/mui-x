@@ -22,4 +22,3 @@ export const referenceLineClasses: ChartsReferenceLineClasses = generateUtilityC
   'MuiChartsReferenceLine',
   ['root', 'line', 'label'],
 );
-
