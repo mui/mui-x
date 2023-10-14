@@ -728,7 +728,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i}
+          index={
+            isRowWithFocusedCellNotInRange && cellFocus?.id === id
+              ? indexOfRowWithFocusedCell
+              : rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i
+          }
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
           position={position}
