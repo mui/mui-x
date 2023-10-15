@@ -246,7 +246,7 @@ export function useGridColumns(
               [field]: newColumn,
             },
           },
-          apiRef.current.getDimensions().viewportInnerSize.width,
+          apiRef.current.getRootDimensions().viewportInnerSize.width,
         ),
       );
 

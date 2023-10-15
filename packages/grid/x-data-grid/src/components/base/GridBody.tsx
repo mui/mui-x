@@ -51,7 +51,7 @@ function GridBody(props: GridBodyProps) {
     };
   }, [apiRef]);
 
-  const hasDimensions = apiRef.current.getDimensions().isReady;
+  const hasDimensions = apiRef.current.getRootDimensions().isReady;
 
   return (
     <GridMainContainer ref={rootRef}>

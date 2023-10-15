@@ -277,7 +277,7 @@ export const useGridCellSelection = (
       let deltaY = 0;
       let factor = 0;
 
-      const dimensions = apiRef.current.getDimensions();
+      const dimensions = apiRef.current.getRootDimensions();
 
       if (mouseY <= AUTO_SCROLL_SENSITIVITY && dimensions.hasScrollY) {
         // When scrolling up, the multiplier increases going closer to the top edge

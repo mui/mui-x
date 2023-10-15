@@ -137,7 +137,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, Props>(
     // const scrollbarSize = useGridSelector(apiRef, (state: GridStatePro) => state.dimensions.hasScrollY ? state.dimensions.scrollBarSize : 0);
 
     const handleContentSizeChange = useEventCallback(() => {
-      const dimensions = apiRef.current.getDimensions();
+      const dimensions = apiRef.current.getRootDimensions();
       const newScrollbarSize = dimensions.hasScrollY ? dimensions.scrollBarSize : 0;
       if (scrollbarSize !== newScrollbarSize) {
         setScrollbarSize(newScrollbarSize);

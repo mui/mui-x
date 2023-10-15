@@ -127,7 +127,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const enabledForColumns = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const containerDimensions = useGridSelector(
     apiRef,
-    () => apiRef.current.getDimensions().viewportOuterSize,
+    () => apiRef.current.getRootDimensions().viewportOuterSize,
   );
   const [visiblePinnedColumns, setVisiblePinnedColumns] = React.useState(EMPTY_PINNED_COLUMNS);
 

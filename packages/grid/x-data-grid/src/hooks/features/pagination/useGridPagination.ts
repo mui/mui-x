@@ -247,7 +247,7 @@ export const useGridPagination = (
       return;
     }
 
-    const dimensions = apiRef.current.getDimensions();
+    const dimensions = apiRef.current.getRootDimensions();
     const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
     const maximumPageSizeWithoutScrollBar = Math.floor(

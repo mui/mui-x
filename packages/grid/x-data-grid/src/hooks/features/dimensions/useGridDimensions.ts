@@ -107,7 +107,7 @@ export function useGridDimensions(
   const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
   const previousSize = React.useRef<ElementSize>();
 
-  const getDimensions = () => apiRef.current.state.dimensions;
+  const getRootDimensions = () => apiRef.current.state.dimensions;
 
   const setDimensions = useEventCallback((dimensions: GridDimensions) => {
     apiRef.current.setState((state) => ({ ...state, dimensions }));
@@ -136,7 +136,7 @@ export function useGridDimensions(
   }, [apiRef]);
 
   const getViewportPageSize = React.useCallback(() => {
-    const dimensions = apiRef.current.getDimensions();
+    const dimensions = apiRef.current.getRootDimensions();
     if (!dimensions.isReady) {
       return 0;
     }
@@ -246,7 +246,7 @@ export function useGridDimensions(
 
   const dimensionsApi: GridDimensionsApi = {
     resize,
-    getDimensions,
+    getRootDimensions,
   };
 
   const dimensionsPrivateApi: GridDimensionsPrivateApi = {

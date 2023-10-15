@@ -87,7 +87,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     (newScrollPosition) => {
       scrollPosition.current = newScrollPosition;
 
-      const dimensions = apiRef.current.getDimensions();
+      const dimensions = apiRef.current.getRootDimensions();
 
       setCanScrollMore(() => {
         if (scrollDirection === 'left') {

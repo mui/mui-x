@@ -41,7 +41,7 @@ export interface GridDimensionsApi {
    * Returns the dimensions of the grid
    * @returns {GridDimensions} The dimension information of the grid. If `null`, the grid is not ready yet.
    */
-  getDimensions: () => GridDimensions;
+  getRootDimensions: () => GridDimensions;
 }
 
 export interface GridDimensionsPrivateApi {
