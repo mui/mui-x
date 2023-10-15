@@ -582,12 +582,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--rangeBottom',
   'cell--rangeLeft',
   'cell--rangeRight',
-<<<<<<< HEAD
   'cell--pinnedLeft',
   'cell--pinnedRight',
-=======
   'cell--selectionMode',
->>>>>>> master
   'cell',
   'cellContent',
   'cellCheckbox',
