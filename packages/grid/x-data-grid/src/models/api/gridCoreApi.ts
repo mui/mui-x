@@ -13,7 +13,7 @@ export interface GridCoreApi {
    * The React ref of the grid root container div element.
    * @ignore - do not document.
    */
-  rootElementRef?: React.RefObject<HTMLDivElement>;
+  rootElementRef: React.RefObject<HTMLDivElement>;
   /**
    * Registers a handler for an event.
    * @param {string} event The name of the event.
@@ -69,7 +69,7 @@ export interface GridCorePrivateApi<
   /**
    * The React ref of the grid virtual scroller container element.
    */
-  virtualScrollerRef?: React.RefObject<HTMLDivElement>;
+  virtualScrollerRef: React.RefObject<HTMLDivElement>;
 
   register: <
     V extends 'public' | 'private',

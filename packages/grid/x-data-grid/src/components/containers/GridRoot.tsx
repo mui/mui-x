@@ -9,7 +9,6 @@ import {
 } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { GridRootStyles } from './GridRootStyles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -51,8 +50,8 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const { children, className, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
-  const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef(rootContainerRef, ref);
+  const rootElementRef = apiRef.current.rootElementRef;
+  const handleRef = useForkRef(rootElementRef, ref);
 
   const getAriaAttributes = rootProps.experimentalFeatures?.ariaV7 // ariaV7 should never change
     ? null
@@ -65,8 +64,6 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   };
 
   const classes = useUtilityClasses(ownerState);
-
-  apiRef.current.register('public', { rootElementRef: rootContainerRef });
 
   // Our implementation of <NoSsr />
   const [mountedState, setMountedState] = React.useState(false);
