@@ -95,7 +95,6 @@ export function useGridDimensions(
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
-  const rootElement = apiRef.current.rootElementRef?.current;
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
@@ -163,7 +162,7 @@ export function useGridDimensions(
   }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
   const updateDimensions = React.useCallback(() => {
-    const rootElement = apiRef.current.rootElementRef?.current;
+    const rootElement = apiRef.current.rootElementRef.current;
     const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
     const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
@@ -264,8 +263,8 @@ export function useGridDimensions(
   }, [apiRef, savedSize, updateDimensions]);
 
   useEnhancedEffect(() => {
-    rootElement?.style.setProperty('--private_DataGrid--columnsTotalWidth', `${columnsTotalWidth}px`);
-  }, [rootElement, columnsTotalWidth]);
+    apiRef.current.rootElementRef.current?.style.setProperty('--private_DataGrid--columnsTotalWidth', `${columnsTotalWidth}px`);
+  }, [apiRef.current.rootElementRef.current, columnsTotalWidth]);
 
   const isFirstSizing = React.useRef(true);
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
