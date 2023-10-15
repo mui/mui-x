@@ -8,8 +8,11 @@ export const useGridRefs = <PrivateApi extends GridPrivateApiCommon>(
   const mainElementRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
-  apiRef.current.register('private', {
+  apiRef.current.register('public', {
     rootElementRef,
+  });
+
+  apiRef.current.register('private', {
     mainElementRef,
     virtualScrollerRef,
   });
