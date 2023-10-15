@@ -63,13 +63,14 @@ export interface GridCorePrivateApi<
    */
   eventManager: EventManager;
   /**
+   * The React ref of the grid main container div element.
+   */
+  mainElementRef: React.RefObject<HTMLDivElement>;
+  /**
    * The React ref of the grid virtual scroller container element.
    */
   virtualScrollerRef?: React.RefObject<HTMLDivElement>;
-  /**
-   * The React ref of the grid main container div element.
-   */
-  mainElementRef?: React.RefObject<HTMLDivElement>;
+
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'

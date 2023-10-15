@@ -12,20 +12,13 @@ interface GridBodyProps {
 function GridBody(props: GridBodyProps) {
   const { children } = props;
   const apiRef = useGridPrivateApiContext();
-  const rootRef = React.useRef<HTMLDivElement>(null);
-  const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
-  apiRef.current.register('private', {
-    virtualScrollerRef,
-    mainElementRef: rootRef,
-  });
-
-  useResizeObserver(rootRef, () => apiRef.current.resize());
+  useResizeObserver(apiRef.current.mainElementRef, () => apiRef.current.resize());
 
   const hasDimensions = apiRef.current.getRootDimensions().isReady;
 
   return (
-    <GridMainContainer ref={rootRef}>
+    <GridMainContainer ref={apiRef.current.mainElementRef}>
       {hasDimensions && (
         <GridVirtualScroller
           // The content is only rendered after dimensions are computed because
@@ -33,7 +26,7 @@ function GridBody(props: GridBodyProps) {
           // but only does something if the dimensions are also available.
           // If this event is published while dimensions haven't been computed,
           // the `onFetchRows` prop won't be called during mount.
-          ref={virtualScrollerRef}
+          ref={apiRef.current.virtualScrollerRef}
         />
       )}
 

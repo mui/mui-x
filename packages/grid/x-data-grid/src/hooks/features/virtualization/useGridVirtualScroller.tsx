@@ -125,10 +125,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const enabled = useGridSelector(apiRef, gridVirtualizationEnabledSelector);
   const enabledForColumns = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
-  const containerDimensions = useGridSelector(
-    apiRef,
-    () => apiRef.current.getRootDimensions().viewportOuterSize,
-  );
+  const dimensions = useGridSelector(apiRef, () => apiRef.current.getRootDimensions());
+  const containerDimensions = dimensions.viewportOuterSize;
   const [visiblePinnedColumns, setVisiblePinnedColumns] = React.useState(EMPTY_PINNED_COLUMNS);
 
   const { ref, onRenderZonePositioning, getRowProps } = props;
@@ -336,10 +334,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       updateRenderZonePosition(realRenderContext);
 
-      if (
+      const didRowIntervalChange = 
         nextRenderContext.firstRowIndex !== prevRenderContext.current.firstRowIndex ||
         nextRenderContext.lastRowIndex !== prevRenderContext.current.lastRowIndex
-      ) {
+
+      // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
+      // but only does something if the dimensions are also available.
+      // So we wait until we have valid dimensions before publishing the first event.
+      if (dimensions.isReady && didRowIntervalChange) {
         apiRef.current.publishEvent('renderedRowsIntervalChange', {
           firstRowToRender: realRenderContext.firstRowIndex,
           lastRowToRender: realRenderContext.lastRowIndex,
@@ -353,6 +355,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       prevRenderContext,
       currentPage.rows.length,
       rootProps.rowBuffer,
+      dimensions.isReady,
       updateRenderZonePosition,
     ],
   );
