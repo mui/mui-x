@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { useResizeObserver } from '../../hooks/utils/useResizeObserver';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridVirtualScroller } from '../virtualization/GridVirtualScroller';
 
@@ -20,36 +20,7 @@ function GridBody(props: GridBodyProps) {
     mainElementRef: rootRef,
   });
 
-  useEnhancedEffect(() => {
-    apiRef.current.resize();
-
-    const elementToObserve = rootRef.current;
-    if (typeof ResizeObserver === 'undefined') {
-      return () => {};
-    }
-
-    let animationFrame: number;
-    const observer = new ResizeObserver(() => {
-      // See https://github.com/mui/mui-x/issues/8733
-      animationFrame = requestAnimationFrame(() => {
-        apiRef.current.resize();
-      });
-    });
-
-    if (elementToObserve) {
-      observer.observe(elementToObserve);
-    }
-
-    return () => {
-      if (animationFrame) {
-        window.cancelAnimationFrame(animationFrame);
-      }
-
-      if (elementToObserve) {
-        observer.unobserve(elementToObserve);
-      }
-    };
-  }, [apiRef]);
+  useResizeObserver(rootRef, () => apiRef.current.resize());
 
   const hasDimensions = apiRef.current.getRootDimensions().isReady;
 
