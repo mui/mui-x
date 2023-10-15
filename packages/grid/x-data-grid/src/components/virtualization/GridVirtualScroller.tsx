@@ -8,6 +8,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { GridOverlays } from '../base/GridOverlays';
 import { GridHeaders } from '../GridHeaders';
+import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridVirtualScrollerContent } from './GridVirtualScrollerContent';
 import { GridVirtualScrollerRenderZone } from './GridVirtualScrollerRenderZone';
 import { GridTopContainer } from './GridTopContainer';
@@ -39,7 +40,7 @@ const Element = styled('div', {
   },
 });
 
-const Root = React.forwardRef<
+const Scroller = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScroller(props, ref) {
@@ -56,31 +57,30 @@ const Root = React.forwardRef<
   );
 });
 
-export interface GridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
-  ref: React.Ref<HTMLDivElement>;
-}
+export interface GridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScrollerProps>(
-  function GridVirtualScroller(props, ref) {
-    const { className, ...other } = props;
-    const rootProps = useGridRootProps();
+function GridVirtualScroller(props: GridVirtualScrollerProps) {
+  const { className, ...other } = props;
+  const rootProps = useGridRootProps();
 
-    const virtualScroller = useGridVirtualScroller({
-      ref,
-    });
-    const { getRootProps, getContentProps, getRenderZoneProps } = virtualScroller;
+  const virtualScroller = useGridVirtualScroller({});
+  const {
+    getContainerProps,
+    getScrollerProps,
+    getContentProps,
+    getRenderZoneProps,
+  } = virtualScroller;
 
-    const contentProps = getContentProps();
-
-    return (
-      <Root className={className} {...getRootProps(other)}>
+  return (
+    <GridMainContainer {...getContainerProps()}>
+      <Scroller className={className} {...getScrollerProps(other)}>
         <GridTopContainer>
-          <GridHeaders contentProps={contentProps} />
+          <GridHeaders />
           <GridOverlays />
           <rootProps.slots.pinnedRows virtualScroller={virtualScroller} position="top" />
         </GridTopContainer>
 
-        <GridVirtualScrollerContent {...contentProps}>
+        <GridVirtualScrollerContent {...getContentProps()}>
           <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
             <rootProps.slots.mainRows virtualScroller={virtualScroller} />
           </GridVirtualScrollerRenderZone>
@@ -89,9 +89,9 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
         <GridBottomContainer>
           <rootProps.slots.pinnedRows virtualScroller={virtualScroller} position="bottom" />
         </GridBottomContainer>
-      </Root>
-    );
-  },
-);
+      </Scroller>
+    </GridMainContainer>
+  );
+}
 
 export { GridVirtualScroller };

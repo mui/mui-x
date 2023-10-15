@@ -23,15 +23,8 @@ import {
 } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { gridColumnMenuSelector } from '../hooks/features/columnMenu/columnMenuSelector';
 import { EMPTY_PINNED_COLUMNS } from '../hooks/features/virtualization/useGridVirtualScroller';
-import type { VirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
 
-type Props = {
-  contentProps: ReturnType<VirtualScroller['getContentProps']>;
-};
-
-export function GridHeaders(props: Props) {
-  const { contentProps } = props;
-
+export function GridHeaders() {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
 
@@ -78,10 +71,8 @@ export function GridHeaders(props: Props) {
   });
 
   React.useEffect(() => {
-    if (columnsContainerRef.current) {
-      columnsContainerRef.current.style.width = `${contentProps.style.width}px`;
-    }
-  }, [contentProps.style.width]);
+    columnsContainerRef.current!.style.width = 'var(--private_DataGrid--columnsTotalWidth)';
+  }, []);
 
   return (
     <rootProps.slots.columnHeaders

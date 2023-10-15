@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {
-  unstable_useForkRef as useForkRef,
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
@@ -11,6 +10,7 @@ import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useLazyRef } from '../../utils/useLazyRef';
+import { useResizeObserver } from '../../../hooks/utils/useResizeObserver';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
@@ -100,7 +100,6 @@ export const areRenderContextsEqual = (
 };
 
 interface UseGridVirtualScrollerProps {
-  ref: React.Ref<HTMLDivElement>;
   onRenderZonePositioning?: (params: { top: number; left: number }) => void;
   getRowProps?: (id: GridRowId, model: GridRowModel) => any;
 }
@@ -129,7 +128,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const containerDimensions = dimensions.viewportOuterSize;
   const [visiblePinnedColumns, setVisiblePinnedColumns] = React.useState(EMPTY_PINNED_COLUMNS);
 
-  const { ref, onRenderZonePositioning, getRowProps } = props;
+  const { onRenderZonePositioning, getRowProps } = props;
 
   const theme = useTheme();
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
@@ -139,10 +138,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const rootRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef(ref, rootRef);
-  const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const gridRootRef = apiRef.current.rootElementRef!;
+  const mainRef = apiRef.current.mainElementRef!;
+  const scrollerRef = apiRef.current.virtualScrollerRef;
+  const renderZoneRef = React.useRef<HTMLDivElement>(null);
+
+  useResizeObserver(mainRef, () => apiRef.current.resize());
 
   const [renderContext, setRenderContext] = React.useState(EMPTY_RENDER_CONTEXT);
   const [realRenderContext, setRealRenderContext] = React.useState(EMPTY_RENDER_CONTEXT);
@@ -634,7 +635,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const height = Math.max(rowsMeta.currentPageTotalHeight, 1);
 
     let shouldExtendContent = false;
-    if (rootRef.current && height <= rootRef.current.clientHeight) {
+    if (scrollerRef.current && height <= scrollerRef.current.clientHeight) {
       shouldExtendContent = true;
     }
 
@@ -651,7 +652,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return size;
   }, [
     apiRef,
-    rootRef,
+    scrollerRef,
     columnsTotalWidth,
     rowsMeta.currentPageTotalHeight,
     needsHorizontalScrollbar,
@@ -672,8 +673,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   useEnhancedEffect(() => {
     if (enabled) {
       // TODO a scroll reset should not be necessary
-      rootRef.current!.scrollLeft = 0;
-      rootRef.current!.scrollTop = 0;
+      scrollerRef.current!.scrollLeft = 0;
+      scrollerRef.current!.scrollTop = 0;
     } else {
       gridRootRef.current!.style.setProperty('--private_DataGrid-offsetTop', '0px');
       gridRootRef.current!.style.setProperty('--private_DataGrid-offsetLeft', '0px');
@@ -702,8 +703,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   return {
     renderContext,
     getRows,
-    getRootProps: (inputProps: { style?: object } = {}) => ({
-      ref: handleRef,
+    getContainerProps: () => ({
+      ref: mainRef,
+    }),
+    getScrollerProps: (inputProps: { style?: object } = {}) => ({
+      ref: scrollerRef,
       onScroll: handleScroll,
       onWheel: handleWheel,
       onTouchMove: handleTouchMove,
