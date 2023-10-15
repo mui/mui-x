@@ -29,7 +29,7 @@ export function GridHeaders() {
   const rootProps = useGridRootProps();
 
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const visiblePinnedColumns = EMPTY_PINNED_COLUMNS;
+  const visiblePinnedColumns = EMPTY_PINNED_COLUMNS; // XXX: what's this?
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
