@@ -10,6 +10,7 @@ import { ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps, getWordsByLines } from '../internals/components/ChartsText';
+import { getMinXTranslation } from '../internals/geometry';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -27,20 +28,6 @@ const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
 
 type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
 
-/**
- * Return a rough approximate of the needed horizontal gap between two boxes to avoid overlap.
- */
-function getDistance({ width, height, angle }: Record<string, number>) {
-  if (Math.abs(angle % 180) < 10 || Math.abs(angle % 180) > 170) {
-    // It's nearly horizontal
-    return width;
-  }
-  if (Math.abs(((angle % 180) - 90) % 180) < 10) {
-    // It's nearly vertical
-    return height;
-  }
-  return height / Math.sin(angle);
-}
 function addLabelDimension(
   xTicks: TickItemType[],
   {
@@ -74,7 +61,7 @@ function addLabelDimension(
   return withDimension.map((item, labelIndex) => {
     const { width, offset, labelOffset, height } = item;
 
-    const distance = getDistance({ width, height, angle: style?.angle ?? 0 });
+    const distance = getMinXTranslation(width, height, style?.angle);
     const textPosition = offset + labelOffset;
     const gapRatio = 1.2; // Ratio applied to the minimal distanc eto add some margin
 
