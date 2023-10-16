@@ -86,6 +86,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 /**
  * Demos:
  *
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/) 
  * - [Custom slots and subcomponents](https://mui.com/x/react-date-pickers/custom-components/)
  *
  * API:
