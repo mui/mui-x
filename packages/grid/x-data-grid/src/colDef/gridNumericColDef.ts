@@ -11,7 +11,15 @@ export const GRID_NUMERIC_COL_DEF: GridColTypeDef<number | string | null, string
   align: 'right',
   headerAlign: 'right',
   sortComparator: gridNumberComparator,
-  valueParser: (value) => (value === '' ? null : Number(value)),
+  valueParser: (value) => {
+    if (value === '') {
+      return null;
+    }
+    if (value === '-') {
+      return '-0';
+    }
+    return Number(value);
+  },
   valueFormatter: ({ value }) => (isNumber(value) ? value.toLocaleString() : value || ''),
   filterOperators: getGridNumericOperators(),
   getApplyQuickFilterFn: convertQuickFilterV7ToLegacy(getGridNumericQuickFilterFn),
