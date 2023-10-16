@@ -24,6 +24,7 @@ export interface AreaPlotProps
  *
  * - [Lines](https://mui.com/x/react-charts/lines/)
  * - [Areas demonstration](https://mui.com/x/react-charts/areas-demo/)
+ * - [Stacking](https://mui.com/x/react-charts/stacking/)
  *
  * API:
  *
