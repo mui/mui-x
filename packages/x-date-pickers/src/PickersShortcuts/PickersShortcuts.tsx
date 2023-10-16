@@ -48,7 +48,6 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
 /**
  * Demos:
  *
- * - [Custom slots and subcomponents](https://mui.com/x/react-date-pickers/custom-components/)
  * - [Shortcuts](https://mui.com/x/react-date-pickers/shortcuts/)
  *
  * API:
