@@ -11,6 +11,7 @@ import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps, getWordsByLines } from '../internals/components/ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
+import { useMounted } from '../hooks/useMounted';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -33,10 +34,11 @@ function addLabelDimension(
   {
     tickLabelStyle: style,
     tickLabelInterval,
-  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'>,
+    isMounted,
+  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> & { isMounted: boolean },
 ): (TickItemType & LabelExtraData)[] {
   const withDimension = xTicks.map((tick) => {
-    if (tick.formattedValue === undefined) {
+    if (!isMounted || tick.formattedValue === undefined) {
       return { ...tick, width: 0, height: 0 };
     }
     const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
@@ -91,6 +93,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     },
   } = React.useContext(CartesianContext);
 
+  const isMounted = useMounted();
+
   const defaultizedProps = { ...defaultProps, ...settings, ...props };
   const {
     position,
@@ -144,6 +148,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const xTicksWithDimension = addLabelDimension(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
+    isMounted,
   });
 
   const labelRefPoint = {
