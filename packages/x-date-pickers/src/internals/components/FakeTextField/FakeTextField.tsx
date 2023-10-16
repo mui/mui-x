@@ -6,8 +6,6 @@ export interface FakeTextFieldElement extends React.HTMLAttributes<HTMLDivElemen
   after: string;
 }
 
-export interface A {}
-
 interface FakeTextFieldProps {
   elements: FakeTextFieldElement[];
 }
