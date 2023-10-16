@@ -141,5 +141,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/TimeClock/TimeClock.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-clock/\">Time Clock</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/time-clock/\">Time Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li></ul>"
 }
