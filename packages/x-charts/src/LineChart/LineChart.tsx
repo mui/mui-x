@@ -75,6 +75,17 @@ export interface LineChartProps
    */
   slotProps?: LineChartSlotComponentProps;
 }
+
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
+ */
 const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
   const {
     xAxis,
