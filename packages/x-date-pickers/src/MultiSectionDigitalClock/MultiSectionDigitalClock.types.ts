@@ -66,8 +66,4 @@ export interface MultiSectionDigitalClockProps<TDate>
    * @default {}
    */
   slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
-  /**
-   * If `true`, the component will take all the width of its parent.
-   */
-  fitWidth?: boolean;
 }

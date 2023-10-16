@@ -36,7 +36,6 @@ export interface MultiSectionDigitalClockSectionProps<TValue>
   onChange: (value: TValue) => void;
   active?: boolean;
   skipDisabled?: boolean;
-  fitWidth?: boolean;
   role?: string;
 }
 
@@ -57,9 +56,8 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
 })<{ ownerState: MultiSectionDigitalClockSectionProps<any> & { alreadyRendered: boolean } }>(
   ({ theme, ownerState }) => ({
     maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-    ...(ownerState.fitWidth
-      ? { flex: '1 1 100%', overflow: 'auto' }
-      : { width: 56, overflow: 'hidden' }),
+    width: 56,
+    overflow: 'hidden',
     padding: 0,
     '@media (prefers-reduced-motion: no-preference)': {
       scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
@@ -86,9 +84,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
 })<{ ownerState: MultiSectionDigitalClockSectionProps<any> }>(({ theme, ownerState }) => ({
   padding: 8,
   margin: '2px 4px',
-  ...(ownerState.fitWidth
-    ? { width: 'calc(100% - 8px)' }
-    : { width: MULTI_SECTION_CLOCK_SECTION_WIDTH }),
+  width: MULTI_SECTION_CLOCK_SECTION_WIDTH,
   justifyContent: 'center',
   '&:first-of-type': {
     marginTop: 4,
@@ -144,7 +140,6 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       slots,
       slotProps,
       skipDisabled,
-      fitWidth,
       ...other
     } = props;
 

@@ -290,7 +290,6 @@ export const renderMultiSectionDigitalClockTimeRangeView = <TDate extends unknow
       disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
       timeSteps={timeSteps}
       skipDisabled={skipDisabled}
-      fitWidth
       timezone={timezone}
     />
   );
