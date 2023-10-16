@@ -60,6 +60,17 @@ export interface BarChartProps
   layout?: BarSeriesType['layout'];
 }
 
+/**
+ * Demos:
+ *
+ * - [Bars](https://mui.com/x/react-charts/bars/)
+ * - [Bar demonstration](https://mui.com/x/react-charts/bar-demo/)
+ * - [Stacking](https://mui.com/x/react-charts/stacking/)
+ *
+ * API:
+ *
+ * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
+ */
 const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
   const {
     xAxis,
