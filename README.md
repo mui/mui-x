@@ -127,3 +127,5 @@ Future plans and high-priority features and enhancements can be found in our [ro
 ## Security
 
 For details of supported versions and contact details for reporting security issues, please refer to the [security policy](https://github.com/mui/mui-x/security/policy).
+
+Placeholder change
