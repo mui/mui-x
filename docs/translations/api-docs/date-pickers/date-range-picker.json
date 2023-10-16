@@ -227,7 +227,7 @@
       "typeDescriptions": {}
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.",
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The date to test.",
@@ -274,6 +274,8 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "clearButton": "Button to clear the value.",
+    "clearIcon": "Icon to display inside the clear button.",
     "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
     "desktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
     "desktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",

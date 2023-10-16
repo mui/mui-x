@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue } from 'test/utils/pickers';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
+import { userEvent, fireEvent } from '@mui-internal/test-utils';
+import { expectInputValue, describeAdapters } from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(`key: Delete`, SingleInputDateRangeField, ({ adapter, renderWithProps }) => {

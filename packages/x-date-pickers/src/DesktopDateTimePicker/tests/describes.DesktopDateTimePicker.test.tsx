@@ -1,15 +1,15 @@
-import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
   expectInputPlaceholder,
   getTextbox,
+  describeValidation,
+  describeValue,
+  describePicker,
 } from 'test/utils/pickers';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

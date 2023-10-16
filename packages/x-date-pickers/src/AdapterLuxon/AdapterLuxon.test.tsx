@@ -4,17 +4,15 @@ import { DateTime, Settings } from 'luxon';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
+import { screen } from '@mui-internal/test-utils/createRenderer';
 import {
   cleanText,
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
-} from 'test/utils/pickers';
-import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
-} from '@mui/x-date-pickers/tests/describeGregorianAdapter';
+} from 'test/utils/pickers';
 
 describe('<AdapterLuxon />', () => {
   describeGregorianAdapter(AdapterLuxon, {

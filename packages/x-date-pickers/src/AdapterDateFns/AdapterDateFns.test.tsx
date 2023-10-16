@@ -2,17 +2,19 @@ import * as React from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
+import { screen } from '@mui-internal/test-utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  expectInputPlaceholder,
+  expectInputValue,
+  describeGregorianAdapter,
+  TEST_DATE_ISO_STRING,
+} from 'test/utils/pickers';
 import enUS from 'date-fns/locale/en-US';
 import fr from 'date-fns/locale/fr';
 import de from 'date-fns/locale/de';
 import ru from 'date-fns/locale/ru';
-import {
-  describeGregorianAdapter,
-  TEST_DATE_ISO_STRING,
-} from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterDateFns />', () => {
   describeGregorianAdapter(AdapterDateFns, {

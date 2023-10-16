@@ -1,5 +1,12 @@
 {
   "props": {
+    "onClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, pieItemIdentifier: PieItemIdentifier, item: DefaultizedPieValueType) => void",
+        "describedArgs": ["event", "pieItemIdentifier", "item"]
+      }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },

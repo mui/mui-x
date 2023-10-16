@@ -10,12 +10,7 @@ export type AnchorY = 'top' | 'bottom' | 'middle';
 
 export type AnchorPosition = { horizontal: AnchorX; vertical: AnchorY };
 
-export type SizingParams = {
-  direction?: 'row' | 'column';
-  markSize?: number;
-  itemWidth?: number;
-  spacing?: number;
-};
+export type Direction = 'row' | 'column';
 
 const legendGetter: { [T in ChartSeriesType]: LegendGetter<T> } = {
   bar: getBarLegend,

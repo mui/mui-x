@@ -143,6 +143,16 @@ TimePickerToolbarAmPmSelection.propTypes = {
   ]),
 } as any;
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [TimePickerToolbar API](https://mui.com/x/api/date-pickers/time-picker-toolbar/)
+ */
 function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
   const {

@@ -20,6 +20,16 @@ type MobileDateTimePickerComponent = (<TDate>(
   props: MobileDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
+ */
 const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDate>(
   inProps: MobileDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -378,6 +388,9 @@ MobileDateTimePicker.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.

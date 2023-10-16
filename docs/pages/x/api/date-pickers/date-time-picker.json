@@ -188,6 +188,7 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
     "timeSteps": {
       "type": {
         "name": "shape",
@@ -238,6 +239,18 @@
     },
     {
       "class": null,
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon"
+    },
+    {
+      "class": null,
       "name": "day",
       "description": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
       "default": "PickersDay"
@@ -265,6 +278,12 @@
       "name": "dialog",
       "description": "Custom component for the dialog inside which the views are rendered on mobile.",
       "default": "PickersModalDialogRoot"
+    },
+    {
+      "class": null,
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'"
     },
     {
       "class": null,
