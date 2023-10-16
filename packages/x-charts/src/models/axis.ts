@@ -185,7 +185,7 @@ export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
   'scaleType'
 > &
   AxisScaleConfig[S] & {
-    ticksNumber: number;
+    tickNumber: number;
   };
 
 export function isBandScaleConfig(

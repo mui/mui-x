@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, describeConformance } from '@mui/monorepo/test/utils';
+import { screen, describeConformance } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,

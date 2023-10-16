@@ -319,6 +319,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "thresholdToRenderTimeInASingleColumn": {
+      "description": "Amount of time options below or at which the single column time renderer is used.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "timeSteps": {
       "description": "The time steps between two time unit options. For example, if <code>timeStep.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>. When single column time renderer is used, only <code>timeStep.minutes</code> will be used.",
       "deprecated": "",
@@ -362,6 +367,7 @@
     "desktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "desktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "digitalClockItem": "Component responsible for rendering a single digital clock item.",
     "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
     "field": "Component used to enter the date with the keyboard.",
     "inputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",

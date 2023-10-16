@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { screen, act, userEvent } from '@mui-internal/test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { getExpectedOnChangeCount } from 'test/utils/pickers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';

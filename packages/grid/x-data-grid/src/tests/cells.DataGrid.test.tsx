@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';

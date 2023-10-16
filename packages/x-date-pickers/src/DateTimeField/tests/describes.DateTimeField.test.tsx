@@ -1,6 +1,6 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
-import { describeConformance, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, userEvent } from '@mui-internal/test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
