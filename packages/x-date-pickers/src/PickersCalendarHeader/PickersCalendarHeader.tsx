@@ -192,6 +192,8 @@ type PickersCalendarHeaderComponent = (<TDate>(
 /**
  * Demos:
  *
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
+ * - [DateRangeCalendar](https://mui.com/x/react-date-pickers/date-range-calendar/)
  * - [Custom slots and subcomponents](https://mui.com/x/react-date-pickers/custom-components/)
  *
  * API:
