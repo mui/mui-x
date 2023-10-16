@@ -15,8 +15,10 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "markSelected": { "type": { "name": "bool" } },
     "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" },
+    "toolbarTitle": { "type": { "name": "node" } }
   },
   "slots": [],
   "name": "DateTimePickerToolbar",

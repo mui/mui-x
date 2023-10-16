@@ -16,6 +16,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "markSelected": {
+      "description": "If <code>true</code>, will toggle the <code>selected</code> state for the currently active view. Used by <code>DateTimeRangePickerToolbar</code> to mark only the currently selected <code>rangePosition</code> as active.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "onViewChange": {
       "description": "Callback called when a toolbar is clicked",
       "deprecated": "",
@@ -28,6 +33,11 @@
     },
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "toolbarTitle": {
+      "description": "If provided, it will be used instead of <code>dateTimePickerToolbarTitle</code> from localization.",
       "deprecated": "",
       "typeDescriptions": {}
     },

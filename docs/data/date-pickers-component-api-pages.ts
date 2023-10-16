@@ -21,6 +21,21 @@ export default [
   { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
   { pathname: '/x/api/date-pickers/date-time-picker-tabs', title: 'DateTimePickerTabs' },
   { pathname: '/x/api/date-pickers/date-time-picker-toolbar', title: 'DateTimePickerToolbar' },
+  {
+    pathname: '/x/api/date-pickers/date-time-range-picker',
+    title: 'DateTimeRangePicker',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/date-pickers/date-time-range-picker-tabs',
+    title: 'DateTimeRangePickerTabs',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/date-pickers/date-time-range-picker-toolbar',
+    title: 'DateTimeRangePickerToolbar',
+    plan: 'pro',
+  },
   { pathname: '/x/api/date-pickers/day-calendar-skeleton', title: 'DayCalendarSkeleton' },
   { pathname: '/x/api/date-pickers/desktop-date-picker', title: 'DesktopDatePicker' },
   {
@@ -29,6 +44,11 @@ export default [
     plan: 'pro',
   },
   { pathname: '/x/api/date-pickers/desktop-date-time-picker', title: 'DesktopDateTimePicker' },
+  {
+    pathname: '/x/api/date-pickers/desktop-date-time-range-picker',
+    title: 'DesktopDateTimeRangePicker',
+    plan: 'pro',
+  },
   { pathname: '/x/api/date-pickers/desktop-time-picker', title: 'DesktopTimePicker' },
   { pathname: '/x/api/date-pickers/digital-clock', title: 'DigitalClock' },
   { pathname: '/x/api/date-pickers/localization-provider', title: 'LocalizationProvider' },
@@ -39,6 +59,11 @@ export default [
     plan: 'pro',
   },
   { pathname: '/x/api/date-pickers/mobile-date-time-picker', title: 'MobileDateTimePicker' },
+  {
+    pathname: '/x/api/date-pickers/mobile-date-time-range-picker',
+    title: 'MobileDateTimeRangePicker',
+    plan: 'pro',
+  },
   { pathname: '/x/api/date-pickers/mobile-time-picker', title: 'MobileTimePicker' },
   { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
   {
