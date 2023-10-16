@@ -497,7 +497,6 @@ PickersDayRaw.propTypes = {
 /**
  * Demos:
  *
- * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
  * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
  * API:
  *
