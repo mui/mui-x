@@ -13,6 +13,7 @@ type CustomizationItemType = {
   comments?: string;
   componentProps?: any;
   parentSlot?: string;
+  parentComponent?: string;
 };
 export type CustomizationItemsType = Partial<{
   [k in keyof CustomizationLabelType]: CustomizationItemType;
@@ -145,7 +146,7 @@ function formatComponentProps(componentProps?: Object, spacing: number = 1) {
     return (Object.keys(obj) as Array<keyof typeof obj>)
       .map((key) => {
         const getValue = (val: any) => {
-          if (typeof val === 'string') {
+          if (typeof val === 'string' && !val.includes('Styled')) {
             return `'${val}'`;
           }
           if (separator === '=' && typeof val !== 'object') {
@@ -285,11 +286,32 @@ const newTheme = (theme) => createTheme({
   <${componentName}${formatComponentProps(examples.componentProps, 2)} />
 </ThemeProvider>`;
   } else if (selectedCustomizationOption === 'styledComponents') {
+    if (selectedExample?.parentSlot && selectedExample?.parentComponent) {
+      const componentProps = {
+        ...examples.componentProps,
+        slots: {
+          ...examples.componentProps?.slots,
+          [selectedExample?.parentSlot]: `Styled${selectedExample?.parentComponent}`,
+        },
+      };
+      return `import { styled } from '@mui/material/styles'\n${code}
+const Styled${selectedExample?.parentComponent} = styled(${selectedExample?.parentComponent})({
+  '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+  }
+})
+
+export default function StyledPickerContainer() {
+  return (
+    <${componentName} ${formatComponentProps(componentProps, 3)}
+    />
+  );
+}`;
+    }
     return `import { styled } from '@mui/material/styles'\n${code}
 const Styled${componentName} = styled(${componentName})({
   '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
   }
-}))
+})
 
 export default function StyledPickerContainer() {
   return (
