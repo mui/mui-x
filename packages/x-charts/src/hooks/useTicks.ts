@@ -24,9 +24,10 @@ export interface TickParams {
    * Defines which ticks are displayed. Its value can be:
    * - 'auto' In such case the ticks are computed based on axis sacle and other paramteres.
    * - a filtering function of the form (value, index) => boolean which is availabel only if the axis has a data property.
+   * - an array containing the value where ticks should be displayed.
    * @default 'auto'
    */
-  tickInterval?: 'auto' | ((value: any, index: number) => boolean);
+  tickInterval?: 'auto' | ((value: any, index: number) => boolean) | any[];
 }
 
 export function getTickNumber(
@@ -90,7 +91,10 @@ function useTicks(
 
       // scale type = 'point'
       const filteredDomain =
-        typeof tickInterval === 'function' ? domain.filter(tickInterval) : domain;
+        (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
+        (typeof tickInterval === 'object' && tickInterval) ||
+        domain;
+
       return filteredDomain.map((value) => ({
         value,
         formattedValue: valueFormatter?.(value) ?? `${value}`,
