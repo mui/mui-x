@@ -313,7 +313,7 @@ SparkLineChart.propTypes = {
     slots: PropTypes.object,
     stroke: PropTypes.string,
     tickFontSize: PropTypes.number,
-    tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+    tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
     tickLabelStyle: PropTypes.object,
     tickMaxStep: PropTypes.number,

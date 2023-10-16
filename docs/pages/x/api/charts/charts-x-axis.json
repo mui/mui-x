@@ -24,7 +24,7 @@
       "deprecationInfo": "You can us <code>tickLabelStyle.fontSize</code> instead."
     },
     "tickInterval": {
-      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
+      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
       "default": "'auto'"
     },
     "tickLabelInterval": {

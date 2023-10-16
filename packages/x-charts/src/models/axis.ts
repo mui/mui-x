@@ -129,8 +129,6 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   position?: 'top' | 'bottom';
 }
 
-
-
 export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 

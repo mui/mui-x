@@ -224,9 +224,10 @@ ChartsYAxis.propTypes = {
    * Defines which ticks are displayed. Its value can be:
    * - 'auto' In such case the ticks are computed based on axis sacle and other paramteres.
    * - a filtering function of the form (value, index) => boolean which is availabel only if the axis has a data property.
+   * - an array containing the value where ticks should be displayed.
    * @default 'auto'
    */
-  tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+  tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
   /**
    * Defines which ticks get its label displayed. Its value can be:
    * - 'auto' In such case, labels are displayed if they do not overlap with the previous one.
