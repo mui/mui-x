@@ -13,7 +13,7 @@ All the date and time pickers have an API for adding validation constraints.
 By default, they provide visual feedback if the component value doesn't meet the validation criteria.
 
 :::info
-The validation props are showcased for each type of picker component using the responsive pickers (`DatePicker`, `TimePicker`, `DateTimePicker`, `DateRangePicker` and `DateCalendar`)
+The validation props are showcased for each type of picker component using the responsive pickers (`DatePicker`, `TimePicker`, `DateTimePicker`, and `DateRangePicker`)
 
 But the same props are available on:
 
