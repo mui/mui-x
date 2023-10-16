@@ -12,15 +12,15 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['main'],
+    root: ['scrollerContainer'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridMainContainerRoot = styled('div', {
+const Element = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'Main',
+  slot: 'ScrollerContainer',
   overridesResolver: (props, styles) => styles.main,
 })<{ ownerState: OwnerState }>(() => ({
   position: 'relative',
@@ -30,7 +30,7 @@ const GridMainContainerRoot = styled('div', {
   overflow: 'hidden',
 }));
 
-export const GridMainContainer = React.forwardRef<HTMLDivElement, React.PropsWithChildren<{}>>(
+export const GridVirtualScrollerContainer = React.forwardRef<HTMLDivElement, React.PropsWithChildren<{}>>(
   (props, ref) => {
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
@@ -41,14 +41,14 @@ export const GridMainContainer = React.forwardRef<HTMLDivElement, React.PropsWit
     const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
 
     return (
-      <GridMainContainerRoot
+      <Element
         ref={ref}
         className={classes.root}
         ownerState={rootProps}
         {...ariaAttributes}
       >
         {props.children}
-      </GridMainContainerRoot>
+      </Element>
     );
   },
 );

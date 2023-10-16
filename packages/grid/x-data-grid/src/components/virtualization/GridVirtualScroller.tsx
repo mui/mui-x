@@ -8,7 +8,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { GridOverlays } from '../base/GridOverlays';
 import { GridHeaders } from '../GridHeaders';
-import { GridMainContainer } from '../containers/GridMainContainer';
+import { GridVirtualScrollerContainer } from './GridVirtualScrollerContainer';
 import { GridVirtualScrollerContent } from './GridVirtualScrollerContent';
 import { GridVirtualScrollerRenderZone } from './GridVirtualScrollerRenderZone';
 import { GridTopContainer } from './GridTopContainer';
@@ -72,7 +72,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   } = virtualScroller;
 
   return (
-    <GridMainContainer {...getContainerProps()}>
+    <GridVirtualScrollerContainer {...getContainerProps()}>
       <Scroller className={className} {...getScrollerProps(other)}>
         <GridTopContainer>
           <GridHeaders />
@@ -90,7 +90,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           <rootProps.slots.pinnedRows virtualScroller={virtualScroller} position="bottom" />
         </GridBottomContainer>
       </Scroller>
-    </GridMainContainer>
+    </GridVirtualScrollerContainer>
   );
 }
 
