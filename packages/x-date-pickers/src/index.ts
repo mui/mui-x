@@ -48,3 +48,5 @@ export { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from './internals/utils/utils';
 export * from './models';
 
 export * from './icons';
+
+export * from './hooks';

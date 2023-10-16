@@ -25,3 +25,11 @@ title: Charts - Pie demonstration
 ## PieChartWithPaddingAngle
 
 {{"demo": "PieChartWithPaddingAngle.js"}}
+
+## PieChartWithCenterLabel
+
+{{"demo": "PieChartWithCenterLabel.js"}}
+
+## OnSeriesItemClick
+
+{{"demo": "OnSeriesItemClick.js"}}

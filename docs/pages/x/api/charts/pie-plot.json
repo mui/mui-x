@@ -1,5 +1,12 @@
 {
   "props": {
+    "onClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, pieItemIdentifier: PieItemIdentifier, item: DefaultizedPieValueType) => void",
+        "describedArgs": ["event", "pieItemIdentifier", "item"]
+      }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
@@ -11,6 +18,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiPiePlot" },
   "filename": "/packages/x-charts/src/PieChart/PiePlot.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "PiePlot" }]
+  "demos": "<ul></ul>"
 }

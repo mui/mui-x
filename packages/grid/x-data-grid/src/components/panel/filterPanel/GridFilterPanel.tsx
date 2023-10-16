@@ -317,4 +317,11 @@ GridFilterPanel.propTypes = {
   ]),
 } as any;
 
+/**
+ * Demos:
+ * - [Filtering - overview](https://mui.com/x/react-data-grid/filtering/)
+ *
+ * API:
+ * - [GridFilterPanel API](https://mui.com/x/api/data-grid/grid-filter-panel/)
+ */
 export { GridFilterPanel, getGridFilter };

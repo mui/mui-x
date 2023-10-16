@@ -8,6 +8,5 @@
   ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiLineHighlightElement" },
   "filename": "/packages/x-charts/src/LineChart/LineHighlightElement.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "LineHighlightElement" }]
+  "demos": "<ul></ul>"
 }

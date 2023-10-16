@@ -23,6 +23,12 @@ You can use the `fieldSeparator` slot to pass custom props to the `Typography` r
 
 {{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
 
+### Customize the `start` and `end` fields differently [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+You can pass conditional props to the `textField` slot to customize the input styling based on the `position`.
+
+{{"demo": "MultiInputFieldTextFieldProps.js"}}
+
 ### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can pass the single input fields to the range picker to use it for keyboard editing:
@@ -69,6 +75,10 @@ You can also use any other input:
 
 {{"demo": "PickerWithBrowserField.js", "defaultCodeOpen": false}}
 
+:::warning
+You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
+:::
+
 ### Using an `Autocomplete`
 
 If your user can only select a value in a small list of available dates,
@@ -82,6 +92,10 @@ If you only want to allow the user to pick a value through the views,
 you can replace the field with a `Button`:
 
 {{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
+
+The same can be applied to the `DateRangePicker`:
+
+{{"demo": "DateRangePickerWithButtonField.js", "defaultCodeOpen": false}}
 
 ## How to build a custom field
 

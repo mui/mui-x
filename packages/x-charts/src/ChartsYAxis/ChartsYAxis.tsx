@@ -1,18 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { ChartsYAxisProps } from '../models/axis';
-import {
-  ChartsLine,
-  ChartsTick,
-  ChartsTickLabel,
-  ChartsLabel,
-  AxisRoot,
-} from '../internals/components/AxisSharedComponents';
+import { AxisRoot } from '../internals/components/AxisSharedComponents';
+import { ChartsText, ChartsTextProps } from '../internals/components/ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
@@ -42,7 +38,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
   const {
     yAxis: {
-      [props.axisId]: { scale: yScale, ticksNumber, ...settings },
+      [props.axisId]: { scale: yScale, tickNumber, ...settings },
     },
   } = React.useContext(CartesianContext);
 
@@ -67,7 +63,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const yTicks = useTicks({ scale: yScale, ticksNumber, valueFormatter });
+  const yTicks = useTicks({ scale: yScale, tickNumber, valueFormatter });
 
   const positionSigne = position === 'right' ? 1 : -1;
 
@@ -76,10 +72,38 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     y: top + height / 2,
   };
 
-  const Line = slots?.axisLine ?? ChartsLine;
-  const Tick = slots?.axisTick ?? ChartsTick;
-  const TickLabel = slots?.axisTickLabel ?? ChartsTickLabel;
-  const Label = slots?.axisLabel ?? ChartsLabel;
+  const Line = slots?.axisLine ?? 'line';
+  const Tick = slots?.axisTick ?? 'line';
+  const TickLabel = slots?.axisTickLabel ?? ChartsText;
+  const Label = slots?.axisLabel ?? ChartsText;
+
+  const axisTickLabelProps = useSlotProps({
+    elementType: TickLabel,
+    externalSlotProps: slotProps?.axisTickLabel,
+    additionalProps: {
+      textAnchor: position === 'right' ? 'start' : 'end',
+      dominantBaseline: 'central',
+      style: { fontSize: tickFontSize },
+      className: classes.tickLabel,
+    } as Partial<ChartsTextProps>,
+    ownerState: {},
+  });
+
+  const axisLabelProps = useSlotProps({
+    elementType: Label,
+    externalSlotProps: slotProps?.axisLabel,
+    additionalProps: {
+      textAnchor: 'middle',
+      dominantBaseline: 'auto',
+      style: {
+        fontSize: labelFontSize,
+        transform: `rotate(${positionSigne * 90}deg)`,
+        transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
+      },
+      className: classes.label,
+    } as Partial<ChartsTextProps>,
+    ownerState: {},
+  });
 
   return (
     <AxisRoot
@@ -113,32 +137,18 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
                 x={xTickLabel}
                 y={yTickLabel}
                 transform-origin={`${xTickLabel}px ${yTickLabel}px`}
-                sx={{
-                  fontSize: tickFontSize,
-                }}
-                className={classes.tickLabel}
-                {...slotProps?.axisTickLabel}
-              >
-                {formattedValue.toLocaleString()}
-              </TickLabel>
+                text={formattedValue.toString()}
+                {...axisTickLabelProps}
+              />
             )}
           </g>
         );
       })}
 
       {label && (
-        <Label
-          {...labelRefPoint}
-          sx={{
-            fontSize: labelFontSize,
-            transform: `rotate(${positionSigne * 90}deg)`,
-            transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
-          }}
-          className={classes.label}
-          {...slotProps?.axisLabel}
-        >
-          {label}
-        </Label>
+        <g className={classes.label}>
+          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
+        </g>
       )}
     </AxisRoot>
   );

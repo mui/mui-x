@@ -136,7 +136,7 @@ The filter operators can then be edited just like on a regular column.
 
 ```ts
 const ratingColumnType: GridColTypeDef = {
-  extendType: 'number',
+  type: 'number',
   filterOperators: getGridNumericOperators().filter(
     (operator) => operator.value === '>' || operator.value === '<',
   ),

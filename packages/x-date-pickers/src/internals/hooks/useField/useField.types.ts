@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { SlotComponentProps } from '@mui/base/utils';
+import IconButton from '@mui/material/IconButton';
+import { ClearIcon } from '../../../icons';
 import {
   FieldSectionType,
   FieldSection,
@@ -116,6 +119,20 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * The ref object used to imperatively interact with the field.
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  /**
+   * Callback fired when the clear button is clicked.
+   */
+  onClear?: React.MouseEventHandler;
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable?: boolean;
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
 }
 
 export interface FieldRef<TSection extends FieldSection> {
@@ -141,10 +158,13 @@ export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
   onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onBlur?: () => void;
   error?: boolean;
+  onClear?: React.MouseEventHandler;
+  clearable?: boolean;
+  disabled?: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -371,3 +391,21 @@ export type SectionOrdering = {
    */
   endIndex: number;
 };
+
+export interface FieldSlotsComponents {
+  /**
+   * Icon to display inside the clear button.
+   * @default ClearIcon
+   */
+  ClearIcon?: React.ElementType;
+  /**
+   * Button to clear the value.
+   * @default IconButton
+   */
+  ClearButton?: React.ElementType;
+}
+
+export interface FieldSlotsComponentsProps {
+  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
+  clearButton?: SlotComponentProps<typeof IconButton, {}, {}>;
+}

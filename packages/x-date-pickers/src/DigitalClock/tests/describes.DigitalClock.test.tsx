@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, describeConformance } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { screen, describeConformance } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,
   adapterToUse,
   digitalClockHandler,
+  describeValidation,
+  describeValue,
 } from 'test/utils/pickers';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 

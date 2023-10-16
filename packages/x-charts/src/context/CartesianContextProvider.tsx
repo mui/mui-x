@@ -26,7 +26,7 @@ import {
   ExtremumGetterResult,
 } from '../models/seriesType/config';
 import { MakeOptional } from '../models/helpers';
-import { getTicksNumber } from '../hooks/useTicks';
+import { getTickNumber } from '../hooks/useTicks';
 
 export type CartesianContextProviderProps = {
   xAxis?: MakeOptional<AxisConfig, 'id'>[];
@@ -35,7 +35,8 @@ export type CartesianContextProviderProps = {
   children: React.ReactNode;
 };
 
-const DEFAULT_CATEGORY_GAP_RATIO = 0.1;
+const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
+const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 // TODO: those might be better placed in a distinct file
 const xExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
@@ -174,21 +175,22 @@ function CartesianContextProvider({
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+        const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
         completedXAxis[axis.id] = {
           categoryGapRatio,
-          barGapRatio: 0,
+          barGapRatio,
           ...axis,
           scale: scaleBand(axis.data!, range)
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
-          ticksNumber: axis.data!.length,
+          tickNumber: axis.data!.length,
         };
       }
       if (isPointScaleConfig(axis)) {
         completedXAxis[axis.id] = {
           ...axis,
           scale: scalePoint(axis.data!, range),
-          ticksNumber: axis.data!.length,
+          tickNumber: axis.data!.length,
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
@@ -199,9 +201,9 @@ function CartesianContextProvider({
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range, domain: extremums });
+      const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-      const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
+      const niceScale = getScale(scaleType, extremums, range).nice(tickNumber);
       const niceDomain = niceScale.domain();
       const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
 
@@ -209,7 +211,7 @@ function CartesianContextProvider({
         ...axis,
         scaleType,
         scale: niceScale.domain(domain),
-        ticksNumber,
+        tickNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
 
@@ -235,14 +237,14 @@ function CartesianContextProvider({
           scale: scaleBand(axis.data!, [range[1], range[0]])
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
-          ticksNumber: axis.data!.length,
+          tickNumber: axis.data!.length,
         };
       }
       if (isPointScaleConfig(axis)) {
         completedYAxis[axis.id] = {
           ...axis,
           scale: scalePoint(axis.data!, [range[1], range[0]]),
-          ticksNumber: axis.data!.length,
+          tickNumber: axis.data!.length,
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
@@ -253,9 +255,9 @@ function CartesianContextProvider({
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range, domain: extremums });
+      const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-      const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
+      const niceScale = getScale(scaleType, extremums, range).nice(tickNumber);
       const niceDomain = niceScale.domain();
       const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
 
@@ -263,7 +265,7 @@ function CartesianContextProvider({
         ...axis,
         scaleType,
         scale: niceScale.domain(domain),
-        ticksNumber,
+        tickNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
 

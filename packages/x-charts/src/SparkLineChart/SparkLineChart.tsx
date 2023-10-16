@@ -7,7 +7,12 @@ import {
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  ChartsTooltip,
+  ChartsTooltipProps,
+  ChartsTooltipSlotComponentProps,
+  ChartsTooltipSlotsComponent,
+} from '../ChartsTooltip';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
@@ -26,13 +31,15 @@ export interface SparkLineChartSlotsComponent
     LinePlotSlotsComponent,
     MarkPlotSlotsComponent,
     LineHighlightPlotSlotsComponent,
-    BarPlotSlotsComponent {}
+    BarPlotSlotsComponent,
+    ChartsTooltipSlotsComponent {}
 export interface SparkLineChartSlotComponentProps
   extends AreaPlotSlotComponentProps,
     LinePlotSlotComponentProps,
     MarkPlotSlotComponentProps,
     LineHighlightPlotSlotComponentProps,
-    BarPlotSlotComponentProps {}
+    BarPlotSlotComponentProps,
+    ChartsTooltipSlotComponentProps {}
 
 export interface SparkLineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis'> {
@@ -145,7 +152,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
       xAxis={[
         {
           id: DEFAULT_X_AXIS_KEY,
-          scaleType: plotType === 'bar' ? 'band' : 'linear',
+          scaleType: plotType === 'bar' ? 'band' : 'point',
           data: Array.from({ length: data.length }, (_, index) => index),
           hideTooltip: xAxis === undefined,
           ...xAxis,
@@ -159,7 +166,10 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
         axisHighlight?.y === 'none'
       }
     >
-      {plotType === 'bar' && <BarPlot slots={slots} slotProps={slotProps} />}
+      {plotType === 'bar' && (
+        <BarPlot slots={slots} slotProps={slotProps} sx={{ shapeRendering: 'auto' }} />
+      )}
+
       {plotType === 'line' && (
         <React.Fragment>
           <AreaPlot slots={slots} slotProps={slotProps} />
@@ -169,7 +179,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
       )}
 
       <ChartsAxisHighlight {...axisHighlight} />
-      {showTooltip && <ChartsTooltip {...tooltip} />}
+      {showTooltip && <ChartsTooltip {...tooltip} slotProps={slotProps} slots={slots} />}
 
       {children}
     </ResponsiveChartContainer>
@@ -261,6 +271,8 @@ SparkLineChart.propTypes = {
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
     itemContent: PropTypes.elementType,
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**

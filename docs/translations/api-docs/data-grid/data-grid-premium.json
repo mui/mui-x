@@ -41,6 +41,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "autosizeOnMount": {
+      "description": "If <code>true</code>, columns are autosized after the datagrid is mounted.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "autosizeOptions": {
+      "description": "The options for autosize when user-initiated.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "cellModesModel": {
       "description": "Controls the modes of the cells.",
       "deprecated": "",
@@ -118,6 +128,11 @@
     },
     "disableAggregation": {
       "description": "If <code>true</code>, aggregation is disabled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "disableAutosize": {
+      "description": "If <code>true</code>, column autosizing on header separator double-click is disabled.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -972,6 +987,10 @@
       "nodeName": "the root element",
       "conditions": "<code>autoHeight={true}</code>"
     },
+    "autosizing": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element while it is being autosized"
+    },
     "booleanCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the icon of the boolean cell"
@@ -1025,6 +1044,11 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "it is at the right edge of a cell selection range"
+    },
+    "cell--selectionMode": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is in a cell selection range"
     },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "cellContent": {
@@ -1533,6 +1557,7 @@
     "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter panel.",
     "filterPanelRemoveAllIcon": "Icon displayed for deleting all the active filters from filter panel.",
     "footer": "Footer component rendered at the bottom of the grid viewport.",
+    "footerRowCount": "Row count component rendered in the footer",
     "groupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "headerFilterCell": "Component responsible for showing menu adornment in Header filter row",

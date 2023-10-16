@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue } from 'test/utils/pickers';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
+import { userEvent, fireEvent } from '@mui-internal/test-utils';
+import { expectInputValue, describeAdapters } from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Editing', () => {
   ['Backspace', 'Delete'].forEach((keyToClearValue) => {
@@ -14,7 +13,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         it('should clear all the sections when all sections are selected and all sections are completed', () => {
           const { input, selectSection } = renderWithProps({
             defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
           });
 
           selectSection('month');
@@ -28,7 +27,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         it('should clear all the sections when all sections are selected and not all sections are completed', () => {
           const { input, selectSection } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
           });
 
           selectSection('month');
@@ -50,7 +49,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           const onChange = spy();
 
           const { input, selectSection } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
             defaultValue: [null, null],
             onChange,
           });
@@ -68,7 +67,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           const handleChange = spy();
 
           const { selectSection, input } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
             defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
             onChange: handleChange,
           });
@@ -101,7 +100,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           const handleChange = spy();
 
           const { selectSection, input } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
             defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
             onChange: handleChange,
           });

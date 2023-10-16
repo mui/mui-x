@@ -112,7 +112,7 @@
     {
       "class": null,
       "name": "textField",
-      "description": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render a date. It is rendered twice: once for the start date and once for the end date. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     }
   ],
@@ -127,8 +127,5 @@
     "name": "MuiMultiInputDateRangeField"
   },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateRangeField/MultiInputDateRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiInputDateRangeField" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
 }
