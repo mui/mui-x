@@ -129,20 +129,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }),
   );
 
-  const updateInnerPosition = React.useCallback(
-    () => {
-      const offset = columnPositions[visiblePinnedColumns.left.length];
-
-      // innerRef!.current!.style.transform = `translate3d(${offset}px, 0px, 0px)`;
-    },
-    [
-      columnPositions,
-      visiblePinnedColumns.left.length,
-    ],
-  );
-
-  React.useLayoutEffect(updateInnerPosition, [updateInnerPosition]);
-
   const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     (params) => setResizeCol(params.field),
     [],
