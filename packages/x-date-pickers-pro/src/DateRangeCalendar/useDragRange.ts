@@ -178,7 +178,7 @@ const useDragRangeEvents = <TDate>({
 
     // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
     const targetsAreIdentical = target === event.changedTouches[0].target;
-    if (!(targetsAreIdentical && isElementDraggable(newDate))) {
+    if (!targetsAreIdentical || !isElementDraggable(newDate)) {
       return;
     }
 
