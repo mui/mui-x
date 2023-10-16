@@ -32,7 +32,6 @@ export type DateTimeRangePickerTimeWrapperProps<
       selectionState: PickerSelectionState,
       selectedView: TView,
     ) => void;
-    // TODO: fix types
     viewRenderer: PickerViewRenderer<TDate, TView, any, {}>;
   };
 

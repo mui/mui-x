@@ -40,7 +40,6 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
       [`.${multiSectionDigitalClockSectionClasses.root}`]: {
         maxHeight: VIEW_HEIGHT,
       },
-      // ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
     },
   };
   const isTimeViewActive = isInternalTimeView(popperView);
@@ -73,9 +72,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     TDate,
     DesktopDateTimeRangePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimeRangePicker');
-
-  // const shouldUseNewRenderer =
-  //   !defaultizedProps.viewRenderers || Object.keys(defaultizedProps.viewRenderers).length === 0;
 
   const viewRenderers: PickerViewRendererLookup<
     DateRange<TDate>,
