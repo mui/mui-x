@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { describeConformance, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, userEvent } from '@mui-internal/test-utils';
 import TextField from '@mui/material/TextField';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   createPickerRenderer,
@@ -11,6 +9,8 @@ import {
   expectInputPlaceholder,
   adapterToUse,
   getTextbox,
+  describeValidation,
+  describeValue,
 } from 'test/utils/pickers';
 
 describe('<DateField /> - Describes', () => {

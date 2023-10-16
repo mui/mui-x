@@ -55,13 +55,7 @@ function GridHeaderFilterMenu({
   }
 
   return (
-    <GridMenu
-      placement="bottom-end"
-      open={open}
-      target={target as HTMLElement}
-      onClickAway={hideMenu}
-      onExited={hideMenu}
-    >
+    <GridMenu placement="bottom-end" open={open} target={target} onClose={hideMenu}>
       <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown}>
         {operators.map((op, i) => {
           const label =

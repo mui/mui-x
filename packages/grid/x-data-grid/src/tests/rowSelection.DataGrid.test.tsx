@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -34,7 +34,7 @@ function getSelectedRowIds() {
     );
 }
 
-describe('<DataGrid /> - Row Selection', () => {
+describe('<DataGrid /> - Row selection', () => {
   const { render, clock } = createRenderer();
 
   const defaultData = getBasicGridData(4, 2);

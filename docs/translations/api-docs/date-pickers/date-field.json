@@ -6,6 +6,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "clearable": {
+      "description": "If <code>true</code>, a clear button will be shown in the field allowing value clearing.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "color": {
       "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#adding-new-colors\">palette customization guide</a>.",
       "deprecated": "",
@@ -130,6 +135,11 @@
         "context": "The context containing the validation result of the current value."
       }
     },
+    "onClear": {
+      "description": "Callback fired when the clear button is clicked.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "onError": {
       "description": "Callback fired when the error associated to the current value changes.",
       "deprecated": "",
@@ -164,7 +174,7 @@
       "typeDescriptions": {}
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.",
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The date to test.",
@@ -231,6 +241,8 @@
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
+    "clearButton": "Button to clear the value.",
+    "clearIcon": "Icon to display inside the clear button.",
     "textField": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>."
   }
 }

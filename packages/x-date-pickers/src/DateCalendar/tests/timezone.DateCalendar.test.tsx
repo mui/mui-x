@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { userEvent, screen } from '@mui/monorepo/test/utils';
+import { userEvent, screen } from '@mui-internal/test-utils';
+import { describeAdapters } from 'test/utils/pickers';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

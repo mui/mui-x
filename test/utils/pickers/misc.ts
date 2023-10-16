@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
-import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
+import { PickerComponentFamily } from './describe.types';
 import { OpenPickerParams } from './openPicker';
 
 export const stubMatchMedia = (matches = true) =>

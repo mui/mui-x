@@ -26,6 +26,16 @@ export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
   slotProps?: MarkPlotSlotComponentProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
+ */
 function MarkPlot(props: MarkPlotProps) {
   const { slots, slotProps, ...other } = props;
 

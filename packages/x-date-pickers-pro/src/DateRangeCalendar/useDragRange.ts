@@ -152,12 +152,6 @@ const useDragRangeEvents = <TDate>({
     }
 
     setRangeDragDay(newDate);
-    setIsDragging(true);
-    const button = event.target as HTMLButtonElement;
-    const buttonDataset = button.dataset;
-    if (buttonDataset.position) {
-      onDatePositionChange(buttonDataset.position as DateRangePosition);
-    }
   });
 
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -173,13 +167,28 @@ const useDragRangeEvents = <TDate>({
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
     const target = resolveElementFromTouch(event);
-    if (!isDragging || !target) {
+    if (!target) {
       return;
     }
 
     const newDate = resolveDateFromTarget(target, utils, timezone);
     if (newDate) {
       setRangeDragDay(newDate);
+    }
+
+    // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
+    const targetsAreIdentical = target === event.changedTouches[0].target;
+    if (!targetsAreIdentical || !isElementDraggable(newDate)) {
+      return;
+    }
+
+    // on mobile we should only initialize dragging state after move is detected
+    setIsDragging(true);
+
+    const button = event.target as HTMLButtonElement;
+    const buttonDataset = button.dataset;
+    if (buttonDataset.position) {
+      onDatePositionChange(buttonDataset.position as DateRangePosition);
     }
   });
 

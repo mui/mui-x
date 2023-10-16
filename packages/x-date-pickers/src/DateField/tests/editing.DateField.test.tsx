@@ -2,9 +2,8 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue, getTextbox } from 'test/utils/pickers';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
+import { act, userEvent, fireEvent } from '@mui-internal/test-utils';
+import { expectInputValue, getTextbox, describeAdapters } from 'test/utils/pickers';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {
@@ -44,7 +43,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should go to the last month of the current year when a value in January is provided', () => {
       testFieldKeyPress({
-        format: adapter.formats.monthAndYear,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(new Date(2022, 0, 15)),
         key: 'ArrowDown',
         expectedValue: 'December 2022',
@@ -70,7 +69,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should decrement the month and keep the day when the new month has fewer days', () => {
       testFieldKeyPress({
-        format: adapter.formats.monthAndDate,
+        format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date(new Date(2022, 4, 31)),
         key: 'ArrowDown',
         expectedValue: 'April 31',
@@ -79,7 +78,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should go to the last day of the current month when a value in the first day of the month is provided', () => {
       testFieldKeyPress({
-        format: adapter.formats.monthAndDate,
+        format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date(new Date(2022, 5, 1)),
         key: 'ArrowDown',
         expectedValue: 'June 30',
@@ -144,7 +143,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should go to the first month of the current year when a value in December is provided', () => {
       testFieldKeyPress({
-        format: adapter.formats.monthAndYear,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(new Date(2022, 11, 15)),
         key: 'ArrowUp',
         expectedValue: 'January 2022',
@@ -170,7 +169,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should increment the month and keep the day when the new month has fewer days', () => {
       testFieldKeyPress({
-        format: adapter.formats.monthAndDate,
+        format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date(new Date(2022, 4, 31)),
         key: 'ArrowUp',
         expectedValue: 'June 31',
@@ -179,7 +178,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should go to the first day of the current month when a value in the last day of the month is provided', () => {
       testFieldKeyPress({
-        format: adapter.formats.monthAndDate,
+        format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date(new Date(2022, 5, 30)),
         key: 'ArrowUp',
         expectedValue: 'June 01',
@@ -214,7 +213,7 @@ describe('<DateField /> - Editing', () => {
       ({ adapter, testFieldKeyPress, renderWithProps }) => {
         it('should clear the selected section when only this section is completed', () => {
           const { input, selectSection } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
           });
           selectSection('month');
 
@@ -230,7 +229,7 @@ describe('<DateField /> - Editing', () => {
 
         it('should clear the selected section when all sections are completed', () => {
           testFieldKeyPress({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
             defaultValue: adapter.date(),
             key: keyToClearValue,
             expectedValue: 'MMMM 2022',
@@ -239,7 +238,7 @@ describe('<DateField /> - Editing', () => {
 
         it('should clear all the sections when all sections are selected and all sections are completed', () => {
           const { input, selectSection } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
             defaultValue: adapter.date(),
           });
 
@@ -254,7 +253,7 @@ describe('<DateField /> - Editing', () => {
 
         it('should clear all the sections when all sections are selected and not all sections are completed', () => {
           const { input, selectSection } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
           });
 
           selectSection('month');
@@ -303,7 +302,7 @@ describe('<DateField /> - Editing', () => {
           const onChange = spy();
 
           const { input, selectSection } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
             onChange,
           });
 
@@ -320,7 +319,7 @@ describe('<DateField /> - Editing', () => {
           const handleChange = spy();
 
           const { selectSection, input } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
             defaultValue: adapter.date(),
             onChange: handleChange,
           });
@@ -342,7 +341,7 @@ describe('<DateField /> - Editing', () => {
           const handleChange = spy();
 
           const { selectSection, input } = renderWithProps({
-            format: adapter.formats.monthAndYear,
+            format: `${adapter.formats.month} ${adapter.formats.year}`,
             defaultValue: adapter.date(),
             onChange: handleChange,
           });
@@ -1045,7 +1044,7 @@ describe('<DateField /> - Editing', () => {
       it('should support letter editing', () => {
         const { input, selectSection } = renderWithProps({
           defaultValue: adapter.date(new Date(2022, 4, 16)),
-          format: adapter.formats.monthAndYear,
+          format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
         selectSection('month');

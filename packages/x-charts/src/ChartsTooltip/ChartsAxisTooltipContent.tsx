@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { useSlotProps } from '@mui/base/utils';
 import { AxisInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
@@ -55,7 +56,7 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
   }
   const axisFormatter = axis.valueFormatter ?? ((v) => v.toLocaleString());
   return (
-    <ChartsTooltipPaper sx={sx} variant="outlined" className={classes.root}>
+    <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable>
         {axisValue != null && !axis.hideTooltip && (
           <thead>
@@ -91,10 +92,11 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
 export function ChartsAxisTooltipContent(props: {
   axisData: AxisInteractionData;
   content?: React.ElementType<ChartsAxisContentProps>;
+  contentProps?: Partial<ChartsAxisContentProps>;
   sx?: SxProps<Theme>;
   classes: ChartsAxisContentProps['classes'];
 }) {
-  const { content, axisData, sx, classes } = props;
+  const { content, contentProps, axisData, sx, classes } = props;
 
   const isXaxis = (axisData.x && axisData.x.index) !== undefined;
 
@@ -129,15 +131,19 @@ export function ChartsAxisTooltipContent(props: {
   }, [USED_AXIS_ID, isXaxis, xAxis, yAxis]);
 
   const Content = content ?? DefaultChartsAxisContent;
-  return (
-    <Content
-      axisData={axisData}
-      series={relevantSeries}
-      axis={relevantAxis}
-      dataIndex={dataIndex}
-      axisValue={axisValue}
-      sx={sx}
-      classes={classes}
-    />
-  );
+  const chartTooltipContentProps = useSlotProps({
+    elementType: Content,
+    externalSlotProps: contentProps,
+    additionalProps: {
+      axisData,
+      series: relevantSeries,
+      axis: relevantAxis,
+      dataIndex,
+      axisValue,
+      sx,
+      classes,
+    },
+    ownerState: {},
+  });
+  return <Content {...chartTooltipContentProps} />;
 }

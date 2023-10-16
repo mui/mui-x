@@ -71,6 +71,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Scegli l'ora, l'ora selezionata è ${utils.format(value, 'fullTime')}`
       : "Scegli l'ora",
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: "scegli un'ora",

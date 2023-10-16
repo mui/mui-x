@@ -108,6 +108,10 @@ If you know that all days of some months are disabled—you can provide the [`sh
 Same with the [`shouldDisableYear`](#disable-specific-years) prop for the `year` view.
 :::
 
+:::success
+Please note that `shouldDisableDate` will execute on every date rendered in the `day` view. Expensive computations in this validation function can impact performance.
+:::
+
 #### Disable specific dates in range components [<span class="pro-premium"></span>](/x/introduction/licensing/#pro-plan)
 
 For components supporting date range edition (`DateRangePicker`, `DateTimeRangePicker`)—the `shouldDisableDate` prop receives a second argument to differentiate the start and the end date.

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, userEvent, within, act } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, userEvent, within, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
@@ -275,7 +275,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe('Tree Data', () => {
+  describe('Tree data', () => {
     function TreeDataTest(props: Omit<DataGridPremiumProps, 'columns'>) {
       return (
         <Test
@@ -355,7 +355,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe('Column Menu', () => {
+  describe('Column menu', () => {
     it('should render select on aggregable column', () => {
       render(<Test />);
 

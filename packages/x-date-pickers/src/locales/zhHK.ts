@@ -67,6 +67,7 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `選擇時間，已選擇${utils.format(value, 'fullTime')}`
       : '選擇時間',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: '選擇時間',

@@ -15,13 +15,26 @@ import { CalendarIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
+import {
+  resolveDateTimeFormat,
+  resolveTimeViewsResponse,
+} from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [DesktopDateTimePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-picker/)
+ */
 const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TDate>(
   inProps: DesktopDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -36,7 +49,12 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     DesktopDateTimePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimePicker');
 
-  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
+  const {
+    shouldRenderTimeInASingleColumn,
+    thresholdToRenderTimeInASingleColumn,
+    views,
+    timeSteps,
+  } = resolveTimeViewsResponse<TDate>(defaultizedProps);
   const shouldUseNewRenderer =
     !defaultizedProps.viewRenderers || Object.keys(defaultizedProps.viewRenderers).length === 0;
 
@@ -71,12 +89,12 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     ...defaultizedProps,
     viewRenderers,
     format: resolveDateTimeFormat(utils, defaultizedProps),
-    views: (defaultizedProps.ampm
-      ? [...defaultizedProps.views, 'meridiem']
-      : defaultizedProps.views) as DateOrTimeViewWithMeridiem[],
+    views,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
     timeSteps,
+    thresholdToRenderTimeInASingleColumn,
+    shouldRenderTimeInASingleColumn,
     slots: {
       field: DateTimeField,
       openPickerIcon: CalendarIcon,
@@ -163,9 +181,10 @@ DesktopDateTimePicker.propTypes = {
   componentsProps: PropTypes.object,
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @param {string} day The day of week provided by the adapter.  Deprecated, will be removed in v7: Use `date` instead.
+   * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (day) => day.charAt(0).toUpperCase()
+   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -409,6 +428,9 @@ DesktopDateTimePicker.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.
@@ -470,6 +492,11 @@ DesktopDateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Amount of time options below or at which the single column time renderer is used.
+   * @default 24
+   */
+  thresholdToRenderTimeInASingleColumn: PropTypes.number,
   /**
    * The time steps between two time unit options.
    * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.

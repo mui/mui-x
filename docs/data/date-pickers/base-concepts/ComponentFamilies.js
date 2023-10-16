@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Link from 'next/link';
 import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -16,9 +17,9 @@ function ProLabel({ children }) {
   return (
     <Stack direction="row" spacing={0.5} component="span">
       <Tooltip title="Included in Pro package">
-        <a href="/x/introduction/licensing/#pro-plan">
+        <Link href="/x/introduction/licensing/#pro-plan">
           <span className="plan-pro" />
-        </a>
+        </Link>
       </Tooltip>
       <span>{children}</span>
     </Stack>
