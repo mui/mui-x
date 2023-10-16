@@ -177,6 +177,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
       ) : (
         <DateTimeRangePickerTabFiller className={classes.filler} />
       )}
+
       <DateTimeRangePickerTab
         startIcon={isDatePickerView(view) ? dateIcon : timeIcon}
         className={classes.tabButton}
@@ -210,25 +211,27 @@ DateTimeRangePickerTabs.propTypes = {
   classes: PropTypes.object,
   /**
    * Date tab icon.
-   * @default DateRange
+   * @default DateRangeIcon
    */
-  dateIcon: PropTypes.node,
+  dateIcon: PropTypes.element,
   /**
    * Toggles visibility of the tabs allowing view switching.
-   * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`
+   * @default `window.innerHeight < 667` for `DesktopDateTimeRangePicker` and `MobileDateTimeRangePicker`
    */
   hidden: PropTypes.bool,
+  onRangePositionChange: PropTypes.func.isRequired,
   /**
    * Callback called when a tab is clicked
    * @template TView
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
+  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * Time tab icon.
-   * @default Time
+   * @default TimeIcon
    */
-  timeIcon: PropTypes.node,
+  timeIcon: PropTypes.element,
   /**
    * Currently visible picker view.
    */

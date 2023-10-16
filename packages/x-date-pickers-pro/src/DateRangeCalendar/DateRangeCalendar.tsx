@@ -713,6 +713,16 @@ DateRangeCalendar.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
+   * Controlled focused view.
+   */
+  focusedView: PropTypes.oneOf(['day']),
+  /**
+   * If `true`, force a `finish` selection state.
+   * Used on Date Time Range pickers to enable date -> time -> date -> time selection flow.
+   * @default false
+   */
+  forceFinishSelection: PropTypes.bool,
+  /**
    * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
@@ -734,6 +744,13 @@ DateRangeCalendar.propTypes = {
    */
   onChange: PropTypes.func,
   /**
+   * Callback fired on focused view change.
+   * @template TView
+   * @param {TView} view The new view to focus or not.
+   * @param {boolean} hasFocus `true` if the view should be focused.
+   */
+  onFocusedViewChange: PropTypes.func,
+  /**
    * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
@@ -744,6 +761,18 @@ DateRangeCalendar.propTypes = {
    * @param {RangePosition} rangePosition The new range position.
    */
   onRangePositionChange: PropTypes.func,
+  /**
+   * Callback fired on view change.
+   * @template TView
+   * @param {TView} view The new view.
+   */
+  onViewChange: PropTypes.func,
+  /**
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
+   */
+  openTo: PropTypes.oneOf(['day']),
   /**
    * The position in the currently edited date range.
    * Used when the component position is controlled.
@@ -823,6 +852,16 @@ DateRangeCalendar.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['day']),
+  /**
+   * Available views.
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day'])),
 } as any;
 
 export { DateRangeCalendar };

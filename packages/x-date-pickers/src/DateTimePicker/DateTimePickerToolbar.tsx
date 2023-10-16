@@ -399,6 +399,11 @@ DateTimePickerToolbar.propTypes = {
    */
   hidden: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
+  /**
+   * If `true`, will toggle the `selected` state for the currently active view.
+   * Used by `DateTimeRangePickerToolbar` to mark only the currently selected `rangePosition` as active.
+   */
+  markSelected: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   /**
    * Callback called when a toolbar is clicked
@@ -422,6 +427,10 @@ DateTimePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
+  /**
+   * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
+   */
+  toolbarTitle: PropTypes.node,
   toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
   value: PropTypes.any,
   /**
