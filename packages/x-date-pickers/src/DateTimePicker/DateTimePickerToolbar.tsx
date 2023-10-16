@@ -31,8 +31,15 @@ export interface DateTimePickerToolbarProps<TDate>
    */
   classes?: Partial<DateTimePickerToolbarClasses>;
   toolbarVariant?: WrapperVariant;
+  /**
+   * If `true`, will toggle the `selected` state for the currently active view.
+   * Used by `DateTimeRangePickerToolbar` to mark only the currently selected `rangePosition` as active.
+   */
   markSelected?: boolean;
-  toolbarTitle: React.ReactNode;
+  /**
+   * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
+   */
+  toolbarTitle?: React.ReactNode;
 }
 
 const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
