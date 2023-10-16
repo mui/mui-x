@@ -334,7 +334,7 @@ export const useGridCellEditing = (
       let newValue = apiRef.current.getCellValue(id, field);
       // eslint-disable-next-line @typescript-eslint/naming-convention
       let unstable_updateValueOnRender = false;
-      if (deleteValue || initialValue) {
+      if (deleteValue || initialValue != null) {
         newValue = deleteValue ? '' : initialValue;
         unstable_updateValueOnRender = true;
       }
