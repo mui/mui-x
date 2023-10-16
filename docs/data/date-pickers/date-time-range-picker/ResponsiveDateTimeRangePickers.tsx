@@ -6,15 +6,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
-// import { StaticDateTimeRangePicker } from '@mui/x-date-pickers-pro/StaticDateTimeRangePicker';
-// import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 
 export default function ResponsiveDateTimeRangePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
         components={[
-          'DateTimeRangePicker',
           'DateTimeRangePicker',
           'DateTimeRangePicker',
           'DateTimeRangePicker',
@@ -34,16 +31,6 @@ export default function ResponsiveDateTimeRangePickers() {
           <DateTimeRangePicker
             defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-21T18:30')]}
           />
-        </DemoItem>
-        <DemoItem label="Static variant" component="DateTimeRangePicker">
-          {/* <StaticDateTimeRangePicker
-            defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-21T18:30')]}
-            sx={{
-              [`.${pickersLayoutClasses.contentWrapper}`]: {
-                alignItems: 'center',
-              },
-            }}
-          /> */}
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

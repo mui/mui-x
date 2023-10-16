@@ -41,7 +41,7 @@ const tabToView = (tab: TabValue): DateOrTimeViewWithMeridiem => {
 export interface ExportedDateTimeRangePickerTabsProps extends ExportedBaseTabsProps {
   /**
    * Toggles visibility of the tabs allowing view switching.
-   * @default `window.innerHeight < 667` for `DesktopDateTimeRangePicker` and `MobileDateTimeRangePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimeRangePicker`
+   * @default `window.innerHeight < 667` for `DesktopDateTimeRangePicker` and `MobileDateTimeRangePicker`
    */
   hidden?: boolean;
   /**
