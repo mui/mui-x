@@ -7,6 +7,8 @@ export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
 }
 
+export type FieldType = 'single-input' | 'multi-input';
+
 /**
  * Props the `textField` slot of the multi input field can receive when used inside a picker.
  */
