@@ -86,8 +86,21 @@ const useUtilityClasses = (ownerState: FakeTextFieldProps & { focused: boolean }
   return composeClasses(slots, getFakeTextFieldUtilityClass, []);
 };
 
-export function FakeTextField(props: FakeTextFieldProps) {
-  const { sections, disabled } = props;
+export interface FakeTextFieldElement extends React.HTMLAttributes<HTMLDivElement> {
+  before: string;
+  after: string;
+}
+
+interface FakeTextFieldProps {
+  elements: FakeTextFieldElement[];
+  disabled?: boolean;
+}
+
+export const FakeTextField = React.forwardRef(function FakeTextField(
+  props: FakeTextFieldProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const { elements, disabled } = props;
 
   const [focused, setFocused] = React.useState(false);
 
@@ -100,21 +113,19 @@ export function FakeTextField(props: FakeTextFieldProps) {
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <SectionsWrapper className={classes.root}>
-      {sections.map((section, index) => (
-        <React.Fragment>
-          {section.startSeparator}
+    <SectionsWrapper className={classes.root} ref={ref}>
+      {elements.map(({ before, after, ...otherElementProps }, elementIndex) => (
+        <React.Fragment key={elementIndex}>
+          {before}
           <SectionInput
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            size={4}
-            key={index}
-            value={section.value}
             onChange={() => {}}
+            {...otherElementProps}
           />
-          {section.endSeparator}
+          {after}
         </React.Fragment>
       ))}
     </SectionsWrapper>
   );
-}
+});

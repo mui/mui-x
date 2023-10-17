@@ -57,6 +57,10 @@ type TimeClockComponent = (<TDate>(
 const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
 
 /**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [TimeClock](https://mui.com/x/react-date-pickers/time-clock/)
  *
  * API:
  *

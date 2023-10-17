@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui/monorepo/test/utils';
+import { screen } from '@mui-internal/test-utils';
 import { adapterToUse } from 'test/utils/pickers';
-import { act } from '@mui/monorepo/test/utils/createRenderer';
+import { act } from '@mui-internal/test-utils/createRenderer';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput?: boolean) => {

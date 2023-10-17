@@ -57,6 +57,17 @@ export interface PieChartProps
 }
 
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 100 };
+
+/**
+ * Demos:
+ *
+ * - [Pie](https://mui.com/x/react-charts/pie/)
+ * - [Pie demonstration](https://mui.com/x/react-charts/pie-demo/)
+ *
+ * API:
+ *
+ * - [PieChart API](https://mui.com/x/api/charts/pie-chart/)
+ */
 function PieChart(props: PieChartProps) {
   const {
     xAxis,

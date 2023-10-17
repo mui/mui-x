@@ -45,6 +45,15 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
   isValid: (value: TValue) => boolean;
 }
 
+/**
+ * Demos:
+ *
+ * - [Shortcuts](https://mui.com/x/react-date-pickers/shortcuts/)
+ *
+ * API:
+ *
+ * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
+ */
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
   const { items, changeImportance, isLandscape, onChange, isValid, ...other } = props;
 

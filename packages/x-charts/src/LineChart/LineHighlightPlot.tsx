@@ -27,6 +27,16 @@ export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElemen
   slotProps?: LineHighlightPlotSlotComponentProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [LineHighlightPlot API](https://mui.com/x/api/charts/line-highlight-plot/)
+ */
 function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
