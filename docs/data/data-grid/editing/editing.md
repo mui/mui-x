@@ -466,7 +466,13 @@ Instead, use the provided interactions to exit edit mode.
 
 ## Advanced use cases
 
-See [Editing recipes](/x/react-data-grid/recipes-editing/) for more advanced use cases.
+The [Editing recipes](/x/react-data-grid/recipes-editing/) page covers more advanced use cases, such as:
+
+- [Multiline editing](/x/react-data-grid/recipes-editing/#multiline-editing)
+- [Single click editing](/x/react-data-grid/recipes-editing/#single-click-editing)
+- [Bulk editing](/x/react-data-grid/recipes-editing/#bulk-editing)
+- [Conditional validation](/x/react-data-grid/recipes-editing/#conditional-validation)
+- [Linked fields](/x/react-data-grid/recipes-editing/#linked-fields)
 
 ## apiRef
 

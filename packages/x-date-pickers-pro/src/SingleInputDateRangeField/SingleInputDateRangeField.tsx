@@ -16,6 +16,16 @@ type DateRangeFieldComponent = (<TDate>(
   props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
 
+/**
+ * Demos:
+ *
+ * - [DateRangeField](http://mui.com/x/react-date-pickers/date-range-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ *
+ * - [SingleInputDateRangeField API](https://mui.com/x/api/single-input-date-range-field/)
+ */
 const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<TDate>(
   inProps: SingleInputDateRangeFieldProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -293,6 +303,9 @@ SingleInputDateRangeField.propTypes = {
   ]),
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.

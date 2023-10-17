@@ -557,7 +557,7 @@
         "name": "union",
         "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
       },
-      "default": ": false"
+      "default": "false"
     }
   },
   "slots": [
@@ -991,6 +991,7 @@
       "aggregationColumnHeader--alignRight",
       "aggregationColumnHeaderLabel",
       "autoHeight",
+      "autosizing",
       "booleanCell",
       "cell--editable",
       "cell--editing",
@@ -1002,6 +1003,7 @@
       "cell--rangeBottom",
       "cell--rangeLeft",
       "cell--rangeRight",
+      "cell--selectionMode",
       "cell",
       "cellContent",
       "cellCheckbox",

@@ -1,5 +1,15 @@
 import { expect } from 'chai';
-import { chromium, webkit, firefox, Page, Browser, BrowserContext } from '@playwright/test';
+import {
+  chromium,
+  webkit,
+  firefox,
+  Page,
+  Browser,
+  BrowserContext,
+  devices,
+  BrowserContextOptions,
+  BrowserType,
+} from '@playwright/test';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -65,62 +75,71 @@ async function attemptGoto(page: Page, url: string): Promise<boolean> {
 // Pick the new/fake "now" for you test pages.
 const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
 
-[chromium, webkit, firefox].forEach((browserType) => {
-  describe(`e2e: ${browserType.name()}`, () => {
-    const baseUrl = 'http://localhost:5001';
-    let browser: Browser;
-    let context: BrowserContext;
-    let page: Page;
+let browser: Browser;
+let context: BrowserContext;
+let page: Page;
+const baseUrl = 'http://localhost:5001';
 
-    async function renderFixture(fixturePath: string) {
-      if (page.url().includes(fixturePath)) {
-        // ensure that the page is reloaded if the it's the same fixture
-        // ensures that page is reset on firefox
-        await page.reload();
-      } else {
-        await page.goto(`${baseUrl}/e2e/${fixturePath}#no-dev`);
+async function renderFixture(fixturePath: string) {
+  if (page.url().includes(fixturePath)) {
+    // ensure that the page is reloaded if the it's the same fixture
+    // ensures that page is reset on firefox
+    await page.reload();
+  } else {
+    await page.goto(`${baseUrl}/e2e/${fixturePath}#no-dev`);
+  }
+}
+
+async function initializeEnvironment(
+  browserType: BrowserType,
+  contextOptions?: BrowserContextOptions,
+) {
+  browser = await browserType.launch({
+    headless: true,
+  });
+  // eslint-disable-next-line no-console
+  console.log(`Running on: ${browserType.name()}, version: ${browser.version()}.`);
+  context = await browser.newContext({
+    // ensure consistent date formatting regardless of environment
+    locale: 'en-US',
+    ...contextOptions,
+  });
+  // Circle CI has low-performance CPUs.
+  context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 4 : 2) * 1000);
+  page = await context.newPage();
+  // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
+  // Update the Date accordingly in your test pages
+  await page.addInitScript(`{
+    // Extend Date constructor to default to fakeNow
+    Date = class extends Date {
+      constructor(...args) {
+        if (args.length === 0) {
+          super(${fakeNow});
+        } else {
+          super(...args);
+        }
       }
     }
+    // Override Date.now() to start from fakeNow
+    const __DateNowOffset = ${fakeNow} - Date.now();
+    const __DateNow = Date.now;
+    Date.now = () => __DateNow() + __DateNowOffset;
+  }`);
+  const isServerRunning = await attemptGoto(page, `${baseUrl}#no-dev`);
+  if (!isServerRunning) {
+    throw new Error(
+      `Unable to navigate to ${baseUrl} after multiple attempts. Did you forget to run \`yarn test:e2e:server\` and \`yarn test:e2e:build\`?`,
+    );
+  }
+  return { browser, context, page };
+}
 
+[chromium, webkit, firefox].forEach((browserType) => {
+  describe(`e2e: ${browserType.name()}`, () => {
     before(async function beforeHook() {
       this.timeout(20000);
 
-      browser = await browserType.launch({
-        headless: true,
-      });
-      // eslint-disable-next-line no-console
-      console.log(`Running on: ${browserType.name()}, version: ${browser.version()}.`);
-      context = await browser.newContext({
-        // ensure consistent date formatting regardless or environment
-        locale: 'en-US',
-      });
-      // Circle CI has low-performance CPUs.
-      context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 4 : 2) * 1000);
-      page = await context.newPage();
-      // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
-      // Update the Date accordingly in your test pages
-      await page.addInitScript(`{
-      // Extend Date constructor to default to fakeNow
-      Date = class extends Date {
-        constructor(...args) {
-          if (args.length === 0) {
-            super(${fakeNow});
-          } else {
-            super(...args);
-          }
-        }
-      }
-      // Override Date.now() to start from fakeNow
-      const __DateNowOffset = ${fakeNow} - Date.now();
-      const __DateNow = Date.now;
-      Date.now = () => __DateNow() + __DateNowOffset;
-    }`);
-      const isServerRunning = await attemptGoto(page, `${baseUrl}#no-dev`);
-      if (!isServerRunning) {
-        throw new Error(
-          `Unable to navigate to ${baseUrl} after multiple attempts. Did you forget to run \`yarn test:e2e:server\` and \`yarn test:e2e:build\`?`,
-        );
-      }
+      await initializeEnvironment(browserType);
     });
 
     after(async () => {
@@ -569,5 +588,39 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
       });
     });
+  });
+});
+
+describe('e2e: chromium on Android', () => {
+  before(async function beforeHook() {
+    this.timeout(20000);
+
+    await initializeEnvironment(chromium, devices['Pixel 5']);
+  });
+
+  after(async () => {
+    await context.close();
+    await browser.close();
+  });
+
+  it('should allow re-selecting value to have the same start and end date', async () => {
+    await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+
+    await page.getByRole('textbox', { name: 'Start' }).tap();
+
+    await page.getByRole('gridcell', { name: '11' }).first().tap();
+    await page.getByRole('gridcell', { name: '17' }).first().tap();
+
+    const toolbarButtons = await page.getByRole('button', { name: /Apr/ }).all();
+    expect(await toolbarButtons[0].textContent()).to.equal('Apr 11');
+    expect(await toolbarButtons[1].textContent()).to.equal('Apr 17');
+
+    // tap twice on the same date to select a range within one day
+    const april11 = page.getByRole('gridcell', { name: '11' }).first();
+    await april11.tap();
+    await april11.tap();
+
+    expect(await toolbarButtons[0].textContent()).to.equal('Apr 11');
+    expect(await toolbarButtons[1].textContent()).to.equal('Apr 11');
   });
 });

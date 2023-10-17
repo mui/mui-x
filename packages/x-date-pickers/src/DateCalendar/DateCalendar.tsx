@@ -28,6 +28,7 @@ import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -73,6 +74,7 @@ const DateCalendarRoot = styled(PickerViewRoot, {
 })<{ ownerState: DateCalendarProps<any> }>({
   display: 'flex',
   flexDirection: 'column',
+  height: VIEW_HEIGHT,
 });
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
@@ -560,6 +562,9 @@ DateCalendar.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.

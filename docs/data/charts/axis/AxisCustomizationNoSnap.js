@@ -16,7 +16,7 @@ const defaultXAxis = {
   disableLine: false,
   disableTicks: false,
   fontSize: 12,
-  label: 'my axis',
+  label: 'My axis',
   labelFontSize: 14,
   tickSize: 6,
 };

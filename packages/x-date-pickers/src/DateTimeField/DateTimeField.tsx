@@ -16,6 +16,16 @@ type DateTimeFieldComponent = (<TDate>(
   props: DateTimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateTimeField](http://mui.com/x/react-date-pickers/date-time-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ *
+ * - [DateTimeField API](https://mui.com/x/api/date-pickers/date-time-field/)
+ */
 const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
   inProps: DateTimeFieldProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -332,6 +342,9 @@ DateTimeField.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.

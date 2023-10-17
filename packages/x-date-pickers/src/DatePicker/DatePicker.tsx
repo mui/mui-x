@@ -12,6 +12,16 @@ type DatePickerComponent = (<TDate>(
   props: DatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [DatePicker API](https://mui.com/x/api/date-pickers/date-picker/)
+ */
 const DatePicker = React.forwardRef(function DatePicker<TDate>(
   inProps: DatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -282,6 +292,9 @@ DatePicker.propTypes = {
   ]),
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.

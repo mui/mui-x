@@ -188,6 +188,7 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
     "timeSteps": {
       "type": {
         "name": "shape",
@@ -277,6 +278,12 @@
       "name": "dialog",
       "description": "Custom component for the dialog inside which the views are rendered on mobile.",
       "default": "PickersModalDialogRoot"
+    },
+    {
+      "class": null,
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'"
     },
     {
       "class": null,

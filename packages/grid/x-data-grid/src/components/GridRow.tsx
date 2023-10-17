@@ -125,6 +125,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     onDoubleClick,
     onMouseEnter,
     onMouseLeave,
+    onMouseOut,
+    onMouseOver,
     ...other
   } = props;
   const apiRef = useGridApiContext();
@@ -449,6 +451,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         onDoubleClick: publish('rowDoubleClick', onDoubleClick),
         onMouseEnter: publish('rowMouseEnter', onMouseEnter),
         onMouseLeave: publish('rowMouseLeave', onMouseLeave),
+        onMouseOut: publish('rowMouseOut', onMouseOut),
+        onMouseOver: publish('rowMouseOver', onMouseOver),
       }
     : null;
 

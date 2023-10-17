@@ -16,6 +16,16 @@ type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [DesktopDateRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-range-picker/)
+ */
 const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<TDate>(
   inProps: DesktopDateRangePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -322,6 +332,9 @@ DesktopDateRangePicker.propTypes = {
   ]),
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.

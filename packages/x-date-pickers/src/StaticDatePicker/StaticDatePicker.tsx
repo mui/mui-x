@@ -13,6 +13,16 @@ type StaticDatePickerComponent = (<TDate>(
   props: StaticDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [StaticDatePicker API](https://mui.com/x/api/date-pickers/static-date-picker/)
+ */
 const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate>(
   inProps: StaticDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -238,6 +248,9 @@ StaticDatePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.

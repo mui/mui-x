@@ -12,7 +12,12 @@ import {
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  ChartsTooltip,
+  ChartsTooltipProps,
+  ChartsTooltipSlotComponentProps,
+  ChartsTooltipSlotsComponent,
+} from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
@@ -25,11 +30,13 @@ import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../model
 export interface ScatterChartSlotsComponent
   extends ChartsAxisSlotsComponent,
     ScatterPlotSlotsComponent,
-    ChartsLegendSlotsComponent {}
+    ChartsLegendSlotsComponent,
+    ChartsTooltipSlotsComponent {}
 export interface ScatterChartSlotComponentProps
   extends ChartsAxisSlotComponentProps,
     ScatterPlotSlotComponentProps,
-    ChartsLegendSlotComponentProps {}
+    ChartsLegendSlotComponentProps,
+    ChartsTooltipSlotComponentProps {}
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -37,6 +44,9 @@ export interface ScatterChartProps
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
@@ -50,6 +60,16 @@ export interface ScatterChartProps
   slotProps?: ScatterChartSlotComponentProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Scatter](https://mui.com/x/react-charts/scatter/)
+ * - [Scatter demonstration](https://mui.com/x/react-charts/scatter-demo/)
+ *
+ * API:
+ *
+ * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
+ */
 const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
   const {
     xAxis,
@@ -171,23 +191,19 @@ ScatterChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
     hidden: PropTypes.bool,
-    itemWidth: PropTypes.number,
-    markSize: PropTypes.number,
-    offset: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
     position: PropTypes.shape({
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
     }),
     slotProps: PropTypes.object,
     slots: PropTypes.object,
-    spacing: PropTypes.number,
   }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -264,6 +280,8 @@ ScatterChart.propTypes = {
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
     itemContent: PropTypes.elementType,
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**

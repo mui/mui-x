@@ -128,6 +128,11 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * @default false
    */
   clearable?: boolean;
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
 }
 
 export interface FieldRef<TSection extends FieldSection> {
@@ -159,6 +164,7 @@ export interface UseFieldForwardedProps {
   error?: boolean;
   onClear?: React.MouseEventHandler;
   clearable?: boolean;
+  disabled?: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<

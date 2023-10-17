@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { describeConformance, screen } from '@mui/monorepo/test/utils';
+import { describeConformance, screen } from '@mui-internal/test-utils';
 import {
   clockPointerClasses,
   TimeClock,

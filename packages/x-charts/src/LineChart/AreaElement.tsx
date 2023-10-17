@@ -108,6 +108,16 @@ export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighli
     };
   };
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Areas demonstration](https://mui.com/x/react-charts/areas-demo/)
+ *
+ * API:
+ *
+ * - [AreaElement API](https://mui.com/x/api/charts/area-element/)
+ */
 function AreaElement(props: AreaElementProps) {
   const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
 

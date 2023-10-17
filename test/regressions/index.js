@@ -57,7 +57,7 @@ function excludeTest(suite, name) {
 }
 
 // Also use some of the demos to avoid code duplication.
-const requireDocs = require.context('docsx/data', true, /js$/);
+const requireDocs = require.context('docsx/data', true, /\.js$/);
 const tests = requireDocs.keys().reduce((res, path) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;

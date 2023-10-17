@@ -71,6 +71,7 @@ interface CompletedBarData {
   color: string;
   highlightScope?: Partial<HighlightScope>;
 }
+
 const useCompletData = (): CompletedBarData[] => {
   const seriesData =
     React.useContext(SeriesContext).bar ??
@@ -180,6 +181,17 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
   width,
 });
 
+/**
+ * Demos:
+ *
+ * - [Bars](https://mui.com/x/react-charts/bars/)
+ * - [Bar demonstration](https://mui.com/x/react-charts/bar-demo/)
+ * - [Stacking](https://mui.com/x/react-charts/stacking/)
+ *
+ * API:
+ *
+ * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
+ */
 function BarPlot(props: BarPlotProps) {
   const completedData = useCompletData();
   const { animate, ...other } = props;
