@@ -1,5 +1,7 @@
 const ANGLE_APPROX = 5; // Angle (in deg) for which we approximate the rectangle as perfectly horizontal/vertical
 
+let warnedOnce = false;
+
 /**
  * Return the minimal translation along x-axis to avoid overflow of a rectangle of a given width, height, rotation.
  * This assume that all rectangles have the same heightand angle are in -90, 90.
@@ -9,6 +11,18 @@ const ANGLE_APPROX = 5; // Angle (in deg) for which we approximate the rectangle
  * @param angle the rotation in degree.
  */
 export function getMinXTranslation(width: number, height: number, angle: number = 0) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (!warnedOnce && angle > 90 && angle < -90) {
+      warnedOnce = true;
+      console.warn(
+        [
+          `MUI X: It seems you applied an angle larger that 90° to an axis text.`,
+          `This could cause some text overlapping.`,
+          `If you encounter a uscase where it's needed, please open an issue.`,
+        ].join('\n'),
+      );
+    }
+  }
   const standardAngle = Math.min(
     Math.abs(angle) % 180,
     Math.abs((Math.abs(angle) % 180) - 180) % 180,
