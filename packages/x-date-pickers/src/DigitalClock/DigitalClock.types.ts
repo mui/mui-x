@@ -1,7 +1,6 @@
 import { SlotComponentProps } from '@mui/base/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { DigitalClockClasses } from './digitalClockClasses';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   BaseClockProps,
   DigitalClockOnlyProps,
@@ -33,22 +32,10 @@ export interface DigitalClockProps<TDate>
    */
   classes?: Partial<DigitalClockClasses>;
   /**
-   * Overrideable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DigitalClockSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DigitalClockSlotsComponentsProps;
-  /**
    * Overrideable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DigitalClockSlotsComponent>;
+  slots?: DigitalClockSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}

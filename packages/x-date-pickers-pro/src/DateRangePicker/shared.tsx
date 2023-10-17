@@ -9,7 +9,6 @@ import {
   BaseDateValidationProps,
   BasePickerInputProps,
   PickerViewRendererLookup,
-  UncapitalizeObjectKeys,
   uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../models';
@@ -32,7 +31,7 @@ export interface BaseDateRangePickerSlotsComponent<TDate>
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
 }
 
 export interface BaseDateRangePickerSlotsComponentsProps<TDate>
@@ -48,22 +47,10 @@ export interface BaseDateRangePickerProps<TDate>
     ExportedDateRangeCalendarProps<TDate>,
     BaseDateValidationProps<TDate> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseDateRangePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseDateRangePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseDateRangePickerSlotsComponent<TDate>>;
+  slots?: BaseDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

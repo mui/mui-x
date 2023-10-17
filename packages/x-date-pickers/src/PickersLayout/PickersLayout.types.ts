@@ -5,7 +5,6 @@ import { PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
@@ -115,22 +114,10 @@ export interface PickersLayoutProps<TValue, TDate, TView extends DateOrTimeViewW
   ref?: React.Ref<HTMLDivElement>;
   classes?: Partial<PickersLayoutClasses>;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: PickersLayoutSlotsComponent<TValue, TDate, TView>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: PickersLayoutSlotsComponentsProps<TValue, TDate, TView>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<PickersLayoutSlotsComponent<TValue, TDate, TView>>;
+  slots?: PickersLayoutSlotsComponent<TValue, TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

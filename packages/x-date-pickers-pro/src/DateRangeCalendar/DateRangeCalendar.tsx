@@ -25,8 +25,6 @@ import {
   useUtils,
   PickerSelectionState,
   useNow,
-  uncapitalizeObjectKeys,
-  UncapitalizeObjectKeys,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   buildWarning,
   useControlledValueWithTimezone,
@@ -427,7 +425,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const slotsForDayCalendar = {
     day: DateRangePickerDay,
     ...slots,
-  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
+  } as DayCalendarSlotsComponent<TDate>;
 
   const slotPropsForDayCalendar = {
     ...slotProps,

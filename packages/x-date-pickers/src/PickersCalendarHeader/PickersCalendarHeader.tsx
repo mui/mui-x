@@ -28,7 +28,6 @@ import {
   pickersCalendarHeaderClasses,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export type ExportedPickersCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
@@ -40,12 +39,12 @@ export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitche
    * Button displayed to switch between different calendar views.
    * @default IconButton
    */
-  SwitchViewButton?: React.ElementType;
+  switchViewButton?: React.ElementType;
   /**
    * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.
    * @default ArrowDropDown
    */
-  SwitchViewIcon?: React.ElementType;
+  switchViewIcon?: React.ElementType;
 }
 
 // We keep the interface to allow module augmentation
@@ -75,7 +74,7 @@ export interface PickersCalendarHeaderProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
+  slots?: PickersCalendarHeaderSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}

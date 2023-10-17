@@ -18,7 +18,6 @@ import { TimeValidationError } from '../models';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeViewWithMeridiem } from '../internals/models';
 
@@ -43,22 +42,10 @@ export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem>
    */
   ampmInClock?: boolean;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseTimePickerSlotsComponentsProps;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseTimePickerSlotsComponent<TDate>>;
+  slots?: BaseTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

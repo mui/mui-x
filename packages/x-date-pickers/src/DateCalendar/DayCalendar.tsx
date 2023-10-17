@@ -26,7 +26,6 @@ import {
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 import { TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
 
@@ -36,7 +35,7 @@ export interface DayCalendarSlotsComponent<TDate> {
    * Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
    * @default PickersDay
    */
-  Day?: React.ElementType<PickersDayProps<TDate>>;
+  day?: React.ElementType<PickersDayProps<TDate>>;
 }
 
 export interface DayCalendarSlotsComponentsProps<TDate> {
@@ -86,8 +85,7 @@ export interface DayCalendarProps<TDate>
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
-    DefaultizedProps<TimezoneProps, 'timezone'>,
-    SlotsAndSlotProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
+    DefaultizedProps<TimezoneProps, 'timezone'> {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;
@@ -106,6 +104,16 @@ export interface DayCalendarProps<TDate>
   onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
   classes?: Partial<DayCalendarClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: DayCalendarSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DayCalendarSlotsComponentsProps<TDate>;
 }
 
 const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {

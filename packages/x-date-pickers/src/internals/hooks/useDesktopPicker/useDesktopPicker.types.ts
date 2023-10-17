@@ -21,41 +21,40 @@ import {
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
-import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../useField';
 
 export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<
       PickersPopperSlotsComponent,
-      'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper'
+      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
     ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView>,
     FieldSlotsComponents {
   /**
    * Component used to enter the date with the keyboard.
    */
-  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, any>>;
+  field: React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, any>>;
   /**
    * Form control with an input to render the value inside the default field.
    * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
-  TextField?: React.ElementType<TextFieldProps>;
+  textField?: React.ElementType<TextFieldProps>;
   /**
    * Component displayed on the start or end input adornment used to open the picker on desktop.
    * @default InputAdornment
    */
-  InputAdornment?: React.ElementType<InputAdornmentProps>;
+  inputAdornment?: React.ElementType<InputAdornmentProps>;
   /**
    * Button to open the picker on desktop.
    * @default IconButton
    */
-  OpenPickerButton?: React.ElementType<IconButtonProps>;
+  openPickerButton?: React.ElementType<IconButtonProps>;
   /**
    * Icon displayed in the open picker button on desktop.
    */
-  OpenPickerIcon: React.ElementType;
+  openPickerIcon: React.ElementType;
 }
 
 export interface UseDesktopPickerSlotsComponentsProps<
@@ -107,7 +106,7 @@ export interface UseDesktopPickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UncapitalizeObjectKeys<UseDesktopPickerSlotsComponent<TDate, TView>>;
+  slots: UseDesktopPickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

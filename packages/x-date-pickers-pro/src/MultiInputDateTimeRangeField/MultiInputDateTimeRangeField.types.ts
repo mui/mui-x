@@ -4,7 +4,6 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
@@ -39,22 +38,10 @@ export interface MultiInputDateTimeRangeFieldProps<TDate>
    */
   classes?: Partial<MultiInputRangeFieldClasses>;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: MultiInputDateTimeRangeFieldSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<MultiInputDateTimeRangeFieldSlotsComponent>;
+  slots?: MultiInputDateTimeRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}

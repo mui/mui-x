@@ -11,7 +11,7 @@ import { applyDefaultViewProps } from '../internals/utils/views';
 import { DateValidationError, DateView } from '../models';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { BaseDateValidationProps, UncapitalizeObjectKeys } from '../internals';
+import { BaseDateValidationProps } from '../internals';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DatePickerToolbar,
@@ -20,7 +20,6 @@ import {
 } from './DatePickerToolbar';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
-import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
   /**
@@ -39,22 +38,10 @@ export interface BaseDatePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateView, DateValidationError>,
     ExportedDateCalendarProps<TDate> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseDatePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseDatePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseDatePickerSlotsComponent<TDate>>;
+  slots?: BaseDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

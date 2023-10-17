@@ -34,7 +34,6 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
 
@@ -77,22 +76,10 @@ export interface BaseDateTimePickerProps<TDate, TView extends DateOrTimeViewWith
    */
   ampmInClock?: boolean;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseDateTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseDateTimePickerSlotsComponent<TDate>>;
+  slots?: BaseDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

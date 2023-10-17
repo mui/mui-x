@@ -397,12 +397,12 @@ export interface FieldSlotsComponents {
    * Icon to display inside the clear button.
    * @default ClearIcon
    */
-  ClearIcon?: React.ElementType;
+  clearIcon?: React.ElementType;
   /**
    * Button to clear the value.
    * @default IconButton
    */
-  ClearButton?: React.ElementType;
+  clearButton?: React.ElementType;
 }
 
 export interface FieldSlotsComponentsProps {
