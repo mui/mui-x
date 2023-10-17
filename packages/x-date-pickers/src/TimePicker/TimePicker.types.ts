@@ -27,8 +27,6 @@ export interface TimePickerProps<TDate>
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery?: string;
-
-  
   /**
    * Overridable component slots.
    * @default {}
