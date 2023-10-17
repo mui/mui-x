@@ -4,18 +4,6 @@
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -104,32 +92,7 @@
       }
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "leftArrowIcon",
-      "description": "Icon displayed in the left view switch button.",
-      "default": "ArrowLeft"
-    },
-    {
-      "class": null,
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "rightArrowIcon",
-      "description": "Icon displayed in the right view switch button.",
-      "default": "ArrowRight"
-    }
-  ],
+  "slots": [],
   "name": "TimeClock",
   "imports": [
     "import { TimeClock } from '@mui/x-date-pickers/TimeClock';",

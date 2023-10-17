@@ -4,18 +4,6 @@
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -121,55 +109,7 @@
       }
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
-      "default": "PickersActionBar"
-    },
-    {
-      "class": null,
-      "name": "layout",
-      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
-    },
-    {
-      "class": null,
-      "name": "leftArrowIcon",
-      "description": "Icon displayed in the left view switch button.",
-      "default": "ArrowLeft"
-    },
-    {
-      "class": null,
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "rightArrowIcon",
-      "description": "Icon displayed in the right view switch button.",
-      "default": "ArrowRight"
-    },
-    {
-      "class": null,
-      "name": "shortcuts",
-      "description": "Custom component for the shortcuts.",
-      "default": "PickersShortcuts"
-    },
-    {
-      "class": null,
-      "name": "toolbar",
-      "description": "Custom component for the toolbar rendered above the views.",
-      "default": "TimePickerToolbar"
-    }
-  ],
+  "slots": [],
   "name": "StaticTimePicker",
   "imports": [
     "import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';",

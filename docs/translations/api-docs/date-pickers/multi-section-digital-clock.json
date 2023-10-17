@@ -16,16 +16,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overrideable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "defaultValue": {
       "description": "The default selected value. Used when the component is not controlled.",
       "deprecated": "",
@@ -169,7 +159,5 @@
     "views": { "description": "Available views.", "deprecated": "", "typeDescriptions": {} }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
-  "slotDescriptions": {
-    "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item."
-  }
+  "slotDescriptions": {}
 }

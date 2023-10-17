@@ -1,16 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "orientation": {
       "description": "Force rendering in particular orientation.",
       "deprecated": "",
@@ -45,11 +35,5 @@
       "nodeName": "the shortcuts container"
     }
   },
-  "slotDescriptions": {
-    "actionBar": "Custom component for the action bar, it is placed below the picker views.",
-    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
-    "shortcuts": "Custom component for the shortcuts.",
-    "tabs": "Tabs enabling toggling between views.",
-    "toolbar": "Custom component for the toolbar. It is placed above the picker views."
-  }
+  "slotDescriptions": {}
 }

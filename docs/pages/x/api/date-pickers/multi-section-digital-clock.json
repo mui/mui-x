@@ -3,18 +3,6 @@
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -111,14 +99,7 @@
       }
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "digitalClockSectionItem",
-      "description": "Component responsible for rendering a single multi section digital clock section item.",
-      "default": "MenuItem from '@mui/material'"
-    }
-  ],
+  "slots": [],
   "name": "MultiSectionDigitalClock",
   "imports": [
     "import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';",

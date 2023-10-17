@@ -1,48 +1,12 @@
 {
   "props": {
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
-      "default": "PickersActionBar"
-    },
-    {
-      "class": null,
-      "name": "layout",
-      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
-    },
-    {
-      "class": null,
-      "name": "shortcuts",
-      "description": "Custom component for the shortcuts.",
-      "default": "PickersShortcuts"
-    },
-    { "class": null, "name": "tabs", "description": "Tabs enabling toggling between views." },
-    {
-      "class": null,
-      "name": "toolbar",
-      "description": "Custom component for the toolbar. It is placed above the picker views."
-    }
-  ],
+  "slots": [],
   "name": "PickersLayout",
   "imports": [
     "import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';",
