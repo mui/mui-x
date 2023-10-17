@@ -24,6 +24,7 @@ import {
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
   UseDateRangeFieldProps,
+  FieldType,
 } from '../models';
 import { DateRange, RangePosition } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
@@ -83,7 +84,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
     >,
     UseRangePositionResponse {
   wrapperVariant: WrapperVariant;
-  fieldType: 'single-input' | 'multi-input';
+  fieldType: FieldType;
   readOnly?: boolean;
   labelId?: string;
   disableOpenPicker?: boolean;
