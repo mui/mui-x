@@ -9,7 +9,6 @@ import {
   BaseDateValidationProps,
   BasePickerInputProps,
   PickerViewRendererLookup,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../models';
 import { DateRange } from '../internals/models';
@@ -80,7 +79,7 @@ export function useDateRangePickerDefaultizedProps<
 ): UseDateRangePickerDefaultizedProps<TDate, Omit<Props, 'components' | 'componentsProps'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const { components, componentsProps, ...themeProps } = useThemeProps({
+  const { ...themeProps } = useThemeProps({
     props,
     name,
   });
@@ -105,8 +104,7 @@ export function useDateRangePickerDefaultizedProps<
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     slots: {
       toolbar: DateRangePickerToolbar,
-      ...(themeProps.slots ?? uncapitalizeObjectKeys(components)),
+      ...themeProps.slots,
     },
-    slotProps: themeProps.slotProps ?? componentsProps,
   };
 }

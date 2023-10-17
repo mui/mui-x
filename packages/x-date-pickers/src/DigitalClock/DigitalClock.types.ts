@@ -17,7 +17,7 @@ export interface DigitalClockSlotsComponent {
    * Component responsible for rendering a single digital clock item.
    * @default MenuItem from '@mui/material'
    */
-  DigitalClockItem?: React.ElementType;
+  digitalClockItem?: React.ElementType;
 }
 
 export interface DigitalClockSlotsComponentsProps {

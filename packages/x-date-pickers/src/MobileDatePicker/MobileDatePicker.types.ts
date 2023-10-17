@@ -13,7 +13,7 @@ import { DateView } from '../models';
 
 export interface MobileDatePickerSlotsComponent<TDate>
   extends BaseDatePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate, DateView>, 'Field'> {}
+    MakeOptional<UseMobilePickerSlotsComponent<TDate, DateView>, 'field'> {}
 
 export interface MobileDatePickerSlotsComponentsProps<TDate>
   extends BaseDatePickerSlotsComponentsProps<TDate>,

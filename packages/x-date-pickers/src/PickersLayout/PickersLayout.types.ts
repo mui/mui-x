@@ -18,17 +18,17 @@ export interface ExportedPickersLayoutSlotsComponent<
    * Custom component for the action bar, it is placed below the picker views.
    * @default PickersActionBar
    */
-  ActionBar?: React.ElementType<PickersActionBarProps>;
+  actionBar?: React.ElementType<PickersActionBarProps>;
   /**
    * Custom component for the shortcuts.
    * @default PickersShortcuts
    */
-  Shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<TValue>>;
+  shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<TValue>>;
   /**
    * Custom component for wrapping the layout.
    * It wraps the toolbar, views, action bar, and shortcuts.
    */
-  Layout?: React.JSXElementConstructor<
+  layout?: React.JSXElementConstructor<
     PickersLayoutProps<TValue, TDate, TView> & React.RefAttributes<HTMLDivElement>
   >;
 }
@@ -79,12 +79,12 @@ export interface PickersLayoutSlotsComponent<
   /**
    * Tabs enabling toggling between views.
    */
-  Tabs?: React.ElementType<BaseTabsProps<TView>>;
+  tabs?: React.ElementType<BaseTabsProps<TView>>;
   /**
    * Custom component for the toolbar.
    * It is placed above the picker views.
    */
-  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
+  toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
 }
 
 export interface PickersLayoutSlotsComponentsProps<

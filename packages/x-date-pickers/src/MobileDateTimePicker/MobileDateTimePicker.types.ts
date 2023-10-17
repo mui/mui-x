@@ -16,7 +16,7 @@ export interface MobileDateTimePickerSlotsComponent<
   TDate,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
 > extends BaseDateTimePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate, TView>, 'Field'> {}
+    MakeOptional<UseMobilePickerSlotsComponent<TDate, TView>, 'field'> {}
 
 export interface MobileDateTimePickerSlotsComponentsProps<
   TDate,

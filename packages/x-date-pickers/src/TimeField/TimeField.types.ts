@@ -60,7 +60,7 @@ export interface TimeFieldSlotsComponent extends FieldSlotsComponents {
    * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
-  TextField?: React.ElementType;
+  textField?: React.ElementType;
 }
 
 export interface TimeFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {

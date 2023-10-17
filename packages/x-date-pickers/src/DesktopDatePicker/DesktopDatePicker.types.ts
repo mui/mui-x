@@ -13,7 +13,7 @@ import { DateView } from '../models';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
   extends BaseDatePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopPickerSlotsComponent<TDate, DateView>, 'Field' | 'OpenPickerIcon'> {}
+    MakeOptional<UseDesktopPickerSlotsComponent<TDate, DateView>, 'field' | 'openPickerIcon'> {}
 
 export interface DesktopDatePickerSlotsComponentsProps<TDate>
   extends BaseDatePickerSlotsComponentsProps<TDate>,

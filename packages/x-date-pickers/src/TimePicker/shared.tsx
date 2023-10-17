@@ -26,7 +26,7 @@ export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsCompo
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
 }
 
 export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsComponentsProps {
@@ -102,8 +102,6 @@ export function useTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
-  const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ampm,
@@ -118,14 +116,14 @@ export function useTimePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     slots: {
       toolbar: TimePickerToolbar,
-      ...slots,
+      ...themeProps.slots,
     },
     slotProps: {
-      ...slotProps,
+      ...themeProps.slotProps,
       toolbar: {
         ampm,
         ampmInClock: themeProps.ampmInClock,
-        ...slotProps?.toolbar,
+        ...themeProps.slotProps?.toolbar,
       },
     },
   };

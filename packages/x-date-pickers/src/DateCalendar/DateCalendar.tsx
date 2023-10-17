@@ -135,8 +135,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     showDaysOutsideCurrentMonth,
     fixedWeekNumber,
     dayOfWeekFormatter,
-    components,
-    componentsProps,
     slots,
     slotProps,
     loading,
@@ -198,11 +196,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   const gridLabelId = `${id}-grid-label`;
   const hasFocus = focusedView !== null;
 
-  const CalendarHeader =
-    slots?.calendarHeader ?? components?.CalendarHeader ?? PickersCalendarHeader;
+  const CalendarHeader = slots?.calendarHeader ?? PickersCalendarHeader;
   const calendarHeaderProps: PickersCalendarHeaderProps<TDate> = useSlotProps({
     elementType: CalendarHeader,
-    externalSlotProps: slotProps?.calendarHeader ?? componentsProps?.calendarHeader,
+    externalSlotProps: slotProps?.calendarHeader,
     additionalProps: {
       views,
       view,
@@ -391,8 +388,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
-              components={components}
-              componentsProps={componentsProps}
               slots={slots}
               slotProps={slotProps}
               loading={loading}

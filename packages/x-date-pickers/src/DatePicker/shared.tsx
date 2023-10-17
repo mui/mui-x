@@ -26,7 +26,7 @@ export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsCo
    * Custom component for the toolbar rendered above the views.
    * @default DatePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
 }
 
 export interface BaseDatePickerSlotsComponentsProps<TDate>
@@ -90,7 +90,7 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
+  const slots = themeProps.slots;
   return {
     ...themeProps,
     localeText,
@@ -105,6 +105,5 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     slots: { toolbar: DatePickerToolbar, ...slots },
-    slotProps: themeProps.slotProps ?? themeProps.componentsProps,
   };
 }

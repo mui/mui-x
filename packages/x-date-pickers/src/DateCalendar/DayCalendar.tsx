@@ -256,8 +256,6 @@ function WrappedDay<TDate extends unknown>({
     disableHighlightToday,
     isMonthSwitchingAnimating,
     showDaysOutsideCurrentMonth,
-    components,
-    componentsProps,
     slots,
     slotProps,
     timezone,
@@ -270,11 +268,11 @@ function WrappedDay<TDate extends unknown>({
   const isSelected = selectedDays.some((selectedDay) => utils.isSameDay(selectedDay, day));
   const isToday = utils.isSameDay(day, now);
 
-  const Day = slots?.day ?? components?.Day ?? PickersDay;
+  const Day = slots?.day ?? PickersDay;
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
   const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,
-    externalSlotProps: slotProps?.day ?? componentsProps?.day,
+    externalSlotProps: slotProps?.day,
     additionalProps: {
       disableHighlightToday,
       showDaysOutsideCurrentMonth,

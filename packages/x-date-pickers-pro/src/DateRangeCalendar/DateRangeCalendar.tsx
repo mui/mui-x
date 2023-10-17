@@ -181,10 +181,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     onRangePositionChange: inOnRangePositionChange,
     calendars,
     currentMonthCalendarPosition = 1,
-    components,
-    componentsProps,
-    slots: innerSlots,
-    slotProps: innerSlotProps,
+    slots,
+    slotProps,
     loading,
     renderLoading,
     disableHighlightToday,
@@ -213,9 +211,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
   const now = useNow<TDate>(timezone);
-
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   const { rangePosition, onRangePositionChange } = useRangePosition({
     rangePosition: rangePositionProp,

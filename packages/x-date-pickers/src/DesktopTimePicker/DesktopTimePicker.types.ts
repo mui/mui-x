@@ -22,7 +22,7 @@ export interface DesktopTimePickerSlotsComponent<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
     MakeOptional<
       UseDesktopPickerSlotsComponent<TDate, TimeViewWithMeridiem>,
-      'Field' | 'OpenPickerIcon'
+      'field' | 'openPickerIcon'
     >,
     DigitalClockSlotsComponent,
     MultiSectionDigitalClockSlotsComponent {}

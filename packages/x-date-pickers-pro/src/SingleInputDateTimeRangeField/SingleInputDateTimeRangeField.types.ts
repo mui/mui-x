@@ -50,7 +50,7 @@ export interface SingleInputDateTimeRangeFieldSlotsComponent extends FieldSlotsC
    * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
-  TextField?: React.ElementType;
+  textField?: React.ElementType;
 }
 
 export interface SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate>

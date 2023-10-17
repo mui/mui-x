@@ -56,19 +56,19 @@ export interface MultiInputTimeRangeFieldSlotsComponent {
    * Element rendered at the root.
    * @default MultiInputTimeRangeFieldRoot
    */
-  Root?: React.ElementType;
+  root?: React.ElementType;
   /**
    * Form control with an input to render a time.
    * It is rendered twice: once for the start time and once for the end time.
    * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
-  TextField?: React.ElementType;
+  textField?: React.ElementType;
   /**
    * Element rendered between the two inputs.
    * @default MultiInputTimeRangeFieldSeparator
    */
-  Separator?: React.ElementType;
+  separator?: React.ElementType;
 }
 
 export interface MultiInputTimeRangeFieldSlotsComponentsProps<TDate> {

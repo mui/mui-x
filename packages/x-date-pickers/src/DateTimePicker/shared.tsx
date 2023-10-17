@@ -44,12 +44,12 @@ export interface BaseDateTimePickerSlotsComponent<TDate>
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
    */
-  Tabs?: React.ElementType<DateTimePickerTabsProps>;
+  tabs?: React.ElementType<DateTimePickerTabsProps>;
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
 }
 
 export interface BaseDateTimePickerSlotsComponentsProps<TDate>
@@ -146,8 +146,6 @@ export function useDateTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
-  const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ...applyDefaultViewProps({
@@ -186,13 +184,13 @@ export function useDateTimePickerDefaultizedProps<
     slots: {
       toolbar: DateTimePickerToolbar,
       tabs: DateTimePickerTabs,
-      ...slots,
+      ...themeProps.slots,
     },
     slotProps: {
-      ...slotProps,
+      ...themeProps.slotProps,
       toolbar: {
         ampm,
-        ...slotProps?.toolbar,
+        ...themeProps.slotProps?.toolbar,
       },
     },
   };

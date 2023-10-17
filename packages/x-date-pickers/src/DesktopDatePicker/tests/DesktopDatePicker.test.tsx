@@ -40,7 +40,7 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           open
-          componentsProps={{ toolbar: { hidden: false } }}
+          slotProps={{ toolbar: { hidden: false } }}
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
           onViewChange={handleViewChange}
         />,

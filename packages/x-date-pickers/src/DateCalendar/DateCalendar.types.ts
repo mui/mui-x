@@ -35,7 +35,7 @@ export interface DateCalendarSlotsComponent<TDate>
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
    * @default PickersCalendarHeader
    */
-  CalendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
+  calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
 }
 
 export interface DateCalendarSlotsComponentsProps<TDate>
