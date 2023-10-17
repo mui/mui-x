@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 
 export function useResizeObserver(ref: React.MutableRefObject<HTMLElement | null>, fn: Function) {
@@ -14,7 +14,9 @@ export function useResizeObserver(ref: React.MutableRefObject<HTMLElement | null
     let animationFrame: number;
     const observer = new ResizeObserver(() => {
       // See https://github.com/mui/mui-x/issues/8733
-      animationFrame = requestAnimationFrame(() => { fn(); });
+      animationFrame = requestAnimationFrame(() => {
+        fn();
+      });
     });
 
     if (target) {
