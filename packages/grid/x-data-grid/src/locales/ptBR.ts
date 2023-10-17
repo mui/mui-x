@@ -71,12 +71,12 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'está vazio',
   filterOperatorIsNotEmpty: 'não está vazio',
   filterOperatorIsAnyOf: 'é qualquer um dos',
-  "filterOperator=": "igual à",
-  "filterOperator!=": "diferente de",
-  "filterOperator>": "maior que",
-  "filterOperator>=": "maior ou igual que",
-  "filterOperator<": "menor que",
-  "filterOperator<=": "menor ou igual que",
+  'filterOperator=': 'igual à',
+  'filterOperator!=': 'diferente de',
+  'filterOperator>': 'maior que',
+  'filterOperator>=': 'maior ou igual que',
+  'filterOperator<': 'menor que',
+  'filterOperator<=': 'menor ou igual que',
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contém',
