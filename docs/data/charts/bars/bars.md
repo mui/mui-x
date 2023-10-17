@@ -78,3 +78,4 @@ When set to `true` it activate animation using `@react-spring/web`.
 </ResponsiveChartContainer>
 
 {{"demo": "BarAnimation.js"}}
+```
