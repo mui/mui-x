@@ -140,8 +140,11 @@ export const GridRootStyles = styled('div', {
         0.1,
       ),
     '--DataGrid-cellOffsetMultiplier': 2,
-    '--private_DataGrid-offsetTop': `0px`,
-    '--private_DataGrid-offsetLeft': `0px`,
+    '--DataGrid-offsetTop': '0px',
+    '--DataGrid-offsetLeft': '0px',
+    '--DataGrid-scrollbarSize': '10px',
+    '--DataGrid-columnsTotalWidth': '0px',
+    '--DataGrid-headersTotalHeight': '0px',
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
@@ -284,6 +287,9 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       color: borderColor,
     },
+    [`& .${gridClasses.columnHeaders}`]: {
+      width: 'var(--DataGrid-columnsTotalWidth)',
+    },
     '@media (hover: hover)': {
       [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
       [`& .${gridClasses.columnHeader}:hover`]: columnHeaderStyles,
@@ -336,7 +342,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses.row}`]: {
       display: 'flex',
-      width: 'var(--private_DataGrid--columnsTotalWidth, fit-content)',
+      width: 'var(--DataGrid-columnsTotalWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
       '&:hover, &.Mui-hovered': {
         backgroundColor: (theme.vars || theme).palette.action.hover,
@@ -515,9 +521,10 @@ export const GridRootStyles = styled('div', {
       zIndex: 3,
       background: 'var(--unstable_DataGrid-pinnedBackground)',
     },
-    [`& .${gridClasses.cell}:not(.${gridClasses['cell--pinnedLeft']}):not(.${gridClasses['cell--pinnedRight']})`]: {
-      transform: 'translate3d(var(--private_DataGrid-offsetLeft), 0, 0)',
-    },
+    [`& .${gridClasses.cell}:not(.${gridClasses['cell--pinnedLeft']}):not(.${gridClasses['cell--pinnedRight']})`]:
+      {
+        transform: 'translate3d(var(--DataGrid-offsetLeft), 0, 0)',
+      },
     [`& .${gridClasses.treeDataGroupingCell}`]: {
       display: 'flex',
       alignItems: 'center',

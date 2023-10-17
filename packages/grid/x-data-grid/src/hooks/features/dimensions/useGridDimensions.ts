@@ -17,7 +17,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
-import { gridColumnsTotalWidthSelector } from '../columns';
+import { gridColumnsTotalWidthSelector, gridVisibleColumnDefinitionsSelector } from '../columns';
 import { gridDensityFactorSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -78,6 +78,11 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   hasScrollX: false,
   hasScrollY: false,
   scrollBarSize: 0,
+  headerHeight: 0,
+  columnsTotalWidth: 0,
+  headersTotalHeight: 0,
+  topContainerHeight: 0,
+  bottomContainerHeight: 0,
 };
 
 export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (state, _props) => {
@@ -99,8 +104,12 @@ export function useGridDimensions(
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
-  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
+  const hasHeaderFilters = Boolean((props as any).unstable_headerFilters); // XXX: this is kinda unsafe
+  const headersTotalHeight =
+    getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
+    Number(hasHeaderFilters) * headerHeight;
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
   const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
@@ -163,21 +172,9 @@ export function useGridDimensions(
 
   const updateDimensions = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef.current;
-    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
     const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
-    if (!rootDimensionsRef.current) {
-      return;
-    }
-
-    let scrollBarSize: number;
-    if (props.scrollbarSize != null) {
-      scrollBarSize = props.scrollbarSize;
-    } else if (!columnsTotalWidth || !rootElement) {
-      scrollBarSize = 0;
-    } else {
-      scrollBarSize = measureScrollbarSize(rootElement);
-    }
+    const scrollBarSize = measureScrollbarSize(rootElement, columnsTotalWidth, props.scrollbarSize);
 
     let viewportOuterSize: ElementSize;
     let hasScrollX: boolean;
@@ -194,7 +191,7 @@ export function useGridDimensions(
     } else {
       viewportOuterSize = {
         width: rootDimensionsRef.current.width,
-        height: Math.max(rootDimensionsRef.current.height - totalHeaderHeight, 0),
+        height: Math.max(rootDimensionsRef.current.height - headersTotalHeight, 0),
       };
 
       const scrollInformation = hasScroll({
@@ -215,6 +212,9 @@ export function useGridDimensions(
       height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
     };
 
+    const topContainerHeight = headersTotalHeight + pinnedRowsHeight.top;
+    const bottomContainerHeight = pinnedRowsHeight.bottom;
+
     const newFullDimensions: GridDimensions = {
       isReady: true,
       root: rootDimensionsRef.current,
@@ -223,6 +223,11 @@ export function useGridDimensions(
       hasScrollX,
       hasScrollY,
       scrollBarSize,
+      headerHeight,
+      columnsTotalWidth,
+      headersTotalHeight,
+      topContainerHeight,
+      bottomContainerHeight,
     };
 
     const prevDimensions = apiRef.current.state.dimensions;
@@ -236,24 +241,27 @@ export function useGridDimensions(
     }
   }, [
     apiRef,
+    setDimensions,
     props.scrollbarSize,
     props.autoHeight,
     rowsMeta.currentPageTotalHeight,
-    totalHeaderHeight,
-    setDimensions,
+    headerHeight,
+    columnsTotalWidth,
+    headersTotalHeight,
+    hasHeaderFilters,
   ]);
 
-  const dimensionsApi: GridDimensionsApi = {
+  const apiPublic: GridDimensionsApi = {
     resize,
     getRootDimensions,
   };
 
-  const dimensionsPrivateApi: GridDimensionsPrivateApi = {
+  const apiPrivate: GridDimensionsPrivateApi = {
     getViewportPageSize,
   };
 
-  useGridApiMethod(apiRef, dimensionsApi, 'public');
-  useGridApiMethod(apiRef, dimensionsPrivateApi, 'private');
+  useGridApiMethod(apiRef, apiPublic, 'public');
+  useGridApiMethod(apiRef, apiPrivate, 'private');
 
   useEnhancedEffect(() => {
     if (savedSize) {
@@ -263,8 +271,15 @@ export function useGridDimensions(
   }, [apiRef, savedSize, updateDimensions]);
 
   useEnhancedEffect(() => {
-    apiRef.current.rootElementRef.current?.style.setProperty('--private_DataGrid--columnsTotalWidth', `${columnsTotalWidth}px`);
-  }, [apiRef.current.rootElementRef.current, columnsTotalWidth]);
+    const root = apiRef.current.rootElementRef.current;
+    const dimensions = apiRef.current.state.dimensions;
+    if (!root) {
+      return;
+    }
+    root.style.setProperty('--DataGrid-scrollbarSize', `${dimensions.scrollBarSize}px`);
+    root.style.setProperty('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
+    root.style.setProperty('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
+  }, [apiRef.current.rootElementRef.current, apiRef.current.state.dimensions]);
 
   const isFirstSizing = React.useRef(true);
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
@@ -327,7 +342,19 @@ export function useGridDimensions(
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
 }
 
-function measureScrollbarSize(rootElement: Element) {
+function measureScrollbarSize(
+  rootElement: Element | null,
+  columnsTotalWidth: number,
+  scrollbarSize: number | undefined,
+) {
+  if (scrollbarSize !== undefined) {
+    return scrollbarSize;
+  }
+
+  if (rootElement === null || columnsTotalWidth === 0) {
+    return 0;
+  }
+
   const doc = ownerDocument(rootElement);
   const scrollDiv = doc.createElement('div');
   scrollDiv.style.width = '99px';

@@ -142,6 +142,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const mainRef = apiRef.current.mainElementRef!;
   const scrollerRef = apiRef.current.virtualScrollerRef;
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
+  const scrollbarVerticalRef = React.useRef<HTMLDivElement>(null);
+  const scrollbarHorizontalRef = React.useRef<HTMLDivElement>(null);
 
   useResizeObserver(mainRef, () => apiRef.current.resize());
 
@@ -312,10 +314,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const top = gridRowsMetaSelector(apiRef.current.state).positions[
         nextRenderContext.firstRowIndex
       ];
-      const left = direction * columnPositions[nextRenderContext.firstColumnIndex] - columnPositions[visiblePinnedColumns.left.length];
+      const left =
+        direction * columnPositions[nextRenderContext.firstColumnIndex] -
+        columnPositions[visiblePinnedColumns.left.length];
 
-      gridRootRef.current!.style.setProperty('--private_DataGrid-offsetTop', `${top}px`);
-      gridRootRef.current!.style.setProperty('--private_DataGrid-offsetLeft', `${left}px`);
+      gridRootRef.current!.style.setProperty('--DataGrid-offsetTop', `${top}px`);
+      gridRootRef.current!.style.setProperty('--DataGrid-offsetLeft', `${left}px`);
 
       onRenderZonePositioning?.({ top, left });
     },
@@ -335,9 +339,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       updateRenderZonePosition(realRenderContext);
 
-      const didRowIntervalChange = 
+      const didRowIntervalChange =
         nextRenderContext.firstRowIndex !== prevRenderContext.current.firstRowIndex ||
-        nextRenderContext.lastRowIndex !== prevRenderContext.current.lastRowIndex
+        nextRenderContext.lastRowIndex !== prevRenderContext.current.lastRowIndex;
 
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if the dimensions are also available.
@@ -619,7 +623,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const needsHorizontalScrollbar =
     containerDimensions.width && columnsTotalWidth >= containerDimensions.width;
 
-  const rootStyle = React.useMemo(
+  const scrollerStyle = React.useMemo(
     () =>
       ({
         overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
@@ -676,8 +680,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       scrollerRef.current!.scrollLeft = 0;
       scrollerRef.current!.scrollTop = 0;
     } else {
-      gridRootRef.current!.style.setProperty('--private_DataGrid-offsetTop', '0px');
-      gridRootRef.current!.style.setProperty('--private_DataGrid-offsetLeft', '0px');
+      gridRootRef.current!.style.setProperty('--DataGrid-offsetTop', '0px');
+      gridRootRef.current!.style.setProperty('--DataGrid-offsetLeft', '0px');
     }
   }, [enabled]);
 
@@ -706,13 +710,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     getContainerProps: () => ({
       ref: mainRef,
     }),
-    getScrollerProps: (inputProps: { style?: object } = {}) => ({
+    getScrollerProps: () => ({
       ref: scrollerRef,
       onScroll: handleScroll,
       onWheel: handleWheel,
       onTouchMove: handleTouchMove,
-      ...inputProps,
-      style: inputProps.style ? { ...inputProps.style, ...rootStyle } : rootStyle,
+      style: scrollerStyle,
       role: 'presentation',
     }),
     getContentProps: () => ({
@@ -720,6 +723,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       role: 'presentation',
     }),
     getRenderZoneProps: () => ({ ref: renderZoneRef, role: 'rowgroup' }),
+    getScrollbarVerticalProps: () => ({ ref: scrollbarVerticalRef, role: 'presentation' }),
+    getScrollbarHorizontalProps: () => ({ ref: scrollbarHorizontalRef, role: 'presentation' }),
     setVisiblePinnedColumns,
   };
 };

@@ -30,6 +30,26 @@ export interface GridDimensions {
    * It is defined even when the scrollbar is currently not needed.
    */
   scrollBarSize: number;
+  /**
+   * Size of all the visible columns.
+   */
+  columnsTotalWidth: number;
+  /**
+   * Height of one headers.
+   */
+  headerHeight: number;
+  /**
+   * Height of all the column headers.
+   */
+  headersTotalHeight: number;
+  /**
+   * Size of the top container.
+   */
+  topContainerHeight: number;
+  /**
+   * Size of the bottom container.
+   */
+  bottomContainerHeight: number;
 }
 
 export interface GridDimensionsApi {

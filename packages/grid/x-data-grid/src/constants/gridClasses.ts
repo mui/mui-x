@@ -494,6 +494,18 @@ export interface GridClasses {
    */
   'scrollArea--right': string;
   /**
+   * Styles applied to the scrollbars.
+   */
+  scrollbar: string;
+  /**
+   * Styles applied to the horizontal scrollbar.
+   */
+  'scrollbar--horizontal': string;
+  /**
+   * Styles applied to the horizontal scrollbar.
+   */
+  'scrollbar--vertical': string;
+  /**
    * Styles applied to the footer selected row count element.
    */
   selectedRowCount: string;
@@ -675,6 +687,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollArea--left',
   'scrollArea--right',
   'scrollArea',
+  'scrollbar',
+  'scrollbar--vertical',
+  'scrollbar--horizontal',
   'selectedRowCount',
   'sortIcon',
   'toolbarContainer',

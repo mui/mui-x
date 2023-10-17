@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
 import { useGridSelector } from '../../utils';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
@@ -49,17 +49,17 @@ export interface UseGridColumnHeadersProps {
   minColumnIndex?: number;
   visibleColumns: GridStateColDef[];
   visiblePinnedColumns: {
+    // XXX: unused
     left: GridStateColDef[];
     right: GridStateColDef[];
   };
   sortColumnLookup: GridSortColumnLookup;
   filterColumnLookup: GridFilterActiveItemsLookup;
-  columnPositions: number[];
+  columnPositions: number[]; // XXX: unused
   columnHeaderTabIndexState: GridColumnIdentifier | null;
   columnGroupHeaderTabIndexState: GridColumnGroupIdentifier | null;
   columnHeaderFocus: GridColumnIdentifier | null;
   columnGroupHeaderFocus: GridColumnGroupIdentifier | null;
-  densityFactor: number;
   headerGroupingMaxDepth: number;
   columnMenuState: GridColumnMenuState;
   columnVisibility: GridColumnVisibilityModel;
@@ -78,22 +78,18 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     innerRef: innerRefProp,
     minColumnIndex = 0,
     visibleColumns,
-    visiblePinnedColumns,
     sortColumnLookup,
     filterColumnLookup,
-    columnPositions,
     columnHeaderTabIndexState,
     columnGroupHeaderTabIndexState,
     columnHeaderFocus,
     columnGroupHeaderFocus,
-    densityFactor,
     headerGroupingMaxDepth,
     columnMenuState,
     columnVisibility,
     columnGroupsHeaderStructure,
     hasOtherElementInTabSequence,
   } = props;
-  const theme = useTheme();
 
   const [dragCol, setDragCol] = React.useState('');
   const [resizeCol, setResizeCol] = React.useState('');
@@ -114,8 +110,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [visibleColumns.length],
   );
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
-  const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
+  const dimensions = apiRef.current.getRootDimensions();
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
@@ -230,7 +225,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           filterItemsCounter={
             filterColumnLookup[colDef.field] && filterColumnLookup[colDef.field].length
           }
-          headerHeight={headerHeight}
+          headerHeight={dimensions.headerHeight}
           isDragging={colDef.field === dragCol}
           colDef={colDef}
           colIndex={columnIndex}
@@ -351,7 +346,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       columns.push(
         <GridColumnHeaderRow
           style={{
-            height: `${headerHeight}px`,
+            height: `${dimensions.headerHeight}px`,
             transform: `translateX(-${depthInfo.leftOverflow}px)`,
           }}
           key={depthIndex}
@@ -371,7 +366,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
                   depth={depthIndex}
                   isLastColumn={colIndex === visibleColumns.length - fields.length}
                   maxDepth={headerToRender.length}
-                  height={headerHeight}
+                  height={dimensions.headerHeight}
                   hasFocus={hasFocus}
                   tabIndex={tabIndex}
                 />
@@ -385,9 +380,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   };
 
   const rootStyle = {
-    minHeight: totalHeaderHeight,
-    maxHeight: totalHeaderHeight,
-    lineHeight: `${headerHeight}px`,
+    minHeight: dimensions.headersTotalHeight,
+    maxHeight: dimensions.headersTotalHeight,
+    lineHeight: `${dimensions.headerHeight}px`,
   };
 
   return {
@@ -401,6 +396,5 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       ref: handleInnerRef,
       role: 'rowgroup',
     }),
-    headerHeight,
   };
 };

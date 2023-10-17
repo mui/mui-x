@@ -12,7 +12,6 @@ import {
   useGridColumnHeaders as useGridColumnHeadersCommunity,
   UseGridColumnHeadersProps,
   GetHeadersParams,
-  getTotalHeaderHeight,
   useGridPrivateApiContext,
   getGridFilter,
   GridStateColDef,
@@ -64,11 +63,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const disableHeaderFiltering = !rootProps.unstable_headerFilters;
-  const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
+  const dimensions = apiRef.current.getRootDimensions();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const totalHeaderHeight =
-    getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) +
-    (disableHeaderFiltering ? 0 : headerHeight);
 
   const columnHeaderFilterFocus = useGridSelector(
     apiRef,
@@ -137,7 +133,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         <rootProps.slots.headerFilterCell
           colIndex={columnIndex}
           key={`${colDef.field}-filter`}
-          height={headerHeight}
+          height={dimensions.headerHeight}
           width={colDef.computedWidth}
           colDef={colDef}
           hasFocus={hasFocus}
@@ -167,9 +163,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   };
 
   const rootStyle = {
-    minHeight: totalHeaderHeight,
-    maxHeight: totalHeaderHeight,
-    lineHeight: `${headerHeight}px`,
+    minHeight: dimensions.headersTotalHeight,
+    maxHeight: dimensions.headersTotalHeight,
+    lineHeight: `${dimensions.headerHeight}px`,
   };
 
   return {

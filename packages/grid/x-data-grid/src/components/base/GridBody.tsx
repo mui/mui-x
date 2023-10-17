@@ -7,9 +7,7 @@ interface GridBodyProps {
 }
 
 function GridBody(props: GridBodyProps) {
-  return (
-    <GridVirtualScroller children={props.children} />
-  );
+  return <GridVirtualScroller children={props.children} />;
 }
 
 GridBody.propTypes = {

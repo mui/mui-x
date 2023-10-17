@@ -30,25 +30,21 @@ const Element = styled('div', {
   overflow: 'hidden',
 }));
 
-export const GridVirtualScrollerContainer = React.forwardRef<HTMLDivElement, React.PropsWithChildren<{}>>(
-  (props, ref) => {
-    const rootProps = useGridRootProps();
-    const classes = useUtilityClasses(rootProps);
+export const GridVirtualScrollerContainer = React.forwardRef<
+  HTMLDivElement,
+  React.PropsWithChildren<{}>
+>((props, ref) => {
+  const rootProps = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
 
-    const getAriaAttributes = rootProps.experimentalFeatures?.ariaV7 // ariaV7 should never change
-      ? useGridAriaAttributes
-      : null;
-    const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
+  const getAriaAttributes = rootProps.experimentalFeatures?.ariaV7 // ariaV7 should never change
+    ? useGridAriaAttributes
+    : null;
+  const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
 
-    return (
-      <Element
-        ref={ref}
-        className={classes.root}
-        ownerState={rootProps}
-        {...ariaAttributes}
-      >
-        {props.children}
-      </Element>
-    );
-  },
-);
+  return (
+    <Element ref={ref} className={classes.root} ownerState={rootProps} {...ariaAttributes}>
+      {props.children}
+    </Element>
+  );
+});

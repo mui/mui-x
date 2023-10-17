@@ -26,7 +26,7 @@ const VirtualScrollerRenderZoneRoot = styled('div', {
   position: 'absolute',
   display: 'flex', // Prevents margin collapsing when using `getRowSpacing`
   flexDirection: 'column',
-  transform: 'translate3d(0, var(--private_DataGrid-offsetTop), 0)',
+  transform: 'translate3d(0, var(--DataGrid-offsetTop), 0)',
 });
 
 const GridVirtualScrollerRenderZone = React.forwardRef<

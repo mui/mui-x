@@ -6,21 +6,44 @@ import {
   useGridColumnHeaders,
   UseGridColumnHeadersProps,
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+import { EMPTY_PINNED_COLUMNS } from '../hooks/features/virtualization/useGridVirtualScroller';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement>,
+interface Props
+  extends React.HTMLAttributes<HTMLDivElement>,
     Omit<UseGridColumnHeadersProps, 'innerRef'> {
   innerRef?: React.Ref<HTMLDivElement>;
 }
 
-const GridColumnHeaders = React.forwardRef<HTMLDivElement, Props>(
-  function GridColumnHeaders(props, ref) {
-    const {
+const GridColumnHeaders = React.forwardRef<HTMLDivElement, Props>(function GridColumnHeaders(
+  props,
+  ref,
+) {
+  const {
+    innerRef,
+    className,
+    visibleColumns,
+    sortColumnLookup,
+    filterColumnLookup,
+    columnPositions,
+    columnHeaderTabIndexState,
+    columnGroupHeaderTabIndexState,
+    columnHeaderFocus,
+    columnGroupHeaderFocus,
+    headerGroupingMaxDepth,
+    columnMenuState,
+    columnVisibility,
+    columnGroupsHeaderStructure,
+    hasOtherElementInTabSequence,
+    ...other
+  } = props;
+
+  const { isDragging, getRootProps, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
+    useGridColumnHeaders({
       innerRef,
-      className,
       visibleColumns,
-      visiblePinnedColumns,
+      visiblePinnedColumns: EMPTY_PINNED_COLUMNS,
       sortColumnLookup,
       filterColumnLookup,
       columnPositions,
@@ -28,45 +51,22 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, Props>(
       columnGroupHeaderTabIndexState,
       columnHeaderFocus,
       columnGroupHeaderFocus,
-      densityFactor,
       headerGroupingMaxDepth,
       columnMenuState,
       columnVisibility,
       columnGroupsHeaderStructure,
       hasOtherElementInTabSequence,
-      ...other
-    } = props;
+    });
 
-    const { isDragging, getRootProps, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
-      useGridColumnHeaders({
-        innerRef,
-        visibleColumns,
-        visiblePinnedColumns,
-        sortColumnLookup,
-        filterColumnLookup,
-        columnPositions,
-        columnHeaderTabIndexState,
-        columnGroupHeaderTabIndexState,
-        columnHeaderFocus,
-        columnGroupHeaderFocus,
-        densityFactor,
-        headerGroupingMaxDepth,
-        columnMenuState,
-        columnVisibility,
-        columnGroupsHeaderStructure,
-        hasOtherElementInTabSequence,
-      });
-
-    return (
-      <GridBaseColumnHeaders ref={ref} {...getRootProps(other)}>
-        <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
-          {getColumnGroupHeaders()}
-          {getColumnHeaders()}
-        </GridColumnHeadersInner>
-      </GridBaseColumnHeaders>
-    );
-  },
-);
+  return (
+    <GridBaseColumnHeaders ref={ref} {...getRootProps(other)}>
+      <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
+        {getColumnGroupHeaders()}
+        {getColumnHeaders()}
+      </GridColumnHeadersInner>
+    </GridBaseColumnHeaders>
+  );
+});
 
 GridColumnHeaders.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -101,7 +101,6 @@ GridColumnHeaders.propTypes = {
   }).isRequired,
   columnPositions: PropTypes.arrayOf(PropTypes.number).isRequired,
   columnVisibility: PropTypes.object.isRequired,
-  densityFactor: PropTypes.number.isRequired,
   filterColumnLookup: PropTypes.object.isRequired,
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,

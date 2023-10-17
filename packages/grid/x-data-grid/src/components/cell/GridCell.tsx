@@ -99,7 +99,15 @@ type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'pinnedPosit
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { align, showRightBorder, pinnedPosition, isEditable, isSelected, isSelectionMode, classes } = ownerState;
+  const {
+    align,
+    showRightBorder,
+    pinnedPosition,
+    isEditable,
+    isSelected,
+    isSelectionMode,
+    classes,
+  } = ownerState;
 
   const slots = {
     root: [

@@ -22,14 +22,12 @@ import {
   gridColumnGroupsHeaderStructureSelector,
 } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { gridColumnMenuSelector } from '../hooks/features/columnMenu/columnMenuSelector';
-import { EMPTY_PINNED_COLUMNS } from '../hooks/features/virtualization/useGridVirtualScroller';
 
 export function GridHeaders() {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
 
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const visiblePinnedColumns = EMPTY_PINNED_COLUMNS; // XXX: what's this?
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
@@ -70,16 +68,11 @@ export function GridHeaders() {
     columnHeadersElementRef: columnHeadersRef,
   });
 
-  React.useEffect(() => {
-    columnsContainerRef.current!.style.width = 'var(--private_DataGrid--columnsTotalWidth)';
-  }, []);
-
   return (
     <rootProps.slots.columnHeaders
       ref={columnsContainerRef}
       innerRef={columnHeadersRef}
       visibleColumns={visibleColumns}
-      visiblePinnedColumns={visiblePinnedColumns}
       filterColumnLookup={filterColumnLookup}
       sortColumnLookup={sortColumnLookup}
       columnPositions={columnPositions}
