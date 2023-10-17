@@ -91,9 +91,6 @@ export default function StackedAreas() {
           showMark: false,
         },
       ]}
-      sx={{
-        '--ChartsLegend-itemWidth': '200px',
-      }}
       width={600}
       height={400}
       margin={{ left: 70 }}

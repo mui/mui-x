@@ -74,7 +74,7 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: 'elige la hora',
 
   // Field section placeholders
-  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
   fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),

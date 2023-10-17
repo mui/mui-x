@@ -6,8 +6,8 @@ import treeViewComponentApi from './tree-view-component-api-pages';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/blog/mui-x-v6/',
-    title: "✨ What's new in v6? ✨",
+    pathname: '/x/whats-new',
+    title: "What's new in MUI X",
   },
   {
     pathname: '/x/introduction-group',
@@ -36,6 +36,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/column-definition' },
           { pathname: '/x/react-data-grid/column-dimensions' },
           { pathname: '/x/react-data-grid/column-visibility' },
+          { pathname: '/x/react-data-grid/custom-columns' },
           { pathname: '/x/react-data-grid/column-header' },
           { pathname: '/x/react-data-grid/column-menu' },
           { pathname: '/x/react-data-grid/column-spanning' },
@@ -327,7 +328,7 @@ const pages: MuiPage[] = [
         children: [
           {
             pathname: '/x/react-date-pickers/custom-components',
-            title: 'Custom subcomponents',
+            title: 'Custom slots and subcomponents',
           },
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },

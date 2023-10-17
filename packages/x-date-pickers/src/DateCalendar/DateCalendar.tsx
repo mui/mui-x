@@ -28,6 +28,7 @@ import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -73,6 +74,7 @@ const DateCalendarRoot = styled(PickerViewRoot, {
 })<{ ownerState: DateCalendarProps<any> }>({
   display: 'flex',
   flexDirection: 'column',
+  height: VIEW_HEIGHT,
 });
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
