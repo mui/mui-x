@@ -226,7 +226,7 @@ BarPlot.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If `true`, the bar update will be animated.
+   * If `true`, the bar updates will be animated.
    */
   animate: PropTypes.bool,
   /**

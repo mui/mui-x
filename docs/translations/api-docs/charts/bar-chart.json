@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "animate": {
-      "description": "If <code>true</code>, the bar update will be animated.",
+      "description": "If <code>true</code>, the bar updates will be animated.",
       "deprecated": "",
       "typeDescriptions": {}
     },
