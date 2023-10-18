@@ -1,6 +1,5 @@
 {
   "props": {
-    "animate": { "type": { "name": "bool" } },
     "bottomAxis": {
       "type": {
         "name": "union",
@@ -25,6 +24,7 @@
       },
       "default": "null"
     },
+    "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "topAxis": {

@@ -227,9 +227,10 @@ BarPlot.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If `true`, the bar updates will be animated.
+   * If `true`, animations are skiped.
+   * @default false
    */
-  animate: PropTypes.bool,
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

@@ -167,10 +167,6 @@ BarChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * If `true`, the bar updates will be animated.
-   */
-  animate: PropTypes.bool,
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
@@ -312,6 +308,11 @@ BarChart.propTypes = {
       yAxisKey: PropTypes.string,
     }),
   ).isRequired,
+  /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

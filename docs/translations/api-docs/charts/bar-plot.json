@@ -1,8 +1,8 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "animate": {
-      "description": "If <code>true</code>, the bar updates will be animated.",
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skiped.",
       "deprecated": "",
       "typeDescriptions": {}
     },
