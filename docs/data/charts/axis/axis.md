@@ -67,9 +67,9 @@ xAxis={[{ min: 10, max: 50,  }]}
 
 {{"demo": "MinMaxExample.js"}}
 
-## Ticks positions
+## Tick position
 
-### Automatic tick positions
+### Automatic tick position
 
 You can customize the number of ticks with the property `tickNumber`.
 
@@ -88,40 +88,40 @@ Here the top axis has a `tickMinStep` of half a day, and the bottom axis a `tick
 
 {{"demo": "TickNumber.js"}}
 
-### Fix tick positions
+### Fixed tick positions
 
-If you want more control on the tick positions, you can use the `tickInterval` property.
+If you want more control over the tick position, you can use the `tickInterval` property.
 
-This property accept an array of values.
+This property accepts an array of values.
 Ticks will be placed at those values.
 
 For axis with scale type `'point'`, the `tickInterval` property can be a filtering function of the type `(value, index) => boolean`.
 
 In the next demo, both axes are with `scaleType='point'`.
-The top axis is here to display the default behavior.
+The top axis displays the default behavior.
 It shows a tick for each point.
-The bottom axis use a filtering function to only display a tick at the beginning of a day.
+The bottom axis uses a filtering function to only display a tick at the beginning of a day.
 
 {{"demo": "TickPosition.js"}}
 
 ### Filtering ticks label
 
-You can display labels only on a subsets of the ticks with the `tickInterval` property.
-It's a filtering function `(value, index) => boolean`.
+You can display labels only on a subset of ticks with the `tickLabelInterval` property.
+It's a filtering function in the `(value, index) => boolean` form.
 
 For example `tickInterval: (value, index) => index % 2 === 0` will show only one label every two ticks.
 
 :::warning
-The `value` and `index` in the argument are those of the ticks, not the axis data.
+The `value` and `index` arguments are those of the ticks, not the axis data.
 :::
 
 By default, ticks are filtered such that their labels do not overlap.
-You can override this behavior with `tickInterval: () => true` which show the tick label for each tick.
+You can override this behavior with `tickLabelInterval: () => true` which forces showing the tick label for each tick.
 
-In this example we still have the top axis as a reference for the default behavior.
-Notice that tick label do not overflow.
+In this example, the top axis is a reference for the default behavior.
+Notice that tick labels do not overflow.
 
-At the bottom, we display one tick for the beginning and the middle of the day but display the label only for the beginning.
+At the bottom, you can see one tick for the beginning and the middle of the day but the tick label is only displayed for the beginning of the day.
 
 {{"demo": "TickLabelPosition.js"}}
 
@@ -146,7 +146,7 @@ Axes rendering can be further customized. Below is an interactive demonstration 
 
 {{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
-### Text Customization
+### Text customization
 
 To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
 
