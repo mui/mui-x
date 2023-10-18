@@ -120,7 +120,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const positionSigne = position === 'bottom' ? 1 : -1;
+  const positionSign = position === 'bottom' ? 1 : -1;
 
   const Line = slots?.axisLine ?? 'line';
   const Tick = slots?.axisTick ?? 'line';
@@ -153,7 +153,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const labelRefPoint = {
     x: left + width / 2,
-    y: positionSigne * (tickSize + 22),
+    y: positionSign * (tickSize + 22),
   };
 
   const axisLabelProps = useSlotProps({
@@ -186,12 +186,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
       {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
         const xTickLabel = labelOffset ?? 0;
-        const yTickLabel = positionSigne * (tickSize + 3);
+        const yTickLabel = positionSign * (tickSize + 3);
         return (
           <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
             {!disableTicks && (
               <Tick
-                y2={positionSigne * tickSize}
+                y2={positionSign * tickSize}
                 className={classes.tick}
                 {...slotProps?.axisTick}
               />

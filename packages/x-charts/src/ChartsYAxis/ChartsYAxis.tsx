@@ -65,10 +65,10 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const yTicks = useTicks({ scale: yScale, tickNumber, valueFormatter });
 
-  const positionSigne = position === 'right' ? 1 : -1;
+  const positionSign = position === 'right' ? 1 : -1;
 
   const labelRefPoint = {
-    x: positionSigne * (tickFontSize + tickSize + 10),
+    x: positionSign * (tickFontSize + tickSize + 10),
     y: top + height / 2,
   };
 
@@ -97,7 +97,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     additionalProps: {
       style: {
         fontSize: labelFontSize,
-        angle: positionSigne * 90,
+        angle: positionSign * 90,
         textAnchor: 'middle',
         dominantBaseline: 'auto',
       } as Partial<ChartsTextProps>['style'],
@@ -120,13 +120,13 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
       )}
 
       {yTicks.map(({ formattedValue, offset, labelOffset }, index) => {
-        const xTickLabel = positionSigne * (tickSize + 2);
+        const xTickLabel = positionSign * (tickSize + 2);
         const yTickLabel = labelOffset;
         return (
           <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
             {!disableTicks && (
               <Tick
-                x2={positionSigne * tickSize}
+                x2={positionSign * tickSize}
                 className={classes.tick}
                 {...slotProps?.axisTick}
               />
