@@ -10,6 +10,8 @@ export interface FakeTextFieldClasses {
   focused: string;
   /** State class applied to the root element if `disabled=true`. */
   disabled: string;
+  /** Styles applied to the NotchedOutline element. */
+  notchedOutline: string;
 }
 
 export type FakeTextFieldClassKey = keyof FakeTextFieldClasses;
@@ -20,5 +22,5 @@ export function getFakeTextFieldUtilityClass(slot: string) {
 
 export const fakeTextFieldClasses = generateUtilityClasses<FakeTextFieldClassKey>(
   'MuiFakeTextField',
-  ['root', 'focused', 'disabled'],
+  ['root', 'focused', 'disabled', 'notchedOutline'],
 );
