@@ -121,6 +121,9 @@ export default function AxisTextCustomizationNoSnap() {
                 label: 'months',
                 labelStyle: {
                   fontSize: props.labelFontSize,
+                  transform: `translateY(${
+                    5 * Math.abs(Math.sin((Math.PI * props.angle) / 180))
+                  }px)`,
                 },
                 tickLabelStyle: {
                   angle: props.angle,
@@ -148,6 +151,10 @@ export default function AxisTextCustomizationNoSnap() {
           `  bottomAxis={{`,
           `    labelStyle: {`,
           `      fontSize: ${props.labelFontSize},`,
+          `      transform: \`translateY(\${
+            // Hack that should be adde din the lib latter.
+            5 * Math.abs(Math.sin((Math.PI * props.angle) / 180))
+          }px)\``,
           `    },`,
           `    tickLabelStyle: {`,
           `      angle: ${props.angle},`,
