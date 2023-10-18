@@ -473,7 +473,7 @@ export const doesSectionFormatHaveLeadingZeros = <TDate>(
     }
 
     case 'seconds': {
-      return utils.formatByString(utils.setMinutes(now, 1), format).length > 1;
+      return utils.formatByString(utils.setSeconds(now, 1), format).length > 1;
     }
 
     default: {
