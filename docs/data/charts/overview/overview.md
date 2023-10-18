@@ -67,6 +67,8 @@ To combine different charts, like lines with bars, you can use composition with 
 
 Inside this wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<AreaPlot />`, `<ScatterPlot />`)
 
+To get an overview of what is available, have a look at the [composition page](/x/react-charts/composition/).
+
 {{"demo": "Combining.js"}}
 
 ## Axis management
