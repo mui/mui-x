@@ -61,7 +61,7 @@ export interface ChartsAxisProps extends TickParams {
   /**
    * The font size of the axis ticks text.
    * @default 12
-   * @deprecated You can us `tickLabelStyle.fontSize` instead.
+   * @deprecated Consider using  `tickLabelStyle.fontSize` instead.
    */
   tickFontSize?: number;
   /**
@@ -86,7 +86,7 @@ export interface ChartsAxisProps extends TickParams {
   /**
    * The font size of the axis label.
    * @default 14
-   * @deprecated You can us `labelStyle.fontSize` instead.
+   * @deprecated Consider using  `labelStyle.fontSize` instead.
    */
   labelFontSize?: number;
   /**

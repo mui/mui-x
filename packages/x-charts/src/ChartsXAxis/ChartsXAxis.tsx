@@ -65,12 +65,12 @@ function addLabelDimension(
 
     const distance = getMinXTranslation(width, height, style?.angle);
     const textPosition = offset + labelOffset;
-    const gapRatio = 1.2; // Ratio applied to the minimal distanc eto add some margin
+    const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
 
     textStart = textPosition - (gapRatio * distance) / 2;
     if (labelIndex > 0 && textStart < textEnd) {
       // Except for the first label, we skip all label that overlap with the last accepted.
-      // Notice that the early return prevent textEnd to be updated.
+      // Notice that the early return prevents `textEnd` from being updated.
       return { ...item, skipLabel: true };
     }
     textEnd = textPosition + (gapRatio * distance) / 2;
@@ -253,7 +253,7 @@ ChartsXAxis.propTypes = {
   /**
    * The font size of the axis label.
    * @default 14
-   * @deprecated You can us `labelStyle.fontSize` instead.
+   * @deprecated Consider using  `labelStyle.fontSize` instead.
    */
   labelFontSize: PropTypes.number,
   /**
@@ -282,7 +282,7 @@ ChartsXAxis.propTypes = {
   /**
    * The font size of the axis ticks text.
    * @default 12
-   * @deprecated You can us `tickLabelStyle.fontSize` instead.
+   * @deprecated Consider using  `tickLabelStyle.fontSize` instead.
    */
   tickFontSize: PropTypes.number,
   /**
