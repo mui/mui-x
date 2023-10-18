@@ -49,7 +49,7 @@ pnpm add @mui/x-charts
 ## Display charts
 
 Charts can be rendered in two ways.
-With a single component or by composing sub-components.
+With a single component or by composing subcomponents.
 
 ### Single charts
 
