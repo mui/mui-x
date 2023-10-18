@@ -51,7 +51,7 @@ For example if you use
     data: [1, 2, 3] // No need to specify it's a bar series
 }]} />
 
-<ChartContainer 
+<ChartContainer
   series={[
     { data: [1, 2, 3], type: 'bar' }, // We need to specify this is for bar chart
     { data: [3, 2, 1], type: 'line' } // We need to specify this is for line chart
@@ -85,7 +85,7 @@ Instead of using `slotProps` you can directly pass props to it.
 
 ```jsx
 // With single component chart
-<BarChart 
+<BarChart
   slotProps={{
     legend: {
       direction: 'row',
@@ -111,4 +111,5 @@ If you don't use theaxis highlight or the tooltip, consider disabling this featu
 ```jsx
 <ChartContainer {...} disableAxisListener>
 ```
+
 :::
