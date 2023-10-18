@@ -64,8 +64,8 @@ interface CompletedBarData {
   layout: BarSeriesType['layout'];
   x: number;
   y: number;
-  xOrigine: number;
-  yOrigine: number;
+  xOrigin: number;
+  yOrigin: number;
   height: number;
   width: number;
   color: string;
@@ -144,8 +144,8 @@ const useCompletData = (): CompletedBarData[] => {
             ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
             : xScale(bottom),
           y: verticalLayout ? yScale(top) : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
-          xOrigine: xScale(0),
-          yOrigine: yScale(0),
+          xOrigin: xScale(0),
+          yOrigin: yScale(0),
           height: verticalLayout ? Math.abs(yScale(bottom) - yScale(top)) : barWidth,
           width: verticalLayout ? barWidth : Math.abs(xScale(bottom) - xScale(top)),
           color,
@@ -158,17 +158,17 @@ const useCompletData = (): CompletedBarData[] => {
   return data;
 };
 
-const getOutStyle = ({ layout, yOrigine, x, width, y, xOrigine, height }: CompletedBarData) => ({
+const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: CompletedBarData) => ({
   ...(layout === 'vertical'
     ? {
-        y: yOrigine,
+        y: yOrigin,
         x,
         height: 0,
         width,
       }
     : {
         y,
-        x: xOrigine,
+        x: xOrigin,
         height,
         width: 0,
       }),
