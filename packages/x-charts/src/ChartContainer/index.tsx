@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useReducedMotion } from '@react-spring/web';
 import useForkRef from '@mui/utils/useForkRef';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
@@ -7,6 +6,7 @@ import {
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import {
   CartesianContextProvider,
