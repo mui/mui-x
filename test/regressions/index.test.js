@@ -125,7 +125,7 @@ async function main() {
         }
 
         if (/^\docs-charts-.*/.test(pathURL)) {
-          // Run one tickc of the clock to get animation final state
+          // Run one tick of the clock to get the final animation state
           await sleep(10);
         }
 

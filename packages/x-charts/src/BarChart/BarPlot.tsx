@@ -51,7 +51,7 @@ export interface BarPlotSlotComponentProps {
 
 export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
   /**
-   * If `true`, the bar update will be animated.
+   * If `true`, the bar updates will be animated.
    */
   animate?: boolean;
 }
@@ -72,7 +72,7 @@ interface CompletedBarData {
   highlightScope?: Partial<HighlightScope>;
 }
 
-const useCompletData = (): CompletedBarData[] => {
+const useCompletedData = (): CompletedBarData[] => {
   const seriesData =
     React.useContext(SeriesContext).bar ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
@@ -193,7 +193,7 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
 function BarPlot(props: BarPlotProps) {
-  const completedData = useCompletData();
+  const completedData = useCompletedData();
   const { animate, ...other } = props;
 
   const transition = useTransition(completedData, {

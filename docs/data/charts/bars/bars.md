@@ -64,8 +64,8 @@ If you're using [composition](/x/react-charts/#multiple-charts), you should set 
 
 ## Animation
 
-To animate the creation and update of your chart use the `animate` prop.
-When set to `true` it activate animation using `@react-spring/web`.
+To animate the creation and update of your chart you can use the `animate` prop.
+When set to `true` it activates animation powered by `@react-spring/web`.
 
 ```jsx
 // For a single component chart
@@ -77,5 +77,5 @@ When set to `true` it activate animation using `@react-spring/web`.
   <BarPlot  animate />
 </ResponsiveChartContainer>
 
-{{"demo": "BarAnimation.js"}}
 ```
+{{"demo": "BarAnimation.js"}}
