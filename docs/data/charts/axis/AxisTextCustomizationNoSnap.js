@@ -101,6 +101,12 @@ export default function AxisTextCustomizationNoSnap() {
       componentName="Alert"
       data={[
         { propName: 'angle', knob: 'number', defaultValue: 45, min: -180, max: 180 },
+        {
+          propName: 'textAnchor',
+          knob: 'select',
+          defaultValue: 'start',
+          options: ['start', 'middle', 'end'],
+        },
         { propName: 'fontSize', knob: 'number', defaultValue: 12 },
         { propName: 'labelFontSize', knob: 'number', defaultValue: 14 },
       ]}
@@ -118,6 +124,7 @@ export default function AxisTextCustomizationNoSnap() {
                 },
                 tickLabelStyle: {
                   angle: props.angle,
+                  textAnchor: props.textAnchor,
                   fontSize: props.fontSize,
                 },
               },
@@ -144,6 +151,7 @@ export default function AxisTextCustomizationNoSnap() {
           `    },`,
           `    tickLabelStyle: {`,
           `      angle: ${props.angle},`,
+          `      textAnchor: '${props.textAnchor}',`,
           `      fontSize: ${props.fontSize},`,
           `    },`,
           '  }}',
