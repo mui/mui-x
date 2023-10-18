@@ -63,7 +63,7 @@
       "typeDescriptions": {}
     },
     "tickInterval": {
-      "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis sacle and other paramteres. - a filtering function of the form (value, index) =&gt; boolean which is availabel only if the axis has a data property. - an array containing the value where ticks should be displayed.",
+      "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has a data property. - an array containing the values where ticks should be displayed.",
       "deprecated": "",
       "typeDescriptions": {}
     },

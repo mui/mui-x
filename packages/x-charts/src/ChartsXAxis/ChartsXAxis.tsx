@@ -287,9 +287,9 @@ ChartsXAxis.propTypes = {
   tickFontSize: PropTypes.number,
   /**
    * Defines which ticks are displayed. Its value can be:
-   * - 'auto' In such case the ticks are computed based on axis sacle and other paramteres.
-   * - a filtering function of the form (value, index) => boolean which is availabel only if the axis has a data property.
-   * - an array containing the value where ticks should be displayed.
+   * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - an array containing the values where ticks should be displayed.
    * @default 'auto'
    */
   tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
