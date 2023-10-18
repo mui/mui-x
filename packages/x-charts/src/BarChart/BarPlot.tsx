@@ -51,9 +51,10 @@ export interface BarPlotSlotComponentProps {
 
 export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
   /**
-   * If `true`, the bar updates will be animated.
+   * If `true`, animations are skiped.
+   * @default false
    */
-  animate?: boolean;
+  skipAnimation?: boolean;
 }
 
 interface CompletedBarData {
@@ -194,7 +195,7 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
  */
 function BarPlot(props: BarPlotProps) {
   const completedData = useCompletedData();
-  const { animate, ...other } = props;
+  const { skipAnimation, ...other } = props;
 
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
@@ -202,7 +203,7 @@ function BarPlot(props: BarPlotProps) {
     leave: getOutStyle,
     enter: getInStyle,
     update: getInStyle,
-    immediate: !animate,
+    immediate: skipAnimation,
   });
   return (
     <React.Fragment>

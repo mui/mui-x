@@ -9,7 +9,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 export default function BarAnimation() {
   const [seriesNb, setSeriesNb] = React.useState(2);
   const [itemNb, setItemNb] = React.useState(5);
-  const [animate, setAnimate] = React.useState(true);
+  const [skipAnimation, setSkipAnimation] = React.useState(false);
 
   const handleItemNbChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue !== 'number') {
@@ -31,12 +31,14 @@ export default function BarAnimation() {
         series={series
           .slice(0, seriesNb)
           .map((s) => ({ ...s, data: s.data.slice(0, itemNb) }))}
-        animate={animate}
+        skipAnimation={skipAnimation}
       />
       <FormControlLabel
-        checked={animate}
-        control={<Checkbox onChange={(event) => setAnimate(event.target.checked)} />}
-        label="animate"
+        checked={skipAnimation}
+        control={
+          <Checkbox onChange={(event) => setSkipAnimation(event.target.checked)} />
+        }
+        label="skipAnimation"
         labelPlacement="end"
       />
       <Typography id="input-item-number" gutterBottom>

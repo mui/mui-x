@@ -40,7 +40,7 @@ export interface BarChartSlotComponentProps
 export interface BarChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Pick<BarPlotProps, 'animate'> {
+    Pick<BarPlotProps, 'skipAnimation'> {
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
@@ -91,7 +91,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     leftAxis,
     rightAxis,
     bottomAxis,
-    animate,
+    skipAnimation,
     children,
     slots,
     slotProps,
@@ -143,7 +143,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
-        <BarPlot slots={slots} slotProps={slotProps} animate={animate} />
+        <BarPlot slots={slots} slotProps={slotProps} skipAnimation={skipAnimation} />
       </g>
       <ChartsAxis
         topAxis={topAxis}

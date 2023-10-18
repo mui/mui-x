@@ -64,18 +64,19 @@ If you're using [composition](/x/react-charts/#multiple-charts), you should set 
 
 ## Animation
 
-To animate the creation and update of your chart you can use the `animate` prop.
-When set to `true` it activates animation powered by `@react-spring/web`.
+To skip animation at the creation and update of your chart you can use the `skipAnimation` prop.
+When set to `true` it skips animation powered by `@react-spring/web`.
+
+Charts containers already use the `useReduceMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
 
 ```jsx
 // For a single component chart
-<BarChart {/* ... */} animate />
+<BarChart  skipAnimation />
 
 // For a composed chart
 <ResponsiveChartContainer>
-  {/* ... */}
-  <BarPlot  animate />
+  <BarPlot  skipAnimation />
 </ResponsiveChartContainer>
-
 ```
+
 {{"demo": "BarAnimation.js"}}

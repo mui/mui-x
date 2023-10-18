@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useReducedMotion } from '@react-spring/web';
 import useForkRef from '@mui/utils/useForkRef';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
@@ -44,6 +45,8 @@ export const ChartContainer = React.forwardRef(function ChartContainer(
   } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
   const handleRef = useForkRef(ref, svgRef);
+
+  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
   return (
     <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
