@@ -95,7 +95,7 @@ export function withStyles(
 
     if (selectedCustomizationOption === 'sxProp') {
       const sxProp = {
-        [`& .Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
+        [`.Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
       };
 
       return <Component {...props} sx={{ ...sxProp, ...props?.sx }} />;
@@ -118,7 +118,7 @@ export function withStyles(
 
     if (selectedCustomizationOption === 'styledComponents') {
       const StyledComponent = styled(Component as React.JSXElementConstructor<any>)(() => ({
-        [`& .Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
+        [`.Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
       }));
       return <StyledComponent {...props} />;
     }
@@ -296,7 +296,7 @@ const newTheme = (theme) => createTheme({
       };
       return `import { styled } from '@mui/material/styles'\n${code}
 const Styled${selectedExample?.parentComponent} = styled(${selectedExample?.parentComponent})({
-  '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+  '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
   }
 })
 
@@ -309,7 +309,7 @@ export default function StyledPickerContainer() {
     }
     return `import { styled } from '@mui/material/styles'\n${code}
 const Styled${componentName} = styled(${componentName})({
-  '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+  '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
   }
 })
 
