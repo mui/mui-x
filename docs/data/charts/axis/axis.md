@@ -67,7 +67,9 @@ xAxis={[{ min: 10, max: 50,  }]}
 
 {{"demo": "MinMaxExample.js"}}
 
-### Ticks positions
+## Tick position
+
+### Automatic tick position
 
 You can customize the number of ticks with the property `tickNumber`.
 
@@ -85,6 +87,43 @@ As a helper, you can also provide `tickMinStep` and `tickMaxStep` which will com
 Here the top axis has a `tickMinStep` of half a day, and the bottom axis a `tickMinStep` of a full day.
 
 {{"demo": "TickNumber.js"}}
+
+### Fixed tick positions
+
+If you want more control over the tick position, you can use the `tickInterval` property.
+
+This property accepts an array of values.
+Ticks will be placed at those values.
+
+For axis with scale type `'point'`, the `tickInterval` property can be a filtering function of the type `(value, index) => boolean`.
+
+In the next demo, both axes are with `scaleType='point'`.
+The top axis displays the default behavior.
+It shows a tick for each point.
+The bottom axis uses a filtering function to only display a tick at the beginning of a day.
+
+{{"demo": "TickPosition.js"}}
+
+### Filtering ticks label
+
+You can display labels only on a subset of ticks with the `tickLabelInterval` property.
+It's a filtering function in the `(value, index) => boolean` form.
+
+For example `tickLabelInterval: (value, index) => index % 2 === 0` will show the label every two ticks.
+
+:::warning
+The `value` and `index` arguments are those of the ticks, not the axis data.
+:::
+
+By default, ticks are filtered such that their labels do not overlap.
+You can override this behavior with `tickLabelInterval: () => true` which forces showing the tick label for each tick.
+
+In this example, the top axis is a reference for the default behavior.
+Notice that tick labels do not overflow.
+
+At the bottom, you can see one tick for the beginning and the middle of the day but the tick label is only displayed for the beginning of the day.
+
+{{"demo": "TickLabelPosition.js"}}
 
 ## Axis customization
 
@@ -114,7 +153,13 @@ Axes rendering can be further customized. Below is an interactive demonstration 
 
 {{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
-### Composition
+### Text customization
+
+To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
+
+{{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+
+## Composition
 
 If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.
 

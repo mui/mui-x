@@ -1,0 +1,16 @@
+<LineChart
+  xAxis={[
+    {
+      ...xAxisCommon,
+      id: 'bottomAxis',
+      scaleType: 'point',
+      tickInterval: (time) => time.getHours() === 0,
+    },
+    {
+      ...xAxisCommon,
+      id: 'topAxis',
+      scaleType: 'point',
+    },
+  ]}
+  {...config}
+/>

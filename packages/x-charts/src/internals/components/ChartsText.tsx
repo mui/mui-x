@@ -1,6 +1,17 @@
 import * as React from 'react';
 import { getStringSize } from '../domUtils';
 
+export type ChartsTextBaseline = 'hanging' | 'central' | 'auto';
+
+export interface ChartsTextStyle extends React.CSSProperties {
+  angle?: number;
+  /**
+   * The text baseline
+   * @default 'central'
+   */
+  dominantBaseline?: ChartsTextBaseline;
+}
+
 interface GetWordsByLinesParams {
   /**
    * Text displayed.
@@ -9,7 +20,7 @@ interface GetWordsByLinesParams {
   /**
    * Style applied to text elements.
    */
-  style?: React.SVGAttributes<'text'>['style'];
+  style?: ChartsTextStyle;
   /**
    * If true, the line width is computed.
    * @default false
@@ -17,20 +28,16 @@ interface GetWordsByLinesParams {
   needsComputation?: boolean;
 }
 
-export type ChartsTextBaseline = 'hanging' | 'central' | 'auto';
-
 export interface ChartsTextProps
-  extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width' | 'ref'>,
+  extends Omit<
+      React.SVGTextElementAttributes<SVGTextElement>,
+      'width' | 'ref' | 'style' | 'dominantBaseline'
+    >,
     GetWordsByLinesParams {
   /**
    * Height of a text line (in `em`).
    */
   lineHeight?: number;
-  /**
-   * The text baseline
-   * @default 'central'
-   */
-  dominantBaseline?: ChartsTextBaseline;
   ownerState?: any;
 }
 
@@ -42,16 +49,9 @@ export function getWordsByLines({ style, needsComputation, text }: GetWordsByLin
 }
 
 export function ChartsText(props: ChartsTextProps) {
-  const {
-    x,
-    y,
-    textAnchor = 'start',
-    dominantBaseline = 'central',
-    style,
-    text,
-    ownerState,
-    ...textProps
-  } = props;
+  const { x, y, style: styleProps, text, ownerState, ...textProps } = props;
+
+  const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
 
   const wordsByLines = React.useMemo(
     () => getWordsByLines({ style, needsComputation: text.includes('\n'), text }),
@@ -71,17 +71,17 @@ export function ChartsText(props: ChartsTextProps) {
       break;
   }
 
-  // const transforms = [];
+  const transforms = [];
   // if (scaleToFit) {
   //   const lineWidth = wordsByLines[0].width;
   //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
   // }
-  // if (angle) {
-  //   transforms.push(`rotate(${angle}, ${x}, ${y})`);
-  // }
-  // if (transforms.length) {
-  //   textProps.transform = transforms.join(' ');
-  // }
+  if (angle) {
+    transforms.push(`rotate(${angle}, ${x}, ${y})`);
+  }
+  if (transforms.length) {
+    textProps.transform = transforms.join(' ');
+  }
 
   return (
     <text
