@@ -302,7 +302,7 @@ describe('<DataGrid /> - Filter panel', () => {
     );
     expect(getColumnValues(0)).to.deep.equal(['REF_2']);
 
-    setColumnValue('origin');
+    setColumnValue('');
 
     expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
   });
@@ -376,7 +376,7 @@ describe('<DataGrid /> - Filter panel', () => {
     );
 
     expect(getColumnValues(0)).to.deep.equal(['REF_2']);
-    setColumnValue('origin');
+    setColumnValue('');
     expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
   });
 
