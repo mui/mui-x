@@ -166,7 +166,7 @@
     "string-replace-loader": "^3.1.0",
     "typescript": "^5.2.2",
     "util": "^0.12.5",
-    "webpack": "^5.88.2",
+    "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
     "yargs": "^17.7.2",
     "yarn-deduplicate": "^6.0.2"
