@@ -95,7 +95,7 @@ If you restore the page using `initialState` before the data is fetched, the Dat
 
 ### Save and restore the state from external storage
 
-You can use `apiRef.current.exportState()` to save a snapshot of the state to an external storage (e.g. using `LocalStorage` or `redux`).
+You can use `apiRef.current.exportState()` to save a snapshot of the state to an external storage (e.g. using `localStorage` or `redux`).
 This way the state can be persisted when refreshing the page or navigating to another page.
 
 {{"demo": "SaveAndRestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
