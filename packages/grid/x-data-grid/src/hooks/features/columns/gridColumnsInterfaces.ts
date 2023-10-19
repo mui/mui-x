@@ -13,7 +13,7 @@ export interface GridColumnsState {
   orderedFields: string[];
   lookup: GridColumnLookup;
   columnVisibilityModel: GridColumnVisibilityModel;
-  pinnedColumns: GridColumnPinningState,
+  pinnedColumns: GridColumnPinningState;
 }
 
 export interface GridPinnedColumnFields {

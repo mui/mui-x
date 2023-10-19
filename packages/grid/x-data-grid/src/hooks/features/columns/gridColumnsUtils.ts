@@ -15,7 +15,11 @@ import { DEFAULT_GRID_COL_TYPE_KEY, GRID_STRING_COL_DEF } from '../../../colDef'
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
-import { gridColumnsStateSelector, gridColumnVisibilityModelSelector, gridVisibleColumnFieldsSelector } from './gridColumnsSelector';
+import {
+  gridColumnsStateSelector,
+  gridColumnVisibilityModelSelector,
+  gridVisibleColumnFieldsSelector,
+} from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridRowEntry } from '../../../models/gridRows';
@@ -416,15 +420,20 @@ export const createColumnsState = ({
     initialState,
   );
 
-  return updatePinnedColumns(hydrateColumnsWidth(
-    columnsStateWithPortableColumns,
-    apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
-  ), theme);
+  return updatePinnedColumns(
+    hydrateColumnsWidth(
+      columnsStateWithPortableColumns,
+      apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
+    ),
+    theme,
+  );
 };
 
 export function updatePinnedColumns(columnsState: GridColumnsState, theme: Theme) {
   const model = columnsState.pinnedColumns.model;
-  const visibleColumnFields = gridVisibleColumnFieldsSelector({ columns: columnsState } as GridStateCommunity);
+  const visibleColumnFields = gridVisibleColumnFieldsSelector({
+    columns: columnsState,
+  } as GridStateCommunity);
   const visiblePinnedFields = filterVisibleColumns(
     model,
     visibleColumnFields,
@@ -437,8 +446,8 @@ export function updatePinnedColumns(columnsState: GridColumnsState, theme: Theme
   const pinnedColumns = {
     model,
     visible,
-  }
-  return { ...columnsState, pinnedColumns }
+  };
+  return { ...columnsState, pinnedColumns };
 }
 
 export const mergeColumnsState =

@@ -30,8 +30,8 @@ export const useGridColumnPinningPreProcessors = (
       }
 
       const visibleColumns = columnsState.pinnedColumns.visible;
-      const leftPinnedColumns = visibleColumns.left.map(c => c.field);
-      const rightPinnedColumns = visibleColumns.right.map(c => c.field);
+      const leftPinnedColumns = visibleColumns.left.map((c) => c.field);
+      const rightPinnedColumns = visibleColumns.right.map((c) => c.field);
 
       let newOrderedFields: string[];
       const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];

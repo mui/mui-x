@@ -57,7 +57,7 @@ export const columnPinningStateInitializer: GridStateInitializer<
       pinnedColumns: {
         model,
         // .visible is not set here but will be derived by the columns state initializer
-      }
+      },
     },
   };
 };
@@ -386,12 +386,15 @@ function updateState(
 ) {
   apiRef.current.setState((state) => ({
     ...state,
-    columns: updatePinnedColumns({
-      ...state.columns,
-      pinnedColumns: {
-        ...state.columns.pinnedColumns,
-        model
-      }
-    }, theme)
+    columns: updatePinnedColumns(
+      {
+        ...state.columns,
+        pinnedColumns: {
+          ...state.columns.pinnedColumns,
+          model,
+        },
+      },
+      theme,
+    ),
   }));
 }
