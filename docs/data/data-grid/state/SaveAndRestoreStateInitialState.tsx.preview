@@ -1,0 +1,9 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  loading={loading}
+  onStateChange={saveSnapshot}
+  initialState={{
+    ...initialState,
+  }}
+/>
