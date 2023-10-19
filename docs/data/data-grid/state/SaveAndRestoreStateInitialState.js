@@ -1,26 +1,8 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
-
-import { CircularProgress } from '@mui/material';
-import Box from '@mui/material/Box';
-
-function saveDataGridStateToLocalStorage(stateSnapshot) {
-  console.info('State update: Update the state snap in localStorage', stateSnapshot);
-  localStorage.setItem('dataGridState', JSON.stringify(stateSnapshot));
-}
-
-function getInitialStateFromLocalStorage() {
-  const stateFromLocalStorage = localStorage.getItem('dataGridState');
-  return new Promise((resolve) => {
-    if (!stateFromLocalStorage) {
-      resolve({});
-      return;
-    }
-    const state = JSON.parse(stateFromLocalStorage);
-    resolve(state);
-  });
-}
 
 export default function SaveAndRestoreStateInitialState() {
   const apiRef = useGridApiRef();
@@ -33,20 +15,14 @@ export default function SaveAndRestoreStateInitialState() {
   const [initialState, setInitialState] = React.useState();
 
   React.useEffect(() => {
-    const getSnapshot = async () => {
-      const snapshotFromLocalStorage = await getInitialStateFromLocalStorage();
-      setInitialState(snapshotFromLocalStorage);
-    };
-    getSnapshot().catch(() => {
-      // fallback to no state when state retrieval fails
-      setInitialState({});
-    });
+    const stateFromLocalStorage = localStorage?.getItem('dataGridState');
+    setInitialState(stateFromLocalStorage ? JSON.parse(stateFromLocalStorage) : {});
   }, []);
 
   const saveSnapshot = React.useCallback(() => {
-    if (apiRef?.current) {
+    if (apiRef?.current && localStorage) {
       const currentState = apiRef.current.exportState();
-      saveDataGridStateToLocalStorage(currentState);
+      localStorage.setItem('dataGridState', JSON.stringify(currentState));
     }
   }, [apiRef]);
 
@@ -61,9 +37,7 @@ export default function SaveAndRestoreStateInitialState() {
         apiRef={apiRef}
         loading={loading}
         onStateChange={saveSnapshot}
-        initialState={{
-          ...initialState,
-        }}
+        initialState={initialState}
       />
     </Box>
   );

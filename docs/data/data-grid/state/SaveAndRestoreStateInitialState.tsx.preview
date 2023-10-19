@@ -3,7 +3,5 @@
   apiRef={apiRef}
   loading={loading}
   onStateChange={saveSnapshot}
-  initialState={{
-    ...initialState,
-  }}
+  initialState={initialState}
 />
