@@ -183,7 +183,7 @@ describe('<DataGrid /> - Filter panel', () => {
 
     setColumnValue('slogan');
 
-    expect(getColumnValues(0)).to.deep.equal([]);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
       'equals',
     );
