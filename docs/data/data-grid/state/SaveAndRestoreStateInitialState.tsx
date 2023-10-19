@@ -38,7 +38,10 @@ export default function SaveAndRestoreStateInitialState() {
         apiRef={apiRef}
         loading={loading}
         onStateChange={saveSnapshot}
-        initialState={initialState}
+        initialState={{
+          ...data.initialState,
+          ...initialState,
+        }}
       />
     </Box>
   );
