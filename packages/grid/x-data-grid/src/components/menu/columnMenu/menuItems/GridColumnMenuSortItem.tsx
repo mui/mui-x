@@ -42,6 +42,11 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
     return null;
   }
 
+  const getLabel = (key: 'columnMenuSortAsc' | 'columnMenuSortDesc') => {
+    const label = apiRef.current.getLocaleText(key);
+    return typeof label === 'function' ? label(colDef) : label;
+  };
+
   return (
     <React.Fragment>
       {sortingOrder.includes('asc') && sortDirection !== 'asc' ? (
@@ -49,7 +54,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
           <ListItemIcon>
             <rootProps.slots.columnMenuSortAscendingIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{apiRef.current.getLocaleText('columnMenuSortAsc')}</ListItemText>
+          <ListItemText>{getLabel('columnMenuSortAsc')}</ListItemText>
         </MenuItem>
       ) : null}
       {sortingOrder.includes('desc') && sortDirection !== 'desc' ? (
@@ -57,7 +62,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
           <ListItemIcon>
             <rootProps.slots.columnMenuSortDescendingIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{apiRef.current.getLocaleText('columnMenuSortDesc')}</ListItemText>
+          <ListItemText>{getLabel('columnMenuSortDesc')}</ListItemText>
         </MenuItem>
       ) : null}
       {sortingOrder.includes(null) && sortDirection != null ? (
