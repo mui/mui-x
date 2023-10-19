@@ -24,7 +24,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
     return sortItem?.sort;
   }, [colDef, sortModel]);
 
-  const sortingOrder: GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
+  const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
 
   const onSortMenuItemClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
