@@ -14,8 +14,8 @@ import {
   DataGridPropsWithDefaultValues,
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
+  GridPinnedColumnFields,
 } from '@mui/x-data-grid/internals';
-import type { GridPinnedColumns } from '../hooks/features/columnPinning';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
 import {
@@ -216,7 +216,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * The column fields to display pinned to left or right.
    */
-  pinnedColumns?: GridPinnedColumns;
+  pinnedColumns?: GridPinnedColumnFields;
   /**
    * Callback fired when the pinned columns have changed.
    * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.

@@ -1,28 +1,24 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
+import {
+  GridPinnedColumnFields,
+  GridPipeProcessor,
+  useGridRegisterPipeProcessor,
+} from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
-import { columnPinningStateInitializer } from './useGridColumnPinning';
-import { GridApiPro, GridPrivateApiPro } from '../../../models/gridApiPro';
-import { filterColumns } from '../../../components/DataGridProVirtualScroller';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const useGridColumnPinningPreProcessors = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
-  const { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState } = props;
-  const theme = useTheme();
-  let pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
-  if (pinnedColumns == null) {
-    // Since the state is not ready yet lets use the initializer to get which
-    // columns should be pinned initially.
-    const initializedState = columnPinningStateInitializer(
-      apiRef.current.state,
-      { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState },
-      apiRef,
-    ) as GridApiPro['state'];
-    pinnedColumns = gridPinnedColumnsSelector(initializedState);
+  const { disableColumnPinning } = props;
+
+  let pinnedColumns: GridPinnedColumnFields | null;
+  if (apiRef.current.state.columns) {
+    pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
+  } else {
+    pinnedColumns = null;
   }
 
   const prevAllPinnedColumns = React.useRef<string[]>([]);
@@ -33,11 +29,9 @@ export const useGridColumnPinningPreProcessors = (
         return columnsState;
       }
 
-      const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
-        pinnedColumns,
-        columnsState.orderedFields,
-        theme.direction === 'rtl',
-      );
+      const visibleColumns = columnsState.pinnedColumns.visible;
+      const leftPinnedColumns = visibleColumns.left.map(c => c.field);
+      const rightPinnedColumns = visibleColumns.right.map(c => c.field);
 
       let newOrderedFields: string[];
       const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];
@@ -121,7 +115,7 @@ export const useGridColumnPinningPreProcessors = (
         orderedFields: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       };
     },
-    [apiRef, disableColumnPinning, pinnedColumns, theme.direction],
+    [apiRef, disableColumnPinning, pinnedColumns],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);

@@ -1,17 +1,4 @@
-import { GridStateColDef } from '@mui/x-data-grid/internals';
-
-export interface GridPinnedColumns {
-  left?: string[];
-  right?: string[];
-}
-
-export type GridColumnPinningState = {
-  model: GridPinnedColumns;
-  visible: {
-    left: GridStateColDef[];
-    right: GridStateColDef[];
-  };
-};
+import { GridPinnedColumnFields } from '@mui/x-data-grid/internals';
 
 enum GridPinnedPosition {
   left = 'left',
@@ -35,14 +22,14 @@ export interface GridColumnPinningApi {
   unpinColumn: (field: string) => void;
   /**
    * Returns which columns are pinned.
-   * @returns {GridPinnedColumns} An object containing the pinned columns.
+   * @returns {GridPinnedColumnFields} An object containing the pinned columns.
    */
-  getPinnedColumns: () => GridPinnedColumns;
+  getPinnedColumns: () => GridPinnedColumnFields;
   /**
    * Changes the pinned columns.
-   * @param {GridPinnedColumns} pinnedColumns An object containing the columns to pin.
+   * @param {GridPinnedColumnFields} pinnedColumns An object containing the columns to pin.
    */
-  setPinnedColumns: (pinnedColumns: GridPinnedColumns) => void;
+  setPinnedColumns: (pinnedColumns: GridPinnedColumnFields) => void;
   /**
    * Returns which side a column is pinned to.
    * @param {string} field The column field to check.

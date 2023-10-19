@@ -16,7 +16,6 @@ import {
   unstable_gridTabIndexColumnGroupHeaderSelector,
   unstable_gridFocusColumnGroupHeaderSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
-import { gridDensityFactorSelector } from '../hooks/features/density/densitySelector';
 import {
   gridColumnGroupsHeaderMaxDepthSelector,
   gridColumnGroupsHeaderStructureSelector,
@@ -44,7 +43,6 @@ export function GridHeaders() {
     unstable_gridFocusColumnGroupHeaderSelector,
   );
 
-  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
 
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
@@ -80,7 +78,6 @@ export function GridHeaders() {
       columnGroupHeaderTabIndexState={columnGroupHeaderTabIndexState}
       columnHeaderFocus={columnHeaderFocus}
       columnGroupHeaderFocus={columnGroupHeaderFocus}
-      densityFactor={densityFactor}
       headerGroupingMaxDepth={headerGroupingMaxDepth}
       columnMenuState={columnMenuState}
       columnVisibility={columnVisibility}

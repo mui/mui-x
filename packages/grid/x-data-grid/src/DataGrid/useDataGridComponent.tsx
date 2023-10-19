@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material/styles';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
@@ -58,6 +59,7 @@ export const useDataGridComponent = (
     inputApiRef,
     props,
   );
+  const theme = useTheme();
 
   /**
    * Register all pre-processors called during state initialization here.
@@ -70,7 +72,7 @@ export const useDataGridComponent = (
    */
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
-  useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(columnsStateInitializer, apiRef, props, theme);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);

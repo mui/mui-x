@@ -15,37 +15,32 @@ import {
 import {
   useOnMount,
   useGridRegisterPipeProcessor,
+  updatePinnedColumns,
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
+  GridPinnedColumnFields,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import {
-  GridColumnPinningApi,
-  GridPinnedPosition,
-  GridPinnedColumns,
-  GridColumnPinningState,
-} from './gridColumnPinningInterface';
+import { GridColumnPinningApi, GridPinnedPosition } from './gridColumnPinningInterface';
 import {
   gridPinnedColumnsSelector,
   gridVisiblePinnedColumnsSelector,
 } from './gridColumnPinningSelector';
 
-const EMPTY_VISIBLE = {
-  left: [],
-  right: [],
-};
-
 export const columnPinningStateInitializer: GridStateInitializer<
-  Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
+  Pick<
+    DataGridProProcessedProps,
+    'columns' | 'pinnedColumns' | 'columnVisibilityModel' | 'initialState' | 'disableColumnPinning'
+  >
 > = (state, props, apiRef) => {
   apiRef.current.caches.columnPinning = {
     orderedFieldsBeforePinningColumns: null,
   };
 
-  let model: GridPinnedColumns;
+  let model: GridPinnedColumnFields;
   if (props.disableColumnPinning) {
     model = {};
   } else if (props.pinnedColumns) {
@@ -56,49 +51,16 @@ export const columnPinningStateInitializer: GridStateInitializer<
     model = {};
   }
 
-  const pinnedColumns: GridColumnPinningState = {
-    model,
-    visible: EMPTY_VISIBLE,
-  };
-
   return {
     ...state,
-    pinnedColumns,
+    columns: {
+      pinnedColumns: {
+        model,
+        // .visible is not set here but will be derived by the columns state initializer
+      }
+    },
   };
 };
-
-function deriveState(
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
-  model: GridPinnedColumns,
-  theme: Theme,
-) {
-  const columnLookup = gridColumnLookupSelector(apiRef);
-  const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
-  const visiblePinnedFields = filterVisibleColumns(
-    model,
-    visibleColumnFields,
-    theme.direction === 'rtl',
-  );
-  const visible = {
-    left: visiblePinnedFields.left.map((field) => columnLookup[field]),
-    right: visiblePinnedFields.right.map((field) => columnLookup[field]),
-  };
-  return {
-    model,
-    visible,
-  };
-}
-
-function updateState(
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
-  model: GridPinnedColumns,
-  theme: Theme,
-) {
-  apiRef.current.setState((state) => ({
-    ...state,
-    pinnedColumns: deriveState(apiRef, model, theme),
-  }));
-}
 
 export const useGridColumnPinning = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
@@ -417,36 +379,19 @@ export const useGridColumnPinning = (
   });
 };
 
-function filterVisibleColumns(
-  pinnedColumns: GridPinnedColumns,
-  columns: string[],
-  invert?: boolean,
+function updateState(
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  model: GridPinnedColumnFields,
+  theme: Theme,
 ) {
-  if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
-    return EMPTY_VISIBLE;
-  }
-
-  if (pinnedColumns.left?.length === 0 && pinnedColumns.right?.length === 0) {
-    return EMPTY_VISIBLE;
-  }
-
-  const filter = (newPinnedColumns: string[] | undefined, remainingColumns: string[]) => {
-    if (!Array.isArray(newPinnedColumns)) {
-      return [];
-    }
-    return newPinnedColumns.filter((field) => remainingColumns.includes(field));
-  };
-
-  const leftPinnedColumns = filter(pinnedColumns.left, columns);
-  const columnsWithoutLeftPinnedColumns = columns.filter(
-    // Filter out from the remaining columns those columns already pinned to the left
-    (field) => !leftPinnedColumns.includes(field),
-  );
-  const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
-
-  if (invert) {
-    return { left: rightPinnedColumns, right: leftPinnedColumns };
-  }
-
-  return { left: leftPinnedColumns, right: rightPinnedColumns };
+  apiRef.current.setState((state) => ({
+    ...state,
+    columns: updatePinnedColumns({
+      ...state.columns,
+      pinnedColumns: {
+        ...state.columns.pinnedColumns,
+        model
+      }
+    }, theme)
+  }));
 }

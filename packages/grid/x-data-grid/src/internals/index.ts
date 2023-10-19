@@ -40,7 +40,7 @@ export {
   columnMenuStateInitializer,
 } from '../hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
-export { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
+export * from '../hooks/features/columns/gridColumnsUtils';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 export { gridColumnsStateSelector } from '../hooks/features/columns/gridColumnsSelector';
 export {
@@ -52,6 +52,9 @@ export type {
   GridColumnRawLookup,
   GridColumnsRawState,
   GridHydrateColumnsValue,
+  GridPinnedColumns,
+  GridPinnedColumnFields,
+  GridColumnPinningState,
 } from '../hooks/features/columns/gridColumnsInterfaces';
 export { useGridDensity, densityStateInitializer } from '../hooks/features/density/useGridDensity';
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';

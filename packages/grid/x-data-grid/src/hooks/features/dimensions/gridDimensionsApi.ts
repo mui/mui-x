@@ -18,6 +18,10 @@ export interface GridDimensions {
    */
   viewportInnerSize: ElementSize;
   /**
+   * The size of the grid content.
+   */
+  contentSize: ElementSize;
+  /**
    * Indicates if a scroll is currently needed to go from the beginning of the first column to the end of the last column.
    */
   hasScrollX: boolean;

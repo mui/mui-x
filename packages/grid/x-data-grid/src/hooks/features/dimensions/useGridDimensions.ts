@@ -17,7 +17,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
-import { gridColumnsTotalWidthSelector, gridVisibleColumnDefinitionsSelector } from '../columns';
+import { gridColumnsTotalWidthSelector } from '../columns';
 import { gridDensityFactorSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -27,33 +27,6 @@ import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
-
-const hasScroll = ({
-  content,
-  container,
-  scrollBarSize,
-}: {
-  content: ElementSize;
-  container: ElementSize;
-  scrollBarSize: number;
-}) => {
-  const hasScrollXIfNoYScrollBar = content.width > container.width;
-  const hasScrollYIfNoXScrollBar = content.height > container.height;
-
-  let hasScrollX = false;
-  let hasScrollY = false;
-  if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
-    hasScrollX = hasScrollXIfNoYScrollBar;
-    hasScrollY = content.height + (hasScrollX ? scrollBarSize : 0) > container.height;
-
-    // We recalculate the scroll x to consider the size of the y scrollbar.
-    if (hasScrollY) {
-      hasScrollX = content.width + scrollBarSize > container.width;
-    }
-  }
-
-  return { hasScrollX, hasScrollY };
-};
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -75,6 +48,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   root: EMPTY_SIZE,
   viewportOuterSize: EMPTY_SIZE,
   viewportInnerSize: EMPTY_SIZE,
+  contentSize: EMPTY_SIZE,
   hasScrollX: false,
   hasScrollY: false,
   scrollBarSize: 0,
@@ -176,9 +150,18 @@ export function useGridDimensions(
 
     const scrollBarSize = measureScrollbarSize(rootElement, columnsTotalWidth, props.scrollbarSize);
 
+    const topContainerHeight = headersTotalHeight + pinnedRowsHeight.top;
+    const bottomContainerHeight = pinnedRowsHeight.bottom;
+
+    const contentSize = {
+      width: Math.round(columnsTotalWidth),
+      height: rowsMeta.currentPageTotalHeight,
+    };
+
     let viewportOuterSize: ElementSize;
-    let hasScrollX: boolean;
-    let hasScrollY: boolean;
+    let viewportInnerSize: ElementSize;
+    let hasScrollX = false;
+    let hasScrollY = false;
 
     if (props.autoHeight) {
       hasScrollY = false;
@@ -188,38 +171,43 @@ export function useGridDimensions(
         width: rootDimensionsRef.current.width,
         height: rowsMeta.currentPageTotalHeight + (hasScrollX ? scrollBarSize : 0),
       };
+      viewportInnerSize = {
+        width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
+        height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
+      };
     } else {
       viewportOuterSize = {
         width: rootDimensionsRef.current.width,
-        height: Math.max(rootDimensionsRef.current.height - headersTotalHeight, 0),
+        height: rootDimensionsRef.current.height,
+      };
+      viewportInnerSize = {
+        width: viewportOuterSize.width - 0 /* XXX: right/left pinned */,
+        height: viewportOuterSize.height - topContainerHeight - bottomContainerHeight,
       };
 
-      const scrollInformation = hasScroll({
-        content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
-        container: {
-          width: Math.round(viewportOuterSize.width),
-          height: viewportOuterSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom,
-        },
-        scrollBarSize,
-      });
+      const content = contentSize;
+      const container = viewportInnerSize;
 
-      hasScrollY = scrollInformation.hasScrollY;
-      hasScrollX = scrollInformation.hasScrollX;
+      const hasScrollXIfNoYScrollBar = content.width > container.width;
+      const hasScrollYIfNoXScrollBar = content.height > container.height;
+
+      if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
+        hasScrollY = hasScrollYIfNoXScrollBar;
+        hasScrollX = content.width + (hasScrollY ? scrollBarSize : 0) > container.width;
+
+        // We recalculate the scroll y to consider the size of the x scrollbar.
+        if (hasScrollX) {
+          hasScrollY = content.height + scrollBarSize > container.height;
+        }
+      }
     }
-
-    const viewportInnerSize: ElementSize = {
-      width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
-      height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
-    };
-
-    const topContainerHeight = headersTotalHeight + pinnedRowsHeight.top;
-    const bottomContainerHeight = pinnedRowsHeight.bottom;
 
     const newFullDimensions: GridDimensions = {
       isReady: true,
       root: rootDimensionsRef.current,
       viewportOuterSize,
       viewportInnerSize,
+      contentSize,
       hasScrollX,
       hasScrollY,
       scrollBarSize,
@@ -276,9 +264,16 @@ export function useGridDimensions(
     if (!root) {
       return;
     }
+    root.style.setProperty('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
+    root.style.setProperty('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
     root.style.setProperty('--DataGrid-scrollbarSize', `${dimensions.scrollBarSize}px`);
     root.style.setProperty('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
     root.style.setProperty('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
+    root.style.setProperty('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
+    root.style.setProperty(
+      '--DataGrid-bottomContainerHeight',
+      `${dimensions.bottomContainerHeight}px`,
+    );
   }, [apiRef.current.rootElementRef.current, apiRef.current.state.dimensions]);
 
   const isFirstSizing = React.useRef(true);

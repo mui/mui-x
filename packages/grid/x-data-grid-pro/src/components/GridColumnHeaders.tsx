@@ -11,6 +11,7 @@ import {
 import {
   GridBaseColumnHeaders,
   GridColumnHeadersInner,
+  GridPinnedColumnFields,
   UseGridColumnHeadersProps,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -18,15 +19,14 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   GridPinnedPosition,
-  GridPinnedColumns,
   gridVisiblePinnedColumnsSelector,
 } from '../hooks/features/columnPinning';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridScrollArea } from './GridScrollArea';
 
 type OwnerState = DataGridProProcessedProps & {
-  leftPinnedColumns: GridPinnedColumns['left'];
-  rightPinnedColumns: GridPinnedColumns['right'];
+  leftPinnedColumns: GridPinnedColumnFields['left'];
+  rightPinnedColumns: GridPinnedColumnFields['right'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

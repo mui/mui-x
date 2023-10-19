@@ -13,7 +13,23 @@ export interface GridColumnsState {
   orderedFields: string[];
   lookup: GridColumnLookup;
   columnVisibilityModel: GridColumnVisibilityModel;
+  pinnedColumns: GridColumnPinningState,
 }
+
+export interface GridPinnedColumnFields {
+  left?: string[];
+  right?: string[];
+}
+
+export interface GridPinnedColumns {
+  left: GridStateColDef[];
+  right: GridStateColDef[];
+}
+
+export type GridColumnPinningState = {
+  model: GridPinnedColumnFields;
+  visible: GridPinnedColumns;
+};
 
 export type GridColumnDimensions = { [key in GridColumnDimensionProperties]?: number };
 

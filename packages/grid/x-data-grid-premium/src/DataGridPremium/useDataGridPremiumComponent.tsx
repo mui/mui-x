@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import {
   useGridInitialization,
   useGridInitializeState,
@@ -91,6 +92,7 @@ export const useDataGridPremiumComponent = (
   props: DataGridPremiumProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiPremium, GridApiPremium>(inputApiRef, props);
+  const theme = useTheme();
 
   /**
    * Register all pre-processors called during state initialization here.
@@ -119,7 +121,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(cellSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
-  useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(columnsStateInitializer, apiRef, props, theme);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);

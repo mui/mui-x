@@ -15,4 +15,7 @@ export type {
   GridColumnsState,
   GridColumnsInitialState,
   GridColumnVisibilityModel,
+  GridPinnedColumns,
+  GridPinnedColumnFields,
+  GridColumnPinningState,
 } from './gridColumnsInterfaces';

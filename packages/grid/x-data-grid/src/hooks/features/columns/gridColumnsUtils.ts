@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Theme } from '@mui/material/styles';
 import {
   GridColumnLookup,
   GridColumnsState,
@@ -6,22 +7,42 @@ import {
   GridColumnVisibilityModel,
   GridColumnRawLookup,
   GridColumnsInitialState,
+  GridColumnPinningState,
+  GridPinnedColumns,
+  GridPinnedColumnFields,
 } from './gridColumnsInterfaces';
-import { GridColumnTypesRecord } from '../../../models';
 import { DEFAULT_GRID_COL_TYPE_KEY, GRID_STRING_COL_DEF } from '../../../colDef';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
-import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
+import { gridColumnsStateSelector, gridColumnVisibilityModelSelector, gridVisibleColumnFieldsSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridRowEntry } from '../../../models/gridRows';
+import { getGridDefaultColumnTypes } from '../../../colDef';
 import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
+
+export const EMPTY_PINNED_COLUMNS: GridPinnedColumns = {
+  left: [],
+  right: [],
+};
+
+export const EMPTY_PINNED_COLUMN_FIELDS = {
+  left: [] as string[],
+  right: [] as string[],
+};
+
+export const EMPTY_PINNED_COLUMNS_STATE: GridColumnPinningState = {
+  model: {},
+  visible: EMPTY_PINNED_COLUMNS,
+};
+
+const COLUMN_TYPES = getGridDefaultColumnTypes();
 
 /**
  * Computes width for flex columns.
@@ -277,30 +298,31 @@ export const applyInitialState = (
   return newColumnsState;
 };
 
-function getDefaultColTypeDef(columnTypes: GridColumnTypesRecord, type: GridColDef['type']) {
-  let colDef = columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
-  if (type && columnTypes[type]) {
-    colDef = columnTypes[type];
+function getDefaultColTypeDef(type: GridColDef['type']) {
+  let colDef = COLUMN_TYPES[DEFAULT_GRID_COL_TYPE_KEY];
+  if (type && COLUMN_TYPES[type]) {
+    colDef = COLUMN_TYPES[type];
   }
   return colDef;
 }
 
 export const createColumnsState = ({
   apiRef,
+  theme,
   columnsToUpsert,
   initialState,
-  columnTypes,
   columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   keepOnlyColumnsToUpsert = false,
 }: {
   columnsToUpsert: GridColDef[];
   initialState: GridColumnsInitialState | undefined;
-  columnTypes: GridColumnTypesRecord;
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
   apiRef: React.MutableRefObject<GridApiCommunity>;
+  theme: Theme;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
+  const pinnedColumns = apiRef.current.state.columns?.pinnedColumns ?? EMPTY_PINNED_COLUMNS_STATE;
 
   let columnsState: Omit<GridColumnsRawState, 'lookup'> & {
     lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
@@ -310,6 +332,7 @@ export const createColumnsState = ({
       orderedFields: [],
       lookup: {},
       columnVisibilityModel,
+      pinnedColumns,
     };
   } else {
     const currentState = gridColumnsStateSelector(apiRef.current.state);
@@ -317,6 +340,7 @@ export const createColumnsState = ({
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
       columnVisibilityModel,
+      pinnedColumns,
     };
   }
 
@@ -337,7 +361,7 @@ export const createColumnsState = ({
 
     if (existingState == null) {
       existingState = {
-        ...getDefaultColTypeDef(columnTypes, newColumn.type),
+        ...getDefaultColTypeDef(newColumn.type),
         field,
         hasBeenResized: false,
       };
@@ -349,7 +373,7 @@ export const createColumnsState = ({
     // If the column type has changed - merge the existing state with the default column type definition
     if (existingState && existingState.type !== newColumn.type) {
       existingState = {
-        ...getDefaultColTypeDef(columnTypes, newColumn.type),
+        ...getDefaultColTypeDef(newColumn.type),
         field,
       };
     }
@@ -380,6 +404,8 @@ export const createColumnsState = ({
     });
   }
 
+  columnsState = updatePinnedColumns(columnsState as GridColumnsState, theme);
+
   const columnsStateWithPreProcessing = apiRef.current.unstable_applyPipeProcessors(
     'hydrateColumns',
     columnsState,
@@ -390,11 +416,30 @@ export const createColumnsState = ({
     initialState,
   );
 
-  return hydrateColumnsWidth(
+  return updatePinnedColumns(hydrateColumnsWidth(
     columnsStateWithPortableColumns,
     apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
-  );
+  ), theme);
 };
+
+export function updatePinnedColumns(columnsState: GridColumnsState, theme: Theme) {
+  const model = columnsState.pinnedColumns.model;
+  const visibleColumnFields = gridVisibleColumnFieldsSelector({ columns: columnsState } as GridStateCommunity);
+  const visiblePinnedFields = filterVisibleColumns(
+    model,
+    visibleColumnFields,
+    theme.direction === 'rtl',
+  );
+  const visible = {
+    left: visiblePinnedFields.left.map((field) => columnsState.lookup[field]),
+    right: visiblePinnedFields.right.map((field) => columnsState.lookup[field]),
+  };
+  const pinnedColumns = {
+    model,
+    visible,
+  }
+  return { ...columnsState, pinnedColumns }
+}
 
 export const mergeColumnsState =
   (columnsState: GridColumnsState) =>
@@ -471,4 +516,38 @@ export function getTotalHeaderHeight(
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
   return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + 1);
+}
+
+function filterVisibleColumns(
+  pinnedColumns: GridPinnedColumnFields,
+  columns: string[],
+  invert?: boolean,
+) {
+  if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
+    return EMPTY_PINNED_COLUMN_FIELDS;
+  }
+
+  if (pinnedColumns.left?.length === 0 && pinnedColumns.right?.length === 0) {
+    return EMPTY_PINNED_COLUMN_FIELDS;
+  }
+
+  const filter = (newPinnedColumns: string[] | undefined, remainingColumns: string[]) => {
+    if (!Array.isArray(newPinnedColumns)) {
+      return [];
+    }
+    return newPinnedColumns.filter((field) => remainingColumns.includes(field));
+  };
+
+  const leftPinnedColumns = filter(pinnedColumns.left, columns);
+  const columnsWithoutLeftPinnedColumns = columns.filter(
+    // Filter out from the remaining columns those columns already pinned to the left
+    (field) => !leftPinnedColumns.includes(field),
+  );
+  const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
+
+  if (invert) {
+    return { left: rightPinnedColumns, right: leftPinnedColumns };
+  }
+
+  return { left: leftPinnedColumns, right: rightPinnedColumns };
 }

@@ -30,13 +30,14 @@ const Scrollbar = styled('div')({
 });
 const ScrollbarVertical = styled(Scrollbar)({
   width: 'var(--DataGrid-scrollbarSize)',
-  height: 'calc(100% - var(--DataGrid-headersTotalHeight))',
+  height:
+    'calc(100% - var(--DataGrid-topContainerHeight) - var(--DataGrid-bottomContainerHeight) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
   overflowY: 'scroll',
   overflowX: 'hidden',
   '& > div': {
     width: 'var(--DataGrid-scrollbarSize)',
   },
-  top: 'var(--DataGrid-headersTotalHeight)',
+  top: 'var(--DataGrid-topContainerHeight)',
   right: '0px',
 });
 const ScrollbarHorizontal = styled(Scrollbar)({

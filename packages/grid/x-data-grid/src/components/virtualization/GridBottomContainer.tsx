@@ -17,7 +17,7 @@ const StyledDiv = styled('div', {
   overridesResolver: (_props, styles) => styles.bottomContainer ?? {},
 })({
   position: 'sticky',
-  bottom: 0,
+  bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
   zIndex: 2,
 });
 
