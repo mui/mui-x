@@ -189,7 +189,7 @@ async function initializeEnvironment(
         await waitFor(async () => {
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
           expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
-            'button',
+            'combobox',
           );
         });
         await page.keyboard.press('Shift+Tab');

@@ -23,6 +23,10 @@
       "matchPackagePatterns": ["d3-*", "@types/d3-*"]
     },
     {
+      "groupName": "react-spring",
+      "matchPackagePatterns": "@react-spring/*"
+    },
+    {
       "groupName": "Emotion",
       "matchPackagePatterns": "@emotion/*"
     },
@@ -38,7 +42,14 @@
     },
     {
       "groupName": "React",
-      "matchPackageNames": ["react", "react-dom", "react-is", "react-test-renderer"]
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "react-is",
+        "react-test-renderer",
+        "@types/react",
+        "@types/react-dom"
+      ]
     },
     {
       "groupName": "React router",
@@ -76,10 +87,11 @@
     {
       "groupName": "MUI Core",
       "matchPackageNames": [
-        "@mui/material",
-        "@mui/joy",
-        "@mui/icons-material",
         "@mui/base",
+        "@mui/icons-material",
+        "@mui/joy",
+        "@mui/lab",
+        "@mui/material",
         "@mui/styles",
         "@mui/system",
         "@mui/utils"
