@@ -20,6 +20,14 @@ export interface TickParams {
    * Not supported by categorical axis (band, points).
    */
   tickNumber?: number;
+  /**
+   * Defines which ticks are displayed. Its value can be:
+   * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - an array containing the values where ticks should be displayed.
+   * @default 'auto'
+   */
+  tickInterval?: 'auto' | ((value: any, index: number) => boolean) | any[];
 }
 
 export function getTickNumber(
@@ -40,13 +48,23 @@ export function getTickNumber(
   return Math.min(maxTicks, Math.max(minTicks, defaultizedTickNumber));
 }
 
+export type TickItemType = {
+  /**
+   * This property is undefined only if it's the tick closing the last band
+   */
+  value?: any;
+  formattedValue?: string;
+  offset: number;
+  labelOffset: number;
+};
+
 function useTicks(
   options: {
     scale: D3Scale;
     valueFormatter?: (value: any) => string;
-  } & Pick<TickParams, 'tickNumber'>,
-) {
-  const { scale, tickNumber, valueFormatter } = options;
+  } & Pick<TickParams, 'tickNumber' | 'tickInterval'>,
+): TickItemType[] {
+  const { scale, tickNumber, valueFormatter, tickInterval } = options;
 
   return React.useMemo(() => {
     // band scale
@@ -57,7 +75,8 @@ function useTicks(
         // scale type = 'band'
         return [
           ...domain.map((value) => ({
-            formattedValue: valueFormatter?.(value) ?? value,
+            value,
+            formattedValue: valueFormatter?.(value) ?? `${value}`,
             offset: scale(value)! - (scale.step() - scale.bandwidth()) / 2,
             labelOffset: scale.step() / 2,
           })),
@@ -71,19 +90,27 @@ function useTicks(
       }
 
       // scale type = 'point'
-      return domain.map((value) => ({
-        formattedValue: valueFormatter?.(value) ?? value,
+      const filteredDomain =
+        (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
+        (typeof tickInterval === 'object' && tickInterval) ||
+        domain;
+
+      return filteredDomain.map((value) => ({
+        value,
+        formattedValue: valueFormatter?.(value) ?? `${value}`,
         offset: scale(value)!,
         labelOffset: 0,
       }));
     }
 
-    return scale.ticks(tickNumber).map((value: any) => ({
+    const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
+    return ticks.map((value: any) => ({
+      value,
       formattedValue: valueFormatter?.(value) ?? scale.tickFormat(tickNumber)(value),
       offset: scale(value),
       labelOffset: 0,
     }));
-  }, [tickNumber, scale, valueFormatter]);
+  }, [tickNumber, scale, valueFormatter, tickInterval]);
 }
 
 export default useTicks;

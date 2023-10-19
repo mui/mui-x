@@ -65,10 +65,10 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const yTicks = useTicks({ scale: yScale, tickNumber, valueFormatter });
 
-  const positionSigne = position === 'right' ? 1 : -1;
+  const positionSign = position === 'right' ? 1 : -1;
 
   const labelRefPoint = {
-    x: positionSigne * (tickFontSize + tickSize + 10),
+    x: positionSign * (tickFontSize + tickSize + 10),
     y: top + height / 2,
   };
 
@@ -81,9 +81,11 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
-      textAnchor: position === 'right' ? 'start' : 'end',
-      dominantBaseline: 'central',
-      style: { fontSize: tickFontSize },
+      style: {
+        fontSize: tickFontSize,
+        textAnchor: position === 'right' ? 'start' : 'end',
+        dominantBaseline: 'central',
+      },
       className: classes.tickLabel,
     } as Partial<ChartsTextProps>,
     ownerState: {},
@@ -93,14 +95,12 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
-      textAnchor: 'middle',
-      dominantBaseline: 'auto',
       style: {
         fontSize: labelFontSize,
-        transform: `rotate(${positionSigne * 90}deg)`,
-        transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
-      },
-      className: classes.label,
+        angle: positionSign * 90,
+        textAnchor: 'middle',
+        dominantBaseline: 'auto',
+      } as Partial<ChartsTextProps>['style'],
     } as Partial<ChartsTextProps>,
     ownerState: {},
   });
@@ -120,13 +120,13 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
       )}
 
       {yTicks.map(({ formattedValue, offset, labelOffset }, index) => {
-        const xTickLabel = positionSigne * (tickSize + 2);
+        const xTickLabel = positionSign * (tickSize + 2);
         const yTickLabel = labelOffset;
         return (
           <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
             {!disableTicks && (
               <Tick
-                x2={positionSigne * tickSize}
+                x2={positionSign * tickSize}
                 className={classes.tick}
                 {...slotProps?.axisTick}
               />
@@ -136,7 +136,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
-                transform-origin={`${xTickLabel}px ${yTickLabel}px`}
                 text={formattedValue.toString()}
                 {...axisTickLabelProps}
               />
@@ -189,8 +188,13 @@ ChartsYAxis.propTypes = {
   /**
    * The font size of the axis label.
    * @default 14
+   * @deprecated Consider using `labelStyle.fontSize` instead.
    */
   labelFontSize: PropTypes.number,
+  /**
+   * The style applied to the axis label.
+   */
+  labelStyle: PropTypes.object,
   /**
    * Position of the axis.
    */
@@ -213,8 +217,28 @@ ChartsYAxis.propTypes = {
   /**
    * The font size of the axis ticks text.
    * @default 12
+   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
    */
   tickFontSize: PropTypes.number,
+  /**
+   * Defines which ticks are displayed. Its value can be:
+   * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - an array containing the values where ticks should be displayed.
+   * @default 'auto'
+   */
+  tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
+  /**
+   * Defines which ticks get its label displayed. Its value can be:
+   * - 'auto' In such case, labels are displayed if they do not overlap with the previous one.
+   * - a filtering function of the form (value, index) => boolean. Warning: the index is tick index, not data ones.
+   * @default 'auto'
+   */
+  tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+  /**
+   * The style applied to ticks text.
+   */
+  tickLabelStyle: PropTypes.object,
   /**
    * Maximal step between two ticks.
    * When using time data, the value is assumed to be in ms.

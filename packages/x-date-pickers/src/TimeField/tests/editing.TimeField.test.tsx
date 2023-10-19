@@ -365,7 +365,7 @@ describe('<TimeField /> - Editing', () => {
 
         selectSection('hours');
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-        userEvent.keyPress(input, { key: 'Backspace' });
+        fireEvent.change(input, { target: { value: '' } });
         userEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"
