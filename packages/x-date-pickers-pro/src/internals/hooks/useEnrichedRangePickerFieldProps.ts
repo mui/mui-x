@@ -5,7 +5,11 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
+import {
+  BaseSingleInputFieldProps,
+  FieldSelectedSections,
+  FieldRef,
+} from '@mui/x-date-pickers/models';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
@@ -99,6 +103,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   pickerSlots: UncapitalizeObjectKeys<RangePickerFieldSlotsComponent> | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
+  currentView?: TView | null;
 }
 
 const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
@@ -116,6 +121,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   pickerSlots,
   fieldProps,
   anchorRef,
+  currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -127,18 +133,24 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   const localeText = useLocaleText<TDate>();
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
+  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
+  const handleEndFieldRef = useForkRef(fieldProps.unstableFieldRef, endFieldRef);
 
   React.useEffect(() => {
     if (!open) {
       return;
     }
 
-    if (rangePosition === 'start') {
-      startRef.current?.focus();
-    } else if (rangePosition === 'end') {
-      endRef.current?.focus();
+    const currentRef = rangePosition === 'start' ? startRef : endRef;
+    currentRef.current?.focus();
+    const currentFieldRef = rangePosition === 'start' ? startFieldRef : endFieldRef;
+    if (!currentFieldRef.current || !currentView) {
+      return;
     }
-  }, [rangePosition, open]);
+    currentFieldRef.current.setSelectedSections(currentView);
+  }, [rangePosition, open, currentView]);
 
   const openRangeStartSelection = (
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
@@ -247,6 +259,8 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
     ...restFieldProps,
     slots,
     slotProps,
+    unstableStartFieldRef: handleStartFieldRef,
+    unstableEndFieldRef: handleEndFieldRef,
   };
 
   return enrichedFieldProps;
@@ -269,6 +283,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
   pickerSlotProps,
   fieldProps,
   anchorRef,
+  currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -288,7 +303,14 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
     }
 
     inputRef.current?.focus();
-  }, [rangePosition, open]);
+    if (!singleInputFieldRef.current || !currentView) {
+      return;
+    }
+    const sections = singleInputFieldRef.current.getSections().map((section) => section.type);
+    singleInputFieldRef.current.setSelectedSections(
+      rangePosition === 'start' ? sections.indexOf(currentView) : sections.lastIndexOf(currentView),
+    );
+  }, [rangePosition, open, currentView, singleInputFieldRef]);
 
   const updateRangePosition = () => {
     if (!singleInputFieldRef.current || inputRef.current !== getActiveElement(document)) {
