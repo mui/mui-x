@@ -8,6 +8,7 @@ import {
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import { ExportedBaseTabsProps } from '@mui/x-date-pickers/internals/models/props/tabs';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
@@ -26,6 +27,7 @@ export interface UseRangePickerSlotsComponent<TDate, TView extends DateOrTimeVie
 export interface UseRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotsComponentsProps<TDate> {
+  tabs?: ExportedBaseTabsProps;
   toolbar?: ExportedBaseToolbarProps;
 }
 
