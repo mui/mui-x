@@ -42,7 +42,14 @@
     },
     {
       "groupName": "React",
-      "matchPackageNames": ["react", "react-dom", "react-is", "react-test-renderer"]
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "react-is",
+        "react-test-renderer",
+        "@types/react",
+        "@types/react-dom"
+      ]
     },
     {
       "groupName": "React router",
