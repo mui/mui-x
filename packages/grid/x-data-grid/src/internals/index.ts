@@ -119,10 +119,7 @@ export {
 } from '../hooks/features/dimensions/useGridDimensions';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
-export {
-  useGridVirtualScroller,
-  getIndexesToRender,
-} from '../hooks/features/virtualization/useGridVirtualScroller';
+export { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
 export * from '../hooks/features/virtualization';
 
 export { useTimeout } from '../hooks/utils/useTimeout';

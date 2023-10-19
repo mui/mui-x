@@ -11,7 +11,7 @@ import {
   GridDimensions,
   GridFeatureMode,
 } from '@mui/x-data-grid';
-import { useGridVisibleRows, getIndexesToRender } from '@mui/x-data-grid/internals';
+import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import {
   DataGridProProcessedProps,
@@ -110,22 +110,6 @@ export const useGridLazyLoader = (
   });
   const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
 
-  const getCurrentIntervalToRender = React.useCallback(() => {
-    const currentRenderContext = privateApiRef.current.getRenderContext();
-    const [firstRowToRender, lastRowToRender] = getIndexesToRender({
-      firstIndex: currentRenderContext.firstRowIndex,
-      lastIndex: currentRenderContext.lastRowIndex,
-      minFirstIndex: 0,
-      maxLastIndex: visibleRows.rows.length,
-      buffer: props.rowBuffer,
-    });
-
-    return {
-      firstRowToRender,
-      lastRowToRender,
-    };
-  }, [privateApiRef, props.rowBuffer, visibleRows.rows.length]);
-
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
   >(
@@ -196,17 +180,17 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
 
-      const { firstRowToRender, lastRowToRender } = getCurrentIntervalToRender();
+      const renderContext = privateApiRef.current.getRenderContext();
       const fetchRowsParams: GridFetchRowsParams = {
-        firstRowToRender,
-        lastRowToRender,
+        firstRowToRender: renderContext.firstRowIndex,
+        lastRowToRender: renderContext.lastRowIndex,
         sortModel: newSortModel,
         filterModel,
       };
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, props.rowsLoadingMode, filterModel, lazyLoading, getCurrentIntervalToRender],
+    [privateApiRef, props.rowsLoadingMode, filterModel, lazyLoading],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
@@ -225,17 +209,17 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
 
-      const { firstRowToRender, lastRowToRender } = getCurrentIntervalToRender();
+      const renderContext = privateApiRef.current.getRenderContext();
       const fetchRowsParams: GridFetchRowsParams = {
-        firstRowToRender,
-        lastRowToRender,
+        firstRowToRender: renderContext.firstRowIndex,
+        lastRowToRender: renderContext.lastRowIndex,
         sortModel,
         filterModel: newFilterModel,
       };
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, props.rowsLoadingMode, sortModel, lazyLoading, getCurrentIntervalToRender],
+    [privateApiRef, props.rowsLoadingMode, sortModel, lazyLoading],
   );
 
   useGridApiEventHandler(
