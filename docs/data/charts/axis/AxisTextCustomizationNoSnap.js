@@ -152,7 +152,7 @@ export default function AxisTextCustomizationNoSnap() {
           `    labelStyle: {`,
           `      fontSize: ${props.labelFontSize},`,
           `      transform: \`translateY(\${
-            // Hack that should be adde din the lib latter.
+            // Hack that should be added in the lib latter.
             5 * Math.abs(Math.sin((Math.PI * props.angle) / 180))
           }px)\``,
           `    },`,

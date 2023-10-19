@@ -109,7 +109,7 @@ The bottom axis uses a filtering function to only display a tick at the beginnin
 You can display labels only on a subset of ticks with the `tickLabelInterval` property.
 It's a filtering function in the `(value, index) => boolean` form.
 
-For example `tickInterval: (value, index) => index % 2 === 0` will show only one label every two ticks.
+For example `tickLabelInterval: (value, index) => index % 2 === 0` will show the label every two ticks.
 
 :::warning
 The `value` and `index` arguments are those of the ticks, not the axis data.
