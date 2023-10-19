@@ -9,7 +9,7 @@ import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
-import { getFirstColumnIndexToRender, getTotalHeaderHeight } from '../columns/gridColumnsUtils';
+import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getIndexesToRender } from '../virtualization/useGridVirtualScroller';
 import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
