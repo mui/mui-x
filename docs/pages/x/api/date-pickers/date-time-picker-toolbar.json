@@ -15,7 +15,7 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
-    "markSelected": { "type": { "name": "bool" } },
+    "markSelected": { "type": { "name": "bool" }, "default": "true" },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" },
     "toolbarTitle": { "type": { "name": "node" } }

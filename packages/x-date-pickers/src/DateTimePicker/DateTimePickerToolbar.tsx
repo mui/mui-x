@@ -34,6 +34,7 @@ export interface DateTimePickerToolbarProps<TDate>
   /**
    * If `true`, will toggle the `selected` state for the currently active view.
    * Used by `DateTimeRangePickerToolbar` to mark only the currently selected `rangePosition` as active.
+   * @default true
    */
   markSelected?: boolean;
   /**
@@ -402,6 +403,7 @@ DateTimePickerToolbar.propTypes = {
   /**
    * If `true`, will toggle the `selected` state for the currently active view.
    * Used by `DateTimeRangePickerToolbar` to mark only the currently selected `rangePosition` as active.
+   * @default true
    */
   markSelected: PropTypes.bool,
   onChange: PropTypes.func.isRequired,

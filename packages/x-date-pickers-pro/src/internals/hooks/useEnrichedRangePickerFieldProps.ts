@@ -149,6 +149,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
     if (!currentFieldRef.current || !currentView) {
       return;
     }
+    // bring back focus to the field with the current view section selected
     currentFieldRef.current.setSelectedSections(currentView);
   }, [rangePosition, open, currentView]);
 
@@ -307,6 +308,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
       return;
     }
     const sections = singleInputFieldRef.current.getSections().map((section) => section.type);
+    // bring back focus to the field with the current view section selected
     singleInputFieldRef.current.setSelectedSections(
       rangePosition === 'start' ? sections.indexOf(currentView) : sections.lastIndexOf(currentView),
     );
