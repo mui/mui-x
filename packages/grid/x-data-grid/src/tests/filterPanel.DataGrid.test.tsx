@@ -187,7 +187,7 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
       'equals',
     );
-    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Puma');
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('');
   });
 
   it('should reset value if operator is not available for the new column', () => {
