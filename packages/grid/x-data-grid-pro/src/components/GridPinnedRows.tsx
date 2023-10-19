@@ -1,6 +1,5 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass, useGridSelector } from '@mui/x-data-grid';
 import {
@@ -16,12 +15,6 @@ const useUtilityClasses = () => {
   return composeClasses(slots, getDataGridUtilityClass, {});
 };
 
-const Element = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'PinnedRows',
-  overridesResolver: (_props, styles) => styles.pinnedRows ?? {},
-})({});
-
 export function GridPinnedRows({ position, virtualScroller, ...other }: GridPinnedRowsProps) {
   const classes = useUtilityClasses();
   const apiRef = useGridPrivateApiContext();
@@ -36,8 +29,8 @@ export function GridPinnedRows({ position, virtualScroller, ...other }: GridPinn
   });
 
   return (
-    <Element {...other} className={clsx(classes.root, other.className)} role="presentation">
+    <div {...other} className={clsx(classes.root, other.className)} role="presentation">
       {pinnedRows}
-    </Element>
+    </div>
   );
 }

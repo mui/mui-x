@@ -6,10 +6,6 @@ export interface GridPinnedRowsProps extends React.HTMLAttributes<HTMLDivElement
   virtualScroller: VirtualScroller;
 }
 
-const GridPinnedRows = React.forwardRef<HTMLDivElement, GridPinnedRowsProps>(
-  function GridPinnedRows(_props, _ref) {
-    return null;
-  },
-);
-
-export { GridPinnedRows };
+export function GridPinnedRows(_props: GridPinnedRowsProps) {
+  return null;
+}

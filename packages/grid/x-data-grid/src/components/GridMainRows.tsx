@@ -5,11 +5,6 @@ export interface GridMainRowsProps extends React.HTMLAttributes<HTMLDivElement> 
   virtualScroller: VirtualScroller;
 }
 
-const GridMainRows = React.forwardRef<HTMLDivElement, GridMainRowsProps>(function GridMainRows(
-  props,
-  _ref,
-) {
+export function GridMainRows(props: GridMainRowsProps) {
   return props.virtualScroller.getRows();
-});
-
-export { GridMainRows };
+}
