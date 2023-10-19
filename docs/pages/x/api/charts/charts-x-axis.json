@@ -10,7 +10,7 @@
       "type": { "name": "number" },
       "default": "14",
       "deprecated": true,
-      "deprecationInfo": "Consider using  <code>labelStyle.fontSize</code> instead."
+      "deprecationInfo": "Consider using <code>labelStyle.fontSize</code> instead."
     },
     "labelStyle": { "type": { "name": "object" } },
     "position": { "type": { "name": "enum", "description": "'bottom'<br>&#124;&nbsp;'top'" } },
@@ -21,7 +21,7 @@
       "type": { "name": "number" },
       "default": "12",
       "deprecated": true,
-      "deprecationInfo": "Consider using  <code>tickLabelStyle.fontSize</code> instead."
+      "deprecationInfo": "Consider using <code>tickLabelStyle.fontSize</code> instead."
     },
     "tickInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },

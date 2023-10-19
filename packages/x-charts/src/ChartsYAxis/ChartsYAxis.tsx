@@ -188,7 +188,7 @@ ChartsYAxis.propTypes = {
   /**
    * The font size of the axis label.
    * @default 14
-   * @deprecated Consider using  `labelStyle.fontSize` instead.
+   * @deprecated Consider using `labelStyle.fontSize` instead.
    */
   labelFontSize: PropTypes.number,
   /**
@@ -217,7 +217,7 @@ ChartsYAxis.propTypes = {
   /**
    * The font size of the axis ticks text.
    * @default 12
-   * @deprecated Consider using  `tickLabelStyle.fontSize` instead.
+   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
    */
   tickFontSize: PropTypes.number,
   /**
