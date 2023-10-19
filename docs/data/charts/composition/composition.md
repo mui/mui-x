@@ -28,9 +28,14 @@ As you can guess the only difference is the responsiveness.
 The first one requires to provide `width` and `height` props.
 Whereas the second one will compute undefined dimension based on the size of its parent element.
 
+The next demo allows swiching between a chart using `<ChartContainer />` with `width` and `height` props set to 500 and 300,
+and a chart using `<ResponsiveChartContainer />`.
+
+{{"demo": "BasicComposition.js" }}
+
 ### Properties
 
-This component takes all properties that are not specific to a single grphical element.
+The chart container get all props that are not specific to a single graphical element.
 This includes:
 
 - The `xAxis` and `yAxis` props. More information in the [axis page](/x/react-charts/axis/).
@@ -40,15 +45,16 @@ This includes:
 The `series` prop is an array of series definitions.
 You can find explanation about each specific time of series in their respective docs page: [line](/x/react-charts/lines/), [bar](/x/react-charts/bars/), [pie](/x/react-charts/pie/).
 
-When using composition, you must add an additional property `type`.
-It indicates the type of charts you are defining.
+When using a single components chart, the library can guess which kind of series you are defining.
+For example if you use `<BarChart />` the component assumes that `series` will be of type `'bar'`.
 
-When using a single components chart, the library can guess which kind of series your defining.
-For example if you use
+The chart container can't do such a guess.
+So you have to add an additional property `type`.
+It indicates the type of charts you are defining.
 
 ```jsx
 <BarChart series={[{
-    data: [1, 2, 3] // No need to specify it's a bar series
+    data: [1, 2, 3] // No need to specify it is a bar series
 }]} />
 
 <ChartContainer
@@ -64,11 +70,29 @@ For example if you use
 
 Those series can use the `dataset` props [the same way](/x/react-charts/bars/#using-a-dataset) single component chart does
 
+In the next demo, the chart is made by composition with subcomponents `<BarPlot />` and `<LinePlot />`.
+My modifying series `type` property, you can switch between a line and bar rendering.
+
+```jsx
+<ResponsiveChartContainer
+  series={[
+    { type, data: [1, 2, 3, 2, 1] },
+    { type, data: [4, 3, 1, 3, 4] },
+  ]}
+>
+  <BarPlot />
+  <LinePlot />
+  <ChartsXAxis label="X axis" position="bottom" axisId="x-axis-id" />
+</ResponsiveChartContainer>
+```
+
+{{"demo": "SwitchSeriesType.js" }}
+
 ## Subcomponents
 
 ### Plotting
 
-To display data, you have components named `<XxxPlot />` such as `<LinePlot />`, `<AreaPlot />`, `<BarPlot />`, ...
+To display data, you have components named `<XxxPlot />` such as `<LinePlot />`, `<AreaPlot />`, `<MarkPlot />`, `<BarPlot />`, ...
 
 ### Axis
 
@@ -76,7 +100,7 @@ To add axis, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in t
 
 It takes a `axisId` to know which one of the axes defined in the container you want to render. If not provided it will pick the first one.
 
-### Additional Information
+### Additional information
 
 To add a legend to your chart, you can use `<ChartsLegend />`.
 
@@ -101,12 +125,12 @@ Instead of using `slotProps` you can directly pass props to it.
 
 ### Interaction
 
-You can also add interaction elements with `<ChartsAxisHighlight />` and `<ChartsTooltip />`.
+You can also add interaction elements such as `<ChartsAxisHighlight />` and `<ChartsTooltip />`.
 
 :::info
 By default the container is listening to mouse event to keep track of where the mouse is in the chart.
 
-If you don't use theaxis highlight or the tooltip, consider disabling this feature with `disableAxisListener` prop.
+If you don't use the axis highlight or the tooltip, consider disabling this feature with `disableAxisListener` prop.
 
 ```jsx
 <ChartContainer {...} disableAxisListener>
