@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { BarPlot, BarPlotSlotComponentProps, BarPlotSlotsComponent } from './BarPlot';
+import { BarPlot, BarPlotProps, BarPlotSlotComponentProps, BarPlotSlotsComponent } from './BarPlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -39,7 +39,8 @@ export interface BarChartSlotComponentProps
 
 export interface BarChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Pick<BarPlotProps, 'skipAnimation'> {
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
@@ -90,6 +91,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     leftAxis,
     rightAxis,
     bottomAxis,
+    skipAnimation,
     children,
     slots,
     slotProps,
@@ -141,7 +143,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
-        <BarPlot slots={slots} slotProps={slotProps} />
+        <BarPlot slots={slots} slotProps={slotProps} skipAnimation={skipAnimation} />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -306,6 +308,11 @@ BarChart.propTypes = {
       yAxisKey: PropTypes.string,
     }),
   ).isRequired,
+  /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

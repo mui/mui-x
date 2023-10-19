@@ -23,6 +23,10 @@
       "matchPackagePatterns": ["d3-*", "@types/d3-*"]
     },
     {
+      "groupName": "react-spring",
+      "matchPackagePatterns": "@react-spring/*"
+    },
+    {
       "groupName": "Emotion",
       "matchPackagePatterns": "@emotion/*"
     },
