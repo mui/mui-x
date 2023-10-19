@@ -101,6 +101,13 @@ Those pros can accept three type of value:
 
 {{"demo": "ModifyAxisPosition.js"}}
 
+### Hiding axis
+
+To hide an axis, set it to `null`.
+For example `leftAxis={null}` hides the left axis.
+
+{{"demo": "HidingAxis.js"}}
+
 ### Rendering
 
 Axes rendering can be further customized. Below is an interactive demonstration of the axis props.

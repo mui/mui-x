@@ -11,7 +11,9 @@ export type CustomizationLabelType = {
 type CustomizationItemType = {
   type: 'warning' | 'success';
   comments?: string;
-  componentProps?: Object;
+  componentProps?: any;
+  parentSlot?: string;
+  parentComponent?: string;
 };
 export type CustomizationItemsType = Partial<{
   [k in keyof CustomizationLabelType]: CustomizationItemType;
@@ -93,8 +95,9 @@ export function withStyles(
 
     if (selectedCustomizationOption === 'sxProp') {
       const sxProp = {
-        [`& .Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
+        [`.Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
       };
+
       return <Component {...props} sx={{ ...sxProp, ...props?.sx }} />;
     }
 
@@ -115,7 +118,7 @@ export function withStyles(
 
     if (selectedCustomizationOption === 'styledComponents') {
       const StyledComponent = styled(Component as React.JSXElementConstructor<any>)(() => ({
-        [`& .Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
+        [`.Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
       }));
       return <StyledComponent {...props} />;
     }
@@ -131,6 +134,7 @@ interface Props
     Pick<UseCustomizationPlaygroundProps, 'componentName'> {
   theme: Theme;
   examples: CustomizationItemType;
+  selectedExample: CustomizationItemType | null;
 }
 
 /* I use this method to parse whatever component props are passed in and format them for the code example, 
@@ -142,7 +146,7 @@ function formatComponentProps(componentProps?: Object, spacing: number = 1) {
     return (Object.keys(obj) as Array<keyof typeof obj>)
       .map((key) => {
         const getValue = (val: any) => {
-          if (typeof val === 'string') {
+          if (typeof val === 'string' && !val.includes('Styled')) {
             return `'${val}'`;
           }
           if (separator === '=' && typeof val !== 'object') {
@@ -166,7 +170,7 @@ function formatComponentProps(componentProps?: Object, spacing: number = 1) {
           )}]${separator === '=' ? '}' : ''}`;
         }
 
-        return `${indent}${key}${separator}${getValue(value)}`;
+        return `${indent}${key}${separator}${getValue(value)},`;
       })
       .join('\n');
   }
@@ -185,6 +189,7 @@ const getCodeExample = ({
   selectedTokens,
   componentName,
   examples,
+  selectedExample,
   theme,
 }: Props) => {
   const tokens = {
@@ -244,12 +249,26 @@ const getCodeExample = ({
   }
 
   if (selectedCustomizationOption === 'sxProp') {
-    code = `${code}\n<${componentName}${formatComponentProps(examples.componentProps, 1)}
+    if (selectedExample?.parentSlot) {
+      const componentProps = {
+        ...examples.componentProps,
+        slotProps: {
+          ...examples.componentProps?.slotProps,
+          [selectedExample?.parentSlot]: {
+            sx: { [`'.Mui${selectedDemo}-${selectedSlot}'`]: tokens },
+          },
+        },
+      };
+      code = `${code}\n<${componentName}${formatComponentProps(componentProps, 1)}
+/>`;
+    } else {
+      code = `${code}\n<${componentName}${formatComponentProps(examples.componentProps, 1)}
   sx={{
-    '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
+    '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
     },
   }}
 />`;
+    }
   } else if (selectedCustomizationOption === 'customTheme') {
     code = `import { createTheme } from '@mui/material/styles'\n${code}
 const newTheme = (theme) => createTheme({
@@ -267,11 +286,32 @@ const newTheme = (theme) => createTheme({
   <${componentName}${formatComponentProps(examples.componentProps, 2)} />
 </ThemeProvider>`;
   } else if (selectedCustomizationOption === 'styledComponents') {
+    if (selectedExample?.parentSlot && selectedExample?.parentComponent) {
+      const componentProps = {
+        ...examples.componentProps,
+        slots: {
+          ...examples.componentProps?.slots,
+          [selectedExample?.parentSlot]: `Styled${selectedExample?.parentComponent}`,
+        },
+      };
+      return `import { styled } from '@mui/material/styles'\n${code}
+const Styled${selectedExample?.parentComponent} = styled(${selectedExample?.parentComponent})({
+  '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+  }
+})
+
+export default function StyledPickerContainer() {
+  return (
+    <${componentName} ${formatComponentProps(componentProps, 3)}
+    />
+  );
+}`;
+    }
     return `import { styled } from '@mui/material/styles'\n${code}
 const Styled${componentName} = styled(${componentName})({
-  '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+  '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
   }
-}))
+})
 
 export default function StyledPickerContainer() {
   return (
@@ -337,6 +377,12 @@ export function useCustomizationPlayground({
         examples: examples[selectedDemo].examples[
           selectedCustomizationOption
         ] as CustomizationItemType,
+        selectedExample:
+          selectedDemo && selectedCustomizationOption
+            ? (examples[selectedDemo]?.examples[
+                selectedCustomizationOption
+              ] as CustomizationItemType)
+            : null,
         theme,
       });
       if (code) {
