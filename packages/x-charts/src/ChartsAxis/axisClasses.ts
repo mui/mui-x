@@ -14,7 +14,7 @@ export interface ChartsAxisClasses {
   tick: string;
   /** Styles applied to ticks label. */
   tickLabel: string;
-  /** Styles applied to the axis label. */
+  /** Styles applied to the group containing the axis label. */
   label: string;
   /** Styles applied to x axes. */
   directionX: string;
