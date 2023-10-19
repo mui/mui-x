@@ -28,7 +28,12 @@ As you can guess the only difference is the responsiveness.
 The first one requires to provide `width` and `height` props.
 Whereas the second one will compute undefined dimension based on the size of its parent element.
 
-The next demo allows swiching between a chart using `<ChartContainer />` with `width` and `height` props set to 500 and 300,
+:::warning
+The parent element should have intrinsic dimensions.
+If the parents dimension relies on its content, the responsive charts will not render.
+:::
+
+The next demo allows switching between a chart using `<ChartContainer />` with `width` and `height` props set to 500 and 300,
 and a chart using `<ResponsiveChartContainer />`.
 
 {{"demo": "BasicComposition.js" }}
