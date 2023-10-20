@@ -66,6 +66,16 @@ export interface PiePlotProps {
   ) => void;
 }
 
+/**
+ * Demos:
+ *
+ * - [Pie](https://mui.com/x/react-charts/pie/)
+ * - [Pie demonstration](https://mui.com/x/react-charts/pie-demo/)
+ *
+ * API:
+ *
+ * - [PiePlot API](https://mui.com/x/api/charts/pie-plot/)
+ */
 function PiePlot(props: PiePlotProps) {
   const { slots, slotProps, onClick } = props;
   const seriesData = React.useContext(SeriesContext).pie;

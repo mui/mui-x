@@ -49,6 +49,7 @@ const Element = styled('div', {
   '@media print': {
     overflow: 'hidden',
   },
+  zIndex: 0, // See https://github.com/mui/mui-x/issues/10547
 });
 
 const Scroller = React.forwardRef<HTMLDivElement, DivAttributes & { sx?: SxProps<Theme> }>(

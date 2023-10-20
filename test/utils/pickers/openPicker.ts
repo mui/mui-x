@@ -1,4 +1,4 @@
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent } from '@mui-internal/test-utils';
 
 export type OpenPickerParams =
   | {

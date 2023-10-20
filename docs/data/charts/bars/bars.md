@@ -61,3 +61,22 @@ Bar charts can be rendered with a horizontal layout by providing the `layout="ho
 If you're using [composition](/x/react-charts/#multiple-charts), you should set the property `layout: 'horizontal'` to each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
+
+## Animation
+
+To skip animation at the creation and update of your chart you can use the `skipAnimation` prop.
+When set to `true` it skips animation powered by `@react-spring/web`.
+
+Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+
+```jsx
+// For a single component chart
+<BarChart  skipAnimation />
+
+// For a composed chart
+<ResponsiveChartContainer>
+  <BarPlot  skipAnimation />
+</ResponsiveChartContainer>
+```
+
+{{"demo": "BarAnimation.js"}}

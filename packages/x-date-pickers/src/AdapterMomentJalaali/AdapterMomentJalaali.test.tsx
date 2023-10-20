@@ -4,7 +4,7 @@ import moment from 'moment';
 import jMoment from 'moment-jalaali';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
+import { screen } from '@mui-internal/test-utils/createRenderer';
 import {
   createPickerRenderer,
   expectInputPlaceholder,

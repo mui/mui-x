@@ -1,4 +1,4 @@
-import { userEvent } from '@mui/monorepo/test/utils';
+import { userEvent } from '@mui-internal/test-utils';
 import {
   adapterToUse,
   createPickerRenderer,

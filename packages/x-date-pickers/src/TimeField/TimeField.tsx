@@ -16,6 +16,16 @@ type TimeFieldComponent = (<TDate>(
   props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimeField](http://mui.com/x/react-date-pickers/time-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ *
+ * - [TimeField API](https://mui.com/x/api/date-pickers/time-field/)
+ */
 const TimeField = React.forwardRef(function TimeField<TDate>(
   inProps: TimeFieldProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -106,7 +116,7 @@ TimeField.propTypes = {
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
-   * [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+   * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),

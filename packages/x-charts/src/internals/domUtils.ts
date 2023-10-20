@@ -1,6 +1,5 @@
 // DOM utils taken from
 // https://github.com/recharts/recharts/blob/master/src/util/DOMUtils.ts
-import * as React from 'react';
 
 const isSsr = (): boolean =>
   !(typeof window !== 'undefined' && window.document && window.setTimeout);

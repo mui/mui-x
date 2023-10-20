@@ -1,5 +1,5 @@
-import { screen } from '@mui/monorepo/test/utils';
-import { fireEvent } from '@mui/monorepo/test/utils/createRenderer';
+import { screen } from '@mui-internal/test-utils';
+import { fireEvent } from '@mui-internal/test-utils/createRenderer';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 import { createPickerRenderer, adapterToUse, describeRangeValidation } from 'test/utils/pickers';
 

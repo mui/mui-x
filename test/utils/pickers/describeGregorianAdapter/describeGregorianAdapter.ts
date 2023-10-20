@@ -1,4 +1,4 @@
-import createDescribe from '@mui/monorepo/test/utils/createDescribe';
+import createDescribe from '@mui-internal/test-utils/createDescribe';
 import { MuiPickersAdapter } from '@mui/x-date-pickers';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';

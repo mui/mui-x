@@ -90,7 +90,7 @@ const ConfigItemLabel = styled(Typography)(({ theme }) => ({
 
 const SlotItemsWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
-  gap: theme.spacing(1),
+  gap: theme.spacing(0.5),
   flexWrap: 'wrap',
 }));
 
