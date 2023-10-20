@@ -85,10 +85,8 @@
     "react-simple-code-editor": "^0.13.1",
     "recast": "^0.23.4",
     "rimraf": "^5.0.1",
-    "styled-components": "^5.3.11",
-    "stylis": "^4.3.0",
+    "styled-components": "^6.1.0",
     "stylis-plugin-rtl": "^2.1.1",
-    "stylis-plugin-rtl-sc": "npm:stylis-plugin-rtl@^2.1.1",
     "webpack-bundle-analyzer": "^4.9.1"
   },
   "devDependencies": {
