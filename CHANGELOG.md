@@ -50,7 +50,7 @@ Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
 - [charts] Add reference links to area + bar chart components (#10652) @michelengelen
 - [charts] Add reference links to line chart + sparkline components (#10650) @michelengelen
 - [charts] Add reference links to pie + scatter chart components  (#10653) @michelengelen
-- [charts] Skip rendering if not width or height (#10714) @alexfauquette
+- [charts] Render only when `width` and `height` are resolved (#10714) @alexfauquette
 - [charts] Support animation on `BarChart` (#9926) @alexfauquette
 - [charts] Use new text component to avoid tick label overflow on x-axis (#10648) @alexfauquette
 
