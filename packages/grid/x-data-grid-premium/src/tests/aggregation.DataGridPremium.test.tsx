@@ -765,4 +765,28 @@ describe('<DataGridPremium /> - Aggregation', () => {
       ]);
     });
   });
+
+  describe('built-in aggregation functions', () => {
+    describe('`sum`', () => {
+      it('should work with numbers', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sum.apply({
+            values: [0, 10, 12, 23],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(45);
+      });
+
+      it('should ignore non-numbers', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sum.apply({
+            values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(45);
+      });
+    });
+  });
 });
