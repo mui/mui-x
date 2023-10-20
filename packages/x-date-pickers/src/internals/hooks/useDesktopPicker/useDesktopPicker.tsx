@@ -60,6 +60,7 @@ export const useDesktopPicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
+    name,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
@@ -176,6 +177,7 @@ export const useDesktopPicker = <
       <Field
         {...fieldProps}
         slots={slotsForField}
+        name={name}
         slotProps={slotProps}
         inputRef={handleInputRef}
       />

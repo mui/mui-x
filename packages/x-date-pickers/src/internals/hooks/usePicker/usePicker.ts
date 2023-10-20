@@ -76,7 +76,7 @@ export const usePicker = <
     open: pickerValueResponse.open,
     actions: pickerValueResponse.actions,
     fieldProps: pickerValueResponse.fieldProps,
-
+    name: pickerValueResponse.name,
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
     hasUIView: pickerViewsResponse.hasUIView,

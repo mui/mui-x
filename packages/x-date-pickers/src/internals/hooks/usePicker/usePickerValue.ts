@@ -172,6 +172,7 @@ export const usePickerValue = <
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
     timezone: timezoneProp,
+    name,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
@@ -458,5 +459,6 @@ export const usePickerValue = <
     viewProps: viewResponse,
     layoutProps: layoutResponse,
     actions,
+    name,
   };
 };

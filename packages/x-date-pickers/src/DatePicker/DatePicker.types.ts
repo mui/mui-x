@@ -54,4 +54,8 @@ export interface DatePickerProps<TDate>
    * @default {}
    */
   slotProps?: DatePickerSlotsComponentsProps<TDate>;
+  /**
+   * The `name` attribute of the picker.
+   */
+  name?: string;
 }

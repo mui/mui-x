@@ -1,2 +1,2 @@
-<TimePicker label="disabled" disabled />
-<TimePicker label="readOnly" readOnly />
+<TimePicker name="time_picker1" label="disabled" disabled />
+<TimePicker name="time_picker2" label="readOnly" readOnly />

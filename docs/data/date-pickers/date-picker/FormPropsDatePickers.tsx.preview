@@ -1,2 +1,2 @@
-<DatePicker label="disabled" disabled />
-<DatePicker label="readOnly" readOnly />
+<DatePicker name="date_picker1" label="disabled" disabled />
+<DatePicker name="date_picker2" label="readOnly" readOnly />
