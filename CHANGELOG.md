@@ -9,6 +9,8 @@ _Oct 20, 2023_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
+- 🎁 Add a Data Grid recipe for saving & restoring state
+- 💫 Support animations on the bar chart
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
