@@ -47,7 +47,7 @@ export interface PieChartProps
    * @deprecated Consider using `slotProps.legend` instead.
    */
   legend?: ChartsLegendProps;
-  onClick?: PiePlotProps['onClick'];
+  onClick?: (event: any, series: any, itemData: any) => void;
 
   slots?: PieChartSlotsComponent;
   /**

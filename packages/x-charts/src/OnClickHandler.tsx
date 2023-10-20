@@ -10,7 +10,7 @@ import { CartesianChartSeriesType, ChartSeriesType } from './models/seriesType/c
 import { SeriesContext } from './context/SeriesContextProvider';
 import { CartesianContext } from './context/CartesianContextProvider';
 
-function getTootipHasData(
+function hasData(
   trigger: TriggerOptions,
   displayedData: null | AxisInteractionData | ItemInteractionData<ChartSeriesType>,
 ): boolean {
@@ -50,7 +50,7 @@ function OnClickHandler({ trigger, onClick }: OnClickHandlerProps) {
 
       if (trigger === 'item') {
         const displayedData = item as ItemInteractionData<ChartSeriesType>;
-        const tooltipHasData = getTootipHasData(trigger, displayedData);
+        const tooltipHasData = hasData(trigger, displayedData);
 
         if (tooltipHasData) {
           const data = series[displayedData.type]!.series[displayedData.seriesId];
@@ -61,7 +61,7 @@ function OnClickHandler({ trigger, onClick }: OnClickHandlerProps) {
         }
       } else {
         const displayedData = axis as AxisInteractionData;
-        const tooltipHasData = getTootipHasData(trigger, displayedData);
+        const tooltipHasData = hasData(trigger, displayedData);
         if (tooltipHasData) {
           const isXaxis = (displayedData.x && displayedData.x.index) !== undefined;
           const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
