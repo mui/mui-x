@@ -45,7 +45,7 @@ Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
 
 - [DateRangePicker] Fix touch based range dragging (#10664) @michelengelen
 
-### Charts / `@mui/x-charts@__CHARTS_VERSION__`
+### Charts / `@mui/x-charts@6.0.0-alpha.16`
 
 - [charts] Add reference links to area + bar chart components (#10652) @michelengelen
 - [charts] Add reference links to line chart + sparkline components (#10650) @michelengelen
