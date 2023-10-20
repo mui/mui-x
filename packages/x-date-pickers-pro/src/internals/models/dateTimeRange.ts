@@ -39,4 +39,4 @@ export type UseDateTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
   keyof BaseDateValidationProps<TDate> | 'format' | 'disableIgnoringDatePartForTimeValidation'
 >;
 
-export type DateTimeRangePickerViews = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;
+export type DateTimeRangePickerView = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;

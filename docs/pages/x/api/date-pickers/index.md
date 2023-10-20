@@ -70,8 +70,8 @@
 - [DatePickerToolbar](/x/api/date-pickers/date-picker-toolbar/)
 - [TimePickerToolbar](/x/api/date-pickers/time-picker-toolbar/)
 - [DateTimePickerToolbar](/x/api/date-pickers/date-time-picker-toolbar/)
-- [DateTimeRangePickerToolbar](/x/api/date-pickers/date-time-range-picker-toolbar/)
 - [DateRangePickerToolbar](/x/api/date-pickers/date-range-picker-toolbar/)
+- [DateTimeRangePickerToolbar](/x/api/date-pickers/date-time-range-picker-toolbar/)
 
 ### Others
 

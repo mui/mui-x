@@ -9,15 +9,15 @@ import {
   BaseDateTimeRangePickerSlotsComponent,
   BaseDateTimeRangePickerSlotsComponentsProps,
 } from '../DateTimeRangePicker/shared';
-import { DateTimeRangePickerViews } from '../internals/models';
+import { DateTimeRangePickerView } from '../internals/models';
 
 export interface DesktopDateTimeRangePickerSlotsComponent<TDate>
   extends BaseDateTimeRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, DateTimeRangePickerViews>, 'Field'> {}
+    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, DateTimeRangePickerView>, 'Field'> {}
 
 export interface DesktopDateTimeRangePickerSlotsComponentsProps<TDate>
   extends BaseDateTimeRangePickerSlotsComponentsProps<TDate>,
-    Omit<UseDesktopRangePickerSlotsComponentsProps<TDate, DateTimeRangePickerViews>, 'tabs'> {}
+    Omit<UseDesktopRangePickerSlotsComponentsProps<TDate, DateTimeRangePickerView>, 'tabs'> {}
 
 export interface DesktopDateTimeRangePickerProps<TDate>
   extends BaseDateTimeRangePickerProps<TDate>,

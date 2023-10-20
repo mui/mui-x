@@ -15,7 +15,7 @@ import {
 import { DesktopOnlyTimePickerProps } from '@mui/x-date-pickers/internals/models/props/clock';
 import { applyDefaultViewProps } from '@mui/x-date-pickers/internals/utils/views';
 import { DateTimeRangeValidationError } from '../models';
-import { DateRange, DateTimeRangePickerViews } from '../internals/models';
+import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import {
   DateRangeCalendarSlotsComponent,
   DateRangeCalendarSlotsComponentsProps,
@@ -64,7 +64,7 @@ export interface BaseDateTimeRangePickerProps<TDate>
       BasePickerInputProps<
         DateRange<TDate>,
         TDate,
-        DateTimeRangePickerViews,
+        DateTimeRangePickerView,
         DateTimeRangeValidationError
       >,
       'orientation'
@@ -102,7 +102,7 @@ export interface BaseDateTimeRangePickerProps<TDate>
   viewRenderers?: Partial<
     PickerViewRendererLookup<
       DateRange<TDate>,
-      DateTimeRangePickerViews,
+      DateTimeRangePickerView,
       DateRangeViewRendererProps<TDate, 'day'>,
       {}
     >

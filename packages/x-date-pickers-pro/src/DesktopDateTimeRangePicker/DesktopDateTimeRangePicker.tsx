@@ -16,7 +16,7 @@ import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.ty
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
-import { DateRange, DateTimeRangePickerViews } from '../internals/models';
+import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
@@ -27,8 +27,8 @@ const DesktopDateTimeRangeContainer = styled('div')({
 });
 
 const rendererInterceptor = function rendererInterceptor<TDate>(
-  inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerViews, any, any>,
-  popperView: DateTimeRangePickerViews,
+  inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
+  popperView: DateTimeRangePickerView,
   rendererProps: any,
 ) {
   const finalProps = {
@@ -75,7 +75,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
 
   const viewRenderers: PickerViewRendererLookup<
     DateRange<TDate>,
-    DateTimeRangePickerViews,
+    DateTimeRangePickerView,
     any,
     {}
   > = {
@@ -116,7 +116,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, DateTimeRangePickerViews, typeof props>({
+  const { renderPicker } = useDesktopRangePicker<TDate, DateTimeRangePickerView, typeof props>({
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
