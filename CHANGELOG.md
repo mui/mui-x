@@ -37,7 +37,7 @@ Same changes as in `@mui/x-data-grid-pro@6.16.3`.
 - [pickers] Add reference links to clock components (#10645) @michelengelen
 - [pickers] Add reference links to misc picker components (#10647) @michelengelen
 - [pickers] Add reference links to toolbar components (#10646) @michelengelen
-- [pickers] Change the props received by the `FakeTextField` component (#10687) @flaviendelangle
+- [pickers] POC: Change the props received by the `FakeTextField` component (#10687) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@6.16.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
