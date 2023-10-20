@@ -24,7 +24,6 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 Same changes as in `@mui/x-data-grid@6.16.3`.
 
-
 #### `@mui/x-data-grid-premium@6.16.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@6.16.3`.
