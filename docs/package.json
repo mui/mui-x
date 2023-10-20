@@ -87,7 +87,6 @@
     "rimraf": "^5.0.1",
     "styled-components": "^5.3.11",
     "stylis-plugin-rtl": "^2.1.1",
-    "stylis-plugin-rtl-sc": "npm:stylis-plugin-rtl@^2.1.1",
     "webpack-bundle-analyzer": "^4.9.1"
   },
   "devDependencies": {
