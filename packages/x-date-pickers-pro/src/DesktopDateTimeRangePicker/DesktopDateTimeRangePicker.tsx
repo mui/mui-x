@@ -61,7 +61,7 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<TDate>(
   inProps: DesktopDateTimeRangePickerProps<TDate>,

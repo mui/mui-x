@@ -42,7 +42,7 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Available components
 
-The component is available in four variants:
+The component is available in three variants:
 
 - The `DesktopDateTimeRangePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.

@@ -14,7 +14,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { DesktopOnlyTimePickerProps } from '@mui/x-date-pickers/internals/models/props/clock';
 import { applyDefaultViewProps } from '@mui/x-date-pickers/internals/utils/views';
-import { DateRangeValidationError } from '../models';
+import { DateTimeRangeValidationError } from '../models';
 import { DateRange, DateTimeRangePickerViews } from '../internals/models';
 import {
   DateRangeCalendarSlotsComponent,
@@ -65,7 +65,7 @@ export interface BaseDateTimeRangePickerProps<TDate>
         DateRange<TDate>,
         TDate,
         DateTimeRangePickerViews,
-        DateRangeValidationError
+        DateTimeRangeValidationError
       >,
       'orientation'
     >,

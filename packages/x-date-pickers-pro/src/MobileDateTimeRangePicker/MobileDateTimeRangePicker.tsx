@@ -22,7 +22,7 @@ import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeR
 
 type MobileDateRangePickerComponent = (<TDate>(
   props: MobileDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangePicker<TDate>(
   inProps: MobileDateTimeRangePickerProps<TDate>,
