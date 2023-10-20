@@ -99,6 +99,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       </Scroller>
       <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
       <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
+      {props.children}
     </Container>
   );
 }
