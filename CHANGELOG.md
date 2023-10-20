@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.16.3
+
+_Oct 20, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add a Data Grid recipe for saving & restoring state
+- 💫 Support animations on the bar chart
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.16.3`
+
+- [DataGrid] Allow passing readonly arrays to `columns` and `sortingOrder` props (#10686) @pcorpet
+
+#### `@mui/x-data-grid-pro@6.16.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.16.3`.
+
+#### `@mui/x-data-grid-premium@6.16.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.16.3`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.16.3`
+
+- [fields] Correctly respect leading zeroes on seconds section (#10713) @flaviendelangle
+- [fields] Use `onChange` instead of `onKeyPress` for Backspace editing (#10494) @flaviendelangle
+- [pickers] Add reference links to DatePicker components (#10626) @michelengelen
+- [pickers] Add reference links to clock components (#10645) @michelengelen
+- [pickers] Add reference links to misc picker components (#10647) @michelengelen
+- [pickers] Add reference links to toolbar components (#10646) @michelengelen
+- [pickers] POC: Change the props received by the `FakeTextField` component (#10687) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@6.16.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
+
+- [DateRangePicker] Fix touch based range dragging (#10664) @michelengelen
+
+### Charts / `@mui/x-charts@6.0.0-alpha.16`
+
+- [charts] Add reference links to area + bar chart components (#10652) @michelengelen
+- [charts] Add reference links to line chart + sparkline components (#10650) @michelengelen
+- [charts] Add reference links to pie + scatter chart components  (#10653) @michelengelen
+- [charts] Render only when `width` and `height` are resolved (#10714) @alexfauquette
+- [charts] Support animation on `BarChart` (#9926) @alexfauquette
+- [charts] Use new text component to avoid tick label overflow on x-axis (#10648) @alexfauquette
+
+### Docs
+
+- [docs] Add a recipe for saving and restoring `state` externally (#10722) @michelengelen
+- [docs] Add example about how to add an axis (#10709) @alexfauquette
+- [docs] Customization Playground - fix DesktopDatePicker sx props and styled examples (#10665) @noraleonte
+- [docs] Improve meta description @oliviertassinari
+- [docs] Make overview demo work in codesandbox (#10661) @alexfauquette
+
+### Core
+
+- [core] Update React renovate group with `@types` (#10723) @LukasTy
+- [core] Update `styled-components` (#10733) @LukasTy
+
 ## 6.16.2
 
 _Oct 12, 2023_
