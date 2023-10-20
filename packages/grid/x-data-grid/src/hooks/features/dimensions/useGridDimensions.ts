@@ -200,6 +200,13 @@ export function useGridDimensions(
           hasScrollY = content.height + scrollBarSize > container.height;
         }
       }
+
+      if (hasScrollY) {
+        viewportInnerSize.width -= scrollBarSize;
+      }
+      if (hasScrollX) {
+        viewportInnerSize.height -= scrollBarSize;
+      }
     }
 
     const newFullDimensions: GridDimensions = {
