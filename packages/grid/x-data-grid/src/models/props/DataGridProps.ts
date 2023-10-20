@@ -371,6 +371,15 @@ export interface DataGridPropsWithDefaultValues {
    * @default '\t'
    */
   clipboardCopyCellDelimiter: string;
+  /**
+   * If `true`, the data grid will attach the `apiRef` to the root HTML element.
+   * Usage:
+   * - Set the `debug` prop to `true`.
+   * - In the dev tools, select the root HTML element (`.MuiDataGrid-root`).
+   * - Type `$0.apiRef` in the console to access the `apiRef`.
+   * @default false
+   */
+  debug: boolean;
 }
 
 /**

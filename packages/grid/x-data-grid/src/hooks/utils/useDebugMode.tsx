@@ -3,8 +3,8 @@ import type { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity'
 
 /**
  * Usage:
- * - Set `debug` prop to `true`
- * - Find the root HTML element (`.MuiDataGrid-root`) in dev tools and select it.
+ * - Set the `debug` prop to `true`.
+ * - In the dev tools, select the root HTML element (`.MuiDataGrid-root`).
  * - Type `$0.apiRef` in the console to access the `apiRef`.
  */
 export const useDebugMode = ({
@@ -19,7 +19,9 @@ export const useDebugMode = ({
   React.useEffect(() => {
     if (enabled && rootContainerEl) {
       // @ts-ignore
-      rootContainerEl.apiRef = apiRef;
+      rootContainerEl.apiRef = {
+        current: apiRef.current.getPublicApi(),
+      };
     }
   }, [
     rootContainerEl,
