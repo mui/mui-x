@@ -108,7 +108,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
       <ChartsTooltip trigger="item" {...tooltip} />
-      <OnClickHandler trigger={tooltip?.trigger} onClick={onClick} />
+      <OnClickHandler trigger="item" onClick={onClick} />
       {children}
     </ResponsiveChartContainer>
   );
