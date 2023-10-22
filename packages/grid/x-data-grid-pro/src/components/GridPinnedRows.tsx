@@ -24,6 +24,7 @@ export function GridPinnedRows({ position, virtualScroller, ...other }: GridPinn
 
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedRows = virtualScroller.getRows({
+    position,
     rows: pinnedRowsData[position],
     rowIndexOffset: position === 'top' ? 0 : pinnedRowsData.top.length + mainRowsLength,
   });

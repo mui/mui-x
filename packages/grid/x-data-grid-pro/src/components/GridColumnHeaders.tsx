@@ -7,6 +7,7 @@ import {
   gridClasses,
   GridColumnHeaderSeparatorSides,
   useGridSelector,
+  gridVisiblePinnedColumnDefinitionsSelector,
 } from '@mui/x-data-grid';
 import {
   GridBaseColumnHeaders,
@@ -19,7 +20,6 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   GridPinnedPosition,
-  gridVisiblePinnedColumnsSelector,
 } from '../hooks/features/columnPinning';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridScrollArea } from './GridScrollArea';
@@ -123,7 +123,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
 
-    const visiblePinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnsSelector);
+    const visiblePinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
 
     const {
       isDragging,

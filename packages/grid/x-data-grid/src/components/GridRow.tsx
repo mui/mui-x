@@ -13,7 +13,8 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
-import { GridStateColDef } from '../models/colDef/gridColDef';
+import type { GridPinnedColumns } from '../hooks/features/columns';
+import type { GridStateColDef } from '../models/colDef/gridColDef';
 import {
   gridColumnPositionsSelector,
   gridColumnsTotalWidthSelector,
@@ -46,10 +47,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   lastColumnToRender: number;
   visibleColumns: GridStateColDef[];
   renderedColumns: GridStateColDef[];
-  visiblePinnedColumns: {
-    left: GridStateColDef[];
-    right: GridStateColDef[];
-  };
+  pinnedColumns: GridPinnedColumns;
   /**
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
@@ -118,7 +116,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     className,
     visibleColumns,
     renderedColumns,
-    visiblePinnedColumns,
+    pinnedColumns,
     containerWidth,
     firstColumnToRender,
     lastColumnToRender,
@@ -425,13 +423,13 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const randomNumber = randomNumberBetween(10000, 20, 80);
 
-  const leftCells = visiblePinnedColumns.left.map((column, i) => {
+  const leftCells = pinnedColumns.left.map((column, i) => {
     const indexRelativeToAllColumns = i;
     return getCell(column, indexRelativeToAllColumns, PinnedPosition.LEFT);
   });
 
-  const rightCells = visiblePinnedColumns.right.map((column, i) => {
-    const indexRelativeToAllColumns = visibleColumns.length - visiblePinnedColumns.right.length + i;
+  const rightCells = pinnedColumns.right.map((column, i) => {
+    const indexRelativeToAllColumns = visibleColumns.length - pinnedColumns.right.length + i;
     return getCell(column, indexRelativeToAllColumns, PinnedPosition.RIGHT);
   });
 

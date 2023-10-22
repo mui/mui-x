@@ -88,7 +88,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
 
         <Content {...getContentProps()}>
           <RenderZone {...getRenderZoneProps()}>
-            <rootProps.slots.mainRows virtualScroller={virtualScroller} />
+            {virtualScroller.getRows()}
           </RenderZone>
         </Content>
 

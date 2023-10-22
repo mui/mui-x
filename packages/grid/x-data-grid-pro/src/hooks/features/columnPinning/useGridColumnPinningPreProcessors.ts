@@ -2,10 +2,10 @@ import * as React from 'react';
 import {
   GridPinnedColumnFields,
   GridPipeProcessor,
+  gridPinnedColumnsSelector,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const useGridColumnPinningPreProcessors = (

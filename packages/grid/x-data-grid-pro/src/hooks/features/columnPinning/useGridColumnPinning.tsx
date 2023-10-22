@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { useTheme, Theme } from '@mui/material/styles';
 import {
-  gridColumnLookupSelector,
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
-  gridVisibleColumnFieldsSelector,
   useGridApiMethod,
   useGridApiEventHandler,
   GridEventListener,
@@ -16,6 +14,8 @@ import {
   useOnMount,
   useGridRegisterPipeProcessor,
   updatePinnedColumns,
+  gridPinnedColumnsSelector,
+  gridVisiblePinnedColumnDefinitionsSelector,
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
@@ -25,10 +25,6 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridColumnPinningApi, GridPinnedPosition } from './gridColumnPinningInterface';
-import {
-  gridPinnedColumnsSelector,
-  gridVisiblePinnedColumnsSelector,
-} from './gridColumnPinningSelector';
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<
@@ -86,7 +82,7 @@ export const useGridColumnPinning = (
         return initialValue;
       }
 
-      const visiblePinnedColumns = gridVisiblePinnedColumnsSelector(apiRef.current.state);
+      const visiblePinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef.current.state);
 
       if (
         !params.colIndex ||
@@ -141,7 +137,7 @@ export const useGridColumnPinning = (
 
   const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(
     (initialValue, { targetIndex }) => {
-      const visiblePinnedColumns = gridVisiblePinnedColumnsSelector(apiRef.current.state);
+      const visiblePinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef.current.state);
 
       if (visiblePinnedColumns.left.length === 0 && visiblePinnedColumns.right.length === 0) {
         return initialValue;

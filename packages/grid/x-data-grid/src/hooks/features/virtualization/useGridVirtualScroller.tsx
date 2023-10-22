@@ -13,9 +13,12 @@ import { useLazyRef } from '../../utils/useLazyRef';
 import { useResizeObserver } from '../../../hooks/utils/useResizeObserver';
 import {
   gridVisibleColumnDefinitionsSelector,
+  gridVisiblePinnedColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
 } from '../columns/gridColumnsSelector';
+import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
+import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
@@ -126,7 +129,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const enabledForColumns = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const dimensions = useGridSelector(apiRef, () => apiRef.current.getRootDimensions());
   const containerDimensions = dimensions.viewportOuterSize;
-  const [visiblePinnedColumns, setVisiblePinnedColumns] = React.useState(EMPTY_PINNED_COLUMNS);
+  const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
+  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
 
   const { onRenderZonePositioning, getRowProps } = props;
 
@@ -283,8 +287,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
         firstIndex: nextRenderContext.firstColumnIndex,
         lastIndex: nextRenderContext.lastColumnIndex,
-        minFirstIndex: visiblePinnedColumns.left.length,
-        maxLastIndex: visibleColumns.length - visiblePinnedColumns.right.length,
+        minFirstIndex: pinnedColumns.left.length,
+        maxLastIndex: visibleColumns.length - pinnedColumns.right.length,
         buffer: rootProps.columnBuffer,
       });
 
@@ -316,7 +320,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       ];
       const left =
         direction * columnPositions[nextRenderContext.firstColumnIndex] -
-        columnPositions[visiblePinnedColumns.left.length];
+        columnPositions[pinnedColumns.left.length];
 
       gridRootRef.current!.style.setProperty('--DataGrid-offsetTop', `${top}px`);
       gridRootRef.current!.style.setProperty('--DataGrid-offsetLeft', `${left}px`);
@@ -436,14 +440,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
   });
 
-  const minFirstColumn = visiblePinnedColumns.left.length;
-  const maxLastColumn = visibleColumns.length - visiblePinnedColumns.right.length;
+  const minFirstColumn = pinnedColumns.left.length;
+  const maxLastColumn = visibleColumns.length - pinnedColumns.right.length;
   const availableSpace = containerDimensions.width;
 
   const getRows = (
     params: {
       rows?: GridRowEntry[];
       rowIndexOffset?: number;
+      position?: GridPinnedRowsPosition;
     } = {},
   ) => {
     const { rowIndexOffset = 0 } = params;
@@ -471,19 +476,19 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         columns: visibleColumns,
       });
 
-      if (visiblePinnedColumns.left.length > 0) {
+      if (pinnedColumns.left.length > 0) {
         apiRef.current.calculateColSpan({
           rowId: row.id,
           minFirstColumn: 0,
-          maxLastColumn: visiblePinnedColumns.left.length,
+          maxLastColumn: pinnedColumns.left.length,
           columns: visibleColumns,
         });
       }
 
-      if (visiblePinnedColumns.right.length > 0) {
+      if (pinnedColumns.right.length > 0) {
         apiRef.current.calculateColSpan({
           rowId: row.id,
-          minFirstColumn: visibleColumns.length - visiblePinnedColumns.right.length,
+          minFirstColumn: visibleColumns.length - pinnedColumns.right.length,
           maxLastColumn: visibleColumns.length,
           columns: visibleColumns,
         });
@@ -600,7 +605,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           tabbableCell={tabbableCell}
           renderedColumns={renderedColumnsWithFocusedCell}
           visibleColumns={visibleColumns}
-          visiblePinnedColumns={visiblePinnedColumns}
+          pinnedColumns={pinnedColumns}
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
@@ -725,7 +730,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     getRenderZoneProps: () => ({ ref: renderZoneRef, role: 'rowgroup' }),
     getScrollbarVerticalProps: () => ({ ref: scrollbarVerticalRef, role: 'presentation' }),
     getScrollbarHorizontalProps: () => ({ ref: scrollbarHorizontalRef, role: 'presentation' }),
-    setVisiblePinnedColumns,
   };
 };
 
