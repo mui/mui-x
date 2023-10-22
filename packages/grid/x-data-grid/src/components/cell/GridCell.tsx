@@ -293,10 +293,8 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       };
     }
     const cellStyle = {
-      minWidth: width,
-      maxWidth: width,
-      minHeight: height,
-      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
+      '--width': `${width}px`,
+      '--height': typeof height === 'number' ? `${height}px` : height,
     } as React.CSSProperties;
 
     if (pinnedPosition === PinnedPosition.LEFT) {

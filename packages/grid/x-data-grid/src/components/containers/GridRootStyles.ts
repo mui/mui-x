@@ -387,6 +387,12 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.cell}`]: {
       display: 'flex',
       alignItems: 'center',
+      '--width': '0px',
+      '--height': '0px',
+      minWidth: 'var(--width)',
+      maxWidth: 'var(--width)',
+      minHeight: 'var(--height)',
+      maxHeight: 'var(--height)',
       borderBottom: '1px solid',
       '&.Mui-selected': {
         backgroundColor: theme.vars
@@ -527,6 +533,17 @@ export const GridRootStyles = styled('div', {
       {
         transform: 'translate3d(var(--DataGrid-offsetLeft), 0, 0)',
       },
+    [`& .${gridClasses['row--lastVisible']}`]: {
+      minHeight: 'unset !important',
+      maxHeight: 'unset !important',
+    },
+    [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
+      minWidth: 'var(--width)',
+      maxWidth: 'var(--width)',
+      minHeight: 'calc(var(--height) + var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+      maxHeight: 'calc(var(--height) + var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+      paddingBottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+    },
     [`& .${gridClasses.treeDataGroupingCell}`]: {
       display: 'flex',
       alignItems: 'center',
