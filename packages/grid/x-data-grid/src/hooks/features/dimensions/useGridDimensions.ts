@@ -51,7 +51,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   contentSize: EMPTY_SIZE,
   hasScrollX: false,
   hasScrollY: false,
-  scrollBarSize: 0,
+  scrollbarSize: 0,
   headerHeight: 0,
   columnsTotalWidth: 0,
   headersTotalHeight: 0,
@@ -148,7 +148,7 @@ export function useGridDimensions(
     const rootElement = apiRef.current.rootElementRef.current;
     const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
-    const scrollBarSize = measureScrollbarSize(rootElement, columnsTotalWidth, props.scrollbarSize);
+    const scrollbarSize = measureScrollbarSize(rootElement, columnsTotalWidth, props.scrollbarSize);
 
     const topContainerHeight = headersTotalHeight + pinnedRowsHeight.top;
     const bottomContainerHeight = pinnedRowsHeight.bottom;
@@ -169,11 +169,11 @@ export function useGridDimensions(
 
       viewportOuterSize = {
         width: rootDimensionsRef.current.width,
-        height: rowsMeta.currentPageTotalHeight + (hasScrollX ? scrollBarSize : 0),
+        height: rowsMeta.currentPageTotalHeight + (hasScrollX ? scrollbarSize : 0),
       };
       viewportInnerSize = {
-        width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
-        height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
+        width: viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0),
+        height: viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0),
       };
     } else {
       viewportOuterSize = {
@@ -193,19 +193,19 @@ export function useGridDimensions(
 
       if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
         hasScrollY = hasScrollYIfNoXScrollBar;
-        hasScrollX = content.width + (hasScrollY ? scrollBarSize : 0) > container.width;
+        hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
 
         // We recalculate the scroll y to consider the size of the x scrollbar.
         if (hasScrollX) {
-          hasScrollY = content.height + scrollBarSize > container.height;
+          hasScrollY = content.height + scrollbarSize > container.height;
         }
       }
 
       if (hasScrollY) {
-        viewportInnerSize.width -= scrollBarSize;
+        viewportInnerSize.width -= scrollbarSize;
       }
       if (hasScrollX) {
-        viewportInnerSize.height -= scrollBarSize;
+        viewportInnerSize.height -= scrollbarSize;
       }
     }
 
@@ -217,7 +217,7 @@ export function useGridDimensions(
       contentSize,
       hasScrollX,
       hasScrollY,
-      scrollBarSize,
+      scrollbarSize,
       headerHeight,
       columnsTotalWidth,
       headersTotalHeight,
@@ -273,7 +273,7 @@ export function useGridDimensions(
     }
     root.style.setProperty('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
     root.style.setProperty('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
-    root.style.setProperty('--DataGrid-scrollbarSize', `${dimensions.scrollBarSize}px`);
+    root.style.setProperty('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);
     root.style.setProperty('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
     root.style.setProperty('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
     root.style.setProperty('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);

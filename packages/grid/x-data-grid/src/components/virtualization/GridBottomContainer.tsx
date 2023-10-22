@@ -11,28 +11,20 @@ const useUtilityClasses = () => {
   return composeClasses(slots, getDataGridUtilityClass, {});
 };
 
-const StyledDiv = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'BottomContainer',
-  overridesResolver: (_props, styles) => styles.bottomContainer ?? {},
-})({
+const Element = styled('div')({
   position: 'sticky',
-  bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
   zIndex: 2,
+  bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
 });
 
-export const GridBottomContainer = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(function GridBottomContainer(props, ref) {
+export function GridBottomContainer(props: React.HTMLAttributes<HTMLDivElement>) {
   const classes = useUtilityClasses();
 
   return (
-    <StyledDiv
-      ref={ref}
+    <Element
       {...props}
       className={clsx(classes.root, props.className, gridClasses['container--bottom'])}
       role="presentation"
     />
   );
-});
+}

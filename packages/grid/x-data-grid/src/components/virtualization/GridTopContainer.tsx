@@ -11,29 +11,20 @@ const useUtilityClasses = () => {
   return composeClasses(slots, getDataGridUtilityClass, {});
 };
 
-const StyledDiv = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'TopContainer',
-  overridesResolver: (_props, styles) => styles.topContainer,
-})({
+const Element = styled('div')({
   position: 'sticky',
-  top: 0,
   zIndex: 2,
-  width: '100%',
+  top: 0,
 });
 
-export const GridTopContainer = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(function GridTopContainer(props, ref) {
+export function GridTopContainer(props: React.HTMLAttributes<HTMLDivElement>) {
   const classes = useUtilityClasses();
 
   return (
-    <StyledDiv
-      ref={ref}
+    <Element
       {...props}
       className={clsx(classes.root, props.className, gridClasses['container--top'])}
       role="presentation"
     />
   );
-});
+}

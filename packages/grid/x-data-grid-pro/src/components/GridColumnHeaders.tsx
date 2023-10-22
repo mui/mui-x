@@ -245,7 +245,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
               showCellVerticalBorder: rootProps.showCellVerticalBorder,
             }}
             className={classes.rightPinnedColumns}
-            style={{ paddingRight: 'var(--DataGrid--scrollbarSize)' }}
             {...pinnedColumnHeadersProps}
           >
             {getColumnGroupHeaders({

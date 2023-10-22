@@ -712,10 +712,10 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
-        const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
-        expect(scrollBarSize).not.to.equal(0);
+        const scrollbarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
+        expect(scrollbarSize).not.to.equal(0);
         expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-          scrollBarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
+          scrollbarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
         );
       });
 
@@ -814,9 +814,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
       const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
-      const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
+      const scrollbarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
       const overlayWrapper = screen.getByText('No rows').parentElement;
-      const expectedHeight = height - columnHeaderHeight - scrollBarSize;
+      const expectedHeight = height - columnHeaderHeight - scrollbarSize;
       expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
     });
 

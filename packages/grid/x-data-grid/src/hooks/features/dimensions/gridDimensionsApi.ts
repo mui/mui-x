@@ -33,7 +33,7 @@ export interface GridDimensions {
    * Size of the scrollbar used to scroll the rows in pixel.
    * It is defined even when the scrollbar is currently not needed.
    */
-  scrollBarSize: number;
+  scrollbarSize: number;
   /**
    * Size of all the visible columns.
    */

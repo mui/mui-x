@@ -333,7 +333,6 @@ export const GridRootStyles = styled('div', {
       color: 'inherit',
     },
     [`& .${gridClasses.menuIcon}`]: {
-      width: 0,
       visibility: 'hidden',
       fontSize: 20,
       marginRight: -10,
@@ -342,7 +341,6 @@ export const GridRootStyles = styled('div', {
     },
     [`.${gridClasses.menuOpen}`]: {
       visibility: 'visible',
-      width: 'auto',
     },
     [`& .${gridClasses.row}`]: {
       display: 'flex',
