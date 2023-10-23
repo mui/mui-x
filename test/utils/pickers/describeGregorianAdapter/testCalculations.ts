@@ -123,7 +123,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       }
     });
 
-    it.only('should parse undefined', () => {
+    it('should parse undefined', () => {
       if (adapterTZ.lib !== 'dayjs') {
         return;
       }
