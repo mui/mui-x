@@ -1,14 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SeriesContext } from '../context/SeriesContextProvider';
-import PieArc, { PieArcProps } from './PieArc';
+
 import PieArcLabel, { PieArcLabelProps } from './PieArcLabel';
 import { DrawingContext } from '../context/DrawingProvider';
+import { DefaultizedPieValueType, PieSeriesType } from '../models/seriesType/pie';
 import {
-  DefaultizedPieValueType,
-  PieItemIdentifier,
-  PieSeriesType,
-} from '../models/seriesType/pie';
+  PieArcPlot,
+  PieArcPlotProps,
+  PieArcPlotSlotComponentProps,
+  PieArcPlotSlotsComponent,
+} from './PieArcPlot';
 
 const RATIO = 180 / Math.PI;
 
@@ -32,17 +34,15 @@ function getItemLabel(
   return arcLabel(item);
 }
 
-export interface PiePlotSlotsComponent {
-  pieArc?: React.JSXElementConstructor<PieArcProps>;
+export interface PiePlotSlotsComponent extends PieArcPlotSlotsComponent {
   pieArcLabel?: React.JSXElementConstructor<PieArcLabelProps>;
 }
 
-export interface PiePlotSlotComponentProps {
-  pieArc?: Partial<PieArcProps>;
+export interface PiePlotSlotComponentProps extends PieArcPlotSlotComponentProps {
   pieArcLabel?: Partial<PieArcLabelProps>;
 }
 
-export interface PiePlotProps {
+export interface PiePlotProps extends PieArcPlotProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -59,11 +59,6 @@ export interface PiePlotProps {
    * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
    * @param {DefaultizedPieValueType} item The pie item.
    */
-  onClick?: (
-    event: React.MouseEvent<SVGPathElement, MouseEvent>,
-    pieItemIdentifier: PieItemIdentifier,
-    item: DefaultizedPieValueType,
-  ) => void;
 }
 
 /**
@@ -92,7 +87,6 @@ function PiePlot(props: PiePlotProps) {
   };
   const { series, seriesOrder } = seriesData;
 
-  const Arc = slots?.pieArc ?? PieArc;
   const ArcLabel = slots?.pieArcLabel ?? PieArcLabel;
 
   return (
@@ -117,31 +111,20 @@ function PiePlot(props: PiePlotProps) {
               cy === undefined ? center.y : top + cy
             })`}
           >
+            <PieArcPlot
+              innerRadius={innerRadius}
+              outerRadius={outerRadius ?? availableRadius}
+              cornerRadius={cornerRadius}
+              id={seriesId}
+              data={data}
+              highlightScope={series[seriesId].highlightScope}
+              highlighted={highlighted}
+              faded={faded}
+              onClick={onClick}
+              slots={slots}
+              slotProps={slotProps}
+            />
             <g>
-              {data.map((item, index) => {
-                return (
-                  <Arc
-                    {...item}
-                    key={item.id}
-                    innerRadius={innerRadius}
-                    outerRadius={outerRadius ?? availableRadius}
-                    cornerRadius={cornerRadius}
-                    id={seriesId}
-                    color={item.color}
-                    dataIndex={index}
-                    highlightScope={series[seriesId].highlightScope}
-                    highlighted={highlighted}
-                    faded={faded}
-                    onClick={
-                      onClick &&
-                      ((event) => {
-                        onClick(event, { type: 'pie', seriesId, dataIndex: index }, item);
-                      })
-                    }
-                    {...slotProps?.pieArc}
-                  />
-                );
-              })}
               {data.map((item, index) => {
                 return (
                   <ArcLabel
