@@ -1,7 +1,6 @@
 [
   { "name": "AdapterFormats", "kind": "Interface" },
   { "name": "AdapterOptions", "kind": "TypeAlias" },
-  { "name": "AdapterUnits", "kind": "TypeAlias" },
   { "name": "ArrowDropDownIcon", "kind": "Variable" },
   { "name": "ArrowLeftIcon", "kind": "Variable" },
   { "name": "ArrowRightIcon", "kind": "Variable" },

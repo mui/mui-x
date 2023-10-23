@@ -287,6 +287,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     return null;
   }
 
+  const label = `${utils.format(month, 'month')} ${utils.format(month, 'year')}`;
+
   return (
     <PickersCalendarHeaderRoot
       {...other}
@@ -302,17 +304,14 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
         aria-live="polite"
         className={classes.labelContainer}
       >
-        <PickersFadeTransitionGroup
-          reduceAnimations={reduceAnimations}
-          transKey={utils.format(month, 'monthAndYear')}
-        >
+        <PickersFadeTransitionGroup reduceAnimations={reduceAnimations} transKey={label}>
           <PickersCalendarHeaderLabel
             id={labelId}
             data-mui-test="calendar-month-and-year-text"
             ownerState={ownerState}
             className={classes.label}
           >
-            {utils.format(month, 'monthAndYear')}
+            {label}
           </PickersCalendarHeaderLabel>
         </PickersFadeTransitionGroup>
         {views.length > 1 && !disabled && (

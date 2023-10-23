@@ -16,7 +16,6 @@ export const testFormat: DescribeGregorianAdapterTestSuite = ({ adapter }) => {
     expectDate('shortDate', 'Jan 1');
     expectDate('year', '2020');
     expectDate('month', 'January');
-    expectDate('monthAndDate', 'January 1');
     expectDate('weekday', 'Wednesday');
     expectDate('weekdayShort', 'Wed');
     expectDate('dayOfMonth', '1');

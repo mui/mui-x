@@ -103,19 +103,6 @@ describe('<DateCalendar />', () => {
     expect(disabledDays.length).to.equal(31);
   });
 
-  it('should render header label text according to monthAndYear format', () => {
-    render(
-      <LocalizationProvider
-        dateAdapter={AdapterClassToUse}
-        dateFormats={{ monthAndYear: 'yyyy/MM' }}
-      >
-        <DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />,
-      </LocalizationProvider>,
-    );
-
-    expect(screen.getByText('2019/01')).toBeVisible();
-  });
-
   it('should render column header according to dayOfWeekFormatter', () => {
     render(
       <LocalizationProvider dateAdapter={AdapterClassToUse}>
