@@ -67,9 +67,9 @@ const maxAgg: GridAggregationFunction<number | Date> = {
   columnTypes: ['number', 'date', 'dateTime'],
 };
 
-const sizeAgg: GridAggregationFunction<number> = {
+const sizeAgg: GridAggregationFunction<unknown, number> = {
   apply: ({ values }) => {
-    return values.length;
+    return values.filter((value) => typeof value !== 'undefined').length;
   },
   valueFormatter: (params: GridValueFormatterParams) => {
     if (params.value == null || !isNumber(params.value)) {

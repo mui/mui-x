@@ -788,5 +788,27 @@ describe('<DataGridPremium /> - Aggregation', () => {
         ).to.equal(45);
       });
     });
+
+    describe('`size`', () => {
+      it('should work with any value types', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.size.apply({
+            values: [23, '', 'a', NaN, {}, false, true],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(7);
+      });
+
+      it('should ignore undefined values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.size.apply({
+            values: [23, '', 'a', NaN, {}, false, true, undefined],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(7);
+      });
+    });
   });
 });
