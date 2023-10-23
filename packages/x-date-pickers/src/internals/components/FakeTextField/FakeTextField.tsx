@@ -1,30 +1,68 @@
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
-export interface FakeTextFieldElement extends React.HTMLAttributes<HTMLDivElement> {
-  before: string;
-  after: string;
+export interface FakeTextFieldElement {
+  container: React.HTMLAttributes<HTMLSpanElement>;
+  content: React.HTMLAttributes<HTMLSpanElement>;
+  before: React.HTMLAttributes<HTMLSpanElement>;
+  after: React.HTMLAttributes<HTMLSpanElement>;
 }
 
 interface FakeTextFieldProps {
   elements: FakeTextFieldElement[];
+  valueStr: string;
+  onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
+  error: boolean;
+  id?: string;
+  InputProps: any;
+  inputProps: any;
+  disabled?: boolean;
+  autoFocus?: boolean;
+  ownerState?: any;
+  valueType: 'value' | 'placeholder';
 }
 
 export const FakeTextField = React.forwardRef(function FakeTextField(
   props: FakeTextFieldProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { elements } = props;
+  const {
+    elements,
+    valueStr,
+    onValueStrChange,
+    id,
+    error,
+    InputProps,
+    inputProps,
+    autoFocus,
+    disabled,
+    valueType,
+    ownerState,
+    ...other
+  } = props;
 
   return (
-    <Stack direction="row" spacing={1} ref={ref}>
-      {elements.map(({ before, after, ...otherElementProps }, elementIndex) => (
-        <React.Fragment key={elementIndex}>
-          {before}
-          <input {...otherElementProps} />
-          {after}
-        </React.Fragment>
-      ))}
-    </Stack>
+    <React.Fragment>
+      <Box
+        ref={ref}
+        {...other}
+        style={{
+          display: 'inline-block',
+          border: '1px solid black',
+          borderRadius: 4,
+          padding: '2px 4px',
+          color: valueType === 'placeholder' ? 'grey' : 'black',
+        }}
+      >
+        {elements.map(({ container, content, before, after }, elementIndex) => (
+          <span {...container} key={elementIndex}>
+            <span {...before} />
+            <span {...content} />
+            <span {...after} />
+          </span>
+        ))}
+      </Box>
+      <input type="hidden" value={valueStr} onChange={onValueStrChange} id={id} />
+    </React.Fragment>
   );
 });
