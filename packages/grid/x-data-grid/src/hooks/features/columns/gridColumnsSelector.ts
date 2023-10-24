@@ -73,7 +73,7 @@ export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
 export const gridPinnedColumnsSelector = createSelector(
   gridColumnsStateSelector,
   (columnsState) => columnsState.pinnedColumns.model,
-)
+);
 
 /**
  * Get the visible pinned columns.
@@ -82,7 +82,7 @@ export const gridPinnedColumnsSelector = createSelector(
 export const gridVisiblePinnedColumnDefinitionsSelector = createSelector(
   gridColumnsStateSelector,
   (columnsState) => columnsState.pinnedColumns.visible,
-)
+);
 
 /**
  * Get the left position in pixel of each visible columns relative to the left of the first column.

@@ -22,8 +22,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     scroller: ['virtualScroller'],
-    scrollbarVertical: ['scrollbarVertical'],
-    scrollbarHorizontal: ['scrollbarHorizontal'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -67,7 +65,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
-  const virtualScroller = useGridVirtualScroller({});
+  const virtualScroller = useGridVirtualScroller();
   const {
     getContainerProps,
     getScrollerProps,
@@ -89,6 +87,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         <Content {...getContentProps()}>
           <RenderZone {...getRenderZoneProps()}>
             {virtualScroller.getRows()}
+            {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
           </RenderZone>
         </Content>
 

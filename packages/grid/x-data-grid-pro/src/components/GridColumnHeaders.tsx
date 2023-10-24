@@ -18,9 +18,7 @@ import {
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import {
-  GridPinnedPosition,
-} from '../hooks/features/columnPinning';
+import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridScrollArea } from './GridScrollArea';
 
@@ -123,7 +121,10 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
 
-    const visiblePinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+    const visiblePinnedColumns = useGridSelector(
+      apiRef,
+      gridVisiblePinnedColumnDefinitionsSelector,
+    );
 
     const {
       isDragging,

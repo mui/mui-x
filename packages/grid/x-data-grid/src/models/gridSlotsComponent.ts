@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import type { GridRowProps } from '../components/GridRow';
+import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 
 export interface GridBaseSlots {
@@ -108,6 +109,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * @default DataGridColumnHeaders
    */
   ColumnHeaders: React.JSXElementConstructor<any>;
+  /**
+   * Component responsible for rendering the detail panels.
+   * @default GridDetailPanels
+   */
+  DetailPanels: React.JSXElementConstructor<GridDetailPanelsProps>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    * @default GridFooter

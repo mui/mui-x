@@ -13,9 +13,7 @@ const DetailPanel = styled(Box, {
   slot: 'DetailPanel',
   overridesResolver: (props, styles) => styles.detailPanel,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  zIndex: 2,
   width: '100%',
-  position: 'absolute',
   backgroundColor: (theme.vars || theme).palette.background.default,
   overflow: 'auto',
 }));
