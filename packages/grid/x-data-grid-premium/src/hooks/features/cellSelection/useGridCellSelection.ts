@@ -486,9 +486,7 @@ export const useGridCellSelection = (
         newClasses.push(gridClasses['cell--rangeTop']);
       }
 
-      // https://github.com/mui/mui-x/issues/10777
       if (rowIndex + visibleRows.range.firstRowIndex < visibleRows.range.lastRowIndex) {
-        debugger;
         const { id: nextRowId } = visibleRows.rows[rowIndex + 1];
         if (!apiRef.current.unstable_isCellSelected(nextRowId, field)) {
           newClasses.push(gridClasses['cell--rangeBottom']);
