@@ -333,6 +333,11 @@ PieChart.propTypes = {
     }),
   ).isRequired,
   /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */

@@ -164,6 +164,11 @@ PiePlot.propTypes = {
    */
   onClick: PropTypes.func,
   /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
