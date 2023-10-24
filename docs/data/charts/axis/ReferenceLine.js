@@ -53,7 +53,8 @@ export default function ReferenceLine() {
         <ChartsReferenceLine
           x={new Date(2023, 8, 2, 9)}
           lineStyle={{ strokeDasharray: '10 5' }}
-          label="Wake up\n9AM"
+          labelStyle={{ fontSize: '10' }}
+          label={`Wake up\n9AM`}
           labelAlign="start"
         />
         <ChartsReferenceLine y={50} label="Middle value" labelAlign="end" />
