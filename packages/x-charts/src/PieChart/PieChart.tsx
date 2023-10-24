@@ -38,7 +38,8 @@ export interface PieChartSlotComponentProps
 
 export interface PieChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Pick<PiePlotProps, 'skipAnimation'> {
   series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
@@ -80,6 +81,7 @@ function PieChart(props: PieChartProps) {
     sx,
     tooltip = { trigger: 'item' },
     axisHighlight = { x: 'none', y: 'none' },
+    skipAnimation,
     legend = { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } },
     topAxis = null,
     leftAxis = null,
@@ -124,7 +126,12 @@ function PieChart(props: PieChartProps) {
         slots={slots}
         slotProps={slotProps}
       />
-      <PiePlot slots={slots} slotProps={slotProps} onClick={onClick} />
+      <PiePlot
+        slots={slots}
+        slotProps={slotProps}
+        onClick={onClick}
+        skipAnimation={skipAnimation}
+      />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       <ChartsTooltip {...tooltip} />

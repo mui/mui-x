@@ -1,18 +1,13 @@
 import * as React from 'react';
-import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
+import { arc as d3Arc } from 'd3-shape';
+import { animated, SpringValue, to } from '@react-spring/web';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { HighlightScope } from '../context/HighlightProvider';
-import { InteractionContext } from '../context/InteractionProvider';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
-import { PieSeriesType } from '../models/seriesType/pie';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
@@ -53,27 +48,24 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   return composeClasses(slots, getPieArcUtilityClass, classes);
 };
 
-const PieArcRoot = styled('path', {
+const PieArcRoot = styled(animated.path, {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
-})<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
   stroke: (theme.vars || theme).palette.background.paper,
   strokeWidth: 1,
   strokeLinejoin: 'round',
-  fill: ownerState.color,
-  opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 
-export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> &
-  D3PieArcDatum<any> & {
+export type PieArcProps = PieArcOwnerState &
+  React.ComponentPropsWithoutRef<'path'> & {
+    startAngle: SpringValue<number>;
+    endAngle: SpringValue<number>;
     highlightScope?: Partial<HighlightScope>;
-    innerRadius: PieSeriesType['innerRadius'];
-    outerRadius: number;
-    cornerRadius: PieSeriesType['cornerRadius'];
-    highlighted: PieSeriesType['highlighted'];
-    faded: PieSeriesType['faded'];
+    innerRadius: SpringValue<number>;
+    outerRadius: SpringValue<number>;
+    cornerRadius: SpringValue<number>;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
   };
 
@@ -109,17 +101,22 @@ export default function PieArc(props: PieArcProps) {
 
   return (
     <PieArcRoot
-      d={
-        d3Arc().cornerRadius(cornerRadius)({
+      d={to(
+        [startAngle, endAngle, innerRadius, outerRadius, cornerRadius],
+        (sA, eA, iR, oR, cR) =>
+          d3Arc().cornerRadius(cR)({
           ...other,
-          innerRadius,
-          outerRadius,
-        })!
-      }
+            startAngle: sA,
+            endAngle: eA,
+            innerRadius: iR,
+            outerRadius: oR,
+          })!,
+      )}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={classes.root}
+      {...other}
       {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
     />
   );

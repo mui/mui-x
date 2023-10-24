@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { useTransition } from '@react-spring/web';
 import PieArc, { PieArcProps } from './PieArc';
 import {
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieItemIdentifier,
 } from '../models/seriesType/pie';
+import { getIsFaded, getIsHighlighted } from '../hooks/useInteractionItemProps';
+import { InteractionContext } from '../context/InteractionProvider';
 
 export interface PieArcPlotSlotsComponent {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -126,6 +129,49 @@ export function PieArcPlot(props: PieArcPlotProps) {
     ],
   );
 
+  const transition = useTransition<ValueWithHighlight, AnimatedObject>(dataWithHighlight, {
+    keys: (item) => {
+      return item.id;
+    },
+    from: ({ innerRadius, outerRadius, cornerRadius, startAngle, endAngle, color, isFaded }) => ({
+      innerRadius,
+      outerRadius: (innerRadius + outerRadius) / 2,
+      cornerRadius,
+      startAngle: (startAngle + endAngle) / 2,
+      endAngle: (startAngle + endAngle) / 2,
+      fill: color,
+      opacity: isFaded ? 0.3 : 1,
+    }),
+    leave: ({ innerRadius, cornerRadius, startAngle, endAngle }) => ({
+      innerRadius,
+      outerRadius: innerRadius,
+      cornerRadius,
+      startAngle: (startAngle + endAngle) / 2,
+      endAngle: (startAngle + endAngle) / 2,
+    }),
+    enter: ({ innerRadius, outerRadius, cornerRadius, startAngle, endAngle }) => ({
+      innerRadius,
+      outerRadius,
+      cornerRadius,
+      startAngle,
+      endAngle,
+    }),
+    update: ({ innerRadius, outerRadius, cornerRadius, startAngle, endAngle, color, isFaded }) => ({
+      innerRadius,
+      outerRadius,
+      cornerRadius,
+      startAngle,
+      endAngle,
+      fill: color,
+      opacity: isFaded ? 0.3 : 1,
+    }),
+    immediate: skipAnimation,
+    config: {
+      tension: 120,
+      friction: 14,
+      clamp: true,
+    },
+  });
 
   if (data.length === 0) {
     return null;
@@ -135,7 +181,13 @@ export function PieArcPlot(props: PieArcPlotProps) {
 
   return (
     <g {...other}>
-      {data.map((item, index) => {
+      {transition(
+        (
+          { startAngle, endAngle, innerRadius, outerRadius, cornerRadius, ...style },
+          item,
+          _,
+          index,
+        ) => {
         return (
           <Arc
               startAngle={startAngle}
@@ -159,7 +211,8 @@ export function PieArcPlot(props: PieArcPlotProps) {
             {...slotProps?.pieArc}
           />
         );
-      })}
+        },
+      )}
     </g>
   );
 }

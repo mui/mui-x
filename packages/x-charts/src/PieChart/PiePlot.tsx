@@ -42,7 +42,7 @@ export interface PiePlotSlotComponentProps extends PieArcPlotSlotComponentProps 
   pieArcLabel?: Partial<PieArcLabelProps>;
 }
 
-export interface PiePlotProps extends PieArcPlotProps {
+export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'onClick'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -72,7 +72,7 @@ export interface PiePlotProps extends PieArcPlotProps {
  * - [PiePlot API](https://mui.com/x/api/charts/pie-plot/)
  */
 function PiePlot(props: PiePlotProps) {
-  const { slots, slotProps, onClick } = props;
+  const { skipAnimation, slots, slotProps, onClick } = props;
   const seriesData = React.useContext(SeriesContext).pie;
   const { left, top, width, height } = React.useContext(DrawingContext);
 
@@ -117,6 +117,7 @@ function PiePlot(props: PiePlotProps) {
               cornerRadius={cornerRadius}
               id={seriesId}
               data={data}
+              skipAnimation={skipAnimation}
               highlightScope={series[seriesId].highlightScope}
               highlighted={highlighted}
               faded={faded}
