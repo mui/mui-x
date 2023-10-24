@@ -61,11 +61,11 @@ export type PieArcProps = PieArcOwnerState &
   React.ComponentPropsWithoutRef<'path'> & {
     startAngle: SpringValue<number>;
     endAngle: SpringValue<number>;
-    highlightScope?: Partial<HighlightScope>;
     innerRadius: SpringValue<number>;
     outerRadius: SpringValue<number>;
     cornerRadius: SpringValue<number>;
     paddingAngle: SpringValue<number>;
+    highlightScope?: Partial<HighlightScope>;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
   };
 

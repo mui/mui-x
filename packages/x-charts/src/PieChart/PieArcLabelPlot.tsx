@@ -1,28 +1,50 @@
 import * as React from 'react';
 import { useTransition } from '@react-spring/web';
-import PieArc, { PieArcProps } from './PieArc';
 import {
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
-  PieItemIdentifier,
+  PieSeriesType,
 } from '../models/seriesType/pie';
-import { defaultTransitionConfig } from './dataTransform/transition';
+import { defaultLabelTransitionConfig } from './dataTransform/transition';
 import {
   AnimatedObject,
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
+import PieArcLabel, { PieArcLabelProps } from './PieArcLabel';
 import { DefaultizedProps } from '../models/helpers';
 
-export interface PieArcPlotSlotsComponent {
-  pieArc?: React.JSXElementConstructor<PieArcProps>;
+const RATIO = 180 / Math.PI;
+
+function getItemLabel(
+  arcLabel: PieSeriesType['arcLabel'],
+  arcLabelMinAngle: number,
+  item: DefaultizedPieValueType,
+) {
+  if (!arcLabel) {
+    return null;
+  }
+  const angle = (item.endAngle - item.startAngle) * RATIO;
+  if (angle < arcLabelMinAngle) {
+    return null;
+  }
+
+  if (typeof arcLabel === 'string') {
+    return item[arcLabel]?.toString();
+  }
+
+  return arcLabel(item);
 }
 
-export interface PieArcPlotSlotComponentProps {
-  pieArc?: Partial<PieArcProps>;
+export interface PieArcLabelPlotSlotsComponent {
+  pieArcLabel?: React.JSXElementConstructor<PieArcLabelProps>;
 }
 
-export interface PieArcPlotProps
+export interface PieArcLabelPlotSlotComponentProps {
+  pieArcLabel?: Partial<PieArcLabelProps>;
+}
+
+export interface PieArcLabelPlotProps
   extends DefaultizedProps<
     Pick<
       DefaultizedPieSeriesType,
@@ -33,6 +55,8 @@ export interface PieArcPlotProps
       | 'outerRadius'
       | 'cornerRadius'
       | 'paddingAngle'
+      | 'arcLabel'
+      | 'arcLabelMinAngle'
       | 'id'
       | 'highlightScope'
     >,
@@ -42,23 +66,12 @@ export interface PieArcPlotProps
    * Overridable component slots.
    * @default {}
    */
-  slots?: PieArcPlotSlotsComponent;
+  slots?: PieArcLabelPlotSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PieArcPlotSlotComponentProps;
-  /**
-   * Callback fired when a pie item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
-   * @param {DefaultizedPieValueType} item The pie item.
-   */
-  onClick?: (
-    event: React.MouseEvent<SVGPathElement, MouseEvent>,
-    pieItemIdentifier: PieItemIdentifier,
-    item: DefaultizedPieValueType,
-  ) => void;
+  slotProps?: PieArcLabelPlotSlotComponentProps;
   /**
    * If `true`, animations are skiped.
    * @default false
@@ -66,7 +79,7 @@ export interface PieArcPlotProps
   skipAnimation?: boolean;
 }
 
-export function PieArcPlot(props: PieArcPlotProps) {
+export function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const {
     slots,
     slotProps,
@@ -79,7 +92,8 @@ export function PieArcPlot(props: PieArcPlotProps) {
     highlighted,
     faded = { additionalRadius: -5 },
     data,
-    onClick,
+    arcLabel,
+    arcLabelMinAngle = 0,
     skipAnimation,
     ...other
   } = props;
@@ -96,7 +110,7 @@ export function PieArcPlot(props: PieArcPlotProps) {
     data,
   });
   const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...defaultTransitionConfig,
+    ...defaultLabelTransitionConfig,
     immediate: skipAnimation,
   });
 
@@ -104,7 +118,7 @@ export function PieArcPlot(props: PieArcPlotProps) {
     return null;
   }
 
-  const Arc = slots?.pieArc ?? PieArc;
+  const ArcLabel = slots?.pieArcLabel ?? PieArcLabel;
 
   return (
     <g {...other}>
@@ -120,11 +134,9 @@ export function PieArcPlot(props: PieArcPlotProps) {
             ...style
           },
           item,
-          _,
-          index,
         ) => {
           return (
-            <Arc
+            <ArcLabel
               startAngle={startAngle}
               endAngle={endAngle}
               paddingAngle={pA}
@@ -134,17 +146,10 @@ export function PieArcPlot(props: PieArcPlotProps) {
               style={style}
               id={id}
               color={item.color}
-              dataIndex={index}
-              highlightScope={highlightScope}
               isFaded={item.isFaded}
               isHighlighted={item.isHighlighted}
-              onClick={
-                onClick &&
-                ((event) => {
-                  onClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
-                })
-              }
-              {...slotProps?.pieArc}
+              formattedArcLabel={getItemLabel(arcLabel, arcLabelMinAngle, item)}
+              {...slotProps?.pieArcLabel}
             />
           );
         },
