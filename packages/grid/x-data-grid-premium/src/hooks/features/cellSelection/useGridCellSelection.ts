@@ -22,8 +22,6 @@ import {
   gridClasses,
   gridFocusCellSelector,
   GridCellParams,
-  gridPaginationModelSelector,
-  useGridSelector,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import { GridCellSelectionApi } from './gridCellSelectionInterfaces';
@@ -62,7 +60,7 @@ export const useGridCellSelection = (
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
   const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
   const autoScrollRAF = React.useRef<number | null>();
-  const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
+
   const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
     (typeof ignoreValueFormatterProp === 'object'
@@ -489,8 +487,8 @@ export const useGridCellSelection = (
       }
 
       // https://github.com/mui/mui-x/issues/10777
-      const rowIndexRelativeToRange = rowIndex + paginationModel.page * paginationModel.pageSize;
-      if (rowIndexRelativeToRange < visibleRows.range.lastRowIndex) {
+      if (rowIndex + visibleRows.range.firstRowIndex < visibleRows.range.lastRowIndex) {
+        debugger;
         const { id: nextRowId } = visibleRows.rows[rowIndex + 1];
         if (!apiRef.current.unstable_isCellSelected(nextRowId, field)) {
           newClasses.push(gridClasses['cell--rangeBottom']);
@@ -519,7 +517,7 @@ export const useGridCellSelection = (
 
       return newClasses;
     },
-    [apiRef, visibleRows.range, visibleRows.rows, paginationModel],
+    [apiRef, visibleRows.range, visibleRows.rows],
   );
 
   const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
