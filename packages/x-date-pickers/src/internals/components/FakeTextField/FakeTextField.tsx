@@ -40,14 +40,14 @@ interface FakeTextFieldProps {
   label?: string;
   // size?: 'small' | 'medium';
   variant?: 'filled' | 'outlined' | 'standard';
-  // valueStr: string;
+  valueStr: string;
   // onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
   // id?: string;
   // InputProps: any;
   // inputProps: any;
   // autoFocus?: boolean;
   // ownerState?: any;
-  // valueType: 'value' | 'placeholder';
+  valueType: 'value' | 'placeholder';
 }
 
 export const FakeTextField = React.forwardRef(function FakeTextField(
@@ -62,12 +62,14 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
     label = 'test',
     variant = 'outlined',
     fullWidth = false,
+    valueStr,
+    valueType,
     ...other
   } = props;
 
   const [focused, setFocused] = React.useState(false);
 
-  const areAllSectionsEmpty = elements.every(({ content }) => !content?.value);
+  const areAllSectionsEmpty = !valueStr && valueType !== 'placeholder';
 
   const ownerState = {
     ...props,
@@ -100,10 +102,23 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
   return (
     <FakeTextFieldRoot
       className={classes.root}
-      {...{ focused, disabled, variant, error, color, ownerState, fullWidth, ...other }}
+      {...{
+        focused,
+        disabled,
+        variant,
+        error,
+        color,
+        ownerState,
+        fullWidth,
+        ...other,
+      }}
     >
       <InputLabel shrink={focused || !areAllSectionsEmpty}>{label}</InputLabel>
-      <FakeInput ref={ref} {...props} {...{ areAllSectionsEmpty, onWrapperClick }} />
+      <FakeInput
+        ref={ref}
+        {...{ elements, valueStr, valueType, areAllSectionsEmpty, onWrapperClick }}
+        {...other}
+      />
     </FakeTextFieldRoot>
   );
 });

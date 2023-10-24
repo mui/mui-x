@@ -15,6 +15,7 @@ const SectionsContainer = styled('span', {
   return {
     fontFamily: theme.typography.fontFamily,
     fontSize: 'inherit',
+    lineHeight: '1.4375em', // 23px
   };
 });
 const SectionInput = styled('span', {
@@ -33,7 +34,7 @@ const SectionsWrapper = styled(Box, {
   name: 'MuiFakeInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})(({ theme, ownerState }: { theme: Theme; ownerState: FakeInputProps }) => {
+})(({ theme, ownerState }: { theme: Theme; ownerState: OwnerStateType }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
@@ -97,7 +98,7 @@ const NotchedOutlineRoot = styled(Outline, {
   };
 });
 
-const useUtilityClasses = (ownerState: FakeInputProps) => {
+const useUtilityClasses = (ownerState: OwnerStateType) => {
   const { focused, disabled, error, classes } = ownerState;
 
   const slots = {
@@ -137,15 +138,6 @@ export interface FakeInputElement extends React.HTMLAttributes<HTMLDivElement> {
 
 interface FakeInputProps extends FieldsTextFieldProps {
   elements: FakeInputElement[];
-  color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-  disabled?: boolean;
-  error?: boolean;
-  fullWidth?: boolean;
-  helperText?: React.ReactNode;
-  label?: string;
-  margin?: 'dense' | 'none' | 'normal';
-  size?: 'small' | 'medium';
-  variant?: 'filled' | 'outlined' | 'standard';
   areAllSectionsEmpty?: boolean;
   valueStr: string;
   onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -157,6 +149,14 @@ interface FakeInputProps extends FieldsTextFieldProps {
   valueType: 'value' | 'placeholder';
 
   onWrapperClick: () => void;
+}
+
+interface OwnerStateType extends FakeInputProps {
+  color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
+  disabled?: boolean;
+  error?: boolean;
+  fullWidth?: boolean;
+  variant?: 'filled' | 'outlined' | 'standard';
 }
 
 const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref<HTMLDivElement>) {

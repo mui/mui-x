@@ -49,9 +49,6 @@ function AppContent() {
           onClick: () => {},
         } as React.HTMLAttributes<HTMLSpanElement>,
         content: {
-          // Could we include this for the content?
-          value: null,
-          placeholder: section.placeholder,
           className: 'content',
           role: 'textbox',
           children: section.value || section.placeholder,
