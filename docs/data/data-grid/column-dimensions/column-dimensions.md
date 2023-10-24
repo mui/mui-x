@@ -88,13 +88,19 @@ In all the cases, the `colDef.minWidth` and `colDef.maxWidth` options will be re
 {{"demo": "ColumnAutosizing.js", "disableAd": true, "bg": "inline"}}
 
 :::warning
-Autosizing has no effect if dynamic row height is enabled.
-:::
-
-:::warning
 The data grid can only autosize based on the currently rendered cells.
 
 DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) to discuss it further.
+:::
+
+### Autosizing with dynamic row height
+
+Column autosizing is compatible with the [Dynamic row height](/x/react-data-grid/row-height/#dynamic-row-height) feature.
+
+{{"demo": "ColumnAutosizingDynamicRowHeight.js", "disableAd": true, "bg": "inline"}}
+
+:::warning
+When autosizing columns with long content, consider setting the `maxWidth` for the column to avoid it becoming too wide.
 :::
 
 ## API
