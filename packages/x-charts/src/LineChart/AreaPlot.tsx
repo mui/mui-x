@@ -19,6 +19,17 @@ export interface AreaPlotProps
   extends React.SVGAttributes<SVGSVGElement>,
     Pick<AreaElementProps, 'slots' | 'slotProps'> {}
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Areas demonstration](https://mui.com/x/react-charts/areas-demo/)
+ * - [Stacking](https://mui.com/x/react-charts/stacking/)
+ *
+ * API:
+ *
+ * - [AreaPlot API](https://mui.com/x/api/charts/area-plot/)
+ */
 function AreaPlot(props: AreaPlotProps) {
   const { slots, slotProps, ...other } = props;
 

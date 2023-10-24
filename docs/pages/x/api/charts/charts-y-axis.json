@@ -6,12 +6,32 @@
     "disableTicks": { "type": { "name": "bool" } },
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
-    "labelFontSize": { "type": { "name": "number" }, "default": "14" },
+    "labelFontSize": {
+      "type": { "name": "number" },
+      "default": "14",
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>labelStyle.fontSize</code> instead."
+    },
+    "labelStyle": { "type": { "name": "object" } },
     "position": { "type": { "name": "enum", "description": "'left'<br>&#124;&nbsp;'right'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "stroke": { "type": { "name": "string" }, "default": "'currentColor'" },
-    "tickFontSize": { "type": { "name": "number" }, "default": "12" },
+    "tickFontSize": {
+      "type": { "name": "number" },
+      "default": "12",
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>tickLabelStyle.fontSize</code> instead."
+    },
+    "tickInterval": {
+      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
+      "default": "'auto'"
+    },
+    "tickLabelInterval": {
+      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
+      "default": "'auto'"
+    },
+    "tickLabelStyle": { "type": { "name": "object" } },
     "tickMaxStep": { "type": { "name": "number" } },
     "tickMinStep": { "type": { "name": "number" } },
     "tickNumber": { "type": { "name": "number" } },

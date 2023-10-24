@@ -1,0 +1,10 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the reference line" },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the reference label" }
+  },
+  "slotDescriptions": {}
+}

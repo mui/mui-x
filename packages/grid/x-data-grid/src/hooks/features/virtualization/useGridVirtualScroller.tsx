@@ -663,6 +663,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     const rows: React.JSX.Element[] = [];
+    let isRowWithFocusedCellRendered = false;
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
@@ -713,6 +714,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         rowStyleCache.current[id] = style;
       }
 
+      let index = rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i;
+      if (isRowWithFocusedCellNotInRange && cellFocus?.id === id) {
+        index = indexOfRowWithFocusedCell;
+        isRowWithFocusedCellRendered = true;
+      } else if (isRowWithFocusedCellRendered) {
+        index -= 1;
+      }
+
       rows.push(
         <rootProps.slots.row
           key={id}
@@ -728,7 +737,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i}
+          index={index}
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
           position={position}

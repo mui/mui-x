@@ -1,0 +1,16 @@
+{
+  "props": {},
+  "slots": [],
+  "name": "ChartsReferenceLine",
+  "imports": [
+    "import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';",
+    "import { ChartsReferenceLine } from '@mui/x-charts';"
+  ],
+  "styles": {
+    "classes": ["root", "line", "label"],
+    "globalClasses": {},
+    "name": "MuiChartsReferenceLine"
+  },
+  "filename": "/packages/x-charts/src/ChartsReferenceLine/ChartsReferenceLine.tsx",
+  "demos": "<ul></ul>"
+}

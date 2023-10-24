@@ -19,6 +19,16 @@ export interface LinePlotProps
   extends React.SVGAttributes<SVGSVGElement>,
     Pick<LineElementProps, 'slots' | 'slotProps'> {}
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
+ */
 function LinePlot(props: LinePlotProps) {
   const { slots, slotProps, ...other } = props;
   const seriesData = React.useContext(SeriesContext).line;
