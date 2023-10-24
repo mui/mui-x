@@ -222,16 +222,13 @@ const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref
         onBlur={onBlur}
       >
         {elements &&
-          elements.map(
-            // TODO: rename to before & after, remove type (eg. type month on the input doesn't make a lot of sense, so separating it until we have the final behavior)
-            ({ container, content, before, after }, elementIndex) => (
-              <SectionsContainer key={elementIndex} {...container}>
-                <span {...before} />
-                <SectionInput {...content} disabled={fcs.disabled} {...{ ownerState }} />
-                <span {...after} />
-              </SectionsContainer>
-            ),
-          )}
+          elements.map(({ container, content, before, after }, elementIndex) => (
+            <SectionsContainer key={elementIndex} {...container}>
+              <span {...before} />
+              <SectionInput {...content} disabled={fcs.disabled} {...{ ownerState }} />
+              <span {...after} />
+            </SectionsContainer>
+          ))}
         <NotchedOutlineRoot
           shrink={fcs.focused || !areAllSectionsEmpty}
           notched={fcs.focused || !areAllSectionsEmpty}

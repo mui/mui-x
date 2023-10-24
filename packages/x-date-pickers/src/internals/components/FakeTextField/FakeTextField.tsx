@@ -20,6 +20,7 @@ const useUtilityClasses = (ownerState: FakeTextFieldProps & { focused: boolean }
     notchedOutline: ['notchedOutline'],
   };
 
+  // TODO: fix classes
   return composeClasses(slots, getFakeTextFieldUtilityClass, []);
 };
 
@@ -30,6 +31,8 @@ export interface FakeTextFieldElement {
   after: React.HTMLAttributes<HTMLSpanElement>;
 }
 
+// TODO: move to separate file
+// TODO: extend input props
 interface FakeTextFieldProps {
   elements: FakeTextFieldElement[];
   color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
