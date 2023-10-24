@@ -17,18 +17,26 @@ export interface PieArcPlotSlotComponentProps {
   pieArc?: Partial<PieArcProps>;
 }
 
+interface AnimatedObject {
+  innerRadius: number;
+  outerRadius: number;
+  cornerRadius: number;
+  startAngle: number;
+  endAngle: number;
+}
+
+interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObject {
+  isFaded: boolean;
+  isHighlighted: boolean;
+}
+
 export interface PieArcPlotProps
-  extends Pick<
-      PieArcProps,
-      | 'innerRadius'
-      | 'outerRadius'
-      | 'cornerRadius'
-      | 'id'
-      | 'highlightScope'
-      | 'highlighted'
-      | 'faded'
+  extends Pick<PieArcProps, 'id' | 'highlightScope'>,
+    Pick<
+      DefaultizedPieSeriesType,
+      'data' | 'faded' | 'highlighted' | 'innerRadius' | 'cornerRadius'
     >,
-    Pick<DefaultizedPieSeriesType, 'data'> {
+    Required<Pick<DefaultizedPieSeriesType, 'outerRadius'>> {
   /**
    * Overridable component slots.
    * @default {}
@@ -188,29 +196,29 @@ export function PieArcPlot(props: PieArcPlotProps) {
           _,
           index,
         ) => {
-        return (
-          <Arc
+          return (
+            <Arc
               startAngle={startAngle}
               endAngle={endAngle}
-            innerRadius={innerRadius}
-            outerRadius={outerRadius}
-            cornerRadius={cornerRadius}
+              innerRadius={innerRadius}
+              outerRadius={outerRadius}
+              cornerRadius={cornerRadius}
               style={style}
-            id={seriesId}
-            color={item.color}
-            dataIndex={index}
-            highlightScope={highlightScope}
+              id={seriesId}
+              color={item.color}
+              dataIndex={index}
+              highlightScope={highlightScope}
               isFaded={item.isFaded}
               isHighlighted={item.isHighlighted}
-            onClick={
-              onClick &&
-              ((event) => {
-                onClick(event, { type: 'pie', seriesId, dataIndex: index }, item);
-              })
-            }
-            {...slotProps?.pieArc}
-          />
-        );
+              onClick={
+                onClick &&
+                ((event) => {
+                  onClick(event, { type: 'pie', seriesId, dataIndex: index }, item);
+                })
+              }
+              {...slotProps?.pieArc}
+            />
+          );
         },
       )}
     </g>

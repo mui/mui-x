@@ -105,7 +105,7 @@ export default function PieArc(props: PieArcProps) {
         [startAngle, endAngle, innerRadius, outerRadius, cornerRadius],
         (sA, eA, iR, oR, cR) =>
           d3Arc().cornerRadius(cR)({
-          ...other,
+            ...other,
             startAngle: sA,
             endAngle: eA,
             innerRadius: iR,

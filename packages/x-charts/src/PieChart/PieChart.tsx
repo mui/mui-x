@@ -30,6 +30,7 @@ export interface PieChartSlotsComponent
     PiePlotSlotsComponent,
     ChartsLegendSlotsComponent,
     ChartsTooltipSlotsComponent {}
+
 export interface PieChartSlotComponentProps
   extends ChartsAxisSlotComponentProps,
     PiePlotSlotComponentProps,
