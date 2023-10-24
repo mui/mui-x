@@ -23,6 +23,7 @@ interface AnimatedObject {
   cornerRadius: number;
   startAngle: number;
   endAngle: number;
+  paddingAngle: number;
 }
 
 interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObject {
@@ -34,7 +35,7 @@ export interface PieArcPlotProps
   extends Pick<PieArcProps, 'id' | 'highlightScope'>,
     Pick<
       DefaultizedPieSeriesType,
-      'data' | 'faded' | 'highlighted' | 'innerRadius' | 'cornerRadius'
+      'data' | 'faded' | 'highlighted' | 'innerRadius' | 'cornerRadius' | 'paddingAngle'
     >,
     Required<Pick<DefaultizedPieSeriesType, 'outerRadius'>> {
   /**
@@ -72,6 +73,7 @@ export function PieArcPlot(props: PieArcPlotProps) {
     innerRadius: baseInnerRadius = 0,
     outerRadius: baseOuterRadius,
     cornerRadius: baseCornerRadius = 0,
+    paddingAngle: basePaddingAngle = 0,
     id: seriesId,
     highlightScope,
     highlighted,
@@ -109,6 +111,10 @@ export function PieArcPlot(props: PieArcPlotProps) {
           additionalRadius: 0,
           ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
         };
+        const paddingAngle = Math.max(
+          0,
+          (Math.PI * (attibuesOverride.paddingAngle ?? basePaddingAngle)) / 180,
+        );
         const innerRadius = Math.max(0, attibuesOverride.innerRadius ?? baseInnerRadius);
 
         const outerRadius = Math.max(
@@ -116,20 +122,23 @@ export function PieArcPlot(props: PieArcPlotProps) {
           attibuesOverride.outerRadius ?? baseOuterRadius + attibuesOverride.additionalRadius,
         );
         const cornerRadius = attibuesOverride.cornerRadius ?? baseCornerRadius;
+
         return {
           ...item,
+          ...attibuesOverride,
           isFaded,
           isHighlighted,
+          paddingAngle,
           innerRadius,
           outerRadius,
           cornerRadius,
-          ...attibuesOverride,
         };
       }),
     [
       baseCornerRadius,
       baseInnerRadius,
       baseOuterRadius,
+      basePaddingAngle,
       data,
       faded,
       getHighlightStatus,
@@ -141,35 +150,54 @@ export function PieArcPlot(props: PieArcPlotProps) {
     keys: (item) => {
       return item.id;
     },
-    from: ({ innerRadius, outerRadius, cornerRadius, startAngle, endAngle, color, isFaded }) => ({
+    from: ({
+      innerRadius,
+      outerRadius,
+      cornerRadius,
+      startAngle,
+      endAngle,
+      paddingAngle,
+      color,
+      isFaded,
+    }) => ({
       innerRadius,
       outerRadius: (innerRadius + outerRadius) / 2,
       cornerRadius,
       startAngle: (startAngle + endAngle) / 2,
       endAngle: (startAngle + endAngle) / 2,
+      paddingAngle,
       fill: color,
       opacity: isFaded ? 0.3 : 1,
     }),
-    leave: ({ innerRadius, cornerRadius, startAngle, endAngle }) => ({
+    leave: ({ innerRadius, startAngle, endAngle }) => ({
       innerRadius,
       outerRadius: innerRadius,
-      cornerRadius,
       startAngle: (startAngle + endAngle) / 2,
       endAngle: (startAngle + endAngle) / 2,
     }),
-    enter: ({ innerRadius, outerRadius, cornerRadius, startAngle, endAngle }) => ({
+    enter: ({ innerRadius, outerRadius, startAngle, endAngle }) => ({
       innerRadius,
       outerRadius,
-      cornerRadius,
+
       startAngle,
       endAngle,
     }),
-    update: ({ innerRadius, outerRadius, cornerRadius, startAngle, endAngle, color, isFaded }) => ({
+    update: ({
       innerRadius,
       outerRadius,
       cornerRadius,
       startAngle,
       endAngle,
+      paddingAngle,
+      color,
+      isFaded,
+    }) => ({
+      innerRadius,
+      outerRadius,
+      cornerRadius,
+      startAngle,
+      endAngle,
+      paddingAngle,
       fill: color,
       opacity: isFaded ? 0.3 : 1,
     }),
@@ -191,7 +219,7 @@ export function PieArcPlot(props: PieArcPlotProps) {
     <g {...other}>
       {transition(
         (
-          { startAngle, endAngle, innerRadius, outerRadius, cornerRadius, ...style },
+          { startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius, ...style },
           item,
           _,
           index,
@@ -200,6 +228,7 @@ export function PieArcPlot(props: PieArcPlotProps) {
             <Arc
               startAngle={startAngle}
               endAngle={endAngle}
+              paddingAngle={paddingAngle}
               innerRadius={innerRadius}
               outerRadius={outerRadius}
               cornerRadius={cornerRadius}

@@ -96,6 +96,7 @@ function PiePlot(props: PiePlotProps) {
           innerRadius,
           outerRadius,
           cornerRadius,
+          paddingAngle,
           arcLabel,
           arcLabelMinAngle = 0,
           data,
@@ -115,6 +116,7 @@ function PiePlot(props: PiePlotProps) {
               innerRadius={innerRadius}
               outerRadius={outerRadius ?? availableRadius}
               cornerRadius={cornerRadius}
+              paddingAngle={paddingAngle}
               id={seriesId}
               data={data}
               skipAnimation={skipAnimation}

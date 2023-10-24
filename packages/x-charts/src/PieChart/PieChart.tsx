@@ -309,6 +309,7 @@ PieChart.propTypes = {
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
+        paddingAngle: PropTypes.number,
       }),
       highlighted: PropTypes.shape({
         additionalRadius: PropTypes.number,
@@ -316,6 +317,7 @@ PieChart.propTypes = {
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
+        paddingAngle: PropTypes.number,
       }),
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),

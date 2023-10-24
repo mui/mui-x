@@ -65,6 +65,7 @@ export type PieArcProps = PieArcOwnerState &
     innerRadius: SpringValue<number>;
     outerRadius: SpringValue<number>;
     cornerRadius: SpringValue<number>;
+    paddingAngle: SpringValue<number>;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
   };
 
@@ -80,6 +81,7 @@ export default function PieArc(props: PieArcProps) {
     isHighlighted,
     startAngle,
     endAngle,
+    paddingAngle,
     innerRadius,
     outerRadius,
     cornerRadius,
@@ -101,10 +103,10 @@ export default function PieArc(props: PieArcProps) {
   return (
     <PieArcRoot
       d={to(
-        [startAngle, endAngle, innerRadius, outerRadius, cornerRadius],
-        (sA, eA, iR, oR, cR) =>
+        [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
+        (sA, eA, pA, iR, oR, cR) =>
           d3Arc().cornerRadius(cR)({
-            ...other,
+            padAngle: pA,
             startAngle: sA,
             endAngle: eA,
             innerRadius: iR,
