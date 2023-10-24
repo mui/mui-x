@@ -84,27 +84,16 @@ export default function PieArc(props: PieArcProps) {
     classes: innerClasses,
     color,
     highlightScope,
-    innerRadius: baseInnerRadius = 0,
-    outerRadius: baseOuterRadius,
-    cornerRadius: baseCornerRadius = 0,
-    highlighted,
-    faded = { additionalRadius: -5 },
     onClick,
+    isFaded,
+    isHighlighted,
+    startAngle,
+    endAngle,
+    innerRadius,
+    outerRadius,
+    cornerRadius,
     ...other
   } = props;
-
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(
-    item,
-    { type: 'pie', seriesId: id, dataIndex },
-    highlightScope,
-  );
-
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'pie', seriesId: id, dataIndex }, highlightScope);
 
   const ownerState = {
     id,
@@ -116,17 +105,7 @@ export default function PieArc(props: PieArcProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const attibuesOverride = {
-    additionalRadius: 0,
-    ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
-  };
-  const innerRadius = Math.max(0, attibuesOverride.innerRadius ?? baseInnerRadius);
-
-  const outerRadius = Math.max(
-    0,
-    attibuesOverride.outerRadius ?? baseOuterRadius + attibuesOverride.additionalRadius,
-  );
-  const cornerRadius = attibuesOverride.cornerRadius ?? baseCornerRadius;
+  const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   return (
     <PieArcRoot

@@ -58,27 +58,74 @@ export function PieArcPlot(props: PieArcPlotProps) {
   const {
     slots,
     slotProps,
-    innerRadius,
-    outerRadius,
-    cornerRadius,
+    innerRadius: baseInnerRadius = 0,
+    outerRadius: baseOuterRadius,
+    cornerRadius: baseCornerRadius = 0,
     id: seriesId,
     highlightScope,
     highlighted,
-    faded,
+    faded = { additionalRadius: -5 },
     data,
     onClick,
     skipAnimation,
     ...other
   } = props;
 
-  // const transition = useTransition(completedData, {
-  //   keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-  //   from: getOutStyle,
-  //   leave: getOutStyle,
-  //   enter: getInStyle,
-  //   update: getInStyle,
-  //   immediate: skipAnimation,
-  // });
+  const { item: highlightedItem } = React.useContext(InteractionContext);
+
+  const getHighlightStatus = React.useCallback(
+    (dataIndex: number) => {
+      const isHighlighted = getIsHighlighted(
+        highlightedItem,
+        { type: 'pie', seriesId, dataIndex },
+        highlightScope,
+      );
+      const isFaded =
+        !isHighlighted &&
+        getIsFaded(highlightedItem, { type: 'pie', seriesId, dataIndex }, highlightScope);
+
+      return { isHighlighted, isFaded };
+    },
+    [highlightScope, highlightedItem, seriesId],
+  );
+
+  const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
+    () =>
+      data.map((item, itemIndex) => {
+        const { isHighlighted, isFaded } = getHighlightStatus(itemIndex);
+
+        const attibuesOverride = {
+          additionalRadius: 0,
+          ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
+        };
+        const innerRadius = Math.max(0, attibuesOverride.innerRadius ?? baseInnerRadius);
+
+        const outerRadius = Math.max(
+          0,
+          attibuesOverride.outerRadius ?? baseOuterRadius + attibuesOverride.additionalRadius,
+        );
+        const cornerRadius = attibuesOverride.cornerRadius ?? baseCornerRadius;
+        return {
+          ...item,
+          isFaded,
+          isHighlighted,
+          innerRadius,
+          outerRadius,
+          cornerRadius,
+          ...attibuesOverride,
+        };
+      }),
+    [
+      baseCornerRadius,
+      baseInnerRadius,
+      baseOuterRadius,
+      data,
+      faded,
+      getHighlightStatus,
+      highlighted,
+    ],
+  );
+
 
   if (data.length === 0) {
     return null;
@@ -91,17 +138,18 @@ export function PieArcPlot(props: PieArcPlotProps) {
       {data.map((item, index) => {
         return (
           <Arc
-            {...item}
-            key={item.id}
+              startAngle={startAngle}
+              endAngle={endAngle}
             innerRadius={innerRadius}
             outerRadius={outerRadius}
             cornerRadius={cornerRadius}
+              style={style}
             id={seriesId}
             color={item.color}
             dataIndex={index}
             highlightScope={highlightScope}
-            highlighted={highlighted}
-            faded={faded}
+              isFaded={item.isFaded}
+              isHighlighted={item.isHighlighted}
             onClick={
               onClick &&
               ((event) => {
