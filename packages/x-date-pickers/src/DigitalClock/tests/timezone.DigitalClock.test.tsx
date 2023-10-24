@@ -38,6 +38,80 @@ describe('<DigitalClock /> - Timezone', () => {
       expect(actualDate).toEqualDateTime(expectedDate);
     });
 
+    it('should render correct time options when fall back DST occurs', () => {
+      render(
+        <DigitalClock
+          referenceDate={adapter.setTimezone(
+            adapter.parseISO('2023-11-05T12:00:00'),
+            'America/New_York',
+          )}
+          timezone="America/New_York"
+          timeStep={30}
+        />,
+      );
+      const oneAM = adapter.setMinutes(
+        adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 1),
+        0,
+      );
+      const elevenPM = adapter.setMinutes(
+        adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 23),
+        0,
+      );
+      expect(
+        screen.getAllByText(
+          adapter.format(
+            oneAM,
+            adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+          ),
+        ),
+      ).to.have.length(1);
+      expect(
+        screen.getAllByText(
+          adapter.format(
+            elevenPM,
+            adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+          ),
+        ),
+      ).to.have.length(1);
+    });
+
+    it('should render correct time options when spring forward DST occurs', () => {
+      render(
+        <DigitalClock
+          referenceDate={adapter.setTimezone(
+            adapter.parseISO('2024-03-10T12:00:00'),
+            'America/New_York',
+          )}
+          timezone="America/New_York"
+          timeStep={30}
+        />,
+      );
+      const startOfDay = adapter.setMinutes(
+        adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 0),
+        0,
+      );
+      const twoAM = adapter.setMinutes(
+        adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 2),
+        0,
+      );
+      expect(
+        screen.getAllByText(
+          adapter.format(
+            startOfDay,
+            adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+          ),
+        ),
+      ).to.have.length(1);
+      expect(
+        screen.getAllByText(
+          adapter.format(
+            twoAM,
+            adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+          ),
+        ),
+      ).to.have.length(1);
+    });
+
     TIMEZONE_TO_TEST.forEach((timezone) => {
       describe(`Timezone: ${timezone}`, () => {
         it('should use timezone prop for onChange when no value is provided', () => {
