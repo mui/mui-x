@@ -75,8 +75,6 @@ function PiePlot(props: PiePlotProps) {
           outerRadius,
           cornerRadius,
           paddingAngle,
-          arcLabel,
-          arcLabelMinAngle,
           data,
           cx,
           cy,
@@ -106,6 +104,29 @@ function PiePlot(props: PiePlotProps) {
               slots={slots}
               slotProps={slotProps}
             />
+          </g>
+        );
+      })}
+      {seriesOrder.map((seriesId) => {
+        const {
+          innerRadius,
+          outerRadius,
+          cornerRadius,
+          paddingAngle,
+          arcLabel,
+          arcLabelMinAngle,
+          data,
+          cx,
+          cy,
+          highlightScope,
+        } = series[seriesId];
+        return (
+          <g
+            key={seriesId}
+            transform={`translate(${cx === undefined ? center.x : left + cx}, ${
+              cy === undefined ? center.y : top + cy
+            })`}
+          >
             <PieArcLabelPlot
               innerRadius={innerRadius}
               outerRadius={outerRadius ?? availableRadius}
