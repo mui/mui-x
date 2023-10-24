@@ -192,7 +192,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     />
   );
 
-  const sortingOrder: GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
+  const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
 
   const columnTitleIconButtons = (
     <React.Fragment>

@@ -40,9 +40,44 @@ function AppContent() {
     [utils, localeText],
   );
 
+  // simulating behavior; TODO: Delete
+  const elements = React.useMemo(
+    () =>
+      sections.map((section, sectionIndex) => ({
+        container: {
+          'data-sectionindex': sectionIndex,
+          onClick: () => {},
+        } as React.HTMLAttributes<HTMLSpanElement>,
+        content: {
+          // Could we include this for the content?
+          value: null,
+          placeholder: section.placeholder,
+          className: 'content',
+          role: 'textbox',
+          children: section.value || section.placeholder,
+          inputMode: section.contentType === 'letter' ? 'text' : 'numeric',
+          suppressContentEditableWarning: true,
+          style: {
+            outline: 'none',
+          },
+        },
+        before: {
+          className: 'before',
+          children: section.startSeparator,
+          style: { whiteSpace: 'pre' },
+        },
+        after: {
+          className: 'after',
+          children: section.endSeparator,
+          style: { whiteSpace: 'pre' },
+        },
+      })),
+    [sections],
+  );
+
   return (
     <FakeTextField
-      elements={sections}
+      elements={elements}
       size="small"
       error
       // disabled

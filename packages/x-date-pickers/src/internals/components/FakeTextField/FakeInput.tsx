@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -6,32 +7,29 @@ import { fakeInputClasses, getFakeInputUtilityClass } from './fakeTextFieldClass
 import Outline from './Outline';
 import { FieldsTextFieldProps } from '../../models';
 
-const SectionInput = styled('input', {
+const SectionsContainer = styled('span', {
   name: 'MuiFakeInput',
   slot: 'Section',
   overridesResolver: (props, styles) => styles.root,
-})(({ value, placeholder, theme }) => {
-  let width = 2;
-  if (value) {
-    width = String(value).length;
-  } else if (placeholder) {
-    // might be problematic :-?
-    width = String(placeholder).length + 1;
-  }
+})(({ theme }) => {
   return {
-    border: 'none',
-    background: 'none',
-    outline: 'none',
-    margin: 0,
     fontFamily: theme.typography.fontFamily,
     fontSize: 'inherit',
-    color: 'inherit',
-    width: `${width}ch`,
+  };
+});
+const SectionInput = styled('span', {
+  name: 'MuiFakeInput',
+  slot: 'Section',
+  overridesResolver: (props, styles) => styles.root,
+})(({ theme }) => {
+  return {
+    fontFamily: theme.typography.fontFamily,
+    lineHeight: '1.4375em', // 23px
     letterSpacing: 'inherit',
   };
 });
 
-const SectionsWrapper = styled('div', {
+const SectionsWrapper = styled(Box, {
   name: 'MuiFakeInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -39,10 +37,9 @@ const SectionsWrapper = styled('div', {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
-    lineHeight: '1.4375em', // 23px
+    cursor: 'text',
     padding: '16.5px 14px',
     display: 'flex',
-    // gap: theme.spacing(0.1),
     justifyContent: 'flex-start',
     alignItems: 'center',
     width: ownerState.fullWidth ? '100%' : '25ch',
@@ -149,9 +146,16 @@ interface FakeInputProps extends FieldsTextFieldProps {
   margin?: 'dense' | 'none' | 'normal';
   size?: 'small' | 'medium';
   variant?: 'filled' | 'outlined' | 'standard';
-  // TODO: remove once field behavior is implemented
-  onFocus: () => void;
-  onBlur: () => void;
+  areAllSectionsEmpty?: boolean;
+  valueStr: string;
+  onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
+  id?: string;
+  InputProps: any;
+  inputProps: any;
+  autoFocus?: boolean;
+  ownerState?: any;
+  valueType: 'value' | 'placeholder';
+
   onWrapperClick: () => void;
 }
 
@@ -165,6 +169,16 @@ const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref
     onWrapperClick,
     onBlur,
     areAllSectionsEmpty = false,
+    valueStr,
+    onValueStrChange,
+    id,
+    error,
+    InputProps,
+    inputProps,
+    autoFocus,
+    disabled,
+    valueType,
+    ownerState: ownerStateProp,
     ...other
   } = props;
 
@@ -186,6 +200,7 @@ const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref
 
   const ownerState = {
     ...props,
+    ...ownerStateProp,
     color: fcs.color || 'primary',
     disabled: fcs.disabled,
     error: fcs.error,
@@ -197,39 +212,35 @@ const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <SectionsWrapper
-      className={classes.root}
-      ref={ref}
-      onClick={onWrapperClick}
-      {...other}
-      ownerState={ownerState}
-    >
-      {elements &&
-        elements.map(
-          // TODO: rename to before & after, remove type (eg. type month on the input doesn't make a lot of sense, so separating it until we have the final behavior)
-          ({ startSeparator, endSeparator, type, ...otherElementProps }, elementIndex) => (
-            <React.Fragment key={elementIndex}>
-              <span>{startSeparator}</span>
-              <SectionInput
-                disabled={fcs.disabled}
-                {...otherElementProps}
-                // onFocus and onBlur to simulate the state classes
-                onFocus={onFocus}
-                onBlur={onBlur}
-                onChange={() => {}}
-                {...{ ownerState }}
-              />
-              <span>{endSeparator}</span>
-            </React.Fragment>
-          ),
-        )}
-      <NotchedOutlineRoot
-        shrink={fcs.focused || !areAllSectionsEmpty}
-        notched={fcs.focused || !areAllSectionsEmpty}
-        {...{ ownerState, label }}
-        className={classes.notchedOutline}
-      />
-    </SectionsWrapper>
+    <React.Fragment>
+      <SectionsWrapper
+        ref={ref}
+        {...other}
+        className={classes.root}
+        onClick={onWrapperClick}
+        ownerState={ownerState}
+        onBlur={onBlur}
+      >
+        {elements &&
+          elements.map(
+            // TODO: rename to before & after, remove type (eg. type month on the input doesn't make a lot of sense, so separating it until we have the final behavior)
+            ({ container, content, before, after }, elementIndex) => (
+              <SectionsContainer key={elementIndex} {...container}>
+                <span {...before} />
+                <SectionInput {...content} disabled={fcs.disabled} {...{ ownerState }} />
+                <span {...after} />
+              </SectionsContainer>
+            ),
+          )}
+        <NotchedOutlineRoot
+          shrink={fcs.focused || !areAllSectionsEmpty}
+          notched={fcs.focused || !areAllSectionsEmpty}
+          {...{ ownerState, label }}
+          className={classes.notchedOutline}
+        />
+      </SectionsWrapper>
+      <input type="hidden" value={valueStr} onChange={onValueStrChange} id={id} />
+    </React.Fragment>
   );
 });
 

@@ -2,12 +2,12 @@ import { GridValueFormatterParams } from '@mui/x-data-grid-pro';
 import { isNumber } from '@mui/x-data-grid-pro/internals';
 import { GridAggregationFunction } from './gridAggregationInterfaces';
 
-const sumAgg: GridAggregationFunction<number> = {
+const sumAgg: GridAggregationFunction<unknown, number> = {
   apply: ({ values }) => {
     let sum = 0;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
-      if (value != null) {
+      if (isNumber(value)) {
         sum += value;
       }
     }
@@ -67,9 +67,9 @@ const maxAgg: GridAggregationFunction<number | Date> = {
   columnTypes: ['number', 'date', 'dateTime'],
 };
 
-const sizeAgg: GridAggregationFunction<number> = {
+const sizeAgg: GridAggregationFunction<unknown, number> = {
   apply: ({ values }) => {
-    return values.length;
+    return values.filter((value) => typeof value !== 'undefined').length;
   },
   valueFormatter: (params: GridValueFormatterParams) => {
     if (params.value == null || !isNumber(params.value)) {

@@ -2,10 +2,9 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import InputLabel from '@mui/material/InputLabel';
-import FormControl, { FormControlProps } from '@mui/material/FormControl';
+import FormControl from '@mui/material/FormControl';
 import { getFakeTextFieldUtilityClass } from './fakeTextFieldClasses';
 import FakeInput from './FakeInput';
-import { FieldsTextFieldProps } from '../../models';
 
 const FakeTextFieldRoot = styled(FormControl, {
   name: 'MuiFakeTextField',
@@ -24,14 +23,11 @@ const useUtilityClasses = (ownerState: FakeTextFieldProps & { focused: boolean }
   return composeClasses(slots, getFakeTextFieldUtilityClass, []);
 };
 
-export interface FakeTextFieldElement extends React.HTMLAttributes<HTMLDivElement> {
-  before: string;
-  after: string;
-  value: string;
-  // remove these after
-  startSeparator: string;
-  endSeparator: string;
-  type: string;
+export interface FakeTextFieldElement {
+  container: React.HTMLAttributes<HTMLSpanElement>;
+  content: React.HTMLAttributes<HTMLSpanElement>;
+  before: React.HTMLAttributes<HTMLSpanElement>;
+  after: React.HTMLAttributes<HTMLSpanElement>;
 }
 
 interface FakeTextFieldProps {
@@ -40,10 +36,18 @@ interface FakeTextFieldProps {
   disabled?: boolean;
   error?: boolean;
   fullWidth?: boolean;
-  helperText?: React.ReactNode;
+  // helperText?: React.ReactNode;
   label?: string;
-  size?: 'small' | 'medium';
+  // size?: 'small' | 'medium';
   variant?: 'filled' | 'outlined' | 'standard';
+  // valueStr: string;
+  // onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
+  // id?: string;
+  // InputProps: any;
+  // inputProps: any;
+  // autoFocus?: boolean;
+  // ownerState?: any;
+  // valueType: 'value' | 'placeholder';
 }
 
 export const FakeTextField = React.forwardRef(function FakeTextField(
@@ -63,7 +67,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
 
   const [focused, setFocused] = React.useState(false);
 
-  const areAllSectionsEmpty = elements.every(({ value }) => !value);
+  const areAllSectionsEmpty = elements.every(({ content }) => !content?.value);
 
   const ownerState = {
     ...props,
@@ -84,22 +88,13 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
       const container = ref?.current;
 
       // Find the first input element within the container
-      const firstInput = container.querySelector('input');
+      const firstInput = container.querySelector('.content');
 
       // Check if the input element exists before focusing it
       if (firstInput) {
         firstInput.focus();
-        firstInput.select();
       }
     }
-  };
-
-  // TODO: delete after behavior implementation
-  const onFocus = () => {
-    setFocused(true);
-  };
-  const onBlur = () => {
-    setFocused(false);
   };
 
   return (
@@ -108,11 +103,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
       {...{ focused, disabled, variant, error, color, ownerState, fullWidth, ...other }}
     >
       <InputLabel shrink={focused || !areAllSectionsEmpty}>{label}</InputLabel>
-      <FakeInput
-        ref={ref}
-        {...props}
-        {...{ areAllSectionsEmpty, onFocus, onBlur, onWrapperClick }}
-      />
+      <FakeInput ref={ref} {...props} {...{ areAllSectionsEmpty, onWrapperClick }} />
     </FakeTextFieldRoot>
   );
 });
