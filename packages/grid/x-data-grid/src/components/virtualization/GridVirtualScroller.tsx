@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, SxProps, Theme } from '@mui/system';
+import { styled } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
