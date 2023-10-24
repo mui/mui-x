@@ -15,7 +15,6 @@ import { GridTopContainer } from './GridTopContainer';
 import { GridBottomContainer } from './GridBottomContainer';
 
 type OwnerState = DataGridProcessedProps;
-type DivAttributes = React.HTMLAttributes<HTMLDivElement>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -27,11 +26,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const Element = styled('div', {
+const Scroller = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
   overridesResolver: (props, styles) => styles.virtualScroller,
-})<{ ownerState: OwnerState }>({
+})({
   height: '100%',
 
   overflow: 'scroll',
@@ -48,14 +47,6 @@ const Element = styled('div', {
   },
   zIndex: 0, // See https://github.com/mui/mui-x/issues/10547
 });
-
-const Scroller = React.forwardRef<HTMLDivElement, DivAttributes & { sx?: SxProps<Theme> }>(
-  function Scroller(props, ref) {
-    const rootProps = useGridRootProps();
-
-    return <Element ref={ref} {...props} ownerState={rootProps} />;
-  },
-);
 
 export interface GridVirtualScrollerProps {
   children?: React.ReactNode;

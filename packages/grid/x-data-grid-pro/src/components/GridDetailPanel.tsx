@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { GridRowId } from '@mui/x-data-grid';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -18,23 +18,20 @@ const DetailPanel = styled(Box, {
   overflow: 'auto',
 }));
 
-interface GridDetailPanelProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /**
-   * The panel height.
-   */
-  height: number | 'auto';
+interface GridDetailPanelProps {
   /**
    * The row ID that this panel belongs to.
    */
   rowId: GridRowId;
+  /**
+   * The panel height.
+   */
+  height: number | 'auto';
+  className: string;
 }
 
 function GridDetailPanel(props: GridDetailPanelProps) {
-  const { rowId, height, style: styleProp = {}, ...other } = props;
+  const { rowId, height, className } = props;
   const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement>();
   const rootProps = useGridRootProps();
@@ -68,9 +65,7 @@ function GridDetailPanel(props: GridDetailPanelProps) {
     return () => resizeObserver.disconnect();
   }, [apiRef, height, rowId]);
 
-  const style = { ...styleProp, height };
-
-  return <DetailPanel ref={ref} ownerState={ownerState} style={style} {...other} />;
+  return <DetailPanel ref={ref} ownerState={ownerState} style={{ height }} className={className} />;
 }
 
 export { GridDetailPanel };

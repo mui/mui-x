@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/export
 export * from '@mui/x-data-grid/internals';
 
-export { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 export { GridColumnHeaders } from '../components/GridColumnHeaders';
 export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
