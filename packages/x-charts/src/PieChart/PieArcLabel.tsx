@@ -52,6 +52,7 @@ const PieArcLabelRoot = styled(animated.text, {
 })(({ theme }) => ({
   fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',
+  dominantBaseline: 'middle',
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
