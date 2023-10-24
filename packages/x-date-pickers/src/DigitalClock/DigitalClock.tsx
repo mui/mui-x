@@ -19,6 +19,7 @@ import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { isEqualTime, mergeDateAndTime } from '../internals/utils/date-utils';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -182,9 +183,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     timezone,
   });
 
-  const handleValueChange = useEventCallback((newValue: TDate | null) =>
-    handleRawValueChange(newValue, 'finish', 'hours'),
-  );
+  const handleValueChange = useEventCallback((newValue: TDate | null) => {
+    if (newValue === null) {
+      handleRawValueChange(null, 'finish', 'hours');
+      return;
+    }
+    handleRawValueChange(
+      mergeDateAndTime(utils, valueOrReferenceDate, newValue),
+      'finish',
+      'hours',
+    );
+  });
 
   const { setValueAndGoToNextView } = useViews<TDate | null, Extract<TimeView, 'hours'>>({
     view: inView,
@@ -274,14 +283,16 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const timeOptions = React.useMemo(() => {
-    const startOfDay = utils.startOfDay(valueOrReferenceDate);
+    // use `startOfYear` to avoid DST problems: https://github.com/mui/mui-x/issues/10783
+    // use today as base to avoid rebuilding the array on each value change
+    const startOfYear = utils.startOfYear(utils.dateWithTimezone(undefined, 'default'));
     return [
-      startOfDay,
+      startOfYear,
       ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
-        utils.addMinutes(startOfDay, timeStep * (index + 1)),
+        utils.addMinutes(startOfYear, timeStep * (index + 1)),
       ),
     ];
-  }, [valueOrReferenceDate, timeStep, utils]);
+  }, [timeStep, utils]);
 
   return (
     <DigitalClockRoot
@@ -300,7 +311,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           if (skipDisabled && isTimeDisabled(option)) {
             return null;
           }
-          const isSelected = utils.isEqual(option, value);
+          const isSelected = isEqualTime(utils, option, value);
           return (
             <ClockItem
               key={utils.toISO(option)}
