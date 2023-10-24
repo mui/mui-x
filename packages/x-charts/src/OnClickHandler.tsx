@@ -61,8 +61,8 @@ function OnClickHandler({ trigger, onClick }: OnClickHandlerProps) {
         }
       } else {
         const displayedData = axis as AxisInteractionData;
-        const tooltipHasData = hasData(trigger, displayedData);
-        if (tooltipHasData) {
+
+        if (hasData(trigger, displayedData)) {
           const isXaxis = (displayedData.x && displayedData.x.index) !== undefined;
           const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
           const dataIndex = isXaxis
@@ -72,7 +72,7 @@ function OnClickHandler({ trigger, onClick }: OnClickHandlerProps) {
           if (dataIndex == null) {
             return;
           }
-          const displayedLabel: any[] = [];
+          const data: any[] = [];
           (
             Object.keys(series).filter((seriesType) =>
               ['bar', 'line', 'scatter'].includes(seriesType),
@@ -82,12 +82,12 @@ function OnClickHandler({ trigger, onClick }: OnClickHandlerProps) {
               const seriesItem = series[seriesType]!.series[seriesId];
               const axisKey = isXaxis ? seriesItem.xAxisKey : seriesItem.yAxisKey;
               if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-                displayedLabel.push(series[seriesType]!.series[seriesId]);
+                data.push(series[seriesType]!.series[seriesId]);
               }
             });
           });
 
-          onClick(event, displayedLabel, displayedData);
+          onClick(event, data, displayedData);
         }
       }
     };
