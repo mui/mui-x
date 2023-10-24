@@ -5,6 +5,7 @@ import {
   ChartsReferenceLineClasses,
   getChartsReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
+import { ChartsTextStyle } from '../internals/components/ChartsText';
 
 export type CommonChartsReferenceLineProps = {
   /**
@@ -29,7 +30,7 @@ export type CommonChartsReferenceLineProps = {
   /**
    * The style applied to the label
    */
-  labelStyle?: React.CSSProperties;
+  labelStyle?: ChartsTextStyle;
   /**
    * The style applied to the line
    */

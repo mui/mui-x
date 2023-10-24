@@ -27,22 +27,28 @@ const getTextParams = ({ left, width, labelAlign = 'middle' }: GetTextPlacementP
     case 'start':
       return {
         x: left,
-        dominantBaseline: 'auto' as const,
-        textAnchor: 'start',
+        style: {
+          dominantBaseline: 'auto',
+          textAnchor: 'start',
+        } as const,
       };
 
     case 'end':
       return {
         x: left + width,
-        dominantBaseline: 'auto' as const,
-        textAnchor: 'end',
+        style: {
+          dominantBaseline: 'auto',
+          textAnchor: 'end',
+        } as const,
       };
 
     default:
       return {
         x: left + width / 2,
-        dominantBaseline: 'auto' as const,
-        textAnchor: 'middle',
+        style: {
+          dominantBaseline: 'auto',
+          textAnchor: 'middle',
+        } as const,
       };
   }
 };
@@ -80,7 +86,7 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   return (
     <ReferenceLineRoot className={classes.root}>
       <path d={d} className={classes.line} style={lineStyle} />
-      <ChartsText {...textParams} style={labelStyle} />
+      <ChartsText {...textParams} style={{ ...textParams.style, ...labelStyle }} />
     </ReferenceLineRoot>
   );
 }
