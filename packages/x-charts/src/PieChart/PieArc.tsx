@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { arc as d3Arc } from 'd3-shape';
 import { animated, SpringValue, to } from '@react-spring/web';
-import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -121,19 +120,3 @@ export default function PieArc(props: PieArcProps) {
     />
   );
 }
-
-PieArc.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  classes: PropTypes.object,
-  cornerRadius: PropTypes.number,
-  dataIndex: PropTypes.number.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
-  innerRadius: PropTypes.number,
-  outerRadius: PropTypes.number.isRequired,
-} as any;
