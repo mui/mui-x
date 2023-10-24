@@ -61,12 +61,12 @@ function AppContent() {
         before: {
           className: 'before',
           children: section.startSeparator,
-          style: { height: 16, fontSize: 12, whiteSpace: 'pre' },
+          style: { whiteSpace: 'pre' },
         },
         after: {
           className: 'after',
           children: section.endSeparator,
-          style: { height: 16, fontSize: 12, whiteSpace: 'pre' },
+          style: { whiteSpace: 'pre' },
         },
       })),
     [sections],
