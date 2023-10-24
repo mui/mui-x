@@ -78,6 +78,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     innerRadius?: number;
     outerRadius?: number;
     cornerRadius?: number;
+    color?: string;
   };
   /**
    * Override the arc attibutes when it is faded.
@@ -91,6 +92,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     innerRadius?: number;
     outerRadius?: number;
     cornerRadius?: number;
+    color?: string;
   };
 }
 

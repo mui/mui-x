@@ -305,12 +305,14 @@ PieChart.propTypes = {
       endAngle: PropTypes.number,
       faded: PropTypes.shape({
         additionalRadius: PropTypes.number,
+        color: PropTypes.string,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
       }),
       highlighted: PropTypes.shape({
         additionalRadius: PropTypes.number,
+        color: PropTypes.string,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
