@@ -111,6 +111,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "debug": {
+      "description": "If <code>true</code>, the data grid will attach the <code>apiRef</code> to the root HTML element. Usage: - Set the <code>debug</code> prop to <code>true</code>. - In the dev tools, select the root HTML element (<code>.MuiDataGrid-root</code>). - Type <code>$0.apiRef</code> in the console to access the <code>apiRef</code>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "defaultGroupingExpansionDepth": {
       "description": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded.",
       "deprecated": "",

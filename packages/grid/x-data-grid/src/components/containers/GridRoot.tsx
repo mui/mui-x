@@ -19,6 +19,7 @@ import { gridDensityValueSelector } from '../../hooks/features/density/densitySe
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
 import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
+import { useDebugMode } from '../../hooks/utils/useDebugMode';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -73,6 +74,15 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   useEnhancedEffect(() => {
     setMountedState(true);
   }, []);
+
+  useDebugMode({
+    rootContainerEl: rootContainerRef.current,
+    apiRef,
+    enabled:
+      mountedState &&
+      // @ts-ignore
+      (rootProps.debug as unknown as boolean),
+  });
 
   if (!mountedState) {
     return null;

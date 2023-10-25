@@ -28,6 +28,7 @@
       "deprecated": true,
       "deprecationInfo": "Use the <code>slotProps</code> prop instead."
     },
+    "debug": { "type": { "name": "bool" } },
     "density": {
       "type": {
         "name": "enum",

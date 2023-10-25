@@ -51,6 +51,7 @@
       "deprecated": true,
       "deprecationInfo": "Use the <code>slotProps</code> prop instead."
     },
+    "debug": { "type": { "name": "bool" } },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
