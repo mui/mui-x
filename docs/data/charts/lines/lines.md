@@ -52,7 +52,7 @@ By default, they are stacked in the order you defined them, with positive values
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
 
-## Missing data
+## Partial data
 
 You can handle lines with missing data or data starting at different points by providing `null` values.
 
