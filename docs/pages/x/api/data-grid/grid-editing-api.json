@@ -39,12 +39,12 @@
     },
     {
       "name": "stopCellEditMode",
-      "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored. If <code>params.ignoreModifications</code> is <code>false</code> it will discard the modifications made.",
+      "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored. If <code>params.ignoreModifications</code> is <code>true</code> it will discard the modifications made.",
       "type": "(params: GridStopCellEditModeParams) => void"
     },
     {
       "name": "stopRowEditMode",
-      "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored. If <code>params.ignoreModifications</code> is <code>false</code> it will discard the modifications made.",
+      "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored. If <code>params.ignoreModifications</code> is <code>true</code> it will discard the modifications made.",
       "type": "(params: GridStopRowEditModeParams) => void"
     }
   ]
