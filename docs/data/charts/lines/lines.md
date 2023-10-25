@@ -54,7 +54,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ## Missing data
 
-To handle lines with data not starting at the same point or with missing data, use `null` values.
+You can handle lines with missing data or data starting at different points by providing `null` values.
 
 {{"demo": "DifferentLength.js"}}
 
