@@ -60,7 +60,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => v.toLocaleString()),
+    series: defaultizeValueFormatter(completedSeries, (v) => v?.toLocaleString()),
   };
 };
 
