@@ -154,7 +154,6 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <OnClickHandler trigger={tooltip?.trigger} onClick={onClick} />
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
-
       <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>
@@ -256,6 +255,7 @@ LineChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  onClick: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.

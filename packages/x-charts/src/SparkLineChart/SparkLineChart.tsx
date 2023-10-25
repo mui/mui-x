@@ -170,7 +170,6 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
       }
     >
       <OnClickHandler trigger={tooltip?.trigger} onClick={onClick} />
-
       {plotType === 'bar' && (
         <BarPlot slots={slots} slotProps={slotProps} sx={{ shapeRendering: 'auto' }} />
       )}
@@ -239,6 +238,7 @@ SparkLineChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  onClick: PropTypes.func,
   /**
    * Type of plot used.
    * @default 'line'
