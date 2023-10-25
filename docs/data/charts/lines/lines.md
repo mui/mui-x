@@ -59,7 +59,6 @@ You can handle lines with missing data or data starting at different points by p
 
 By default, the tooltip does not show series if they have no value.
 To override this behavior, use the `valueFormatter` to return a string if the value is `null` or `undefined`.
-It can be an empty string.
 
 {{"demo": "DifferentLength.js"}}
 
