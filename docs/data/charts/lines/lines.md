@@ -56,6 +56,10 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 You can handle lines with missing data or data starting at different points by providing `null` values.
 
+By default, the tooltip does not show series if they have no value.
+To override this behavior, use the `valueFormatter` to return a string if the value is `null` or `undefined`.
+It can be an empty string.
+
 {{"demo": "DifferentLength.js"}}
 
 ## Styling
