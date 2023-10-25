@@ -52,6 +52,12 @@ By default, they are stacked in the order you defined them, with positive values
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
 
+## Missing data
+
+To handle lines with data not starting at the same point or with missing data, use `null` values.
+
+{{"demo": "DifferentLength.js"}}
+
 ## Styling
 
 ### Interpolation
