@@ -76,6 +76,7 @@ The following code plots a line for x between 2 and 4.
   xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6] }]}
 />
 ```
+
 :::
 
 ## Styling
