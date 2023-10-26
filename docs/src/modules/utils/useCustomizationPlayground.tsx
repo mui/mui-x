@@ -2,7 +2,7 @@ import * as React from 'react';
 import pick from 'lodash/pick';
 import { blue, pink } from '@mui/material/colors';
 import { BoxProps } from '@mui/material/Box';
-import { createTheme, ThemeProvider, styled, useTheme, Theme } from '@mui/material/styles';
+import { createTheme, ThemeProvider, styled, useTheme, Theme, alpha } from '@mui/material/styles';
 
 export type CustomizationLabelType = {
   [k in 'customTheme' | 'styledComponents' | 'sxProp']: string;
@@ -14,6 +14,7 @@ type CustomizationItemType = {
   componentProps?: any;
   parentSlot?: string;
   parentComponent?: string;
+  current?: boolean;
 };
 export type CustomizationItemsType = Partial<{
   [k in keyof CustomizationLabelType]: CustomizationItemType;
@@ -85,8 +86,8 @@ export function withStyles(
       border: `${selectedTokens.borderWidth}px solid`,
       backgroundColor:
         defaultTheme.palette.mode === 'light'
-          ? DEFAULT_COLORS[selectedTokens.color][100]
-          : DEFAULT_COLORS[selectedTokens.color][900],
+          ? alpha(DEFAULT_COLORS[selectedTokens.color][200], 0.5)
+          : alpha(DEFAULT_COLORS[selectedTokens.color][900], 0.5),
       color:
         defaultTheme.palette.mode === 'light'
           ? DEFAULT_COLORS[selectedTokens.color][800]
@@ -194,12 +195,14 @@ const getCodeExample = ({
 }: Props) => {
   const tokens = {
     ...selectedTokens,
+    borderRadius: `${selectedTokens.borderRadius}px`,
+    borderWidth: `${selectedTokens.borderWidth}px`,
     borderColor: DEFAULT_COLORS[selectedTokens.color][500],
     border: `${selectedTokens.borderWidth}px solid`,
     backgroundColor:
       theme.palette.mode === 'light'
-        ? DEFAULT_COLORS[selectedTokens.color][100]
-        : DEFAULT_COLORS[selectedTokens.color][900],
+        ? alpha(DEFAULT_COLORS[selectedTokens.color][200], 0.5)
+        : alpha(DEFAULT_COLORS[selectedTokens.color][900], 0.5),
     color:
       theme.palette.mode === 'light'
         ? DEFAULT_COLORS[selectedTokens.color][800]
@@ -255,7 +258,9 @@ const getCodeExample = ({
         slotProps: {
           ...examples.componentProps?.slotProps,
           [selectedExample?.parentSlot]: {
-            sx: { [`'.Mui${selectedDemo}-${selectedSlot}'`]: tokens },
+            sx: selectedExample?.parentSlot
+              ? tokens
+              : { [`'.Mui${selectedDemo}-${selectedSlot}'`]: tokens },
           },
         },
       };
@@ -294,10 +299,16 @@ const newTheme = (theme) => createTheme({
           [selectedExample?.parentSlot]: `Styled${selectedExample?.parentComponent}`,
         },
       };
-      return `import { styled } from '@mui/material/styles'\n${code}
-const Styled${selectedExample?.parentComponent} = styled(${selectedExample?.parentComponent})({
+      const example = selectedExample?.current
+        ? getTokensString(1)
+        : `
   '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
-  }
+  }`;
+
+      return `import { styled } from '@mui/material/styles'\n${code}
+const Styled${selectedExample?.parentComponent} = styled(${
+        selectedExample?.parentComponent
+      })({${example}
 })
 
 export default function StyledPickerContainer() {

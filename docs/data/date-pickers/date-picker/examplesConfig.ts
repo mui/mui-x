@@ -232,6 +232,48 @@ export const datePickerExamples: PickersSubcomponentType = {
     },
     slots: ['root', 'monthButton'],
   },
+  TextField: {
+    examples: {
+      customTheme: {
+        type: 'success',
+      },
+      sxProp: {
+        type: 'success',
+        parentSlot: 'textField',
+        current: true,
+        comments: 'You can apply the sx prop to the `TextField` via slotProps',
+      },
+      styledComponents: {
+        type: 'success',
+        parentSlot: 'textField',
+        parentComponent: 'TextField',
+        comments: 'You can style the `TextField` component directly',
+        current: true,
+      },
+    },
+    slots: ['root'],
+  },
+  OutlinedInput: {
+    examples: {
+      customTheme: {
+        type: 'warning',
+        comments:
+          'The OutlinedInput is a subcomponent of the TextField with variant="outlined", and a native Material UI component',
+      },
+      sxProp: {
+        type: 'warning',
+        comments:
+          'The OutlinedInput is a subcomponent of the TextField with variant="outlined", and a native Material UI component',
+      },
+      styledComponents: {
+        type: 'warning',
+        parentComponent: 'TextField',
+        comments:
+          'The OutlinedInput is a subcomponent of the TextField with variant="outlined", and a native Material UI component',
+      },
+    },
+    slots: ['root', 'notchedOutline', 'input'],
+  },
 };
 
 const pickerProps: DatePickerProps<Dayjs> = {
