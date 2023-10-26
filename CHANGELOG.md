@@ -7,9 +7,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Oct 26, 2023_
 
-We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- The Tree View package is now stable!
+- The Tree View package is now officially stable!
+![tree-view-example](https://github.com/mui/mui-x/assets/550141/77d1fe66-d912-49ba-b38f-b853fb90446a)
 
 ### Data Grid
 
@@ -38,6 +39,7 @@ Same changes as in `@mui/x-data-grid-pro@6.17.0`, plus:
 #### `@mui/x-date-pickers@6.17.0`
 
 - [fields] POC: Use `contentEditable` on `FakeTextField` (#10779) @flaviendelangle
+- [pickers] Fix weekday label localization (#10809) @LukasTy
 
 #### `@mui/x-date-pickers-pro@6.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -45,7 +47,7 @@ Same changes as in `@mui/x-date-pickers@6.17.0`.
 
 ### Charts / `@mui/x-charts@6.0.0-alpha.17`
 
-- [charts] Support lines with different domain (#10801) @alexfauquette
+- [charts] Support lines with different domains (#10801) @alexfauquette
 
 ### Tree View / `@mui/x-tree-view@6.17.0`
 
@@ -55,8 +57,8 @@ No change
 
 - [docs] Correct editing related props' description (#10798) @MBilalShafi
 - [docs] Fix RTL data grid demo (#10728) @oliviertassinari
-- [docs] Fix non-closed warning (#10796) @flaviendelangle
-- [docs] Improve recipe with `useLayoutEffect` and `beforeunload` event-listener (#10811) @michelengelen
+- [docs] Fix unclosed warning (#10796) @flaviendelangle
+- [docs] Improve performance of `Save and restore the state from external storage` recipe (#10811) @michelengelen
 
 - [test] Add missing type on `cleanText` utility function (#10780) @flaviendelangle
 
