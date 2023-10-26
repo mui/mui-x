@@ -93,7 +93,7 @@ export function ChartsText(props: ChartsTextProps) {
       style={style}
     >
       {wordsByLines.map((line, index) => (
-        <tspan x={x} dy={`${index === 0 ? startDy : wordsByLines[0].height}px`} key={index}>
+        <tspan x={x} dy={`${index === 0 ? startDy : wordsByLines[0].height}px`} dominantBaseline={dominantBaseline} key={index}>
           {line.text}
         </tspan>
       ))}
