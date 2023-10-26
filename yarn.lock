@@ -2950,10 +2950,10 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-10.0.3.tgz#4804fe9cd39da26eb62fa65c15ea77615a187812"
   integrity sha512-RsOPImTriV/OE4A9qKjMtk2MnXiuLLbcO3nCXK+kvq4nr0iMfFgpjaX3MPLb6f7+EL1FGSelYvuJMV6REH+ZPQ==
 
-"@types/moment-hijri@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@types/moment-hijri/-/moment-hijri-2.1.1.tgz#c7398ab4b734498b745a26d524f96bced00f6082"
-  integrity sha512-Pj30rsxZvPCaNj9BjCZrGMaldJRVmKSLaLByNZNwt50A5PyjXSwTvG6Wjn9iLNLpfWaH2IGtNiKGCGA9/Zr5hA==
+"@types/moment-hijri@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@types/moment-hijri/-/moment-hijri-2.1.2.tgz#d416eaebf337e920c6328504a15a6beec2d13776"
+  integrity sha512-6VrmS3qmOHs+h1WlH0EqTlPu9JP/Tb1pokXecj8cfa0C+avsjit7QYx7aZWHEB7suXazC6n/qUMvhIgH3A0D1A==
   dependencies:
     moment ">=2.14.0"
 
