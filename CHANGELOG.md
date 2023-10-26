@@ -57,7 +57,7 @@ No change
 - [docs] Correct editing related props' description (#10798) @MBilalShafi
 - [docs] Fix RTL data grid demo (#10728) @oliviertassinari
 - [docs] Fix non-closed warning (#10796) @flaviendelangle
-- [docs] Improve recipe with `useLayoutEffect` and `beforeunload` event-listener (#10811) @michelengelen
+- [docs] Improve performance of `Save and restore the state from external storage` recipe (#10811) @michelengelen
 
 - [test] Add missing type on `cleanText` utility function (#10780) @flaviendelangle
 
