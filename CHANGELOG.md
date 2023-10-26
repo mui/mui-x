@@ -47,7 +47,7 @@ Same changes as in `@mui/x-date-pickers@6.17.0`.
 
 ### Charts / `@mui/x-charts@6.0.0-alpha.17`
 
-- [charts] Support lines with different domain (#10801) @alexfauquette
+- [charts] Support lines with different domains (#10801) @alexfauquette
 
 ### Tree View / `@mui/x-tree-view@6.17.0`
 
