@@ -50,7 +50,7 @@ const defaultFormats: AdapterFormats = {
   monthShort: 'jMMM',
   dayOfMonth: 'jD',
   weekday: 'dddd',
-  weekdayShort: 'ddd',
+  weekdayShort: 'dd',
   hours24h: 'HH',
   hours12h: 'hh',
   meridiem: 'A',

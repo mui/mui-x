@@ -18,7 +18,7 @@ export const testFormat: DescribeGregorianAdapterTestSuite = ({ adapter }) => {
     expectDate('month', 'January');
     expectDate('monthAndDate', 'January 1');
     expectDate('weekday', 'Wednesday');
-    expectDate('weekdayShort', 'Wed');
+    expectDate('weekdayShort', ['date-fns', 'luxon'].includes(adapter.lib) ? 'W' : 'We');
     expectDate('dayOfMonth', '1');
     expectDate('fullTime12h', '11:44 PM');
     expectDate('fullTime24h', '23:44');
