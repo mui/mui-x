@@ -96,7 +96,7 @@ export function ChartsText(props: ChartsTextProps) {
         <tspan
           x={x}
           dy={`${index === 0 ? startDy : wordsByLines[0].height}px`}
-          dominantBaseline={dominantBaseline}
+          dominantBaseline={dominantBaseline} // Propagated to fix Safari issue: https://github.com/mui/mui-x/issues/10808
           key={index}
         >
           {line.text}
