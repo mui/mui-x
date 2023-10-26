@@ -38,7 +38,7 @@
     "lru-cache": "^7.18.3"
   },
   "devDependencies": {
-    "@types/chance": "^1.1.4",
+    "@types/chance": "^1.1.5",
     "@types/lru-cache": "^7.10.9"
   },
   "peerDependencies": {
