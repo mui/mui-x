@@ -9,7 +9,8 @@ _Oct 26, 2023_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- The Tree View package is now stable!
+- The Tree View package is now officially stable!
+![tree-view-example](https://github.com/mui/mui-x/assets/550141/77d1fe66-d912-49ba-b38f-b853fb90446a)
 
 ### Data Grid
 
