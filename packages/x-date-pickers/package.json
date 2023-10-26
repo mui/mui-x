@@ -97,8 +97,8 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.2",
-    "@types/moment-jalaali": "^0.7.7",
+    "@types/luxon": "^3.3.3",
+    "@types/moment-jalaali": "^0.7.8",
     "date-fns": "^2.30.0",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.11.10",

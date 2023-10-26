@@ -789,6 +789,28 @@ describe('<DataGridPremium /> - Aggregation', () => {
       });
     });
 
+    describe('`avg`', () => {
+      it('should work with numbers', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.avg.apply({
+            values: [0, 10, 12, 23],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(11.25);
+      });
+
+      it('should ignore non-numbers', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.avg.apply({
+            values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(11.25);
+      });
+    });
+
     describe('`size`', () => {
       it('should work with any value types', () => {
         expect(
