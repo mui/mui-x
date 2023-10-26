@@ -76,6 +76,7 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   const textParams = {
     y: yPosition - spacing,
     text: label,
+    fontSize: 12,
     ...getTextParams({
       left,
       width,

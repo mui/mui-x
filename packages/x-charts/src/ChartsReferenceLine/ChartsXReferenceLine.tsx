@@ -76,6 +76,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const textParams = {
     x: xPosition + spacing,
     text: label,
+    fontSize: 12,
     ...getTextParams({
       top,
       height,
