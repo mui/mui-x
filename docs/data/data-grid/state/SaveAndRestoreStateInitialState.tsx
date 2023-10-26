@@ -22,7 +22,7 @@ export default function SaveAndRestoreStateInitialState() {
     }
   }, [apiRef]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const stateFromLocalStorage = localStorage?.getItem('dataGridState');
     setInitialState(stateFromLocalStorage ? JSON.parse(stateFromLocalStorage) : {});
 
