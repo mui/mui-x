@@ -34,7 +34,7 @@ export default function SaveAndRestoreStateInitialState() {
       window.removeEventListener('beforeunload', saveSnapshot);
       saveSnapshot();
     };
-  }, []);
+  }, [saveSnapshot]);
 
   if (!initialState) {
     return <CircularProgress />;
