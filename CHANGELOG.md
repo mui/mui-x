@@ -10,13 +10,18 @@ _Oct 26, 2023_
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - The Tree View package is now officially stable!
+
 ![tree-view-example](https://github.com/mui/mui-x/assets/550141/77d1fe66-d912-49ba-b38f-b853fb90446a)
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+- 🚀 Allow custom debounce time for row positions calculation
 
 ### Data Grid
 
 #### `@mui/x-data-grid@6.17.0`
 
-- [DataGrid] Allow changing debounce time for row positions calculation (#10708) @cherniavskii
+- [DataGrid] Allow custom debounce time for row positions calculation (#10708) @cherniavskii
 - [DataGrid] Persist stable row index for focused row (#10674) @cherniavskii
 
 #### `@mui/x-data-grid-pro@6.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
