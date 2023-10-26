@@ -46,7 +46,7 @@
     "@mui/utils": "^5.14.14",
     "@mui/x-data-grid": "6.16.3",
     "@mui/x-license-pro": "6.10.2",
-    "@types/format-util": "^1.0.2",
+    "@types/format-util": "^1.0.3",
     "clsx": "^2.0.0",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.8"
