@@ -67,10 +67,11 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
+            data,
             disableHighlight,
           } = series[seriesId];
 
-          if (disableHighlight) {
+          if (disableHighlight || data[highlightedIndex] == null) {
             return null;
           }
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);

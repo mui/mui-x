@@ -61,7 +61,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => v.toLocaleString()),
+    series: defaultizeValueFormatter(completedSeries, (v) => v?.toLocaleString()),
   };
 };
 
