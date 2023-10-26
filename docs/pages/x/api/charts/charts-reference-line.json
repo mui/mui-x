@@ -1,5 +1,25 @@
 {
-  "props": {},
+  "props": {
+    "axisId": { "type": { "name": "string" }, "default": "id the id of the first axis defined" },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "label": { "type": { "name": "string" } },
+    "labelAlign": {
+      "type": {
+        "name": "enum",
+        "description": "'end'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'"
+      },
+      "default": "'middle'"
+    },
+    "labelStyle": { "type": { "name": "object" } },
+    "lineStyle": { "type": { "name": "object" } },
+    "spacing": { "type": { "name": "number" }, "default": "5" },
+    "x": {
+      "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
+    },
+    "y": {
+      "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
+    }
+  },
   "slots": [],
   "name": "ChartsReferenceLine",
   "imports": [

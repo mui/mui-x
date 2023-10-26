@@ -1,6 +1,52 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "axisId": {
+      "description": "The id of the axis used for the reference value.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "classes": {
+      "description": "Override or extend the styles applied to the component.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "label": {
+      "description": "The label to display along the reference line.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "labelAlign": {
+      "description": "The alignment if the label in the chart drawing area.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "labelStyle": {
+      "description": "The style applied to the label",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "lineStyle": {
+      "description": "The style applied to the line",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "spacing": {
+      "description": "Additional Space between the label and the reference line in px.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "x": {
+      "description": "The x value associated to the reference line. If defined the reference line will be vertical.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "y": {
+      "description": "The y value associated to the reference line. If defined the reference line will be horizontal.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
+  },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },
     "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the reference line" },
