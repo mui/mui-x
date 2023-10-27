@@ -56,6 +56,15 @@ export type ChartsAxisHighlightProps = {
   y?: AxisHighlight;
 };
 
+/**
+ * Demos:
+ *
+ * - [Custom components](https://mui.com/x/react-charts/components/)
+ *
+ * API:
+ *
+ * - [ChartsAxisHighlight API](https://mui.com/x/api/charts/charts-axis-highlight/)
+ */
 function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
   const { x: xAxisHighlight, y: yAxisHighlight } = props;
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
