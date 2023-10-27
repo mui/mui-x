@@ -42,8 +42,8 @@ const euESPickers: Partial<PickersLocaleText<any>> = {
   clockLabelText: (view, time, adapter) =>
     `Aukeratu ${views[view]}. ${
       time === null
-        ? 'Denbora aukeraketarik gabe'
-        : `Aukeratutako denbora ${adapter.format(time, 'fullTime')} da`
+        ? 'Ez da ordurik aukertau'
+        : `Aukeratutako ordua ${adapter.format(time, 'fullTime')} da`
     }`,
   hoursClockNumberText: (hours) => `${hours} ordu`,
   minutesClockNumberText: (minutes) => `${minutes} minutu`,
@@ -61,17 +61,17 @@ const euESPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Aukeratu data, aukeratutako data ${utils.format(value, 'fullDate')} da`
-      : 'Aukeratu data',
+      ? `Data aukeratu, aukeratutako data ${utils.format(value, 'fullDate')} da`
+      : 'Data aukeratu',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Aukeratu ordua, aukeratutako ordua ${utils.format(value, 'fullTime')} da`
-      : 'Aukeratu ordua',
-  // fieldClearLabel: 'Clear value',
+      ? `Ordua aukeratu, aukeratutako ordua ${utils.format(value, 'fullTime')} da`
+      : 'Ordua aukeratu',
+  fieldClearLabel: 'Balioa garbitu',
 
   // Table labels
-  timeTableLabel: 'aukeratu data',
-  dateTableLabel: 'aukeratu ordua',
+  timeTableLabel: 'ordua aukeratu',
+  dateTableLabel: 'data aukeratu',
 
   // Field section placeholders
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
