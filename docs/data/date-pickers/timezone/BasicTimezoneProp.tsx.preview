@@ -1,0 +1,15 @@
+<TimePicker
+  value={value}
+  onChange={setValue}
+  timezone="America/New_York"
+  label={'Rendered in "America/New_York"'}
+/>
+<TimePicker
+  value={value}
+  onChange={setValue}
+  timezone="Europe/Paris"
+  label={'Rendered in "Europe/Paris"'}
+/>
+<Typography>
+  Stored value: {value == null ? 'null' : value.format()}
+</Typography>

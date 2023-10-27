@@ -53,6 +53,7 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem
     onViewChange,
     value,
     onChange,
+    onSelectShortcut,
     isValid,
     isLandscape,
     disabled,
@@ -65,7 +66,7 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem
     // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
     // The true type should be
     // - For pickers value: TDate | null
-    // - For rangepickers value: [TDate | null, TDate | null]
+    // - For range pickers value: [TDate | null, TDate | null]
   } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
 
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
@@ -132,13 +133,13 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem
     additionalProps: {
       isValid,
       isLandscape,
-      onChange,
+      onChange: onSelectShortcut,
       className: classes.shortcuts,
     },
     ownerState: {
       isValid,
       isLandscape,
-      onChange,
+      onChange: onSelectShortcut,
       className: classes.shortcuts,
       wrapperVariant,
     },

@@ -651,4 +651,11 @@ GridFilterForm.propTypes = {
   valueInputProps: PropTypes.any,
 } as any;
 
+/**
+ * Demos:
+ * - [Filtering - overview](https://mui.com/x/react-data-grid/filtering/)
+ *
+ * API:
+ * - [GridFilterForm API](https://mui.com/x/api/data-grid/grid-filter-form/)
+ */
 export { GridFilterForm };

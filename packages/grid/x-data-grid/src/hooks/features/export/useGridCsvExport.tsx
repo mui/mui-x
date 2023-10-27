@@ -33,8 +33,8 @@ export const useGridCsvExport = (
       ? ignoreValueFormatterProp?.csvExport
       : ignoreValueFormatterProp) || false;
 
-  const getDataAsCsv = React.useCallback(
-    (options: GridCsvExportOptions = {}): string => {
+  const getDataAsCsv = React.useCallback<GridCsvExportApi['getDataAsCsv']>(
+    (options = {}) => {
       logger.debug(`Get data as CSV`);
 
       const exportedColumns = getColumnsToExport({
@@ -48,10 +48,11 @@ export const useGridCsvExport = (
       return buildCSV({
         columns: exportedColumns,
         rowIds: exportedRowIds,
-        getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: options.delimiter || ',',
         includeHeaders: options.includeHeaders ?? true,
+        includeColumnGroupsHeaders: options.includeColumnGroupsHeaders ?? true,
         ignoreValueFormatter,
+        apiRef,
       });
     },
     [logger, apiRef, ignoreValueFormatter],

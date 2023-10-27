@@ -1,54 +1,96 @@
 import * as React from 'react';
+import { Store } from '../../utils/Store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridCoreApi } from '../../models';
-import type {
-  GridApiCommon,
-  GridPrivateApiCommon,
-  GridPrivateOnlyApiCommon,
-} from '../../models/api/gridApiCommon';
+import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { EventManager } from '../../utils/EventManager';
+
+const SYMBOL_API_PRIVATE = Symbol('mui.api_private');
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
+export function unwrapPrivateAPI<
+  PrivateApi extends GridPrivateApiCommon,
+  Api extends GridApiCommon,
+>(publicApi: Api): PrivateApi {
+  return (publicApi as any)[SYMBOL_API_PRIVATE];
+}
+
 let globalId = 0;
 
-const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extends GridApiCommon>(
-  publicApi: PublicApi,
-) => {
-  type PrivateOnlyApi = GridPrivateOnlyApiCommon<PublicApi, PrivateApi>;
-  const privateOnlyApi = {} as PrivateOnlyApi;
+function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
+  publicApiRef: React.MutableRefObject<Api>,
+): PrivateApi {
+  const existingPrivateApi = (publicApiRef.current as any)?.[SYMBOL_API_PRIVATE];
+  if (existingPrivateApi) {
+    return existingPrivateApi;
+  }
 
-  privateOnlyApi.getPublicApi = () => publicApi;
+  const state = {} as Api['state'];
+  const privateApi = {
+    state,
+    store: Store.create(state),
+    instanceId: { id: globalId },
+  } as any as PrivateApi;
 
-  privateOnlyApi.register = (visibility, methods) => {
+  globalId += 1;
+
+  privateApi.getPublicApi = () => publicApiRef.current;
+
+  privateApi.register = (visibility, methods) => {
     Object.keys(methods).forEach((methodName) => {
-      if (visibility === 'public') {
-        publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
+      const method = (methods as any)[methodName];
+
+      const currentPrivateMethod = privateApi[methodName as keyof typeof privateApi] as any;
+      if (currentPrivateMethod?.spying === true) {
+        currentPrivateMethod.target = method;
       } else {
-        privateOnlyApi[methodName as keyof PrivateOnlyApi] = (methods as any)[methodName];
+        privateApi[methodName as keyof typeof privateApi] = method;
+      }
+
+      if (visibility === 'public') {
+        const publicApi = publicApiRef.current;
+
+        const currentPublicMethod = publicApi[methodName as keyof typeof publicApi] as any;
+        if (currentPublicMethod?.spying === true) {
+          currentPublicMethod.target = method;
+        } else {
+          publicApi[methodName as keyof typeof publicApi] = method;
+        }
       }
     });
   };
 
-  const handler: ProxyHandler<GridApiCommon> = {
-    get: (obj, prop) => {
-      if (prop in obj) {
-        return obj[prop as keyof typeof obj];
-      }
-      return privateOnlyApi[prop as keyof PrivateOnlyApi];
-    },
-    set: (obj, prop, value) => {
-      obj[prop as keyof typeof obj] = value;
-      return true;
-    },
-  };
+  privateApi.register('private', {
+    caches: {} as any,
+    eventManager: new EventManager(),
+  });
 
-  return new Proxy(publicApi, handler) as PrivateApi;
-};
+  return privateApi;
+}
+
+function createPublicAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
+  privateApiRef: React.MutableRefObject<PrivateApi>,
+): Api {
+  const publicApi = {
+    get state() {
+      return privateApiRef.current.state;
+    },
+    get store() {
+      return privateApiRef.current.store;
+    },
+    get instanceId() {
+      return privateApiRef.current.instanceId;
+    },
+    [SYMBOL_API_PRIVATE]: privateApiRef.current,
+  } as any as Api;
+
+  return publicApi;
+}
 
 export function useGridApiInitialization<
   PrivateApi extends GridPrivateApiCommon,
@@ -58,27 +100,15 @@ export function useGridApiInitialization<
   props: Pick<DataGridProcessedProps, 'signature'>,
 ): React.MutableRefObject<PrivateApi> {
   const publicApiRef = React.useRef() as React.MutableRefObject<Api>;
+  const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
+
+  if (!privateApiRef.current) {
+    privateApiRef.current = createPrivateAPI(publicApiRef) as PrivateApi;
+  }
 
   if (!publicApiRef.current) {
-    publicApiRef.current = {
-      state: {} as Api['state'],
-      instanceId: { id: globalId },
-    } as Api;
-
-    globalId += 1;
+    publicApiRef.current = createPublicAPI(privateApiRef);
   }
-
-  const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
-  if (!privateApiRef.current) {
-    privateApiRef.current = wrapPublicApi<PrivateApi, Api>(publicApiRef.current);
-
-    privateApiRef.current.register('private', {
-      caches: {} as PrivateApi['caches'],
-      eventManager: new EventManager(),
-    });
-  }
-
-  React.useImperativeHandle(inputApiRef, () => publicApiRef.current, [publicApiRef]);
 
   const publishEvent = React.useCallback<GridCoreApi['publishEvent']>(
     (...args: any[]) => {
@@ -110,6 +140,8 @@ export function useGridApiInitialization<
   );
 
   useGridApiMethod(privateApiRef, { subscribeEvent, publishEvent } as any, 'public');
+
+  React.useImperativeHandle(inputApiRef, () => publicApiRef.current, [publicApiRef]);
 
   React.useEffect(() => {
     const api = privateApiRef.current;

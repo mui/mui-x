@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -42,5 +42,24 @@ describe('<DataGrid />', () => {
 
     expect(document.querySelector('[data-custom-id="grid-1"]')).to.equal(gridRef.current);
     expect(document.querySelector('[aria-label="Grid one"]')).to.equal(gridRef.current);
+  });
+
+  it('should not fail when row have IDs match Object prototype keys (constructor, hasOwnProperty, etc)', () => {
+    const rows = [
+      { id: 'a', col1: 'Hello', col2: 'World' },
+      { id: 'constructor', col1: 'DataGridPro', col2: 'is Awesome' },
+      { id: 'hasOwnProperty', col1: 'MUI', col2: 'is Amazing' },
+    ];
+
+    const columns = [
+      { field: 'col1', headerName: 'Column 1', width: 150 },
+      { field: 'col2', headerName: 'Column 2', width: 150 },
+    ];
+
+    render(
+      <div style={{ height: 300, width: '100%' }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
   });
 });

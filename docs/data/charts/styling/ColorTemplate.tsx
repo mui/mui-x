@@ -1,26 +1,70 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { ScatterSeriesType } from '@mui/x-charts/models';
+import { ScatterValueType } from '@mui/x-charts';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import { Chance } from 'chance';
 
-const Dt = 100;
-const series = [...Array(20)].map((_, seriesIndex) => {
-  return {
-    id: `series_${seriesIndex}`,
-    type: 'scatter',
-    data: [...Array(Dt)].map((x, i) => {
-      const t = seriesIndex * Dt + i;
-      return {
-        x: t / Dt,
-        y: Math.cos(t / 30) / Dt,
-        id: i,
-      };
-    }),
-  } as ScatterSeriesType;
-});
+const chance = new Chance(42);
+
+function getGaussianSeriesData(
+  mean: [number, number],
+  stdev: [number, number] = [0.3, 0.4],
+  N: number = 50,
+) {
+  return [...Array(N)].map((_, i) => {
+    const x =
+      Math.sqrt(-2.0 * Math.log(1 - chance.floating({ min: 0, max: 0.99 }))) *
+        Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
+        stdev[0] +
+      mean[0];
+    const y =
+      Math.sqrt(-2.0 * Math.log(1 - chance.floating({ min: 0, max: 0.99 }))) *
+        Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
+        stdev[1] +
+      mean[1];
+    return { x, y, id: i };
+  });
+}
+
+const legendPlacement = {
+  slotProps: {
+    legend: {
+      position: {
+        vertical: 'middle',
+        horizontal: 'right',
+      },
+      direction: 'column',
+      itemGap: 2,
+    },
+  },
+  margin: {
+    top: 20,
+    right: 150,
+    left: 20,
+  },
+} as const;
+const series = [
+  { label: 'Series 1', data: getGaussianSeriesData([-5, 0]) },
+  { label: 'Series 2', data: getGaussianSeriesData([-4, 0]) },
+  { label: 'Series 3', data: getGaussianSeriesData([-3, 0]) },
+  { label: 'Series 4', data: getGaussianSeriesData([-2, 0]) },
+  { label: 'Series 5', data: getGaussianSeriesData([-1, 0]) },
+  { label: 'Series 6', data: getGaussianSeriesData([0, 0]) },
+  { label: 'Series 7', data: getGaussianSeriesData([1, 0]) },
+  { label: 'Series 8', data: getGaussianSeriesData([2, 0]) },
+  { label: 'Series 9', data: getGaussianSeriesData([3, 0]) },
+  { label: 'Series 10', data: getGaussianSeriesData([4, 0]) },
+  { label: 'Series 11', data: getGaussianSeriesData([5, 0]) },
+  { label: 'Series 12', data: getGaussianSeriesData([6, 0]) },
+  { label: 'Series 13', data: getGaussianSeriesData([7, 0]) },
+].map((s) => ({
+  ...s,
+  valueFormatter: (v: ScatterValueType) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+}));
+
 const categories: { [key: string]: string[] } = {
   Category10: [
     '#1f77b4',
@@ -142,12 +186,13 @@ export default function ColorTemplate() {
   const [colorScheme, setColorScheme] = React.useState('Category10');
 
   return (
-    <Stack direction="column" spacing={2}>
+    <Stack direction="column" spacing={2} sx={{ width: '100%', maxWidth: 600 }}>
       <ScatterChart
-        width={600}
         height={400}
         series={series}
+        yAxis={[{ min: -1.5, max: 1.5 }]}
         colors={categories[colorScheme]}
+        {...legendPlacement}
       />
       <TextField
         select

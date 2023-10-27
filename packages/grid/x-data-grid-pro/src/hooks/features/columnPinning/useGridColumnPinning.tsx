@@ -6,7 +6,6 @@ import {
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
   gridVisibleColumnFieldsSelector,
-  gridClasses,
   useGridApiMethod,
   useGridApiEventHandler,
   GridEventListener,
@@ -71,64 +70,6 @@ export const useGridColumnPinning = (
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const theme = useTheme();
-  // Each visible row (not to be confused with a filter result) is composed of a central .MuiDataGrid-row element
-  // and up to two additional .MuiDataGrid-row's, one for the columns pinned to the left and another
-  // for those on the right side. When hovering any of these elements, the :hover styles are applied only to
-  // the row element that was actually hovered, not its additional siblings. To make it look like a contiguous row,
-  // this method adds/removes the .Mui-hovered class to all of the row elements inside one visible row.
-  const updateHoveredClassOnSiblingRows = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
-      if (props.disableColumnPinning) {
-        return;
-      }
-
-      if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
-        return;
-      }
-
-      const nbLeftPinnedColumns = pinnedColumns.left?.length ?? 0;
-      const nbRightPinnedColumns = pinnedColumns.right?.length ?? 0;
-      if (nbLeftPinnedColumns + nbRightPinnedColumns === 0) {
-        return;
-      }
-
-      const index = event.currentTarget.dataset.rowindex;
-      const rowElements = apiRef.current.virtualScrollerRef!.current!.querySelectorAll(
-        `.${gridClasses.row}[data-rowindex="${index}"]`,
-      );
-      rowElements.forEach((row) => {
-        // Ignore rows from other grid inside the hovered row
-        if (
-          row.closest(`.${gridClasses.virtualScroller}`) ===
-          apiRef.current.virtualScrollerRef!.current!
-        ) {
-          if (event.type === 'mouseenter') {
-            row.classList.add('Mui-hovered');
-          } else {
-            row.classList.remove('Mui-hovered');
-          }
-        }
-      });
-    },
-    [apiRef, pinnedColumns.left, pinnedColumns.right, props.disableColumnPinning],
-  );
-
-  const handleMouseEnter = React.useCallback<GridEventListener<'rowMouseEnter'>>(
-    (params, event) => {
-      updateHoveredClassOnSiblingRows(event);
-    },
-    [updateHoveredClassOnSiblingRows],
-  );
-
-  const handleMouseLeave = React.useCallback<GridEventListener<'rowMouseLeave'>>(
-    (params, event) => {
-      updateHoveredClassOnSiblingRows(event);
-    },
-    [updateHoveredClassOnSiblingRows],
-  );
-
-  useGridApiEventHandler(apiRef, 'rowMouseEnter', handleMouseEnter);
-  useGridApiEventHandler(apiRef, 'rowMouseLeave', handleMouseLeave);
 
   /**
    * PRE-PROCESSING

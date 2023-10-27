@@ -13,9 +13,76 @@ interface SortRowTreeParams {
   shouldRenderGroupBelowLeaves: boolean;
 }
 
+// Single-linked list node
+class Node<T> {
+  next: null | Node<T>;
+
+  data: T;
+
+  constructor(data: T, next: null | Node<T>) {
+    this.next = next;
+    this.data = data;
+  }
+
+  insertAfter(list: List<T>) {
+    if (!list.first || !list.last) {
+      return;
+    }
+    const next = this.next;
+    this.next = list.first;
+    list.last.next = next;
+  }
+}
+
+// Single-linked list container
+class List<T> {
+  first: Node<T> | null;
+
+  last: Node<T> | null;
+
+  constructor(first: Node<T> | null, last: Node<T> | null) {
+    this.first = first;
+    this.last = last;
+  }
+
+  data() {
+    const array = [] as T[];
+    this.forEach((node) => {
+      array.push(node.data);
+    });
+    return array;
+  }
+
+  forEach(fn: (node: Node<T>) => void) {
+    let current = this.first;
+
+    while (current !== null) {
+      fn(current);
+      current = current.next;
+    }
+  }
+
+  static from<T>(array: T[]): List<T> {
+    if (array.length === 0) {
+      return new List(null, null);
+    }
+
+    let index = 0;
+    const first = new Node(array[index], null);
+    let current = first;
+    while (index + 1 < array.length) {
+      index += 1;
+      const node = new Node(array[index], null);
+      current.next = node;
+      current = node;
+    }
+
+    return new List(first, current);
+  }
+}
+
 export const sortRowTree = (params: SortRowTreeParams) => {
   const { rowTree, disableChildrenSorting, sortRowList, shouldRenderGroupBelowLeaves } = params;
-  let sortedRows: GridRowId[] = [];
 
   const sortedGroupedByParentRows = new Map<GridRowId, GridRowId[]>();
 
@@ -68,24 +135,15 @@ export const sortRowTree = (params: SortRowTreeParams) => {
 
   sortGroup(rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode);
 
-  // Flatten the sorted lists to have children just after their parent
-  const insertRowListIntoSortedRows = (startIndex: number, rowList: GridRowId[]) => {
-    sortedRows = [...sortedRows.slice(0, startIndex), ...rowList, ...sortedRows.slice(startIndex)];
+  const rootList = List.from<GridRowId>(sortedGroupedByParentRows.get(GRID_ROOT_GROUP_ID)!);
 
-    let treeSize = 0;
-    rowList.forEach((rowId) => {
-      treeSize += 1;
-      const children = sortedGroupedByParentRows.get(rowId);
-      if (children?.length) {
-        const subTreeSize = insertRowListIntoSortedRows(startIndex + treeSize, children);
-        treeSize += subTreeSize;
-      }
-    });
+  rootList.forEach((node) => {
+    const children = sortedGroupedByParentRows.get(node.data);
 
-    return treeSize;
-  };
+    if (children?.length) {
+      node.insertAfter(List.from(children));
+    }
+  });
 
-  insertRowListIntoSortedRows(0, sortedGroupedByParentRows.get(GRID_ROOT_GROUP_ID)!);
-
-  return sortedRows;
+  return rootList.data();
 };

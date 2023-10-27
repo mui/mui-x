@@ -1,6 +1,6 @@
 import { createIsAfterIgnoreDatePart } from './time-utils';
 import { mergeDateAndTime, getTodayDate } from './date-utils';
-import { FieldSection, FieldValueType, MuiPickersAdapter } from '../../models';
+import { DateOrTimeView, FieldSection, MuiPickersAdapter, PickersTimezone } from '../../models';
 
 export interface GetDefaultReferenceDateProps<TDate> {
   maxDate?: TDate;
@@ -10,7 +10,7 @@ export interface GetDefaultReferenceDateProps<TDate> {
   disableIgnoringDatePartForTimeValidation?: boolean;
 }
 
-const SECTION_TYPE_GRANULARITY = {
+export const SECTION_TYPE_GRANULARITY = {
   year: 1,
   month: 2,
   day: 3,
@@ -27,6 +27,9 @@ export const getSectionTypeGranularity = (sections: FieldSection[]) =>
         SECTION_TYPE_GRANULARITY[section.type as keyof typeof SECTION_TYPE_GRANULARITY] ?? 1,
     ),
   );
+
+export const getViewsGranularity = (views: readonly DateOrTimeView[]) =>
+  Math.max(...views.map((view) => SECTION_TYPE_GRANULARITY[view] ?? 1));
 
 const roundDate = <TDate>(utils: MuiPickersAdapter<TDate>, granularity: number, date: TDate) => {
   if (granularity === SECTION_TYPE_GRANULARITY.year) {
@@ -57,15 +60,19 @@ const roundDate = <TDate>(utils: MuiPickersAdapter<TDate>, granularity: number, 
 export const getDefaultReferenceDate = <TDate>({
   props,
   utils,
-  valueType,
   granularity,
+  timezone,
+  getTodayDate: inGetTodayDate,
 }: {
   props: GetDefaultReferenceDateProps<TDate>;
   utils: MuiPickersAdapter<TDate>;
-  valueType: FieldValueType;
   granularity: number;
+  timezone: PickersTimezone;
+  getTodayDate?: () => TDate;
 }) => {
-  let referenceDate = roundDate(utils, granularity, getTodayDate(utils, valueType));
+  let referenceDate = inGetTodayDate
+    ? inGetTodayDate()
+    : roundDate(utils, granularity, getTodayDate(utils, timezone));
 
   if (props.minDate != null && utils.isAfterDay(props.minDate, referenceDate)) {
     referenceDate = roundDate(utils, granularity, props.minDate);

@@ -5,7 +5,6 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { arrayIncludes } from '../internals/utils/utils';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
@@ -16,6 +15,7 @@ import {
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { formatMeridiem } from '../internals/utils/date-utils';
 
 export interface TimePickerToolbarProps<TDate>
   extends BaseToolbarProps<TDate | null, TimeViewWithMeridiem> {
@@ -53,11 +53,7 @@ const TimePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (props, styles) => styles.root,
 })<{
   ownerState: TimePickerToolbarProps<any>;
-}>({
-  [`& .${pickersToolbarClasses.penIconButtonLandscape}`]: {
-    marginTop: 'auto',
-  },
-});
+}>({});
 
 const TimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiTimePickerToolbar',
@@ -147,6 +143,16 @@ TimePickerToolbarAmPmSelection.propTypes = {
   ]),
 } as any;
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [TimePickerToolbar API](https://mui.com/x/api/date-pickers/time-picker-toolbar/)
+ */
 function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
   const {
@@ -237,7 +243,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             data-mui-test="toolbar-am-btn"
             selected={meridiemMode === 'am'}
             typographyClassName={classes.ampmLabel}
-            value={utils.getMeridiemText('am')}
+            value={formatMeridiem(utils, 'am')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
             disabled={disabled}
           />
@@ -247,7 +253,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             data-mui-test="toolbar-pm-btn"
             selected={meridiemMode === 'pm'}
             typographyClassName={classes.ampmLabel}
-            value={utils.getMeridiemText('pm')}
+            value={formatMeridiem(utils, 'pm')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             disabled={disabled}
           />
@@ -284,6 +290,11 @@ TimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   titleId: PropTypes.string,
   /**
    * Toolbar date format.

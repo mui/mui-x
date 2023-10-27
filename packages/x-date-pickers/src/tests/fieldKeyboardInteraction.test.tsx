@@ -2,15 +2,15 @@ import * as React from 'react';
 import { expect } from 'chai';
 import moment from 'moment/moment';
 import jMoment from 'moment-jalaali';
-import { userEvent } from '@mui/monorepo/test/utils';
+import { userEvent } from '@mui-internal/test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   buildFieldInteractions,
-  createPickerRenderer,
-  expectInputValue,
   getCleanedSelectedContent,
   getTextbox,
-} from 'test/utils/pickers-utils';
+  createPickerRenderer,
+  expectInputValue,
+} from 'test/utils/pickers';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { FieldSectionType, MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import {

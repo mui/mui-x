@@ -2,13 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
+import { useTimeout } from '../../../hooks/utils/useTimeout';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'date' | 'datetime-local';
-    headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -16,8 +16,6 @@ export type GridFilterInputDateProps = GridFilterInputValueProps &
      */
     isFilterActive?: boolean;
   };
-
-export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 
 function GridFilterInputDate(props: GridFilterInputDateProps) {
   const {
@@ -27,14 +25,13 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     apiRef,
     focusElementRef,
     InputProps,
-    headerFilterMenu,
     isFilterActive,
     clearButton,
     tabIndex,
     disabled,
     ...other
   } = props;
-  const filterTimeout = React.useRef<any>();
+  const filterTimeout = useTimeout();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
@@ -44,23 +41,16 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const value = event.target.value;
 
-      clearTimeout(filterTimeout.current);
       setFilterValueState(String(value));
 
       setIsApplying(true);
-      filterTimeout.current = setTimeout(() => {
+      filterTimeout.start(rootProps.filterDebounceMs, () => {
         applyValue({ ...item, value });
         setIsApplying(false);
-      }, SUBMIT_FILTER_DATE_STROKE_TIME);
+      });
     },
-    [applyValue, item],
+    [applyValue, item, rootProps.filterDebounceMs, filterTimeout],
   );
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(filterTimeout.current);
-    };
-  }, []);
 
   React.useEffect(() => {
     const itemValue = item.value ?? '';
@@ -91,7 +81,6 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
               ),
             }
           : {}),
-        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
         disabled,
         ...InputProps,
         inputProps: {
@@ -120,7 +109,6 @@ GridFilterInputDate.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)

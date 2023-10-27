@@ -74,10 +74,7 @@ export const useGridClipboard = (
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
-      const isModifierKeyPressed = event.ctrlKey || event.metaKey;
-      // event.code === 'KeyC' is not enough as event.code assume a QWERTY keyboard layout which would
-      // be wrong with a Dvorak keyboard (as if pressing J).
-      if (String.fromCharCode(event.keyCode) !== 'C' || !isModifierKeyPressed) {
+      if (!((event.ctrlKey || event.metaKey) && event.key === 'c')) {
         return;
       }
 

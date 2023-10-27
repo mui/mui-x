@@ -2,14 +2,14 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireTouchChangedEvent, screen, userEvent } from '@mui/monorepo/test/utils';
+import { fireTouchChangedEvent, screen, userEvent } from '@mui-internal/test-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import {
   adapterToUse,
   createPickerRenderer,
   openPicker,
   getClockTouchEvent,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 
 describe('<MobileDateTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -47,7 +47,7 @@ describe('<MobileDateTimePicker />', () => {
     render(
       <MobileDateTimePicker
         open
-        componentsProps={{ toolbar: { hidden: false } }}
+        slotProps={{ toolbar: { hidden: false } }}
         openTo="seconds"
         views={['seconds']}
         defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}

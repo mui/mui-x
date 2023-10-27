@@ -1,7 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import defaultJMoment, { Moment } from 'moment-jalaali';
 import { AdapterMoment } from '../AdapterMoment';
-import { AdapterFormats, AdapterOptions, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  DateBuilderReturnType,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -39,33 +45,37 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
+  year: 'jYYYY',
+  month: 'jMMMM',
+  monthShort: 'jMMM',
   dayOfMonth: 'jD',
+  weekday: 'dddd',
+  weekdayShort: 'ddd',
+  hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'A',
+  minutes: 'mm',
+  seconds: 'ss',
+
   fullDate: 'jYYYY, jMMMM Do',
   fullDateWithWeekday: 'dddd Do jMMMM jYYYY',
-  fullDateTime: 'jYYYY, jMMMM Do, hh:mm A',
-  fullDateTime12h: 'jD jMMMM hh:mm A',
-  fullDateTime24h: 'jD jMMMM HH:mm',
+  keyboardDate: 'jYYYY/jMM/jDD',
+  shortDate: 'jD jMMM',
+  normalDate: 'dddd, jD jMMM',
+  normalDateWithWeekday: 'DD MMMM',
+  monthAndYear: 'jMMMM jYYYY',
+  monthAndDate: 'jD jMMMM',
+
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
-  hours12h: 'hh',
-  hours24h: 'HH',
-  keyboardDate: 'jYYYY/jMM/jDD',
+
+  fullDateTime: 'jYYYY, jMMMM Do, hh:mm A',
+  fullDateTime12h: 'jD jMMMM hh:mm A',
+  fullDateTime24h: 'jD jMMMM HH:mm',
   keyboardDateTime: 'jYYYY/jMM/jDD LT',
   keyboardDateTime12h: 'jYYYY/jMM/jDD hh:mm A',
   keyboardDateTime24h: 'jYYYY/jMM/jDD HH:mm',
-  minutes: 'mm',
-  month: 'jMMMM',
-  monthAndDate: 'jD jMMMM',
-  monthAndYear: 'jMMMM jYYYY',
-  monthShort: 'jMMM',
-  weekday: 'dddd',
-  weekdayShort: 'ddd',
-  normalDate: 'dddd, jD jMMM',
-  normalDateWithWeekday: 'DD MMMM',
-  seconds: 'ss',
-  shortDate: 'jD jMMM',
-  year: 'jYYYY',
 };
 
 const NUMBER_SYMBOL_MAP = {
@@ -134,8 +144,10 @@ export class AdapterMomentJalaali
     return this.moment(value).locale('fa');
   };
 
-  public dateWithTimezone = (value: string | null | undefined): Moment | null => {
-    return this.date(value);
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
+  ): DateBuilderReturnType<T, Moment> => {
+    return <DateBuilderReturnType<T, Moment>>this.date(value);
   };
 
   public getTimezone = (): string => {

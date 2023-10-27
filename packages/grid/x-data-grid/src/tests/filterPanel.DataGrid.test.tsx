@@ -4,11 +4,12 @@ import { spy } from 'sinon';
 import {
   DataGrid,
   DataGridProps,
+  GridCellParams,
   GridFilterInputValue,
   GridFilterInputValueProps,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
@@ -102,7 +103,8 @@ describe('<DataGrid /> - Filter panel', () => {
                 sensitivity: 'base',
                 usage: 'search',
               });
-              return ({ value }): boolean => {
+              return (params: GridCellParams): boolean => {
+                const value = params.value!;
                 return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
               };
             },

@@ -70,6 +70,8 @@ export interface GridBaseSlots {
   BaseSelectOption: React.JSXElementConstructor<any>;
 }
 
+// TODO v7: camelCase GridSlotsComponent, the `componenets` prop is going away.
+
 /**
  * Grid components React prop interface containing all the overridable components.
  */
@@ -109,6 +111,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * @default GridFooter
    */
   Footer: React.JSXElementConstructor<any>;
+  /**
+   * Row count component rendered in the footer
+   * @default GridRowCount
+   */
+  FooterRowCount: React.JSXElementConstructor<any>;
   /**
    * Toolbar component rendered inside the Header component.
    * @default null

@@ -1,12 +1,18 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { color as d3Color } from 'd3-color';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import {
+  getIsFaded,
+  getIsHighlighted,
+  useInteractionItemProps,
+} from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
+import { HighlightScope } from '../context/HighlightProvider';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -16,10 +22,13 @@ export interface AreaElementClasses {
   /** Styles applied to the root element when faded. */
   faded: string;
 }
-export interface AreaElementOwnerState {
+
+export type AreaElementClassKey = keyof AreaElementClasses;
+
+interface AreaElementOwnerState {
   id: string;
   color: string;
-  isNotHighlighted: boolean;
+  isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<AreaElementClasses>;
 }
@@ -35,22 +44,25 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
-  const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getAreaElementUtilityClass, classes);
 };
 
-const AreaElementPath = styled('path', {
+export const AreaElementPath = styled('path', {
   name: 'MuiAreaElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: AreaElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
-  fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
-  opacity: ownerState.isNotHighlighted ? 0.3 : 1,
+  fill: ownerState.isHighlighted
+    ? d3Color(ownerState.color)!.brighter(1).formatHex()
+    : d3Color(ownerState.color)!.brighter(0.5).formatHex(),
+  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 
 AreaElementPath.propTypes = {
@@ -63,8 +75,8 @@ AreaElementPath.propTypes = {
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+    isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
-    isNotHighlighted: PropTypes.bool.isRequired,
   }).isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
@@ -73,35 +85,70 @@ AreaElementPath.propTypes = {
   ]),
 } as any;
 
-export type AreaElementProps = Omit<AreaElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'>;
+export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'> &
+  React.ComponentPropsWithoutRef<'path'> & {
+    highlightScope?: Partial<HighlightScope>;
+    /**
+     * The props used for each component slot.
+     * @default {}
+     */
+    slotProps?: {
+      area?: SlotComponentProps<'path', {}, AreaElementOwnerState>;
+    };
+    /**
+     * Overridable component slots.
+     * @default {}
+     */
+    slots?: {
+      /**
+       * The component that renders the root.
+       * @default AreaElementPath
+       */
+      area?: React.ElementType;
+    };
+  };
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Areas demonstration](https://mui.com/x/react-charts/areas-demo/)
+ *
+ * API:
+ *
+ * - [AreaElement API](https://mui.com/x/api/charts/area-element/)
+ */
 function AreaElement(props: AreaElementProps) {
-  const { id, classes: innerClasses, color, ...other } = props;
+  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const { item } = React.useContext(InteractionContext);
-  const someSeriesIsHighlighted = item !== null;
-  const isHighlighted = item !== null && item.type === 'line' && item.seriesId === id;
+  const isHighlighted = getIsHighlighted(item, { type: 'line', seriesId: id }, highlightScope);
+  const isFaded =
+    !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
 
   const ownerState = {
     id,
     classes: innerClasses,
     color,
-    isNotHighlighted: someSeriesIsHighlighted && !isHighlighted,
+    isFaded,
     isHighlighted,
   };
   const classes = useUtilityClasses(ownerState);
 
-  return (
-    <AreaElementPath
-      {...other}
-      ownerState={ownerState}
-      className={classes.root}
-      {...getInteractionItemProps({ type: 'line', seriesId: id })}
-    />
-  );
+  const Area = slots?.area ?? AreaElementPath;
+  const areaProps = useSlotProps({
+    elementType: Area,
+    externalSlotProps: slotProps?.area,
+    additionalProps: {
+      ...other,
+      ...getInteractionItemProps({ type: 'line', seriesId: id }),
+      className: classes.root,
+    },
+    ownerState,
+  });
+  return <Area {...areaProps} />;
 }
 
 AreaElement.propTypes = {
@@ -110,6 +157,20 @@ AreaElement.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  highlightScope: PropTypes.shape({
+    faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+  }),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
 } as any;
 
 export { AreaElement };

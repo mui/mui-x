@@ -1,18 +1,16 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, useGridRootProps } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import SyncIcon from '@mui/icons-material/Sync';
 
-const SUBMIT_FILTER_STROKE_TIME = 500;
-
 function InputNumberInterval(props) {
+  const rootProps = useGridRootProps();
   const { item, applyValue, focusElementRef = null } = props;
 
   const filterTimeout = React.useRef();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
-
   const [applying, setIsApplying] = React.useState(false);
 
   React.useEffect(() => {
@@ -34,7 +32,7 @@ function InputNumberInterval(props) {
     filterTimeout.current = setTimeout(() => {
       setIsApplying(false);
       applyValue({ ...item, value: [lowerBound, upperBound] });
-    }, SUBMIT_FILTER_STROKE_TIME);
+    }, rootProps.filterDebounceMs);
   };
 
   const handleUpperFilterChange = (event) => {

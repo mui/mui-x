@@ -1,8 +1,8 @@
 import { DefaultizedProps } from '../helpers';
 import {
   CartesianSeriesType,
+  CommonDefaultizedProps,
   CommonSeriesType,
-  DefaultizedCommonSeriesType,
   StackableSeriesType,
 } from './common';
 
@@ -16,13 +16,57 @@ export type CurveType =
   | 'stepBefore'
   | 'stepAfter';
 
-export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType, StackableSeriesType {
+export interface ShowMarkParams<AxisValue = number | Date> {
+  /**
+   * The item index.
+   */
+  index: number;
+  /**
+   * The x coordinate in the SVG.
+   */
+  x: number;
+  /**
+   * The y coordinate in the SVG.
+   */
+  y: number;
+  /**
+   * The item position value. It likely comes from the axis `data` property.
+   */
+  position: AxisValue;
+  /**
+   * The item value. It comes from the series `data` property.
+   */
+  value: number;
+}
+
+export interface LineSeriesType
+  extends CommonSeriesType<number>,
+    CartesianSeriesType,
+    StackableSeriesType {
   type: 'line';
-  data: number[];
+  /**
+   * Data associated to the line.
+   */
+  data?: (number | null)[];
+  /**
+   * The key used to retrive data from the dataset.
+   */
+  dataKey?: string;
   stack?: string;
   area?: boolean;
   label?: string;
   curve?: CurveType;
+  /**
+   * Define which items of the series should display a mark.
+   * If can be a boolean that applies to all items.
+   * Or a callback that gets some item properties and returns true if the item should be displayed.
+   */
+  showMark?: boolean | ((params: ShowMarkParams) => boolean);
+  /**
+   * Do not render the line highlight item if set to `true`.
+   * @default false
+   */
+  disableHighlight?: boolean;
 }
 
 /**
@@ -39,5 +83,4 @@ export type LineItemIdentifier = {
 };
 
 export interface DefaultizedLineSeriesType
-  extends DefaultizedProps<LineSeriesType, 'id'>,
-    DefaultizedCommonSeriesType<number> {}
+  extends DefaultizedProps<LineSeriesType, CommonDefaultizedProps | 'color'> {}

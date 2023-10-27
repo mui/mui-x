@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { act, fireEvent, screen } from '@mui-internal/test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateView } from '@mui/x-date-pickers/models';
-import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 describe('<StaticDatePicker /> - Keyboard interactions', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

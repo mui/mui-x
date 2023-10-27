@@ -60,6 +60,7 @@ import {
   AdapterFormats,
   AdapterOptions,
   AdapterUnits,
+  DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
 } from '../models';
@@ -132,33 +133,37 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
+  year: 'yyyy',
+  month: 'LLLL',
+  monthShort: 'MMM',
   dayOfMonth: 'd',
+  weekday: 'EEEE',
+  weekdayShort: 'EEEEEE',
+  hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'aa',
+  minutes: 'mm',
+  seconds: 'ss',
+
   fullDate: 'PP',
   fullDateWithWeekday: 'PPPP',
-  fullDateTime: 'PP p',
-  fullDateTime12h: 'PP hh:mm aa',
-  fullDateTime24h: 'PP HH:mm',
+  keyboardDate: 'P',
+  shortDate: 'MMM d',
+  normalDate: 'd MMMM',
+  normalDateWithWeekday: 'EEE, MMM d',
+  monthAndYear: 'LLLL yyyy',
+  monthAndDate: 'MMMM d',
+
   fullTime: 'p',
   fullTime12h: 'hh:mm aa',
   fullTime24h: 'HH:mm',
-  hours12h: 'hh',
-  hours24h: 'HH',
-  keyboardDate: 'P',
+
+  fullDateTime: 'PP p',
+  fullDateTime12h: 'PP hh:mm aa',
+  fullDateTime24h: 'PP HH:mm',
   keyboardDateTime: 'P p',
   keyboardDateTime12h: 'P hh:mm aa',
   keyboardDateTime24h: 'P HH:mm',
-  minutes: 'mm',
-  month: 'LLLL',
-  monthAndDate: 'MMMM d',
-  monthAndYear: 'LLLL yyyy',
-  monthShort: 'MMM',
-  weekday: 'EEEE',
-  weekdayShort: 'EEE',
-  normalDate: 'd MMMM',
-  normalDateWithWeekday: 'EEE, MMM d',
-  seconds: 'ss',
-  shortDate: 'MMM d',
-  year: 'yyyy',
 };
 
 /**
@@ -218,8 +223,10 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return new Date(value);
   };
 
-  public dateWithTimezone = (value: string | null | undefined): Date | null => {
-    return this.date(value);
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
+  ): DateBuilderReturnType<T, Date> => {
+    return <DateBuilderReturnType<T, Date>>this.date(value);
   };
 
   public getTimezone = (): string => {

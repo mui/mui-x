@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import {
   DataGrid,
   GridRenderCellParams,
@@ -13,26 +14,27 @@ function renderRating(params: GridRenderCellParams<any, number>) {
 }
 
 function RatingEditInputCell(props: GridRenderCellParams<any, number>) {
-  const { id, value, field } = props;
+  const { id, value, field, hasFocus } = props;
   const apiRef = useGridApiContext();
+  const ref = React.useRef<HTMLElement>();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number | null) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  const handleRef = (element: HTMLSpanElement) => {
-    if (element) {
-      const input = element.querySelector<HTMLInputElement>(
+  useEnhancedEffect(() => {
+    if (hasFocus && ref.current) {
+      const input = ref.current.querySelector<HTMLInputElement>(
         `input[value="${value}"]`,
       );
       input?.focus();
     }
-  };
+  }, [hasFocus, value]);
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
       <Rating
-        ref={handleRef}
+        ref={ref}
         name="rating"
         precision={1}
         value={value}

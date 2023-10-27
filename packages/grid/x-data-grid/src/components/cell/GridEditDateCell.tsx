@@ -150,7 +150,6 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       inputRef.current!.focus();
     }
   }, [hasFocus]);
-
   return (
     <StyledInputBase
       inputRef={inputRef}

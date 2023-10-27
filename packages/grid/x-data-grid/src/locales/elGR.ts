@@ -1,3 +1,4 @@
+import { elGR as elGRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -26,16 +27,16 @@ const elGRGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} ενεργά φίλτρα` : `${count} ενεργό φίλτρο`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Αναζήτηση…',
+  toolbarQuickFilterLabel: 'Αναζήτηση',
+  toolbarQuickFilterDeleteIconLabel: 'Καθαρισμός',
 
   // Export selector toolbar button text
   toolbarExport: 'Εξαγωγή',
   toolbarExportLabel: 'Εξαγωγή',
   toolbarExportCSV: 'Λήψη ως CSV',
-  // toolbarExportPrint: 'Print',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportPrint: 'Εκτύπωση',
+  toolbarExportExcel: 'Λήψη ως Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Εύρεση στήλης',
@@ -46,9 +47,9 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Προσθήκη φίλτρου',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Αφαίρεση όλων',
   filterPanelDeleteIconLabel: 'Διαγραφή',
-  // filterPanelLogicOperator: 'Logic operator',
+  filterPanelLogicOperator: 'Λογικός τελεστής',
   filterPanelOperator: 'Τελεστές',
   filterPanelOperatorAnd: 'Καί',
   filterPanelOperatorOr: 'Ή',
@@ -69,44 +70,44 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'είναι ίσο ή πριν',
   filterOperatorIsEmpty: 'είναι κενό',
   filterOperatorIsNotEmpty: 'δεν είναι κενό',
-  // filterOperatorIsAnyOf: 'is any of',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  filterOperatorIsAnyOf: 'είναι οποιοδήποτε από',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
-  // headerFilterOperatorContains: 'Contains',
-  // headerFilterOperatorEquals: 'Equals',
-  // headerFilterOperatorStartsWith: 'Starts with',
-  // headerFilterOperatorEndsWith: 'Ends with',
-  // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Is not',
-  // headerFilterOperatorAfter: 'Is after',
-  // headerFilterOperatorOnOrAfter: 'Is on or after',
-  // headerFilterOperatorBefore: 'Is before',
-  // headerFilterOperatorOnOrBefore: 'Is on or before',
-  // headerFilterOperatorIsEmpty: 'Is empty',
-  // headerFilterOperatorIsNotEmpty: 'Is not empty',
-  // headerFilterOperatorIsAnyOf: 'Is any of',
-  // 'headerFilterOperator=': 'Equals',
-  // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Is greater than',
-  // 'headerFilterOperator>=': 'Is greater than or equal to',
-  // 'headerFilterOperator<': 'Is less than',
-  // 'headerFilterOperator<=': 'Is less than or equal to',
+  headerFilterOperatorContains: 'Περιέχει',
+  headerFilterOperatorEquals: 'Ισούται',
+  headerFilterOperatorStartsWith: 'Ξεκινάει με',
+  headerFilterOperatorEndsWith: 'Τελειώνει με',
+  headerFilterOperatorIs: 'Είναι',
+  headerFilterOperatorNot: 'Δεν είναι',
+  headerFilterOperatorAfter: 'Είναι μετά',
+  headerFilterOperatorOnOrAfter: 'Είναι ίσο ή μετά',
+  headerFilterOperatorBefore: 'Είναι πριν',
+  headerFilterOperatorOnOrBefore: 'Είναι ίσο ή πριν',
+  headerFilterOperatorIsEmpty: 'Είναι κενό',
+  headerFilterOperatorIsNotEmpty: 'Δεν είναι κενό',
+  headerFilterOperatorIsAnyOf: 'Είναι οποιοδήποτε από',
+  'headerFilterOperator=': 'Ισούται',
+  'headerFilterOperator!=': 'Δεν ισούται',
+  'headerFilterOperator>': 'Μεγαλύτερο από',
+  'headerFilterOperator>=': 'Μεγαλύτερο ή ίσο με',
+  'headerFilterOperator<': 'Μικρότερο από',
+  'headerFilterOperator<=': 'Μικρότερο ή ίσο με',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'οποιοδήποτε',
+  filterValueTrue: 'αληθές',
+  filterValueFalse: 'ψευδές',
 
   // Column menu text
   columnMenuLabel: 'Μενού',
   columnMenuShowColumns: 'Εμφάνιση στηλών',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Διαχείριση στηλών',
   columnMenuFilter: 'Φίλτρο',
   columnMenuHideColumn: 'Απόκρυψη',
   columnMenuUnsort: 'Απενεργοποίηση ταξινόμησης',
@@ -133,49 +134,49 @@ const elGRGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} από ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionHeaderName: 'Επιλογή πλαισίου ελέγχου',
+  checkboxSelectionSelectAllRows: 'Επιλέξτε όλες τις σειρές',
+  checkboxSelectionUnselectAllRows: 'Καταργήση επιλογής όλων των σειρών',
+  checkboxSelectionSelectRow: 'Επιλογή γραμμής',
+  checkboxSelectionUnselectRow: 'Καταργήση επιλογής γραμμής',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'yes',
-  // booleanCellFalseLabel: 'no',
+  booleanCellTrueLabel: 'ναί',
+  booleanCellFalseLabel: 'όχι',
 
   // Actions cell more text
   actionsCellMore: 'περισσότερα',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Καρφιτσώμα στα αριστερά',
+  pinToRight: 'Καρφιτσώμα στα δεξιά',
+  unpin: 'Ξεκαρφίτσωμα',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Ομαδοποίηση',
+  treeDataExpand: 'εμφάνιση περιεχομένων',
+  treeDataCollapse: 'απόκρυψη περιεχομένων',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Ομαδοποίηση',
+  groupColumn: (name) => `Ομαδοποίηση κατά ${name}`,
+  unGroupColumn: (name) => `Διακοπή ομαδοποίησης κατά ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'Εναλλαγή πίνακα λεπτομερειών',
+  expandDetailPanel: 'Ανάπτυξη',
+  collapseDetailPanel: 'Σύμπτυξη',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Αναδιάταξη γραμμών',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Συσσωμάτωση',
+  aggregationFunctionLabelSum: 'άθροισμα',
+  aggregationFunctionLabelAvg: 'μέση τιμή',
+  aggregationFunctionLabelMin: 'ελάχιστο',
+  aggregationFunctionLabelMax: 'μέγιστο',
+  aggregationFunctionLabelSize: 'μέγεθος',
 };
 
-export const elGR: Localization = getGridLocalization(elGRGrid);
+export const elGR: Localization = getGridLocalization(elGRGrid, elGRCore);

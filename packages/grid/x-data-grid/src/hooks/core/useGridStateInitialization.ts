@@ -19,12 +19,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
   const registerControlState = React.useCallback<
     GridStatePrivateApi<PrivateApi['state']>['registerControlState']
   >((controlStateItem) => {
-    const { stateId, ...others } = controlStateItem;
-
-    controlStateMapRef.current[stateId] = {
-      ...others,
-      stateId,
-    };
+    controlStateMapRef.current[controlStateItem.stateId] = controlStateItem;
   }, []);
 
   const setState = React.useCallback<GridStateApi<PrivateApi['state']>['setState']>(
@@ -87,6 +82,8 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
         if (apiRef.current.publishEvent) {
           apiRef.current.publishEvent('stateChange', newState);
         }
+
+        apiRef.current.store.update(newState);
       }
 
       if (updatedControlStateIds.length === 1) {

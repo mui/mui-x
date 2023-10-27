@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { scaleBand } from 'd3-scale';
+import { scaleBand, scalePoint } from 'd3-scale';
+import PropTypes from 'prop-types';
 import {
   getExtremumX as getBarExtremumX,
   getExtremumY as getBarExtremumY,
@@ -12,34 +13,39 @@ import {
   getExtremumX as getLineExtremumX,
   getExtremumY as getLineExtremumY,
 } from '../LineChart/extremums';
-import { getScale } from '../hooks/useScale';
-import { AxisConfig, AxisDefaultized, ScaleName } from '../models/axis';
+import { AxisConfig, AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import { getScale } from '../internals/getScale';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
+  CartesianChartSeriesType,
   ChartSeries,
-  ChartSeriesType,
+  DatasetType,
   ExtremumGetter,
   ExtremumGetterResult,
 } from '../models/seriesType/config';
 import { MakeOptional } from '../models/helpers';
-import { getTicksNumber } from '../hooks/useTicks';
+import { getTickNumber } from '../hooks/useTicks';
 
 export type CartesianContextProviderProps = {
   xAxis?: MakeOptional<AxisConfig, 'id'>[];
   yAxis?: MakeOptional<AxisConfig, 'id'>[];
+  dataset?: DatasetType;
   children: React.ReactNode;
 };
 
+const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
+const DEFAULT_BAR_GAP_RATIO = 0.1;
+
 // TODO: those might be better placed in a distinct file
-const xExtremumGetters: { [T in ChartSeriesType]: ExtremumGetter<T> } = {
+const xExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
   bar: getBarExtremumX,
   scatter: getScatterExtremumX,
   line: getLineExtremumX,
 };
 
-const yExtremumGetters: { [T in ChartSeriesType]: ExtremumGetter<T> } = {
+const yExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
   bar: getBarExtremumY,
   scatter: getScatterExtremumY,
   line: getLineExtremumY,
@@ -64,20 +70,57 @@ export const CartesianContext = React.createContext<{
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
-export function CartesianContextProvider({
-  xAxis,
-  yAxis,
+function CartesianContextProvider({
+  xAxis: inXAxis,
+  yAxis: inYAxis,
+  dataset,
   children,
 }: CartesianContextProviderProps) {
   const formattedSeries = React.useContext(SeriesContext);
   const drawingArea = React.useContext(DrawingContext);
+
+  const xAxis = React.useMemo(
+    () =>
+      inXAxis?.map((axisConfig) => {
+        const dataKey = axisConfig.dataKey;
+        if (dataKey === undefined || axisConfig.data !== undefined) {
+          return axisConfig;
+        }
+        if (dataset === undefined) {
+          throw Error('MUI: x-axis uses `dataKey` but no `dataset` is provided.');
+        }
+        return {
+          ...axisConfig,
+          data: dataset.map((d) => d[dataKey]),
+        };
+      }),
+    [inXAxis, dataset],
+  );
+
+  const yAxis = React.useMemo(
+    () =>
+      inYAxis?.map((axisConfig) => {
+        const dataKey = axisConfig.dataKey;
+        if (dataKey === undefined || axisConfig.data !== undefined) {
+          return axisConfig;
+        }
+        if (dataset === undefined) {
+          throw Error('MUI: y-axis uses `dataKey` but no `dataset` is provided.');
+        }
+        return {
+          ...axisConfig,
+          data: dataset.map((d) => d[dataKey]),
+        };
+      }),
+    [inYAxis, dataset],
+  );
 
   const value = React.useMemo(() => {
     const axisExtremumCallback = <T extends keyof typeof xExtremumGetters>(
       acc: ExtremumGetterResult,
       chartType: T,
       axis: AxisConfig,
-      getters: { [T2 in ChartSeriesType]: ExtremumGetter<T2> },
+      getters: { [T2 in CartesianChartSeriesType]: ExtremumGetter<T2> },
       isDefaultAxis: boolean,
     ): ExtremumGetterResult => {
       const getter = getters[chartType];
@@ -104,10 +147,10 @@ export function CartesianContextProvider({
 
     const getAxisExtremum = (
       axis: AxisConfig,
-      getters: { [T in ChartSeriesType]: ExtremumGetter<T> },
+      getters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> },
       isDefaultAxis: boolean,
     ) => {
-      const charTypes = Object.keys(getters) as ChartSeriesType[];
+      const charTypes = Object.keys(getters) as CartesianChartSeriesType[];
 
       return charTypes.reduce(
         (acc, charType) => axisExtremumCallback(acc, charType, axis, getters, isDefaultAxis),
@@ -128,25 +171,47 @@ export function CartesianContextProvider({
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
 
-      const scaleType = axis.scaleType ?? 'linear';
-      const domain = [drawingArea.left, drawingArea.left + drawingArea.width];
+      const range = [drawingArea.left, drawingArea.left + drawingArea.width];
 
-      if (scaleType === 'band') {
+      if (isBandScaleConfig(axis)) {
+        const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+        const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
+        completedXAxis[axis.id] = {
+          categoryGapRatio,
+          barGapRatio,
+          ...axis,
+          scale: scaleBand(axis.data!, range)
+            .paddingInner(categoryGapRatio)
+            .paddingOuter(categoryGapRatio / 2),
+          tickNumber: axis.data!.length,
+        };
+      }
+      if (isPointScaleConfig(axis)) {
         completedXAxis[axis.id] = {
           ...axis,
-          scaleType,
-          scale: scaleBand(axis.data!, domain),
-          ticksNumber: axis.data!.length,
+          scale: scalePoint(axis.data!, range),
+          tickNumber: axis.data!.length,
         };
+      }
+      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+        // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
+
+      const scaleType = axis.scaleType ?? 'linear';
+
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, domain });
+      const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
+
+      const niceScale = getScale(scaleType, extremums, range).nice(tickNumber);
+      const niceDomain = niceScale.domain();
+      const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
+
       completedXAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType, extremums, domain).nice(ticksNumber),
-        ticksNumber,
+        scale: niceScale.domain(domain),
+        tickNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
 
@@ -161,25 +226,46 @@ export function CartesianContextProvider({
     allYAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
-      const domain = [drawingArea.top + drawingArea.height, drawingArea.top];
+      const range = [drawingArea.top + drawingArea.height, drawingArea.top];
 
-      const scaleType: ScaleName = axis.scaleType ?? 'linear';
-      if (scaleType === 'band') {
+      if (isBandScaleConfig(axis)) {
+        const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+        completedYAxis[axis.id] = {
+          categoryGapRatio,
+          barGapRatio: 0,
+          ...axis,
+          scale: scaleBand(axis.data!, [range[1], range[0]])
+            .paddingInner(categoryGapRatio)
+            .paddingOuter(categoryGapRatio / 2),
+          tickNumber: axis.data!.length,
+        };
+      }
+      if (isPointScaleConfig(axis)) {
         completedYAxis[axis.id] = {
           ...axis,
-          scaleType,
-          scale: scaleBand(axis.data!, domain),
-          ticksNumber: axis.data!.length,
+          scale: scalePoint(axis.data!, [range[1], range[0]]),
+          tickNumber: axis.data!.length,
         };
+      }
+      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+        // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
+
+      const scaleType = axis.scaleType ?? 'linear';
+
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, domain });
+      const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
+
+      const niceScale = getScale(scaleType, extremums, range).nice(tickNumber);
+      const niceDomain = niceScale.domain();
+      const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
+
       completedYAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType, extremums, domain).nice(ticksNumber),
-        ticksNumber,
+        scale: niceScale.domain(domain),
+        tickNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
 
@@ -202,3 +288,86 @@ export function CartesianContextProvider({
   // @ts-ignore
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }
+
+CartesianContextProvider.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  dataset: PropTypes.arrayOf(PropTypes.object),
+  xAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.string,
+      classes: PropTypes.object,
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      hideTooltip: PropTypes.bool,
+      id: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
+      tickSize: PropTypes.number,
+      valueFormatter: PropTypes.func,
+    }),
+  ),
+  yAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.string,
+      classes: PropTypes.object,
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      hideTooltip: PropTypes.bool,
+      id: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
+      tickSize: PropTypes.number,
+      valueFormatter: PropTypes.func,
+    }),
+  ),
+} as any;
+
+export { CartesianContextProvider };

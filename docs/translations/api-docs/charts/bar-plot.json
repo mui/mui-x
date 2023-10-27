@@ -1,6 +1,22 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skiped.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
+  },
   "classDescriptions": {},
   "slotDescriptions": {}
 }

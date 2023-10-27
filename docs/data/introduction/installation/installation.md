@@ -2,7 +2,7 @@
 
 <p class="description">Install the necessary packages to start building with MUI X components.</p>
 
-MUI X packages are available through the free MIT-licensed Community Plan, or the commercially-licensed Pro and Premium Plans.
+MUI X packages are available through the free MIT-licensed Community plan, or the commercially-licensed Pro and Premium plans.
 See [the licensing page](/x/introduction/licensing/) for complete details.
 
 ## Peer dependencies
@@ -20,3 +20,11 @@ The installation [instructions](/x/react-data-grid/getting-started/#installation
 ### Date and Time Pickers
 
 The installation [instructions](/x/react-date-pickers/getting-started/#installation).
+
+### Charts
+
+The installation [instructions](/x/react-charts/#getting-started).
+
+### Tree View
+
+The installation [instructions](/x/react-tree-view/getting-started/#installation).

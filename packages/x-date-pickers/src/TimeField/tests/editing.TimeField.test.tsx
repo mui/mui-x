@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue, getCleanedSelectedContent } from 'test/utils/pickers-utils';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
+import { userEvent, fireEvent } from '@mui-internal/test-utils';
+import { expectInputValue, getCleanedSelectedContent, describeAdapters } from 'test/utils/pickers';
 
 describe('<TimeField /> - Editing', () => {
   describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
@@ -366,7 +365,7 @@ describe('<TimeField /> - Editing', () => {
 
         selectSection('hours');
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-        userEvent.keyPress(input, { key: 'Backspace' });
+        fireEvent.change(input, { target: { value: '' } });
         userEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"
@@ -394,4 +393,64 @@ describe('<TimeField /> - Editing', () => {
       });
     },
   );
+
+  describeAdapters('props: minutesStep', TimeField, ({ adapter, testFieldKeyPress }) => {
+    it('should use `minitesStep` to set initial minutes with ArrowUp', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        key: 'ArrowUp',
+        minutesStep: 5,
+        expectedValue: '00',
+      });
+    });
+
+    it('should use `minitesStep` to set initial minutes with ArrowDown', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        key: 'ArrowDown',
+        minutesStep: 5,
+        expectedValue: '00',
+      });
+    });
+
+    it('should use `minitesStep` to increase minutes', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date(new Date(2022, 5, 15, 14, 0, 25)),
+        key: 'ArrowUp',
+        minutesStep: 5,
+        expectedValue: '05',
+      });
+    });
+
+    it('should use `minitesStep` to decrease minutes', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date(new Date(2022, 5, 15, 14, 0, 25)),
+        key: 'ArrowDown',
+        minutesStep: 5,
+        expectedValue: '55',
+      });
+    });
+
+    it('should go to the closest valid values acording to `minitesStep` when pressing ArrowDown', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date(new Date(2022, 5, 15, 14, 2, 25)),
+        key: 'ArrowDown',
+        minutesStep: 5,
+        expectedValue: '00',
+      });
+    });
+
+    it('should go to the closest valid values acording to `minitesStep` when pressing ArrowUp', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date(new Date(2022, 5, 15, 14, 2, 25)),
+        key: 'ArrowUp',
+        minutesStep: 5,
+        expectedValue: '05',
+      });
+    });
+  });
 });

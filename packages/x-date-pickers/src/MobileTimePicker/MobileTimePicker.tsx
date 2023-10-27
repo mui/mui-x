@@ -1,25 +1,40 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { PickerViewRendererLookup, useLocaleText, validateTime } from '../internals';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { validateTime } from '../internals/utils/validation/validateTime';
 import { TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
+import { resolveTimeFormat } from '../internals/utils/time-utils';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
+ */
 const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   inProps: MobileTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
@@ -41,6 +56,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     ...defaultizedProps,
     ampmInClock,
     viewRenderers,
+    format: resolveTimeFormat(utils, defaultizedProps),
     slots: {
       field: TimeField,
       ...defaultizedProps.slots,
@@ -64,7 +80,8 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText: localeText.openTimePickerDialogue,
+    getOpenDialogAriaText:
+      props.localeText?.openTimePickerDialogue ?? localeText.openTimePickerDialogue,
     validator: validateTime,
   });
 
@@ -158,12 +175,7 @@ MobileTimePicker.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */
@@ -250,6 +262,16 @@ MobileTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
+   */
+  reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
+   */
+  referenceDate: PropTypes.any,
+  /**
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
@@ -310,6 +332,14 @@ MobileTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

@@ -1,6 +1,5 @@
 import path from 'path';
-import { Project } from '../getTypeScriptProjects';
-import type { ReactApi } from './buildComponentsDocumentation';
+import { XTypeScriptProject } from '../createXTypeScriptProjects';
 import { writePrettifiedFile } from './utils';
 
 export type ApiPageType = {
@@ -10,16 +9,16 @@ export type ApiPageType = {
   plan?: 'pro' | 'premium' | undefined;
 };
 
-export function getPlan(packages: ReactApi['packages']): 'pro' | 'premium' | undefined {
+export function getPlan(imports: string[]): 'pro' | 'premium' | undefined {
+  const packages = imports.map((el) => /(.*) from (.*)/.exec(el)?.[2] ?? '');
+
   if (
-    packages.some(
-      ({ packageName }) => !packageName.includes('premium') && !packageName.includes('pro'),
-    )
+    packages.some((packageName) => !packageName.includes('premium') && !packageName.includes('pro'))
   ) {
     return undefined;
   }
 
-  if (packages.some(({ packageName }) => packageName.includes('pro'))) {
+  if (packages.some((packageName) => packageName.includes('pro'))) {
     return 'pro';
   }
   return 'premium';
@@ -36,9 +35,9 @@ type Options = {
    */
   identifier: string;
   /**
-   * One of the projects. Used to pretify the docs
+   * One of the projects. Used to prettify the docs
    */
-  project: Project;
+  project: XTypeScriptProject;
 };
 export default async function saveApiDocPages(
   createdPages: ApiPageType[],

@@ -4,6 +4,7 @@ import {
   AdapterFormats,
   AdapterOptions,
   AdapterUnits,
+  DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
   PickersTimezone,
@@ -56,33 +57,37 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
+  year: 'yyyy',
+  month: 'LLLL',
+  monthShort: 'MMM',
   dayOfMonth: 'd',
+  weekday: 'cccc',
+  weekdayShort: 'ccccc',
+  hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'a',
+  minutes: 'mm',
+  seconds: 'ss',
+
   fullDate: 'DD',
   fullDateWithWeekday: 'DDDD',
-  fullDateTime: 'ff',
-  fullDateTime12h: 'DD, hh:mm a',
-  fullDateTime24h: 'DD, T',
+  keyboardDate: 'D',
+  shortDate: 'MMM d',
+  normalDate: 'd MMMM',
+  normalDateWithWeekday: 'EEE, MMM d',
+  monthAndYear: 'LLLL yyyy',
+  monthAndDate: 'MMMM d',
+
   fullTime: 't',
   fullTime12h: 'hh:mm a',
   fullTime24h: 'HH:mm',
-  hours12h: 'hh',
-  hours24h: 'HH',
-  keyboardDate: 'D',
+
+  fullDateTime: 'ff',
+  fullDateTime12h: 'DD, hh:mm a',
+  fullDateTime24h: 'DD, T',
   keyboardDateTime: 'D t',
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
-  minutes: 'mm',
-  seconds: 'ss',
-  month: 'LLLL',
-  monthAndDate: 'MMMM d',
-  monthAndYear: 'LLLL yyyy',
-  monthShort: 'MMM',
-  weekday: 'cccc',
-  weekdayShort: 'ccc',
-  normalDate: 'd MMMM',
-  normalDateWithWeekday: 'EEE, MMM d',
-  shortDate: 'MMM d',
-  year: 'yyyy',
 };
 
 /**
@@ -130,6 +135,15 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     this.formats = { ...defaultFormats, ...formats };
   }
 
+  private setLocaleToValue = (value: DateTime) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale) {
+      return value;
+    }
+
+    return value.setLocale(expectedLocale);
+  };
+
   public date = (value?: any) => {
     if (typeof value === 'undefined') {
       return DateTime.local();
@@ -152,21 +166,22 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return DateTime.fromJSDate(value, { locale: this.locale });
   };
 
-  public dateWithTimezone = (
-    value: string | null | undefined,
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
     timezone: PickersTimezone,
-  ): DateTime | null => {
+  ): DateBuilderReturnType<T, DateTime> => {
+    type R = DateBuilderReturnType<T, DateTime>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
     if (typeof value === 'undefined') {
       // @ts-ignore
-      return DateTime.fromJSDate(new Date(), { locale: this.locale, zone: timezone });
+      return <R>DateTime.fromJSDate(new Date(), { locale: this.locale, zone: timezone });
     }
 
     // @ts-ignore
-    return DateTime.fromISO(value, { locale: this.locale, zone: timezone });
+    return <R>DateTime.fromISO(value, { locale: this.locale, zone: timezone });
   };
 
   public getTimezone = (value: DateTime): string => {
@@ -175,7 +190,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
       return 'system';
     }
 
-    return value.zoneName ?? 'system';
+    return value.zoneName!;
   };
 
   public setTimezone = (value: DateTime, timezone: PickersTimezone): DateTime => {
@@ -195,7 +210,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public toISO = (value: DateTime) => {
-    return value.toISO({ format: 'extended' })!;
+    return value.toUTC().toISO({ format: 'extended' })!;
   };
 
   public parse = (value: string, formatString: string) => {
@@ -513,17 +528,18 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekArray = (value: DateTime) => {
-    const { days } = value
+    const cleanValue = this.setLocaleToValue(value);
+    const { days } = cleanValue
       .endOf('month')
       .endOf('week')
-      .diff(value.startOf('month').startOf('week'), 'days')
+      .diff(cleanValue.startOf('month').startOf('week'), 'days')
       .toObject();
 
     const weeks: DateTime[][] = [];
     new Array<number>(Math.round(days!))
       .fill(0)
       .map((_, i) => i)
-      .map((day) => value.startOf('month').startOf('week').plus({ days: day }))
+      .map((day) => cleanValue.startOf('month').startOf('week').plus({ days: day }))
       .forEach((v, i) => {
         if (i === 0 || (i % 7 === 0 && i > 6)) {
           weeks.push([v]);

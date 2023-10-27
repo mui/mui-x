@@ -1,19 +1,38 @@
 import * as React from 'react';
-import { line as d3Line, area as d3Area } from 'd3-shape';
+import PropTypes from 'prop-types';
+import { line as d3Line } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { LineElement } from './LineElement';
-import { AreaElement } from './AreaElement';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { MarkElement } from './MarkElement';
+import { LineElement, LineElementProps } from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export function LinePlot() {
+export interface LinePlotSlotsComponent {
+  line?: React.JSXElementConstructor<LineElementProps>;
+}
+
+export interface LinePlotSlotComponentProps {
+  line?: Partial<LineElementProps>;
+}
+
+export interface LinePlotProps
+  extends React.SVGAttributes<SVGSVGElement>,
+    Pick<LineElementProps, 'slots' | 'slotProps'> {}
+
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
+ */
+function LinePlot(props: LinePlotProps) {
+  const { slots, slotProps, ...other } = props;
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
-
-  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -24,128 +43,76 @@ export function LinePlot() {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <React.Fragment>
-      <g>
-        {stackingGroups.flatMap(({ ids: groupIds }) => {
-          return groupIds.flatMap((seriesId) => {
-            const {
-              xAxisKey = defaultXAxisId,
-              yAxisKey = defaultYAxisId,
-              stackedData,
-            } = series[seriesId];
+    <g {...other}>
+      {stackingGroups.flatMap(({ ids: groupIds }) => {
+        return groupIds.flatMap((seriesId) => {
+          const {
+            xAxisKey = defaultXAxisId,
+            yAxisKey = defaultYAxisId,
+            stackedData,
+            data,
+          } = series[seriesId];
 
-            const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-            const yScale = yAxis[yAxisKey].scale;
-            const xData = xAxis[xAxisKey].data;
+          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
+          const yScale = yAxis[yAxisKey].scale;
+          const xData = xAxis[xAxisKey].data;
 
-            if (xData === undefined) {
-              throw new Error(
-                `Axis of id "${xAxisKey}" should have data property to be able to display a line plot.`,
-              );
-            }
-
-            const areaPath = d3Area<{
-              x: any;
-              y: any[];
-            }>()
-              .x((d) => xScale(d.x))
-              .y0((d) => yScale(d.y[0]))
-              .y1((d) => yScale(d.y[1]));
-
-            const curve = getCurveFactory(series[seriesId].curve);
-            const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
-
-            return (
-              !!series[seriesId].area && (
-                <AreaElement
-                  key={seriesId}
-                  id={seriesId}
-                  d={areaPath.curve(curve)(d3Data) || undefined}
-                  color={series[seriesId].color}
-                />
-              )
-            );
-          });
-        })}
-      </g>
-      <g>
-        {stackingGroups.flatMap(({ ids: groupIds }) => {
-          return groupIds.flatMap((seriesId) => {
-            const {
-              xAxisKey = defaultXAxisId,
-              yAxisKey = defaultYAxisId,
-              stackedData,
-            } = series[seriesId];
-
-            const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-            const yScale = yAxis[yAxisKey].scale;
-            const xData = xAxis[xAxisKey].data;
-
+          if (process.env.NODE_ENV !== 'production') {
             if (xData === undefined) {
               throw new Error(
                 `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
               );
             }
-
-            const linePath = d3Line<{
-              x: any;
-              y: any[];
-            }>()
-              .x((d) => xScale(d.x))
-              .y((d) => yScale(d.y[1]));
-
-            const curve = getCurveFactory(series[seriesId].curve);
-            const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
-
-            return (
-              <LineElement
-                key={seriesId}
-                id={seriesId}
-                d={linePath.curve(curve)(d3Data) || undefined}
-                color={series[seriesId].color}
-                {...getInteractionItemProps({ type: 'line', seriesId })}
-              />
-            );
-          });
-        })}
-      </g>
-      <g>
-        {stackingGroups.flatMap(({ ids: groupIds }) => {
-          return groupIds.flatMap((seriesId) => {
-            const {
-              xAxisKey = defaultXAxisId,
-              yAxisKey = defaultYAxisId,
-              stackedData,
-            } = series[seriesId];
-
-            const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-            const yScale = yAxis[yAxisKey].scale;
-            const xData = xAxis[xAxisKey].data;
-
-            if (xData === undefined) {
+            if (xData.length < stackedData.length) {
               throw new Error(
-                `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+                `MUI: data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items)`,
               );
             }
+          }
 
-            return xData?.map((x, index) => {
-              const y = stackedData[index][1];
-              return (
-                <MarkElement
-                  key={`${seriesId}-${index}`}
-                  id={seriesId}
-                  dataIndex={index}
-                  shape="circle"
-                  color={series[seriesId].color}
-                  x={xScale(x)}
-                  y={yScale(y)}
-                  {...getInteractionItemProps({ type: 'line', seriesId, dataIndex: index })}
-                />
-              );
-            });
-          });
-        })}
-      </g>
-    </React.Fragment>
+          const linePath = d3Line<{
+            x: any;
+            y: [number, number];
+          }>()
+            .x((d) => xScale(d.x))
+            .defined((_, i) => data[i] != null)
+            .y((d) => yScale(d.y[1]));
+
+          const curve = getCurveFactory(series[seriesId].curve);
+          const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
+
+          return (
+            <LineElement
+              key={seriesId}
+              id={seriesId}
+              d={linePath.curve(curve)(d3Data) || undefined}
+              color={series[seriesId].color}
+              highlightScope={series[seriesId].highlightScope}
+              slots={slots}
+              slotProps={slotProps}
+            />
+          );
+        });
+      })}
+    </g>
   );
 }
+
+LinePlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { LinePlot };

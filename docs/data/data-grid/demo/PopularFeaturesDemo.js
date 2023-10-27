@@ -28,9 +28,11 @@ import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid
 import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
-import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
+import EditingWithDatePickers from '../custom-columns/EditingWithDatePickers';
 import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
+import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
+import ClipboardPaste from '../clipboard/ClipboardPaste';
 
 export const featuresSet = [
   {
@@ -40,6 +42,7 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/master-detail/',
     demo: <BasicDetailPanels />,
+    linkToCode: '/master-detail/#system-BasicDetailPanels.tsx',
   },
   {
     id: 2,
@@ -49,6 +52,7 @@ export const featuresSet = [
     plan: 'Community',
     detailPage: '/editing/',
     demo: <EditingWithDatePickers />,
+    linkToCode: '/recipes-editing/#system-EditingWithDatePickers.tsx',
   },
   {
     id: 3,
@@ -58,6 +62,7 @@ export const featuresSet = [
     detailPage: '/column-groups/',
     newBadge: true,
     demo: <BasicGroupingDemo />,
+    linkToCode: '/column-groups/#system-BasicGroupingDemo.tsx',
   },
   {
     id: 4,
@@ -66,6 +71,7 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/pagination/',
     demo: <LazyLoadingGrid />,
+    linkToCode: '/row-updates/#system-LazyLoadingGrid.tsx',
   },
   {
     id: 5,
@@ -75,6 +81,7 @@ export const featuresSet = [
     plan: 'Community',
     detailPage: '/state/#save-and-restore-the-state',
     demo: <RestoreStateInitialState />,
+    linkToCode: '/state/#system-RestoreStateInitialState.tsx',
   },
   {
     id: 6,
@@ -83,6 +90,7 @@ export const featuresSet = [
     plan: 'Premium',
     detailPage: '/row-grouping/',
     demo: <RowGroupingInitialState />,
+    linkToCode: '/row-grouping/#system-RowGroupingInitialState.tsx',
   },
   {
     id: 7,
@@ -92,6 +100,7 @@ export const featuresSet = [
     plan: 'Premium',
     detailPage: '/export/#excel-export',
     demo: <ExcelExport />,
+    linkToCode: '/export/#system-ExcelExport.tsx',
   },
   {
     id: 8,
@@ -100,6 +109,7 @@ export const featuresSet = [
     plan: 'Community',
     detailPage: '/filtering/quick-filter/',
     demo: <QuickFilteringGrid />,
+    linkToCode: '/filtering/quick-filter/#system-QuickFilteringGrid.tsx',
   },
   {
     id: 9,
@@ -108,6 +118,7 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/row-ordering/',
     demo: <RowOrderingGrid />,
+    linkToCode: '/row-ordering/#system-RowOrderingGrid.tsx',
   },
   {
     id: 10,
@@ -116,6 +127,7 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/column-pinning/',
     demo: <BasicColumnPinning />,
+    linkToCode: '/column-pinning/#system-BasicColumnPinning.tsx',
   },
   {
     id: 11,
@@ -124,6 +136,7 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/row-pinning/',
     demo: <RowPinningWithPagination />,
+    linkToCode: '/row-pinning/#system-RowPinningWithPagination.tsx',
   },
   {
     id: 12,
@@ -132,6 +145,7 @@ export const featuresSet = [
     plan: 'Premium',
     detailPage: '/aggregation/',
     demo: <AggregationRowGrouping />,
+    linkToCode: '/aggregation/#system-AggregationRowGrouping.tsx',
   },
   {
     id: 13,
@@ -141,6 +155,7 @@ export const featuresSet = [
     plan: 'Community',
     detailPage: '/column-visibility/',
     demo: <ColumnSelectorGrid />,
+    linkToCode: '/column-visibility/#system-ColumnSelectorGrid.tsx',
   },
   {
     id: 14,
@@ -149,6 +164,7 @@ export const featuresSet = [
     plan: 'Community',
     detailPage: '/virtualization/#column-virtualization',
     demo: <ColumnVirtualizationGrid />,
+    linkToCode: '/virtualization/#system-ColumnVirtualizationGrid.tsx',
   },
   {
     id: 15,
@@ -165,15 +181,17 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/tree-data/',
     demo: <TreeDataFullExample />,
+    linkToCode: '/tree-data/#system-TreeDataFullExample.tsx',
   },
   {
     id: 17,
-    name: 'Cell Selection',
+    name: 'Cell selection',
     description:
       'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
     plan: 'Premium',
     detailPage: '/cell-selection/',
     demo: <CellSelectionGrid />,
+    linkToCode: '/cell-selection/#system-CellSelectionGrid.tsx',
     newBadge: true,
   },
   {
@@ -183,6 +201,29 @@ export const featuresSet = [
     plan: 'Community',
     detailPage: '/column-menu/',
     demo: <AddNewColumnMenuGrid />,
+    linkToCode: '/column-menu/#system-AddNewColumnMenuGrid.tsx',
+    newBadge: true,
+  },
+  {
+    id: 19,
+    name: 'Clipboard paste',
+    description:
+      'Copy and paste the selected cells and rows using the copy/paste keyboard shortcuts.',
+    plan: 'Premium',
+    detailPage: '/clipboard/#clipboard-paste',
+    demo: <ClipboardPaste />,
+    linkToCode: '/clipboard/#system-ClipboardPaste.tsx',
+    newBadge: true,
+  },
+  {
+    id: 20,
+    name: 'Header filters',
+    description:
+      'Quickly accessible and customizable header filters to filter the data',
+    plan: 'Pro',
+    detailPage: '/filtering/#header-filters',
+    demo: <HeaderFilteringDataGridPro />,
+    linkToCode: '/filtering/header-filters/#system-HeaderFilteringDataGridPro.tsx',
     newBadge: true,
   },
 ];
@@ -235,9 +276,16 @@ function RowDemo(props) {
 
   return (
     <Box sx={{ py: 2, backgroundColor: panelColor }}>
-      <Box sx={{ width: '90%', margin: 'auto', backgroundColor: gridBgColor }}>
-        {row.demo}
-      </Box>
+      <div style={{ width: '90%', margin: 'auto' }}>
+        <Box sx={{ backgroundColor: gridBgColor }}>{row.demo}</Box>
+        {row.linkToCode ? (
+          <Typography sx={{ marginTop: 1 }} variant="body2">
+            <Link href={`/x/react-data-grid${row.linkToCode}`} target="_blank">
+              Open demo source
+            </Link>
+          </Typography>
+        ) : null}
+      </div>
     </Box>
   );
 }
@@ -390,7 +438,7 @@ export default function PopularFeaturesDemo() {
           detailPanelCollapseIcon: ArrowUp,
         }}
         slotProps={{
-          toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+          toolbar: { showQuickFilter: true },
         }}
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}

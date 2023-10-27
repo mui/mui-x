@@ -1,14 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/utils';
+import { refType, unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputBooleanProps = GridFilterInputValueProps &
   TextFieldProps & {
-    headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -19,8 +18,11 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
 
 const BooleanOperatorContainer = styled('div')({
   display: 'flex',
-  alignItems: 'flex-end',
+  alignItems: 'center',
   width: '100%',
+  [`& button`]: {
+    margin: 'auto 0px 5px 5px',
+  },
 });
 
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
@@ -29,11 +31,11 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     applyValue,
     apiRef,
     focusElementRef,
-    headerFilterMenu,
     isFilterActive,
     clearButton,
     tabIndex,
     label: labelProp,
+    InputLabelProps,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
@@ -82,7 +84,6 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           variant="standard"
           native={isSelectNative}
           displayEmpty
-          startAdornment={isFilterActive ? headerFilterMenu : null}
           inputProps={{ ref: focusElementRef, tabIndex }}
           {...others}
           {...baseSelectProps}
@@ -125,13 +126,7 @@ GridFilterInputBoolean.propTypes = {
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
   clearButton: PropTypes.node,
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
-  headerFilterMenu: PropTypes.node,
+  focusElementRef: refType,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)

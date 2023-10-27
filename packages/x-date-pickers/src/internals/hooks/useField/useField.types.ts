@@ -1,11 +1,16 @@
 import * as React from 'react';
+import { SlotComponentProps } from '@mui/base/utils';
+import IconButton from '@mui/material/IconButton';
+import { ClearIcon } from '../../../icons';
 import {
   FieldSectionType,
   FieldSection,
   FieldSelectedSections,
   MuiPickersAdapter,
+  TimezoneProps,
   FieldSectionContentType,
   FieldValueType,
+  PickersTimezone,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
@@ -31,7 +36,8 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError> {
+export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError>
+  extends TimezoneProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -42,7 +48,7 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    */
   defaultValue?: TValue;
   /**
-   * The date used to generate a part of the date-time that is not present in the format when both `value` and `defaultValue` are not present.
+   * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
@@ -113,6 +119,20 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * The ref object used to imperatively interact with the field.
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  /**
+   * Callback fired when the clear button is clicked.
+   */
+  onClear?: React.MouseEventHandler;
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable?: boolean;
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
 }
 
 export interface FieldRef<TSection extends FieldSection> {
@@ -138,10 +158,13 @@ export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
   onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onBlur?: () => void;
   error?: boolean;
+  onClear?: React.MouseEventHandler;
+  clearable?: boolean;
+  disabled?: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -327,8 +350,11 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
 
 export type UseFieldValidationProps<
   TValue,
-  TInternalProps extends { value?: TValue; defaultValue?: TValue },
-> = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TValue };
+  TInternalProps extends { value?: TValue; defaultValue?: TValue; timezone?: PickersTimezone },
+> = Omit<TInternalProps, 'value' | 'defaultValue' | 'timezone'> & {
+  value: TValue;
+  timezone: PickersTimezone;
+};
 
 export type AvailableAdjustKeyCode =
   | 'ArrowUp'
@@ -365,3 +391,21 @@ export type SectionOrdering = {
    */
   endIndex: number;
 };
+
+export interface FieldSlotsComponents {
+  /**
+   * Icon to display inside the clear button.
+   * @default ClearIcon
+   */
+  ClearIcon?: React.ElementType;
+  /**
+   * Button to clear the value.
+   * @default IconButton
+   */
+  ClearButton?: React.ElementType;
+}
+
+export interface FieldSlotsComponentsProps {
+  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
+  clearButton?: SlotComponentProps<typeof IconButton, {}, {}>;
+}

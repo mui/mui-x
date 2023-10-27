@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -72,7 +71,7 @@ const xAxis = {
 
 const series = [
   { label: 'Car', data: car, stack: 'total' },
-  { label: 'Common Transportation', data: commonTransportation, stack: 'total' },
+  { label: 'Public T.', data: commonTransportation, stack: 'total' },
   { label: 'Motorcycle', data: motorcycle, stack: 'total' },
   { label: 'Walk', data: walking, stack: 'total' },
   { label: 'Bike', data: biking, stack: 'total' },
@@ -91,39 +90,42 @@ export default function StackOrderDemo() {
 
   const modifiedSeries = [{ ...series[0], stackOrder }, ...series.slice(1)];
   return (
-    <Box>
-      <Stack direction="row">
-        <TextField
-          sx={{ minWidth: 150, mr: 5 }}
-          select
-          label="stackOrder"
-          value={stackOrder}
-          onChange={(event) => setStackOrder(event.target.value)}
-        >
-          {availableStackOrder.map((offset) => (
-            <MenuItem key={offset} value={offset}>
-              {offset}
-            </MenuItem>
-          ))}
-        </TextField>
-      </Stack>
-      <BarChart
-        width={700}
-        height={400}
-        xAxis={[xAxis]}
-        yAxis={[{ min: 0, max: 100 }]}
-        series={modifiedSeries}
-        sx={{
-          '.MuiAxis-bottom': {
-            '.MuiAxis-tickLabel': {
-              transform: 'translate(0, 23px) rotate(45deg)',
+    <Box sx={{ width: '100%' }}>
+      <TextField
+        sx={{ minWidth: 150, mr: 5, mt: 1 }}
+        select
+        label="stackOrder"
+        value={stackOrder}
+        onChange={(event) => setStackOrder(event.target.value)}
+      >
+        {availableStackOrder.map((offset) => (
+          <MenuItem key={offset} value={offset}>
+            {offset}
+          </MenuItem>
+        ))}
+      </TextField>
+      <Box sx={{ overflow: 'auto', py: 2 }}>
+        <BarChart
+          width={700}
+          height={300}
+          xAxis={[
+            {
+              ...xAxis,
+              tickLabelStyle: {
+                angle: 45,
+                dominantBaseline: 'hanging',
+                textAnchor: 'start',
+              },
+              labelStyle: {
+                transform: 'translateY(15px)',
+              },
             },
-            '.MuiAxis-label': {
-              transform: 'translate(400px, 50px)',
-            },
-          },
-        }}
-      />
+          ]}
+          yAxis={[{ min: 0, max: 100 }]}
+          series={modifiedSeries}
+          margin={{ bottom: 70 }}
+        />
+      </Box>
     </Box>
   );
 }

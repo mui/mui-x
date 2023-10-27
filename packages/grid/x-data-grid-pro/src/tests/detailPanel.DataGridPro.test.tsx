@@ -18,7 +18,7 @@ import {
   waitFor,
   act,
   userEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import { getRow, getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

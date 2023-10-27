@@ -6,7 +6,7 @@ import {
   GridLogicOperator,
   GridPreferencePanelsValue,
   GridRowModel,
-  SUBMIT_FILTER_STROKE_TIME,
+  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   useGridApiRef,
   DataGridPro,
   GetColumnForNewFilterArgs,
@@ -15,11 +15,13 @@ import {
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+
+const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -881,7 +883,7 @@ describe('<DataGridPro /> - Filter', () => {
       const filterCell = getColumnHeaderCell(0, 1);
       const filterCellInput = filterCell.querySelector('input')!;
       expect(filterCellInput).not.toHaveFocus();
-      fireEvent.mouseDown(filterCell);
+      fireEvent.mouseDown(filterCellInput);
       expect(filterCellInput).toHaveFocus();
       fireEvent.change(filterCellInput, { target: { value: 'ad' } });
       clock.tick(SUBMIT_FILTER_STROKE_TIME);
@@ -927,7 +929,7 @@ describe('<DataGridPro /> - Filter', () => {
       fireEvent.click(filterCell);
 
       fireEvent.click(within(filterCell).getByLabelText('Operator'));
-      fireEvent.click(screen.getByRole('menuitem', { name: '= Equals' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Equals' }));
 
       expect(onFilterModelChange.callCount).to.equal(1);
       expect(onFilterModelChange.lastCall.firstArg.items[0].operator).to.equal('equals');

@@ -54,7 +54,8 @@ const paginationModel = gridPaginationModelSelector(
 
 ### With useGridSelector
 
-If you only need to access the state value in the render of your components, use the `useGridSelector` hook:
+If you only need to access the state value in the render of your components, use the `useGridSelector` hook.
+This hook ensures there is a reactive binding such that when the state changes, the component in which this hook is used is re-rendered.
 
 ```tsx
 const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
@@ -91,6 +92,14 @@ If you restore the page using `initialState` before the data is fetched, the Dat
 :::
 
 {{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Save and restore the state from external storage
+
+You can use `apiRef.current.exportState()` to save a snapshot of the state to an external storage (e.g. using `localStorage` or `redux`).
+This way the state can be persisted on refresh or navigating to another page. This is done by listening on the `beforeunload` event.
+When the component is unmounted, the `useLayoutEffect` cleanup function is being used instead.
+
+{{"demo": "SaveAndRestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Restore the state with apiRef
 

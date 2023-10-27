@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Time Clock component
 components: TimeClock
 githubLabel: 'component: TimePicker'
@@ -13,6 +13,8 @@ packageName: '@mui/x-date-pickers'
 ## Basic usage
 
 {{"demo": "BasicTimeClock.js"}}
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
@@ -48,7 +50,7 @@ The component uses the hour format of the locale's time setting, i.e. the 12-hou
 
 You can force a specific format using the `ampm` prop.
 
-You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#12h-24h-format).
+You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#meridiem-12h-24h-format).
 
 {{"demo": "TimeClockAmPm.js"}}
 

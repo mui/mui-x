@@ -13,6 +13,7 @@ import {
 import {
   passFilterLogic,
   GridAggregatedFilterItemApplier,
+  GridAggregatedFilterItemApplierResult,
   GridColumnRawLookup,
   GridApiCommunity,
 } from '@mui/x-data-grid-pro/internals';
@@ -82,20 +83,22 @@ const shouldApplyFilterItemOnGroup = (columnField: string, node: GridGroupNode) 
 export const filterRowTreeFromGroupingColumns = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
-  const { rowTree, isRowMatchingFilters, filterModel } = params;
+  const { apiRef, rowTree, isRowMatchingFilters, filterModel } = params;
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
+  const filterCache = {};
 
   const filterTreeNode = (
     node: GridTreeNode,
     areAncestorsExpanded: boolean,
-    ancestorsResults: ReturnType<GridAggregatedFilterItemApplier>[],
+    ancestorsResults: GridAggregatedFilterItemApplierResult[],
   ): number => {
-    let isPassingFiltering = false;
-    let filterResults: ReturnType<GridAggregatedFilterItemApplier> = {
+    const filterResults: GridAggregatedFilterItemApplierResult = {
       passingFilterItems: null,
       passingQuickFilterValues: null,
     };
+
+    let isPassingFiltering = false;
 
     if (isRowMatchingFilters && node.type !== 'footer') {
       const shouldApplyItem =
@@ -103,7 +106,8 @@ export const filterRowTreeFromGroupingColumns = (
           ? (columnField: string) => shouldApplyFilterItemOnGroup(columnField, node)
           : undefined;
 
-      filterResults = isRowMatchingFilters(node.id, shouldApplyItem);
+      const row = apiRef.current.getRow(node.id);
+      isRowMatchingFilters(row, shouldApplyItem, filterResults);
     } else {
       isPassingFiltering = true;
     }
@@ -114,7 +118,6 @@ export const filterRowTreeFromGroupingColumns = (
         const childNode = rowTree[childId];
         const childSubTreeSize = filterTreeNode(
           childNode,
-
           areAncestorsExpanded && !!node.childrenExpanded,
           [...ancestorsResults, filterResults],
         );
@@ -133,6 +136,7 @@ export const filterRowTreeFromGroupingColumns = (
           allResults.map((result) => result.passingQuickFilterValues),
           filterModel,
           params.apiRef,
+          filterCache,
         );
       }
     }

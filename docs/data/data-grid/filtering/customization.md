@@ -136,7 +136,7 @@ The filter operators can then be edited just like on a regular column.
 
 ```ts
 const ratingColumnType: GridColTypeDef = {
-  extendType: 'number',
+  type: 'number',
   filterOperators: getGridNumericOperators().filter(
     (operator) => operator.value === '>' || operator.value === '<',
   ),
@@ -178,6 +178,38 @@ To pass props directly to the `InputComponent` and not its wrapper, you can use 
 The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.
 
 {{"demo": "CustomFilterPanelPosition.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Optimize performance
+
+There is a new set of APIs with a more efficient interface that are going to be used by default at the next major release, v7.
+
+You can use them right now to make your custom filters faster. Instead of receiving a `GridCellParams` argument, they receive the parameters listed below.
+
+```ts
+const noop = () => {};
+const operator: GridFilterOperator = {
+  /* ...other operator properties */
+  getApplyFilterFn: noop /* It is required to pass a noop function until v7 */,
+  getApplyFilterFnV7: (filterItem: GridFilterItem) => {
+    /* This example is our default string filter function for v7 */
+
+    if (!filterItem.value) {
+      return null;
+    }
+    const filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim();
+    const filterRegex = new RegExp(escapeRegExp(filterItemValue), 'i');
+
+    return (
+      value: any,
+      row: GridValidRowModel,
+      column: GridColDef,
+      apiRef: React.MutableRefObject<GridApiCommunity>,
+    ): boolean => {
+      return value != null ? filterRegex.test(String(value)) : false;
+    };
+  },
+};
+```
 
 ## API
 

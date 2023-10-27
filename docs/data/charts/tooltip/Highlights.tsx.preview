@@ -1,1 +1,0 @@
-<LineChart {...lineChartsParams} tooltip={{ trigger: 'axis' }} />

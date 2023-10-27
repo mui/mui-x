@@ -28,6 +28,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   views,
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -50,6 +51,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   autoFocus,
   showViewSwitcher,
   disableIgnoringDatePartForTimeValidation,
+  timezone,
 }: TimeViewRendererProps<TimeView, TimeClockProps<TDate, TimeView>>) => (
   <TimeClock<TDate>
     view={view}
@@ -59,6 +61,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
     views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}
@@ -81,6 +84,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
     autoFocus={autoFocus}
     showViewSwitcher={showViewSwitcher}
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
+    timezone={timezone}
   />
 );
 
@@ -92,6 +96,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   views,
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -114,6 +119,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
+  timezone,
 }: TimeViewRendererProps<
   Extract<TimeView, 'hours'>,
   Omit<DigitalClockProps<TDate>, 'timeStep'> & Pick<TimePickerProps<TDate>, 'timeSteps'>
@@ -126,6 +132,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
     views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}
@@ -148,6 +155,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
     timeStep={timeSteps?.minutes}
     skipDisabled={skipDisabled}
+    timezone={timezone}
   />
 );
 
@@ -159,6 +167,7 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
   views,
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -181,6 +190,7 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
+  timezone,
 }: TimeViewRendererProps<TimeViewWithMeridiem, MultiSectionDigitalClockProps<TDate>>) => (
   <MultiSectionDigitalClock<TDate>
     view={view}
@@ -190,6 +200,7 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
     views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}
@@ -212,5 +223,6 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
     timeSteps={timeSteps}
     skipDisabled={skipDisabled}
+    timezone={timezone}
   />
 );

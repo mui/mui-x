@@ -43,6 +43,12 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * Enables accessibility improvements that will be enabled by default in v7.
+   * If you rely on the v6 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
+   * @default false
+   */
+  ariaV7: boolean;
 }
 
 /**
@@ -189,6 +195,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableDensitySelector: boolean;
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: boolean;
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -224,6 +236,11 @@ export interface DataGridPropsWithDefaultValues {
    * @default "client"
    */
   filterMode: GridFeatureMode;
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: number;
   /**
    * Sets the height in pixel of the column headers in the grid.
    * @default 56
@@ -288,7 +305,7 @@ export interface DataGridPropsWithDefaultValues {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: number[];
+  pageSizeOptions: Array<number | { value: number; label: string }>;
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -308,7 +325,7 @@ export interface DataGridPropsWithDefaultValues {
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */
-  sortingOrder: GridSortDirection[];
+  sortingOrder: readonly GridSortDirection[];
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
@@ -341,7 +358,7 @@ export interface DataGridPropsWithDefaultValues {
   /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default: false
+   * @default false
    */
   unstable_ignoreValueFormatterDuringExport:
     | boolean
@@ -354,6 +371,13 @@ export interface DataGridPropsWithDefaultValues {
    * @default '\t'
    */
   clipboardCopyCellDelimiter: string;
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: number;
 }
 
 /**
@@ -424,7 +448,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
   /**
@@ -688,7 +712,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Set of columns of type [[GridColDef[]]].
    */
-  columns: GridColDef<R>[];
+  columns: readonly GridColDef<R>[];
   /**
    * Return the id of a given [[GridRowModel]].
    */

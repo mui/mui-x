@@ -1,13 +1,17 @@
 import * as React from 'react';
 import {
   GridCellParams,
+  GridColDef,
   GridFilterItem,
   GridFilterModel,
   GridLogicOperator,
   GridRowId,
+  GridRowIdGetter,
+  GridValidRowModel,
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GLOBAL_API_REF, isInternalFilter } from '../../../colDef/utils';
 import {
   getDefaultGridFilterModel,
   GridAggregatedFilterItemApplier,
@@ -15,15 +19,37 @@ import {
   GridQuickFilterValueResult,
 } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
-import { gridColumnFieldsSelector, gridColumnLookupSelector } from '../columns';
+import {
+  gridColumnFieldsSelector,
+  gridColumnLookupSelector,
+  gridVisibleColumnFieldsSelector,
+} from '../columns';
 
-type GridFilterItemApplier = {
-  fn: (rowId: GridRowId) => boolean;
-  item: GridFilterItem;
-};
+// Fixes https://github.com/mui/mui-x/issues/10056
+const globalScope = (typeof window === 'undefined' ? globalThis : window) as any;
+const evalCode = globalScope[atob('ZXZhbA==')] as <T>(source: string) => T;
+
+let hasEval: boolean;
+try {
+  hasEval = evalCode<boolean>('true');
+} catch (_: unknown) {
+  hasEval = false;
+}
+
+type GridFilterItemApplier =
+  | {
+      v7: false;
+      fn: (rowId: GridRowId) => boolean;
+      item: GridFilterItem;
+    }
+  | {
+      v7: true;
+      fn: (row: GridValidRowModel) => boolean;
+      item: GridFilterItem;
+    };
 
 type GridFilterItemApplierNotAggregated = (
-  rowId: GridRowId,
+  row: GridValidRowModel,
   shouldApplyItem?: (field: string) => boolean,
 ) => GridFilterItemResult;
 
@@ -165,29 +191,56 @@ const getFilterCallbackFromItem = (
     );
   }
 
-  const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
+  const hasUserFunctionLegacy = !isInternalFilter(filterOperator.getApplyFilterFn);
+  const hasUserFunctionV7 = !isInternalFilter(filterOperator.getApplyFilterFnV7);
+
+  if (filterOperator.getApplyFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
+    const applyFilterOnRow = filterOperator.getApplyFilterFnV7(newFilterItem, column)!;
+    if (typeof applyFilterOnRow !== 'function') {
+      return null;
+    }
+    return {
+      v7: true,
+      item: newFilterItem,
+      fn: (row: GridValidRowModel) => {
+        const value = apiRef.current.getRowValue(row, column);
+        return applyFilterOnRow(value, row, column, apiRef);
+      },
+    };
+  }
+
+  const applyFilterOnRow = filterOperator.getApplyFilterFn!(newFilterItem, column)!;
   if (typeof applyFilterOnRow !== 'function') {
     return null;
   }
 
-  const fn = (rowId: GridRowId) => {
-    const cellParams = apiRef.current.getCellParams(rowId, newFilterItem.field!);
-
-    return applyFilterOnRow(cellParams);
+  return {
+    v7: false,
+    item: newFilterItem,
+    fn: (rowId: GridRowId) => {
+      const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
+      GLOBAL_API_REF.current = apiRef;
+      const result = applyFilterOnRow(params);
+      GLOBAL_API_REF.current = null;
+      return result;
+    },
   };
-
-  return { fn, item: newFilterItem };
 };
+
+let filterItemsApplierId = 1;
 
 /**
  * Generates a method to easily check if a row is matching the current filter model.
+ * @param {GridRowIdGetter | undefined} getRowId The getter for row's id.
  * @param {GridFilterModel} filterModel The model with which we want to filter the rows.
  * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
 export const buildAggregatedFilterItemsApplier = (
+  getRowId: GridRowIdGetter | undefined,
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  disableEval: boolean,
 ): GridFilterItemApplierNotAggregated | null => {
   const { items } = filterModel;
 
@@ -199,100 +252,212 @@ export const buildAggregatedFilterItemsApplier = (
     return null;
   }
 
-  return (rowId, shouldApplyFilter) => {
-    const resultPerItemId: GridFilterItemResult = {};
+  if (!hasEval || disableEval) {
+    // This is the original logic, which is used if `eval()` is not supported (aka prevented by CSP).
+    return (row, shouldApplyFilter) => {
+      const resultPerItemId: GridFilterItemResult = {};
 
-    const filteredAppliers = shouldApplyFilter
-      ? appliers.filter((applier) => shouldApplyFilter(applier.item.field))
-      : appliers;
+      for (let i = 0; i < appliers.length; i += 1) {
+        const applier = appliers[i];
+        if (!shouldApplyFilter || shouldApplyFilter(applier.item.field)) {
+          resultPerItemId[applier.item.id!] = applier.v7
+            ? applier.fn(row)
+            : applier.fn(getRowId ? getRowId(row) : row.id);
+        }
+      }
 
-    filteredAppliers.forEach((applier) => {
-      resultPerItemId[applier.item.id!] = applier.fn(rowId);
-    });
+      return resultPerItemId;
+    };
+  }
 
-    return resultPerItemId;
+  // We generate a new function with `eval()` to avoid expensive patterns for JS engines
+  // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
+  const filterItemTemplate = `(function filterItem$$(getRowId, appliers, row, shouldApplyFilter) {
+      ${appliers
+        .map(
+          (applier, i) =>
+            `const shouldApply${i} = !shouldApplyFilter || shouldApplyFilter(${JSON.stringify(
+              applier.item.field,
+            )});`,
+        )
+        .join('\n')}
+
+      const result$$ = {
+      ${appliers
+        .map(
+          (applier, i) =>
+            `${JSON.stringify(String(applier.item.id))}:
+          !shouldApply${i} ?
+            false :
+            ${
+              applier.v7
+                ? `appliers[${i}].fn(row)`
+                : `appliers[${i}].fn(${getRowId ? 'getRowId(row)' : 'row.id'})`
+            },
+      `,
+        )
+        .join('\n')}};
+
+      return result$$;
+    })`;
+
+  const filterItemCore = evalCode<Function>(
+    filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
+  );
+  const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
+    return filterItemCore(getRowId, appliers, row, shouldApplyItem);
   };
+  filterItemsApplierId += 1;
+
+  return filterItem;
 };
 
 /**
  * Generates a method to easily check if a row is matching the current quick filter.
- * @param {any[]} values The model with which we want to filter the rows.
+ * @param {GridRowIdGetter | undefined} getRowId The getter for row's id.
+ * @param {any[]} filterModel The model with which we want to filter the rows.
  * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
 export const buildAggregatedQuickFilterApplier = (
+  getRowId: GridRowIdGetter | undefined,
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridFilterItemApplierNotAggregated | null => {
-  const { quickFilterValues = [] } = filterModel;
+  const quickFilterValues = filterModel.quickFilterValues?.filter(Boolean) ?? [];
   if (quickFilterValues.length === 0) {
     return null;
   }
 
-  const columnsFields = gridColumnFieldsSelector(apiRef);
+  const quickFilterExcludeHiddenColumns = filterModel.quickFilterExcludeHiddenColumns ?? false;
 
-  const appliersPerField: {
-    [field: string]: (null | ((params: GridCellParams) => boolean))[];
-  } = {};
-  columnsFields.forEach((field) => {
+  const columnFields = quickFilterExcludeHiddenColumns
+    ? gridVisibleColumnFieldsSelector(apiRef)
+    : gridColumnFieldsSelector(apiRef);
+
+  const appliersPerField = [] as {
+    column: GridColDef;
+    appliers: {
+      v7: boolean;
+      fn: null | ((...args: any[]) => boolean);
+    }[];
+  }[];
+
+  columnFields.forEach((field) => {
     const column = apiRef.current.getColumn(field);
     const getApplyQuickFilterFn = column?.getApplyQuickFilterFn;
-    if (!getApplyQuickFilterFn) {
-      return;
+    const getApplyQuickFilterFnV7 = column?.getApplyQuickFilterFnV7;
+
+    const hasUserFunctionLegacy = !isInternalFilter(getApplyQuickFilterFn);
+    const hasUserFunctionV7 = !isInternalFilter(getApplyQuickFilterFnV7);
+
+    if (getApplyQuickFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
+      appliersPerField.push({
+        column,
+        appliers: quickFilterValues.map((value) => ({
+          v7: true,
+          fn: getApplyQuickFilterFnV7(value, column, apiRef),
+        })),
+      });
+    } else if (getApplyQuickFilterFn) {
+      appliersPerField.push({
+        column,
+        appliers: quickFilterValues.map((value) => ({
+          v7: false,
+          fn: getApplyQuickFilterFn(value, column, apiRef),
+        })),
+      });
     }
-    appliersPerField[field] = quickFilterValues.map((value) =>
-      getApplyQuickFilterFn(value, column, apiRef),
-    );
   });
 
-  // If some value does not have an applier we ignore them
-  const sanitizedQuickFilterValues = quickFilterValues.filter((value, index) =>
-    Object.keys(appliersPerField).some((field) => appliersPerField[field][index] != null),
-  );
+  return function isRowMatchingQuickFilter(row, shouldApplyFilter) {
+    const result = {} as GridQuickFilterValueResult;
+    const usedCellParams = {} as { [field: string]: GridCellParams };
 
-  if (sanitizedQuickFilterValues.length === 0) {
-    return null;
-  }
+    /* eslint-disable no-restricted-syntax, no-labels */
+    outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
+      const filterValue = quickFilterValues[v];
 
-  return (rowId, shouldApplyFilter) => {
-    const usedCellParams: { [field: string]: GridCellParams } = {};
-    const fieldsToFilter: string[] = [];
+      for (let i = 0; i < appliersPerField.length; i += 1) {
+        const { column, appliers } = appliersPerField[i];
+        const { field } = column;
 
-    Object.keys(appliersPerField).forEach((field) => {
-      if (!shouldApplyFilter || shouldApplyFilter(field)) {
-        usedCellParams[field] = apiRef.current.getCellParams(rowId, field);
-        fieldsToFilter.push(field);
-      }
-    });
-
-    const quickFilterValueResult: GridQuickFilterValueResult = {};
-    sanitizedQuickFilterValues.forEach((value, index) => {
-      const isPassing = fieldsToFilter.some((field) => {
-        if (appliersPerField[field][index] == null) {
-          return false;
+        if (shouldApplyFilter && !shouldApplyFilter(field)) {
+          continue;
         }
-        return appliersPerField[field][index]?.(usedCellParams[field]);
-      });
-      quickFilterValueResult[value] = isPassing;
-    });
 
-    return quickFilterValueResult;
+        const applier = appliers[v];
+        const value = apiRef.current.getRowValue(row, column);
+
+        if (applier.fn === null) {
+          continue;
+        }
+
+        if (applier.v7) {
+          const isMatching = applier.fn(value, row, column, apiRef);
+          if (isMatching) {
+            result[filterValue] = true;
+            continue outer;
+          }
+        } else {
+          const cellParams =
+            usedCellParams[field] ??
+            apiRef.current.getCellParams(getRowId ? getRowId(row) : row.id, field);
+          usedCellParams[field] = cellParams;
+
+          const isMatching = applier.fn(cellParams);
+          if (isMatching) {
+            result[filterValue] = true;
+            continue outer;
+          }
+        }
+      }
+
+      result[filterValue] = false;
+    }
+    /* eslint-enable no-restricted-syntax, no-labels */
+
+    return result;
   };
 };
 
 export const buildAggregatedFilterApplier = (
+  getRowId: GridRowIdGetter | undefined,
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  disableEval: boolean,
 ): GridAggregatedFilterItemApplier => {
-  const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(filterModel, apiRef);
-  const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(filterModel, apiRef);
+  const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(
+    getRowId,
+    filterModel,
+    apiRef,
+    disableEval,
+  );
+  const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(getRowId, filterModel, apiRef);
 
-  return (rowId, shouldApplyFilter) => ({
-    passingFilterItems:
-      isRowMatchingFilterItems && isRowMatchingFilterItems(rowId, shouldApplyFilter),
-    passingQuickFilterValues:
-      isRowMatchingQuickFilter && isRowMatchingQuickFilter(rowId, shouldApplyFilter),
-  });
+  return function isRowMatchingFilters(row, shouldApplyFilter, result) {
+    result.passingFilterItems = isRowMatchingFilterItems?.(row, shouldApplyFilter) ?? null;
+    result.passingQuickFilterValues = isRowMatchingQuickFilter?.(row, shouldApplyFilter) ?? null;
+  };
+};
+
+const isNotNull = <T>(result: null | T): result is T => result != null;
+
+type FilterCache = {
+  cleanedFilterItems?: GridFilterItem[];
+};
+
+const filterModelItems = (
+  cache: FilterCache,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  items: GridFilterItem[],
+) => {
+  if (!cache.cleanedFilterItems) {
+    cache.cleanedFilterItems = items.filter(
+      (item) => getFilterCallbackFromItem(item, apiRef) !== null,
+    );
+  }
+  return cache.cleanedFilterItems;
 };
 
 export const passFilterLogic = (
@@ -300,31 +465,20 @@ export const passFilterLogic = (
   allQuickFilterResults: (null | GridQuickFilterValueResult)[],
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  cache: FilterCache,
 ): boolean => {
-  const cleanedFilterItems = filterModel.items.filter(
-    (item) => getFilterCallbackFromItem(item, apiRef) !== null,
-  );
-
-  const cleanedAllFilterItemResults = allFilterItemResults.filter(
-    (result): result is GridFilterItemResult => result != null,
-  );
-
-  const cleanedAllQuickFilterResults = allQuickFilterResults.filter(
-    (result): result is GridQuickFilterValueResult => result != null,
-  );
-
-  // Defaultize operators
-  const quickFilterLogicOperator =
-    filterModel.quickFilterLogicOperator ?? getDefaultGridFilterModel().quickFilterLogicOperator;
-  const logicOperator = filterModel.logicOperator ?? getDefaultGridFilterModel().logicOperator;
+  const cleanedFilterItems = filterModelItems(cache, apiRef, filterModel.items);
+  const cleanedFilterItemResults = allFilterItemResults.filter(isNotNull);
+  const cleanedQuickFilterResults = allQuickFilterResults.filter(isNotNull);
 
   // get result for filter items model
-  if (cleanedAllFilterItemResults.length > 0) {
+  if (cleanedFilterItemResults.length > 0) {
     // Return true if the item pass with one of the rows
     const filterItemPredicate = (item: GridFilterItem) => {
-      return cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!]);
+      return cleanedFilterItemResults.some((filterItemResult) => filterItemResult[item.id!]);
     };
 
+    const logicOperator = filterModel.logicOperator ?? getDefaultGridFilterModel().logicOperator;
     if (logicOperator === GridLogicOperator.And) {
       const passesAllFilters = cleanedFilterItems.every(filterItemPredicate);
       if (!passesAllFilters) {
@@ -339,14 +493,16 @@ export const passFilterLogic = (
   }
 
   // get result for quick filter model
-  if (cleanedAllQuickFilterResults.length > 0 && filterModel.quickFilterValues != null) {
+  if (cleanedQuickFilterResults.length > 0 && filterModel.quickFilterValues != null) {
     // Return true if the item pass with one of the rows
     const quickFilterValuePredicate = (value: string) => {
-      return cleanedAllQuickFilterResults.some(
+      return cleanedQuickFilterResults.some(
         (quickFilterValueResult) => quickFilterValueResult[value],
       );
     };
 
+    const quickFilterLogicOperator =
+      filterModel.quickFilterLogicOperator ?? getDefaultGridFilterModel().quickFilterLogicOperator;
     if (quickFilterLogicOperator === GridLogicOperator.And) {
       const passesAllQuickFilterValues =
         filterModel.quickFilterValues.every(quickFilterValuePredicate);

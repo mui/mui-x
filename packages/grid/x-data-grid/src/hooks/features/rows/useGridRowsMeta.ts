@@ -69,6 +69,7 @@ export const useGridRowsMeta = (
     | 'pagination'
     | 'paginationMode'
     | 'rowHeight'
+    | 'rowPositionsDebounceMs'
   >,
 ): void => {
   const { getRowHeight: getRowHeightProp, getRowSpacing, getEstimatedRowHeight } = props;
@@ -79,7 +80,7 @@ export const useGridRowsMeta = (
       autoHeight: boolean; // Determines if the row has dynamic height
       needsFirstMeasurement: boolean; // Determines if the row was never measured. If true, use the estimated height as row height.
     };
-  }>({});
+  }>(Object.create(null));
 
   // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
   const lastMeasuredRowIndex = React.useRef(-1);
@@ -256,8 +257,8 @@ export const useGridRowsMeta = (
   );
 
   const debouncedHydrateRowsMeta = React.useMemo(
-    () => debounce(hydrateRowsMeta),
-    [hydrateRowsMeta],
+    () => debounce(hydrateRowsMeta, props.rowPositionsDebounceMs),
+    [hydrateRowsMeta, props.rowPositionsDebounceMs],
   );
 
   const storeMeasuredRowHeight = React.useCallback<

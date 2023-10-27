@@ -1,12 +1,12 @@
 ---
-product: date-pickers
-title: Date and Time Pickers - Localization
+productId: x-date-pickers
+title: Date and Time Pickers - Translated components
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Date and Time Pickers - Localization
+# Translated components
 
 <p class="description">Date and Time Pickers support translations between languages.</p>
 
@@ -18,7 +18,7 @@ The default locale of MUI is English (United States). If you want to use other l
 
 :::warning
 This page focuses on translating the text inside the Date and Time Pickers.
-If you need to change the formatting of the text to conform to a given locale, visit the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
+If you need to change the formatting of the text to conform to a given locale, visit the [Date format and localization](/x/react-date-pickers/adapters-locale/) page.
 :::
 
 ## Set translations globally

@@ -1,14 +1,12 @@
 <!-- markdownlint-disable-next-line -->
 <p align="center">
-  <a href="https://mui.com/" rel="noopener" target="_blank"><img width="150" src="https://mui.com/static/logo.svg" alt="MUI logo"></a>
+  <a href="https://mui.com/x/" rel="noopener" target="_blank"><img width="150" height="133" src="https://mui.com/static/logo.svg" alt="MUI X logo"></a>
 </p>
 
 <h1 align="center">MUI X</h1>
 
-MUI X is a collection of advanced UI components, including a [data grid](https://mui.com/x/react-data-grid/) and [date and time pickers](https://mui.com/x/react-date-pickers/getting-started/).
-
-These components are significantly more complex than the ones found in the [MUI Core](https://github.com/mui/material-ui/) libraries.
-They feature advanced functionality for data-rich applications and a wide range of other use cases.
+MUI X is a collection of advanced UI components that are significantly more complex than the ones found in the [MUI Core](https://github.com/mui/material-ui/) libraries.
+They feature state-of-the-art functionality and complex UX workflows for data-rich applications and support a wide range of use cases.
 
 MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
@@ -18,7 +16,9 @@ See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
 ## Components
 
 - [Data Grid](https://mui.com/x/react-data-grid/)
-- [Date and Time Pickers](https://mui.com/x/react-date-pickers/getting-started/)
+- [Date and Time Pickers](https://mui.com/x/react-date-pickers/)
+- [Charts](https://mui.com/x/react-charts/)
+- [Tree View](https://mui.com/x/react-tree-view/)
 
 ## Installation
 
@@ -29,6 +29,14 @@ Read the Data Grid [Installation instructions](https://mui.com/x/react-data-grid
 ### Date and Time Pickers
 
 Read the Date and Time Pickers [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#installation) in the MUI X docs.
+
+### Charts
+
+Read the Charts [Installation instructions](https://mui.com/x/react-charts/#getting-started) in the MUI X docs.
+
+### Tree View
+
+Read the Tree View [Installation instructions](https://mui.com/x/react-tree-view/getting-started/#installation) in the MUI X docs.
 
 ## MIT vs. commercial licenses
 
@@ -45,7 +53,7 @@ See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparis
 
 ## Plans
 
-### Community Plan
+### Community plan
 
 The free version of MUI X is [published under an MIT license](https://www.tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 This version contains features that we believe are maintainable by contributions from the open-source community.
@@ -54,8 +62,10 @@ MIT licensed packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
+- [`@mui/x-charts`](https://www.npmjs.com/package/@mui/x-charts)
+- [`@mui/x-tree-view`](https://www.npmjs.com/package/@mui/x-tree-view)
 
-### Pro Plan
+### Pro plan
 
 The Pro version of MUI X expands on the features of the free version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
 
@@ -66,9 +76,9 @@ Pro packages:
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
 
-### Premium Plan
+### Premium plan
 
-The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, and aggregation, in addition to everything that's included in the Pro Plan.
+The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, and aggregation, in addition to everything that's included in the Pro plan.
 
 The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
 
@@ -90,7 +100,7 @@ You can search through existing issues and pull requests to see if someone has r
 
 Visit Stack Overflow to ask questions and read crowdsourced answers from expert developers in the MUI community, as well as MUI maintainers.
 
-[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui) on Stack Overflow using the "mui" tag.
+[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui-x) on Stack Overflow using the "mui-x" tag.
 
 ### Bugs and feature requests
 

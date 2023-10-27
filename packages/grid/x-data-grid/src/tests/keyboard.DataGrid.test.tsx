@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -685,13 +685,13 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    expect(renderCell.callCount).to.equal(4);
+    expect(renderCell.callCount).to.equal(2);
     const input = screen.getByTestId('custom-input');
     input.focus();
     fireEvent.keyDown(input, { key: 'a' });
-    expect(renderCell.callCount).to.equal(6);
+    expect(renderCell.callCount).to.equal(4);
     fireEvent.keyDown(input, { key: 'b' });
-    expect(renderCell.callCount).to.equal(6);
+    expect(renderCell.callCount).to.equal(4);
   });
 
   it('should not scroll horizontally when cell is wider than viewport', () => {
@@ -714,5 +714,20 @@ describe('<DataGrid /> - Keyboard', () => {
 
     fireEvent.keyDown(firstCell, { key: 'ArrowDown' });
     expect(virtualScroller.scrollLeft).to.equal(0);
+  });
+
+  it('should not throw when moving into an empty grid', async () => {
+    const columns = [{ field: 'id', width: 400 }, { field: 'name' }];
+    const rows = [] as any[];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+
+    const cell = getColumnHeaderCell(0);
+    act(() => cell.focus());
+    fireEvent.keyDown(cell, { key: 'ArrowDown' });
   });
 });

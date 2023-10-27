@@ -5,7 +5,11 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { InferError, useValidation } from '../useValidation';
-import { FieldSection, FieldSelectedSections } from '../../../models';
+import { FieldSection, FieldSelectedSections, PickerChangeHandlerContext } from '../../../models';
+import {
+  PickerShortcutChangeImportance,
+  PickersShortcutsItemContext,
+} from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -18,8 +22,8 @@ import {
   UsePickerValueActions,
   PickerSelectionState,
   PickerValueUpdaterParams,
-  PickerChangeHandlerContext,
 } from './usePickerValue.types';
+import { useValueWithTimezone } from '../useValueWithTimezone';
 
 /**
  * Decide if the new value should be published
@@ -51,6 +55,16 @@ const shouldPublishValue = <TValue, TError>(
   }
 
   if (action.name === 'setValueFromView' && action.selectionState !== 'shallow') {
+    // On the first view,
+    // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
+    if (isCurrentValueTheDefaultValue) {
+      return true;
+    }
+
+    return hasChanged(dateState.lastPublishedValue);
+  }
+
+  if (action.name === 'setValueFromShortcut') {
     // On the first view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
     if (isCurrentValueTheDefaultValue) {
@@ -98,6 +112,10 @@ const shouldCommitValue = <TValue, TError>(
     return hasChanged(dateState.lastCommittedValue);
   }
 
+  if (action.name === 'setValueFromShortcut') {
+    return action.changeImportance === 'accept' && hasChanged(dateState.lastCommittedValue);
+  }
+
   return false;
 };
 
@@ -115,6 +133,10 @@ const shouldClosePicker = <TValue, TError>(
 
   if (action.name === 'setValueFromView') {
     return action.selectionState === 'finish' && closeOnSelect;
+  }
+
+  if (action.name === 'setValueFromShortcut') {
+    return action.changeImportance === 'accept';
   }
 
   return false;
@@ -149,6 +171,7 @@ export const usePickerValue = <
     closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
+    timezone: timezoneProp,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
@@ -217,8 +240,16 @@ export const usePickerValue = <
     };
   });
 
+  const { timezone, handleValueChange } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: inValue,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
+
   useValidation(
-    { ...props, value: dateState.draft },
+    { ...props, value: dateState.draft, timezone },
     validator,
     valueManager.isSameError,
     valueManager.defaultErrorState,
@@ -245,21 +276,26 @@ export const usePickerValue = <
       hasBeenModifiedSinceMount: true,
     }));
 
-    if (shouldPublish && onChange) {
+    if (shouldPublish) {
       const validationError =
         action.name === 'setValueFromField'
           ? action.context.validationError
           : validator({
               adapter,
               value: action.value,
-              props: { ...props, value: action.value },
+              props: { ...props, value: action.value, timezone },
             });
 
       const context: PickerChangeHandlerContext<TError> = {
         validationError,
       };
 
-      onChange(action.value, context);
+      // TODO v7: Remove 2nd condition
+      if (action.name === 'setValueFromShortcut' && action.shortcut != null) {
+        context.shortcut = action.shortcut;
+      }
+
+      handleValueChange(action.value, context);
     }
 
     if (shouldCommit && onAccept) {
@@ -277,6 +313,7 @@ export const usePickerValue = <
       !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
   ) {
     const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
+
     setDateState((prev) => ({
       ...prev,
       lastControlledValue: inValue,
@@ -325,7 +362,7 @@ export const usePickerValue = <
 
   const handleSetToday = useEventCallback(() => {
     updateDate({
-      value: valueManager.getTodayValue(utils, valueType),
+      value: valueManager.getTodayValue(utils, timezone, valueType),
       name: 'setValueFromAction',
       pickerAction: 'today',
     });
@@ -340,7 +377,22 @@ export const usePickerValue = <
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
   );
 
-  const handleChangeField = useEventCallback(
+  // TODO v7: Make changeImportance and label mandatory.
+  const handleSelectShortcut = useEventCallback(
+    (
+      newValue: TValue,
+      changeImportance?: PickerShortcutChangeImportance,
+      shortcut?: PickersShortcutsItemContext,
+    ) =>
+      updateDate({
+        name: 'setValueFromShortcut',
+        value: newValue,
+        changeImportance: changeImportance ?? 'accept',
+        shortcut,
+      }),
+  );
+
+  const handleChangeFromField = useEventCallback(
     (newValue: TValue, context: FieldChangeHandlerContext<TError>) =>
       updateDate({ name: 'setValueFromField', value: newValue, context }),
   );
@@ -364,7 +416,7 @@ export const usePickerValue = <
 
   const fieldResponse: UsePickerValueFieldResponse<TValue, TSection, TError> = {
     value: dateState.draft,
-    onChange: handleChangeField,
+    onChange: handleChangeFromField,
     selectedSections,
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
@@ -386,7 +438,7 @@ export const usePickerValue = <
     const error = validator({
       adapter,
       value: testedValue,
-      props: { ...props, value: testedValue },
+      props: { ...props, value: testedValue, timezone },
     });
 
     return !valueManager.hasError(error);
@@ -396,6 +448,7 @@ export const usePickerValue = <
     ...actions,
     value: viewValue,
     onChange: handleChange,
+    onSelectShortcut: handleSelectShortcut,
     isValid,
   };
 

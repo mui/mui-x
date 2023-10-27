@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
+import { fireEvent, screen, userEvent } from '@mui-internal/test-utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -10,7 +10,7 @@ import {
   adapterToUse,
   getTextbox,
   expectInputValue,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 
 describe('<MobileDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

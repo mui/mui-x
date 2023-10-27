@@ -1,4 +1,4 @@
-# Data Grid - Row spanning
+# Data Grid - Row spanning 🚧
 
 <p class="description">Span cells across several columns.</p>
 
@@ -6,6 +6,8 @@
 This feature isn't implemented yet. It's coming.
 
 👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
 :::
 
 Each cell takes up the width of one row.

@@ -18,5 +18,11 @@ export function defaultizeColor(
   seriesIndex: number,
   colors = DEFAULT_COLORS,
 ) {
+  if (series.type === 'pie') {
+    return {
+      ...series,
+      data: series.data.map((d, index) => ({ color: colors[index % colors.length], ...d })),
+    };
+  }
   return { color: colors[seriesIndex % colors.length], ...series };
 }

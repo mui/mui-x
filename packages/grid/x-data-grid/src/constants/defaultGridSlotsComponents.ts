@@ -1,6 +1,5 @@
 import { GridSlotsComponent } from '../models';
 import {
-  GridCell,
   GridSkeletonCell,
   GridColumnsPanel,
   GridFilterPanel,
@@ -12,20 +11,25 @@ import {
   GridPreferencesPanel,
   GridRow,
   GridColumnHeaderFilterIconButton,
+  GridRowCount,
 } from '../components';
+import { GridCellV7 } from '../components/cell/GridCell';
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import materialSlots from '../material';
 
+// TODO: camelCase these key. It's a private helper now.
+// Remove then need to call `uncapitalizeObjectKeys`.
 export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...materialSlots,
-  Cell: GridCell,
+  Cell: GridCellV7,
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
   ColumnHeaders: GridColumnHeaders,
   Footer: GridFooter,
+  FooterRowCount: GridRowCount,
   Toolbar: null,
   PreferencesPanel: GridPreferencesPanel,
   LoadingOverlay: GridLoadingOverlay,

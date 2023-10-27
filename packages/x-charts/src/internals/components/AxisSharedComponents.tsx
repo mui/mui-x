@@ -1,39 +1,27 @@
 import { styled } from '@mui/material/styles';
+import { axisClasses } from '../../ChartsAxis/axisClasses';
 
-export const Line = styled('line', {
+export const AxisRoot = styled('g', {
   name: 'MuiChartsAxis',
-  slot: 'Line',
+  slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })(({ theme }) => ({
-  stroke: theme.palette.text.primary,
-  shapeRendering: 'crispEdges',
-}));
+  [`& .${axisClasses.tickLabel}`]: {
+    ...theme.typography.caption,
+    fill: (theme.vars || theme).palette.text.primary,
+  },
+  [`& .${axisClasses.label}`]: {
+    ...theme.typography.body1,
+    fill: (theme.vars || theme).palette.text.primary,
+  },
 
-export const Tick = styled('line', {
-  name: 'MuiChartsAxis',
-  slot: 'Tick',
-  overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => ({
-  stroke: theme.palette.text.primary,
-  shapeRendering: 'crispEdges',
-}));
-
-export const TickLabel = styled('text', {
-  name: 'MuiChartsAxis',
-  slot: 'TickLabel',
-  overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => ({
-  ...theme.typography.caption,
-  fill: theme.palette.text.primary,
-  textAnchor: 'middle',
-}));
-
-export const Label = styled('text', {
-  name: 'MuiChartsAxis',
-  slot: 'Label',
-  overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => ({
-  ...theme.typography.body1,
-  fill: theme.palette.text.primary,
-  textAnchor: 'middle',
+  [`& .${axisClasses.line}`]: {
+    stroke: (theme.vars || theme).palette.text.primary,
+    shapeRendering: 'crispEdges',
+    strokeWidth: 1,
+  },
+  [`& .${axisClasses.tick}`]: {
+    stroke: (theme.vars || theme).palette.text.primary,
+    shapeRendering: 'crispEdges',
+  },
 }));

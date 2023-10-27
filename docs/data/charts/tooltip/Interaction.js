@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
 
@@ -11,20 +10,23 @@ const barChartsParams = {
     },
   ],
   series: [
-    { data: [2, 5, 3, 4, 1], stack: '1', label: 'series x' },
-    { data: [10, 3, 1, 2, 10], stack: '1', label: 'series y' },
-    { data: [10, 3, 1, 2, 10], stack: '1', label: 'series z' },
+    { data: [2, 5, 3, 4, 1], stack: '1', label: 'Series x' },
+    { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series y' },
+    { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series z' },
   ],
-  width: 400,
+  margin: { top: 10, right: 10 },
   height: 200,
+  slotProps: {
+    legend: {
+      hidden: true,
+    },
+  },
 };
 export default function Interaction() {
   return (
-    <Box>
-      <Stack direction={{ xs: 'column', md: 'row' }}>
-        <BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
-        <BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />
-      </Stack>
-    </Box>
+    <Stack direction="column" sx={{ width: '100%', maxWidth: 400 }}>
+      <BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
+      <BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />
+    </Stack>
   );
 }

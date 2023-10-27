@@ -46,7 +46,7 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Usuń wszystkie',
   filterPanelDeleteIconLabel: 'Usuń',
   filterPanelLogicOperator: 'Operator logiczny',
   filterPanelOperator: 'Operator',
@@ -78,12 +78,12 @@ const plPLGrid: Partial<GridLocaleText> = {
   // 'filterOperator<=': '<=',
 
   // Header filter operators text
-  // headerFilterOperatorContains: 'Contains',
-  // headerFilterOperatorEquals: 'Equals',
-  // headerFilterOperatorStartsWith: 'Starts with',
-  // headerFilterOperatorEndsWith: 'Ends with',
+  headerFilterOperatorContains: 'Zawiera',
+  headerFilterOperatorEquals: 'Równa się',
+  headerFilterOperatorStartsWith: 'Zaczyna się od',
+  headerFilterOperatorEndsWith: 'Kończy się na',
   // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Is not',
+  headerFilterOperatorNot: 'Niepuste',
   // headerFilterOperatorAfter: 'Is after',
   // headerFilterOperatorOnOrAfter: 'Is on or after',
   // headerFilterOperatorBefore: 'Is before',
@@ -93,10 +93,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   // headerFilterOperatorIsAnyOf: 'Is any of',
   // 'headerFilterOperator=': 'Equals',
   // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Is greater than',
-  // 'headerFilterOperator>=': 'Is greater than or equal to',
-  // 'headerFilterOperator<': 'Is less than',
-  // 'headerFilterOperator<=': 'Is less than or equal to',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'dowolny',
@@ -106,7 +106,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Zarządzaj kolumnami',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Ukryj',
   columnMenuUnsort: 'Anuluj sortowanie',

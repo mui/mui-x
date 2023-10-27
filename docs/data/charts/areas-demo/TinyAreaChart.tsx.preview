@@ -1,0 +1,16 @@
+<ChartContainer
+  width={500}
+  height={300}
+  series={[
+    {
+      data: uData,
+      type: 'line',
+      label: 'uv',
+      area: true,
+      stack: 'total',
+    },
+  ]}
+  xAxis={[{ scaleType: 'point', data: xLabels }]}
+>
+  <AreaPlot />
+</ChartContainer>

@@ -44,7 +44,7 @@ const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
     'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
     'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#server-side-persistence.',
   ],
   'error',
 );

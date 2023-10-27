@@ -7,14 +7,13 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   PickersToolbar,
   PickersToolbarButton,
-  pickersToolbarClasses,
   useUtils,
   BaseToolbarProps,
   useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internal/models';
-import { UseRangePositionResponse } from '../internal/hooks/useRangePosition';
+import { DateRange } from '../internals/models';
+import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
@@ -47,12 +46,7 @@ const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: DateRangePickerToolbarProps<any>;
-}>({
-  [`& .${pickersToolbarClasses.penIconButton}`]: {
-    position: 'relative',
-    top: 4,
-  },
-});
+}>({});
 
 const DateRangePickerToolbarContainer = styled('div', {
   name: 'MuiDateRangePickerToolbar',
@@ -62,6 +56,16 @@ const DateRangePickerToolbarContainer = styled('div', {
   display: 'flex',
 });
 
+/**
+ * Demos:
+ *
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [DateRangePickerToolbar API](https://mui.com/x/api/date-pickers/date-range-picker-toolbar/)
+ */
 const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
   TDate extends unknown,
 >(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
@@ -137,6 +141,11 @@ DateRangePickerToolbar.propTypes = {
   onRangePositionChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   titleId: PropTypes.string,
   /**
    * Toolbar date format.

@@ -1,5 +1,6 @@
-import { DateView, FieldValueType, MuiPickersAdapter } from '../../models';
+import { DateView, FieldValueType, MuiPickersAdapter, PickersTimezone } from '../../models';
 import { DateOrTimeViewWithMeridiem } from '../models';
+import { areViewsEqual } from './views';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
@@ -9,6 +10,7 @@ interface FindClosestDateParams<TDate> {
   minDate: TDate;
   isDateDisabled: (date: TDate) => boolean;
   utils: MuiPickersAdapter<TDate>;
+  timezone: PickersTimezone;
 }
 
 export const findClosestEnabledDate = <TDate>({
@@ -19,8 +21,9 @@ export const findClosestEnabledDate = <TDate>({
   minDate,
   isDateDisabled,
   utils,
+  timezone,
 }: FindClosestDateParams<TDate>) => {
-  const today = utils.startOfDay(utils.date()!);
+  const today = utils.startOfDay(utils.dateWithTimezone(undefined, timezone));
 
   if (disablePast && utils.isBefore(minDate!, today)) {
     minDate = today;
@@ -69,21 +72,6 @@ export const findClosestEnabledDate = <TDate>({
   }
 
   return null;
-};
-
-export const clamp = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  value: TDate,
-  minDate: TDate,
-  maxDate: TDate,
-): TDate => {
-  if (utils.isBefore(value, minDate)) {
-    return minDate;
-  }
-  if (utils.isAfter(value, maxDate)) {
-    return maxDate;
-  }
-  return value;
 };
 
 export const replaceInvalidDateByNull = <TDate>(
@@ -136,9 +124,67 @@ export const mergeDateAndTime = <TDate>(
   return mergedDate;
 };
 
-export const getTodayDate = <TDate>(utils: MuiPickersAdapter<TDate>, valueType: FieldValueType) =>
-  valueType === 'date' ? utils.startOfDay(utils.date()!) : utils.date()!;
+export const getTodayDate = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  timezone: PickersTimezone,
+  valueType?: FieldValueType,
+) =>
+  valueType === 'date'
+    ? utils.startOfDay(utils.dateWithTimezone(undefined, timezone))
+    : utils.dateWithTimezone(undefined, timezone);
+
+export const formatMeridiem = <TDate>(utils: MuiPickersAdapter<TDate>, meridiem: 'am' | 'pm') => {
+  const date = utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14);
+  return utils.format(date, 'meridiem');
+};
 
 const dateViews = ['year', 'month', 'day'];
 export const isDatePickerView = (view: DateOrTimeViewWithMeridiem): view is DateView =>
   dateViews.includes(view);
+
+export const resolveDateFormat = (
+  utils: MuiPickersAdapter<any>,
+  { format, views }: { format?: string; views: readonly DateView[] },
+  isInToolbar: boolean,
+) => {
+  if (format != null) {
+    return format;
+  }
+
+  const formats = utils.formats;
+  if (areViewsEqual(views, ['year'])) {
+    return formats.year;
+  }
+
+  if (areViewsEqual(views, ['month'])) {
+    return formats.month;
+  }
+
+  if (areViewsEqual(views, ['day'])) {
+    return formats.dayOfMonth;
+  }
+
+  if (areViewsEqual(views, ['month', 'year'])) {
+    return `${formats.month} ${formats.year}`;
+  }
+
+  if (areViewsEqual(views, ['day', 'month'])) {
+    return `${formats.month} ${formats.dayOfMonth}`;
+  }
+
+  if (isInToolbar) {
+    // Little localization hack (Google is doing the same for android native pickers):
+    // For english localization it is convenient to include weekday into the date "Mon, Jun 1".
+    // For other locales using strings like "June 1", without weekday.
+    return /en/.test(utils.getCurrentLocaleCode())
+      ? formats.normalDateWithWeekday
+      : formats.normalDate;
+  }
+
+  return formats.keyboardDate;
+};
+
+export const getWeekdays = <TDate>(utils: MuiPickersAdapter<TDate>, date: TDate) => {
+  const start = utils.startOfWeek(date);
+  return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
+};

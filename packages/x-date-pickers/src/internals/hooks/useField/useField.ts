@@ -23,7 +23,7 @@ export const useField = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any> & { minutesStep?: number },
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
@@ -40,12 +40,13 @@ export const useField = <
     setTempAndroidValueStr,
     sectionsValueBoundaries,
     placeholder,
+    timezone,
   } = useFieldState(params);
 
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false, unstableFieldRef },
+    internalProps: { readOnly = false, unstableFieldRef, minutesStep },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -54,6 +55,9 @@ export const useField = <
       onMouseUp,
       onPaste,
       error,
+      clearable,
+      onClear,
+      disabled,
       ...otherForwardedProps
     },
     fieldValueManager,
@@ -66,7 +70,9 @@ export const useField = <
     updateSectionValue,
     sectionsValueBoundaries,
     setTempAndroidValueStr,
+    timezone,
   });
+
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
@@ -97,12 +103,17 @@ export const useField = <
       );
     }
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
-
     setSelectedSections(sectionIndex);
   };
 
-  const handleInputClick = useEventCallback((...args) => {
-    onClick?.(...(args as []));
+  const handleInputClick = useEventCallback((event: React.MouseEvent, ...args) => {
+    // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
+    // We avoid this by checking if the call of `handleInputClick` is actually intended, or a side effect.
+    if (event.isDefaultPrevented()) {
+      return;
+    }
+
+    onClick?.(event, ...(args as []));
     syncSelectionFromDOM();
   });
 
@@ -118,7 +129,7 @@ export const useField = <
     // The ref is guaranteed to be resolved at this point.
     const input = inputRef.current;
 
-    clearTimeout(focusTimeoutRef.current);
+    window.clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => {
       // The ref changed, the component got remounted, the focus event is no longer relevant.
       if (!input || input !== inputRef.current) {
@@ -181,6 +192,7 @@ export const useField = <
     }
 
     event.preventDefault();
+    resetCharacterQuery();
     updateValueFromValueStr(pastedValue);
   });
 
@@ -189,13 +201,24 @@ export const useField = <
       return;
     }
 
-    const valueStr = event.target.value;
+    const targetValue = event.target.value;
+    if (targetValue === '') {
+      resetCharacterQuery();
+      clearValue();
+      return;
+    }
+
+    const eventData = (event.nativeEvent as InputEvent).data;
+    // Calling `.fill(04/11/2022)` in playwright will trigger a change event with the requested content to insert in `event.nativeEvent.data`
+    // usual changes have only the currently typed character in the `event.nativeEvent.data`
+    const shouldUseEventData = eventData && eventData.length > 1;
+    const valueStr = shouldUseEventData ? eventData : targetValue;
     const cleanValueStr = cleanString(valueStr);
 
-    // If no section is selected, we just try to parse the new value
+    // If no section is selected or eventData should be used, we just try to parse the new value
     // This line is mostly triggered by imperative code / application tests.
-    if (selectedSectionIndexes == null) {
-      updateValueFromValueStr(cleanValueStr);
+    if (selectedSectionIndexes == null || shouldUseEventData) {
+      updateValueFromValueStr(shouldUseEventData ? eventData : cleanValueStr);
       return;
     }
 
@@ -250,8 +273,14 @@ export const useField = <
       );
     }
 
-    if (isAndroid() && keyPressed.length === 0) {
-      setTempAndroidValueStr(valueStr);
+    if (keyPressed.length === 0) {
+      if (isAndroid()) {
+        setTempAndroidValueStr(valueStr);
+      } else {
+        resetCharacterQuery();
+        clearActiveSection();
+      }
+
       return;
     }
 
@@ -309,7 +338,7 @@ export const useField = <
       }
 
       // Reset the value of the selected section
-      case ['Backspace', 'Delete'].includes(event.key): {
+      case event.key === 'Delete': {
         event.preventDefault();
 
         if (readOnly) {
@@ -346,10 +375,12 @@ export const useField = <
 
         const newSectionValue = adjustSectionValue(
           utils,
+          timezone,
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
           activeDateManager.date,
+          { minutesStep },
         );
 
         updateSectionValue({
@@ -363,12 +394,15 @@ export const useField = <
   });
 
   useEnhancedEffect(() => {
+    if (!inputRef.current) {
+      return;
+    }
     if (selectedSectionIndexes == null) {
-      if (inputRef.current!.scrollLeft) {
+      if (inputRef.current.scrollLeft) {
         // Ensure that input content is not marked as selected.
         // setting selection range to 0 causes issues in Safari.
         // https://bugs.webkit.org/show_bug.cgi?id=224425
-        inputRef.current!.scrollLeft = 0;
+        inputRef.current.scrollLeft = 0;
       }
       return;
     }
@@ -384,24 +418,24 @@ export const useField = <
     }
 
     if (
-      selectionStart !== inputRef.current!.selectionStart ||
-      selectionEnd !== inputRef.current!.selectionEnd
+      selectionStart !== inputRef.current.selectionStart ||
+      selectionEnd !== inputRef.current.selectionEnd
     ) {
       // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
-      const currentScrollTop = inputRef.current!.scrollTop;
+      const currentScrollTop = inputRef.current.scrollTop;
       // On multi input range pickers we want to update selection range only for the active input
-      // This helps avoiding the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
+      // This helps to avoid the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
       // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
-      if (inputRef.current && inputRef.current === getActiveElement(document)) {
-        inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      if (inputRef.current === getActiveElement(document)) {
+        inputRef.current.setSelectionRange(selectionStart, selectionEnd);
       }
       // Even reading this variable seems to do the trick, but also setting it just to make use of it
-      inputRef.current!.scrollTop = currentScrollTop;
+      inputRef.current.scrollTop = currentScrollTop;
     }
   });
 
   const validationError = useValidation(
-    { ...internalProps, value: state.value },
+    { ...internalProps, value: state.value, timezone },
     validator,
     valueManager.isSameError,
     valueManager.defaultErrorState,
@@ -416,6 +450,12 @@ export const useField = <
 
     return valueManager.hasError(validationError);
   }, [valueManager, validationError, error]);
+
+  React.useEffect(() => {
+    if (!inputError && !selectedSectionIndexes) {
+      resetCharacterQuery();
+    }
+  }, [state.referenceValue, selectedSectionIndexes, inputError]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)
@@ -452,12 +492,16 @@ export const useField = <
       return 'text';
     }
 
-    return 'tel';
+    return 'numeric';
   }, [selectedSectionIndexes, state.sections]);
 
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
-  const shouldShowPlaceholder =
-    !inputHasFocus && valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
+  const areAllSectionsEmpty = valueManager.areValuesEqual(
+    utils,
+    state.value,
+    valueManager.emptyValue,
+  );
+  const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
 
   React.useImperativeHandle(unstableFieldRef, () => ({
     getSections: () => state.sections,
@@ -479,9 +523,18 @@ export const useField = <
     setSelectedSections: (activeSectionIndex) => setSelectedSections(activeSectionIndex),
   }));
 
+  const handleClearValue = useEventCallback((event: React.MouseEvent, ...args) => {
+    event.preventDefault();
+    onClear?.(event, ...(args as []));
+    clearValue();
+    inputRef?.current?.focus();
+    setSelectedSections(0);
+  });
+
   return {
     placeholder,
     autoComplete: 'off',
+    disabled: Boolean(disabled),
     ...otherForwardedProps,
     value: shouldShowPlaceholder ? '' : valueStr,
     inputMode,
@@ -493,7 +546,9 @@ export const useField = <
     onChange: handleInputChange,
     onKeyDown: handleInputKeyDown,
     onMouseUp: handleInputMouseUp,
+    onClear: handleClearValue,
     error: inputError,
     ref: handleRef,
+    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 };

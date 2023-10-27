@@ -13,6 +13,7 @@ export const useIsDateDisabled = <TDate>({
   maxDate,
   disableFuture,
   disablePast,
+  timezone,
 }: DateComponentValidationProps<TDate>) => {
   const adapter = useLocalizationContext<TDate>();
 
@@ -29,6 +30,7 @@ export const useIsDateDisabled = <TDate>({
           maxDate,
           disableFuture,
           disablePast,
+          timezone,
         },
       }) !== null,
     [
@@ -40,6 +42,7 @@ export const useIsDateDisabled = <TDate>({
       maxDate,
       disableFuture,
       disablePast,
+      timezone,
     ],
   );
 };

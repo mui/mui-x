@@ -2,7 +2,7 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
@@ -29,9 +29,24 @@
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "onChange": { "type": { "name": "func" } },
-    "onFocusedViewChange": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate | null, selectionState: PickerSelectionState | undefined, selectedView: TView | undefined) => void",
+        "describedArgs": ["value", "selectionState", "selectedView"]
+      }
+    },
+    "onFocusedViewChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(view: TView, hasFocus: boolean) => void",
+        "describedArgs": ["view", "hasFocus"]
+      }
+    },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
     "openTo": {
       "type": {
         "name": "enum",
@@ -39,12 +54,28 @@
       }
     },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
+    },
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
+      "signature": {
+        "type": "function(clockValue: number, view: TimeView) => boolean",
+        "describedArgs": ["clockValue", "view"],
+        "returned": "boolean"
+      }
     },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      }
+    },
     "skipDisabled": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
@@ -52,7 +83,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
     },
     "timeSteps": {
       "type": {
@@ -60,6 +92,10 @@
         "description": "{ hours?: number, minutes?: number, seconds?: number }"
       },
       "default": "{ hours: 1, minutes: 5, seconds: 5 }"
+    },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "value": { "type": { "name": "any" } },
     "view": {
@@ -75,21 +111,24 @@
       }
     }
   },
-  "slots": {
-    "DigitalClockSectionItem": {
-      "default": "MenuItem from '@mui/material'",
-      "type": { "name": "elementType" }
+  "slots": [
+    {
+      "class": null,
+      "name": "digitalClockSectionItem",
+      "description": "Component responsible for rendering a single multi section digital clock section item.",
+      "default": "MenuItem from '@mui/material'"
     }
-  },
+  ],
   "name": "MultiSectionDigitalClock",
+  "imports": [
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';",
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers';",
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMultiSectionDigitalClock" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MultiSectionDigitalClock/MultiSectionDigitalClock.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiSectionDigitalClock" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "MultiSectionDigitalClock" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li></ul>"
 }

@@ -2,14 +2,6 @@
 
 <p class="description">Easily paginate your rows and only fetch what you need.</p>
 
-:::warning
-The default pagination behavior depends on your plan.
-
-- On the `DataGrid`, pagination is enabled by default and can't be disabled
-- On the `DataGridPro`, pagination is disabled by default, use the `pagination` prop to enable it
-
-:::
-
 ## Size of the page
 
 The `DataGrid` (MIT license) is limited to pages of up to 100 rows.
@@ -20,6 +12,13 @@ By default, each page contains 100 rows. The user can change the size of the pag
 ### Page size options
 
 You can configure the page size the user can choose from with the `pageSizeOptions` prop.
+
+It's possible to customize the options shown in the "Rows per page" select using the `pageSizeOptions` prop.
+You should either provide an array of:
+
+- **numbers**, each number will be used for the option's label and value.
+
+- **objects**, the `value` and `label` keys will be used respectively for the value and label of the option (useful for language strings such as 'All').
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
 
@@ -32,6 +31,20 @@ You can't use both the `autoPageSize` and `autoHeight` props at the same time be
 :::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
+
+## Pagination on Pro and Premium
+
+The default pagination behavior depends on your plan.
+
+- On the `DataGrid`, pagination is enabled by default and can't be disabled.
+- On the `DataGridPro` and `DataGridPremium`, pagination is disabled by default; use the `pagination` prop to enable it.
+
+The following example activates pagination on a `DataGridPremium` component.
+
+:::info
+On a side note, exported CSV and Excel files will contain the full data and disregard the pagination by default. To apply pagination on exported files, please check the available [row selectors](/x/react-data-grid/export/#exported-rows).
+:::
+{{"demo": "PageSizeAutoPremium.js", "bg": "inline"}}
 
 ## Pagination model
 
@@ -87,8 +100,8 @@ For more information regarding server-side pagination in combination with contro
 - Provide a `rowCount` prop to let the data grid know how many pages there are
 - Use the `onPaginationModelChange` prop callback to load the rows when the page changes
 
-Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
-To avoid this problem, you can keep the previous value of `rowCount` while loading as follow:
+Since the `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading resets the page to zero.
+To avoid this problem, you can keep the previous value of `rowCount` while loading as follows:
 
 ```jsx
 const [rowCountState, setRowCountState] = React.useState(rowCount);

@@ -31,7 +31,10 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
-import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
+import {
+  gridColumnFieldsSelector,
+  gridVisibleColumnFieldsSelector,
+} from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { buildWarning } from '../../../utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
@@ -42,12 +45,13 @@ import {
   GridRowEditStopReasons,
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
+import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
     'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
     'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#server-side-persistence.',
   ],
   'error',
 );
@@ -191,10 +195,13 @@ export const useGridRowEditing = (
         } else if (event.key === 'Enter') {
           reason = GridRowEditStopReasons.enterKeyDown;
         } else if (event.key === 'Tab') {
-          const columnFields = gridColumnFieldsSelector(apiRef).filter((field) =>
-            apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
-          );
-
+          const columnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) => {
+            const column = apiRef.current.getColumn(field);
+            if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+              return true;
+            }
+            return apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field));
+          });
           if (event.shiftKey) {
             if (params.field === columnFields[0]) {
               // Exit if user pressed Shift+Tab on the first field
@@ -217,9 +224,8 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
-          const rowParams = apiRef.current.getRowParams(params.id);
           const newParams: GridRowEditStopParams = {
-            ...rowParams,
+            ...apiRef.current.getRowParams(params.id),
             reason,
             field: params.field,
           };

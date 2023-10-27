@@ -98,17 +98,21 @@ Note that the `onCellEditStart` and `onCellEditStop` props also have to be used 
 
 {{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Usage with `@mui/x-date-pickers`
+## Single click editing
 
-By default, the data grid uses native browser inputs for editing `date` and `dateTime` columns.
+By default, one of the ways to [enter the edit mode](/x/react-data-grid/editing/#start-editing) is by double-clicking a cell.
+Using the [controlled mode](/x/react-data-grid/editing/#controlled-model) and listening to click events, you can also enter the edit mode with just a single click.
+The following demo implements this behavior.
 
-While [MUI X Date / Time Pickers](/x/react-date-pickers/getting-started/) are not supported by the data grid out of the box yet, it is easy to integrate them by creating [custom edit components](/x/react-data-grid/editing/#create-your-own-edit-component) and [custom filter operators](/x/react-data-grid/filtering/customization/#create-a-custom-operator).
+{{"demo": "SingleClickEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
-The example below uses `@mui/x-date-pickers` for both `date` and `dateTime` column types:
+## Bulk editing
 
-{{"demo": "EditingWithDatePickers.js", "bg": "inline", "defaultCodeOpen": false }}
+The data grid [Editing](/x/react-data-grid/editing/) API exposes [the `processRowUpdate` callback](/x/react-data-grid/editing/#the-processrowupdate-callback) which is commonly used to persist edits on per-row basis.
+You can utilize this callback to batch edits locally and then choose to either persist or discard them in bulk.
 
-:::warning
-You can change date format by importing different locale (`en-US` locale is used in the example above).
-See [Localization](/x/react-date-pickers/localization/) for more information.
-:::
+The demo below stores edited and deleted rows in the `unsavedChangesRef`.
+These changes are saved or discarded when the user clicks the **Save** or **Discard** buttons respectively.
+Row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) are also batched, as [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data).
+
+{{"demo": "BulkEditingNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}

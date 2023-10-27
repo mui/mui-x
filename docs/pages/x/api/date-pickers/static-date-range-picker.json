@@ -24,7 +24,12 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()"
+      "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "signature": {
+        "type": "function(day: string, date: TDate) => string",
+        "describedArgs": ["day", "date"],
+        "returned": "string"
+      }
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultRangePosition": {
@@ -48,23 +53,66 @@
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
-    "onAccept": { "type": { "name": "func" } },
-    "onChange": { "type": { "name": "func" } },
+    "onAccept": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
+    },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
+    },
     "onClose": {
       "type": { "name": "func" },
       "deprecated": true,
       "deprecationInfo": "Please avoid using as it will be removed in next major version."
     },
-    "onError": { "type": { "name": "func" } },
-    "onMonthChange": { "type": { "name": "func" } },
-    "onRangePositionChange": { "type": { "name": "func" } },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      }
+    },
+    "onMonthChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+    },
+    "onRangePositionChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(rangePosition: RangePosition) => void",
+        "describedArgs": ["rangePosition"]
+      }
+    },
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
-    "renderLoading": { "type": { "name": "func" }, "default": "() => \"...\"" },
-    "shouldDisableDate": { "type": { "name": "func" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
+    },
+    "renderLoading": {
+      "type": { "name": "func" },
+      "default": "() => \"...\"",
+      "signature": {
+        "type": "function() => React.ReactNode",
+        "describedArgs": [],
+        "returned": "React.ReactNode"
+      }
+    },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate, position: string) => boolean",
+        "describedArgs": ["day", "position"],
+        "returned": "boolean"
+      }
+    },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
@@ -72,32 +120,92 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
   },
-  "slots": {
-    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "Day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
-    "Layout": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
-  },
+  "slots": [
+    {
+      "class": null,
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar"
+    },
+    {
+      "class": null,
+      "name": "day",
+      "description": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
+      "default": "DateRangePickersDay"
+    },
+    {
+      "class": null,
+      "name": "layout",
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
+    },
+    {
+      "class": null,
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft"
+    },
+    {
+      "class": null,
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight"
+    },
+    {
+      "class": null,
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts"
+    },
+    {
+      "class": null,
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+      "default": "ArrowDropDown"
+    },
+    {
+      "class": null,
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "DateTimePickerToolbar"
+    }
+  ],
   "name": "StaticDateRangePicker",
+  "imports": [
+    "import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';",
+    "import { StaticDateRangePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers-pro/src/StaticDateRangePicker/StaticDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "StaticDateRangePicker" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }

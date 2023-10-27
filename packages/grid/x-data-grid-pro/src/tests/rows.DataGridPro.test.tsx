@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui-internal/test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -300,15 +300,12 @@ describe('<DataGridPro /> - Rows', () => {
         );
       }
 
-      // For some reason the number of renders in test env is 2x the number of renders in the browser
-      const renrederMultiplier = 2;
-
       render(<Test />);
       const initialRendersCount = 2;
-      expect(renderCellSpy.callCount).to.equal(initialRendersCount * renrederMultiplier);
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount);
 
       act(() => apiRef.current.updateRows([{ id: 1, name: 'John' }]));
-      expect(renderCellSpy.callCount).to.equal((initialRendersCount + 2) * renrederMultiplier);
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount + 2);
     });
   });
 

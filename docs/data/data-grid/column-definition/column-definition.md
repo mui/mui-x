@@ -121,7 +121,7 @@ const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    renderCell: (params: GridRenderCellParams<Date>) => (
+    renderCell: (params: GridRenderCellParams<any, Date>) => (
       <strong>
         {params.value.getFullYear()}
         <Button
@@ -217,17 +217,19 @@ Updating the row will rerender the row and so call renderCell with updated param
 ## Column types
 
 To facilitate the configuration of the columns, some column types are predefined.
-By default, columns are assumed to hold strings, so the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell.
+By default, columns are assumed to hold strings, so the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell. Some column types require that their value have a specific type.
 
-The following are the native column types:
+The following are the native column types with their required value types:
 
-- `'string'` (default)
-- `'number'`
-- `'date'`
-- `'dateTime'`
-- `'boolean'`
-- `'singleSelect'`
-- `'actions'`
+| Column type          | Value type                 |
+| :------------------- | :------------------------- |
+| `'string'` (default) | `string`                   |
+| `'number'`           | `number`                   |
+| `'date'`             | `Date() object`            |
+| `'dateTime'`         | `Date() object`            |
+| `'boolean'`          | `boolean`                  |
+| `'singleSelect'`     | A value in `.valueOptions` |
+| `'actions'`          | Not applicable             |
 
 ### Converting types
 
@@ -300,26 +302,9 @@ However, some types require additional properties to be set to make them work co
 
 {{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
 
-## Custom column types
+### Custom column types
 
-You can extend the native column types with your own by simply spreading the necessary properties.
-
-The demo below defines a new column type: `usdPrice` that extends the native `number` column type.
-
-```ts
-const usdPrice: GridColTypeDef = {
-  type: 'number',
-  width: 130,
-  valueFormatter: ({ value }) => valueFormatter.format(Number(value)),
-  cellClassName: 'font-tabular-nums',
-};
-```
-
-{{"demo": "CustomColumnTypesGrid.js", "bg": "inline"}}
-
-:::info
-If an unsupported column type is used, the `string` column type will be used instead.
-:::
+Please refer to the [custom columns](/x/react-data-grid/custom-columns/) page for documentation and integration examples.
 
 ## Selectors
 

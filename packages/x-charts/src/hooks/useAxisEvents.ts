@@ -2,7 +2,8 @@ import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
-import { isBandScale } from './useScale';
+import { isBandScale } from '../internals/isBandScale';
+import { AxisDefaultized } from '../models/axis';
 
 export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = React.useContext(SVGContext);
@@ -25,44 +26,30 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       return () => {};
     }
 
-    const getUpdateY = (y: number) => {
-      if (usedYAxis === null) {
-        return null;
-      }
-      const { scale: yScale, data: yAxisData } = yAxis[usedYAxis];
-      if (!isBandScale(yScale)) {
-        return { value: yScale.invert(y) };
-      }
-      const dataIndex = Math.floor((y - yScale.range()[0]) / yScale.step());
-      if (dataIndex < 0 || dataIndex >= yAxisData!.length) {
-        return null;
-      }
-      return {
-        index: dataIndex,
-        value: yAxisData![dataIndex],
-      };
-    };
-
-    const getUpdateX = (x: number) => {
+    const getUpdate = (axisConfig: AxisDefaultized, mouseValue: number) => {
       if (usedXAxis === null) {
         return null;
       }
-      const { scale: xScale, data: xAxisData } = xAxis[usedXAxis];
-      if (!isBandScale(xScale)) {
-        const value = xScale.invert(x);
+      const { scale, data: axisData } = axisConfig;
 
-        const closestIndex = xAxisData?.findIndex((v: typeof value, index) => {
+      if (!isBandScale(scale)) {
+        const value = scale.invert(mouseValue);
+
+        if (axisData === undefined) {
+          return { value };
+        }
+        const closestIndex = axisData?.findIndex((v: typeof value, index) => {
           if (v > value) {
             // @ts-ignore
-            if (index === 0 || Math.abs(value - v) <= Math.abs(value - xAxisData[index - 1])) {
+            if (index === 0 || Math.abs(value - v) <= Math.abs(value - axisData[index - 1])) {
               return true;
             }
           }
           if (v <= value) {
             if (
-              index === xAxisData.length - 1 ||
+              index === axisData.length - 1 ||
               // @ts-ignore
-              Math.abs(value - v) < Math.abs(value - xAxisData[index + 1])
+              Math.abs(value - v) < Math.abs(value - axisData[index + 1])
             ) {
               return true;
             }
@@ -71,17 +58,22 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         });
 
         return {
-          value: closestIndex !== undefined && closestIndex >= 0 ? xAxisData![closestIndex] : value,
+          value: closestIndex !== undefined && closestIndex >= 0 ? axisData![closestIndex] : value,
           index: closestIndex,
         };
       }
-      const dataIndex = Math.floor((x - xScale.range()[0]) / xScale.step());
-      if (dataIndex < 0 || dataIndex >= xAxisData!.length) {
+
+      const dataIndex =
+        scale.bandwidth() === 0
+          ? Math.floor((mouseValue - Math.min(...scale.range()) + scale.step() / 2) / scale.step())
+          : Math.floor((mouseValue - Math.min(...scale.range())) / scale.step());
+
+      if (dataIndex < 0 || dataIndex >= axisData!.length) {
         return null;
       }
       return {
         index: dataIndex,
-        value: xAxisData![dataIndex],
+        value: axisData![dataIndex],
       };
     };
 
@@ -94,18 +86,25 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
     };
 
     const handleMouseMove = (event: MouseEvent) => {
+      // Get mouse coordinate in global SVG space
+      const pt = svgRef.current!.createSVGPoint();
+      pt.x = event.clientX;
+      pt.y = event.clientY;
+      const svgPt = pt.matrixTransform(svgRef.current!.getScreenCTM()!.inverse());
+
       mousePosition.current = {
-        x: event.offsetX,
-        y: event.offsetY,
+        x: svgPt.x,
+        y: svgPt.y,
       };
-      const outsideX = event.offsetX < left || event.offsetX > left + width;
-      const outsideY = event.offsetY < top || event.offsetY > top + height;
+
+      const outsideX = svgPt.x < left || svgPt.x > left + width;
+      const outsideY = svgPt.y < top || svgPt.y > top + height;
       if (outsideX || outsideY) {
         dispatch({ type: 'updateAxis', data: { x: null, y: null } });
         return;
       }
-      const newStateX = getUpdateX(event.offsetX);
-      const newStateY = getUpdateY(event.offsetY);
+      const newStateX = getUpdate(xAxis[usedXAxis], svgPt.x);
+      const newStateY = getUpdate(yAxis[usedYAxis], svgPt.y);
 
       dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
     };

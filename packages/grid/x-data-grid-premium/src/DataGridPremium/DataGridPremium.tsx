@@ -56,10 +56,17 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 interface DataGridPremiumComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): JSX.Element;
+  ): React.JSX.Element;
   propTypes?: any;
 }
 
+/**
+ * Demos:
+ * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)
+ */
 export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremiumComponent;
 
 DataGridPremiumRaw.propTypes = {
@@ -107,6 +114,21 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   autoPageSize: PropTypes.bool,
+  /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: PropTypes.bool,
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions: PropTypes.shape({
+    columns: PropTypes.arrayOf(PropTypes.string),
+    expand: PropTypes.bool,
+    includeHeaders: PropTypes.bool,
+    includeOutliers: PropTypes.bool,
+    outliersFactor: PropTypes.number,
+  }),
   /**
    * Controls the modes of the cells.
    */
@@ -196,6 +218,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableAggregation: PropTypes.bool,
   /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: PropTypes.bool,
+  /**
    * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
    */
@@ -246,6 +273,12 @@ DataGridPremiumRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: PropTypes.bool,
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -285,11 +318,17 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    ariaV7: PropTypes.bool,
     clipboardPaste: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: PropTypes.number,
   /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
@@ -316,6 +355,7 @@ DataGridPremiumRaw.propTypes = {
       }),
     ).isRequired,
     logicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterExcludeHiddenColumns: PropTypes.bool,
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
@@ -340,7 +380,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent: PropTypes.func,
   /**
@@ -773,7 +813,15 @@ DataGridPremiumRaw.propTypes = {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
+  pageSizeOptions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+    ]).isRequired,
+  ),
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -844,6 +892,13 @@ DataGridPremiumRaw.propTypes = {
    * Controls the modes of the rows.
    */
   rowModesModel: PropTypes.object,
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: PropTypes.number,
   /**
    * If `true`, the reordering of rows is enabled.
    * @default false
@@ -967,7 +1022,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default: false
+   * @default false
    */
   unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
     PropTypes.shape({
@@ -986,7 +1041,7 @@ DataGridPremiumRaw.propTypes = {
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(text) => text.split(/\r\n|\n|\r/).map((row) => row.split('\t'))`
+   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
    */
   unstable_splitClipboardPastedText: PropTypes.func,
 } as any;

@@ -127,7 +127,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(text) => text.split(/\r\n|\n|\r/).map((row) => row.split('\t'))`
+   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
    */
   unstable_splitClipboardPastedText: (text: string) => string[][] | null;
 }

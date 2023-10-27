@@ -5,10 +5,11 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { FieldRef } from '@mui/x-date-pickers/models';
 import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
-import { UseDateRangeFieldProps } from '../internal/models/dateRange';
-import { RangePosition } from '../internal/models/range';
-import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { RangeFieldSection } from '../internal/models/fields';
+import { UseDateRangeFieldProps } from '../internals/models/dateRange';
+import { RangePosition } from '../internals/models/range';
+import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
+import { RangeFieldSection } from '../internals/models/fields';
+import { MultiInputRangeFieldClasses } from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate,
@@ -16,7 +17,7 @@ export type UseMultiInputDateRangeFieldParams<
 > = UseMultiInputRangeFieldParams<UseMultiInputDateRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
 export interface UseMultiInputDateRangeFieldProps<TDate>
-  extends Omit<UseDateRangeFieldProps<TDate>, 'unstableFieldRef'> {
+  extends Omit<UseDateRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'> {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
@@ -30,6 +31,10 @@ export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends
 export interface MultiInputDateRangeFieldProps<TDate>
   extends UseMultiInputDateRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
   autoFocus?: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<MultiInputRangeFieldClasses>;
   /**
    * Overridable components.
    * @default {}

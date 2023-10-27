@@ -1,4 +1,4 @@
-import { createSelector } from '../../../utils/createSelector';
+import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridColumnLookup } from './gridColumnsInterfaces';
 
@@ -30,7 +30,7 @@ export const gridColumnLookupSelector = createSelector(
  * Get an array of column definitions in the order rendered on screen..
  * @category Columns
  */
-export const gridColumnDefinitionsSelector = createSelector(
+export const gridColumnDefinitionsSelector = createSelectorMemoized(
   gridColumnFieldsSelector,
   gridColumnLookupSelector,
   (allFields, lookup) => allFields.map((field) => lookup[field]),
@@ -50,7 +50,7 @@ export const gridColumnVisibilityModelSelector = createSelector(
  * Get the visible columns as a lookup (an object containing the field for keys and the definition for values).
  * @category Visible Columns
  */
-export const gridVisibleColumnDefinitionsSelector = createSelector(
+export const gridVisibleColumnDefinitionsSelector = createSelectorMemoized(
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
   (columns, columnVisibilityModel) =>
@@ -61,7 +61,7 @@ export const gridVisibleColumnDefinitionsSelector = createSelector(
  * Get the field of each visible column.
  * @category Visible Columns
  */
-export const gridVisibleColumnFieldsSelector = createSelector(
+export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => visibleColumns.map((column) => column.field),
 );
@@ -70,7 +70,7 @@ export const gridVisibleColumnFieldsSelector = createSelector(
  * Get the left position in pixel of each visible columns relative to the left of the first column.
  * @category Visible Columns
  */
-export const gridColumnPositionsSelector = createSelector(
+export const gridColumnPositionsSelector = createSelectorMemoized(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => {
     const positions: number[] = [];
@@ -105,7 +105,7 @@ export const gridColumnsTotalWidthSelector = createSelector(
  * Get the filterable columns as an array.
  * @category Columns
  */
-export const gridFilterableColumnDefinitionsSelector = createSelector(
+export const gridFilterableColumnDefinitionsSelector = createSelectorMemoized(
   gridColumnDefinitionsSelector,
   (columns) => columns.filter((col) => col.filterable),
 );
@@ -114,7 +114,7 @@ export const gridFilterableColumnDefinitionsSelector = createSelector(
  * Get the filterable columns as a lookup (an object containing the field for keys and the definition for values).
  * @category Columns
  */
-export const gridFilterableColumnLookupSelector = createSelector(
+export const gridFilterableColumnLookupSelector = createSelectorMemoized(
   gridColumnDefinitionsSelector,
   (columns) =>
     columns.reduce<GridColumnLookup>((acc, col) => {

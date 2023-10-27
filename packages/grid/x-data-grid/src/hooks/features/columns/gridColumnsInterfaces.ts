@@ -1,4 +1,3 @@
-import type { GridRowId } from '../../../models';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import type { GridColumnDimensionProperties } from './gridColumnsUtils';
 
@@ -30,4 +29,4 @@ export type GridColumnsRawState = Omit<GridColumnsState, 'lookup'> & {
 
 export type GridHydrateColumnsValue = GridColumnsRawState;
 
-export type GridColumnVisibilityModel = Record<GridRowId, boolean>;
+export type GridColumnVisibilityModel = Record<GridColDef['field'], boolean>;

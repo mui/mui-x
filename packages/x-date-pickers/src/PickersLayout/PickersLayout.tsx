@@ -70,6 +70,15 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
+/**
+ * Demos:
+ *
+ * - [Custom layout](https://mui.com/x/react-date-pickers/custom-layout/)
+ *
+ * API:
+ *
+ * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
+ */
 const PickersLayout = function PickersLayout<
   TValue,
   TDate,
@@ -140,6 +149,7 @@ PickersLayout.propTypes = {
   onClose: PropTypes.func.isRequired,
   onDismiss: PropTypes.func.isRequired,
   onOpen: PropTypes.func.isRequired,
+  onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
   /**

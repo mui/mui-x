@@ -1,6 +1,5 @@
 ---
-product: date-pickers
-title: Date and Time Pickers - Validation
+productId: x-date-pickers
 components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
@@ -107,6 +106,10 @@ For performance reasons—when rendering the `month` view—we are not calling t
 
 If you know that all days of some months are disabled—you can provide the [`shouldDisableMonth`](#disable-specific-months) prop to disable them in the `month` view.
 Same with the [`shouldDisableYear`](#disable-specific-years) prop for the `year` view.
+:::
+
+:::success
+Please note that `shouldDisableDate` will execute on every date rendered in the `day` view. Expensive computations in this validation function can impact performance.
 :::
 
 #### Disable specific dates in range components [<span class="pro-premium"></span>](/x/introduction/licensing/#pro-plan)

@@ -35,9 +35,9 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
    */
   includeHeaders?: boolean;
   /**
-   * Function that returns the id of the rows to export on the order they should be exported.
+   * Function that returns the list of row ids to export on the order they should be exported.
    * @param {GridGetRowsToExportParams} params With all properties from [[GridGetRowsToExportParams]].
-   * @returns {GridRowId[]} The id of the rows to export.
+   * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridGetRowsToExportParams<Api>) => GridRowId[];
 }
@@ -50,6 +50,9 @@ export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCo
 }
 
 export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
+  extends GridGetRowsToExportParams<Api> {}
+
+export interface GridPrintGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
   extends GridGetRowsToExportParams<Api> {}
 
 /**
@@ -75,14 +78,21 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
    */
   utf8WithBom?: boolean;
   /**
-   * If `true`, the first row of the CSV will include the headers of the grid.
+   * If `true`, the CSV will include the column headers and column groups.
+   * Use `includeColumnGroupsHeaders` to control whether the column groups are included.
    * @default true
    */
   includeHeaders?: boolean;
   /**
-   * Function that returns the id of the rows to export on the order they should be exported.
+   * If `true`, the CSV will include the column groups.
+   * @see See {@link https://mui.com/x/react-data-grid/column-groups/ column groups docs} for more details.
+   * @default true
+   */
+  includeColumnGroupsHeaders?: boolean;
+  /**
+   * Function that returns the list of row ids to export on the order they should be exported.
    * @param {GridCsvGetRowsToExportParams} params With all properties from [[GridCsvGetRowsToExportParams]].
-   * @returns {GridRowId[]} The id of the rows to export.
+   * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridCsvGetRowsToExportParams) => GridRowId[];
 }
@@ -109,6 +119,11 @@ export interface GridPrintExportOptions extends GridExportOptions {
    */
   hideFooter?: boolean;
   /**
+   * If `true`, the selection checkboxes will be included when printing.
+   * @default false
+   */
+  includeCheckboxes?: boolean;
+  /**
    * If `false`, all <style> and <link type="stylesheet" /> tags from the <head> will not be copied
    * to the print window.
    * @default true
@@ -122,6 +137,12 @@ export interface GridPrintExportOptions extends GridExportOptions {
    * Provide Print specific styles to the print window.
    */
   pageStyle?: string | Function;
+  /**
+   * Function that returns the list of row ids to export in the order they should be exported.
+   * @param {GridPrintGetRowsToExportParams} params With all properties from [[GridPrintGetRowsToExportParams]].
+   * @returns {GridRowId[]} The list of row ids to export.
+   */
+  getRowsToExport?: (params: GridPrintGetRowsToExportParams) => GridRowId[];
 }
 
 /**

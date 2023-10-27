@@ -91,7 +91,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "clipboardCopy",
-    "description": "Fired when the data is copied to the clipboard",
+    "description": "Fired when the data is copied to the clipboard.",
     "params": "string",
     "event": "MuiEvent<{}>",
     "componentProp": "onClipboardCopy"
@@ -227,7 +227,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "headerSelectionCheckboxChange",
-    "description": "Fired when the value of the selection checkbox of the header is changed",
+    "description": "Fired when the value of the selection checkbox of the header is changed.",
     "params": "GridHeaderSelectionCheckboxParams",
     "event": "MuiEvent<{}>"
   },
@@ -287,7 +287,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowClick",
-    "description": "Fired when a row is clicked.\nNot fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
+    "description": "Fired when a row is clicked. Not fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onRowClick"
@@ -323,6 +323,13 @@
     "params": "GridRowEditStopParams",
     "event": "MuiEvent<MuiBaseEvent>",
     "componentProp": "onRowEditStop"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowExpansionChange",
+    "description": "Fired when the expansion of a row is changed. Called with a GridGroupNode object.",
+    "params": "GridGroupNode",
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid-premium"],
@@ -370,7 +377,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowSelectionCheckboxChange",
-    "description": "Fired when the value of the selection checkbox of a row is changed",
+    "description": "Fired when the value of the selection checkbox of a row is changed.",
     "params": "GridRowSelectionCheckboxParams",
     "event": "MuiEvent<React.ChangeEvent<HTMLElement>>"
   },

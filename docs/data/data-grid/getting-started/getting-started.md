@@ -11,13 +11,20 @@ Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-d
 The Data Grid package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
-```sh
-// with npm
+<codeblock storageKey="package-manager">
+```bash npm
 npm install @mui/material @emotion/react @emotion/styled
+```
 
-// with yarn
+```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
+
+```bash pnpm
+pnpm add @mui/material @emotion/react @emotion/styled
+```
+
+</codeblock>
 
 <!-- #react-peer-version -->
 
@@ -34,15 +41,22 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
-```sh
-// with npm
+<codeblock storageKey="package-manager">
+```bash npm
 npm install @mui/styled-engine-sc styled-components
+```
 
-// with yarn
+```bash yarn
 yarn add @mui/styled-engine-sc styled-components
 ```
 
-Take a look at the [Styled engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
+```bash pnpm
+pnpm add @mui/styled-engine-sc styled-components
+```
+
+</codeblock>
+
+Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
 ## Quickstart
 
@@ -164,6 +178,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column groups](/x/react-data-grid/column-groups/)                                     |    ✅     |                 ✅                 |                     ✅                     |
 | [Column spanning](/x/react-data-grid/column-spanning/)                                 |    ✅     |                 ✅                 |                     ✅                     |
 | [Column resizing](/x/react-data-grid/column-dimensions/#resizing)                      |    ❌     |                 ✅                 |                     ✅                     |
+| [Column autosizing](/x/react-data-grid/column-dimensions/#autosizing)                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/x/react-data-grid/column-ordering/)                                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                |           |                                    |                                            |

@@ -1,12 +1,12 @@
 ---
-product: date-pickers
-title: React Fields components
+productId: x-date-pickers
+title: React Date Fields components
 components: DateField, TimeField, DateTimeField, MultiInputDateRangeField, SingleInputDateRangeField, MultiInputTimeRangeField, SingleInputTimeRangeField, MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Fields
+# Fields component
 
 <p class="description">The field components let the user input date and time values with a keyboard and refined keyboard navigation.</p>
 
@@ -19,7 +19,7 @@ They provide refined navigation through arrow keys and support advanced behavior
 
 {{"demo": "SingleDateFieldExamples.js", "defaultCodeOpen": false}}
 
-### Fields to edit a range [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+### Fields to edit a range [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 All fields to edit a range are available in a single input version and in a multi input version.
 
@@ -37,40 +37,6 @@ For example, if the format passed to the field is `MM/DD/YYYY`, the field will c
 - A `year` section for the token `YYYY`
 
 Those sections are independent, pressing <kbd class="key">ArrowUp</kbd> while focusing the `day` section will add one day to the date, but it will never change the month or the year.
-
-### When is `onChange` called?
-
-The field components have an internal state to update the visible value.
-
-It will only call the `onChange` callback when:
-
-- the user fills one section of an empty input. The value equals `Invalid date`.
-- the user completes all sections of an input. The value reflects the input.
-- the user cleans one section of a completed input. The value equals `Invalid date`.
-- the user cleans all sections of an input. The value equals `null`.
-
-In the example below, `onChange` will be called when any of the conditions are triggered:
-
-{{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
-
-#### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
-
-On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
-`onChange` will be called if the date you are modifying is matching one of the condition above,
-even if the other date does not.
-
-In the example below, changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
-
-{{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
-
-#### Only update when the value is valid
-
-The `onChange` callback received a 2nd parameter containing the validation error associated to the current value.
-If you only want to update your state when the value is valid, you can ignore any `onChange` call with a non-null `validationError`.
-
-In the example below, `onChange` will only be called if the date is valid and its year is 2022:
-
-{{"demo": "LifeCycleIgnoreInvalidValue.js"}}
 
 ### Control the selected sections
 
@@ -90,14 +56,14 @@ You need to make sure the input is focused before imperatively updating the sele
 
 {{"demo": "ControlledSelectedSections.js", "defaultCodeOpen": false }}
 
-#### Usage with multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+#### Usage with multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 For multi input range fields, you just have to make sure that the right input is focused before updating the selected section(s).
 Otherwise, the section(s) might be selected on the wrong input.
 
 {{"demo": "ControlledSelectedSectionsMultiInputRangeField.js", "defaultCodeOpen": false }}
 
-#### Usage with single input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+#### Usage with single input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 For single input range fields, you won't be able to use the section name to select a single section because each section is present both in the start and in the end date.
 Instead, you can pass the index of the section using the `unstableFieldRef` prop to access the full list of sections:
@@ -108,3 +74,17 @@ Please only use it if needed.
 :::
 
 {{"demo": "ControlledSelectedSectionsSingleInputRangeField.js", "defaultCodeOpen": false }}
+
+### Clearable behavior
+
+You can use the `clearable` prop to enable the clearing behavior on a field. You can also add an event handler using the `onClear` callback prop.
+
+:::info
+For **multi-input** range fields the clearable behavior is not supported yet.
+:::
+
+{{"demo": "ClearableBehavior.js"}}
+
+You can also customize the icon you want to be displayed inside the clear `IconButton`.
+
+{{"demo": "CustomizeClearIcon.js"}}

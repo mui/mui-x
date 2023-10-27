@@ -10,8 +10,8 @@ import {
   UseSingleInputDateTimeRangeFieldParams,
   UseSingleInputDateTimeRangeFieldProps,
 } from './SingleInputDateTimeRangeField.types';
-import { rangeValueManager, rangeFieldValueManager } from '../internal/utils/valueManagers';
-import { validateDateTimeRange } from '../internal/utils/validation/validateDateTimeRange';
+import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
+import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 
 export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputDateTimeRangeFieldProps<TDate>,

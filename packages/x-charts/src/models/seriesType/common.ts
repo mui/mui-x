@@ -1,19 +1,19 @@
+import type { HighlightScope } from '../../context/HighlightProvider';
 import type { StackOffset, StackOrder } from '../../internals/stackSeries';
 
-export type CommonSeriesType = {
+export type CommonSeriesType<TValue> = {
   id?: string;
-};
-
-export type DefaultizedCommonSeriesType<TValue> = {
-  id: string;
-  color: string;
+  color?: string;
   /**
    * Formatter used to render values in tooltip or other data display.
    * @param {TValue} value The series' value to render.
    * @returns {string} The string to dispaly.
    */
-  valueFormatter: (value: TValue) => string;
+  valueFormatter?: (value: TValue) => string;
+  highlightScope?: Partial<HighlightScope>;
 };
+
+export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
 
 export type CartesianSeriesType = {
   xAxisKey?: string;

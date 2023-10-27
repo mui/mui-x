@@ -4,7 +4,6 @@ import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
@@ -16,6 +15,7 @@ import {
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
+import { formatMeridiem } from '../internals/utils/date-utils';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
@@ -64,11 +64,6 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
       : undefined,
   justifyContent: 'space-around',
   position: 'relative',
-  [`& .${pickersToolbarClasses.penIconButton}`]: {
-    position: 'absolute',
-    top: 8,
-    ...(theme.direction === 'rtl' ? { left: 8 } : { right: 8 }),
-  },
 }));
 
 DateTimePickerToolbarRoot.propTypes = {
@@ -190,6 +185,16 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
   },
 }));
 
+/**
+ * Demos:
+ *
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [DateTimePickerToolbar API](https://mui.com/x/api/date-pickers/date-time-picker-toolbar/)
+ */
 function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
@@ -328,7 +333,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               variant="subtitle2"
               selected={meridiemMode === 'am'}
               typographyClassName={classes.ampmLabel}
-              value={utils.getMeridiemText('am')}
+              value={formatMeridiem(utils, 'am')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
               disabled={disabled}
             />
@@ -336,7 +341,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               variant="subtitle2"
               selected={meridiemMode === 'pm'}
               typographyClassName={classes.ampmLabel}
-              value={utils.getMeridiemText('pm')}
+              value={formatMeridiem(utils, 'pm')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
               disabled={disabled}
             />
@@ -349,7 +354,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             data-mui-test="am-pm-view-button"
             onClick={() => onViewChange('meridiem')}
             selected={view === 'meridiem'}
-            value={value && meridiemMode ? utils.getMeridiemText(meridiemMode) : '--'}
+            value={value && meridiemMode ? formatMeridiem(utils, meridiemMode) : '--'}
             width={MULTI_SECTION_CLOCK_SECTION_WIDTH}
           />
         )}
@@ -388,6 +393,11 @@ DateTimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   titleId: PropTypes.string,
   /**
    * Toolbar date format.

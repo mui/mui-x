@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireTouchChangedEvent, screen, userEvent, act } from '@mui/monorepo/test/utils';
+import { fireTouchChangedEvent, screen, userEvent, act } from '@mui-internal/test-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
   adapterToUse,
   openPicker,
   getClockTouchEvent,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });

@@ -2,14 +2,29 @@ import { DefaultizedProps } from '../helpers';
 import {
   CartesianSeriesType,
   CommonSeriesType,
-  DefaultizedCommonSeriesType,
+  CommonDefaultizedProps,
   StackableSeriesType,
 } from './common';
 
-export interface BarSeriesType extends CommonSeriesType, CartesianSeriesType, StackableSeriesType {
+export interface BarSeriesType
+  extends CommonSeriesType<number>,
+    CartesianSeriesType,
+    StackableSeriesType {
   type: 'bar';
-  data: number[];
+  /**
+   * Data associated to each bar.
+   */
+  data?: number[];
+  /**
+   * The key used to retrive data from the dataset.
+   */
+  dataKey?: string;
   label?: string;
+  /**
+   * Layout of the bars. All bar should have the same layout.
+   * @default 'vertical'
+   */
+  layout?: 'horizontal' | 'vertical';
 }
 
 /**
@@ -23,5 +38,4 @@ export type BarItemIdentifier = {
 };
 
 export interface DefaultizedBarSeriesType
-  extends DefaultizedProps<BarSeriesType, 'id'>,
-    DefaultizedCommonSeriesType<number> {}
+  extends DefaultizedProps<BarSeriesType, CommonDefaultizedProps | 'color' | 'layout'> {}

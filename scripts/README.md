@@ -2,6 +2,9 @@
 
 ## Release
 
+> Tip: For people who are doing the release for the first time, make sure you sign in to NPM from the command line using security-key flow as well as have two-factor authentication enabled.
+> You can follow [this guide](https://docs.npmjs.com/accessing-npm-using-2fa) for more information on how to set it up.
+
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
 
 A typical release goes like this:
@@ -46,7 +49,7 @@ The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` 
 
 <!-- #default-branch-switch -->
 
-```sh
+```bash
 git push upstream master:docs-v6 -f
 ```
 

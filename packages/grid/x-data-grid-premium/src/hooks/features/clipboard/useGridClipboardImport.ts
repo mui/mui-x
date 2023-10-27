@@ -11,6 +11,7 @@ import {
   useGridApiEventHandler,
   GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
+  gridExpandedSortedRowIdsSelector,
 } from '@mui/x-data-grid';
 import {
   buildWarning,
@@ -28,7 +29,7 @@ const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
     'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
     'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#server-side-persistence.',
   ],
   'error',
 );
@@ -208,10 +209,12 @@ function defaultPasteResolver({
   pastedData,
   apiRef,
   updateCell,
+  pagination,
 }: {
   pastedData: string[][];
   apiRef: React.MutableRefObject<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
+  pagination: DataGridPremiumProcessedProps['pagination'];
 }) {
   const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
@@ -282,7 +285,9 @@ function defaultPasteResolver({
 
   const selectedRowId = selectedCell.id;
   const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
-  const visibleRowIds = gridPaginatedVisibleSortedGridRowIdsSelector(apiRef);
+  const visibleRowIds = pagination
+    ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+    : gridExpandedSortedRowIdsSelector(apiRef);
 
   const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
   pastedData.forEach((rowData, index) => {
@@ -301,11 +306,7 @@ function defaultPasteResolver({
 }
 
 function isPasteShortcut(event: React.KeyboardEvent) {
-  const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
-  if (event.code === 'KeyV' && isModifierKeyPressed) {
-    return true;
-  }
-  return false;
+  return (event.ctrlKey || event.metaKey) && event.key === 'v';
 }
 
 export const useGridClipboardImport = (
@@ -382,6 +383,7 @@ export const useGridClipboardImport = (
         updateCell: (...args) => {
           cellUpdater.updateCell(...args);
         },
+        pagination: props.pagination,
       });
 
       cellUpdater.applyUpdates();
@@ -394,6 +396,7 @@ export const useGridClipboardImport = (
       enableClipboardPaste,
       rootEl,
       splitClipboardPastedText,
+      props.pagination,
     ],
   );
 
