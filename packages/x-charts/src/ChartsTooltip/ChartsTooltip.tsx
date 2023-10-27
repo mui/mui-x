@@ -88,10 +88,7 @@ const ChartsTooltipRoot = styled(Popper, {
 /**
  * Demos:
  *
- * - [Bars demonstration](https://mui.com/x/react-charts/bar-demo/)
- * - [Lines demonstration](https://mui.com/x/react-charts/line-demo/)
- * - [Area demonstration](https://mui.com/x/react-charts/area-demo/)
- * - [Pie demonstration](https://mui.com/x/react-charts/pie-demo/)
+ * - [ChartsTooltip](https://mui.com/x/react-charts/tooltip/)
  *
  * API:
  *
