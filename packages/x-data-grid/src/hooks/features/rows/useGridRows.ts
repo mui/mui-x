@@ -410,6 +410,7 @@ export const useGridRows = (
       const dataRowIdToIdLookup = { ...gridRowsDataRowIdToIdLookupSelector(apiRef) };
       const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
       const rootGroupChildren = [...rootGroup.children];
+      const seenIds: GridRowId[] = [];
 
       for (let i = 0; i < newRows.length; i += 1) {
         const rowModel = newRows[i];
@@ -421,9 +422,11 @@ export const useGridRows = (
 
         const [replacedRowId] = rootGroupChildren.splice(firstRowToRender + i, 1, rowId);
 
-        delete dataRowIdToModelLookup[replacedRowId];
-        delete dataRowIdToIdLookup[replacedRowId];
-        delete tree[replacedRowId];
+        if (!seenIds.includes(replacedRowId)) {
+          delete dataRowIdToModelLookup[replacedRowId];
+          delete dataRowIdToIdLookup[replacedRowId];
+          delete tree[replacedRowId];
+        }
 
         const rowTreeNodeConfig: GridLeafNode = {
           id: rowId,
@@ -435,6 +438,8 @@ export const useGridRows = (
         dataRowIdToModelLookup[rowId] = rowModel;
         dataRowIdToIdLookup[rowId] = rowId;
         tree[rowId] = rowTreeNodeConfig;
+
+        seenIds.push(rowId);
       }
 
       tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
