@@ -3,10 +3,10 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
 
 const views: Record<TimeViewWithMeridiem, string> = {
-    hours: 'orduak',
-    minutes: 'minutuak',
-    seconds: 'segunduak',
-    meridiem: 'meridianoa',
+  hours: 'orduak',
+  minutes: 'minutuak',
+  seconds: 'segunduak',
+  meridiem: 'meridianoa',
 };
 
 const euESPickers: Partial<PickersLocaleText<any>> = {
