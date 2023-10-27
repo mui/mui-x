@@ -5,17 +5,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.17.0
 
-_Oct 26, 2023_
+_Oct 27, 2023_
 
-We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- The Tree View package is now officially stable!
+- 🎁 The Tree View package is now officially stable!
 
 ![tree-view-example](https://github.com/mui/mui-x/assets/550141/77d1fe66-d912-49ba-b38f-b853fb90446a)
 
+- ✨ Improve the handling of non-numeric values by Data Grid aggregation
+- 🚀 Support lines with different domains on the line charts
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-- 🚀 Allow custom debounce time for row positions calculation
 
 ### Data Grid
 
@@ -52,6 +53,7 @@ Same changes as in `@mui/x-date-pickers@6.17.0`.
 
 ### Charts / `@mui/x-charts@6.0.0-alpha.17`
 
+- [charts] Fix text position in Safari (#10815) @lhilgert9
 - [charts] Support lines with different domains (#10801) @alexfauquette
 
 ### Tree View / `@mui/x-tree-view@6.17.0`
