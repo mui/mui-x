@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.17.0
+
+_Oct 27, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 The Tree View package is now officially stable!
+
+![tree-view-example](https://github.com/mui/mui-x/assets/550141/77d1fe66-d912-49ba-b38f-b853fb90446a)
+
+- ✨ Improve the handling of non-numeric values by Data Grid aggregation
+- 🚀 Support lines with different domains on the line charts
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.17.0`
+
+- [DataGrid] Allow custom debounce time for row positions calculation (#10708) @cherniavskii
+- [DataGrid] Persist stable row index for focused row (#10674) @cherniavskii
+
+#### `@mui/x-data-grid-pro@6.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.17.0`, plus:
+
+- [DataGridPro] Fix `undefined` values passed to `valueFormatter` for tree leaf nodes (#10748) @cherniavskii
+
+#### `@mui/x-data-grid-premium@6.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.17.0`, plus:
+
+- [DataGridPremium] Fix `avg` aggregation to ignore non-numeric values (#10787) @cherniavskii
+- [DataGridPremium] Fix `size` aggregation to ignore `undefined` values (#10745) @cherniavskii
+- [DataGridPremium] Fix `sum` aggregation to ignore non-numeric values (#10730) @cherniavskii
+- [DataGridPremium] Fix cell selection throwing index error on second page and beyond (#10784) @MBilalShafi
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.17.0`
+
+- [fields] POC: Use `contentEditable` on `FakeTextField` (#10779) @flaviendelangle
+- [pickers] Fix weekday label localization (#10809) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.17.0`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.17`
+
+- [charts] Fix text position in Safari (#10815) @lhilgert9
+- [charts] Support lines with different domains (#10801) @alexfauquette
+
+### Tree View / `@mui/x-tree-view@6.17.0`
+
+No change
+
+### Docs
+
+- [docs] Correct editing related props' description (#10798) @MBilalShafi
+- [docs] Fix RTL data grid demo (#10728) @oliviertassinari
+- [docs] Fix unclosed warning (#10796) @flaviendelangle
+- [docs] Improve performance of `Save and restore the state from external storage` recipe (#10811) @michelengelen
+
+- [test] Add missing type on `cleanText` utility function (#10780) @flaviendelangle
+
 ## 6.16.3
 
 _Oct 20, 2023_
