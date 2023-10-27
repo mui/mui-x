@@ -78,20 +78,23 @@ export default function ColumnAutosizingAsync() {
     [expand, includeHeaders, includeOutliers, outliersFactor],
   );
 
-  const fetchData = React.useCallback(() => {
-    setIsLoading(true);
-    getFakeData(100)
-      .then((data) => {
-        return ReactDOM.flushSync(() => {
-          setIsLoading(false);
-          apiRef.current.updateRows(data.rows);
-        });
-      })
-      .then(() => apiRef.current.autosizeColumns(autosizeOptions));
-  }, [apiRef, autosizeOptions]);
+  const fetchData = React.useCallback(
+    (options: typeof autosizeOptions) => {
+      setIsLoading(true);
+      getFakeData(100)
+        .then((data) => {
+          return ReactDOM.flushSync(() => {
+            setIsLoading(false);
+            apiRef.current.updateRows(data.rows);
+          });
+        })
+        .then(() => apiRef.current.autosizeColumns(options));
+    },
+    [apiRef],
+  );
 
   React.useEffect(() => {
-    fetchData();
+    fetchData(DEFAULT_GRID_AUTOSIZE_OPTIONS);
   }, [fetchData]);
 
   return (
@@ -104,7 +107,7 @@ export default function ColumnAutosizingAsync() {
         useFlexGap
         flexWrap="wrap"
       >
-        <Button variant="outlined" onClick={fetchData}>
+        <Button variant="outlined" onClick={() => fetchData(autosizeOptions)}>
           Refetch data
         </Button>
         <FormControlLabel
