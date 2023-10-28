@@ -99,7 +99,7 @@ DOM access is required to accurately calculate dimensions, so unmounted cells (w
 
 ### Autosizing asynchronously [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-The `autosizeColumns` method from the `apiRef` can be used as well to adjust the column size on specified events, for example when receiving row-data from an endpoint.
+The `autosizeColumns` method from the `apiRef` can be used as well to adjust the column size on specified events, for example when receiving row data from the server.
 
 {{"demo": "ColumnAutosizingAsync.js", "disableAd": true, "bg": "inline"}}
 
