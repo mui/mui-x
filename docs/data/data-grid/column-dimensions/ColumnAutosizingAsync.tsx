@@ -1,17 +1,14 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import { useGridApiRef } from '@mui/x-data-grid';
+import { DataGridPro, GridApiPro } from '@mui/x-data-grid-pro';
 import {
-  DataGridPro,
-  GridApiPro,
-  DEFAULT_GRID_AUTOSIZE_OPTIONS,
-} from '@mui/x-data-grid-pro';
-import { randomRating, randomTraderName } from '@mui/x-data-grid-generator';
+  randomInt,
+  randomRating,
+  randomTraderName,
+} from '@mui/x-data-grid-generator';
 import * as ReactDOM from 'react-dom';
 import { GridData } from 'docsx/data/data-grid/virtualization/ColumnVirtualizationGrid';
 
@@ -40,7 +37,7 @@ function getFakeData(length: number): Promise<{ rows: GridData['rows'] }> {
       ];
       const rows = Array.from({ length }).map((_, id) => ({
         id,
-        brand: names[id % names.length],
+        brand: names[randomInt(0, names.length - 1)],
         rep: randomTraderName(),
         rating: randomRating(),
       }));
@@ -55,46 +52,25 @@ export default function ColumnAutosizingAsync() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [rows] = React.useState([]);
 
-  const [includeHeaders, setIncludeHeaders] = React.useState(
-    DEFAULT_GRID_AUTOSIZE_OPTIONS.includeHeaders,
-  );
-  const [includeOutliers, setExcludeOutliers] = React.useState(
-    DEFAULT_GRID_AUTOSIZE_OPTIONS.includeOutliers,
-  );
-  const [outliersFactor, setOutliersFactor] = React.useState(
-    String(DEFAULT_GRID_AUTOSIZE_OPTIONS.outliersFactor),
-  );
-  const [expand, setExpand] = React.useState(DEFAULT_GRID_AUTOSIZE_OPTIONS.expand);
-
-  const autosizeOptions = React.useMemo(
-    () => ({
-      includeHeaders,
-      includeOutliers,
-      outliersFactor: Number.isNaN(parseFloat(outliersFactor))
-        ? 1
-        : parseFloat(outliersFactor),
-      expand,
-    }),
-    [expand, includeHeaders, includeOutliers, outliersFactor],
-  );
-
-  const fetchData = React.useCallback(
-    (options: typeof autosizeOptions) => {
-      setIsLoading(true);
-      getFakeData(100)
-        .then((data) => {
-          return ReactDOM.flushSync(() => {
-            setIsLoading(false);
-            apiRef.current.updateRows(data.rows);
-          });
-        })
-        .then(() => apiRef.current.autosizeColumns(options));
-    },
-    [apiRef],
-  );
+  const fetchData = React.useCallback(() => {
+    setIsLoading(true);
+    getFakeData(100)
+      .then((data) => {
+        return ReactDOM.flushSync(() => {
+          setIsLoading(false);
+          apiRef.current.updateRows(data.rows);
+        });
+      })
+      .then(() =>
+        apiRef.current.autosizeColumns({
+          includeHeaders: true,
+          includeOutliers: true,
+        }),
+      );
+  }, [apiRef]);
 
   React.useEffect(() => {
-    fetchData(DEFAULT_GRID_AUTOSIZE_OPTIONS);
+    fetchData();
   }, [fetchData]);
 
   return (
@@ -107,46 +83,9 @@ export default function ColumnAutosizingAsync() {
         useFlexGap
         flexWrap="wrap"
       >
-        <Button variant="outlined" onClick={() => fetchData(autosizeOptions)}>
+        <Button variant="outlined" onClick={fetchData}>
           Refetch data
         </Button>
-        <FormControlLabel
-          sx={{ ml: 0 }}
-          control={
-            <Checkbox
-              checked={includeHeaders}
-              onChange={(ev) => setIncludeHeaders(ev.target.checked)}
-            />
-          }
-          label="Include headers"
-        />
-        <FormControlLabel
-          sx={{ ml: 0 }}
-          control={
-            <Checkbox
-              checked={includeOutliers}
-              onChange={(event) => setExcludeOutliers(event.target.checked)}
-            />
-          }
-          label="Include outliers"
-        />
-        <TextField
-          size="small"
-          label="Outliers factor"
-          value={outliersFactor}
-          onChange={(ev) => setOutliersFactor(ev.target.value)}
-          sx={{ width: '12ch' }}
-        />
-        <FormControlLabel
-          sx={{ ml: 0 }}
-          control={
-            <Checkbox
-              checked={expand}
-              onChange={(ev) => setExpand(ev.target.checked)}
-            />
-          }
-          label="Expand"
-        />
       </Stack>
       <div style={{ height: 400, width: '100%' }}>
         <DataGridPro
@@ -155,7 +94,6 @@ export default function ColumnAutosizingAsync() {
           columns={columns}
           rows={rows}
           loading={isLoading}
-          autosizeOptions={autosizeOptions}
         />
       </div>
     </div>
