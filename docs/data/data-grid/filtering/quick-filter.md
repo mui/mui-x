@@ -127,18 +127,16 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 In some languages, the letters can have diacritics (accents) - for instance, the letter `é` in French.
 By default, these letters are considered different from their non-accented versions when filtering.
 
-To ignore diacritics, set the `ignoreDiacritics` property to `true`:
+To ignore diacritics, set the `ignoreDiacriticsInFiltering` prop to `true`:
 
 ```tsx
-const columns: GridColDef[] = [
-  { field: 'value', type: 'string', ignoreDiacritics: true },
-];
+<DataGrid ignoreDiacriticsInFiltering />
 ```
 
 {{"demo": "QuickFilteringDiacritics.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-Note that `ignoreDiacritics` affects [regular filters](/x/react-data-grid/filtering/), [Quick filter](/x/react-data-grid/filtering/quick-filter/) and [Header filters](/x/react-data-grid/filtering/header-filters/) simultaneously.
+Note that the `ignoreDiacriticsInFiltering` prop affects all columns and all types of filters: [regular filters](/x/react-data-grid/filtering/), [Quick filter](/x/react-data-grid/filtering/quick-filter/) and [Header filters](/x/react-data-grid/filtering/header-filters/).
 :::
 
 ## API

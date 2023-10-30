@@ -413,19 +413,17 @@ describe('<DataGrid /> - Filter', () => {
 
     describe('ignoreDiacritics', () => {
       function DiacriticsTestCase({
-        columns = [{ field: 'label', type: 'string' }],
         filterValue,
-      }: {
-        columns?: DataGridProps['columns'];
-        filterValue: GridFilterItem['value'];
-      }) {
+        ...props
+      }: Partial<DataGridProps> & { filterValue: GridFilterItem['value'] }) {
         return (
           <TestCase
             filterModel={{
               items: [{ field: 'label', operator: 'contains', value: filterValue }],
             }}
+            {...props}
             rows={[{ id: 0, label: 'Apă' }]}
-            columns={columns}
+            columns={[{ field: 'label', type: 'string' }]}
           />
         );
       }
@@ -447,10 +445,7 @@ describe('<DataGrid /> - Filter', () => {
       it('should ignore diacritics when `ignoreDiacritics` is enabled', () => {
         testEval(() => {
           const { unmount } = render(
-            <DiacriticsTestCase
-              columns={[{ field: 'label', type: 'string', ignoreDiacritics: true }]}
-              filterValue="apa"
-            />,
+            <DiacriticsTestCase filterValue="apa" ignoreDiacriticsInFiltering />,
           );
           expect(getColumnValues(0)).to.deep.equal(['Apă']);
           unmount();
@@ -458,10 +453,7 @@ describe('<DataGrid /> - Filter', () => {
 
         testEval(() => {
           const { unmount } = render(
-            <DiacriticsTestCase
-              columns={[{ field: 'label', type: 'string', ignoreDiacritics: true }]}
-              filterValue="apă"
-            />,
+            <DiacriticsTestCase filterValue="apă" ignoreDiacriticsInFiltering />,
           );
           expect(getColumnValues(0)).to.deep.equal(['Apă']);
           unmount();

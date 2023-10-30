@@ -163,6 +163,7 @@ const removeDiacritics = (value: unknown) => {
 const getFilterCallbackFromItem = (
   filterItem: GridFilterItem,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  ignoreDiacriticsInFiltering: boolean,
 ): GridFilterItemApplier | null => {
   if (!filterItem.field || !filterItem.operator) {
     return null;
@@ -183,7 +184,7 @@ const getFilterCallbackFromItem = (
     parsedValue = filterItem.value;
   }
 
-  if (column.ignoreDiacritics) {
+  if (ignoreDiacriticsInFiltering) {
     parsedValue = removeDiacritics(parsedValue);
   }
 
@@ -216,7 +217,7 @@ const getFilterCallbackFromItem = (
       item: newFilterItem,
       fn: (row: GridValidRowModel) => {
         let value = apiRef.current.getRowValue(row, column);
-        if (column.ignoreDiacritics) {
+        if (ignoreDiacriticsInFiltering) {
           value = removeDiacritics(value);
         }
         return applyFilterOnRow(value, row, column, apiRef);
@@ -235,7 +236,7 @@ const getFilterCallbackFromItem = (
     fn: (rowId: GridRowId) => {
       const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
       GLOBAL_API_REF.current = apiRef;
-      if (column.ignoreDiacritics) {
+      if (ignoreDiacriticsInFiltering) {
         params.value = removeDiacritics(params.value);
       }
       const result = applyFilterOnRow(params);
@@ -259,11 +260,12 @@ export const buildAggregatedFilterItemsApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
   disableEval: boolean,
+  ignoreDiacriticsInFiltering: boolean,
 ): GridFilterItemApplierNotAggregated | null => {
   const { items } = filterModel;
 
   const appliers = items
-    .map((item) => getFilterCallbackFromItem(item, apiRef))
+    .map((item) => getFilterCallbackFromItem(item, apiRef, ignoreDiacriticsInFiltering))
     .filter((callback): callback is GridFilterItemApplier => !!callback);
 
   if (appliers.length === 0) {
@@ -341,6 +343,7 @@ export const buildAggregatedQuickFilterApplier = (
   getRowId: GridRowIdGetter | undefined,
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  ignoreDiacriticsInFiltering: boolean,
 ): GridFilterItemApplierNotAggregated | null => {
   const quickFilterValues = filterModel.quickFilterValues?.filter(Boolean) ?? [];
   if (quickFilterValues.length === 0) {
@@ -373,7 +376,7 @@ export const buildAggregatedQuickFilterApplier = (
       appliersPerField.push({
         column,
         appliers: quickFilterValues.map((quickFilterValue) => {
-          const value = column.ignoreDiacritics
+          const value = ignoreDiacriticsInFiltering
             ? removeDiacritics(quickFilterValue)
             : quickFilterValue;
           return {
@@ -386,7 +389,7 @@ export const buildAggregatedQuickFilterApplier = (
       appliersPerField.push({
         column,
         appliers: quickFilterValues.map((quickFilterValue) => {
-          const value = column.ignoreDiacritics
+          const value = ignoreDiacriticsInFiltering
             ? removeDiacritics(quickFilterValue)
             : quickFilterValue;
           return {
@@ -422,7 +425,7 @@ export const buildAggregatedQuickFilterApplier = (
         }
 
         if (applier.v7) {
-          if (column.ignoreDiacritics) {
+          if (ignoreDiacriticsInFiltering) {
             value = removeDiacritics(value);
           }
           const isMatching = applier.fn(value, row, column, apiRef);
@@ -434,7 +437,7 @@ export const buildAggregatedQuickFilterApplier = (
           const cellParams =
             usedCellParams[field] ??
             apiRef.current.getCellParams(getRowId ? getRowId(row) : row.id, field);
-          if (column.ignoreDiacritics) {
+          if (ignoreDiacriticsInFiltering) {
             cellParams.value = removeDiacritics(cellParams.value);
           }
           usedCellParams[field] = cellParams;
@@ -460,19 +463,27 @@ export const buildAggregatedFilterApplier = ({
   filterModel,
   apiRef,
   disableEval,
+  ignoreDiacriticsInFiltering,
 }: {
   getRowId: GridRowIdGetter | undefined;
   filterModel: GridFilterModel;
   apiRef: React.MutableRefObject<GridApiCommunity>;
   disableEval: boolean;
+  ignoreDiacriticsInFiltering: boolean;
 }): GridAggregatedFilterItemApplier => {
   const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(
     getRowId,
     filterModel,
     apiRef,
     disableEval,
+    ignoreDiacriticsInFiltering,
   );
-  const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(getRowId, filterModel, apiRef);
+  const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(
+    getRowId,
+    filterModel,
+    apiRef,
+    ignoreDiacriticsInFiltering,
+  );
 
   return function isRowMatchingFilters(row, shouldApplyFilter, result) {
     result.passingFilterItems = isRowMatchingFilterItems?.(row, shouldApplyFilter) ?? null;
@@ -490,10 +501,11 @@ const filterModelItems = (
   cache: FilterCache,
   apiRef: React.MutableRefObject<GridApiCommunity>,
   items: GridFilterItem[],
+  ignoreDiacriticsInFiltering: boolean,
 ) => {
   if (!cache.cleanedFilterItems) {
     cache.cleanedFilterItems = items.filter(
-      (item) => getFilterCallbackFromItem(item, apiRef) !== null,
+      (item) => getFilterCallbackFromItem(item, apiRef, ignoreDiacriticsInFiltering) !== null,
     );
   }
   return cache.cleanedFilterItems;
@@ -505,8 +517,14 @@ export const passFilterLogic = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
   cache: FilterCache,
+  ignoreDiacriticsInFiltering: boolean,
 ): boolean => {
-  const cleanedFilterItems = filterModelItems(cache, apiRef, filterModel.items);
+  const cleanedFilterItems = filterModelItems(
+    cache,
+    apiRef,
+    filterModel.items,
+    ignoreDiacriticsInFiltering,
+  );
   const cleanedFilterItemResults = allFilterItemResults.filter(isNotNull);
   const cleanedQuickFilterResults = allQuickFilterResults.filter(isNotNull);
 

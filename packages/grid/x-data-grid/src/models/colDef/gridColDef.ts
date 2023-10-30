@@ -251,12 +251,6 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   getApplyQuickFilterFnV7?: GetApplyQuickFilterFnV7<R, V>;
   /**
-   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
-   * Only applies to columns of type `string`.
-   * @default false
-   */
-  ignoreDiacritics?: boolean;
-  /**
    * If `true`, this column cannot be reordered.
    * @default false
    */

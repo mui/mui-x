@@ -4,13 +4,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
 const rows = [{ id: 0, value: 'Café' }];
+const columns = [{ field: 'value', width: 150 }];
 
 export default function QuickFilteringDiacritics() {
   const [ignoreDiacritics, setIgnoreDiacritics] = React.useState(true);
-
-  const columns = React.useMemo(() => {
-    return [{ field: 'value', width: 150, ignoreDiacritics }];
-  }, [ignoreDiacritics]);
 
   return (
     <div style={{ width: '100%' }}>
@@ -36,6 +33,7 @@ export default function QuickFilteringDiacritics() {
           hideFooter
           slots={{ toolbar: GridToolbar }}
           slotProps={{ toolbar: { showQuickFilter: true } }}
+          ignoreDiacriticsInFiltering={ignoreDiacritics}
         />
       </div>
     </div>
