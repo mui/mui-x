@@ -2,10 +2,13 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled, Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
 import { fakeInputClasses, getFakeInputUtilityClass } from './fakeTextFieldClasses';
 import Outline from './Outline';
-import { FieldsTextFieldProps } from '../../models';
+import { FakeInputProps } from './FakeInput.types';
 
 const SectionsContainer = styled('span', {
   name: 'MuiFakeInput',
@@ -99,10 +102,18 @@ const NotchedOutlineRoot = styled(Outline, {
 });
 
 const useUtilityClasses = (ownerState: OwnerStateType) => {
-  const { focused, disabled, error, classes } = ownerState;
+  const { focused, disabled, error, classes, fullWidth, color, size } = ownerState;
 
   const slots = {
-    root: ['root', focused && !disabled && 'focused', disabled && 'disabled', error && 'error'],
+    root: [
+      'root',
+      focused && !disabled && 'focused',
+      disabled && 'disabled',
+      error && 'error',
+      fullWidth && 'fullWidth',
+      `color${capitalize(color)}`,
+      size === 'small' && 'inputSizeSmall',
+    ],
     section: ['section'],
     notchedOutline: ['notchedOutline'],
   };
@@ -126,44 +137,22 @@ function formControlState({ props, states, muiFormControl }) {
   }, {});
 }
 
-export interface FakeInputElement extends React.HTMLAttributes<HTMLDivElement> {
-  before: string;
-  after: string;
-  value: string;
-  // remove these after
-  startSeparator: string;
-  endSeparator: string;
-  type: string;
-}
-
-interface FakeInputProps extends FieldsTextFieldProps {
-  elements: FakeInputElement[];
-  areAllSectionsEmpty?: boolean;
-  valueStr: string;
-  onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
-  id?: string;
-  InputProps: any;
-  inputProps: any;
-  autoFocus?: boolean;
-  ownerState?: any;
-  valueType: 'value' | 'placeholder';
-
-  onWrapperClick: () => void;
-}
-
 interface OwnerStateType extends FakeInputProps {
   color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
   disabled?: boolean;
   error?: boolean;
   fullWidth?: boolean;
   variant?: 'filled' | 'outlined' | 'standard';
+  size?: 'small' | 'medium';
 }
 
-const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref<HTMLDivElement>) {
+const FakeInput = React.forwardRef(function FakeInput(
+  props: FakeInputProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const {
     elements,
     defaultValue,
-    InputLabelProps,
     label = 'test',
     onFocus,
     onWrapperClick,
@@ -172,13 +161,13 @@ const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref
     valueStr,
     onValueStrChange,
     id,
-    error,
     InputProps,
     inputProps,
     autoFocus,
-    disabled,
     valueType,
     ownerState: ownerStateProp,
+    endAdornment,
+    startAdornment,
     ...other
   } = props;
 
@@ -186,16 +175,7 @@ const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref
   const fcs = formControlState({
     props,
     muiFormControl,
-    states: [
-      'color',
-      'disabled',
-      'error',
-      'focused',
-      'hiddenLabel',
-      'size',
-      'required',
-      'fullWidth',
-    ],
+    states: ['color', 'disabled', 'error', 'focused', 'size', 'required', 'fullWidth'],
   });
 
   const ownerState = {
@@ -206,7 +186,6 @@ const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref
     error: fcs.error,
     focused: fcs.focused,
     fullWidth: fcs.fullWidth,
-    hiddenLabel: fcs.hiddenLabel,
     size: fcs.size,
   };
   const classes = useUtilityClasses(ownerState);
@@ -219,13 +198,12 @@ const FakeInput = React.forwardRef(function FakeInput(props: any, ref: React.Ref
         className={classes.root}
         onClick={onWrapperClick}
         ownerState={ownerState}
-        onBlur={onBlur}
       >
         {elements &&
           elements.map(({ container, content, before, after }, elementIndex) => (
             <SectionsContainer key={elementIndex} {...container}>
               <span {...before} />
-              <SectionInput {...content} disabled={fcs.disabled} {...{ ownerState }} />
+              <SectionInput {...content} {...{ ownerState }} />
               <span {...after} />
             </SectionsContainer>
           ))}

@@ -1,10 +1,13 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import InputLabel from '@mui/material/InputLabel';
+import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import { getFakeTextFieldUtilityClass } from './fakeTextFieldClasses';
 import FakeInput from './FakeInput';
+import { FakeTextFieldProps } from './FakeTextField.types';
 
 const FakeTextFieldRoot = styled(FormControl, {
   name: 'MuiFakeTextField',
@@ -12,46 +15,16 @@ const FakeTextFieldRoot = styled(FormControl, {
   overridesResolver: (props, styles) => styles.root,
 })({});
 
-const useUtilityClasses = (ownerState: FakeTextFieldProps & { focused: boolean }) => {
-  const { focused, disabled } = ownerState;
+const useUtilityClasses = (ownerState: FakeTextFieldProps) => {
+  const { focused, disabled, classes } = ownerState;
 
   const slots = {
     root: ['root', focused && !disabled && 'focused', disabled && 'disabled'],
     notchedOutline: ['notchedOutline'],
   };
 
-  // TODO: fix classes
-  return composeClasses(slots, getFakeTextFieldUtilityClass, []);
+  return composeClasses(slots, getFakeTextFieldUtilityClass, classes);
 };
-
-export interface FakeTextFieldElement {
-  container: React.HTMLAttributes<HTMLSpanElement>;
-  content: React.HTMLAttributes<HTMLSpanElement>;
-  before: React.HTMLAttributes<HTMLSpanElement>;
-  after: React.HTMLAttributes<HTMLSpanElement>;
-}
-
-// TODO: move to separate file
-// TODO: extend input props
-interface FakeTextFieldProps {
-  elements: FakeTextFieldElement[];
-  color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-  disabled?: boolean;
-  error?: boolean;
-  fullWidth?: boolean;
-  // helperText?: React.ReactNode;
-  label?: string;
-  // size?: 'small' | 'medium';
-  variant?: 'filled' | 'outlined' | 'standard';
-  valueStr: string;
-  // onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
-  // id?: string;
-  // InputProps: any;
-  // inputProps: any;
-  // autoFocus?: boolean;
-  // ownerState?: any;
-  valueType: 'value' | 'placeholder';
-}
 
 export const FakeTextField = React.forwardRef(function FakeTextField(
   props: FakeTextFieldProps,
@@ -66,13 +39,23 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
     variant = 'outlined',
     fullWidth = false,
     valueStr,
+    helperText,
     valueType,
+    id: idOverride,
+    FormHelperTextProps,
+    InputLabelProps,
+    classes: inClasses,
+    inputProps,
+    InputProps,
     ...other
   } = props;
 
   const [focused, setFocused] = React.useState(false);
 
   const areAllSectionsEmpty = !valueStr && valueType !== 'placeholder';
+  const id = useId(idOverride);
+  const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
+  const inputLabelId = label && id ? `${id}-label` : undefined;
 
   const ownerState = {
     ...props,
@@ -104,7 +87,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
 
   return (
     <FakeTextFieldRoot
-      className={classes.root}
+      className={clsx(classes.root, inClasses)}
       {...{
         focused,
         disabled,
@@ -116,12 +99,20 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
         ...other,
       }}
     >
-      <InputLabel shrink={focused || !areAllSectionsEmpty}>{label}</InputLabel>
+      <InputLabel htmlFor={id} id={inputLabelId} shrink={focused || !areAllSectionsEmpty}>
+        {label}
+      </InputLabel>
       <FakeInput
         ref={ref}
-        {...{ elements, valueStr, valueType, areAllSectionsEmpty, onWrapperClick }}
+        {...{ elements, valueStr, valueType, areAllSectionsEmpty, onWrapperClick, inputProps }}
         {...other}
+        {...InputProps}
       />
+      {helperText && (
+        <FormHelperText id={helperTextId} {...FormHelperTextProps}>
+          {helperText}
+        </FormHelperText>
+      )}
     </FakeTextFieldRoot>
   );
 });

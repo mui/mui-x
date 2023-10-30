@@ -1,0 +1,26 @@
+import { FieldsTextFieldProps } from '../../models';
+
+export interface FakeInputElement {
+  container: React.HTMLAttributes<HTMLSpanElement>;
+  content: React.HTMLAttributes<HTMLSpanElement>;
+  before: React.HTMLAttributes<HTMLSpanElement>;
+  after: React.HTMLAttributes<HTMLSpanElement>;
+}
+
+export interface FakeInputProps extends FieldsTextFieldProps {
+  elements: FakeInputElement[];
+  areAllSectionsEmpty?: boolean;
+  valueStr: string;
+  onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
+  id?: string;
+  InputProps: any;
+  inputProps: any;
+  autoFocus?: boolean;
+  ownerState?: any;
+  valueType: 'value' | 'placeholder';
+  onWrapperClick: () => void;
+  defaultValue: string;
+  label?: string;
+  endAdornment?: React.ReactNode;
+  startAdornment?: React.ReactNode;
+}
