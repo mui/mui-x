@@ -107,7 +107,12 @@ export const useGridFilter = (
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
         props.filterMode === 'client'
-          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef, props.disableEval)
+          ? buildAggregatedFilterApplier({
+              getRowId: props.getRowId,
+              filterModel,
+              apiRef,
+              disableEval: props.disableEval,
+            })
           : null;
 
       const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {

@@ -455,12 +455,17 @@ export const buildAggregatedQuickFilterApplier = (
   };
 };
 
-export const buildAggregatedFilterApplier = (
-  getRowId: GridRowIdGetter | undefined,
-  filterModel: GridFilterModel,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-  disableEval: boolean,
-): GridAggregatedFilterItemApplier => {
+export const buildAggregatedFilterApplier = ({
+  getRowId,
+  filterModel,
+  apiRef,
+  disableEval,
+}: {
+  getRowId: GridRowIdGetter | undefined;
+  filterModel: GridFilterModel;
+  apiRef: React.MutableRefObject<GridApiCommunity>;
+  disableEval: boolean;
+}): GridAggregatedFilterItemApplier => {
   const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(
     getRowId,
     filterModel,
