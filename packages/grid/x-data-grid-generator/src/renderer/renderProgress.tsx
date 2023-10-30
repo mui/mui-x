@@ -1,20 +1,37 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { GridRenderCellParams } from '@mui/x-data-grid-premium';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 
 interface ProgressBarProps {
   value: number;
 }
 
-const Root = styled('div')(({ theme }) => ({
-  border: `1px solid ${(theme.vars || theme).palette.divider}`,
+const Root = styled('div')({
   position: 'relative',
   overflow: 'hidden',
   width: '100%',
   height: 26,
-  borderRadius: 2,
-}));
+  borderRadius: 3,
+  '&.low': {
+    backgroundColor: alpha('#FF505F', 0.1),
+    ' .progress-bar': {
+      backgroundColor: '#FF505F',
+    },
+  },
+  '&.medium': {
+    backgroundColor: alpha('#F4C000', 0.2),
+    '.progress-bar': {
+      backgroundColor: '#F4C000',
+    },
+  },
+  '&.high': {
+    backgroundColor: alpha('#21CC66', 0.1),
+    ' .progress-bar': {
+      backgroundColor: '#21CC66',
+    },
+  },
+});
 
 const Value = styled('div')({
   position: 'absolute',
@@ -26,15 +43,6 @@ const Value = styled('div')({
 
 const Bar = styled('div')({
   height: '100%',
-  '&.low': {
-    backgroundColor: '#f44336',
-  },
-  '&.medium': {
-    backgroundColor: '#efbb5aa3',
-  },
-  '&.high': {
-    backgroundColor: '#088208a3',
-  },
 });
 
 const ProgressBar = React.memo(function ProgressBar(props: ProgressBarProps) {
@@ -42,16 +50,15 @@ const ProgressBar = React.memo(function ProgressBar(props: ProgressBarProps) {
   const valueInPercent = value * 100;
 
   return (
-    <Root>
+    <Root
+      className={clsx({
+        low: valueInPercent < 30,
+        medium: valueInPercent >= 30 && valueInPercent <= 70,
+        high: valueInPercent > 70,
+      })}
+    >
       <Value>{`${valueInPercent.toLocaleString()} %`}</Value>
-      <Bar
-        className={clsx({
-          low: valueInPercent < 30,
-          medium: valueInPercent >= 30 && valueInPercent <= 70,
-          high: valueInPercent > 70,
-        })}
-        style={{ maxWidth: `${valueInPercent}%` }}
-      />
+      <Bar className="progress-bar" style={{ maxWidth: `${valueInPercent}%` }} />
     </Root>
   );
 });
