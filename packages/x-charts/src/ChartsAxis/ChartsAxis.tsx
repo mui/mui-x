@@ -74,6 +74,15 @@ const mergeProps = (
     : { slots, slotProps };
 };
 
+/**
+ * Demos:
+ *
+ * - [Axis](https://mui.com/x/react-charts/axis/)
+ *
+ * API:
+ *
+ * - [ChartsAxis API](https://mui.com/x/api/charts/charts-axis/)
+ */
 function ChartsAxis(props: ChartsAxisProps) {
   const { topAxis, leftAxis, rightAxis, bottomAxis, slots, slotProps } = props;
   const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);

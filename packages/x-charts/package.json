@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "6.0.0-alpha.16",
+  "version": "6.0.0-alpha.17",
   "description": "The community edition of the charts components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -65,9 +65,9 @@
     }
   },
   "devDependencies": {
-    "@types/d3-color": "^3.1.1",
-    "@types/d3-scale": "^4.0.5",
-    "@types/d3-shape": "^3.1.3"
+    "@types/d3-color": "^3.1.2",
+    "@types/d3-scale": "^4.0.6",
+    "@types/d3-shape": "^3.1.4"
   },
   "exports": {
     ".": {

@@ -70,6 +70,11 @@ export const CartesianContext = React.createContext<{
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
+/**
+ * API:
+ *
+ * - [CartesianContextProvider API](https://mui.com/x/api/charts/cartesian-context-provider/)
+ */
 function CartesianContextProvider({
   xAxis: inXAxis,
   yAxis: inYAxis,

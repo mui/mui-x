@@ -17,14 +17,23 @@ const sumAgg: GridAggregationFunction<unknown, number> = {
   columnTypes: ['number'],
 };
 
-const avgAgg: GridAggregationFunction<number> = {
-  apply: (params) => {
-    if (params.values.length === 0) {
+const avgAgg: GridAggregationFunction<unknown, number> = {
+  apply: ({ values }) => {
+    if (values.length === 0) {
       return null;
     }
 
-    const sum = sumAgg.apply(params) as number;
-    return sum / params.values.length;
+    let sum = 0;
+    let valuesCount = 0;
+    for (let i = 0; i < values.length; i += 1) {
+      const value = values[i];
+      if (isNumber(value)) {
+        valuesCount += 1;
+        sum += value;
+      }
+    }
+
+    return sum / valuesCount;
   },
   columnTypes: ['number'],
 };
