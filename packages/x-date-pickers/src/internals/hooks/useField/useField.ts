@@ -426,7 +426,7 @@ export const useField = <
       // On multi input range pickers we want to update selection range only for the active input
       // This helps to avoid the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
       // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
-      if (inputRef.current === getActiveElement(document)) {
+      if (inputRef.current === getActiveElement(inputRef.current.ownerDocument)) {
         inputRef.current.setSelectionRange(selectionStart, selectionEnd);
       }
       // Even reading this variable seems to do the trick, but also setting it just to make use of it
@@ -459,7 +459,7 @@ export const useField = <
 
   React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)
-    if (inputRef.current && inputRef.current === document.activeElement) {
+    if (inputRef.current && inputRef.current === inputRef.current.ownerDocument.activeElement) {
       setSelectedSections('all');
     }
 
@@ -495,7 +495,8 @@ export const useField = <
     return 'numeric';
   }, [selectedSectionIndexes, state.sections]);
 
-  const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
+  const inputHasFocus =
+    inputRef.current && inputRef.current === getActiveElement(inputRef.current.ownerDocument);
   const areAllSectionsEmpty = valueManager.areValuesEqual(
     utils,
     state.value,
