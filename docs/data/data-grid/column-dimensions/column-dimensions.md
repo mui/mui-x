@@ -97,6 +97,16 @@ The data grid can only autosize based on the currently rendered cells.
 DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) to discuss it further.
 :::
 
+### Autosizing asynchronously [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+The `autosizeColumns` method from the `apiRef` can be used as well to adjust the column size on specified events, for example when receiving row data from the server.
+
+{{"demo": "ColumnAutosizingAsync.js", "disableAd": true, "bg": "inline"}}
+
+:::warning
+This example uses `ReactDOM.flushSync`. If used incorrectly it can hurt the performance of your application. Please refer to the official [React docs](https://react.dev/reference/react-dom/flushSync) for further information.
+:::
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

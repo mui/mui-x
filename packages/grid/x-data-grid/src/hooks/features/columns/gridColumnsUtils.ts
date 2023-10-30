@@ -292,7 +292,7 @@ export const createColumnsState = ({
   columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   keepOnlyColumnsToUpsert = false,
 }: {
-  columnsToUpsert: GridColDef[];
+  columnsToUpsert: readonly GridColDef[];
   initialState: GridColumnsInitialState | undefined;
   columnTypes: GridColumnTypesRecord;
   columnVisibilityModel?: GridColumnVisibilityModel;

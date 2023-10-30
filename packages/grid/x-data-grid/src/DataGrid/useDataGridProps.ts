@@ -80,6 +80,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   keepColumnPositionIfDraggedOutside: false,
   unstable_ignoreValueFormatterDuringExport: false,
   clipboardCopyCellDelimiter: '\t',
+  rowPositionsDebounceMs: 166,
 };
 
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;

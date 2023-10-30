@@ -129,14 +129,17 @@ export const datePickerExamples: PickersSubcomponentType = {
         type: 'success',
       },
       sxProp: {
-        type: 'success',
+        type: 'warning',
+        parentSlot: 'layout',
+        comments:
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
       },
-
       styledComponents: {
         type: 'warning',
+        parentSlot: 'layout',
+        parentComponent: 'PickersLayout',
         comments:
-          'You will need to specify the `disablePortal` prop for the popper in order to be able to use `DesktopDatePicker` as a styled component ',
-        componentProps: { slotProps: { popper: { disablePortal: true } } },
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
       },
     },
     slots: ['root'],
@@ -147,14 +150,17 @@ export const datePickerExamples: PickersSubcomponentType = {
         type: 'success',
       },
       sxProp: {
-        type: 'success',
+        type: 'warning',
+        parentSlot: 'layout',
+        comments:
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
       },
-
       styledComponents: {
         type: 'warning',
+        parentSlot: 'layout',
+        parentComponent: 'PickersLayout',
         comments:
-          'You will need to specify the `disablePortal` prop for the popper in order to be able to use `DesktopDatePicker` as a styled component ',
-        componentProps: { slotProps: { popper: { disablePortal: true } } },
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
       },
     },
     slots: ['root', 'label', 'labelContainer', 'switchViewButton', 'switchViewIcon'],
@@ -165,14 +171,17 @@ export const datePickerExamples: PickersSubcomponentType = {
         type: 'success',
       },
       sxProp: {
-        type: 'success',
+        type: 'warning',
+        parentSlot: 'layout',
+        comments:
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
       },
-
       styledComponents: {
         type: 'warning',
+        parentSlot: 'layout',
+        parentComponent: 'PickersLayout',
         comments:
-          'You will need to specify the `disablePortal` prop for the popper in order to be able to use `DesktopDatePicker` as a styled component ',
-        componentProps: { slotProps: { popper: { disablePortal: true } } },
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
       },
     },
     slots: ['root', 'weekDayLabel', 'weekContainer', 'weekNumberLabel', 'weekNumber'],
@@ -183,17 +192,45 @@ export const datePickerExamples: PickersSubcomponentType = {
         type: 'success',
       },
       sxProp: {
+        type: 'warning',
+        parentSlot: 'layout',
+        comments:
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
+      },
+      styledComponents: {
+        type: 'warning',
+        parentSlot: 'layout',
+        parentComponent: 'PickersLayout',
+        comments:
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+      },
+    },
+    slots: ['root', 'today'],
+  },
+  PickersMonth: {
+    examples: {
+      customTheme: {
         type: 'success',
+        componentProps: { views: ['month'] },
+      },
+      sxProp: {
+        type: 'warning',
+        parentSlot: 'layout',
+        comments:
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `layout` slot',
+        componentProps: { views: ['month'] },
       },
 
       styledComponents: {
         type: 'warning',
+        parentSlot: 'layout',
+        parentComponent: 'PickersLayout',
         comments:
-          'You will need to specify the `disablePortal` prop for the popper in order to be able to use `DesktopDatePicker` as a styled component ',
-        componentProps: { slotProps: { popper: { disablePortal: true } } },
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+        componentProps: { views: ['month'] },
       },
     },
-    slots: ['root', 'today'],
+    slots: ['root', 'monthButton'],
   },
 };
 

@@ -386,6 +386,7 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
+    "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {

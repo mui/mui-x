@@ -120,7 +120,9 @@ export const ResponsiveChartContainer = React.forwardRef(function ResponsiveChar
 
   return (
     <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
-      <ChartContainer {...other} width={width} height={height} ref={ref} />
+      {width && height ? (
+        <ChartContainer {...other} width={width} height={height} ref={ref} />
+      ) : null}
     </ResizableContainer>
   );
 });

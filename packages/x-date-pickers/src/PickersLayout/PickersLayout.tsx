@@ -70,6 +70,15 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
+/**
+ * Demos:
+ *
+ * - [Custom layout](https://mui.com/x/react-date-pickers/custom-layout/)
+ *
+ * API:
+ *
+ * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
+ */
 const PickersLayout = function PickersLayout<
   TValue,
   TDate,
