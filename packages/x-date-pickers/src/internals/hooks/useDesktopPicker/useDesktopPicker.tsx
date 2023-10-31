@@ -37,6 +37,7 @@ export const useDesktopPicker = <
     format,
     formatDensity,
     timezone,
+    name,
     label,
     inputRef,
     readOnly,
@@ -60,7 +61,6 @@ export const useDesktopPicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-    name,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
@@ -115,6 +115,7 @@ export const useDesktopPicker = <
       formatDensity,
       timezone,
       label,
+      name,
       autoFocus: autoFocus && !props.open,
       focused: open ? true : undefined,
     },
@@ -177,7 +178,6 @@ export const useDesktopPicker = <
       <Field
         {...fieldProps}
         slots={slotsForField}
-        name={name}
         slotProps={slotProps}
         inputRef={handleInputRef}
       />

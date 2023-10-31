@@ -50,8 +50,4 @@ export interface TimePickerProps<TDate>
    * @default {}
    */
   slotProps?: TimePickerSlotsComponentsProps<TDate>;
-  /**
-   * The `name` attribute of the picker.
-   */
-  name?: string;
 }

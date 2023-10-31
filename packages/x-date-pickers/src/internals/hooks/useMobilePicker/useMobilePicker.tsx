@@ -36,6 +36,7 @@ export const useMobilePicker = <
     format,
     formatDensity,
     timezone,
+    name,
     label,
     inputRef,
     readOnly,
@@ -54,7 +55,6 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-    name,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
@@ -88,6 +88,7 @@ export const useMobilePicker = <
       formatDensity,
       timezone,
       label,
+      name,
     },
     ownerState: props,
   });
@@ -137,7 +138,6 @@ export const useMobilePicker = <
       <Field
         {...fieldProps}
         slots={slotsForField}
-        name={name}
         slotProps={slotProps}
         inputRef={handleInputRef}
       />

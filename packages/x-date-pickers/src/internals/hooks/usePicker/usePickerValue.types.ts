@@ -210,10 +210,6 @@ export type PickerValueUpdateAction<TValue, TError> =
  */
 export interface UsePickerValueBaseProps<TValue, TError> {
   /**
-   * The `name` attribute of the picker.
-   */
-  name?: string;
-  /**
    * The selected value.
    * Used when the component is controlled.
    */
@@ -345,7 +341,6 @@ export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActi
 
 export interface UsePickerValueResponse<TValue, TSection extends FieldSection, TError> {
   open: boolean;
-  name?: string;
   actions: UsePickerValueActions;
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue, TSection, TError>;

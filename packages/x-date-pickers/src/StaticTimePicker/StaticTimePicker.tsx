@@ -159,10 +159,6 @@ StaticTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * The `name` attribute of the picker.
-   */
-  name: PropTypes.string,
-  /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.

@@ -238,7 +238,9 @@ DesktopTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * The `name` attribute of the picker.
+   * The `name` attribute used on the `field` component.
+   * It serves as a `shortcut` for applying the `name` attribute on the `input` HTML element.
+   * Ignored if the field has several inputs.
    */
   name: PropTypes.string,
   /**
