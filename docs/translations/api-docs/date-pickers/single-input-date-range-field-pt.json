@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "autoFocus": "If <code>true</code>, the <code>input</code> element is focused during the first mount.",
-    "color": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#adding-new-colors\">palette customization guide</a>.",
+    "color": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>.",
     "components": "Overridable components.",
     "componentsProps": "The props used for each component slot.",
     "defaultValue": "The default value. Use when the component is not controlled.",
