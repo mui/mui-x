@@ -39,7 +39,7 @@ export default function QuickFilteringDiacritics() {
       <FormControlLabel
         checked={ignoreDiacritics}
         onChange={(event) => setIgnoreDiacritics(event.target.checked)}
-        control={<Switch color="primary" size="small" />}
+        control={<Switch />}
         label="Ignore diacritics"
       />
       <div style={{ height: 200, width: '100%' }}>

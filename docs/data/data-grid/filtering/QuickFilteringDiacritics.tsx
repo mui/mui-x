@@ -45,7 +45,7 @@ export default function QuickFilteringDiacritics() {
         onChange={(event) =>
           setIgnoreDiacritics((event.target as HTMLInputElement).checked)
         }
-        control={<Switch color="primary" size="small" />}
+        control={<Switch />}
         label="Ignore diacritics"
       />
       <div style={{ height: 200, width: '100%' }}>
