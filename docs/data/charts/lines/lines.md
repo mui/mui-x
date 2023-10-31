@@ -52,6 +52,33 @@ By default, they are stacked in the order you defined them, with positive values
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
 
+## Partial data
+
+Line series can have less data than the axis.
+You can handle lines with partial data or data starting at different points by providing `null` values.
+
+By default, the tooltip does not show series if they have no value.
+To override this behavior, use the `valueFormatter` to return a string if the value is `null` or `undefined`.
+
+{{"demo": "DifferentLength.js"}}
+
+:::info
+When series data length is smaller than the axis one, overflowing values are `undefined` and not `null`.
+
+The following code plots a line for x between 2 and 4.
+
+- For x<2, values are set to `null` and then not shown.
+- For x>4, values are set to `undefined` and then not shown.
+
+```jsx
+<LineChart
+  series={[{ data: [null, null, 10, 11, 12] }]}
+  xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6] }]}
+/>
+```
+
+:::
+
 ## Styling
 
 ### Interpolation
