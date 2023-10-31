@@ -204,14 +204,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     if (containerRef.current === null) {
       return;
     }
-    const selectedItem = containerRef.current.querySelector<HTMLElement>(
-      '[role="listbox"] [role="option"][aria-selected="true"]',
+    const activeItem = containerRef.current.querySelector<HTMLElement>(
+      '[role="listbox"] [role="option"][tabindex="0"]',
     );
 
-    if (!selectedItem) {
+    if (!activeItem) {
       return;
     }
-    const offsetTop = selectedItem.offsetTop;
+    const offsetTop = activeItem.offsetTop;
+    if (autoFocus || !!focusedView) {
+      activeItem.focus();
+    }
 
     // Subtracting the 4px of extra margin intended for the first visible section item
     containerRef.current.scrollTop = offsetTop - 4;
@@ -295,7 +298,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       {...other}
     >
       <DigitalClockList
-        autoFocusItem={autoFocus || !!focusedView}
         role="listbox"
         aria-label={localeText.timePickerToolbarTitle}
         className={classes.list}

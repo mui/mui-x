@@ -122,7 +122,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
   ) {
     const containerRef = React.useRef<HTMLUListElement>(null);
     const handleRef = useForkRef(ref, containerRef);
-    const previousSelected = React.useRef<HTMLElement | null>(null);
+    const previousActive = React.useRef<HTMLElement | null>(null);
 
     const props = useThemeProps({
       props: inProps,
@@ -155,21 +155,21 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       if (containerRef.current === null) {
         return;
       }
-      const selectedItem = containerRef.current.querySelector<HTMLElement>(
-        '[role="option"][aria-selected="true"]',
+      const activeItem = containerRef.current.querySelector<HTMLElement>(
+        '[role="option"][tabindex="0"]',
       );
-      if (!selectedItem || previousSelected.current === selectedItem) {
+      if (!activeItem || previousActive.current === activeItem) {
         // Handle setting the ref to null if the selected item is ever reset via UI
-        if (previousSelected.current !== selectedItem) {
-          previousSelected.current = selectedItem;
+        if (previousActive.current !== activeItem) {
+          previousActive.current = activeItem;
         }
         return;
       }
-      previousSelected.current = selectedItem;
+      previousActive.current = activeItem;
       if (active && autoFocus) {
-        selectedItem.focus();
+        activeItem.focus();
       }
-      const offsetTop = selectedItem.offsetTop;
+      const offsetTop = activeItem.offsetTop;
 
       // Subtracting the 4px of extra margin intended for the first visible section item
       containerRef.current.scrollTop = offsetTop - 4;
