@@ -185,14 +185,11 @@ describe('<DateCalendar />', () => {
           onChange={onChange}
           referenceDate={adapterToUse.date(new Date(2022, 3, 17, 12, 30))}
           view="day"
-          autoFocus
         />,
       );
 
-      // should focus the reference day
-      expect(
-        screen.getByRole('gridcell', { name: '17' }).classList.contains('Mui-focusVisible'),
-      ).to.equal(true);
+      // should make the reference day firstly focusable
+      expect(screen.getByRole('gridcell', { name: '17' })).to.have.attribute('tabindex', '0');
 
       userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
