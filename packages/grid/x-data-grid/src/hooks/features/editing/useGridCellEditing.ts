@@ -181,7 +181,7 @@ export const useGridCellEditing = (
         }
 
         if (reason) {
-          const newParams: GridCellEditStartParams = { ...params, reason };
+          const newParams: GridCellEditStartParams = { ...params, reason, key: event.key };
           apiRef.current.publishEvent('cellEditStart', newParams, event);
         }
       }
