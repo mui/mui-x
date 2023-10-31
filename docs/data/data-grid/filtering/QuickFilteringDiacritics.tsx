@@ -1,12 +1,41 @@
 import * as React from 'react';
-import { DataGrid, GridToolbar, GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridToolbar,
+  GridColDef,
+  GridFilterModel,
+} from '@mui/x-data-grid';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
-const rows = [{ id: 0, value: 'Café' }];
-const columns: GridColDef[] = [{ field: 'value', width: 150 }];
+const rows = [
+  { id: 0, string: 'Café', date: new Date(2023, 1, 1), singleSelect: 'Jalapeño' },
+];
+const columns: GridColDef[] = [
+  { field: 'string', width: 100 },
+  {
+    field: 'date',
+    type: 'date',
+    width: 150,
+    valueFormatter: (params) =>
+      params.value.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }),
+  },
+  {
+    field: 'singleSelect',
+    type: 'singleSelect',
+    valueOptions: ['Jalapeño'],
+  },
+];
 
 export default function QuickFilteringDiacritics() {
+  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+    items: [],
+    quickFilterValues: ['cafe'],
+  });
   const [ignoreDiacritics, setIgnoreDiacritics] = React.useState(true);
 
   return (
@@ -24,12 +53,8 @@ export default function QuickFilteringDiacritics() {
           key={ignoreDiacritics.toString()}
           rows={rows}
           columns={columns}
-          initialState={{
-            filter: {
-              filterModel: { items: [], quickFilterValues: ['cafe'] },
-            },
-          }}
-          disableColumnFilter
+          filterModel={filterModel}
+          onFilterModelChange={setFilterModel}
           disableColumnSelector
           disableDensitySelector
           hideFooter
