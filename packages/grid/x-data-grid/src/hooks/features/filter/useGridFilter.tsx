@@ -131,7 +131,7 @@ export const useGridFilter = (
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
-  }, [apiRef, props.filterMode, props.getRowId, props.disableEval]);
+  }, [apiRef, props.filterMode, props.disableEval]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {

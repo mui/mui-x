@@ -6,7 +6,6 @@ import {
   GridFilterModel,
   GridLogicOperator,
   GridRowId,
-  GridRowIdGetter,
   GridValidRowModel,
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
