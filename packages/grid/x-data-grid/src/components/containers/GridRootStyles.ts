@@ -177,6 +177,7 @@ export const GridRootStyles = styled('div', {
       },
       [`& .${gridClasses.cell} > *`]: {
         overflow: 'visible !important',
+        whiteSpace: 'nowrap',
       },
     },
     [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:

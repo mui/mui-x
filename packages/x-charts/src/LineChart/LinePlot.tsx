@@ -50,34 +50,36 @@ function LinePlot(props: LinePlotProps) {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
+            data,
           } = series[seriesId];
 
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
 
-          if (xData === undefined) {
-            throw new Error(
-              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
-            );
+          if (process.env.NODE_ENV !== 'production') {
+            if (xData === undefined) {
+              throw new Error(
+                `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+              );
+            }
+            if (xData.length < stackedData.length) {
+              throw new Error(
+                `MUI: data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items)`,
+              );
+            }
           }
 
           const linePath = d3Line<{
             x: any;
-            y: any[];
+            y: [number, number];
           }>()
             .x((d) => xScale(d.x))
+            .defined((_, i) => data[i] != null)
             .y((d) => yScale(d.y[1]));
 
-          if (process.env.NODE_ENV !== 'production') {
-            if (xData.length !== stackedData.length) {
-              throw new Error(
-                `MUI: data length of the x axis (${xData.length} items) does not match length of series (${stackedData.length} items)`,
-              );
-            }
-          }
           const curve = getCurveFactory(series[seriesId].curve);
-          const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] ?? [0, 0] }));
+          const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
 
           return (
             <LineElement

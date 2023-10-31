@@ -47,7 +47,7 @@ export interface LineSeriesType
   /**
    * Data associated to the line.
    */
-  data?: number[];
+  data?: (number | null)[];
   /**
    * The key used to retrive data from the dataset.
    */
