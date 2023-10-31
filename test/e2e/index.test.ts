@@ -454,6 +454,30 @@ async function initializeEnvironment(
 
         expect(await page.getByTestId('new-value').textContent()).to.equal('number 1');
       });
+
+      // https://github.com/mui/mui-x/issues/10582
+      it('should update input value when editing starts with `0` key press', async () => {
+        await renderFixture('DataGrid/KeyboardEditNumber');
+
+        await page.click('[role="cell"][data-field="age"]');
+        await page.keyboard.press('0');
+
+        expect(await page.locator('[role="cell"][data-field="age"] input').inputValue()).to.equal(
+          '0',
+        );
+      });
+
+      // https://github.com/mui/mui-x/issues/10582
+      it('should update input value when editing starts with `-` key press', async () => {
+        await renderFixture('DataGrid/KeyboardEditNumber');
+
+        await page.click('[role="cell"][data-field="age"]');
+        await page.keyboard.press('-');
+
+        expect(await page.locator('[role="cell"][data-field="age"] input').inputValue()).to.equal(
+          '',
+        );
+      });
     });
 
     describe('<DatePicker />', () => {
