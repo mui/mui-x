@@ -306,7 +306,7 @@
       "typeDescriptions": {}
     },
     "ignoreDiacriticsInFiltering": {
-      "description": "If <code>true</code>, the diacritics (accents) are ignored when filtering or quick filtering. * E.g. when filter value is <code>cafe</code>, the rows with <code>café</code> will be visible.",
+      "description": "If <code>true</code>, the diacritics (accents) are ignored when filtering or quick filtering. E.g. when filter value is <code>cafe</code>, the rows with <code>café</code> will be visible.",
       "deprecated": "",
       "typeDescriptions": {}
     },

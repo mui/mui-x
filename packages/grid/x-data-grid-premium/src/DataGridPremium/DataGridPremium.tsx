@@ -463,7 +463,7 @@ DataGridPremiumRaw.propTypes = {
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
    * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
-   * * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
    * @default false
    */
   ignoreDiacriticsInFiltering: PropTypes.bool,
