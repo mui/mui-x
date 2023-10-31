@@ -478,6 +478,18 @@ async function initializeEnvironment(
           '',
         );
       });
+
+      // https://github.com/mui/mui-x/issues/9195
+      it('should not paste "v" on Ctrl+V press', async () => {
+        await renderFixture('DataGrid/KeyboardEditInput');
+
+        await page.click('[role="cell"][data-field="brand"]');
+        await page.keyboard.press('Control+v');
+
+        expect(
+          await page.locator('[role="cell"][data-field="brand"] input').inputValue(),
+        ).not.to.equal('v');
+      });
     });
 
     describe('<DatePicker />', () => {
