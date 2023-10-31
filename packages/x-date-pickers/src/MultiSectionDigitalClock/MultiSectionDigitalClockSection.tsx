@@ -175,6 +175,8 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       containerRef.current.scrollTop = offsetTop - 4;
     });
 
+    const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
+
     return (
       <MultiSectionDigitalClockSectionRoot
         ref={handleRef}
@@ -184,11 +186,13 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         role="listbox"
         {...other}
       >
-        {items.map((option) => {
+        {items.map((option, index) => {
           if (skipDisabled && option.isDisabled?.(option.value)) {
             return null;
           }
           const isSelected = option.isSelected(option.value);
+          const tabIndex =
+            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
           return (
             <DigitalClockSectionItem
               key={option.label}
@@ -201,6 +205,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               aria-disabled={readOnly}
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
+              tabIndex={tabIndex}
               {...slotProps?.digitalClockSectionItem}
             >
               {option.label}

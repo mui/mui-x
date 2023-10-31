@@ -283,6 +283,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ];
   }, [valueOrReferenceDate, timeStep, utils]);
 
+  const focusedOptionIndex = timeOptions.findIndex((option) =>
+    utils.isEqual(option, valueOrReferenceDate),
+  );
+
   return (
     <DigitalClockRoot
       ref={handleRef}
@@ -296,11 +300,13 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
         aria-label={localeText.timePickerToolbarTitle}
         className={classes.list}
       >
-        {timeOptions.map((option) => {
+        {timeOptions.map((option, index) => {
           if (skipDisabled && isTimeDisabled(option)) {
             return null;
           }
           const isSelected = utils.isEqual(option, value);
+          const tabIndex =
+            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
           return (
             <ClockItem
               key={utils.toISO(option)}
@@ -312,6 +318,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
               // aria-readonly is not supported here and does not have any effect
               aria-disabled={readOnly}
               aria-selected={isSelected}
+              tabIndex={tabIndex}
               {...clockItemProps}
             >
               {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
