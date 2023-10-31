@@ -90,7 +90,6 @@ export const useGridFilter = (
     | 'slotProps'
     | 'disableColumnFilter'
     | 'disableEval'
-    | 'ignoreDiacriticsInFiltering'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -113,14 +112,12 @@ export const useGridFilter = (
               filterModel,
               apiRef,
               disableEval: props.disableEval,
-              ignoreDiacriticsInFiltering: props.ignoreDiacriticsInFiltering,
             })
           : null;
 
       const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
         filterModel: filterModel ?? getDefaultGridFilterModel(),
-        ignoreDiacriticsInFiltering: props.ignoreDiacriticsInFiltering,
       });
 
       const newState = {
@@ -139,13 +136,7 @@ export const useGridFilter = (
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
-  }, [
-    apiRef,
-    props.filterMode,
-    props.getRowId,
-    props.disableEval,
-    props.ignoreDiacriticsInFiltering,
-  ]);
+  }, [apiRef, props.filterMode, props.getRowId, props.disableEval]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
@@ -445,7 +436,6 @@ export const useGridFilter = (
           params.filterModel,
           apiRef,
           filterCache,
-          params.ignoreDiacriticsInFiltering,
         );
 
         filteredRowsLookup[id] = isRowPassing;

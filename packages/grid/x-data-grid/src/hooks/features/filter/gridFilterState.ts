@@ -53,7 +53,6 @@ export type GridAggregatedFilterItemApplier = (
 export interface GridFilteringMethodParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  ignoreDiacriticsInFiltering: boolean;
 }
 
 export type GridFilteringMethodValue = Omit<GridFilterState, 'filterModel'>;
