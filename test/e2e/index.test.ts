@@ -443,6 +443,17 @@ async function initializeEnvironment(
           'p',
         );
       });
+
+      // https://github.com/mui/mui-x/issues/9281
+      it('should return a number value when editing with a digit key press', async () => {
+        await renderFixture('DataGrid/KeyboardEditNumber');
+
+        await page.click('[role="cell"][data-field="age"]');
+        await page.keyboard.press('1');
+        await page.keyboard.press('Enter');
+
+        expect(await page.getByTestId('new-value').textContent()).to.equal('number 1');
+      });
     });
 
     describe('<DatePicker />', () => {
