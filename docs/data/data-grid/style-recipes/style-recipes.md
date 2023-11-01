@@ -11,4 +11,4 @@ You can remove the focus outline by overriding the `:focus` and `:focus-within` 
 Removing the visible `focus` state hurts the accessibility of the grid.
 :::
 
-{{"demo": "HeaderCellFocusNoOutline.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "CellFocusNoOutline.js", "bg": "inline", "defaultCodeOpen": false}}
