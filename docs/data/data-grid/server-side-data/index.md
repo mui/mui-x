@@ -1,3 +1,7 @@
+---
+title: React Data Grid - Server-side data
+---
+
 # Data Grid - Server-side data
 
 <p class="description">The data grid server-side data</p>
@@ -42,7 +46,7 @@ React.useEffect(() => {
     setRows(data.rows);
   };
   fetcher();
-}, [page, sortModel, filterModel]);
+}, [paginationModel, sortModel, filterModel]);
 
 <DataGridPro
   columns={columns}
@@ -74,7 +78,7 @@ A very common pattern to solve these problems is to use a centralized data sourc
 
 :::warning
 
-This feature is still <b>under development</b> and the information shared on this page is subject to change. Feel free to subscribe or comment on the official GitHub issue.
+This feature is still <b>under development</b> and the information shared on this page is subject to change. Feel free to subscribe or comment on the official GitHub [issue](https://github.com/mui/mui-x/issues/8179).
 
 :::
 
@@ -99,7 +103,6 @@ interface DataSource {
     It may return a `rowCount` to update the total count of rows in the grid
   */
   getRows(params: GetRowsParams): Promise<GetRowsResponse>;
-  // if passed, will be called like `processRowUpdate` on row edit
   updateRow?(updatedRow: GridRowModel): Promise<any>;
 }
 ```
@@ -146,10 +149,27 @@ Here's the `GetRowsParams` object for reference:
 interface GetRowsParams {
   sortModel: GridSortModel;
   filterModel: GridFilterModel;
-  groupKeys: string[]; // array of keys returned by `getGroupKey` of all the parent rows until the row for which the data is requested
-  paginationModel: GridPaginationModel; // alternate to `start`, `end`
+  /**
+   * Alternate to `start` and `end`, maps to `GridPaginationModel` interface
+   */
+  paginationModel: GridPaginationModel;
+  /**
+   * First row index to fetch (number) or cursor information (number | string)
+   */
   start: number | string; // first row index to fetch or cursor information
+  /**
+   * Last row index to fetch
+   */
   end: number; // last row index to fetch
+  /**
+   * Array of keys returned by `getGroupKey` of all the parent rows until the row for which the data is requested
+   * `getGroupKey` prop must be implemented to use this
+   * Useful for `treeData` and `rowGrouping` only
+   */
+  groupKeys: string[];
+  /**
+   * List of grouped columns (only applicable with `rowGrouping`)
+   */
   groupFields: GridColDef['field'][]; // list of grouped columns (`rowGrouping`)
 }
 ```
@@ -158,11 +178,30 @@ And here's the `GetRowsResponse` object for reference:
 
 ```tsx
 interface GetRowsResponse {
+  /**
+   * Subset of the rows as per the passed `GetRowsParams`
+   */
   rows: GridRowModel[];
-  rowCount?: number; // optional: to reflect updates in total `rowCount`
+  /**
+   * To reflect updates in total `rowCount` (optional)
+   * Useful when the `rowCount` is inaccurate (e.g. when filtering) or not available upfront
+   */
+  rowCount?: number;
+  /**
+   * Additional `pageInfo` to help the grid determine if there are more rows to fetch (corner-cases)
+   * `hasNextPage`: When row count is unknown/inaccurate, if `truncated` is set or rowCount is not known, data will keep loading until `hasNextPage` is `false`
+   * `truncated`: To reflect `rowCount` is inaccurate (will trigger `x-y of many` in pagination after the count of rows fetched is greater than provided `rowCount`)
+   * It could be useful with:
+   * 1. Cursor based pagination:
+   *   When rowCount is not known, grid will check for `hasNextPage` to determine
+   *   if there are more rows to fetch.
+   * 2. Inaccurate `rowCount`:
+   *   `truncated: true` will let the grid know that `rowCount` is estimated/truncated.
+   *   Thus `hasNextPage` will come into play to check more rows are available to fetch after the number becomes >= provided `rowCount`
+   */
   pageInfo?: {
-    hasNextPage?: boolean; // optional: when row count is unknown/inaccurate, if `truncated` is set or rowCount is not known, data will keep loading until `hasNextPage` is `false`
-    truncated?: number; // optional: to reflect rowCount is inaccurate (will trigger `x-y of many` in pagination)
+    hasNextPage?: boolean;
+    truncated?: number;
   };
 }
 ```
@@ -204,10 +243,10 @@ Props related to grouped data (`treeData` and `rowGrouping`):
 
 #### Existing server-side features
 
-The server-side `dataSource` will change a bit the way existing server-side features work.
+The server-side data source will change a bit the way existing server-side features like `filtering`, `sorting`, and `pagination` work.
 
 **Without data source**:
-When there's no data source, the features `filtering`, `sorting`, `pagination` will work on `client` by default. In order for them to work with server-side data, you need to set them to `server` explicitly and listen to the `onFilterModelChange`, `onSortModelChange`, `onPaginationModelChange` events to fetch the data from the server based on the updated variables.
+When there's no data source, the features `filtering`, `sorting`, `pagination` will work on `client` by default. In order for them to work with server-side data, you need to set them to `server` explicitly and listen to the [`onFilterModelChange`](https://mui.com/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](https://mui.com/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](https://mui.com/x/react-data-grid/pagination/#server-side-pagination) events to fetch the data from the server based on the updated variables.
 
 ```tsx
 <DataGrid
