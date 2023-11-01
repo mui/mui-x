@@ -50,9 +50,9 @@ const PlaygroundDemoArea = styled(Box)(() => ({
 
 const PlaygroundConfigArea = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
-  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
+  backgroundColor: alpha(theme.palette.primary.light, 0.05),
+  border: `1px solid ${grey[200]}`,
+  borderRadius: '4px',
   [theme.breakpoints.down('lg')]: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -90,7 +90,7 @@ const ConfigItemLabel = styled(Typography)(({ theme }) => ({
 
 const SlotItemsWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
-  gap: theme.spacing(1),
+  gap: theme.spacing(0.5),
   flexWrap: 'wrap',
 }));
 
@@ -299,8 +299,8 @@ const CustomizationPlayground = function CustomizationPlayground({
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <BrandingProvider>
-        {selectedDemo && customizationOptions && selectedCustomizationOption && (
+      {selectedDemo && customizationOptions && selectedCustomizationOption && (
+        <BrandingProvider>
           <TabsWrapper>
             <StylingApproachTabs
               onChange={(_e, newValue) => {
@@ -310,28 +310,30 @@ const CustomizationPlayground = function CustomizationPlayground({
               options={customizationOptions}
             />
             {selectedExample && <StylingRecommendation type={selectedExample.type} />}
-          </TabsWrapper>
-        )}
-        <PlaygroundWrapper>
-          <PlaygroundDemoArea>
-            <StyledChild sx={{ width: 'fit-content' }}>
-              {React.Children.map(
-                children,
-                (child) =>
-                  React.isValidElement(child) &&
-                  React.cloneElement(
-                    child,
-                    selectedDemo && selectedCustomizationOption
-                      ? {
-                          ...examples[selectedDemo]?.examples[selectedCustomizationOption]
-                            ?.componentProps,
-                        }
-                      : {},
-                  ),
-              )}
-            </StyledChild>
-          </PlaygroundDemoArea>
-          {shouldBeInteractive && (
+          </TabsWrapper>{' '}
+        </BrandingProvider>
+      )}
+      <PlaygroundWrapper>
+        <PlaygroundDemoArea>
+          <StyledChild sx={{ width: 'fit-content' }}>
+            {React.Children.map(
+              children,
+              (child) =>
+                React.isValidElement(child) &&
+                React.cloneElement(
+                  child,
+                  selectedDemo && selectedCustomizationOption
+                    ? {
+                        ...examples[selectedDemo]?.examples[selectedCustomizationOption]
+                          ?.componentProps,
+                      }
+                    : {},
+                ),
+            )}
+          </StyledChild>
+        </PlaygroundDemoArea>
+        {shouldBeInteractive && (
+          <BrandingProvider>
             <PlaygroundConfigArea>
               <ConfigSectionWrapper>
                 <ConfigLabel gutterBottom>Components</ConfigLabel>
@@ -380,13 +382,13 @@ const CustomizationPlayground = function CustomizationPlayground({
                 </Stack>
               </ConfigSectionWrapper>
             </PlaygroundConfigArea>
-          )}
-        </PlaygroundWrapper>
-
-        {shouldBeInteractive && (
-          <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
+          </BrandingProvider>
         )}
-      </BrandingProvider>
+      </PlaygroundWrapper>
+
+      {shouldBeInteractive && (
+        <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
+      )}
     </Box>
   );
 };

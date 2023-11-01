@@ -748,6 +748,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "rowPositionsDebounceMs": {
+      "description": "The milliseconds delay to wait after measuring the row height before recalculating row positions. Setting it to a lower value could be useful when using dynamic row height, but might reduce performance when displaying a large number of rows.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "rowReordering": {
       "description": "If <code>true</code>, the reordering of rows is enabled.",
       "deprecated": "",
@@ -885,6 +890,10 @@
       "nodeName": "the root element",
       "conditions": "<code>autoHeight={true}</code>"
     },
+    "autosizing": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element while it is being autosized"
+    },
     "booleanCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the icon of the boolean cell"
@@ -938,6 +947,11 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "it is at the right edge of a cell selection range"
+    },
+    "cell--selectionMode": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is in a cell selection range"
     },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "cellContent": {

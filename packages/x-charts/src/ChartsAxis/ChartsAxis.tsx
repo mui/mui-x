@@ -74,6 +74,15 @@ const mergeProps = (
     : { slots, slotProps };
 };
 
+/**
+ * Demos:
+ *
+ * - [Axis](https://mui.com/x/react-charts/axis/)
+ *
+ * API:
+ *
+ * - [ChartsAxis API](https://mui.com/x/api/charts/charts-axis/)
+ */
 function ChartsAxis(props: ChartsAxisProps) {
   const { topAxis, leftAxis, rightAxis, bottomAxis, slots, slotProps } = props;
   const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);
@@ -132,11 +141,19 @@ ChartsAxis.propTypes = {
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['bottom', 'top']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -158,11 +175,19 @@ ChartsAxis.propTypes = {
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['left', 'right']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -184,11 +209,19 @@ ChartsAxis.propTypes = {
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['left', 'right']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -220,11 +253,19 @@ ChartsAxis.propTypes = {
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['bottom', 'top']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,

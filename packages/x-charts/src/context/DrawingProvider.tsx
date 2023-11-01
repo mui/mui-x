@@ -14,6 +14,8 @@ export interface DrawingProviderProps extends LayoutConfig {
 export type DrawingArea = {
   left: number;
   top: number;
+  bottom: number;
+  right: number;
   width: number;
   height: number;
 };
@@ -21,11 +23,18 @@ export type DrawingArea = {
 export const DrawingContext = React.createContext<DrawingArea>({
   top: 0,
   left: 0,
+  bottom: 0,
+  right: 0,
   height: 300,
   width: 400,
 });
 export const SVGContext = React.createContext<React.RefObject<SVGSVGElement>>({ current: null });
 
+/**
+ * API:
+ *
+ * - [DrawingProvider API](https://mui.com/x/api/charts/drawing-provider/)
+ */
 function DrawingProvider({ width, height, margin, svgRef, children }: DrawingProviderProps) {
   const drawingArea = useChartDimensions(width, height, margin);
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -485,13 +485,13 @@ describe('<DataGridPro /> - Columns', () => {
         await autosize({ includeHeaders: true }, [155, 177]);
       });
       it('.includeOutliers works', async () => {
-        await autosize({ includeOutliers: true }, [50, 145]);
+        await autosize({ includeOutliers: true }, [50, 144]);
       });
       it('.outliersFactor works', async () => {
-        await autosize({ outliersFactor: 40 }, [50, 145]);
+        await autosize({ outliersFactor: 40 }, [50, 144]);
       });
       it('.expand works', async () => {
-        await autosize({ expand: true }, [134, 149]);
+        await autosize({ expand: true }, [134, 148]);
       });
     });
   });

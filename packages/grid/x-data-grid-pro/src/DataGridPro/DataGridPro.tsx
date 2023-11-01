@@ -59,6 +59,13 @@ interface DataGridProComponent {
   propTypes?: any;
 }
 
+/**
+ * Demos:
+ * - [DataGridPro](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGridPro API](https://mui.com/x/api/data-grid/data-grid-pro/)
+ */
 export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
 DataGridProRaw.propTypes = {
@@ -811,6 +818,13 @@ DataGridProRaw.propTypes = {
    */
   rowModesModel: PropTypes.object,
   /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: PropTypes.number,
+  /**
    * If `true`, the reordering of rows is enabled.
    * @default false
    */
@@ -924,7 +938,7 @@ DataGridProRaw.propTypes = {
   /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default: false
+   * @default false
    */
   unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
     PropTypes.shape({

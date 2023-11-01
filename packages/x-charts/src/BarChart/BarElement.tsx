@@ -5,6 +5,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { animated } from '@react-spring/web';
 import {
   getIsFaded,
   getIsHighlighted,
@@ -33,7 +34,7 @@ export function getBarElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiBarElement', slot);
 }
 
-export const lineElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
+export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
   'root',
 ]);
 
@@ -46,7 +47,7 @@ const useUtilityClasses = (ownerState: BarElementOwnerState) => {
   return composeClasses(slots, getBarElementUtilityClass, classes);
 };
 
-export const BarElementPath = styled('rect', {
+export const BarElementPath = styled(animated.rect, {
   name: 'MuiBarElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
@@ -92,6 +93,7 @@ export function BarElement(props: BarElementProps) {
     highlightScope,
     slots,
     slotProps,
+    style,
     ...other
   } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
@@ -123,6 +125,7 @@ export function BarElement(props: BarElementProps) {
     additionalProps: {
       ...other,
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
+      style,
       className: classes.root,
     },
     ownerState,

@@ -48,6 +48,16 @@ type MultiSectionDigitalClockComponent = (<TDate>(
   props: MultiSectionDigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [DigitalClock](https://mui.com/x/react-date-pickers/digital-clock/)
+ *
+ * API:
+ *
+ * - [MultiSectionDigitalClock API](https://mui.com/x/api/date-pickers/multi-section-digital-clock/)
+ */
 export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDigitalClock<
   TDate extends unknown,
 >(inProps: MultiSectionDigitalClockProps<TDate>, ref: React.Ref<HTMLDivElement>) {

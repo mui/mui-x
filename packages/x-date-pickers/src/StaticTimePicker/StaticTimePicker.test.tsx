@@ -7,7 +7,7 @@ import {
   screen,
   getAllByRole,
   fireEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import {
   adapterToUse,
   wrapPickerMount,

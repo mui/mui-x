@@ -3,6 +3,301 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.17.0
+
+_Oct 27, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 The Tree View package is now officially stable!
+
+![tree-view-example](https://github.com/mui/mui-x/assets/550141/77d1fe66-d912-49ba-b38f-b853fb90446a)
+
+- ✨ Improve the handling of non-numeric values by Data Grid aggregation
+- 🚀 Support lines with different domains on the line charts
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.17.0`
+
+- [DataGrid] Allow custom debounce time for row positions calculation (#10708) @cherniavskii
+- [DataGrid] Persist stable row index for focused row (#10674) @cherniavskii
+
+#### `@mui/x-data-grid-pro@6.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.17.0`, plus:
+
+- [DataGridPro] Fix `undefined` values passed to `valueFormatter` for tree leaf nodes (#10748) @cherniavskii
+
+#### `@mui/x-data-grid-premium@6.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.17.0`, plus:
+
+- [DataGridPremium] Fix `avg` aggregation to ignore non-numeric values (#10787) @cherniavskii
+- [DataGridPremium] Fix `size` aggregation to ignore `undefined` values (#10745) @cherniavskii
+- [DataGridPremium] Fix `sum` aggregation to ignore non-numeric values (#10730) @cherniavskii
+- [DataGridPremium] Fix cell selection throwing index error on second page and beyond (#10784) @MBilalShafi
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.17.0`
+
+- [fields] POC: Use `contentEditable` on `FakeTextField` (#10779) @flaviendelangle
+- [pickers] Fix weekday label localization (#10809) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.17.0`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.17`
+
+- [charts] Fix text position in Safari (#10815) @lhilgert9
+- [charts] Support lines with different domains (#10801) @alexfauquette
+
+### Tree View / `@mui/x-tree-view@6.17.0`
+
+No change
+
+### Docs
+
+- [docs] Correct editing related props' description (#10798) @MBilalShafi
+- [docs] Fix RTL data grid demo (#10728) @oliviertassinari
+- [docs] Fix unclosed warning (#10796) @flaviendelangle
+- [docs] Improve performance of `Save and restore the state from external storage` recipe (#10811) @michelengelen
+
+- [test] Add missing type on `cleanText` utility function (#10780) @flaviendelangle
+
+## 6.16.3
+
+_Oct 20, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add a Data Grid recipe for saving & restoring state
+- 💫 Support animations on the bar chart
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.16.3`
+
+- [DataGrid] Allow passing readonly arrays to `columns` and `sortingOrder` props (#10686) @pcorpet
+
+#### `@mui/x-data-grid-pro@6.16.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.16.3`.
+
+#### `@mui/x-data-grid-premium@6.16.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.16.3`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.16.3`
+
+- [fields] Correctly respect leading zeroes on seconds section (#10713) @flaviendelangle
+- [fields] Use `onChange` instead of `onKeyPress` for Backspace editing (#10494) @flaviendelangle
+- [pickers] Add reference links to DatePicker components (#10626) @michelengelen
+- [pickers] Add reference links to clock components (#10645) @michelengelen
+- [pickers] Add reference links to misc picker components (#10647) @michelengelen
+- [pickers] Add reference links to toolbar components (#10646) @michelengelen
+- [pickers] POC: Change the props received by the `FakeTextField` component (#10687) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@6.16.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
+
+- [DateRangePicker] Fix touch based range dragging (#10664) @michelengelen
+
+### Charts / `@mui/x-charts@6.0.0-alpha.16`
+
+- [charts] Add reference links to area + bar chart components (#10652) @michelengelen
+- [charts] Add reference links to line chart + sparkline components (#10650) @michelengelen
+- [charts] Add reference links to pie + scatter chart components  (#10653) @michelengelen
+- [charts] Render only when `width` and `height` are resolved (#10714) @alexfauquette
+- [charts] Support animation on `BarChart` (#9926) @alexfauquette
+- [charts] Use new text component to avoid tick label overflow on x-axis (#10648) @alexfauquette
+
+### Docs
+
+- [docs] Add a recipe for saving and restoring `state` externally (#10722) @michelengelen
+- [docs] Add example about how to add an axis (#10709) @alexfauquette
+- [docs] Customization Playground - fix DesktopDatePicker sx props and styled examples (#10665) @noraleonte
+- [docs] Improve meta description @oliviertassinari
+- [docs] Make overview demo work in codesandbox (#10661) @alexfauquette
+
+### Core
+
+- [core] Update React renovate group with `@types` (#10723) @LukasTy
+- [core] Update `styled-components` (#10733) @LukasTy
+
+## 6.16.2
+
+_Oct 12, 2023_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Chart's legend text management has been reworked and contains breaking changes (#10138) @alexfauquette
+- 📝 Add [Bulk editing](https://mui.com/x/react-data-grid/recipes-editing/#bulk-editing) demo (#10333) @cherniavskii
+- 🚀 Column grouping now works smoothly with column pinning (#10518) @MBilalShafi
+- 🌍 Improve Arabic (ar-SD) and Spanish (es-ES) locales
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.16.2`
+
+- [DataGrid] Fix `LazyLoading` demo crash (#10621) @MBilalShafi
+- [DataGrid] Fix cells overlapping the scrollbar in iOS Safari (#10633) @cherniavskii
+- [DataGrid] Fix `getRowId is not defined` error (#10613) @romgrk
+- [DataGrid] Get quick filter to work OOTB with `date` and `dateTime` fields (#10636) @MBilalShafi
+- [DataGrid] Make cursor for selectable cells to be `default` unless editable (#9997) @gitstart
+- [DataGrid] Remove unnecessary syntax in JSDoc (#10567) @Lev-Shapiro
+- [DataGrid] Update row hover behavior to match native hover (#10623) @cherniavskii
+- [l10n] Improve Arabic (ar-SD) locale (#10625) @alabenyahia
+
+#### `@mui/x-data-grid-pro@6.16.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.16.2`, plus:
+
+- [DataGridPro] Improve column grouping and column pinning friendship (#10518) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@6.16.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.16.2`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.16.2`
+
+- [DateTimePicker] Add support for `DigitalClock` view renderer (#10624) @LukasTy
+- [fields] Bootstrap the multi-HTML input component (#10638) @flaviendelangle
+- [pickers] Fix timezone `UTC` false positive (#10586) @alexfauquette
+- [l10n] Improve Spanish (es-ES) locale (#10588) @eduardodallmann
+
+#### `@mui/x-date-pickers-pro@6.16.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.16.2`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.15`
+
+#### Breaking changes
+
+The charts have a new text display mechanism.
+It adds line break support and avoids overlapping text in the legend.
+This comes with some breaking changes.
+
+- The DOM structure is modified. An intermediary `<tspan />` element has been added. This can impact how your style is applied.
+  ```diff
+  - <text>The label</text>
+  + <text><tspan>The label</tspan></text>
+  ```
+
+- The top margin has been reduced from 100 to 50 to benefit from the denser legend.
+
+- To accurately compute the text size and then place it, styling should be provided as a JS object. For example, to set the legend font size, you should do:
+  ```jsx
+  <PieChart
+    {/** ... */}
+    slotProps={{
+      legend: {
+        labelStyle: {
+          fontSize: 16,
+        },
+      },
+    }}
+  />
+  ```
+  Support for other text elements (axis labels and tick labels) will be implemented in follow-up PR.
+
+#### Changes
+
+- [charts] Fix typo between internal/external variable (#10640) @alexfauquette
+- [charts] Improve the management of the text (#10138) @alexfauquette
+
+### Docs
+
+- [docs] Add bulk editing demo (#10333) @cherniavskii
+- [docs] Add reference links to DateRangePicker components (#10629) @michelengelen
+- [docs] Add reference links to DateTimePicker components (#10628) @michelengelen
+- [docs] Add reference links to picker field components (#10631) @michelengelen
+- [docs] Added reference links to TimePicker components (#10627) @michelengelen
+- [docs] Avoid Pickers playground error due to empty views (#10654) @LukasTy
+- [docs] Fix DataGrid[Pro/Premium] reference links (#10620) @michelengelen
+
+### Core
+
+- [core] Bump monorepo (#10619) @alexfauquette
+- [core] Update `no-response` workflow (#10491) @MBilalShafi
+- [core] Update the issue templates to reflect the new support workflow (#10651) @MBilalShafi
+- [test] Fix `testEval` not invoking test assertions (#10587) @cherniavskii
+- [test] Fix dev mode warning (#10610) @oliviertassinari
+- [test] Set UUID chance seed in visual tests (#10609) @oliviertassinari
+
+## 6.16.1
+
+_Oct 6, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🥧 Support interaction with pie chart
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.16.1`
+
+- [DataGrid] Add a new demo with sparklines (#9228) @flaviendelangle
+- [DataGrid] Fix autosize missing a few pixels (#10471) @romgrk
+- [DataGrid] Make `disableColumnSelector` demo idempotent (#10548) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@6.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.16.1`.
+
+#### `@mui/x-data-grid-premium@6.16.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.16.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.16.1`
+
+- [pickers] Avoid calendar layout shifting when changing views (#10541) @LukasTy
+- [pickers] Fix clearable behavior when disabled (#10542) @noraleonte
+- [pickers] Improve customization playground examples (#10544) @noraleonte
+
+#### `@mui/x-date-pickers-pro@6.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
+
+- [DateRangePicker] Fix `InputProps` propagation in multi input (#10564) @alexfauquette
+
+### Charts / `@mui/x-charts@6.0.0-alpha.14`
+
+- [charts] Display cursor pointer for pie chart only if `onClick` is provided (#10551) @giladappsforce
+- [charts] Add `onClick` prop to PieChart (#10506) @giladappsforce
+- [charts] Support `slots`/`slotProps` for the tooltip (#10515) @alexfauquette
+
+### Docs
+
+- [docs] Add `DateRangePicker` example with a `Button` trigger (#10485) @LukasTy
+- [docs] Add section about disabling columns panel (#10328) @MBilalShafi
+- [docs] Add section about overriding slots to base concepts (#10421) @noraleonte
+- [docs] Add "What's new" page listing all release announcements (#9727) @joserodolfofreitas
+- [docs] Update RTL Support section of the grid localization docs (#10561) @MBilalShafi
+
+### Core
+
+- [core] Fix casing consistency with legal and marketing content @oliviertassinari
+- [core] Revert the link in the priority support ticket description (#10517) @michelengelen
+- [CHANGELOG] Polish image @oliviertassinari
+
 ## 6.16.0
 
 _Sep 29, 2023_
@@ -13,7 +308,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
   The pickers and fields now have an out-of-the box implementation for clearing the field value. You can see the documentation for this behavior on the [Date Picker documentation](https://mui.com/x/react-date-pickers/date-picker/#clearing-the-value).
 
-  <img width="380" alt="Clearable behavior" src="https://github.com/mui/mui-x/assets/72460825/e4a66169-83b5-4579-b9f6-6e15bb528411">
+  <img width="337" height="139" alt="Clearable behavior" src="https://github.com/mui/mui-x/assets/3165635/a5407cb6-0b8a-443c-b4b9-1f81ceb4d087">
 
 - 💫 Add Date Picker customization playground (#9581) @noraleonte
 

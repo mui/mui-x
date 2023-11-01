@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { useSlotProps } from '@mui/base/utils';
 import { AxisInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
@@ -67,21 +68,27 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
           </thead>
         )}
         <tbody>
-          {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => (
-            <ChartsTooltipRow key={id}>
-              <ChartsTooltipCell className={classes.markCell}>
-                <ChartsTooltipMark ownerState={{ color }} boxShadow={1} />
-              </ChartsTooltipCell>
+          {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => {
+            const formattedValue = valueFormatter(data[dataIndex]);
+            if (formattedValue == null) {
+              return null;
+            }
+            return (
+              <ChartsTooltipRow key={id}>
+                <ChartsTooltipCell className={classes.markCell}>
+                  <ChartsTooltipMark ownerState={{ color }} boxShadow={1} />
+                </ChartsTooltipCell>
 
-              <ChartsTooltipCell className={classes.labelCell}>
-                {label ? <Typography>{label}</Typography> : null}
-              </ChartsTooltipCell>
+                <ChartsTooltipCell className={classes.labelCell}>
+                  {label ? <Typography>{label}</Typography> : null}
+                </ChartsTooltipCell>
 
-              <ChartsTooltipCell className={classes.valueCell}>
-                <Typography>{valueFormatter(data[dataIndex])}</Typography>
-              </ChartsTooltipCell>
-            </ChartsTooltipRow>
-          ))}
+                <ChartsTooltipCell className={classes.valueCell}>
+                  <Typography>{formattedValue}</Typography>
+                </ChartsTooltipCell>
+              </ChartsTooltipRow>
+            );
+          })}
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
@@ -91,10 +98,11 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
 export function ChartsAxisTooltipContent(props: {
   axisData: AxisInteractionData;
   content?: React.ElementType<ChartsAxisContentProps>;
+  contentProps?: Partial<ChartsAxisContentProps>;
   sx?: SxProps<Theme>;
   classes: ChartsAxisContentProps['classes'];
 }) {
-  const { content, axisData, sx, classes } = props;
+  const { content, contentProps, axisData, sx, classes } = props;
 
   const isXaxis = (axisData.x && axisData.x.index) !== undefined;
 
@@ -129,15 +137,19 @@ export function ChartsAxisTooltipContent(props: {
   }, [USED_AXIS_ID, isXaxis, xAxis, yAxis]);
 
   const Content = content ?? DefaultChartsAxisContent;
-  return (
-    <Content
-      axisData={axisData}
-      series={relevantSeries}
-      axis={relevantAxis}
-      dataIndex={dataIndex}
-      axisValue={axisValue}
-      sx={sx}
-      classes={classes}
-    />
-  );
+  const chartTooltipContentProps = useSlotProps({
+    elementType: Content,
+    externalSlotProps: contentProps,
+    additionalProps: {
+      axisData,
+      series: relevantSeries,
+      axis: relevantAxis,
+      dataIndex,
+      axisValue,
+      sx,
+      classes,
+    },
+    ownerState: {},
+  });
+  return <Content {...chartTooltipContentProps} />;
 }

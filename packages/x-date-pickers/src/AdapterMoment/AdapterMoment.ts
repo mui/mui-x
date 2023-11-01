@@ -239,16 +239,13 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getTimezone = (value: Moment): string => {
-    if (value.isUTC()) {
-      return 'UTC';
-    }
-
     // @ts-ignore
     // eslint-disable-next-line no-underscore-dangle
     const zone = value._z?.name;
+    const defaultZone = value.isUTC() ? 'UTC' : 'system';
 
     // @ts-ignore
-    return zone ?? this.moment.defaultZone?.name ?? 'system';
+    return zone ?? this.moment.defaultZone?.name ?? defaultZone;
   };
 
   public setTimezone = (value: Moment, timezone: PickersTimezone): Moment => {

@@ -8,6 +8,8 @@ import {
   DataGridProProps,
   gridClasses,
   GridPinnedPosition,
+  GridColumnGroupingModel,
+  GridColDef,
   GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
@@ -18,7 +20,7 @@ import {
   createEvent,
   act,
   userEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 // TODO Move to utils
@@ -851,6 +853,79 @@ describe('<DataGridPro /> - Column pinning', () => {
         columns: [{ field: 'id' }, { field: 'price1M' }],
       });
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M']);
+    });
+  });
+
+  describe('Column grouping', () => {
+    const columns: GridColDef[] = [
+      { field: 'id', headerName: 'ID', width: 90 },
+      {
+        field: 'firstName',
+        headerName: 'First name',
+        width: 150,
+      },
+      {
+        field: 'lastName',
+        headerName: 'Last name',
+        width: 150,
+      },
+      {
+        field: 'age',
+        headerName: 'Age',
+        type: 'number',
+        width: 110,
+      },
+    ];
+
+    const rows = [
+      { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+      { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+      { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+      { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+      { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+      { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+      { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+      { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+      { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+    ];
+
+    const columnGroupingModel: GridColumnGroupingModel = [
+      {
+        groupId: 'Internal',
+        description: '',
+        children: [{ field: 'id' }],
+      },
+      {
+        groupId: 'Basic info',
+        children: [
+          {
+            groupId: 'Full name',
+            children: [{ field: 'lastName' }, { field: 'firstName' }],
+          },
+          { field: 'age' },
+        ],
+      },
+    ];
+
+    it('should create separate column groups for pinned and non-pinned columns having same column group', () => {
+      render(
+        <TestCase
+          columns={columns}
+          rows={rows}
+          columnGroupingModel={columnGroupingModel}
+          experimentalFeatures={{ columnGrouping: true }}
+          initialState={{ pinnedColumns: { right: ['age'] } }}
+        />,
+      );
+
+      const firstNameLastNameColumnGroupHeader = document.querySelector(
+        '[role="columnheader"][data-fields="|-firstName-|-lastName-|"]',
+      )!;
+      expect(firstNameLastNameColumnGroupHeader.textContent).to.equal('Basic info');
+      const ageCellColumnGroupHeader = document.querySelector(
+        '[role="columnheader"][data-fields="|-age-|"]',
+      )!;
+      expect(ageCellColumnGroupHeader.textContent).to.equal('Basic info');
     });
   });
 });

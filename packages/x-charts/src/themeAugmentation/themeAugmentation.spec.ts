@@ -34,11 +34,11 @@ createTheme({
         // @ts-expect-error invalid MuiChartsAxisHighlight prop
         someRandomProp: true,
       },
-      // styleOverrides: {
-      //   root: { backgroundColor: 'red' },
-      //   // @ts-expect-error invalid MuiChartsAxisHighlight class key
-      //   constent: { color: 'red' },
-      // },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiChartsAxisHighlight class key
+        constent: { color: 'red' },
+      },
     },
     MuiChartsClipPath: {
       defaultProps: {
@@ -54,7 +54,7 @@ createTheme({
     },
     MuiChartsLegend: {
       defaultProps: {
-        offset: { x: 0 },
+        direction: 'row',
         // @ts-expect-error invalid MuiChartsLegend prop
         someRandomProp: true,
       },

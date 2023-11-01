@@ -515,10 +515,16 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return -1;
   }, [cellFocus, currentPage.rows]);
 
-  useGridApiEventHandler(apiRef, 'rowMouseEnter', (params) => {
+  useGridApiEventHandler(apiRef, 'rowMouseOver', (params, event) => {
+    if (event.currentTarget.contains(event.relatedTarget as Node)) {
+      return;
+    }
     setHoveredRowId(params.id ?? null);
   });
-  useGridApiEventHandler(apiRef, 'rowMouseLeave', () => {
+  useGridApiEventHandler(apiRef, 'rowMouseOut', (params, event) => {
+    if (event.currentTarget.contains(event.relatedTarget as Node)) {
+      return;
+    }
     setHoveredRowId(null);
   });
 
@@ -657,6 +663,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     const rows: React.JSX.Element[] = [];
+    let isRowWithFocusedCellRendered = false;
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
@@ -707,6 +714,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         rowStyleCache.current[id] = style;
       }
 
+      let index = rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i;
+      if (isRowWithFocusedCellNotInRange && cellFocus?.id === id) {
+        index = indexOfRowWithFocusedCell;
+        isRowWithFocusedCellRendered = true;
+      } else if (isRowWithFocusedCellRendered) {
+        index -= 1;
+      }
+
       rows.push(
         <rootProps.slots.row
           key={id}
@@ -722,7 +737,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i}
+          index={index}
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
           position={position}

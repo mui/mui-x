@@ -4,7 +4,7 @@ import {
   screen,
   userEvent,
   fireTouchChangedEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,

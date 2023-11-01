@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 
@@ -61,6 +61,49 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
+    });
+  });
+
+  describe('prop: timeSteps', () => {
+    it('should use "DigitalClock" view renderer, when "timeSteps.minutes" = 60', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      render(
+        <DesktopDateTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          timeSteps={{ minutes: 60 }}
+        />,
+      );
+
+      userEvent.mousePress(screen.getByLabelText(/Choose date/));
+
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      userEvent.mousePress(screen.getByRole('option', { name: '03:00 AM' }));
+
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2, 3, 0, 0));
+      expect(onAccept.callCount).to.equal(1);
+    });
+
+    it('should accept value and close picker when selecting time on "DigitalClock" view renderer', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      render(
+        <DesktopDateTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          timeSteps={{ minutes: 60 }}
+        />,
+      );
+
+      userEvent.mousePress(screen.getByLabelText(/Choose date/));
+
+      userEvent.mousePress(screen.getByRole('option', { name: '03:00 AM' }));
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 3, 0, 0));
+      expect(onAccept.callCount).to.equal(1);
     });
   });
 });
