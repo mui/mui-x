@@ -92,9 +92,8 @@ export interface GridCorePrivateApi<
   /**
    * Allows to access the root props outside of the React component.
    * Do not use in React components - use the `useGridRootProps` hook instead.
-   * @returns {GridProps} The root props passed to the data grid component.
    */
-  getRootProps: () => GridProps;
+  rootProps: GridProps;
   /**
    * The React ref of the grid column container virtualized div element.
    */

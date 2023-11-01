@@ -25,7 +25,7 @@ export const useGridInitialization = <
   useGridStrategyProcessing(privateApiRef);
   useGridLocaleText(privateApiRef, props);
 
-  privateApiRef.current.register('private', { getRootProps: () => props });
+  privateApiRef.current.register('private', { rootProps: props });
 
   return privateApiRef;
 };

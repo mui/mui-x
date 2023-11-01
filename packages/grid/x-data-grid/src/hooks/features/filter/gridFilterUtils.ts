@@ -182,7 +182,7 @@ const getFilterCallbackFromItem = (
     parsedValue = filterItem.value;
   }
 
-  const { ignoreDiacriticsInFiltering } = apiRef.current.getRootProps();
+  const { ignoreDiacriticsInFiltering } = apiRef.current.rootProps;
 
   if (ignoreDiacriticsInFiltering) {
     parsedValue = removeDiacritics(parsedValue);
@@ -354,7 +354,7 @@ const buildAggregatedQuickFilterApplier = (
     }[];
   }[];
 
-  const { ignoreDiacriticsInFiltering } = apiRef.current.getRootProps();
+  const { ignoreDiacriticsInFiltering } = apiRef.current.rootProps;
 
   columnFields.forEach((field) => {
     const column = apiRef.current.getColumn(field);
