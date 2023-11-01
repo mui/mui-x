@@ -286,11 +286,7 @@ const buildAggregatedFilterItemsApplier = (
             `${JSON.stringify(String(applier.item.id))}:
           !shouldApply${i} ?
             false :
-            ${
-              applier.v7
-                ? `appliers[${i}].fn(row)`
-                : `appliers[${i}].fn(getRowId(row))`
-            },
+            ${applier.v7 ? `appliers[${i}].fn(row)` : `appliers[${i}].fn(getRowId(row))`},
       `,
         )
         .join('\n')}};
