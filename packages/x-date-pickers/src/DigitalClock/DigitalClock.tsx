@@ -205,7 +205,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       return;
     }
     const activeItem = containerRef.current.querySelector<HTMLElement>(
-      '[role="listbox"] [role="option"][tabindex="0"]',
+      '[role="listbox"] [role="option"][tabindex="0"], [role="listbox"] [role="option"][aria-selected="true"]',
     );
 
     if (!activeItem) {
