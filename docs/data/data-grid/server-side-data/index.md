@@ -230,6 +230,7 @@ Props related to grouped data (`treeData` and `rowGrouping`):
   - (1) Sarah // groupKey 'Sarah'
     - (2) Thomas // groupKey 'Thomas'
   ```
+
   When (2) is expanded, the `getRows` function will be called with group keys `['Sarah', 'Thomas']`.
 
 - `hasChildren?(row: GridRowModel): boolean`
