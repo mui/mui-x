@@ -450,6 +450,11 @@ async function initializeEnvironment(
 
         await page.click('[role="cell"][data-field="age"]');
         await page.keyboard.press('1');
+        if (browserType.name() === 'firefox') {
+          // In firefox the test fails without this
+          // It works fine when testing manually using the same firefox executable
+          await page.keyboard.insertText('1');
+        }
         await page.keyboard.press('Enter');
 
         expect(await page.getByTestId('new-value').textContent()).to.equal('number 1');
@@ -461,6 +466,11 @@ async function initializeEnvironment(
 
         await page.click('[role="cell"][data-field="age"]');
         await page.keyboard.press('0');
+        if (browserType.name() === 'firefox') {
+          // In firefox the test fails without this
+          // It works fine when testing manually using the same firefox executable
+          await page.keyboard.insertText('0');
+        }
 
         expect(await page.locator('[role="cell"][data-field="age"] input').inputValue()).to.equal(
           '0',
