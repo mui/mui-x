@@ -12,17 +12,17 @@ import { ChartsTextProps } from '../internals/components/ChartsText';
 
 export type D3Scale =
   | ScaleBand<any>
-  | ScaleLogarithmic<any, any>
+  | ScaleLogarithmic<any, number>
   | ScalePoint<any>
-  | ScalePower<any, any>
-  | ScaleTime<any, any>
-  | ScaleLinear<any, any>;
+  | ScalePower<any, number>
+  | ScaleTime<any, number>
+  | ScaleLinear<any, number>;
 
 export type D3ContinuouseScale =
-  | ScaleLogarithmic<any, any>
-  | ScalePower<any, any>
-  | ScaleTime<any, any>
-  | ScaleLinear<any, any>;
+  | ScaleLogarithmic<any, number>
+  | ScalePower<any, number>
+  | ScaleTime<any, number>
+  | ScaleLinear<any, number>;
 
 export interface ChartsAxisSlotsComponent {
   axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
@@ -61,8 +61,24 @@ export interface ChartsAxisProps extends TickParams {
   /**
    * The font size of the axis ticks text.
    * @default 12
+   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
    */
   tickFontSize?: number;
+  /**
+   * The style applied to ticks text.
+   */
+  tickLabelStyle?: ChartsTextProps['style'];
+  /**
+   * The style applied to the axis label.
+   */
+  labelStyle?: ChartsTextProps['style'];
+  /**
+   * Defines which ticks get its label displayed. Its value can be:
+   * - 'auto' In such case, labels are displayed if they do not overlap with the previous one.
+   * - a filtering function of the form (value, index) => boolean. Warning: the index is tick index, not data ones.
+   * @default 'auto'
+   */
+  tickLabelInterval?: 'auto' | ((value: any, index: number) => boolean);
   /**
    * The label of the axis.
    */
@@ -70,6 +86,7 @@ export interface ChartsAxisProps extends TickParams {
   /**
    * The font size of the axis label.
    * @default 14
+   * @deprecated Consider using `labelStyle.fontSize` instead.
    */
   labelFontSize?: number;
   /**

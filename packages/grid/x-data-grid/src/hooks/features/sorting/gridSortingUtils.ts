@@ -146,7 +146,7 @@ export const buildAggregatedSortingApplier = (
 };
 
 export const getNextGridSortDirection = (
-  sortingOrder: GridSortDirection[],
+  sortingOrder: readonly GridSortDirection[],
   current?: GridSortDirection,
 ) => {
   const currentIdx = sortingOrder.indexOf(current);

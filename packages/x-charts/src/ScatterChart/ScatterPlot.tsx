@@ -25,6 +25,16 @@ export interface ScatterPlotProps {
   slotProps?: ScatterPlotSlotComponentProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Scatter](https://mui.com/x/react-charts/scatter/)
+ * - [Scatter demonstration](https://mui.com/x/react-charts/scatter-demo/)
+ *
+ * API:
+ *
+ * - [ScatterPlot API](https://mui.com/x/api/charts/scatter-plot/)
+ */
 function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps } = props;
   const seriesData = React.useContext(SeriesContext).scatter;

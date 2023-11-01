@@ -336,6 +336,27 @@ describe('<DataGridPro /> - Tree data', () => {
       );
       expect(getColumnValues(0)).to.deep.equal(['A', 'A', 'B', 'B', 'A', 'B', 'A', 'A', 'C']);
     });
+
+    // https://github.com/mui/mui-x/issues/9344
+    it('should support valueFormatter', () => {
+      render(
+        <Test
+          groupingColDef={{ valueFormatter: ({ value }) => `> ${value}` }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal([
+        '> A (2)',
+        '> A',
+        '> B',
+        '> B (4)',
+        '> A',
+        '> B (2)',
+        '> A (1)',
+        '> A',
+        '> C',
+      ]);
+    });
   });
 
   describe('row grouping column', () => {

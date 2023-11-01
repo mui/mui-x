@@ -9,7 +9,7 @@ import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider
 import { ChartsLegendClasses, getChartsLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { LegendParams } from '../models/seriesType/config';
-import { ChartsText, getWordsByLines } from '../internals/components/ChartsText';
+import { ChartsText, ChartsTextStyle, getWordsByLines } from '../internals/components/ChartsText';
 import { CardinalDirections } from '../models/layout';
 
 export interface ChartsLegendSlotsComponent {
@@ -91,7 +91,7 @@ export interface LegendRendererProps
    * Style applied to legend labels.
    * @default theme.typography.subtitle1
    */
-  labelStyle?: React.CSSProperties;
+  labelStyle?: ChartsTextStyle;
   /**
    * Width of the item mark (in px).
    * @default 20
@@ -159,20 +159,24 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   const theme = useTheme();
 
   const labelStyle = React.useMemo(
-    () => ({
-      ...theme.typography.subtitle1,
-      color: 'inherit',
-      fill: (theme.vars || theme).palette.text.primary,
-      lineHeight: 1,
-      ...inLabelStyle,
-    }),
+    () =>
+      ({
+        ...theme.typography.subtitle1,
+        color: 'inherit',
+        dominantBaseline: 'central',
+        textAnchor: 'start',
+        fill: (theme.vars || theme).palette.text.primary,
+        lineHeight: 1,
+        ...inLabelStyle,
+      } as ChartsTextStyle), // To say to TS that the dominantBaseline and textAnchor are correct
     [inLabelStyle, theme],
   );
 
   const padding = React.useMemo(() => getStandardizedPadding(paddingProps), [paddingProps]);
 
   const getItemSpace = React.useCallback(
-    (label: string, style?: React.CSSProperties) => {
+    (label: string, inStyle: ChartsTextStyle = {}) => {
+      const { rotate, dominantBaseline, ...style } = inStyle;
       const linesSize = getWordsByLines({ style, needsComputation: true, text: label });
       const innerSize = {
         innerWidth: itemMarkWidth + markGap + Math.max(...linesSize.map((size) => size.width)),
@@ -332,14 +336,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
               height={itemMarkHeight}
               fill={color}
             />
-            <ChartsText
-              style={labelStyle}
-              dominantBaseline="central"
-              textAnchor="start"
-              text={label}
-              x={itemMarkWidth + markGap}
-              y={0}
-            />
+            <ChartsText style={labelStyle} text={label} x={itemMarkWidth + markGap} y={0} />
           </g>
         ))}
       </ChartsLegendRoot>
