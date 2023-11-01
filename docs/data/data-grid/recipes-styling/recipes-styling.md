@@ -6,8 +6,8 @@
 
 As an actionable element the header cells provide the user with a visible `focus` state.
 
-:::info
-Removing the visible `focus` state from the header cell will reduce the accessibility of your data grid.
+:::warning
+Removing the visible `focus` state hurts the accessibility of the grid.
 :::
 
 {{"demo": "HeaderCellFocusNoOutline.js", "bg": "inline", "defaultCodeOpen": false}}
