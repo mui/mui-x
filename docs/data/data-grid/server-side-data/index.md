@@ -226,11 +226,10 @@ Props related to grouped data (`treeData` and `rowGrouping`):
   This effectively replaces `getTreeDataPath`.
   Consider this structure:
 
-  ```
+  ```js
   - (1) Sarah // groupKey 'Sarah'
     - (2) Thomas // groupKey 'Thomas'
   ```
-
   When (2) is expanded, the `getRows` function will be called with group keys `['Sarah', 'Thomas']`.
 
 - `hasChildren?(row: GridRowModel): boolean`
