@@ -4,7 +4,8 @@
 
 ## Remove header outlines on `focus`
 
-As an actionable element the header cells provide the user with a visible `focus` state.
+The data grid cells are actionable elements and visually indicate the `focus` state by default.
+You can remove the focus outline by overriding the `:focus` and `:focus-within` styles for the cells and header cells.
 
 :::warning
 Removing the visible `focus` state hurts the accessibility of the grid.
