@@ -272,7 +272,7 @@ export interface DataGridPropsWithDefaultValues {
    * E.g. when filter value is `cafe`, the rows with `café` will be visible.
    * @default false
    */
-  ignoreDiacriticsInFiltering: boolean;
+  ignoreDiacritics: boolean;
   /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained

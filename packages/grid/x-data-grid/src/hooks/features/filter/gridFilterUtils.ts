@@ -182,9 +182,9 @@ const getFilterCallbackFromItem = (
     parsedValue = filterItem.value;
   }
 
-  const { ignoreDiacriticsInFiltering } = apiRef.current.rootProps;
+  const { ignoreDiacritics } = apiRef.current.rootProps;
 
-  if (ignoreDiacriticsInFiltering) {
+  if (ignoreDiacritics) {
     parsedValue = removeDiacritics(parsedValue);
   }
 
@@ -217,7 +217,7 @@ const getFilterCallbackFromItem = (
       item: newFilterItem,
       fn: (row: GridValidRowModel) => {
         let value = apiRef.current.getRowValue(row, column);
-        if (ignoreDiacriticsInFiltering) {
+        if (ignoreDiacritics) {
           value = removeDiacritics(value);
         }
         return applyFilterOnRow(value, row, column, apiRef);
@@ -236,7 +236,7 @@ const getFilterCallbackFromItem = (
     fn: (rowId: GridRowId) => {
       const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
       GLOBAL_API_REF.current = apiRef;
-      if (ignoreDiacriticsInFiltering) {
+      if (ignoreDiacritics) {
         params.value = removeDiacritics(params.value);
       }
       const result = applyFilterOnRow(params);
@@ -354,7 +354,7 @@ const buildAggregatedQuickFilterApplier = (
     }[];
   }[];
 
-  const { ignoreDiacriticsInFiltering } = apiRef.current.rootProps;
+  const { ignoreDiacritics } = apiRef.current.rootProps;
 
   columnFields.forEach((field) => {
     const column = apiRef.current.getColumn(field);
@@ -368,9 +368,7 @@ const buildAggregatedQuickFilterApplier = (
       appliersPerField.push({
         column,
         appliers: quickFilterValues.map((quickFilterValue) => {
-          const value = ignoreDiacriticsInFiltering
-            ? removeDiacritics(quickFilterValue)
-            : quickFilterValue;
+          const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
             v7: true,
             fn: getApplyQuickFilterFnV7(value, column, apiRef),
@@ -381,9 +379,7 @@ const buildAggregatedQuickFilterApplier = (
       appliersPerField.push({
         column,
         appliers: quickFilterValues.map((quickFilterValue) => {
-          const value = ignoreDiacriticsInFiltering
-            ? removeDiacritics(quickFilterValue)
-            : quickFilterValue;
+          const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
             v7: false,
             fn: getApplyQuickFilterFn(value, column, apiRef),
@@ -417,7 +413,7 @@ const buildAggregatedQuickFilterApplier = (
         }
 
         if (applier.v7) {
-          if (ignoreDiacriticsInFiltering) {
+          if (ignoreDiacritics) {
             value = removeDiacritics(value);
           }
           const isMatching = applier.fn(value, row, column, apiRef);
@@ -429,7 +425,7 @@ const buildAggregatedQuickFilterApplier = (
           const cellParams =
             usedCellParams[field] ??
             apiRef.current.getCellParams(apiRef.current.getRowId(row), field);
-          if (ignoreDiacriticsInFiltering) {
+          if (ignoreDiacritics) {
             cellParams.value = removeDiacritics(cellParams.value);
           }
           usedCellParams[field] = cellParams;

@@ -306,7 +306,7 @@ DataGridRaw.propTypes = {
    * E.g. when filter value is `cafe`, the rows with `café` will be visible.
    * @default false
    */
-  ignoreDiacriticsInFiltering: PropTypes.bool,
+  ignoreDiacritics: PropTypes.bool,
   /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.

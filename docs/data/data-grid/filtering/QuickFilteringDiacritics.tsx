@@ -60,7 +60,7 @@ export default function QuickFilteringDiacritics() {
           hideFooter
           slots={{ toolbar: GridToolbar }}
           slotProps={{ toolbar: { showQuickFilter: true } }}
-          ignoreDiacriticsInFiltering={ignoreDiacritics}
+          ignoreDiacritics={ignoreDiacritics}
         />
       </div>
     </div>
