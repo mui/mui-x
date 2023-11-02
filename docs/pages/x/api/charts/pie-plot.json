@@ -7,6 +7,7 @@
         "describedArgs": ["event", "pieItemIdentifier", "item"]
       }
     },
+    "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },

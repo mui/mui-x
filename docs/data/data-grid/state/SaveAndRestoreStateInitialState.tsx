@@ -15,17 +15,26 @@ export default function SaveAndRestoreStateInitialState() {
 
   const [initialState, setInitialState] = React.useState<GridInitialStatePremium>();
 
-  React.useEffect(() => {
-    const stateFromLocalStorage = localStorage?.getItem('dataGridState');
-    setInitialState(stateFromLocalStorage ? JSON.parse(stateFromLocalStorage) : {});
-  }, []);
-
   const saveSnapshot = React.useCallback(() => {
-    if (apiRef?.current && localStorage) {
+    if (apiRef?.current?.exportState && localStorage) {
       const currentState = apiRef.current.exportState();
       localStorage.setItem('dataGridState', JSON.stringify(currentState));
     }
   }, [apiRef]);
+
+  React.useLayoutEffect(() => {
+    const stateFromLocalStorage = localStorage?.getItem('dataGridState');
+    setInitialState(stateFromLocalStorage ? JSON.parse(stateFromLocalStorage) : {});
+
+    // handle refresh and navigating away/refreshing
+    window.addEventListener('beforeunload', saveSnapshot);
+
+    return () => {
+      // in case of an SPA remove the event-listener
+      window.removeEventListener('beforeunload', saveSnapshot);
+      saveSnapshot();
+    };
+  }, [saveSnapshot]);
 
   if (!initialState) {
     return <CircularProgress />;
@@ -37,7 +46,6 @@ export default function SaveAndRestoreStateInitialState() {
         {...data}
         apiRef={apiRef}
         loading={loading}
-        onStateChange={saveSnapshot}
         initialState={{
           ...data.initialState,
           ...initialState,

@@ -107,7 +107,7 @@ export const useGridFilter = (
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
         props.filterMode === 'client'
-          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef, props.disableEval)
+          ? buildAggregatedFilterApplier(filterModel, apiRef, props.disableEval)
           : null;
 
       const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {
@@ -131,7 +131,7 @@ export const useGridFilter = (
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
-  }, [apiRef, props.filterMode, props.getRowId, props.disableEval]);
+  }, [apiRef, props.filterMode, props.disableEval]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {

@@ -6,7 +6,7 @@
     "import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';",
     "import { ChartsAxisHighlight } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsAxisHighlight" },
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiChartsAxisHighlight" },
   "filename": "/packages/x-charts/src/ChartsAxisHighlight/ChartsAxisHighlight.tsx",
   "demos": "<ul></ul>"
 }
