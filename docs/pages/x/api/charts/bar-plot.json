@@ -4,7 +4,14 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [
+    {
+      "class": null,
+      "name": "bar",
+      "description": "The component that renders the root.",
+      "default": "BarElementPath"
+    }
+  ],
   "name": "BarPlot",
   "imports": [
     "import { BarPlot } from '@mui/x-charts/BarChart';",

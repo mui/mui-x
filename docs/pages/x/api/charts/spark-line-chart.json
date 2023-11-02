@@ -31,7 +31,16 @@
       }
     }
   },
-  "slots": [],
+  "slots": [
+    { "class": null, "name": "area", "description": "" },
+    { "class": null, "name": "axisContent", "description": "" },
+    { "class": null, "name": "bar", "description": "" },
+    { "class": null, "name": "itemContent", "description": "" },
+    { "class": null, "name": "line", "description": "" },
+    { "class": null, "name": "lineHighlight", "description": "" },
+    { "class": null, "name": "mark", "description": "" },
+    { "class": null, "name": "popper", "description": "" }
+  ],
   "name": "SparkLineChart",
   "imports": [
     "import { SparkLineChart } from '@mui/x-charts/SparkLineChart';",
