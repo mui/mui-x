@@ -276,6 +276,18 @@ PickersCalendarHeader.propTypes = {
    * className applied to the root element.
    */
   className: PropTypes.string,
+  /**
+   * Overridable components.
+   * @default {}
+   * @deprecated Please use `slots`.
+   */
+  components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated Please use `slotProps`.
+   */
+  componentsProps: PropTypes.object,
   currentMonth: PropTypes.any.isRequired,
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,
