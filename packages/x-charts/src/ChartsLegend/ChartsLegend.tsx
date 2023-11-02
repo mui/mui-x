@@ -12,11 +12,11 @@ import { LegendParams } from '../models/seriesType/config';
 import { ChartsText, ChartsTextStyle, getWordsByLines } from '../internals/components/ChartsText';
 import { CardinalDirections } from '../models/layout';
 
-export interface ChartsLegendSlotsComponent {
+export interface ChartsLegendSlots {
   legend?: React.JSXElementConstructor<LegendRendererProps>;
 }
 
-export interface ChartsLegendSlotComponentProps {
+export interface ChartsLegendSlotProps {
   legend?: Partial<LegendRendererProps>;
 }
 
@@ -39,12 +39,12 @@ export type ChartsLegendProps = {
    * Overridable component slots.
    * @default {}
    */
-  slots?: ChartsLegendSlotsComponent;
+  slots?: ChartsLegendSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ChartsLegendSlotComponentProps;
+  slotProps?: ChartsLegendSlotProps;
 };
 
 type DefaultizedChartsLegendProps = DefaultizedProps<ChartsLegendProps, 'direction' | 'position'>;

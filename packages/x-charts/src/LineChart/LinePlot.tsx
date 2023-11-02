@@ -7,11 +7,11 @@ import { LineElement, LineElementProps } from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export interface LinePlotSlotsComponent {
+export interface LinePlotSlots {
   line?: React.JSXElementConstructor<LineElementProps>;
 }
 
-export interface LinePlotSlotComponentProps {
+export interface LinePlotSlotProps {
   line?: Partial<LineElementProps>;
 }
 

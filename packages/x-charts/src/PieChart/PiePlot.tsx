@@ -32,12 +32,12 @@ function getItemLabel(
   return arcLabel(item);
 }
 
-export interface PiePlotSlotsComponent {
+export interface PiePlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
   pieArcLabel?: React.JSXElementConstructor<PieArcLabelProps>;
 }
 
-export interface PiePlotSlotComponentProps {
+export interface PiePlotSlotProps {
   pieArc?: Partial<PieArcProps>;
   pieArcLabel?: Partial<PieArcLabelProps>;
 }
@@ -47,12 +47,12 @@ export interface PiePlotProps {
    * Overridable component slots.
    * @default {}
    */
-  slots?: PiePlotSlotsComponent;
+  slots?: PiePlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PiePlotSlotComponentProps;
+  slotProps?: PiePlotSlotProps;
   /**
    * Callback fired when a pie item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

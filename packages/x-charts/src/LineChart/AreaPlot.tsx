@@ -7,11 +7,11 @@ import { AreaElement, AreaElementProps } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export interface AreaPlotSlotsComponent {
+export interface AreaPlotSlots {
   area?: React.JSXElementConstructor<AreaElementProps>;
 }
 
-export interface AreaPlotSlotComponentProps {
+export interface AreaPlotSlotProps {
   area?: Partial<AreaElementProps>;
 }
 

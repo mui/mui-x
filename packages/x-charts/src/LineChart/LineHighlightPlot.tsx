@@ -6,11 +6,11 @@ import { LineHighlightElement, LineHighlightElementProps } from './LineHighlight
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { InteractionContext } from '../context/InteractionProvider';
 
-export interface LineHighlightPlotSlotsComponent {
+export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
 }
 
-export interface LineHighlightPlotSlotComponentProps {
+export interface LineHighlightPlotSlotProps {
   lineHighlight?: Partial<LineHighlightElementProps>;
 }
 
@@ -19,12 +19,12 @@ export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElemen
    * Overridable component slots.
    * @default {}
    */
-  slots?: LineHighlightPlotSlotsComponent;
+  slots?: LineHighlightPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: LineHighlightPlotSlotComponentProps;
+  slotProps?: LineHighlightPlotSlotProps;
 }
 
 /**

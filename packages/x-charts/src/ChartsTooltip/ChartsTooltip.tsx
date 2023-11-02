@@ -16,13 +16,13 @@ import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTo
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipClasses, getTooltipUtilityClass } from './tooltipClasses';
 
-export interface ChartsTooltipSlotsComponent {
+export interface ChartsTooltipSlots {
   popper?: React.ElementType<PopperProps>;
   axisContent?: React.ElementType<ChartsAxisContentProps>;
   itemContent?: React.ElementType<ChartsItemContentProps>;
 }
 
-export interface ChartsTooltipSlotComponentProps {
+export interface ChartsTooltipSlotProps {
   popper?: Partial<PopperProps>;
   axisContent?: Partial<ChartsAxisContentProps>;
   itemContent?: Partial<ChartsItemContentProps>;
@@ -55,12 +55,12 @@ export type ChartsTooltipProps = {
    * Overridable component slots.
    * @default {}
    */
-  slots?: ChartsTooltipSlotsComponent;
+  slots?: ChartsTooltipSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ChartsTooltipSlotComponentProps;
+  slotProps?: ChartsTooltipSlotProps;
 };
 
 const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] }) => {
