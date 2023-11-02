@@ -92,11 +92,11 @@ Charts containers already use the `useReducedMotion` from `@react-spring/web` to
 
 ```jsx
 // For a single component chart
-<PieChart  skipAnimation />
+<PieChart skipAnimation />
 
 // For a composed chart
 <ResponsiveChartContainer>
-  <PiePlot  skipAnimation />
+  <PiePlot skipAnimation />
 </ResponsiveChartContainer>
 ```
 
