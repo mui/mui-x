@@ -30,6 +30,11 @@ export const DrawingContext = React.createContext<DrawingArea>({
 });
 export const SVGContext = React.createContext<React.RefObject<SVGSVGElement>>({ current: null });
 
+/**
+ * API:
+ *
+ * - [DrawingProvider API](https://mui.com/x/api/charts/drawing-provider/)
+ */
 function DrawingProvider({ width, height, margin, svgRef, children }: DrawingProviderProps) {
   const drawingArea = useChartDimensions(width, height, margin);
 

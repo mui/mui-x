@@ -68,21 +68,27 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
           </thead>
         )}
         <tbody>
-          {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => (
-            <ChartsTooltipRow key={id}>
-              <ChartsTooltipCell className={classes.markCell}>
-                <ChartsTooltipMark ownerState={{ color }} boxShadow={1} />
-              </ChartsTooltipCell>
+          {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => {
+            const formattedValue = valueFormatter(data[dataIndex]);
+            if (formattedValue == null) {
+              return null;
+            }
+            return (
+              <ChartsTooltipRow key={id}>
+                <ChartsTooltipCell className={classes.markCell}>
+                  <ChartsTooltipMark ownerState={{ color }} boxShadow={1} />
+                </ChartsTooltipCell>
 
-              <ChartsTooltipCell className={classes.labelCell}>
-                {label ? <Typography>{label}</Typography> : null}
-              </ChartsTooltipCell>
+                <ChartsTooltipCell className={classes.labelCell}>
+                  {label ? <Typography>{label}</Typography> : null}
+                </ChartsTooltipCell>
 
-              <ChartsTooltipCell className={classes.valueCell}>
-                <Typography>{valueFormatter(data[dataIndex])}</Typography>
-              </ChartsTooltipCell>
-            </ChartsTooltipRow>
-          ))}
+                <ChartsTooltipCell className={classes.valueCell}>
+                  <Typography>{formattedValue}</Typography>
+                </ChartsTooltipCell>
+              </ChartsTooltipRow>
+            );
+          })}
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
