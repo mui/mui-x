@@ -21,12 +21,12 @@ export default function ConnectNulls() {
         xAxis={[{ data: [1, 2, 3, 5, 8, 10, 12, 15, 16, 18, 20] }]}
         series={[
           {
+            data: [2, 5, 6.5, 3, 8, 10, 9.5, 2.5, 6, 10, 8],
+          },
+          {
             data: [null, null, 5.5, 2, null, null, 8.5, 1.5, 5],
             connectNulls,
             area: true,
-          },
-          {
-            data: [2, 5.5, 2, 8.5, 1.5, 5, 2, 5.5, 2, 1, 3],
           },
         ]}
         height={200}
