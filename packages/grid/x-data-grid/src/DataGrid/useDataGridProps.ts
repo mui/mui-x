@@ -62,6 +62,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   hideFooterPagination: false,
   hideFooterRowCount: false,
   hideFooterSelectedRowCount: false,
+  ignoreDiacritics: false,
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   pagination: false,
