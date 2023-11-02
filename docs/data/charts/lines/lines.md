@@ -83,9 +83,9 @@ The following code plots a line for x between 2 and 4.
 
 ### Connect missing points
 
-Line series accept a property `connectNulls` which will continue the interpolation across points with value`null`.
-This property can link two set of points, with some `null` data between them.
-But it can not extrapolate the curve before the firs non null data point or after the last one.
+Line series accepts a `connectNulls` property which will continue the interpolation across points with a `null` value.
+This property can link two sets of points, with `null` data between them.
+However, it can not extrapolate the curve before the first non-null data point or after the last one.
 
 {{"demo": "ConnectNulls.js"}}
 

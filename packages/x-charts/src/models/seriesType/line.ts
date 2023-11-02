@@ -68,7 +68,7 @@ export interface LineSeriesType
    */
   disableHighlight?: boolean;
   /**
-   * If `true` line and area connect points separated by `null` values.
+   * If `true`, line and area connect points separated by `null` values.
    * @default false
    */
   connectNulls?: boolean;
