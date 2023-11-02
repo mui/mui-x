@@ -8,6 +8,12 @@ import {
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
+const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
 const rows = [
   { id: 0, string: 'Café', date: new Date(2023, 1, 1), singleSelect: 'Jalapeño' },
 ];
@@ -17,12 +23,7 @@ const columns: GridColDef[] = [
     field: 'date',
     type: 'date',
     width: 150,
-    valueFormatter: (params) =>
-      params.value.toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      }),
+    valueFormatter: (params) => dateFormatter.format(params.value),
   },
   {
     field: 'singleSelect',
