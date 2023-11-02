@@ -41,7 +41,7 @@ export interface ChartsAxisSlotComponentProps {
 export interface ChartsAxisProps extends TickParams {
   /**
    * The id of the axis to render.
-   * If undefined, it will be the first axis defined.
+   * If undefined, it will be the first defined axis.
    */
   axisId?: string;
   /**

@@ -11,7 +11,7 @@ export type ChartsYReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
 > = CommonChartsReferenceLineProps & {
   /**
-   * The y value associated to the reference line.
+   * The y value associated with the reference line.
    * If defined the reference line will be horizontal.
    */
   y: TValue;

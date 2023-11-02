@@ -1,4 +1,4 @@
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 import {
   referenceLineClasses,
@@ -9,7 +9,7 @@ import { ChartsTextStyle } from '../internals/components/ChartsText';
 
 export type CommonChartsReferenceLineProps = {
   /**
-   * The alignment if the label in the chart drawing area.
+   * The alignment if the label is in the chart drawing area.
    * @default 'middle'
    */
   labelAlign?: 'start' | 'middle' | 'end';
@@ -18,21 +18,21 @@ export type CommonChartsReferenceLineProps = {
    */
   label?: string;
   /**
-   * Additional Space between the label and the reference line in px.
+   * Additional space between the label and the reference line in px.
    * @default 5
    */
   spacing?: number;
   /**
    * The id of the axis used for the reference value.
-   * @default id the id of the first axis defined
+   * @default The `id` of the first defined axis.
    */
   axisId?: string;
   /**
-   * The style applied to the label
+   * The style applied to the label.
    */
   labelStyle?: ChartsTextStyle;
   /**
-   * The style applied to the line
+   * The style applied to the line.
    */
   lineStyle?: React.CSSProperties;
   /**

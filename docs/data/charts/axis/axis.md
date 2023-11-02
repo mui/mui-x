@@ -174,10 +174,10 @@ Other props are similar to the ones defined in the [previous section](/x/react-c
 ### Reference line
 
 The `<ChartsReferenceLine />` component add a reference line to the charts.
-You can provide a `x` (resp. `y`) prop to get a vertical (resp. horizontal) line at this value.
+You can provide an `x` or `y` prop to get a vertical or horizontal line respectively at this value.
 
 You can add a `label` to this reference line.
-It can be placed with `labelAlign` prop which accept `'start'`, `'middle'`, and `'end'`.
+It can be placed with `labelAlign` prop which accepts `'start'`, `'middle'`, and `'end'` values.
 Elements can be styled with `lineStyle` and `labelStyle` props.
 
 {{"demo": "ReferenceLine.js"}}
