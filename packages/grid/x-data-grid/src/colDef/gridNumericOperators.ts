@@ -1,8 +1,7 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterOperator } from '../models/gridFilterOperator';
-import type { GridApplyQuickFilterV7 } from '../models/colDef/gridColDef';
-import { tagInternalFilter } from './utils';
+import type { GridApplyQuickFilter } from '../models/colDef/gridColDef';
 
 const parseNumericValue = (value: unknown) => {
   if (value == null) {
@@ -12,17 +11,15 @@ const parseNumericValue = (value: unknown) => {
   return Number(value);
 };
 
-export const getGridNumericQuickFilterFn = tagInternalFilter(
-  (value: any): GridApplyQuickFilterV7 | null => {
-    if (value == null || Number.isNaN(value) || value === '') {
-      return null;
-    }
+export const getGridNumericQuickFilterFn = (value: any): GridApplyQuickFilter | null => {
+  if (value == null || Number.isNaN(value) || value === '') {
+    return null;
+  }
 
-    return (columnValue): boolean => {
-      return parseNumericValue(columnValue) === parseNumericValue(value);
-    };
-  },
-);
+  return (columnValue): boolean => {
+    return parseNumericValue(columnValue) === parseNumericValue(value);
+  };
+};
 
 export const getGridNumericOperators = (): GridFilterOperator<
   any,

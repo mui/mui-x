@@ -1,22 +1,19 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { escapeRegExp } from '../utils/utils';
-import type { GridApplyQuickFilterV7 } from '../models/colDef/gridColDef';
+import type { GridApplyQuickFilter } from '../models/colDef/gridColDef';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
-import { tagInternalFilter } from './utils';
 
-export const getGridStringQuickFilterFn = tagInternalFilter(
-  (value: any): GridApplyQuickFilterV7 | null => {
-    if (!value) {
-      return null;
-    }
-    const filterRegex = new RegExp(escapeRegExp(value), 'i');
-    return (columnValue): boolean => {
-      return columnValue != null ? filterRegex.test(columnValue.toString()) : false;
-    };
-  },
-);
+export const getGridStringQuickFilterFn = (value: any): GridApplyQuickFilter | null => {
+  if (!value) {
+    return null;
+  }
+  const filterRegex = new RegExp(escapeRegExp(value), 'i');
+  return (columnValue): boolean => {
+    return columnValue != null ? filterRegex.test(columnValue.toString()) : false;
+  };
+};
 
 export const getGridStringOperators = (
   disableTrim: boolean = false,

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GridCellParams,
   GridColDef,
   GridFilterItem,
   GridFilterModel,
@@ -9,7 +8,6 @@ import {
 } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { isInternalFilter } from '../../../colDef/utils';
 import {
   getDefaultGridFilterModel,
   GridAggregatedFilterItemApplier,
@@ -313,7 +311,6 @@ const buildAggregatedQuickFilterApplier = (
   const appliersPerField = [] as {
     column: GridColDef;
     appliers: {
-      v7: boolean;
       fn: null | ((...args: any[]) => boolean);
     }[];
   }[];
@@ -323,29 +320,13 @@ const buildAggregatedQuickFilterApplier = (
   columnFields.forEach((field) => {
     const column = apiRef.current.getColumn(field);
     const getApplyQuickFilterFn = column?.getApplyQuickFilterFn;
-    const getApplyQuickFilterFnV7 = column?.getApplyQuickFilterFnV7;
 
-    const hasUserFunctionLegacy = !isInternalFilter(getApplyQuickFilterFn);
-    const hasUserFunctionV7 = !isInternalFilter(getApplyQuickFilterFnV7);
-
-    if (getApplyQuickFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
+    if (getApplyQuickFilterFn) {
       appliersPerField.push({
         column,
         appliers: quickFilterValues.map((quickFilterValue) => {
           const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
-            v7: true,
-            fn: getApplyQuickFilterFnV7(value, column, apiRef),
-          };
-        }),
-      });
-    } else if (getApplyQuickFilterFn) {
-      appliersPerField.push({
-        column,
-        appliers: quickFilterValues.map((quickFilterValue) => {
-          const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
-          return {
-            v7: false,
             fn: getApplyQuickFilterFn(value, column, apiRef),
           };
         }),
@@ -355,7 +336,6 @@ const buildAggregatedQuickFilterApplier = (
 
   return function isRowMatchingQuickFilter(row, shouldApplyFilter) {
     const result = {} as GridQuickFilterValueResult;
-    const usedCellParams = {} as { [field: string]: GridCellParams };
 
     /* eslint-disable no-restricted-syntax, no-labels */
     outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
@@ -376,29 +356,13 @@ const buildAggregatedQuickFilterApplier = (
           continue;
         }
 
-        if (applier.v7) {
-          if (ignoreDiacritics) {
-            value = removeDiacritics(value);
-          }
-          const isMatching = applier.fn(value, row, column, apiRef);
-          if (isMatching) {
-            result[filterValue] = true;
-            continue outer;
-          }
-        } else {
-          const cellParams =
-            usedCellParams[field] ??
-            apiRef.current.getCellParams(apiRef.current.getRowId(row), field);
-          if (ignoreDiacritics) {
-            cellParams.value = removeDiacritics(cellParams.value);
-          }
-          usedCellParams[field] = cellParams;
-
-          const isMatching = applier.fn(cellParams);
-          if (isMatching) {
-            result[filterValue] = true;
-            continue outer;
-          }
+        if (ignoreDiacritics) {
+          value = removeDiacritics(value);
+        }
+        const isMatching = applier.fn(value, row, column, apiRef);
+        if (isMatching) {
+          result[filterValue] = true;
+          continue outer;
         }
       }
 

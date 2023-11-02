@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridColDef, GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
-import { GridBaseColDef, tagInternalFilter } from '@mui/x-data-grid-pro/internals';
+import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -131,19 +131,21 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
   filterOperators!.map((operator) => {
     const baseGetApplyFilterFn = operator.getApplyFilterFn;
 
-    const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
-      tagInternalFilter((filterItem, colDef) => {
-        const filterFn = baseGetApplyFilterFn(filterItem, colDef);
-        if (!filterFn) {
-          return null;
+    const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] = (
+      filterItem,
+      colDef,
+    ) => {
+      const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+      if (!filterFn) {
+        return null;
+      }
+      return (value, row, column, api) => {
+        if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
+          return true;
         }
-        return (value, row, column, api) => {
-          if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
-            return true;
-          }
-          return filterFn(value, row, column, api);
-        };
-      });
+        return filterFn(value, row, column, api);
+      };
+    };
 
     return {
       ...operator,
