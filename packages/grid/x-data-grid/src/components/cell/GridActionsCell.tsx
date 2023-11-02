@@ -143,19 +143,24 @@ function GridActionsCell(props: GridActionsCellProps) {
       return;
     }
 
+    const getNewIndex = (index: number, direction: 'left' | 'right'): number => {
+      if (index < 0 || index > options.length) {
+        return index;
+      }
+      if (direction === 'left') {
+        return options[index - 1]?.props.disabled ? getNewIndex(index - 1, 'left') : index - 1;
+      }
+      if (direction === 'right') {
+        return options[index + 1]?.props.disabled ? getNewIndex(index + 1, 'right') : index + 1;
+      }
+      return index;
+    };
+
     let newIndex: number = focusedButtonIndex;
     if (event.key === 'ArrowRight') {
-      if (theme.direction === 'rtl') {
-        newIndex -= 1;
-      } else {
-        newIndex += 1;
-      }
+      newIndex = getNewIndex(focusedButtonIndex, theme.direction === 'rtl' ? 'left' : 'right');
     } else if (event.key === 'ArrowLeft') {
-      if (theme.direction === 'rtl') {
-        newIndex += 1;
-      } else {
-        newIndex -= 1;
-      }
+      newIndex = getNewIndex(focusedButtonIndex, theme.direction === 'rtl' ? 'right' : 'left');
     }
 
     if (newIndex < 0 || newIndex >= numberOfButtons) {
