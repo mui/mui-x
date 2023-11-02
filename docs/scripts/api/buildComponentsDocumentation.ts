@@ -83,10 +83,12 @@ function extractSlots(options: {
     project,
     checkDeclarations: true,
     shouldResolveObject: ({ name }) => {
+      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
       return name === 'slots' || name === 'components';
     },
     shouldInclude: ({ name, depth }) => {
       // The keys allowed in the `components` prop have depth=2
+      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
       return name === 'slots' || name === 'components' || depth === 2;
     },
   });
@@ -97,6 +99,7 @@ function extractSlots(options: {
   }
 
   const componentsProps = props.types.find(
+    // TODO v7: Remove the `components` fallback once `slots` is used everywhere
     (type) => type.name === 'slots' || type.name === 'components',
   )!;
   if (!componentsProps) {
@@ -483,6 +486,7 @@ const buildComponentDocumentation = async (options: {
   /**
    * Slot descriptions.
    */
+  // TODO v7: Remove the `components` fallback once `slots` is used everywhere
   if (componentApi.propDescriptions.slots || componentApi.propDescriptions.components) {
     const slots = extractSlots({
       filename,
