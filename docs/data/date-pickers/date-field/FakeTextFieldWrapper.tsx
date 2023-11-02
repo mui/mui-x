@@ -1,7 +1,9 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
 import { useLocaleText, useUtils } from '@mui/x-date-pickers/internals';
-import { TextField } from '@mui/material';
+import { TextField, Box } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { FakeTextField } from '@mui/x-date-pickers/internals/components/FakeTextField';
@@ -74,11 +76,28 @@ function AppContent() {
 
   return (
     <FakeTextField
+      label="test"
+      required
+      helperText="test"
       elements={elements}
       size="small"
       error
       // disabled
       color="secondary"
+      fullWidth
+      onChange={() => {}}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <CalendarMonthIcon />
+          </InputAdornment>
+        ),
+        endAdornment: (
+          <InputAdornment position="end">
+            <CalendarMonthIcon />
+          </InputAdornment>
+        ),
+      }}
       {...{ ref }}
     />
   );
@@ -87,8 +106,31 @@ function AppContent() {
 export default function FakeTextFieldWrapper() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <AppContent />
-      <TextField error label="test" value="04-17-2022" size="small" />
+      <Box>
+        <AppContent />
+
+        <TextField
+          required
+          error
+          label="test"
+          // value="04-17-2022"
+          size="small"
+          helperText="test"
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <CalendarMonthIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <CalendarMonthIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
     </LocalizationProvider>
   );
 }

@@ -2,8 +2,9 @@ import { TextFieldClasses } from '@mui/material/TextField';
 import { FakeInputProps } from './FakeInput.types';
 
 export interface FakeTextFieldProps extends FakeInputProps {
-  classes: Partial<TextFieldClasses>;
-  color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
+  classes?: Partial<TextFieldClasses>;
+  className?: string;
+  color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
   disabled?: boolean;
   error?: boolean;
   fullWidth?: boolean;
@@ -18,4 +19,5 @@ export interface FakeTextFieldProps extends FakeInputProps {
   // autoFocus?: boolean;
   // ownerState?: any;
   valueType: 'value' | 'placeholder';
+  required?: boolean;
 }

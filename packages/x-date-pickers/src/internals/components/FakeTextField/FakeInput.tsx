@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import Box from '@mui/material/Box';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled, Theme } from '@mui/material/styles';
@@ -9,29 +10,6 @@ import {
 import { fakeInputClasses, getFakeInputUtilityClass } from './fakeTextFieldClasses';
 import Outline from './Outline';
 import { FakeInputProps } from './FakeInput.types';
-
-const SectionsContainer = styled('span', {
-  name: 'MuiFakeInput',
-  slot: 'Section',
-  overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => {
-  return {
-    fontFamily: theme.typography.fontFamily,
-    fontSize: 'inherit',
-    lineHeight: '1.4375em', // 23px
-  };
-});
-const SectionInput = styled('span', {
-  name: 'MuiFakeInput',
-  slot: 'Section',
-  overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => {
-  return {
-    fontFamily: theme.typography.fontFamily,
-    lineHeight: '1.4375em', // 23px
-    letterSpacing: 'inherit',
-  };
-});
 
 const SectionsWrapper = styled(Box, {
   name: 'MuiFakeInput',
@@ -66,7 +44,6 @@ const SectionsWrapper = styled(Box, {
       borderColor: (theme.vars || theme).palette[ownerState.color].main,
       borderWidth: 2,
     },
-
     [`&.${fakeInputClasses.disabled}`]: {
       [`& .${fakeInputClasses.notchedOutline}`]: {
         borderColor: (theme.vars || theme).palette.action.disabled,
@@ -86,6 +63,42 @@ const SectionsWrapper = styled(Box, {
     }),
   };
 });
+const SectionsContainer = styled('div', {
+  name: 'MuiFakeInput',
+  slot: 'Input',
+  overridesResolver: (props, styles) => styles.input,
+})(({ theme }) => {
+  return {
+    fontFamily: theme.typography.fontFamily,
+    fontSize: 'inherit',
+    lineHeight: '1.4375em', // 23px
+    flexGrow: 1,
+  };
+});
+const SectionContainer = styled('span', {
+  name: 'MuiFakeInput',
+  slot: 'Section',
+  overridesResolver: (props, styles) => styles.section,
+})(({ theme }) => {
+  return {
+    fontFamily: theme.typography.fontFamily,
+    fontSize: 'inherit',
+    lineHeight: '1.4375em', // 23px
+    flexGrow: 1,
+  };
+});
+const SectionInput = styled('span', {
+  name: 'MuiFakeInput',
+  slot: 'Content',
+  overridesResolver: (props, styles) => styles.content,
+})(({ theme }) => {
+  return {
+    fontFamily: theme.typography.fontFamily,
+    lineHeight: '1.4375em', // 23px
+    letterSpacing: 'inherit',
+    width: 'fit-content',
+  };
+});
 
 const NotchedOutlineRoot = styled(Outline, {
   name: 'MuiFakeInput',
@@ -102,7 +115,17 @@ const NotchedOutlineRoot = styled(Outline, {
 });
 
 const useUtilityClasses = (ownerState: OwnerStateType) => {
-  const { focused, disabled, error, classes, fullWidth, color, size } = ownerState;
+  const {
+    focused,
+    disabled,
+    error,
+    classes,
+    fullWidth,
+    color,
+    size,
+    endAdornment,
+    startAdornment,
+  } = ownerState;
 
   const slots = {
     root: [
@@ -113,9 +136,14 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
       fullWidth && 'fullWidth',
       `color${capitalize(color)}`,
       size === 'small' && 'inputSizeSmall',
+      Boolean(startAdornment) && 'adornedStart',
+      Boolean(endAdornment) && 'adornedEnd',
     ],
-    section: ['section'],
     notchedOutline: ['notchedOutline'],
+    before: ['before'],
+    after: ['after'],
+    content: ['content'],
+    input: ['input'],
   };
 
   return composeClasses(slots, getFakeInputUtilityClass, classes);
@@ -178,6 +206,12 @@ const FakeInput = React.forwardRef(function FakeInput(
     states: ['color', 'disabled', 'error', 'focused', 'size', 'required', 'fullWidth'],
   });
 
+  React.useEffect(() => {
+    if (muiFormControl) {
+      muiFormControl.setAdornedStart(Boolean(startAdornment));
+    }
+  }, [muiFormControl, startAdornment]);
+
   const ownerState = {
     ...props,
     ...ownerStateProp,
@@ -191,31 +225,47 @@ const FakeInput = React.forwardRef(function FakeInput(
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <React.Fragment>
-      <SectionsWrapper
-        ref={ref}
-        {...other}
-        className={classes.root}
-        onClick={onWrapperClick}
-        ownerState={ownerState}
-      >
+    <SectionsWrapper
+      ref={ref}
+      {...other}
+      className={classes.root}
+      onClick={onWrapperClick}
+      ownerState={ownerState}
+    >
+      {startAdornment}
+      <SectionsContainer className={classes.input}>
         {elements &&
           elements.map(({ container, content, before, after }, elementIndex) => (
-            <SectionsContainer key={elementIndex} {...container}>
-              <span {...before} />
-              <SectionInput {...content} {...{ ownerState }} />
-              <span {...after} />
-            </SectionsContainer>
+            <SectionContainer key={elementIndex} {...container}>
+              <span {...before} className={clsx(fakeInputClasses.before, before?.className)} />
+              <SectionInput
+                {...content}
+                className={clsx(fakeInputClasses.content, content?.className)}
+                {...{ ownerState }}
+              />
+              <span {...after} className={clsx(fakeInputClasses.after, after?.className)} />
+            </SectionContainer>
           ))}
-        <NotchedOutlineRoot
-          shrink={fcs.focused || !areAllSectionsEmpty}
-          notched={fcs.focused || !areAllSectionsEmpty}
-          {...{ ownerState, label }}
-          className={classes.notchedOutline}
-        />
-      </SectionsWrapper>
-      <input type="hidden" value={valueStr} onChange={onValueStrChange} id={id} />
-    </React.Fragment>
+        <input type="hidden" value={valueStr} onChange={onValueStrChange} id={id} />
+      </SectionsContainer>
+      {endAdornment}
+      <NotchedOutlineRoot
+        shrink={fcs.focused || !areAllSectionsEmpty}
+        notched={fcs.focused || !areAllSectionsEmpty}
+        className={classes.notchedOutline}
+        label={
+          label != null && label !== '' && fcs.required ? (
+            <React.Fragment>
+              {label}
+              &thinsp;{'*'}
+            </React.Fragment>
+          ) : (
+            label
+          )
+        }
+        {...{ ownerState }}
+      />
+    </SectionsWrapper>
   );
 });
 

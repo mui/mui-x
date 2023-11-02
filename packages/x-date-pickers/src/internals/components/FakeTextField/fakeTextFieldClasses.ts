@@ -12,6 +12,8 @@ export interface FakeTextFieldClasses {
   disabled: string;
   /** State class applied to the root element if `error=true`. */
   error: string;
+  /** State class applied to the root element id `required=true` */
+  required: string;
 }
 export type FakeTextFieldClassKey = keyof FakeTextFieldClasses;
 
@@ -21,7 +23,7 @@ export function getFakeTextFieldUtilityClass(slot: string) {
 
 export const fakeTextFieldClasses = generateUtilityClasses<FakeTextFieldClassKey>(
   'MuiFakeTextField',
-  ['root', 'focused', 'disabled', 'error'],
+  ['root', 'focused', 'disabled', 'error', 'required'],
 );
 export interface FakeInputClasses {
   /** Styles applied to the root element. */
@@ -34,8 +36,18 @@ export interface FakeInputClasses {
   error: string;
   /** Styles applied to the NotchedOutline element. */
   notchedOutline: string;
-  /** Styles applied to the section of the icker. */
-  section: string;
+  /** Styles applied to the fake input element. */
+  input: string;
+  /** Styles applied to the section of the picker. */
+  content: string;
+  /** Styles applied to the startSeparator */
+  before: string;
+  /** Styles applied to the endSeparator */
+  after: string;
+  /** Styles applied to the root if there is a startAdornment present */
+  adornedStart: string;
+  /** Styles applied to the root if there is an endAdornment present */
+  adornedEnd: string;
 }
 
 export type FakeInputClassKey = keyof FakeInputClasses;
@@ -48,7 +60,12 @@ export const fakeInputClasses = generateUtilityClasses<FakeInputClassKey>('MuiFa
   'root',
   'focused',
   'disabled',
-  'notchedOutline',
-  'section',
   'error',
+  'notchedOutline',
+  'content',
+  'before',
+  'after',
+  'adornedStart',
+  'adornedEnd',
+  'input',
 ]);

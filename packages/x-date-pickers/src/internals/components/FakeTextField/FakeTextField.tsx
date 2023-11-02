@@ -16,11 +16,15 @@ const FakeTextFieldRoot = styled(FormControl, {
 })({});
 
 const useUtilityClasses = (ownerState: FakeTextFieldProps) => {
-  const { focused, disabled, classes } = ownerState;
+  const { focused, disabled, classes, required } = ownerState;
 
   const slots = {
-    root: ['root', focused && !disabled && 'focused', disabled && 'disabled'],
-    notchedOutline: ['notchedOutline'],
+    root: [
+      'root',
+      focused && !disabled && 'focused',
+      disabled && 'disabled',
+      required && 'required',
+    ],
   };
 
   return composeClasses(slots, getFakeTextFieldUtilityClass, classes);
@@ -32,10 +36,11 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
 ) {
   const {
     elements,
+    className,
     color = 'primary',
     disabled = false,
     error = false,
-    label = 'test',
+    label,
     variant = 'outlined',
     fullWidth = false,
     valueStr,
@@ -44,9 +49,9 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
     id: idOverride,
     FormHelperTextProps,
     InputLabelProps,
-    classes: inClasses,
     inputProps,
     InputProps,
+    required = false,
     ...other
   } = props;
 
@@ -87,7 +92,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
 
   return (
     <FakeTextFieldRoot
-      className={clsx(classes.root, inClasses)}
+      className={clsx(classes.root, className)}
       {...{
         focused,
         disabled,
@@ -96,6 +101,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
         color,
         ownerState,
         fullWidth,
+        required,
         ...other,
       }}
     >
