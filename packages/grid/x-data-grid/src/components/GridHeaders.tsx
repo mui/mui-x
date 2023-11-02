@@ -1,4 +1,5 @@
 import React from 'react';
+import { fastMemo } from '../utils/fastMemo';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -22,7 +23,7 @@ import {
 } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { gridColumnMenuSelector } from '../hooks/features/columnMenu/columnMenuSelector';
 
-export function GridHeaders() {
+function GridHeaders() {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
 
@@ -86,3 +87,7 @@ export function GridHeaders() {
     />
   );
 }
+
+const MemoizedGridHeaders = fastMemo(GridHeaders);
+
+export { MemoizedGridHeaders as GridHeaders };
