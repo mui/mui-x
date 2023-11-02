@@ -130,7 +130,6 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
 }) =>
   filterOperators!.map((operator) => {
     const baseGetApplyFilterFn = operator.getApplyFilterFn;
-    const baseGetApplyFilterFnV7 = operator.getApplyFilterFnV7;
 
     const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
       tagInternalFilter((filterItem, colDef) => {
@@ -138,34 +137,17 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
         if (!filterFn) {
           return null;
         }
-        return (params) => {
-          if (getCellAggregationResult(params.id, params.field) != null) {
+        return (value, row, column, api) => {
+          if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
             return true;
           }
-          return filterFn(params);
+          return filterFn(value, row, column, api);
         };
       });
-
-    const getApplyFilterFnV7: GridFilterOperator<any, any, any>['getApplyFilterFnV7'] =
-      baseGetApplyFilterFnV7 === undefined
-        ? undefined
-        : tagInternalFilter((filterItem, colDef) => {
-            const filterFn = baseGetApplyFilterFnV7(filterItem, colDef);
-            if (!filterFn) {
-              return null;
-            }
-            return (value, row, column, api) => {
-              if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
-                return true;
-              }
-              return filterFn(value, row, column, api);
-            };
-          });
 
     return {
       ...operator,
       getApplyFilterFn,
-      getApplyFilterFnV7,
     } as GridFilterOperator;
   });
 

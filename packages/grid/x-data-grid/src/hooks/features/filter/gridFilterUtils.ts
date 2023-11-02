@@ -5,12 +5,11 @@ import {
   GridFilterItem,
   GridFilterModel,
   GridLogicOperator,
-  GridRowId,
   GridValidRowModel,
 } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GLOBAL_API_REF, isInternalFilter } from '../../../colDef/utils';
+import { isInternalFilter } from '../../../colDef/utils';
 import {
   getDefaultGridFilterModel,
   GridAggregatedFilterItemApplier,
@@ -35,17 +34,10 @@ try {
   hasEval = false;
 }
 
-type GridFilterItemApplier =
-  | {
-      v7: false;
-      fn: (rowId: GridRowId) => boolean;
-      item: GridFilterItem;
-    }
-  | {
-      v7: true;
-      fn: (row: GridValidRowModel) => boolean;
-      item: GridFilterItem;
-    };
+type GridFilterItemApplier = {
+  fn: (row: GridValidRowModel) => boolean;
+  item: GridFilterItem;
+};
 
 type GridFilterItemApplierNotAggregated = (
   row: GridValidRowModel,
@@ -204,44 +196,18 @@ const getFilterCallbackFromItem = (
     );
   }
 
-  const hasUserFunctionLegacy = !isInternalFilter(filterOperator.getApplyFilterFn);
-  const hasUserFunctionV7 = !isInternalFilter(filterOperator.getApplyFilterFnV7);
-
-  if (filterOperator.getApplyFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
-    const applyFilterOnRow = filterOperator.getApplyFilterFnV7(newFilterItem, column)!;
-    if (typeof applyFilterOnRow !== 'function') {
-      return null;
-    }
-    return {
-      v7: true,
-      item: newFilterItem,
-      fn: (row: GridValidRowModel) => {
-        let value = apiRef.current.getRowValue(row, column);
-        if (ignoreDiacritics) {
-          value = removeDiacritics(value);
-        }
-        return applyFilterOnRow(value, row, column, apiRef);
-      },
-    };
-  }
-
-  const applyFilterOnRow = filterOperator.getApplyFilterFn!(newFilterItem, column)!;
+  const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
   if (typeof applyFilterOnRow !== 'function') {
     return null;
   }
-
   return {
-    v7: false,
     item: newFilterItem,
-    fn: (rowId: GridRowId) => {
-      const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
-      GLOBAL_API_REF.current = apiRef;
+    fn: (row: GridValidRowModel) => {
+      let value = apiRef.current.getRowValue(row, column);
       if (ignoreDiacritics) {
-        params.value = removeDiacritics(params.value);
+        value = removeDiacritics(value);
       }
-      const result = applyFilterOnRow(params);
-      GLOBAL_API_REF.current = null;
-      return result;
+      return applyFilterOnRow(value, row, column, apiRef);
     },
   };
 };
@@ -277,9 +243,7 @@ const buildAggregatedFilterItemsApplier = (
       for (let i = 0; i < appliers.length; i += 1) {
         const applier = appliers[i];
         if (!shouldApplyFilter || shouldApplyFilter(applier.item.field)) {
-          resultPerItemId[applier.item.id!] = applier.v7
-            ? applier.fn(row)
-            : applier.fn(apiRef.current.getRowId(row));
+          resultPerItemId[applier.item.id!] = applier.fn(row);
         }
       }
 
@@ -306,7 +270,7 @@ const buildAggregatedFilterItemsApplier = (
             `${JSON.stringify(String(applier.item.id))}:
           !shouldApply${i} ?
             false :
-            ${applier.v7 ? `appliers[${i}].fn(row)` : `appliers[${i}].fn(getRowId(row))`},
+            appliers[${i}].fn(row),
       `,
         )
         .join('\n')}};
