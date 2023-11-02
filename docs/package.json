@@ -93,7 +93,7 @@
     "@babel/plugin-transform-react-constant-elements": "^7.22.5",
     "@babel/preset-typescript": "^7.23.2",
     "@types/doctrine": "^0.0.8",
-    "@types/stylis": "^4.2.0",
+    "@types/stylis": "^4.2.2",
     "cpy-cli": "^5.0.0",
     "gm": "^1.25.0",
     "typescript-to-proptypes": "^2.2.1"
