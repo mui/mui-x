@@ -41,5 +41,5 @@
       "nodeName": "the legend with row layout"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": { "legend": "" }
 }

@@ -6,7 +6,7 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [{ "class": null, "name": "legend", "description": "" }],
   "name": "ChartsLegend",
   "imports": [
     "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
