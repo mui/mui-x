@@ -31,7 +31,12 @@
       "default": "null"
     }
   },
-  "slots": [],
+  "slots": [
+    { "class": null, "name": "axisLabel", "description": "" },
+    { "class": null, "name": "axisLine", "description": "" },
+    { "class": null, "name": "axisTick", "description": "" },
+    { "class": null, "name": "axisTickLabel", "description": "" }
+  ],
   "name": "ChartsAxis",
   "imports": [
     "import { ChartsAxis } from '@mui/x-charts/ChartsAxis';",
