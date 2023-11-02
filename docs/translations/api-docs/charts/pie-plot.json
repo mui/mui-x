@@ -27,5 +27,5 @@
     }
   },
   "classDescriptions": {},
-  "slotDescriptions": {}
+  "slotDescriptions": { "pieArc": "", "pieArcLabel": "" }
 }

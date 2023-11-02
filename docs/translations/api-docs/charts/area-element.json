@@ -25,5 +25,5 @@
       "conditions": "faded"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": { "area": "The component that renders the root." }
 }

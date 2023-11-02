@@ -3,7 +3,7 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [{ "class": null, "name": "mark", "description": "" }],
   "name": "MarkPlot",
   "imports": [
     "import { MarkPlot } from '@mui/x-charts/LineChart';",
