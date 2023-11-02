@@ -343,6 +343,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "ignoreDiacritics": {
+      "description": "If <code>true</code>, the diacritics (accents) are ignored when filtering or quick filtering. E.g. when filter value is <code>cafe</code>, the rows with <code>café</code> will be visible.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "initialState": {
       "description": "The initial state of the DataGridPremium. The data in it is set in the state on initialization but isn&#39;t controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins.",
       "deprecated": "",
