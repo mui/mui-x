@@ -34,7 +34,17 @@
       "default": "null"
     }
   },
-  "slots": [],
+  "slots": [
+    { "class": null, "name": "axisContent", "description": "" },
+    { "class": null, "name": "axisLabel", "description": "" },
+    { "class": null, "name": "axisLine", "description": "" },
+    { "class": null, "name": "axisTick", "description": "" },
+    { "class": null, "name": "axisTickLabel", "description": "" },
+    { "class": null, "name": "itemContent", "description": "" },
+    { "class": null, "name": "legend", "description": "" },
+    { "class": null, "name": "popper", "description": "" },
+    { "class": null, "name": "scatter", "description": "" }
+  ],
   "name": "ScatterChart",
   "imports": [
     "import { ScatterChart } from '@mui/x-charts/ScatterChart';",
