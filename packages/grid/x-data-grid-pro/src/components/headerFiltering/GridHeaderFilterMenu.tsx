@@ -102,7 +102,6 @@ GridHeaderFilterMenu.propTypes = {
   operators: PropTypes.arrayOf(
     PropTypes.shape({
       getApplyFilterFn: PropTypes.func.isRequired,
-      getApplyFilterFnV7: PropTypes.func,
       getValueAsString: PropTypes.func,
       headerLabel: PropTypes.string,
       InputComponent: PropTypes.elementType,
