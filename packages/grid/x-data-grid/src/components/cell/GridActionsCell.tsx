@@ -97,11 +97,13 @@ function GridActionsCell(props: GridActionsCellProps) {
       focus() {
         // If ignoreCallToFocus is true, then one of the buttons was clicked and the focus is already set
         if (!ignoreCallToFocus.current) {
-          setFocusedButtonIndex(0);
+          // find the first focusable button and pass the index to the state
+          const focusableButtonIndex = options.findIndex((o) => !o.props.disabled);
+          setFocusedButtonIndex(focusableButtonIndex);
         }
       },
     }),
-    [],
+    [options],
   );
 
   React.useEffect(() => {
