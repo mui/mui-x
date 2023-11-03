@@ -147,13 +147,10 @@ function GridActionsCell(props: GridActionsCellProps) {
       if (index < 0 || index > options.length) {
         return index;
       }
-      if (direction === 'left') {
-        return options[index - 1]?.props.disabled ? getNewIndex(index - 1, 'left') : index - 1;
-      }
-      if (direction === 'right') {
-        return options[index + 1]?.props.disabled ? getNewIndex(index + 1, 'right') : index + 1;
-      }
-      return index;
+      const indexMod = direction === 'left' ? -1 : 1;
+      return options[index + indexMod]?.props.disabled
+        ? getNewIndex(index + indexMod, direction)
+        : index + indexMod;
     };
 
     let newIndex: number = focusedButtonIndex;
