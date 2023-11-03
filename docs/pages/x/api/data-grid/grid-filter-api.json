@@ -20,7 +20,7 @@
     },
     {
       "name": "setQuickFilterValues",
-      "description": "Set the quick filter values ot the one given by <code>values</code>",
+      "description": "Set the quick filter values to the one given by <code>values</code>",
       "type": "(values: any[]) => void"
     },
     {
