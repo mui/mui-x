@@ -10,7 +10,8 @@ export const getGridStringQuickFilterFn = (value: any): GridApplyQuickFilter | n
     return null;
   }
   const filterRegex = new RegExp(escapeRegExp(value), 'i');
-  return (columnValue): boolean => {
+  return (_, row, column, apiRef): boolean => {
+    const columnValue = apiRef.current.getRowFormattedValue(row, column);
     return columnValue != null ? filterRegex.test(columnValue.toString()) : false;
   };
 };
