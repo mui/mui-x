@@ -352,7 +352,7 @@ const pages: MuiPage[] = [
   },
   {
     pathname: '/x/react-charts-group',
-    title: 'Charts 🧪',
+    title: 'Charts',
     newFeature: true,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
