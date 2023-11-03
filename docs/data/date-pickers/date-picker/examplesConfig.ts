@@ -235,7 +235,9 @@ export const datePickerExamples: PickersSubcomponentType = {
   TextField: {
     examples: {
       customTheme: {
-        type: 'success',
+        type: 'info',
+        comments:
+          'This approach would change the styles of all the TextField components in the application. Consider using a nested theme with this style wrapping your local picker component to isolate this override',
       },
       sxProp: {
         type: 'success',
@@ -252,27 +254,6 @@ export const datePickerExamples: PickersSubcomponentType = {
       },
     },
     slots: ['root'],
-  },
-  OutlinedInput: {
-    examples: {
-      customTheme: {
-        type: 'warning',
-        comments:
-          'The OutlinedInput is a subcomponent of the TextField with variant="outlined", and a native Material UI component',
-      },
-      sxProp: {
-        type: 'warning',
-        comments:
-          'The OutlinedInput is a subcomponent of the TextField with variant="outlined", and a native Material UI component',
-      },
-      styledComponents: {
-        type: 'warning',
-        parentComponent: 'TextField',
-        comments:
-          'The OutlinedInput is a subcomponent of the TextField with variant="outlined", and a native Material UI component',
-      },
-    },
-    slots: ['root', 'notchedOutline', 'input'],
   },
 };
 

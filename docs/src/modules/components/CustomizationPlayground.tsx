@@ -137,25 +137,30 @@ const RECOMMENDATION_MESSAGES: { [k in 'warning' | 'success']: string } = {
   success: 'This is the recommended styling approach for the selected component.',
 };
 
-function StylingRecommendation({ type = 'success' }: { type?: 'warning' | 'success' }) {
+function StylingRecommendation({
+  type = 'warning',
+  message = '',
+}: {
+  type?: 'warning' | 'success' | 'info';
+  message?: string;
+}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const displayedMessage = type === 'info' ? message : RECOMMENDATION_MESSAGES[type];
+
   if (isMobile) {
     return (
-      <Alert severity={type || 'warning'} sx={{ width: '100%', p: 0.5 }}>
-        {RECOMMENDATION_MESSAGES[type]}
+      <Alert severity={type} sx={{ width: '100%', p: 0.5 }}>
+        {displayedMessage}
       </Alert>
     );
   }
+  const labels = { warning: 'Warning', success: 'Recommended', info: 'Info' };
 
   return (
-    <Tooltip title={RECOMMENDATION_MESSAGES[type]}>
-      {type === 'warning' ? (
-        <Chip color="warning" label="Warning" />
-      ) : (
-        <Chip color="success" label="Recommended" />
-      )}
+    <Tooltip title={displayedMessage}>
+      <Chip color={type} label={labels[type]} />
     </Tooltip>
   );
 }
@@ -309,7 +314,12 @@ const CustomizationPlayground = function CustomizationPlayground({
               value={selectedCustomizationOption}
               options={customizationOptions}
             />
-            {selectedExample && <StylingRecommendation type={selectedExample.type} />}
+            {selectedExample && (
+              <StylingRecommendation
+                type={selectedExample.type}
+                message={selectedExample?.comments}
+              />
+            )}
           </TabsWrapper>{' '}
         </BrandingProvider>
       )}

@@ -9,7 +9,7 @@ export type CustomizationLabelType = {
 };
 
 type CustomizationItemType = {
-  type: 'warning' | 'success';
+  type: 'warning' | 'success' | 'info';
   comments?: string;
   componentProps?: any;
   parentSlot?: string;
