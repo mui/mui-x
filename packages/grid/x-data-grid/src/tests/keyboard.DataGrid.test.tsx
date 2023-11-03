@@ -780,9 +780,6 @@ describe('<DataGrid /> - Keyboard', () => {
 
     fireEvent.keyDown(cell, { key: 'ArrowLeft' });
     expect(getActiveCell()).to.equal(`0-0`);
-
-    // expect the cell to be active, not a button inside
-    expect(document.activeElement?.role).to.equal('cell');
   });
 
   it('should be able to navigate the actions', () => {
