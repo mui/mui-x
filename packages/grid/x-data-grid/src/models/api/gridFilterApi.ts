@@ -52,7 +52,7 @@ export interface GridFilterApi {
     reason?: GridControlledStateReasonLookup['filter'],
   ) => void;
   /**
-   * Set the quick filter values ot the one given by `values`
+   * Set the quick filter values to the one given by `values`
    * @param {any[]} values The list of element to quick filter
    */
   setQuickFilterValues: (values: any[]) => void;
