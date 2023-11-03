@@ -147,7 +147,12 @@ function GridActionsCell(props: GridActionsCellProps) {
       if (index < 0 || index > options.length) {
         return index;
       }
-      const indexMod = direction === 'left' ? -1 : 1;
+
+      // for rtl mode we need to reverse the direction
+      const rtlMod = theme.direction === 'rtl' ? -1 : 1;
+      const indexMod = (direction === 'left' ? -1 : 1) * rtlMod;
+
+      // if the button that should receive focus is disabled go one more step
       return options[index + indexMod]?.props.disabled
         ? getNewIndex(index + indexMod, direction)
         : index + indexMod;
@@ -155,9 +160,9 @@ function GridActionsCell(props: GridActionsCellProps) {
 
     let newIndex: number = focusedButtonIndex;
     if (event.key === 'ArrowRight') {
-      newIndex = getNewIndex(focusedButtonIndex, theme.direction === 'rtl' ? 'left' : 'right');
+      newIndex = getNewIndex(focusedButtonIndex, 'right');
     } else if (event.key === 'ArrowLeft') {
-      newIndex = getNewIndex(focusedButtonIndex, theme.direction === 'rtl' ? 'right' : 'left');
+      newIndex = getNewIndex(focusedButtonIndex, 'left');
     }
 
     if (newIndex < 0 || newIndex >= numberOfButtons) {
