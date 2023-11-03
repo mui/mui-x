@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.18.0
+
+_Nov 3, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 The Charts package is now officially stable!
+- 🥧 Pie charts are now animated.
+- 📈 Line charts now support partial data, and can interpolate missing data.
+
+<img width="380" alt="line charts with partial data" src="https://github.com/mui/mui-x/assets/45398769/385ecf77-19b2-4a03-8aef-5d547db1d9ad">
+
+- ✨ Allow to ignore [diacritics](https://en.wikipedia.org/wiki/Diacritic) when filtering
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.0`
+
+- [DataGrid] Allow to ignore [diacritics](https://en.wikipedia.org/wiki/Diacritic) when filtering (#10569) @cherniavskii
+- [DataGrid] Fix a typo in `gridFilterApi` (#10786) @vu-dao-93
+- [DataGrid] Fix `undefined` row id (#10670) @romgrk
+- [DataGrid] Make column autosizing work with dynamic row height (#10693) @cherniavskii
+- [l10n] Allow to customize sorting label per column (#10839) @JerryWu1234
+
+#### `@mui/x-data-grid-pro@6.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.0`.
+
+#### `@mui/x-data-grid-premium@6.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.0`
+
+- [pickers] Add reference links to calendar components (#10644) @michelengelen
+
+#### `@mui/x-date-pickers-pro@6.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.0`.
+
+### Charts / `@mui/x-charts@6.18.0`
+
+- [charts] Add animation on pie chart (#10782) @alexfauquette
+- [charts] Add reference links to shared/misc chart components (#10660) @michelengelen
+- [charts] Allows to connect nulls (#10803) @alexfauquette
+- [charts] Fix axis highlight in dark mode (#10820) @LukasTy
+
+### Docs
+
+- [docs] Add a data grid recipe for autosizing columns after fetching row-data (#10822) @michelengelen
+- [docs] Add a data grid recipe showing how to remove cell outline on `focus` (#10843) @michelengelen
+- [docs] Add demo about how to use charts margin (#10886) @alexfauquette
+- [docs] Improve custom field input demos readability (#10559) @LukasTy
+
+### Core
+
+- [core] Generate `slot` API descriptions based on `slots` or `components` (#10879) @LukasTy
+
 ## 6.17.0
 
 _Oct 27, 2023_
