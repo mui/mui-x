@@ -57,6 +57,7 @@ Same changes as in `@mui/x-date-pickers@6.18.0`.
 
 - [docs] Add a data grid recipe for autosizing columns after fetching row-data (#10822) @michelengelen
 - [docs] Add a data grid recipe showing how to remove cell outline on `focus` (#10843) @michelengelen
+- [docs] Add demo about how to use charts margin (#10886) @alexfauquette
 - [docs] Improve custom field input demos readability (#10559) @LukasTy
 
 ### Core
