@@ -190,7 +190,7 @@ const JoyDateRangePicker = React.forwardRef((props, ref) => {
 });
 
 /**
- * This component is for syncing the MUI docs's mode with this demo.
+ * This component is for syncing the theme mode of this demo with the MUI docs mode.
  * You might not need this component in your project.
  */
 function SyncThemeMode({ mode }) {
