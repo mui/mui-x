@@ -34,16 +34,16 @@ When applying the filters, the data grid will call this function with the filter
 This function must return another function that takes the cell value as an input and return `true` if it satisfies the operator condition.
 
 ```ts
-const operator: GridFilterOperator = {
+const operator: GridFilterOperator<any, number> = {
   label: 'From',
   value: 'from',
-  getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+  getApplyFilterFn: (filterItem, column) => {
     if (!filterItem.field || !filterItem.value || !filterItem.operator) {
       return null;
     }
 
-    return (params: GridCellParams): boolean => {
-      return Number(params.value) >= Number(filterItem.value);
+    return (value, row, column, apiRef) => {
+      return Number(value) >= Number(filterItem.value);
     };
   },
   InputComponent: RatingInputValue,
@@ -84,22 +84,24 @@ The filtering function `getApplyFilterFn` must be adapted to handle `filterItem.
 Below is an example for a "between" operator, applied on the "Quantity" column.
 
 ```ts
-{
+const operator: GridFilterOperator<any, number> = {
   label: 'Between',
   value: 'between',
-  getApplyFilterFn: (filterItem: GridFilterItem) => {
+  getApplyFilterFn: (filterItem) => {
     if (!Array.isArray(filterItem.value) || filterItem.value.length !== 2) {
       return null;
     }
     if (filterItem.value[0] == null || filterItem.value[1] == null) {
       return null;
     }
-    return ({ value }): boolean => {
-      return value != null && filterItem.value[0] <= value && value <= filterItem.value[1];
+    return (value) => {
+      return (
+        value != null && filterItem.value[0] <= value && value <= filterItem.value[1]
+      );
     };
   },
   InputComponent: InputNumberInterval,
-}
+};
 ```
 
 {{"demo": "CustomMultiValueOperator.js", "bg": "inline", "defaultCodeOpen": false}}

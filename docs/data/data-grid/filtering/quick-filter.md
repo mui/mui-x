@@ -79,13 +79,16 @@ This function takes as an input a value of the quick filter and returns another 
 In the example below, a custom filter is created for the `date` column to check if it contains the correct year.
 
 ```ts
-getApplyQuickFilterFn: (value: string) => {
+const getApplyQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
   if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
     // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
     return null;
   }
-  return (params: GridCellParams): boolean => {
-    return params.value.getFullYear() === Number(value);
+  return (cellValue) => {
+    if (cellValue instanceof Date) {
+      return cellValue.getFullYear() === Number(value);
+    }
+    return false;
   };
 };
 ```
