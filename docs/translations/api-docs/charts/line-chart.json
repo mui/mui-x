@@ -43,5 +43,18 @@
     }
   },
   "classDescriptions": {},
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "area": "",
+    "axisContent": "",
+    "axisLabel": "",
+    "axisLine": "",
+    "axisTick": "",
+    "axisTickLabel": "",
+    "itemContent": "",
+    "legend": "",
+    "line": "",
+    "lineHighlight": "",
+    "mark": "",
+    "popper": ""
+  }
 }

@@ -174,7 +174,7 @@ export const buildFieldInteractions = <P extends {}>({
   return { clickOnInput, testFieldKeyPress, testFieldChange, renderWithProps };
 };
 
-export const cleanText = (text, specialCase?: 'singleDigit' | 'RTL') => {
+export const cleanText = (text: string, specialCase?: 'singleDigit' | 'RTL') => {
   const clean = text.replace(/\u202f/g, ' ');
   switch (specialCase) {
     case 'singleDigit':

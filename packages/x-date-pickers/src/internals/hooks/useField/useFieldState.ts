@@ -213,6 +213,10 @@ export const useFieldState = <
       tempValueStrAndroid: null,
     }));
 
+    if (valueManager.areValuesEqual(utils, state.value, value)) {
+      return;
+    }
+
     const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
       validationError: validator({
         adapter,
@@ -237,10 +241,6 @@ export const useFieldState = <
   };
 
   const clearValue = () => {
-    if (valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue)) {
-      return;
-    }
-
     publishValue({
       value: valueManager.emptyValue,
       referenceValue: state.referenceValue,
@@ -254,20 +254,16 @@ export const useFieldState = <
     }
 
     const activeSection = state.sections[selectedSectionIndexes.startIndex];
-
-    if (activeSection.value === '') {
-      return;
-    }
-
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
 
     const nonEmptySectionCountBefore = activeDateManager
       .getSections(state.sections)
       .filter((section) => section.value !== '').length;
-    const isTheOnlyNonEmptySection = nonEmptySectionCountBefore === 1;
+    const hasNoOtherNonEmptySections =
+      nonEmptySectionCountBefore === (activeSection.value === '' ? 0 : 1);
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
-    const newActiveDate = isTheOnlyNonEmptySection ? null : utils.date(new Date(''));
+    const newActiveDate = hasNoOtherNonEmptySections ? null : utils.date(new Date(''));
     const newValues = activeDateManager.getNewValuesFromNewActiveDate(newActiveDate);
 
     if (

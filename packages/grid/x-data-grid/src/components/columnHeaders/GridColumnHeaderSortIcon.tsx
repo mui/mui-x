@@ -13,7 +13,7 @@ import { GridIconButtonContainer } from './GridIconButtonContainer';
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
   index: number | undefined;
-  sortingOrder: GridSortDirection[];
+  sortingOrder: readonly GridSortDirection[];
 }
 
 type OwnerState = GridColumnHeaderSortIconProps & {
@@ -34,7 +34,7 @@ function getIcon(
   icons: UncapitalizedGridSlotsComponent,
   direction: GridSortDirection,
   className: string,
-  sortingOrder: GridSortDirection[],
+  sortingOrder: readonly GridSortDirection[],
 ) {
   let Icon;
   const iconProps: any = {};

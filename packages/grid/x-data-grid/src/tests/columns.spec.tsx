@@ -149,3 +149,10 @@ function CellParamsFormattedValue() {
     />
   );
 }
+
+const constBrandColumns = [{ field: 'brand' }] as const;
+const constEmptyRows = [] as const;
+
+function ConstProps() {
+  return <DataGrid rows={constEmptyRows} columns={constBrandColumns} />;
+}

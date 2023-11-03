@@ -11,6 +11,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "components": {
+      "description": "Overridable components.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "componentsProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "slotProps": {
       "description": "The props used for each component slot.",
       "deprecated": "",
@@ -43,5 +53,12 @@
       "nodeName": "the switch view icon element"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "leftArrowIcon": "Icon displayed in the left view switch button.",
+    "nextIconButton": "Button allowing to switch to the right view.",
+    "previousIconButton": "Button allowing to switch to the left view.",
+    "rightArrowIcon": "Icon displayed in the right view switch button.",
+    "switchViewButton": "Button displayed to switch between different calendar views.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;."
+  }
 }

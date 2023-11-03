@@ -437,6 +437,47 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getRows({ quickFilterValues: ['+55 44444444'] })).to.deep.equal(['France (fr)']);
       expect(getRows({ quickFilterValues: ['5544444444'] })).to.deep.equal([]);
     });
+
+    describe('ignoreDiacritics', () => {
+      function DiacriticsTestCase({
+        quickFilterValues,
+        ...props
+      }: Partial<DataGridProps> & {
+        quickFilterValues: GridFilterModel['quickFilterValues'];
+      }) {
+        return (
+          <TestCase
+            {...props}
+            filterModel={{
+              items: [],
+              quickFilterValues,
+            }}
+            rows={[{ id: 0, label: 'Apă' }]}
+            columns={[{ field: 'label', type: 'string' }]}
+          />
+        );
+      }
+
+      it('should not ignore diacritics by default', () => {
+        let renderer = render(<DiacriticsTestCase quickFilterValues={['apa']} />);
+        expect(getColumnValues(0)).to.deep.equal([]);
+        renderer.unmount();
+
+        renderer = render(<DiacriticsTestCase quickFilterValues={['apă']} />);
+        expect(getColumnValues(0)).to.deep.equal(['Apă']);
+        renderer.unmount();
+      });
+
+      it('should ignore diacritics when `ignoreDiacritics` is enabled', () => {
+        let renderer = render(<DiacriticsTestCase quickFilterValues={['apa']} ignoreDiacritics />);
+        expect(getColumnValues(0)).to.deep.equal(['Apă']);
+        renderer.unmount();
+
+        renderer = render(<DiacriticsTestCase quickFilterValues={['apă']} ignoreDiacritics />);
+        expect(getColumnValues(0)).to.deep.equal(['Apă']);
+        renderer.unmount();
+      });
+    });
   });
 
   describe('column type: number', () => {

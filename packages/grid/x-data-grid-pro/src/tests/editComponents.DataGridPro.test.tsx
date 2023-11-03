@@ -623,7 +623,7 @@ describe('<DataGridPro /> - Edit components', () => {
       userEvent.mousePress(screen.queryAllByRole('option')[1]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
-      fireEvent.keyDown(screen.getByRole('button', { name: 'Adidas' }), { key: 'Enter' });
+      fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Enter' });
       expect(screen.queryByRole('listbox')).to.equal(null);
 
       resolveCallback!();

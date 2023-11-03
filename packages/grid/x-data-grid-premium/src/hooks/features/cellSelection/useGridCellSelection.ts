@@ -486,7 +486,7 @@ export const useGridCellSelection = (
         newClasses.push(gridClasses['cell--rangeTop']);
       }
 
-      if (rowIndex < visibleRows.range.lastRowIndex) {
+      if (rowIndex + visibleRows.range.firstRowIndex < visibleRows.range.lastRowIndex) {
         const { id: nextRowId } = visibleRows.rows[rowIndex + 1];
         if (!apiRef.current.unstable_isCellSelected(nextRowId, field)) {
           newClasses.push(gridClasses['cell--rangeBottom']);

@@ -101,6 +101,16 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
     highlightScope?: Partial<HighlightScope>;
   };
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [MarkElement API](https://mui.com/x/api/charts/mark-element/)
+ */
 function MarkElement(props: MarkElementProps) {
   const {
     x,
