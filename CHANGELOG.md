@@ -10,11 +10,12 @@ _Nov 3, 2023_
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 The Charts package is now officially stable!
-- 📈 Line charts now support partial data, and to interpolate missing ones.
+- 🥧 Pie charts are now animated.
+- 📈 Line charts now support partial data, and can interpolate missing data.
 
 <img width="380" alt="line charts with partial data" src="https://github.com/mui/mui-x/assets/45398769/385ecf77-19b2-4a03-8aef-5d547db1d9ad">
 
-- 🐞 Bugfixes
+- ✨ Allow to ignore [diacritics](https://en.wikipedia.org/wiki/Diacritic) when filtering
 - 📚 Documentation improvements
 
 ### Data Grid
@@ -39,7 +40,7 @@ Same changes as in `@mui/x-data-grid-pro@6.18.0`.
 
 #### `@mui/x-date-pickers@6.18.0`
 
-- [pickers] Add reference links to calendar components  (#10644) @michelengelen
+- [pickers] Add reference links to calendar components (#10644) @michelengelen
 
 #### `@mui/x-date-pickers-pro@6.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
