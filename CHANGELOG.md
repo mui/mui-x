@@ -55,8 +55,8 @@ Same changes as in `@mui/x-date-pickers@6.18.0`.
 
 ### Docs
 
-- [docs] Add a recipe for autosizing columns after fetching row-data (#10822) @michelengelen
-- [docs] Add recipe showing how to remove cell focus outline (#10843) @michelengelen
+- [docs] Add a data grid recipe for autosizing columns after fetching row-data (#10822) @michelengelen
+- [docs] Add a data grid recipe showing how to remove cell outline on `focus` (#10843) @michelengelen
 
 ### Core
 
