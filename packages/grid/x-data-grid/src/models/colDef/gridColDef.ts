@@ -41,7 +41,7 @@ export type GridApplyQuickFilter<R extends GridValidRowModel = GridValidRowModel
 
 export type GetApplyQuickFilterFn<R extends GridValidRowModel = GridValidRowModel, V = any> = (
   value: any,
-  colDef: GridStateColDef,
+  colDef: GridStateColDef<R, V>,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => null | GridApplyQuickFilter<R, V>;
 

@@ -45,6 +45,7 @@
   { "name": "FooterRowCountOverrides", "kind": "Interface" },
   { "name": "frFR", "kind": "Variable" },
   { "name": "GetApplyFilterFn", "kind": "TypeAlias" },
+  { "name": "GetApplyQuickFilterFn", "kind": "TypeAlias" },
   { "name": "GetColumnForNewFilterArgs", "kind": "Interface" },
   { "name": "getDataGridUtilityClass", "kind": "Function" },
   { "name": "getDefaultGridFilterModel", "kind": "Variable" },
