@@ -141,6 +141,7 @@ export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
+export * from '../utils/getPublicApiRef';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
 export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 export * from '../hooks/utils/useOnMount';

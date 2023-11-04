@@ -19,6 +19,7 @@ import {
   getActiveElement,
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
+  getPublicApiRef,
 } from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import { unstable_debounce as debounce } from '@mui/utils';
@@ -379,7 +380,7 @@ export const useGridClipboardImport = (
 
       defaultPasteResolver({
         pastedData,
-        apiRef: { current: apiRef.current.getPublicApi() },
+        apiRef: getPublicApiRef(apiRef),
         updateCell: (...args) => {
           cellUpdater.updateCell(...args);
         },

@@ -15,6 +15,7 @@ import {
   GridQuickFilterValueResult,
 } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
+import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
   gridColumnFieldsSelector,
   gridColumnLookupSelector,
@@ -205,7 +206,7 @@ const getFilterCallbackFromItem = (
       if (ignoreDiacritics) {
         value = removeDiacritics(value);
       }
-      return applyFilterOnRow(value, row, column, apiRef);
+      return applyFilterOnRow(value, row, column, getPublicApiRef(apiRef));
     },
   };
 };
@@ -327,7 +328,7 @@ const buildAggregatedQuickFilterApplier = (
         appliers: quickFilterValues.map((quickFilterValue) => {
           const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
-            fn: getApplyQuickFilterFn(value, column, apiRef),
+            fn: getApplyQuickFilterFn(value, column, getPublicApiRef(apiRef)),
           };
         }),
       });
@@ -359,7 +360,7 @@ const buildAggregatedQuickFilterApplier = (
         if (ignoreDiacritics) {
           value = removeDiacritics(value);
         }
-        const isMatching = applier.fn(value, row, column, apiRef);
+        const isMatching = applier.fn(value, row, column, getPublicApiRef(apiRef));
         if (isMatching) {
           result[filterValue] = true;
           continue outer;
