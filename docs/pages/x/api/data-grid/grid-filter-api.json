@@ -9,6 +9,11 @@
     },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
     {
+      "name": "ignoreDiacritics",
+      "description": "Returns the value of the <code>ignoreDiacritics</code> prop.",
+      "type": "DataGridProcessedProps['ignoreDiacritics']"
+    },
+    {
       "name": "setFilterLogicOperator",
       "description": "Changes the GridLogicOperator used to connect the filters.",
       "type": "(operator: GridLogicOperator) => void"
