@@ -18,6 +18,7 @@ import {
   GridQuickFilterValueResult,
 } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
+import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
   gridColumnFieldsSelector,
   gridColumnLookupSelector,
@@ -220,7 +221,7 @@ const getFilterCallbackFromItem = (
         if (ignoreDiacritics) {
           value = removeDiacritics(value);
         }
-        return applyFilterOnRow(value, row, column, apiRef);
+        return applyFilterOnRow(value, row, column, getPublicApiRef(apiRef));
       },
     };
   }
@@ -371,7 +372,7 @@ const buildAggregatedQuickFilterApplier = (
           const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
             v7: true,
-            fn: getApplyQuickFilterFnV7(value, column, apiRef),
+            fn: getApplyQuickFilterFnV7(value, column, getPublicApiRef(apiRef)),
           };
         }),
       });
@@ -382,7 +383,7 @@ const buildAggregatedQuickFilterApplier = (
           const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
             v7: false,
-            fn: getApplyQuickFilterFn(value, column, apiRef),
+            fn: getApplyQuickFilterFn(value, column, getPublicApiRef(apiRef)),
           };
         }),
       });
@@ -416,7 +417,7 @@ const buildAggregatedQuickFilterApplier = (
           if (ignoreDiacritics) {
             value = removeDiacritics(value);
           }
-          const isMatching = applier.fn(value, row, column, apiRef);
+          const isMatching = applier.fn(value, row, column, getPublicApiRef(apiRef));
           if (isMatching) {
             result[filterValue] = true;
             continue outer;
