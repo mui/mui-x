@@ -5,6 +5,7 @@ import { spy } from 'sinon';
 import {
   DataGrid,
   DataGridProps,
+  GetApplyQuickFilterFn,
   GridFilterModel,
   GridLogicOperator,
   GridToolbar,
@@ -651,14 +652,14 @@ describe('<DataGrid /> - Quick filter', () => {
 
   // https://github.com/mui/mui-x/issues/9666
   it('should not fail when the data changes', () => {
-    function getApplyQuickFilterFn(value: any) {
+    const getApplyQuickFilterFn: GetApplyQuickFilterFn<any, string> = (value) => {
       if (!value) {
         return null;
       }
-      return (params: any) => {
-        return String(params?.value).toLowerCase().includes(String(value).toLowerCase());
+      return (cellValue) => {
+        return String(cellValue).toLowerCase().includes(String(value).toLowerCase());
       };
-    }
+    };
 
     const { setProps } = render(
       <TestCase

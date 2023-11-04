@@ -9,6 +9,7 @@ import {
   GridFilterItem,
   GridPreferencePanelsValue,
   GridToolbar,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -1269,21 +1270,21 @@ describe('<DataGrid /> - Filter', () => {
                     label: 'Contains',
                     value: 'contains',
                     getApplyFilterFn: (filterItem) => {
-                      return (params) => {
+                      return (value) => {
                         if (
                           !filterItem.field ||
                           !filterItem.value ||
                           !filterItem.operator ||
-                          !params.value
+                          !value
                         ) {
                           return null;
                         }
-                        return params.value.includes(filterItem.value);
+                        return value.includes(filterItem.value);
                       };
                     },
                     getValueAsString: (value) => `"${value}" text string`,
                   },
-                ],
+                ] as GridFilterOperator<any, string>[],
               },
             ]}
             components={{ Toolbar: GridToolbarFilterButton }}
