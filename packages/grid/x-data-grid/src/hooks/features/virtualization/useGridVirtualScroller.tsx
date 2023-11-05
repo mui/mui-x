@@ -125,7 +125,8 @@ export const useGridVirtualScroller = () => {
   const enabled = useGridSelector(apiRef, gridVirtualizationEnabledSelector);
   const enabledForColumns = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const containerDimensions = dimensions.viewportOuterSize;
+  const outerSize = dimensions.viewportOuterSize;
+  const innerSize = dimensions.viewportInnerSize;
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
@@ -220,7 +221,7 @@ export const useGridVirtualScroller = () => {
 
     const lastRowIndex = rootProps.autoHeight
       ? firstRowIndex + currentPage.rows.length
-      : getNearestIndexToRender(top + containerDimensions.height);
+      : getNearestIndexToRender(top + innerSize.height);
 
     let firstColumnIndex = 0;
     let lastColumnIndex = columnPositions.length;
@@ -243,7 +244,7 @@ export const useGridVirtualScroller = () => {
 
       if (!hasRowWithAutoHeight) {
         firstColumnIndex = binarySearch(Math.abs(left), columnPositions);
-        lastColumnIndex = binarySearch(Math.abs(left) + containerDimensions.width, columnPositions);
+        lastColumnIndex = binarySearch(Math.abs(left) + innerSize.width, columnPositions);
       }
     }
 
@@ -264,7 +265,7 @@ export const useGridVirtualScroller = () => {
     columnPositions,
     visibleColumns.length,
     apiRef,
-    containerDimensions,
+    innerSize,
   ]);
 
   const computeRealRenderContext = React.useCallback(
@@ -433,7 +434,6 @@ export const useGridVirtualScroller = () => {
 
   const minFirstColumn = pinnedColumns.left.length;
   const maxLastColumn = visibleColumns.length - pinnedColumns.right.length;
-  const availableSpace = containerDimensions.width;
 
   const getRows = (
     params: {
@@ -448,7 +448,7 @@ export const useGridVirtualScroller = () => {
       (hasBottomPinnedRows && params.position === 'bottom');
     const isPinnedSection = params.position !== undefined;
 
-    if (availableSpace == null) {
+    if (innerSize.width === 0) {
       return [];
     }
 
@@ -610,7 +610,7 @@ export const useGridVirtualScroller = () => {
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
           index={index}
-          containerWidth={availableSpace}
+          containerWidth={outerSize.width}
           isLastVisible={isLastVisible}
           {...rootRowProps}
         />,
@@ -626,7 +626,7 @@ export const useGridVirtualScroller = () => {
   };
 
   const needsHorizontalScrollbar =
-    containerDimensions.width && columnsTotalWidth >= containerDimensions.width;
+    outerSize.width && columnsTotalWidth >= outerSize.width;
 
   const scrollerStyle = React.useMemo(
     () =>
@@ -691,7 +691,7 @@ export const useGridVirtualScroller = () => {
   }, [enabled]);
 
   useEnhancedEffect(() => {
-    if (containerDimensions.width == 0) {
+    if (outerSize.width == 0) {
       return;
     }
 
@@ -703,7 +703,7 @@ export const useGridVirtualScroller = () => {
       left: scrollPosition.left,
       renderContext: initialRenderContext,
     });
-  }, [apiRef, containerDimensions.width, computeRenderContext, updateRenderContext]);
+  }, [apiRef, outerSize.width, computeRenderContext, updateRenderContext]);
 
   apiRef.current.register('private', {
     getRenderContext,
