@@ -13,6 +13,7 @@ import {
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
 import { GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSelectionInterfaces';
+import type { DataGridPremiumProcessedProps } from './dataGridPremiumProps';
 
 /**
  * The api of `DataGridPremium`.
@@ -35,5 +36,5 @@ export interface GridApiPremium
 
 export interface GridPrivateApiPremium
   extends GridApiPremium,
-    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium>,
+    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
     GridDetailPanelPrivateApi {}

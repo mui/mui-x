@@ -88,7 +88,14 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
       { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
-      { pathname: '/x/react-data-grid/style' },
+      {
+        pathname: '/x/react-data-grid/style-group',
+        title: 'Style',
+        children: [
+          { pathname: '/x/react-data-grid/style', title: 'Overview' },
+          { pathname: '/x/react-data-grid/style-recipes', title: 'Recipes' },
+        ],
+      },
       { pathname: '/x/react-data-grid/localization' },
       { pathname: '/x/react-data-grid/scrolling' },
       { pathname: '/x/react-data-grid/virtualization' },
@@ -345,7 +352,7 @@ const pages: MuiPage[] = [
   },
   {
     pathname: '/x/react-charts-group',
-    title: 'Charts 🧪',
+    title: 'Charts',
     newFeature: true,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },

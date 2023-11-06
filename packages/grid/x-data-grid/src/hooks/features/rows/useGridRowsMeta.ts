@@ -69,6 +69,7 @@ export const useGridRowsMeta = (
     | 'pagination'
     | 'paginationMode'
     | 'rowHeight'
+    | 'rowPositionsDebounceMs'
   >,
 ): void => {
   const { getRowHeight: getRowHeightProp, getRowSpacing, getEstimatedRowHeight } = props;
@@ -256,8 +257,8 @@ export const useGridRowsMeta = (
   );
 
   const debouncedHydrateRowsMeta = React.useMemo(
-    () => debounce(hydrateRowsMeta),
-    [hydrateRowsMeta],
+    () => debounce(hydrateRowsMeta, props.rowPositionsDebounceMs),
+    [hydrateRowsMeta, props.rowPositionsDebounceMs],
   );
 
   const storeMeasuredRowHeight = React.useCallback<

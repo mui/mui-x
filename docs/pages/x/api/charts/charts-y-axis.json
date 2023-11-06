@@ -37,7 +37,12 @@
     "tickNumber": { "type": { "name": "number" } },
     "tickSize": { "type": { "name": "number" }, "default": "6" }
   },
-  "slots": [],
+  "slots": [
+    { "class": null, "name": "axisLabel", "description": "" },
+    { "class": null, "name": "axisLine", "description": "" },
+    { "class": null, "name": "axisTick", "description": "" },
+    { "class": null, "name": "axisTickLabel", "description": "" }
+  ],
   "name": "ChartsYAxis",
   "imports": [
     "import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';",

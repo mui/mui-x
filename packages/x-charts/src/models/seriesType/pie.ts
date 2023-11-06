@@ -10,7 +10,7 @@ export type PieValueType = {
 };
 
 export type DefaultizedPieValueType = PieValueType &
-  D3PieArcDatum<any> & { color: string; formattedValue: string };
+  Omit<D3PieArcDatum<any>, 'data'> & { color: string; formattedValue: string };
 
 export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number) => number);
 
@@ -78,6 +78,8 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     innerRadius?: number;
     outerRadius?: number;
     cornerRadius?: number;
+    paddingAngle?: number;
+    color?: string;
   };
   /**
    * Override the arc attibutes when it is faded.
@@ -91,6 +93,8 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     innerRadius?: number;
     outerRadius?: number;
     cornerRadius?: number;
+    paddingAngle?: number;
+    color?: string;
   };
 }
 

@@ -3,7 +3,7 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [{ "class": null, "name": "scatter", "description": "" }],
   "name": "ScatterPlot",
   "imports": [
     "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
