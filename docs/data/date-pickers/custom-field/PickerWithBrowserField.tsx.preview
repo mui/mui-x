@@ -3,9 +3,3 @@
     field: { clearable: true },
   }}
 />
-<BrowserSingleInputDateRangePicker
-  slotProps={{
-    field: { clearable: true },
-  }}
-/>
-<BrowserDateRangePicker />

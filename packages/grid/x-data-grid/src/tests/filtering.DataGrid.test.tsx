@@ -410,6 +410,52 @@ describe('<DataGrid /> - Filter', () => {
         '1',
       ]);
     });
+
+    describe('ignoreDiacritics', () => {
+      function DiacriticsTestCase({
+        filterValue,
+        ...props
+      }: Partial<DataGridProps> & { filterValue: GridFilterItem['value'] }) {
+        return (
+          <TestCase
+            filterModel={{
+              items: [{ field: 'label', operator: 'contains', value: filterValue }],
+            }}
+            {...props}
+            rows={[{ id: 0, label: 'Apă' }]}
+            columns={[{ field: 'label', type: 'string' }]}
+          />
+        );
+      }
+
+      it('should not ignore diacritics by default', () => {
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apa" />);
+          expect(getColumnValues(0)).to.deep.equal([]);
+          unmount();
+        });
+
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apă" />);
+          expect(getColumnValues(0)).to.deep.equal(['Apă']);
+          unmount();
+        });
+      });
+
+      it('should ignore diacritics when `ignoreDiacritics` is enabled', () => {
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apa" ignoreDiacritics />);
+          expect(getColumnValues(0)).to.deep.equal(['Apă']);
+          unmount();
+        });
+
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apă" ignoreDiacritics />);
+          expect(getColumnValues(0)).to.deep.equal(['Apă']);
+          unmount();
+        });
+      });
+    });
   });
 
   describe('column type: number', () => {

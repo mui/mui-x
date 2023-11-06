@@ -112,6 +112,7 @@ async function main() {
           '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
           '/docs-data-grid-sorting/ServerSortingGrid', // No flag column
           '/docs-data-grid-filtering/QuickFilteringExcludeHiddenColumns', // No flag column
+          '/docs-data-grid-filtering/QuickFilteringDiacritics', // No flag column
         ];
 
         if (

@@ -70,6 +70,15 @@ type MonthCalendarComponent = (<TDate>(
   props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
+ *
+ * API:
+ *
+ * - [MonthCalendar API](https://mui.com/x/api/date-pickers/month-calendar/)
+ */
 export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
   inProps: MonthCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,

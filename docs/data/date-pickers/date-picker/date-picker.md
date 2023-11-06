@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: React Date Picker component
-components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, DateCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers

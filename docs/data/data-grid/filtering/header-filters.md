@@ -72,6 +72,10 @@ Additionally, `slots.headerFilterMenu` could also be used to customize the menu 
 
 {{"demo": "CustomHeaderFilterDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Ignore diacritics (accents)
+
+You can ignore diacritics (accents) when filtering the rows. See [Quick filter - Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents).
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
