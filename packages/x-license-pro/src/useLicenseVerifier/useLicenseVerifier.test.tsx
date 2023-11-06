@@ -10,16 +10,27 @@ import {
 import { sharedLicenseStatuses } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 
+const oneDayInMS = 1000 * 60 * 60 * 24;
 const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
-const releaseInfo = generateReleaseInfo(releaseDate);
+const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
 function TestComponent() {
-  const licesenStatus = useLicenseVerifier('x-date-pickers-pro', releaseInfo);
+  const licesenStatus = useLicenseVerifier('x-date-pickers-pro', RELEASE_INFO);
   return <div data-testid="status">Status: {licesenStatus.status}</div>;
 }
 
 describe('useLicenseVerifier', () => {
   const { render } = createRenderer();
+
+  let env: any;
+  beforeEach(() => {
+    env = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'test';
+  });
+
+  afterEach(() => {
+    process.env.NODE_ENV = env;
+  });
 
   describe('error', () => {
     beforeEach(() => {
@@ -55,6 +66,32 @@ describe('useLicenseVerifier', () => {
       }).not.toErrorDev();
 
       expect(screen.getByTestId('status')).to.have.text('Status: Valid');
+    });
+
+    it('should throw if the license is expired by more than a 30 days', () => {
+      process.env.NODE_ENV = 'development';
+
+      const expiredLicenseKey = generateLicense({
+        expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
+        orderNumber: 'MUI-123',
+        scope: 'pro',
+        licensingModel: 'subscription',
+      });
+      LicenseInfo.setLicenseKey(expiredLicenseKey);
+
+      let actualErrorMsg;
+      expect(() => {
+        try {
+          render(<TestComponent />);
+        } catch (error: any) {
+          actualErrorMsg = error.message;
+        }
+      }).to.toErrorDev([
+        'MUI: Expired license key',
+        'MUI: Expired license key',
+        'The above error occurred in the <TestComponent> component',
+      ]);
+      expect(actualErrorMsg).to.match(/MUI: Expired license key/);
     });
   });
 });
