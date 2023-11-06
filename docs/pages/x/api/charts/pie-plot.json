@@ -11,7 +11,10 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [
+    { "class": null, "name": "pieArc", "description": "" },
+    { "class": null, "name": "pieArcLabel", "description": "" }
+  ],
   "name": "PiePlot",
   "imports": [
     "import { PiePlot } from '@mui/x-charts/PieChart';",
