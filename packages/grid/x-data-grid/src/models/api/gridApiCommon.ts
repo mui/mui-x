@@ -33,6 +33,7 @@ import type { GridStatePersistenceApi } from '../../hooks/features/statePersiste
 import { GridColumnGroupingApi } from './gridColumnGroupingApi';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 import { GridHeaderFilteringApi, GridHeaderFilteringPrivateApi } from './gridHeaderFilteringApi';
+import type { DataGridProcessedProps } from '../props/DataGridProps';
 
 export interface GridApiCommon<
   GridState extends GridStateCommunity = any,
@@ -67,7 +68,8 @@ export interface GridApiCommon<
 export interface GridPrivateOnlyApiCommon<
   Api extends GridApiCommon,
   PrivateApi extends GridPrivateApiCommon,
-> extends GridCorePrivateApi<Api, PrivateApi>,
+  Props extends DataGridProcessedProps,
+> extends GridCorePrivateApi<Api, PrivateApi, Props>,
     GridStatePrivateApi<PrivateApi['state']>,
     GridPipeProcessingPrivateApi,
     GridStrategyProcessingApi,
@@ -82,4 +84,4 @@ export interface GridPrivateOnlyApiCommon<
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,
-    GridPrivateOnlyApiCommon<GridApiCommon, GridPrivateApiCommon> {}
+    GridPrivateOnlyApiCommon<GridApiCommon, GridPrivateApiCommon, DataGridProcessedProps> {}

@@ -21,3 +21,7 @@ title: Charts - Line demonstration
 ## BiaxialLineChart
 
 {{"demo": "BiaxialLineChart.js"}}
+
+## LineChartConnectNulls
+
+{{"demo": "LineChartConnectNulls.js"}}

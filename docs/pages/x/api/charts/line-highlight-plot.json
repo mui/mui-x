@@ -3,7 +3,7 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [{ "class": null, "name": "lineHighlight", "description": "" }],
   "name": "LineHighlightPlot",
   "imports": [
     "import { LineHighlightPlot } from '@mui/x-charts/LineChart';",

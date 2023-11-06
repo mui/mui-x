@@ -70,6 +70,11 @@ export const CartesianContext = React.createContext<{
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
+/**
+ * API:
+ *
+ * - [CartesianContextProvider API](https://mui.com/x/api/charts/cartesian-context-provider/)
+ */
 function CartesianContextProvider({
   xAxis: inXAxis,
   yAxis: inYAxis,
@@ -309,6 +314,7 @@ CartesianContextProvider.propTypes = {
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
@@ -317,6 +323,13 @@ CartesianContextProvider.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -337,6 +350,7 @@ CartesianContextProvider.propTypes = {
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
@@ -345,6 +359,13 @@ CartesianContextProvider.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,

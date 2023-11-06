@@ -106,6 +106,15 @@ const SPARKLINE_DEFAULT_MARGIN = {
   right: 5,
 };
 
+/**
+ * Demos:
+ *
+ * - [SparkLine](https://mui.com/x/react-charts/sparkline/)
+ *
+ * API:
+ *
+ * - [SparkLineChart API](https://mui.com/x/api/charts/spark-line-chart/)
+ */
 const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLineChartProps, ref) {
   const {
     xAxis,
@@ -304,6 +313,7 @@ SparkLineChart.propTypes = {
     id: PropTypes.string,
     label: PropTypes.string,
     labelFontSize: PropTypes.number,
+    labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
@@ -312,6 +322,9 @@ SparkLineChart.propTypes = {
     slots: PropTypes.object,
     stroke: PropTypes.string,
     tickFontSize: PropTypes.number,
+    tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
+    tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+    tickLabelStyle: PropTypes.object,
     tickMaxStep: PropTypes.number,
     tickMinStep: PropTypes.number,
     tickNumber: PropTypes.number,

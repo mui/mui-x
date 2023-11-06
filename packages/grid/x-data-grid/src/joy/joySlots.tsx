@@ -229,7 +229,7 @@ const Select = React.forwardRef<
     },
     ref,
   ) => {
-    const handleChange: JoySelectProps<any>['onChange'] = (event, newValue) => {
+    const handleChange: JoySelectProps<any, any>['onChange'] = (event, newValue) => {
       if (event && onChange) {
         // Same as in https://github.com/mui/material-ui/blob/e5558282a8f36856aef1299f3a36f3235e92e770/packages/mui-material/src/Select/SelectInput.js#L288-L300
 
@@ -251,7 +251,7 @@ const Select = React.forwardRef<
 
     return (
       <JoySelect
-        {...(props as JoySelectProps<any>)}
+        {...(props as JoySelectProps<any, any>)}
         listboxOpen={open}
         onListboxOpenChange={(isOpen) => {
           if (isOpen) {
@@ -360,7 +360,7 @@ const Pagination = React.forwardRef<
 
   const pageSizeOptions = isPageSizeIncludedInPageSizeOptions() ? rootProps.pageSizeOptions : [];
 
-  const handleChangeRowsPerPage: JoySelectProps<number>['onChange'] = (event, newValue) => {
+  const handleChangeRowsPerPage: JoySelectProps<number, false>['onChange'] = (event, newValue) => {
     const newPageSize = Number(newValue);
     apiRef.current.setPageSize(newPageSize);
   };

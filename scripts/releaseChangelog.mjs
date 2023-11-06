@@ -259,11 +259,11 @@ Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
   }
 ${logChangelogSection(pickersProCommits)}
 
-### Charts / \`@mui/x-charts@__CHARTS_VERSION__\`
+### Charts / \`@mui/x-charts@__VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
 
-### Tree View / \`@mui/x-tree-view@__TREE_VIEW_VERSION__\`
+### Tree View / \`@mui/x-tree-view@__VERSION__\`
 
 ${logChangelogSection(treeViewCommits)}
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}

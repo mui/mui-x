@@ -1,18 +1,12 @@
 import * as React from 'react';
-import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
-import PropTypes from 'prop-types';
+import { arc as d3Arc } from 'd3-shape';
+import { animated, SpringValue, to } from '@react-spring/web';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { HighlightScope } from '../context/HighlightProvider';
-import { InteractionContext } from '../context/InteractionProvider';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
-import { PieSeriesType } from '../models/seriesType/pie';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
@@ -53,27 +47,25 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   return composeClasses(slots, getPieArcUtilityClass, classes);
 };
 
-const PieArcRoot = styled('path', {
+const PieArcRoot = styled(animated.path, {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
-})<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
   stroke: (theme.vars || theme).palette.background.paper,
   strokeWidth: 1,
   strokeLinejoin: 'round',
-  fill: ownerState.color,
-  opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 
-export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> &
-  D3PieArcDatum<any> & {
+export type PieArcProps = PieArcOwnerState &
+  React.ComponentPropsWithoutRef<'path'> & {
+    startAngle: SpringValue<number>;
+    endAngle: SpringValue<number>;
+    innerRadius: SpringValue<number>;
+    outerRadius: SpringValue<number>;
+    cornerRadius: SpringValue<number>;
+    paddingAngle: SpringValue<number>;
     highlightScope?: Partial<HighlightScope>;
-    innerRadius: PieSeriesType['innerRadius'];
-    outerRadius: number;
-    cornerRadius: PieSeriesType['cornerRadius'];
-    highlighted: PieSeriesType['highlighted'];
-    faded: PieSeriesType['faded'];
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
   };
 
@@ -84,27 +76,17 @@ export default function PieArc(props: PieArcProps) {
     classes: innerClasses,
     color,
     highlightScope,
-    innerRadius: baseInnerRadius = 0,
-    outerRadius: baseOuterRadius,
-    cornerRadius: baseCornerRadius = 0,
-    highlighted,
-    faded = { additionalRadius: -5 },
     onClick,
+    isFaded,
+    isHighlighted,
+    startAngle,
+    endAngle,
+    paddingAngle,
+    innerRadius,
+    outerRadius,
+    cornerRadius,
     ...other
   } = props;
-
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(
-    item,
-    { type: 'pie', seriesId: id, dataIndex },
-    highlightScope,
-  );
-
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'pie', seriesId: id, dataIndex }, highlightScope);
 
   const ownerState = {
     id,
@@ -116,48 +98,27 @@ export default function PieArc(props: PieArcProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const attibuesOverride = {
-    additionalRadius: 0,
-    ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
-  };
-  const innerRadius = Math.max(0, attibuesOverride.innerRadius ?? baseInnerRadius);
-
-  const outerRadius = Math.max(
-    0,
-    attibuesOverride.outerRadius ?? baseOuterRadius + attibuesOverride.additionalRadius,
-  );
-  const cornerRadius = attibuesOverride.cornerRadius ?? baseCornerRadius;
+  const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   return (
     <PieArcRoot
-      d={
-        d3Arc().cornerRadius(cornerRadius)({
-          ...other,
-          innerRadius,
-          outerRadius,
-        })!
-      }
+      d={to(
+        [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
+        (sA, eA, pA, iR, oR, cR) =>
+          d3Arc().cornerRadius(cR)({
+            padAngle: pA,
+            startAngle: sA,
+            endAngle: eA,
+            innerRadius: iR,
+            outerRadius: oR,
+          })!,
+      )}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={classes.root}
+      {...other}
       {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
     />
   );
 }
-
-PieArc.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  classes: PropTypes.object,
-  cornerRadius: PropTypes.number,
-  dataIndex: PropTypes.number.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
-  innerRadius: PropTypes.number,
-  outerRadius: PropTypes.number.isRequired,
-} as any;
