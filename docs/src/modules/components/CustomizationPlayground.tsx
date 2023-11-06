@@ -290,6 +290,7 @@ const CustomizationPlayground = function CustomizationPlayground({
     handleTokenChange,
     selectedTokens,
     selectedExample,
+    moreInformation,
   } = useCustomizationPlayground({ examples, componentName });
 
   const StyledChild = withStyles(
@@ -395,10 +396,12 @@ const CustomizationPlayground = function CustomizationPlayground({
           </BrandingProvider>
         )}
       </PlaygroundWrapper>
-
-      {shouldBeInteractive && (
-        <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
-      )}
+      <BrandingProvider>
+        {shouldBeInteractive && (
+          <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
+        )}
+        {moreInformation}
+      </BrandingProvider>
     </Box>
   );
 };

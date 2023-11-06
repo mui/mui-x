@@ -21,7 +21,11 @@ export type CustomizationItemsType = Partial<{
 }>;
 
 export type PickersSubcomponentType = {
-  [k: string]: { examples: CustomizationItemsType; slots: string[] };
+  [k: string]: {
+    examples: CustomizationItemsType;
+    slots: string[];
+    moreInformation?: React.ReactElement | string;
+  };
 };
 
 export interface UseCustomizationPlaygroundProps {
@@ -68,6 +72,7 @@ export type UseCustomizationPlaygroundReturnType = {
   handleTokenChange: HandleTokenChangeType;
   selectedTokens: StyleTokensType;
   selectedExample?: CustomizationItemType | null;
+  moreInformation?: React.ReactElement | string | null;
 };
 
 export function withStyles(
@@ -438,5 +443,6 @@ export function useCustomizationPlayground({
       selectedDemo && selectedCustomizationOption
         ? examples[selectedDemo]?.examples[selectedCustomizationOption]
         : null,
+    moreInformation: selectedDemo && examples[selectedDemo]?.moreInformation,
   };
 }

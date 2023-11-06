@@ -1,5 +1,14 @@
-import { StaticDatePicker, StaticDatePickerProps } from '@mui/x-date-pickers/StaticDatePicker';
-import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import * as React from 'react';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import {
+  StaticDatePicker,
+  StaticDatePickerProps,
+} from '@mui/x-date-pickers/StaticDatePicker';
+import {
+  DesktopDatePicker,
+  DesktopDatePickerProps,
+} from '@mui/x-date-pickers/DesktopDatePicker';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { PickersSubcomponentType } from 'docsx/src/modules/utils/useCustomizationPlayground';
@@ -67,7 +76,13 @@ export const staticDatePickerExamples: PickersSubcomponentType = {
         type: 'success',
       },
     },
-    slots: ['root', 'weekDayLabel', 'weekContainer', 'weekNumberLabel', 'weekNumber'],
+    slots: [
+      'root',
+      'weekDayLabel',
+      'weekContainer',
+      'weekNumberLabel',
+      'weekNumber',
+    ],
   },
   PickersDay: {
     examples: {
@@ -121,6 +136,21 @@ export const staticDatePickerExamples: PickersSubcomponentType = {
     slots: ['root', 'monthButton'],
   },
 };
+
+function TextFieldMoreInfo() {
+  return (
+    <Typography>
+      For more information on customizing the TextField component, you can see{' '}
+      <Link
+        fontWeight={400}
+        underline="hover"
+        href="mui.com/material-ui/react-text-field/#customization"
+      >
+        Material UI docs
+      </Link>
+    </Typography>
+  );
+}
 
 export const datePickerExamples: PickersSubcomponentType = {
   DateCalendar: {
@@ -184,7 +214,13 @@ export const datePickerExamples: PickersSubcomponentType = {
           'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
       },
     },
-    slots: ['root', 'weekDayLabel', 'weekContainer', 'weekNumberLabel', 'weekNumber'],
+    slots: [
+      'root',
+      'weekDayLabel',
+      'weekContainer',
+      'weekNumberLabel',
+      'weekNumber',
+    ],
   },
   PickersDay: {
     examples: {
@@ -254,6 +290,7 @@ export const datePickerExamples: PickersSubcomponentType = {
       },
     },
     slots: ['root'],
+    moreInformation: <TextFieldMoreInfo />,
   },
 };
 
