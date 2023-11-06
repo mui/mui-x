@@ -17,6 +17,7 @@ export default function SwitchSeriesType() {
         value={type}
         onChange={(event) => setType(event.target.value)}
         label="series type"
+        sx={{ minWidth: 150 }}
       >
         <MenuItem value="line">line</MenuItem>
         <MenuItem value="bar">bar</MenuItem>

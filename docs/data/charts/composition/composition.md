@@ -12,9 +12,9 @@ packageName: '@mui/x-charts'
 
 The `@mui/x-charts` follows an architecture based on context providers.
 The overall idea is to pass your series and axes definitions to a single component, the `<ChartContainer />`.
-This component will transform those data to simplify the rendering, and provide them to its children.
+This component will transform those data to simplify the rendering and provide them to its children.
 
-Based on the data provided by the container, you can render some graphical element with our subcomponents.
+Based on the data provided by the container, you can render some graphical elements with our subcomponents.
 Such as `<LinePlot />`, `<ChartsYAxis />`. Or you can create your [own subcomponents](/x/react-charts/components/)
 
 ## Container
@@ -26,11 +26,11 @@ The `<ChartContainer />` and `<ResponsiveChartContainer />`.
 As you can guess the only difference is the responsiveness.
 
 The first one requires to provide `width` and `height` props.
-Whereas the second one will compute undefined dimension based on the size of its parent element.
+Whereas the second one will compute the undefined dimension based on the size of its parent element.
 
 :::warning
 The parent element should have intrinsic dimensions.
-If the parents dimension relies on its content, the responsive charts will not render.
+If the parent's dimension relies on its content, the responsive charts will not render.
 :::
 
 The next demo allows switching between a chart using `<ChartContainer />` with `width` and `height` props set to 500 and 300,
@@ -40,18 +40,20 @@ and a chart using `<ResponsiveChartContainer />`.
 
 ### Properties
 
-The chart container get all props that are not specific to a single graphical element.
+The chart container gets all props that are not specific to a single graphical element.
 This includes:
 
 - The `xAxis` and `yAxis` props. More information in the [axis page](/x/react-charts/axis/).
 - The `colors` prop as defined in the [color palette page](/x/react-charts/styling/#color-palette).
 - The `series` and `dataset`.
 
+#### Series
+
 The `series` prop is an array of series definitions.
-You can find explanation about each specific time of series in their respective docs page: [line](/x/react-charts/lines/), [bar](/x/react-charts/bars/), [pie](/x/react-charts/pie/).
+You can find an explanation about each specific series type in their respective docs page: [line](/x/react-charts/lines/), [bar](/x/react-charts/bars/), [pie](/x/react-charts/pie/).
 
 When using a single components chart, the library can guess which kind of series you are defining.
-For example if you use `<BarChart />` the component assumes that `series` will be of type `'bar'`.
+For example, if you use `<BarChart />` the component assumes that `series` will be of type `'bar'`.
 
 The chart container can't do such a guess.
 So you have to add an additional property `type`.
@@ -76,7 +78,7 @@ It indicates the type of charts you are defining.
 Those series can use the `dataset` props [the same way](/x/react-charts/bars/#using-a-dataset) single component chart does
 
 In the next demo, the chart is made by composition with subcomponents `<BarPlot />` and `<LinePlot />`.
-My modifying series `type` property, you can switch between a line and bar rendering.
+By modifying the series `type` property, you can switch between a line and bar rendering.
 
 ```jsx
 <ResponsiveChartContainer
@@ -101,9 +103,10 @@ To display data, you have components named `<XxxPlot />` such as `<LinePlot />`,
 
 ### Axis
 
-To add axis, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
+To add axes, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
 
-It takes a `axisId` to know which one of the axes defined in the container you want to render. If not provided it will pick the first one.
+It takes an `axisId` prop that indicates which axis defined in the container should be rendered.
+If not provided it will pick the first one.
 
 ### Additional information
 
