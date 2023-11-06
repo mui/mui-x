@@ -25,7 +25,7 @@
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "markdownlint": "markdownlint-cli2 \"**/*.md\"",
     "postinstall": "patch-package",
-    "prettier": "pretty-quick --branch master --ignore-path .eslintignore",
+    "prettier": "pretty-quick --branch next --ignore-path .eslintignore",
     "prettier:all": "prettier --write . --ignore-path .eslintignore",
     "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
