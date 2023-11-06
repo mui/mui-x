@@ -90,6 +90,7 @@ export const useGridFilter = (
     | 'slotProps'
     | 'disableColumnFilter'
     | 'disableEval'
+    | 'ignoreDiacritics'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -329,6 +330,7 @@ export const useGridFilter = (
     showFilterPanel,
     hideFilterPanel,
     setQuickFilterValues,
+    ignoreDiacritics: props.ignoreDiacritics,
   };
 
   useGridApiMethod(apiRef, filterApi, 'public');
