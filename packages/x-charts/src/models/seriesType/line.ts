@@ -47,7 +47,7 @@ export interface LineSeriesType
   /**
    * Data associated to the line.
    */
-  data?: number[];
+  data?: (number | null)[];
   /**
    * The key used to retrive data from the dataset.
    */
@@ -67,6 +67,11 @@ export interface LineSeriesType
    * @default false
    */
   disableHighlight?: boolean;
+  /**
+   * If `true`, line and area connect points separated by `null` values.
+   * @default false
+   */
+  connectNulls?: boolean;
 }
 
 /**

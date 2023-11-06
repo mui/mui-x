@@ -235,6 +235,7 @@ The default formatter only keeps the first letter of the name and capitalises it
 
 :::warning
 The first parameter `day` will be removed in v7 in favor of the second parameter `date` for more flexibility.
+:::
 
 :::info
 This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.

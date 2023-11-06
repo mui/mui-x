@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PieChart, pieArcClasses } from '@mui/x-charts/PieChart';
+import { PieChart } from '@mui/x-charts/PieChart';
 
 const data = [
   { id: 0, value: 10, label: 'series A' },
@@ -14,14 +14,9 @@ export default function PieActiveArc() {
         {
           data,
           highlightScope: { faded: 'global', highlighted: 'item' },
-          faded: { innerRadius: 30, additionalRadius: -30 },
+          faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
         },
       ]}
-      sx={{
-        [`& .${pieArcClasses.faded}`]: {
-          fill: 'gray',
-        },
-      }}
       height={200}
     />
   );

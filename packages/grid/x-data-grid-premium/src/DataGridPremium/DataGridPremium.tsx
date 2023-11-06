@@ -462,6 +462,12 @@ DataGridPremiumRaw.propTypes = {
    */
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
+   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * @default false
+   */
+  ignoreDiacritics: PropTypes.bool,
+  /**
    * The initial state of the DataGridPremium.
    * The data in it is set in the state on initialization but isn't controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -892,6 +898,13 @@ DataGridPremiumRaw.propTypes = {
    * Controls the modes of the rows.
    */
   rowModesModel: PropTypes.object,
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: PropTypes.number,
   /**
    * If `true`, the reordering of rows is enabled.
    * @default false

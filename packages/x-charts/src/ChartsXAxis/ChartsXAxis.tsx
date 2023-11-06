@@ -85,6 +85,15 @@ const defaultProps = {
   tickSize: 6,
 } as const;
 
+/**
+ * Demos:
+ *
+ * - [Axis](https://mui.com/x/react-charts/axis/)
+ *
+ * API:
+ *
+ * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
+ */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
   const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsXAxis' });
   const {

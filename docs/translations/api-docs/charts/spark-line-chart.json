@@ -45,5 +45,14 @@
     }
   },
   "classDescriptions": {},
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "area": "",
+    "axisContent": "",
+    "bar": "",
+    "itemContent": "",
+    "line": "",
+    "lineHighlight": "",
+    "mark": "",
+    "popper": ""
+  }
 }
