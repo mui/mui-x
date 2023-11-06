@@ -30,7 +30,7 @@ pnpm add @mui/x-charts
 :::info
 With Next.js you might face the following error.
 
-```
+```bash
 [ESM][charts] Doesn't build due to require() of ES Module (ERR_REQUIRE_ESM)
 ```
 
