@@ -32,19 +32,19 @@ To modify the styling of charts you can rely on all the MUI styling tools, such 
 This documentation does not follow the usual MUI structure.
 :::
 
-For each component, you have two docs pages:
+Each component has two docs pages:
 
 - The first one describes behaviors that are specific to this component.
 - The second one provides a set of basic examples.
 
 For features shared across multiple components such as axis, or legend. They are documented in distinct pages:
 
-- [Axis](/x/react-charts/axis)
-- [Custom components](/x/react-charts/components)
-- [Legend](/x/react-charts/legend)
-- [Stacking](/x/react-charts/stacking)
-- [Styling](/x/react-charts/styling)
-- [Tooltip & Highlights](/x/react-charts/tooltip)
+- [Axis](/x/react-charts/axis/)
+- [Custom components](/x/react-charts/components/)
+- [Legend](/x/react-charts/legend/)
+- [Stacking](/x/react-charts/stacking/)
+- [Styling](/x/react-charts/styling/)
+- [Tooltip & Highlights](/x/react-charts/tooltip/)
 
 ## What's next?
 
