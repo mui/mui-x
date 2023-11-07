@@ -16,7 +16,7 @@ export const useGridInitialization = <
   Api extends GridApiCommon,
 >(
   inputApiRef: React.MutableRefObject<Api> | undefined,
-  props: Pick<DataGridProcessedProps, 'signature' | 'logger' | 'logLevel' | 'localeText'>,
+  props: DataGridProcessedProps,
 ) => {
   const privateApiRef = useGridApiInitialization<PrivateApi, Api>(inputApiRef, props);
   useGridLoggerFactory(privateApiRef, props);
@@ -24,6 +24,8 @@ export const useGridInitialization = <
   useGridPipeProcessing(privateApiRef);
   useGridStrategyProcessing(privateApiRef);
   useGridLocaleText(privateApiRef, props);
+
+  privateApiRef.current.register('private', { rootProps: props });
 
   return privateApiRef;
 };

@@ -121,5 +121,5 @@
     "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },
     "right": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the right axis" }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": { "axisLabel": "", "axisLine": "", "axisTick": "", "axisTickLabel": "" }
 }

@@ -9,4 +9,4 @@ export type {
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
   ExportedPickersCalendarHeaderProps,
-} from './PickersCalendarHeader';
+} from './PickersCalendarHeader.types';

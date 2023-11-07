@@ -16,7 +16,7 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DesktopDatePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   it('allows to change selected date from the field according to `format`', () => {
     const handleChange = spy();
@@ -98,6 +98,29 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
       expect(handleViewChange.callCount).to.equal(2);
       expect(handleViewChange.lastCall.firstArg).to.equal('month');
+    });
+
+    it('should go to the relevant `view` when `views` prop changes', () => {
+      const { setProps } = render(
+        <DesktopDatePicker
+          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          views={['year']}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByRole('radio', { checked: true, name: '2018' })).to.not.equal(null);
+
+      // Dismiss the picker
+      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      setProps({ views: ['month', 'year'] });
+      openPicker({ type: 'date', variant: 'desktop' });
+      // wait for all pending changes to be flushed
+      clock.runToLast();
+
+      // should have changed the open view
+      expect(screen.getByRole('radio', { checked: true, name: 'January' })).to.not.equal(null);
     });
 
     it('should move the focus to the newly opened views', function test() {

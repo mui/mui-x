@@ -52,16 +52,18 @@ Those will fix the chart's size to the given value (in px).
 
 ### Placement
 
-At the core of charts layout is the drawing area which corresponds to the space available to represent data.
+At the core of chart layout is the drawing area which corresponds to the space available to represent data.
 
-This space can be fined with the `margin` prop and its properties `top`, `bottom`, `left`, and `right`.
+This space can be defined with the `margin` prop and its properties `top`, `bottom`, `left`, and `right`.
 Those values define the space between the SVG border and the drawing area.
 
-You might want to modify those values to let more space for your axis ticks or reduce them to provide more space for the data.
+You might want to modify those values to leave more space for your axis ticks or reduce them to provide more space for the data.
+
+{{"demo": "MarginNoSnap.js"}}
 
 ### CSS
 
 Since the library relies on SVG for rendering, you can customize them as you do with other MUI components with CSS overriding.
 
 Chart components accept the `sx` props.
-And you can target any sub elements with its class name.
+From here, you can target any subcomponents with its class name.

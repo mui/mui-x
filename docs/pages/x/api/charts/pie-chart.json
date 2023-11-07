@@ -24,6 +24,7 @@
       },
       "default": "null"
     },
+    "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "topAxis": {
       "type": {

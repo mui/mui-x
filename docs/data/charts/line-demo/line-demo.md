@@ -25,3 +25,7 @@ title: Charts - Line demonstration
 ## LineChartWithReferenceLines
 
 {{"demo": "LineChartWithReferenceLines.js"}}
+
+## LineChartConnectNulls
+
+{{"demo": "LineChartConnectNulls.js"}}

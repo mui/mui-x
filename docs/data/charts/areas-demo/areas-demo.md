@@ -21,3 +21,7 @@ title: Charts - Areas demonstration
 ## PercentAreaChart
 
 {{"demo": "PercentAreaChart.js"}}
+
+## AreaChartConnectNulls
+
+{{"demo": "AreaChartConnectNulls.js"}}
