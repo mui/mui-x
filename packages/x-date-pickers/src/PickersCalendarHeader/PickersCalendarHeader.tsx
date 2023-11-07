@@ -2,106 +2,26 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
-import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
-import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
-import SvgIcon from '@mui/material/SvgIcon';
-import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
 import { ArrowDropDownIcon } from '../icons';
-import {
-  PickersArrowSwitcher,
-  ExportedPickersArrowSwitcherProps,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
-} from '../internals/components/PickersArrowSwitcher';
+import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
-  MonthValidationOptions,
 } from '../internals/hooks/date-helpers-hooks';
-import { DateView } from '../models';
 import {
   getPickersCalendarHeaderUtilityClass,
   pickersCalendarHeaderClasses,
-  PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-
-export type ExportedPickersCalendarHeaderProps<TDate> = Pick<
-  PickersCalendarHeaderProps<TDate>,
-  'classes' | 'slots' | 'slotProps'
->;
-
-export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
-  /**
-   * Button displayed to switch between different calendar views.
-   * @default IconButton
-   */
-  SwitchViewButton?: React.ElementType;
-  /**
-   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.
-   * @default ArrowDropDown
-   */
-  SwitchViewIcon?: React.ElementType;
-}
-
-// We keep the interface to allow module augmentation
-export interface PickersCalendarHeaderComponentsPropsOverrides {}
-
-type PickersCalendarHeaderOwnerState<TDate> = PickersCalendarHeaderProps<TDate>;
-
-export interface PickersCalendarHeaderSlotsComponentsProps<TDate>
-  extends PickersArrowSwitcherSlotsComponentsProps {
-  switchViewButton?: SlotComponentProps<
-    typeof IconButton,
-    PickersCalendarHeaderComponentsPropsOverrides,
-    PickersCalendarHeaderOwnerState<TDate>
-  >;
-
-  switchViewIcon?: SlotComponentProps<
-    typeof SvgIcon,
-    PickersCalendarHeaderComponentsPropsOverrides,
-    undefined
-  >;
-}
-
-export interface PickersCalendarHeaderProps<TDate>
-  extends ExportedPickersArrowSwitcherProps,
-    MonthValidationOptions<TDate> {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
-  currentMonth: TDate;
-  disabled?: boolean;
-  views: readonly DateView[];
-  onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
-  view: DateView;
-  reduceAnimations: boolean;
-  onViewChange?: (view: DateView) => void;
-  labelId?: string;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<PickersCalendarHeaderClasses>;
-  /**
-   * className applied to the root element.
-   */
-  className?: string;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-}
+import {
+  PickersCalendarHeaderOwnerState,
+  PickersCalendarHeaderProps,
+} from './PickersCalendarHeader.types';
 
 const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
   const { classes } = ownerState;
@@ -212,6 +132,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
   const {
     slots,
     slotProps,
+    components,
+    componentsProps,
     currentMonth: month,
     disabled,
     disableFuture,
@@ -233,7 +155,10 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
 
   const classes = useUtilityClasses(props);
 
-  const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
+  const SwitchViewButton =
+    slots?.switchViewButton ??
+    components?.SwitchViewButton ??
+    PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
     externalSlotProps: slotProps?.switchViewButton,
@@ -245,7 +170,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     className: classes.switchViewButton,
   });
 
-  const SwitchViewIcon = slots?.switchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
+  const SwitchViewIcon =
+    slots?.switchViewIcon ?? components?.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
@@ -350,6 +276,18 @@ PickersCalendarHeader.propTypes = {
    * className applied to the root element.
    */
   className: PropTypes.string,
+  /**
+   * Overridable components.
+   * @default {}
+   * @deprecated Please use `slots`.
+   */
+  components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated Please use `slotProps`.
+   */
+  componentsProps: PropTypes.object,
   currentMonth: PropTypes.any.isRequired,
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,

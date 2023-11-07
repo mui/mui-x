@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
+import { animated, SpringValue, to } from '@react-spring/web';
+import { arc as d3Arc } from 'd3-shape';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { InteractionContext } from '../context/InteractionProvider';
-import { getIsFaded, getIsHighlighted } from '../hooks/useInteractionItemProps';
-import { HighlightScope } from '../context/HighlightProvider';
-import { PieSeriesType } from '../models/seriesType/pie';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
@@ -23,7 +20,6 @@ export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
 interface PieArcLabelOwnerState {
   id: string;
-  dataIndex: number;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -49,54 +45,78 @@ const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
   return composeClasses(slots, getPieArcLabelUtilityClass, classes);
 };
 
-const PieArcLabelRoot = styled('text', {
+const PieArcLabelRoot = styled(animated.text, {
   name: 'MuiPieArcLabel',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',
+  dominantBaseline: 'middle',
 }));
 
-export type PieArcLabelProps = Omit<PieArcLabelOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> &
-  D3PieArcDatum<any> & {
-    highlightScope?: Partial<HighlightScope>;
-    innerRadius: PieSeriesType['innerRadius'];
-    outerRadius: number;
-    cornerRadius: PieSeriesType['cornerRadius'];
+export type PieArcLabelProps = PieArcLabelOwnerState &
+  React.ComponentPropsWithoutRef<'text'> & {
+    startAngle: SpringValue<number>;
+    endAngle: SpringValue<number>;
+    innerRadius: SpringValue<number>;
+    outerRadius: SpringValue<number>;
+    cornerRadius: SpringValue<number>;
+    paddingAngle: SpringValue<number>;
   } & {
     formattedArcLabel?: string | null;
+  };
+
+/**
+ * Helper to compute label position.
+ * It's not an inline function because we need it in inerpolation.
+ */
+const getLabelPosition =
+  (formattedArcLabel: string | null | undefined, variable: 'x' | 'y') =>
+  (
+    startAngle: number,
+    endAngle: number,
+    padAngle: number,
+    innerRadius: number,
+    outerRadius: number,
+    cornerRadius: number,
+  ) => {
+    if (!formattedArcLabel) {
+      return 0;
+    }
+    const [x, y] = d3Arc().cornerRadius(cornerRadius).centroid({
+      padAngle,
+      startAngle,
+      endAngle,
+      innerRadius,
+      outerRadius,
+    })!;
+    if (variable === 'x') {
+      return x;
+    }
+    return y;
   };
 
 export default function PieArcLabel(props: PieArcLabelProps) {
   const {
     id,
-    dataIndex,
     classes: innerClasses,
     color,
-    highlightScope,
-    innerRadius = 0,
+    startAngle,
+    endAngle,
+    paddingAngle,
+    innerRadius,
     outerRadius,
-    cornerRadius = 0,
+    cornerRadius,
     formattedArcLabel,
+    isHighlighted,
+    isFaded,
+    style,
     ...other
   } = props;
 
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(
-    item,
-    { type: 'pie', seriesId: id, dataIndex },
-    highlightScope,
-  );
-
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'pie', seriesId: id, dataIndex }, highlightScope);
-
   const ownerState = {
     id,
-    dataIndex,
     classes: innerClasses,
     color,
     isFaded,
@@ -104,13 +124,22 @@ export default function PieArcLabel(props: PieArcLabelProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const arcLabelPosition = formattedArcLabel
-    ? d3Arc()
-        .cornerRadius(cornerRadius)
-        .centroid({ ...other, innerRadius, outerRadius })
-    : [0, 0];
   return (
-    <PieArcLabelRoot className={classes.root} x={arcLabelPosition[0]} y={arcLabelPosition[1]}>
+    <PieArcLabelRoot
+      className={classes.root}
+      {...other}
+      style={{
+        x: to(
+          [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
+          getLabelPosition(formattedArcLabel, 'x'),
+        ),
+        y: to(
+          [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
+          getLabelPosition(formattedArcLabel, 'y'),
+        ),
+        ...style,
+      }}
+    >
       {formattedArcLabel}
     </PieArcLabelRoot>
   );
