@@ -27,7 +27,7 @@
     "import { ChartsReferenceLine } from '@mui/x-charts';"
   ],
   "styles": {
-    "classes": ["root", "line", "label"],
+    "classes": ["root", "verticale", "horizontal", "line", "label"],
     "globalClasses": {},
     "name": "MuiChartsReferenceLine"
   },

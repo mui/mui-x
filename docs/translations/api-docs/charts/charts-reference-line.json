@@ -49,6 +49,14 @@
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },
+    "verticale": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element is reference line is verticale"
+    },
+    "horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element is reference line is horizontal"
+    },
     "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the reference line" },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the reference label" }
   },
