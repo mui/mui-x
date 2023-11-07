@@ -1,37 +1,47 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 import { styled, alpha } from '@mui/material/styles';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 
 interface ProgressBarProps {
   value: number;
 }
 
-const Root = styled('div')({
+const Root = styled('div')(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
   width: '100%',
-  height: 26,
-  borderRadius: 3,
+  height: 24,
+  borderRadius: 4,
+  fontWeight: theme.typography.fontWeightMedium,
   '&.low': {
-    backgroundColor: alpha('#FF505F', 0.1),
+    backgroundColor: alpha(theme.palette.error.main, 0.1),
     ' .progress-bar': {
-      backgroundColor: '#FF505F',
+      backgroundColor:
+        theme.palette.mode === 'light'
+          ? alpha(theme.palette.error.light, 0.8)
+          : alpha(theme.palette.error.dark, 0.5),
     },
   },
   '&.medium': {
-    backgroundColor: alpha('#F4C000', 0.2),
-    '.progress-bar': {
-      backgroundColor: '#F4C000',
+    backgroundColor: alpha(theme.palette.warning.main, 0.1),
+    ' .progress-bar': {
+      backgroundColor:
+        theme.palette.mode === 'light'
+          ? alpha(theme.palette.warning.light, 0.8)
+          : alpha(theme.palette.warning.dark, 0.5),
     },
   },
   '&.high': {
-    backgroundColor: alpha('#21CC66', 0.1),
+    backgroundColor: alpha(theme.palette.success.main, 0.1),
     ' .progress-bar': {
-      backgroundColor: '#21CC66',
+      backgroundColor:
+        theme.palette.mode === 'light'
+          ? alpha(theme.palette.success.light, 0.8)
+          : alpha(theme.palette.success.dark, 0.5),
     },
   },
-});
+}));
 
 const Value = styled('div')({
   position: 'absolute',
