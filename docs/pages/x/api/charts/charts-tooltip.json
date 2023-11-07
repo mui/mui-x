@@ -21,7 +21,11 @@
       "default": "'item'"
     }
   },
-  "slots": [],
+  "slots": [
+    { "class": null, "name": "axisContent", "description": "" },
+    { "class": null, "name": "itemContent", "description": "" },
+    { "class": null, "name": "popper", "description": "" }
+  ],
   "name": "ChartsTooltip",
   "imports": [
     "import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';",

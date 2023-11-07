@@ -112,6 +112,7 @@ async function main() {
           '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
           '/docs-data-grid-sorting/ServerSortingGrid', // No flag column
           '/docs-data-grid-filtering/QuickFilteringExcludeHiddenColumns', // No flag column
+          '/docs-data-grid-filtering/QuickFilteringDiacritics', // No flag column
         ];
 
         if (
@@ -122,6 +123,11 @@ async function main() {
           await page.waitForResponse((response) =>
             response.url().startsWith('https://flagcdn.com'),
           );
+        }
+
+        if (/^\docs-charts-.*/.test(pathURL)) {
+          // Run one tick of the clock to get the final animation state
+          await sleep(10);
         }
 
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);

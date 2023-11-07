@@ -82,3 +82,22 @@ If you do not want to provide absolute values, you can use `additionalRadius` wh
 This value can be negative to reduce arc size.
 
 {{"demo": "PieActiveArc.js"}}
+
+## Animation
+
+To skip animation at the creation and update of your chart you can use the `skipAnimation` prop.
+When set to `true` it skips animation powered by `@react-spring/web`.
+
+Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+
+```jsx
+// For a single component chart
+<PieChart skipAnimation />
+
+// For a composed chart
+<ResponsiveChartContainer>
+  <PiePlot skipAnimation />
+</ResponsiveChartContainer>
+```
+
+{{"demo": "PieAnimation.js"}}

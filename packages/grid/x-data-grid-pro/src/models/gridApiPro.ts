@@ -13,6 +13,7 @@ import type {
   GridRowPinningApi,
   GridDetailPanelPrivateApi,
 } from '../hooks';
+import type { DataGridProProcessedProps } from './dataGridProProps';
 
 /**
  * The api of `DataGridPro`.
@@ -30,5 +31,5 @@ export interface GridApiPro
 
 export interface GridPrivateApiPro
   extends GridApiPro,
-    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro>,
+    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro, DataGridProProcessedProps>,
     GridDetailPanelPrivateApi {}

@@ -60,6 +60,7 @@ function MarkPlot(props: MarkPlotProps) {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
+            data,
             showMark = true,
           } = series[seriesId];
 
@@ -92,25 +93,37 @@ function MarkPlot(props: MarkPlotProps) {
 
           return xData
             ?.map((x, index) => {
-              const y = stackedData[index][1];
+              const value = data[index] == null ? null : stackedData[index][1];
               return {
                 x: xScale(x),
-                y: yScale(y),
+                y: value === null ? null : yScale(value),
                 position: x,
-                value: y,
+                value,
                 index,
               };
             })
-            .filter(isInRange)
-            .map(({ x, y, index, position, value }) => {
-              return showMark === true ||
-                showMark({
-                  x,
-                  y,
-                  index,
-                  position,
-                  value,
-                }) ? (
+            .filter(({ x, y, index, position, value }) => {
+              if (value === null || y === null) {
+                // Remove missing data point
+                return false;
+              }
+              if (!isInRange({ x, y })) {
+                // Remove out of range
+                return false;
+              }
+              if (showMark === true) {
+                return true;
+              }
+              return showMark({
+                x,
+                y,
+                index,
+                position,
+                value,
+              });
+            })
+            .map(({ x, y, index }) => {
+              return (
                 <Mark
                   key={`${seriesId}-${index}`}
                   id={seriesId}
@@ -122,7 +135,7 @@ function MarkPlot(props: MarkPlotProps) {
                   highlightScope={series[seriesId].highlightScope}
                   {...slotProps?.mark}
                 />
-              ) : null;
+              );
             });
         });
       })}

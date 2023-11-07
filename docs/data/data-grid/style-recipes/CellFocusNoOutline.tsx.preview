@@ -1,0 +1,12 @@
+<DataGridPro
+  sx={{
+    [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
+      outline: 'none',
+    },
+    [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
+      {
+        outline: 'none',
+      },
+  }}
+  {...data}
+/>
