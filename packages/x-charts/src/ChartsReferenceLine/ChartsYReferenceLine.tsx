@@ -58,7 +58,7 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
     y,
     label = '',
     spacing = 5,
-    classes: classesProps,
+    classes: inClasses,
     labelAlign,
     lineStyle,
     labelStyle,
@@ -71,7 +71,7 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   const yPosition = yAxisScale(y);
   const d = `M ${left} ${yPosition} l ${width} 0`;
 
-  const classes = getReferenceLineClasses(classesProps);
+  const classes = getReferenceLineClasses(inClasses);
 
   const textParams = {
     y: yPosition - spacing,
@@ -92,4 +92,4 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   );
 }
 
-export default ChartsYReferenceLine;
+export { ChartsYReferenceLine };
