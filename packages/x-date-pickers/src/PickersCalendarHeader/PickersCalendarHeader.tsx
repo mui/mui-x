@@ -132,6 +132,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
   const {
     slots,
     slotProps,
+    components,
+    componentsProps,
     currentMonth: month,
     disabled,
     disableFuture,
@@ -153,7 +155,10 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
 
   const classes = useUtilityClasses(props);
 
-  const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
+  const SwitchViewButton =
+    slots?.switchViewButton ??
+    components?.SwitchViewButton ??
+    PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
     externalSlotProps: slotProps?.switchViewButton,
@@ -165,7 +170,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     className: classes.switchViewButton,
   });
 
-  const SwitchViewIcon = slots?.switchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
+  const SwitchViewIcon =
+    slots?.switchViewIcon ?? components?.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
@@ -270,6 +276,18 @@ PickersCalendarHeader.propTypes = {
    * className applied to the root element.
    */
   className: PropTypes.string,
+  /**
+   * Overridable components.
+   * @default {}
+   * @deprecated Please use `slots`.
+   */
+  components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated Please use `slotProps`.
+   */
+  componentsProps: PropTypes.object,
   currentMonth: PropTypes.any.isRequired,
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,

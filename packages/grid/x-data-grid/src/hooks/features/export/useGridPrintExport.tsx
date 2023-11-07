@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
-import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridExpandedRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPrintExportOptions, GridPrintGetRowsToExportParams } from '../../../models/gridExport';
-import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
+import { GridPrintExportOptions } from '../../../models/gridExport';
+import { GridValidRowModel } from '../../../models/gridRows';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridColumnDefinitionsSelector,
@@ -15,7 +15,7 @@ import {
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { getColumnsToExport } from './utils';
+import { defaultGetRowsToExport, getColumnsToExport } from './utils';
 import { mergeStateWithPaginationModel } from '../pagination/useGridPagination';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
@@ -104,9 +104,7 @@ export const useGridPrintExport = (
   );
 
   const updateGridRowsForPrint = React.useCallback(
-    (
-      getRowsToExport: (params: GridPrintGetRowsToExportParams<GridApiCommunity>) => GridRowId[],
-    ) => {
+    (getRowsToExport: NonNullable<GridPrintExportOptions['getRowsToExport']>) => {
       const rowsToExportIds = getRowsToExport({ apiRef });
       const newRows = rowsToExportIds.map((id) => apiRef.current.getRow(id));
       apiRef.current.setRows(newRows);
@@ -178,14 +176,12 @@ export const useGridPrintExport = (
       // the footer is always being placed at the bottom of the page as if all rows are exported
       // so if getRowsToExport is being used to only export a subset of rows then we need to
       // adjust the footer position to be correctly placed at the bottom of the grid
-      if (options?.getRowsToExport) {
-        const gridFooterElement: HTMLElement | null = gridClone.querySelector(
-          `.${gridClasses.footerContainer}`,
-        );
-        gridFooterElement!.style.position = 'absolute';
-        gridFooterElement!.style.width = '100%';
-        gridFooterElement!.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
-      }
+      const gridFooterElement: HTMLElement | null = gridClone.querySelector(
+        `.${gridClasses.footerContainer}`,
+      );
+      gridFooterElement!.style.position = 'absolute';
+      gridFooterElement!.style.width = '100%';
+      gridFooterElement!.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
 
       // printDoc.body.appendChild(gridClone); should be enough but a clone isolation bug in Safari
       // prevents us to do it
@@ -325,9 +321,7 @@ export const useGridPrintExport = (
         options?.includeCheckboxes,
       );
 
-      if (options?.getRowsToExport) {
-        updateGridRowsForPrint(options.getRowsToExport);
-      }
+      updateGridRowsForPrint(options?.getRowsToExport ?? defaultGetRowsToExport);
 
       apiRef.current.unstable_setVirtualization(false);
       await raf(); // wait for the state changes to take action

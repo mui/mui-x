@@ -34,13 +34,13 @@ export interface PickersCalendarHeaderSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps {
   switchViewButton?: SlotComponentProps<
     typeof IconButton,
-    PickersCalendarHeaderPropsOverrides,
+    PickersCalendarHeaderComponentsPropsOverrides,
     PickersCalendarHeaderOwnerState<TDate>
   >;
 
   switchViewIcon?: SlotComponentProps<
     typeof SvgIcon,
-    PickersCalendarHeaderPropsOverrides,
+    PickersCalendarHeaderComponentsPropsOverrides,
     undefined
   >;
 }
