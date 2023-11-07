@@ -26,7 +26,7 @@ export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitche
 }
 
 // We keep the interface to allow module augmentation
-export interface PickersCalendarHeaderPropsOverrides {}
+export interface PickersCalendarHeaderComponentsPropsOverrides {}
 
 export type PickersCalendarHeaderOwnerState<TDate> = PickersCalendarHeaderProps<TDate>;
 
