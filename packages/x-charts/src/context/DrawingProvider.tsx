@@ -12,11 +12,29 @@ export interface DrawingProviderProps extends LayoutConfig {
  * Defines the area in which it is possible to draw the charts.
  */
 export type DrawingArea = {
+  /**
+   * The gape between the left border of the SVG and the drawing area.
+   */
   left: number;
+  /**
+   * The gape between the top border of the SVG and the drawing area.
+   */
   top: number;
+  /**
+   * The gape between the bottom border of the SVG and the drawing area.
+   */
   bottom: number;
+  /**
+   * The gape between the right border of the SVG and the drawing area.
+   */
   right: number;
+  /**
+   * The width of the drawing area.
+   */
   width: number;
+  /**
+   * The height of the drawing area.
+   */
   height: number;
 };
 

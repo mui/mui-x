@@ -16,6 +16,10 @@ import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
 
 export type SeriesContextProviderProps = {
   dataset?: DatasetType;
+  /**
+   * The array of series to display.
+   * Each type of series has it's own specificity. Please refer the appropriated docs page to know it.
+   */
   series: AllSeriesType[];
   /**
    * Color palette used to colorize multiple series.

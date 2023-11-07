@@ -55,6 +55,13 @@ export interface LineChartProps
     Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
+  /**
+   * Object `{ x, y }` that defines how the charts highlight the mouse position along x and y axes.
+   * The two proerties accept the next values:
+   * - 'none': display nothing.
+   * - 'line': display a line at the current mouse position.
+   * - 'band': display a band at the current mouse position. Only available  with band scale.
+   */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
    * @deprecated Consider using `slotProps.legend` instead.

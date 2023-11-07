@@ -11,7 +11,21 @@ export type HighlightOptions = 'none' | 'item' | 'series';
 export type FadeOptions = 'none' | 'series' | 'global';
 
 export type HighlightScope = {
+  /**
+   * The scope of elements highlighted.
+   * - 'none': no highlight.
+   * - 'item': only highlight the item.
+   * - 'series': highlight all element of the same seies.
+   * @default 'none'
+   */
   highlighted: HighlightOptions;
+  /**
+   * The scope of elements faded.
+   * - 'none': no fading.
+   * - 'series': only fade element of the same series.
+   * - 'global': fade lal element that are no highlighted.
+   * @default 'none'
+   */
   faded: FadeOptions;
 };
 type HighlighActions<T extends ChartSeriesType = ChartSeriesType> =
@@ -26,6 +40,9 @@ type HighlighActions<T extends ChartSeriesType = ChartSeriesType> =
     };
 
 type HighlighState = {
+  /**
+   * The item that triggers highlight state.
+   */
   item: null | ItemHighlighData<ChartSeriesType>;
   scope: HighlightScope;
   dispatch: React.Dispatch<HighlighActions>;

@@ -29,8 +29,19 @@ import { MakeOptional } from '../models/helpers';
 import { getTickNumber } from '../hooks/useTicks';
 
 export type CartesianContextProviderProps = {
+  /**
+   * The configuration of the x axes.
+   * If not provided, a default axis config is used with id `DEFAULT_X_AXIS_KEY`.
+   */
   xAxis?: MakeOptional<AxisConfig, 'id'>[];
+  /**
+   * The configuration of the y axes.
+   * If not provided, a default axis config is used with id `DEFAULT_Y_AXIS_KEY`.
+   */
   yAxis?: MakeOptional<AxisConfig, 'id'>[];
+  /**
+   * An array of object that can be used to populate series and axis data using there `dataKey` property.
+   */
   dataset?: DatasetType;
   children: React.ReactNode;
 };
