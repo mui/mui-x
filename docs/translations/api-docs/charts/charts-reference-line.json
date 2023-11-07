@@ -17,32 +17,32 @@
       "typeDescriptions": {}
     },
     "labelAlign": {
-      "description": "The alignment if the label in the chart drawing area.",
+      "description": "The alignment if the label is in the chart drawing area.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "labelStyle": {
-      "description": "The style applied to the label",
+      "description": "The style applied to the label.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "lineStyle": {
-      "description": "The style applied to the line",
+      "description": "The style applied to the line.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "spacing": {
-      "description": "Additional Space between the label and the reference line in px.",
+      "description": "Additional space between the label and the reference line in px.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "x": {
-      "description": "The x value associated to the reference line. If defined the reference line will be vertical.",
+      "description": "The x value associated with the reference line. If defined the reference line will be vertical.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "y": {
-      "description": "The y value associated to the reference line. If defined the reference line will be horizontal.",
+      "description": "The y value associated with the reference line. If defined the reference line will be horizontal.",
       "deprecated": "",
       "typeDescriptions": {}
     }

@@ -31,7 +31,7 @@ ChartsReferenceLine.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The id of the axis used for the reference value.
-   * @default id the id of the first axis defined
+   * @default The `id` of the first defined axis.
    */
   axisId: PropTypes.string,
   /**
@@ -43,30 +43,30 @@ ChartsReferenceLine.propTypes = {
    */
   label: PropTypes.string,
   /**
-   * The alignment if the label in the chart drawing area.
+   * The alignment if the label is in the chart drawing area.
    * @default 'middle'
    */
   labelAlign: PropTypes.oneOf(['end', 'middle', 'start']),
   /**
-   * The style applied to the label
+   * The style applied to the label.
    */
   labelStyle: PropTypes.object,
   /**
-   * The style applied to the line
+   * The style applied to the line.
    */
   lineStyle: PropTypes.object,
   /**
-   * Additional Space between the label and the reference line in px.
+   * Additional space between the label and the reference line in px.
    * @default 5
    */
   spacing: PropTypes.number,
   /**
-   * The x value associated to the reference line.
+   * The x value associated with the reference line.
    * If defined the reference line will be vertical.
    */
   x: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
   /**
-   * The y value associated to the reference line.
+   * The y value associated with the reference line.
    * If defined the reference line will be horizontal.
    */
   y: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
