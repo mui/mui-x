@@ -10,7 +10,7 @@ title: React Data Grid - Server-side data
 
 Managing server-side data efficiently in a React application can become complex as the dataset grows.
 
-Without a dedicated module that abstracts it's complexities, developers often face challenges related to manual data fetching, pagination, sorting, filtering, and it's often gets trickier to tackle performance issues, which can lead to a poor user experience.
+Without a dedicated module that abstracts its complexities, developers often face challenges related to manual data fetching, pagination, sorting, and filtering, and it often gets trickier to tackle performance issues, which can lead to a poor user experience.
 
 Have a look at an example:
 
@@ -60,7 +60,7 @@ React.useEffect(() => {
 />;
 ```
 
-We only scratched the surface in the above example with a lot of problems still unsolved like:
+This example only scratches the surface with a lot of problems still unsolved like:
 
 - Performance optimization
 - Caching data/deduping requests
@@ -74,7 +74,7 @@ Trying to solve these problems one after the other can make the code complex and
 
 ## Data source
 
-A very common pattern to solve these problems is to use a centralized data source. A data source is an abstraction layer that sits between the data grid and the server. It provides a simple interface to the data grid to fetch data and update it. It handles a lot of the complexities related to server side data fetching. We will talk more about the data source in the next section.
+A very common pattern to solve these problems is to use a centralized data source. A data source is an abstraction layer that sits between the data grid and the server. It provides a simple interface to the data grid to fetch data and update it. It handles a lot of the complexities related to server-side data fetching. Let's delve a bit deeper into how it will look like.
 
 :::warning
 
@@ -84,7 +84,7 @@ This feature is still <b>under development</b> and the information shared on thi
 
 ### Overview
 
-The Data Grid already supports manual server-side data fetching for features like sorting, filtering, etc. In order to make it more powerful and simple to use, we provide a data source interface that you can implement with your existing data fetching logic.
+The Data Grid already supports manual server-side data fetching for features like sorting, filtering, etc. In order to make it more powerful and simple to use, the grid will support a data source interface that you can implement with your existing data fetching logic.
 
 The datasource will work with all the major data grid features which require server-side data fetching such as sorting, filtering, pagination, grouping, etc.
 
@@ -107,7 +107,7 @@ interface DataSource {
 }
 ```
 
-Here's how the code will look like for the above example:
+Here's how the code will look like for the above example when implemented with data source:
 
 ```tsx
 const customDataSource: DataSource = {
@@ -210,13 +210,13 @@ interface GetRowsResponse {
 
 If provided, the method `dataSource.updateRow` will be called with the `GridRowModel` object whenever the user edits a row. This method is optional and you can skip it if you don't need to update the data on the server. It will work in a similar way as the `processRowUpdate` prop.
 
-#### Data grid props
+#### Data Grid props
 
 These data grid props will work with the server-side data source:
 
 - `dataSource: DataSource`: the data source object that you need to implement
 - `rows`: will be ignored, could be skipped when `dataSource` is provided
-- `rowCount`: will be used to identify the total number of rows in the grid, if not provided, the grid will use the _GetRowsResponse.rowCount_ value
+- `rowCount`: will be used to identify the total number of rows in the grid, if not provided, the grid will check for the _GetRowsResponse.rowCount_ value, unless the feature being used is infinite loading where no `rowCount` is available at all.
 
 Props related to grouped data (`treeData` and `rowGrouping`):
 
