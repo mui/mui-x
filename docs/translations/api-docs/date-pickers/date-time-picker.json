@@ -372,6 +372,8 @@
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
+    "switchViewButton": "Button displayed to switch between different calendar views.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
     "tabs": "Tabs enabling toggling between date and time pickers.",
     "textField": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
     "toolbar": "Custom component for the toolbar rendered above the views."
