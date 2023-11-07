@@ -6,7 +6,31 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [
+    {
+      "class": null,
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar"
+    },
+    {
+      "class": null,
+      "name": "layout",
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
+    },
+    {
+      "class": null,
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts"
+    },
+    { "class": null, "name": "tabs", "description": "Tabs enabling toggling between views." },
+    {
+      "class": null,
+      "name": "toolbar",
+      "description": "Custom component for the toolbar. It is placed above the picker views."
+    }
+  ],
   "name": "PickersLayout",
   "imports": [
     "import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';",

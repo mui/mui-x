@@ -30,7 +30,8 @@ export interface PickersCalendarHeaderPropsOverrides {}
 
 export type PickersCalendarHeaderOwnerState<TDate> = PickersCalendarHeaderProps<TDate>;
 
-export interface PickersCalendarHeaderSlotsProps<TDate> extends PickersArrowSwitcherSlotsComponentsProps {
+export interface PickersCalendarHeaderSlotsProps<TDate>
+  extends PickersArrowSwitcherSlotsComponentsProps {
   switchViewButton?: SlotComponentProps<
     typeof IconButton,
     PickersCalendarHeaderPropsOverrides,

@@ -99,7 +99,14 @@
       }
     }
   },
-  "slots": [],
+  "slots": [
+    {
+      "class": null,
+      "name": "digitalClockSectionItem",
+      "description": "Component responsible for rendering a single multi section digital clock section item.",
+      "default": "MenuItem from '@mui/material'"
+    }
+  ],
   "name": "MultiSectionDigitalClock",
   "imports": [
     "import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';",

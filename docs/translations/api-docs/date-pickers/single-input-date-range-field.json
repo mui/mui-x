@@ -215,5 +215,9 @@
     "variant": { "description": "The variant to use.", "deprecated": "", "typeDescriptions": {} }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "clearButton": "Button to clear the value.",
+    "clearIcon": "Icon to display inside the clear button.",
+    "textField": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>."
+  }
 }

@@ -202,5 +202,9 @@
       "nodeName": "the separator element"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "root": "Element rendered at the root.",
+    "separator": "Element rendered between the two inputs.",
+    "textField": "Form control with an input to render a date and time. It is rendered twice: once for the start date time and once for the end date time. Receives the same props as <code>@mui/material/TextField</code>."
+  }
 }

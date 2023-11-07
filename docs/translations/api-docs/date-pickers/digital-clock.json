@@ -169,5 +169,7 @@
       "nodeName": "the list item (by default: MenuItem) element"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "digitalClockItem": "Component responsible for rendering a single digital clock item."
+  }
 }

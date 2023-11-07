@@ -108,7 +108,26 @@
       "default": "'outlined'"
     }
   },
-  "slots": [],
+  "slots": [
+    {
+      "class": null,
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon"
+    },
+    {
+      "class": null,
+      "name": "textField",
+      "description": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>.",
+      "default": "TextField from '@mui/material'"
+    }
+  ],
   "name": "SingleInputDateRangeField",
   "imports": [
     "import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';",

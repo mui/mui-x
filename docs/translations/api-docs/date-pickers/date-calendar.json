@@ -209,5 +209,8 @@
       "nodeName": "the transition group element"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component."
+  }
 }
