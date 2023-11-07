@@ -36,9 +36,9 @@ Including your Order ID (or Support key) in the issue helps us prioritize the is
 
 ### Long-term support (LTS)
 
-We roll bug fixes, performance enhancements, and other improvements into new releases, however, MUI remains committed to delivering security updates and addressing regressions for the immediate predecessor of the current major version.
+Bug fixes, performance enhancements, and other improvements are delivered in new releases. However, MUI remains committed to delivering security updates and addressing regressions for the immediate predecessor of the current major version.
 
-This includes tackling issues arising from external factors like browser upgrades or changes to upstream dependencies.
+This includes issues introduced by external sources, like browser upgrades or changes to upstream dependencies.
 
 ### Supported versions
 
