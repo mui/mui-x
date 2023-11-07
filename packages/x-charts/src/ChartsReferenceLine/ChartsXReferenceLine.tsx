@@ -1,11 +1,12 @@
 import * as React from 'react';
+import composeClasses from '@mui/utils/composeClasses';
 import { useDrawingArea, useXScale } from '../hooks';
-import {
-  CommonChartsReferenceLineProps,
-  ReferenceLineRoot,
-  getReferenceLineClasses,
-} from './common';
+import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
 import { ChartsText } from '../internals/components/ChartsText';
+import {
+  ChartsReferenceLineClasses,
+  getReferenceLineUtilityClass,
+} from './chartsReferenceLineClasses';
 
 export type ChartsXReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
@@ -53,6 +54,18 @@ const getTextParams = ({ top, height, labelAlign = 'middle' }: GetTextPlacementP
   }
 };
 
+export function getXReferenceLineClasses(classes?: Partial<ChartsReferenceLineClasses>) {
+  return composeClasses(
+    {
+      root: ['root', 'vertical'],
+      line: ['line'],
+      label: ['label'],
+    },
+    getReferenceLineUtilityClass,
+    classes,
+  );
+}
+
 function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const {
     x,
@@ -71,7 +84,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const xPosition = xAxisScale(x);
   const d = `M ${xPosition} ${top} l 0 ${height}`;
 
-  const classes = getReferenceLineClasses(inClasses);
+  const classes = getXReferenceLineClasses(inClasses);
 
   const textParams = {
     x: xPosition + spacing,

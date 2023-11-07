@@ -1,10 +1,5 @@
-import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
-import {
-  referenceLineClasses,
-  ChartsReferenceLineClasses,
-  getChartsReferenceLineUtilityClass,
-} from './chartsReferenceLineClasses';
+import { referenceLineClasses, ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
 import { ChartsTextStyle } from '../internals/components/ChartsText';
 
 export type CommonChartsReferenceLineProps = {
@@ -40,18 +35,6 @@ export type CommonChartsReferenceLineProps = {
    */
   classes?: Partial<ChartsReferenceLineClasses>;
 };
-
-export function getReferenceLineClasses(classes?: Partial<ChartsReferenceLineClasses>) {
-  return composeClasses(
-    {
-      root: ['root'],
-      line: ['line'],
-      label: ['label'],
-    },
-    getChartsReferenceLineUtilityClass,
-    classes,
-  );
-}
 
 export const ReferenceLineRoot = styled('g')(({ theme }) => ({
   [`& .${referenceLineClasses.line}`]: {
