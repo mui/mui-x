@@ -6,7 +6,7 @@ import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
 import { AnchorPosition, Direction, getSeriesToDisplay } from './utils';
 import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
-import { ChartsLegendClasses, getChartsLegendUtilityClass } from './chartsLegendClasses';
+import { ChartsLegendClasses, getLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { LegendParams } from '../models/seriesType/config';
 import { ChartsText, ChartsTextStyle, getWordsByLines } from '../internals/components/ChartsText';
@@ -58,7 +58,7 @@ const useUtilityClasses = (ownerState: DefaultizedChartsLegendProps & { theme: T
     series: ['series'],
   };
 
-  return composeClasses(slots, getChartsLegendUtilityClass, classes);
+  return composeClasses(slots, getLegendUtilityClass, classes);
 };
 
 export type ChartsLegendRootOwnerState = {

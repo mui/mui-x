@@ -12,7 +12,7 @@ export interface ChartsReferenceLineClasses {
 
 export type ChartsReferenceLineClassKey = keyof ChartsReferenceLineClasses;
 
-export function getChartsReferenceLineUtilityClass(slot: string) {
+export function getReferenceLineUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsReferenceLine', slot);
 }
 
