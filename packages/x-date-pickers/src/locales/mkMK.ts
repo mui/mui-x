@@ -77,6 +77,4 @@ const mkMKPickers: PickersLocaleText<any> = {
   fieldMeridiemPlaceholder: () => 'aa',
 };
 
-export const DEFAULT_LOCALE = mkMKPickers;
-
 export const mkMK = getPickersLocalization(mkMKPickers);
