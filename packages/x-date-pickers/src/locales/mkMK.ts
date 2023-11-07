@@ -59,7 +59,6 @@ const mkMKPickers: PickersLocaleText<any> = {
     value !== null && utils.isValid(value)
       ? `Избери време, избраното време е ${utils.format(value, 'fullTime')}`
       : 'Избери време',
-
   fieldClearLabel: 'Избриши',
 
   // Table labels
@@ -76,7 +75,5 @@ const mkMKPickers: PickersLocaleText<any> = {
   fieldSecondsPlaceholder: () => 'сс',
   fieldMeridiemPlaceholder: () => 'aa',
 };
-
-export const DEFAULT_LOCALE = mkMKPickers;
 
 export const mkMK = getPickersLocalization(mkMKPickers);
