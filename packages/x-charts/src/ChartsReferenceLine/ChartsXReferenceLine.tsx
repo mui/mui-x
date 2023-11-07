@@ -72,6 +72,8 @@ export function getXReferenceLineClasses(classes?: Partial<ChartsReferenceLineCl
   );
 }
 
+let warnedOnce = false;
+
 function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const {
     x,
@@ -87,7 +89,19 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const { top, height } = useDrawingArea();
   const xAxisScale = useXScale(axisId);
 
-  const xPosition = xAxisScale(x);
+  const xPosition = xAxisScale(x as any);
+
+  if (xPosition === undefined) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!warnedOnce) {
+        warnedOnce = true;
+        console.error(
+          `MUI X: the value ${x} does not exist in the data of x axis with id ${axisId}.`,
+        );
+      }
+    }
+    return null;
+  }
   const d = `M ${xPosition} ${top} l 0 ${height}`;
 
   const classes = getXReferenceLineClasses(inClasses);

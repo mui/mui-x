@@ -60,6 +60,8 @@ const getTextParams = ({
   }
 };
 
+let warnedOnce = false;
+
 export function getYReferenceLineClasses(classes?: Partial<ChartsReferenceLineClasses>) {
   return composeClasses(
     {
@@ -87,7 +89,20 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   const { left, width } = useDrawingArea();
   const yAxisScale = useYScale(axisId);
 
-  const yPosition = yAxisScale(y);
+  const yPosition = yAxisScale(y as any);
+
+  if (yPosition === undefined) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!warnedOnce) {
+        warnedOnce = true;
+        console.error(
+          `MUI X: the value ${y} does not exist in the data of y axis with id ${axisId}.`,
+        );
+      }
+    }
+    return null;
+  }
+
   const d = `M ${left} ${yPosition} l ${width} 0`;
 
   const classes = getYReferenceLineClasses(inClasses);

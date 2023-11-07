@@ -10,19 +10,23 @@ import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../internals/components/ChartsText';
 
-export type D3Scale =
-  | ScaleBand<any>
-  | ScaleLogarithmic<any, number>
-  | ScalePoint<any>
-  | ScalePower<any, number>
-  | ScaleTime<any, number>
-  | ScaleLinear<any, number>;
+export type D3Scale<
+  Domain extends { toString(): string } = number | Date | string,
+  Range = number,
+  Output = number,
+> =
+  | ScaleBand<Domain>
+  | ScaleLogarithmic<Range, Output>
+  | ScalePoint<Domain>
+  | ScalePower<Range, Output>
+  | ScaleTime<Range, Output>
+  | ScaleLinear<Range, Output>;
 
-export type D3ContinuouseScale =
-  | ScaleLogarithmic<any, number>
-  | ScalePower<any, number>
-  | ScaleTime<any, number>
-  | ScaleLinear<any, number>;
+export type D3ContinuouseScale<Range = number, Output = number> =
+  | ScaleLogarithmic<Range, Output>
+  | ScalePower<Range, Output>
+  | ScaleTime<Range, Output>
+  | ScaleLinear<Range, Output>;
 
 export interface ChartsAxisSlotsComponent {
   axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
@@ -152,31 +156,31 @@ interface AxisScaleConfig {
   };
   point: {
     scaleType: 'point';
-    scale: ScalePoint<any>;
+    scale: ScalePoint<number | Date | string>;
   };
   log: {
     scaleType: 'log';
-    scale: ScaleLogarithmic<any, any>;
+    scale: ScaleLogarithmic<number, number>;
   };
   pow: {
     scaleType: 'pow';
-    scale: ScalePower<any, any>;
+    scale: ScalePower<number, number>;
   };
   sqrt: {
     scaleType: 'sqrt';
-    scale: ScalePower<any, any>;
+    scale: ScalePower<number, number>;
   };
   time: {
     scaleType: 'time';
-    scale: ScaleTime<any, any>;
+    scale: ScaleTime<number, number>;
   };
   utc: {
     scaleType: 'utc';
-    scale: ScaleTime<any, any>;
+    scale: ScaleTime<number, number>;
   };
   linear: {
     scaleType: 'linear';
-    scale: ScaleLinear<any, any>;
+    scale: ScaleLinear<number, number>;
   };
 }
 
