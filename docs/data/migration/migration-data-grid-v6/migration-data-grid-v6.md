@@ -101,6 +101,12 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - -->
 
+### Print export
+
+- The print export will now only print the selected rows if there are any.
+  If there are no selected rows, it will print all rows. This makes the print export consistent with the other exports.
+  You can [customize the rows to export by using the `getRowsToExport` function](/x/react-data-grid/export/#customizing-the-rows-to-export).
+
 <!-- ### Filtering
 
 - -->
