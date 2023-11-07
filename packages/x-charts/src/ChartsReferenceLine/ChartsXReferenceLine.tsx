@@ -58,7 +58,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
     x,
     label = '',
     spacing = 5,
-    classes: classesProps,
+    classes: inClasses,
     labelAlign,
     lineStyle,
     labelStyle,
@@ -71,7 +71,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const xPosition = xAxisScale(x);
   const d = `M ${xPosition} ${top} l 0 ${height}`;
 
-  const classes = getReferenceLineClasses(classesProps);
+  const classes = getReferenceLineClasses(inClasses);
 
   const textParams = {
     x: xPosition + spacing,
@@ -93,4 +93,4 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   );
 }
 
-export default ChartsXReferenceLine;
+export { ChartsXReferenceLine };
