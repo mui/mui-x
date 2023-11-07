@@ -66,7 +66,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   } = props;
 
   const { top, height } = useDrawingArea();
-  const xAxisScale = useXScale(axisId) as any;
+  const xAxisScale = useXScale(axisId);
 
   const xPosition = xAxisScale(x);
   const d = `M ${xPosition} ${top} l 0 ${height}`;

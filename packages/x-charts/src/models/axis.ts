@@ -136,7 +136,7 @@ export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 
 interface AxisScaleConfig {
   band: {
     scaleType: 'band';
-    scale: ScaleBand<any>;
+    scale: ScaleBand<number | Date | string>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
      * 0 means no gap, and 1 no data.

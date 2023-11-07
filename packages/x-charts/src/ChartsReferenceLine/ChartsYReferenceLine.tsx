@@ -66,7 +66,7 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   } = props;
 
   const { left, width } = useDrawingArea();
-  const yAxisScale = useYScale(axisId) as any;
+  const yAxisScale = useYScale(axisId);
 
   const yPosition = yAxisScale(y);
   const d = `M ${left} ${yPosition} l ${width} 0`;
