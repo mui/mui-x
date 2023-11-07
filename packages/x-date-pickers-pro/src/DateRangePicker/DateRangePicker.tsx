@@ -197,6 +197,12 @@ DateRangePicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
+   * The `name` attribute used on the `field` component.
+   * It serves as a `shortcut` for applying the `name` attribute on the `input` HTML element.
+   * Ignored if the field has several inputs.
+   */
+  name: PropTypes.string,
+  /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.

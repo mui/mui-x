@@ -77,4 +77,10 @@ export interface BaseNonRangeNonStaticPickerProps {
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * The `name` attribute used on the `field` component.
+   * It serves as a `shortcut` for applying the `name` attribute on the `input` HTML element.
+   * Ignored if the field has several inputs.
+   */
+  name?: string;
 }
