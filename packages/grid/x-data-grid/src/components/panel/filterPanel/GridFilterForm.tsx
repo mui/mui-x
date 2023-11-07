@@ -305,7 +305,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           ...item,
           field,
           operator: newOperator.value,
-          value: eraseItemValue ? undefined : item.value,
+          value: eraseItemValue ? undefined : '',
         });
       },
       [apiRef, applyFilterChanges, item, currentColumn, currentOperator],
