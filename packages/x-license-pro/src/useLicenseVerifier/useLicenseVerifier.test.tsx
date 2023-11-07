@@ -19,17 +19,26 @@ function TestComponent() {
   return <div data-testid="status">Status: {licesenStatus.status}</div>;
 }
 
-describe('useLicenseVerifier', () => {
+describe('useLicenseVerifier', function test() {
+  // Can't change the process.env.NODE_ENV in Karma
+  if (!/jsdom/.test(window.navigator.userAgent)) {
+    return;
+  }
+
   const { render } = createRenderer();
 
   let env: any;
   beforeEach(() => {
     env = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'test';
+    // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
+    // eslint-disable-next-line no-useless-concat
+    process.env['NODE_' + 'ENV'] = 'test';
   });
 
   afterEach(() => {
-    process.env.NODE_ENV = env;
+    // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
+    // eslint-disable-next-line no-useless-concat
+    process.env['NODE_' + 'ENV'] = env;
   });
 
   describe('error', () => {
@@ -69,7 +78,9 @@ describe('useLicenseVerifier', () => {
     });
 
     it('should throw if the license is expired by more than a 30 days', () => {
-      process.env.NODE_ENV = 'development';
+      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
+      // eslint-disable-next-line no-useless-concat
+      process.env['NODE_' + 'ENV'] = 'development';
 
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
