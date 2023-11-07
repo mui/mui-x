@@ -21,13 +21,19 @@ export type ChartsYReferenceLineProps<
 type GetTextPlacementParams = {
   left: number;
   width: number;
+  spacingX: number;
 } & Pick<CommonChartsReferenceLineProps, 'labelAlign'>;
 
-const getTextParams = ({ left, width, labelAlign = 'middle' }: GetTextPlacementParams) => {
+const getTextParams = ({
+  left,
+  width,
+  spacingX,
+  labelAlign = 'middle',
+}: GetTextPlacementParams) => {
   switch (labelAlign) {
     case 'start':
       return {
-        x: left,
+        x: left + spacingX,
         style: {
           dominantBaseline: 'auto',
           textAnchor: 'start',
@@ -36,7 +42,7 @@ const getTextParams = ({ left, width, labelAlign = 'middle' }: GetTextPlacementP
 
     case 'end':
       return {
-        x: left + width,
+        x: left + width - spacingX,
         style: {
           dominantBaseline: 'auto',
           textAnchor: 'end',
@@ -86,13 +92,17 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
 
   const classes = getYReferenceLineClasses(inClasses);
 
+  const spacingX = typeof spacing === 'object' ? spacing.x ?? 0 : spacing;
+  const spacingY = typeof spacing === 'object' ? spacing.y ?? 0 : spacing;
+
   const textParams = {
-    y: yPosition - spacing,
+    y: yPosition - spacingY,
     text: label,
     fontSize: 12,
     ...getTextParams({
       left,
       width,
+      spacingX,
       labelAlign,
     }),
     className: classes.label,

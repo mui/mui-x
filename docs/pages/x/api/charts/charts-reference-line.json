@@ -12,7 +12,13 @@
     },
     "labelStyle": { "type": { "name": "object" } },
     "lineStyle": { "type": { "name": "object" } },
-    "spacing": { "type": { "name": "number" }, "default": "5" },
+    "spacing": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ x?: number, y?: number }"
+      },
+      "default": "5"
+    },
     "x": {
       "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
     },

@@ -13,10 +13,11 @@ export type CommonChartsReferenceLineProps = {
    */
   label?: string;
   /**
-   * Additional space between the label and the reference line in px.
+   * Additional space arround the label in px.
+   * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
    * @default 5
    */
-  spacing?: number;
+  spacing?: number | { x?: number; y?: number };
   /**
    * The id of the axis used for the reference value.
    * @default The `id` of the first defined axis.

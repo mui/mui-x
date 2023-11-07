@@ -56,10 +56,17 @@ ChartsReferenceLine.propTypes = {
    */
   lineStyle: PropTypes.object,
   /**
-   * Additional space between the label and the reference line in px.
+   * Additional space arround the label in px.
+   * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
    * @default 5
    */
-  spacing: PropTypes.number,
+  spacing: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+  ]),
   /**
    * The x value associated with the reference line.
    * If defined the reference line will be vertical.

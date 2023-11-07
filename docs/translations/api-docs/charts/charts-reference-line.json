@@ -32,7 +32,7 @@
       "typeDescriptions": {}
     },
     "spacing": {
-      "description": "Additional space between the label and the reference line in px.",
+      "description": "Additional space arround the label in px. Can be a number or an object <code>{ x, y }</code> to distinguish space with the reference line and space with axes.",
       "deprecated": "",
       "typeDescriptions": {}
     },
