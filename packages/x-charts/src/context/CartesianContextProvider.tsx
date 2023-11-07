@@ -68,15 +68,24 @@ type DefaultizedAxisConfig = {
 
 export const CartesianContext = React.createContext<{
   /**
-   * Mapping from axis key to scaling function
+   * Mapping from x axis key to scaling configuration
    */
   xAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
   } & DefaultizedAxisConfig;
+  /**
+   * Mapping from y axis key to scaling configuration
+   */
   yAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
   } & DefaultizedAxisConfig;
+  /**
+   * The x axes ids sorted by order they got provided.
+   */
   xAxisIds: string[];
+  /**
+   * The y axes ids sorted by order they got provided.
+   */
   yAxisIds: string[];
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
@@ -311,7 +320,14 @@ CartesianContextProvider.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
+  /**
+   * An array of object that can be used to populate series and axis data using there `dataKey` property.
+   */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The configuration of the x axes.
+   * If not provided, a default axis config is used with id `DEFAULT_X_AXIS_KEY`.
+   */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
@@ -348,6 +364,10 @@ CartesianContextProvider.propTypes = {
       valueFormatter: PropTypes.func,
     }),
   ),
+  /**
+   * The configuration of the y axes.
+   * If not provided, a default axis config is used with id `DEFAULT_Y_AXIS_KEY`.
+   */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,

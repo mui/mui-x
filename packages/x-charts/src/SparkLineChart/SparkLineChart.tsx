@@ -233,10 +233,28 @@ SparkLineChart.propTypes = {
    * Data to plot.
    */
   data: PropTypes.arrayOf(PropTypes.number).isRequired,
+  /**
+   * An array of object that can be used to populate series and axis data using there `dataKey` property.
+   */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  /**
+   * If true, the charts will not listen to the mouse move event.
+   * It might breaks interactive features, but save some computation power.
+   * @default false
+   */
   disableAxisListener: PropTypes.bool,
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * @default undefined
+   */
   height: PropTypes.number,
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leving space for extra information wuch as axes, or legend.
+   * Accept and object with some of the next properties: `top`, `bottom`, `left`, and `right`.
+   * @default object depends on the charts type.
+   */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -296,6 +314,10 @@ SparkLineChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * @default undefined
+   */
   width: PropTypes.number,
   /**
    * The xAxis configuration.

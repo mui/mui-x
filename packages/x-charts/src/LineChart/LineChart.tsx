@@ -179,6 +179,13 @@ LineChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Object `{ x, y }` that defines how the charts highlight the mouse position along x and y axes.
+   * The two proerties accept the next values:
+   * - 'none': display nothing.
+   * - 'line': display a line at the current mouse position.
+   * - 'band': display a band at the current mouse position. Only available  with band scale.
+   */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
@@ -223,13 +230,25 @@ LineChart.propTypes = {
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * An array of object that can be used to populate series and axis data using there `dataKey` property.
+   */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  /**
+   * If true, the charts will not listen to the mouse move event.
+   * It might breaks interactive features, but save some computation power.
+   * @default false
+   */
   disableAxisListener: PropTypes.bool,
   /**
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * @default undefined
+   */
   height: PropTypes.number,
   /**
    * Indicate which axis to display the left of the charts.
@@ -279,6 +298,12 @@ LineChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
   }),
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leving space for extra information wuch as axes, or legend.
+   * Accept and object with some of the next properties: `top`, `bottom`, `left`, and `right`.
+   * @default object depends on the charts type.
+   */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -424,7 +449,15 @@ LineChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * @default undefined
+   */
   width: PropTypes.number,
+  /**
+   * The configuration of the x axes.
+   * If not provided, a default axis config is used with id `DEFAULT_X_AXIS_KEY`.
+   */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
@@ -461,6 +494,10 @@ LineChart.propTypes = {
       valueFormatter: PropTypes.func,
     }),
   ),
+  /**
+   * The configuration of the y axes.
+   * If not provided, a default axis config is used with id `DEFAULT_Y_AXIS_KEY`.
+   */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,

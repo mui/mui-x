@@ -1,6 +1,12 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leving space for extra information wuch as axes, or legend. Accept and object with some of the next properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
+  },
   "classDescriptions": {},
   "slotDescriptions": {}
 }
