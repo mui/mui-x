@@ -4,9 +4,9 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 export interface ChartsReferenceLineClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element is reference line is verticale. */
-  verticale: string;
-  /** Styles applied to the root element is reference line is horizontal. */
+  /** Styles applied to the root element if the reference line is vertical. */
+  vertical: string;
+  /** Styles applied to the root element if the reference line is horizontal. */
   horizontal: string;
   /** Styles applied to the reference line. */
   line: string;
@@ -22,5 +22,5 @@ export function getReferenceLineUtilityClass(slot: string) {
 
 export const referenceLineClasses: ChartsReferenceLineClasses = generateUtilityClasses(
   'MuiChartsReferenceLine',
-  ['root', 'verticale', 'horizontal', 'line', 'label'],
+  ['root', 'vertical', 'horizontal', 'line', 'label'],
 );
