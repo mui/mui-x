@@ -18,5 +18,12 @@ export function computeSlots<SlotComponents extends object>({
     return defaultSlots;
   }
 
-  return { ...defaultSlots, ...overrides };
+  const result = { ...defaultSlots };
+  for (let key in overrides) {
+    if (Object.prototype.hasOwnProperty.call(overrides, key) && overrides[key] !== undefined) {
+      result[key] = overrides[key] as any;
+    }
+  }
+
+  return result;
 }
