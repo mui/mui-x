@@ -16,30 +16,12 @@ const Root = styled('div')(({ theme }) => ({
   fontWeight: theme.typography.fontWeightMedium,
   '&.low': {
     backgroundColor: alpha(theme.palette.error.main, 0.1),
-    ' .progress-bar': {
-      backgroundColor:
-        theme.palette.mode === 'light'
-          ? alpha(theme.palette.error.light, 0.8)
-          : alpha(theme.palette.error.dark, 0.5),
-    },
   },
   '&.medium': {
     backgroundColor: alpha(theme.palette.warning.main, 0.1),
-    ' .progress-bar': {
-      backgroundColor:
-        theme.palette.mode === 'light'
-          ? alpha(theme.palette.warning.light, 0.8)
-          : alpha(theme.palette.warning.dark, 0.5),
-    },
   },
   '&.high': {
     backgroundColor: alpha(theme.palette.success.main, 0.1),
-    ' .progress-bar': {
-      backgroundColor:
-        theme.palette.mode === 'light'
-          ? alpha(theme.palette.success.light, 0.8)
-          : alpha(theme.palette.success.dark, 0.5),
-    },
   },
 }));
 
@@ -51,24 +33,41 @@ const Value = styled('div')({
   justifyContent: 'center',
 });
 
-const Bar = styled('div')({
+const Bar = styled('div')(({ theme }) => ({
   height: '100%',
-});
+  '&.low': {
+    backgroundColor:
+      theme.palette.mode === 'light'
+        ? alpha(theme.palette.error.light, 0.8)
+        : alpha(theme.palette.error.dark, 0.5),
+  },
+  '&.medium': {
+    backgroundColor:
+      theme.palette.mode === 'light'
+        ? alpha(theme.palette.warning.light, 0.8)
+        : alpha(theme.palette.warning.dark, 0.5),
+  },
+  '&.high': {
+    backgroundColor:
+      theme.palette.mode === 'light'
+        ? alpha(theme.palette.success.light, 0.8)
+        : alpha(theme.palette.success.dark, 0.5),
+  },
+}));
 
 const ProgressBar = React.memo(function ProgressBar(props: ProgressBarProps) {
   const { value } = props;
   const valueInPercent = value * 100;
+  const className = clsx({
+    low: valueInPercent < 30,
+    medium: valueInPercent >= 30 && valueInPercent <= 70,
+    high: valueInPercent > 70,
+  });
 
   return (
-    <Root
-      className={clsx({
-        low: valueInPercent < 30,
-        medium: valueInPercent >= 30 && valueInPercent <= 70,
-        high: valueInPercent > 70,
-      })}
-    >
+    <Root className={className}>
       <Value>{`${valueInPercent.toLocaleString()} %`}</Value>
-      <Bar className="progress-bar" style={{ maxWidth: `${valueInPercent}%` }} />
+      <Bar className={className} style={{ maxWidth: `${valueInPercent}%` }} />
     </Root>
   );
 });
