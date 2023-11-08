@@ -14,7 +14,7 @@ TBD
 
 ## Start using the alpha release
 
-In `package.json`, change the version of the date pickers package to `next`.
+In `package.json`, change the version of the tree view package to `next`.
 
 ```diff
 -"@mui/x-tree-view": "6.x.x",
