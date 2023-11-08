@@ -18,6 +18,7 @@ import {
   GridQuickFilterValueResult,
 } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
+import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
   gridColumnFieldsSelector,
   gridColumnLookupSelector,
@@ -152,7 +153,7 @@ export const mergeStateWithFilterModel =
     filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
   });
 
-const removeDiacritics = (value: unknown) => {
+export const removeDiacritics = (value: unknown) => {
   if (typeof value === 'string') {
     return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
@@ -207,6 +208,8 @@ const getFilterCallbackFromItem = (
   const hasUserFunctionLegacy = !isInternalFilter(filterOperator.getApplyFilterFn);
   const hasUserFunctionV7 = !isInternalFilter(filterOperator.getApplyFilterFnV7);
 
+  const publicApiRef = getPublicApiRef(apiRef);
+
   if (filterOperator.getApplyFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
     const applyFilterOnRow = filterOperator.getApplyFilterFnV7(newFilterItem, column)!;
     if (typeof applyFilterOnRow !== 'function') {
@@ -220,7 +223,7 @@ const getFilterCallbackFromItem = (
         if (ignoreDiacritics) {
           value = removeDiacritics(value);
         }
-        return applyFilterOnRow(value, row, column, apiRef);
+        return applyFilterOnRow(value, row, column, publicApiRef);
       },
     };
   }
@@ -235,7 +238,7 @@ const getFilterCallbackFromItem = (
     item: newFilterItem,
     fn: (rowId: GridRowId) => {
       const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
-      GLOBAL_API_REF.current = apiRef;
+      GLOBAL_API_REF.current = publicApiRef;
       if (ignoreDiacritics) {
         params.value = removeDiacritics(params.value);
       }
@@ -355,6 +358,7 @@ const buildAggregatedQuickFilterApplier = (
   }[];
 
   const { ignoreDiacritics } = apiRef.current.rootProps;
+  const publicApiRef = getPublicApiRef(apiRef);
 
   columnFields.forEach((field) => {
     const column = apiRef.current.getColumn(field);
@@ -371,7 +375,7 @@ const buildAggregatedQuickFilterApplier = (
           const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
             v7: true,
-            fn: getApplyQuickFilterFnV7(value, column, apiRef),
+            fn: getApplyQuickFilterFnV7(value, column, publicApiRef),
           };
         }),
       });
@@ -382,7 +386,7 @@ const buildAggregatedQuickFilterApplier = (
           const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
             v7: false,
-            fn: getApplyQuickFilterFn(value, column, apiRef),
+            fn: getApplyQuickFilterFn(value, column, publicApiRef),
           };
         }),
       });
@@ -406,7 +410,7 @@ const buildAggregatedQuickFilterApplier = (
         }
 
         const applier = appliers[v];
-        let value = apiRef.current.getRowFormattedValue(row, column);
+        let value = apiRef.current.getRowValue(row, column);
 
         if (applier.fn === null) {
           continue;
@@ -416,7 +420,7 @@ const buildAggregatedQuickFilterApplier = (
           if (ignoreDiacritics) {
             value = removeDiacritics(value);
           }
-          const isMatching = applier.fn(value, row, column, apiRef);
+          const isMatching = applier.fn(value, row, column, publicApiRef);
           if (isMatching) {
             result[filterValue] = true;
             continue outer;

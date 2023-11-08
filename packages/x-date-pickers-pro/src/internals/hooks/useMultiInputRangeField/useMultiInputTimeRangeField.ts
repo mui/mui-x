@@ -72,6 +72,8 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     onChange,
     disabled,
     readOnly,
+    selectedSections,
+    onSelectedSectionsChange,
   } = sharedProps;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
@@ -134,6 +136,8 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
+    selectedSections,
+    onSelectedSectionsChange,
   };
 
   const endFieldProps: UseTimeFieldComponentProps<
@@ -151,6 +155,8 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
+    selectedSections,
+    onSelectedSectionsChange,
   };
 
   const startDateResponse = useTimeField({
