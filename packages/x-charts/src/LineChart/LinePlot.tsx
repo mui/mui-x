@@ -51,6 +51,7 @@ function LinePlot(props: LinePlotProps) {
             yAxisKey = defaultYAxisId,
             stackedData,
             data,
+            connectNulls,
           } = series[seriesId];
 
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
@@ -75,11 +76,14 @@ function LinePlot(props: LinePlotProps) {
             y: [number, number];
           }>()
             .x((d) => xScale(d.x))
-            .defined((_, i) => data[i] != null)
+            .defined((_, i) => connectNulls || data[i] != null)
             .y((d) => yScale(d.y[1]));
 
           const curve = getCurveFactory(series[seriesId].curve);
-          const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
+          const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
+          const d3Data = connectNulls
+            ? formattedData.filter((_, i) => data[i] != null)
+            : formattedData;
 
           return (
             <LineElement

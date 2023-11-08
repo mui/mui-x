@@ -3,13 +3,8 @@
     {
       data,
       highlightScope: { faded: 'global', highlighted: 'item' },
-      faded: { innerRadius: 30, additionalRadius: -30 },
+      faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
     },
   ]}
-  sx={{
-    [`& .${pieArcClasses.faded}`]: {
-      fill: 'gray',
-    },
-  }}
   height={200}
 />

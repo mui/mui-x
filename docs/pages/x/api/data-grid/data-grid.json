@@ -114,6 +114,7 @@
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
+    "ignoreDiacritics": { "type": { "name": "bool" } },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },

@@ -18,7 +18,8 @@ export default function DifferentLength() {
           valueFormatter: (value) => (value == null ? '?' : value.toString()),
         },
       ]}
-      height={300}
+      height={200}
+      margin={{ top: 10, bottom: 20 }}
     />
   );
 }

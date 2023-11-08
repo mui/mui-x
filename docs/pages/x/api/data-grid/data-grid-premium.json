@@ -184,6 +184,7 @@
       "default": "false"
     },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
+    "ignoreDiacritics": { "type": { "name": "bool" } },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },

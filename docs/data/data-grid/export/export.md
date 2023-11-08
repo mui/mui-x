@@ -88,15 +88,6 @@ There are a few ways to include or hide other columns.
 
 ## Exported rows
 
-### Print export
-
-The print export always prints all rows regardless of whether or not some rows are selected.
-To export only selected rows via print you can use the `getRowsToExport` function.
-
-{{"demo": "PrintExportSelectedRows.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### CSV and Excel export
-
 By default, the data grid exports the selected rows if there are any.
 If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
 

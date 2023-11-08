@@ -316,6 +316,7 @@ LineChart.propTypes = {
     PropTypes.shape({
       area: PropTypes.bool,
       color: PropTypes.string,
+      connectNulls: PropTypes.bool,
       curve: PropTypes.oneOf([
         'catmullRom',
         'linear',
