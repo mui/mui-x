@@ -29,6 +29,7 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
    * Importance of the change when picking a shortcut:
    * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
    * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
    */
   changeImportance?: PickerShortcutChangeImportance;
 }
