@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "axisId": {
-      "description": "Id of the axis to render.",
+      "description": "The id of the axis to render. If undefined, it will be the first defined axis.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -121,5 +121,5 @@
     "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },
     "right": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the right axis" }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": { "axisLabel": "", "axisLine": "", "axisTick": "", "axisTickLabel": "" }
 }

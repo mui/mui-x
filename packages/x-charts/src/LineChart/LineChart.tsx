@@ -183,7 +183,7 @@ LineChart.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -231,7 +231,7 @@ LineChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -285,7 +285,7 @@ LineChart.propTypes = {
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -316,6 +316,7 @@ LineChart.propTypes = {
     PropTypes.shape({
       area: PropTypes.bool,
       color: PropTypes.string,
+      connectNulls: PropTypes.bool,
       curve: PropTypes.oneOf([
         'catmullRom',
         'linear',
@@ -383,7 +384,7 @@ LineChart.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,

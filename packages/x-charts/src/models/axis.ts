@@ -10,19 +10,23 @@ import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../internals/components/ChartsText';
 
-export type D3Scale =
-  | ScaleBand<any>
-  | ScaleLogarithmic<any, number>
-  | ScalePoint<any>
-  | ScalePower<any, number>
-  | ScaleTime<any, number>
-  | ScaleLinear<any, number>;
+export type D3Scale<
+  Domain extends { toString(): string } = number | Date | string,
+  Range = number,
+  Output = number,
+> =
+  | ScaleBand<Domain>
+  | ScaleLogarithmic<Range, Output>
+  | ScalePoint<Domain>
+  | ScalePower<Range, Output>
+  | ScaleTime<Range, Output>
+  | ScaleLinear<Range, Output>;
 
-export type D3ContinuouseScale =
-  | ScaleLogarithmic<any, number>
-  | ScalePower<any, number>
-  | ScaleTime<any, number>
-  | ScaleLinear<any, number>;
+export type D3ContinuouseScale<Range = number, Output = number> =
+  | ScaleLogarithmic<Range, Output>
+  | ScalePower<Range, Output>
+  | ScaleTime<Range, Output>
+  | ScaleLinear<Range, Output>;
 
 export interface ChartsAxisSlotsComponent {
   axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
@@ -40,9 +44,10 @@ export interface ChartsAxisSlotComponentProps {
 
 export interface ChartsAxisProps extends TickParams {
   /**
-   * Id of the axis to render.
+   * The id of the axis to render.
+   * If undefined, it will be the first defined axis.
    */
-  axisId: string;
+  axisId?: string;
   /**
    * If true, the axis line is disabled.
    * @default false
@@ -135,7 +140,7 @@ export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 
 interface AxisScaleConfig {
   band: {
     scaleType: 'band';
-    scale: ScaleBand<any>;
+    scale: ScaleBand<number | Date | string>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
      * 0 means no gap, and 1 no data.
@@ -151,31 +156,31 @@ interface AxisScaleConfig {
   };
   point: {
     scaleType: 'point';
-    scale: ScalePoint<any>;
+    scale: ScalePoint<number | Date | string>;
   };
   log: {
     scaleType: 'log';
-    scale: ScaleLogarithmic<any, any>;
+    scale: ScaleLogarithmic<number, number>;
   };
   pow: {
     scaleType: 'pow';
-    scale: ScalePower<any, any>;
+    scale: ScalePower<number, number>;
   };
   sqrt: {
     scaleType: 'sqrt';
-    scale: ScalePower<any, any>;
+    scale: ScalePower<number, number>;
   };
   time: {
     scaleType: 'time';
-    scale: ScaleTime<any, any>;
+    scale: ScaleTime<number, number>;
   };
   utc: {
     scaleType: 'utc';
-    scale: ScaleTime<any, any>;
+    scale: ScaleTime<number, number>;
   };
   linear: {
     scaleType: 'linear';
-    scale: ScaleLinear<any, any>;
+    scale: ScaleLinear<number, number>;
   };
 }
 

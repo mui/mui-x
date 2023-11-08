@@ -225,12 +225,18 @@ function extractColumnWidths(
       if (header) {
         const title = header.querySelector(`.${gridClasses.columnHeaderTitle}`);
         const content = header.querySelector(`.${gridClasses.columnHeaderTitleContainerContent}`)!;
+        const iconContainer = header.querySelector(`.${gridClasses.iconButtonContainer}`);
+        const menuContainer = header.querySelector(`.${gridClasses.menuIcon}`);
         const element = title ?? content;
 
         const style = window.getComputedStyle(header, null);
         const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
         const contentWidth = element.scrollWidth + 1;
-        const width = paddingWidth + contentWidth;
+        const width =
+          contentWidth +
+          paddingWidth +
+          (iconContainer?.clientWidth ?? 0) +
+          (menuContainer?.clientWidth ?? 0);
 
         filteredWidths.push(width);
       }

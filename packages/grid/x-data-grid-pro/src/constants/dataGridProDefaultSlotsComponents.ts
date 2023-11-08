@@ -11,10 +11,10 @@ import materialSlots from '../material';
 export const DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS: GridProSlotsComponent = {
   ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
   ...materialSlots,
-  ColumnMenu: GridProColumnMenu,
-  ColumnHeaders: GridColumnHeaders,
-  DetailPanels: GridDetailPanels,
-  HeaderFilterCell: GridHeaderFilterCell,
-  HeaderFilterMenu: GridHeaderFilterMenu,
-  PinnedRows: GridPinnedRows,
+  columnMenu: GridProColumnMenu,
+  columnHeaders: GridColumnHeaders,
+  detailPanels: GridDetailPanels,
+  headerFilterCell: GridHeaderFilterCell,
+  headerFilterMenu: GridHeaderFilterMenu,
+  pinnedRows: GridPinnedRows,
 };

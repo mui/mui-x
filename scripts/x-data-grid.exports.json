@@ -529,7 +529,6 @@
   { "name": "ToolbarPropsOverrides", "kind": "Interface" },
   { "name": "trTR", "kind": "Variable" },
   { "name": "ukUA", "kind": "Variable" },
-  { "name": "UncapitalizedGridSlotsComponent", "kind": "Interface" },
   { "name": "unstable_gridFocusColumnGroupHeaderSelector", "kind": "Variable" },
   { "name": "unstable_gridFocusColumnHeaderFilterSelector", "kind": "Variable" },
   { "name": "unstable_gridHeaderFilteringEditFieldSelector", "kind": "Variable" },

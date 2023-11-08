@@ -88,7 +88,14 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
       { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
-      { pathname: '/x/react-data-grid/style' },
+      {
+        pathname: '/x/react-data-grid/style-group',
+        title: 'Style',
+        children: [
+          { pathname: '/x/react-data-grid/style', title: 'Overview' },
+          { pathname: '/x/react-data-grid/style-recipes', title: 'Recipes' },
+        ],
+      },
       { pathname: '/x/react-data-grid/localization' },
       { pathname: '/x/react-data-grid/scrolling' },
       { pathname: '/x/react-data-grid/virtualization' },
@@ -103,6 +110,39 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
           { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧', plan: 'premium' },
+        ],
+      },
+      {
+        pathname: '/x/react-data-grid/server-side-data-group',
+        title: 'Server-side data 🚧',
+        plan: 'pro',
+        children: [
+          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
+          {
+            pathname: '/x/react-data-grid/server-side-data/lazy-loading',
+            title: 'Lazy loading 🚧',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-data-grid/server-side-data/infinite-loading',
+            title: 'Infinite loading 🚧',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-data-grid/server-side-data/tree-data',
+            title: 'Tree data 🚧',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-data-grid/server-side-data/row-grouping',
+            title: 'Row grouping 🚧',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-data-grid/server-side-data/aggregation',
+            title: 'Aggregation 🚧',
+            plan: 'premium',
+          },
         ],
       },
       {
@@ -345,7 +385,7 @@ const pages: MuiPage[] = [
   },
   {
     pathname: '/x/react-charts-group',
-    title: 'Charts 🧪',
+    title: 'Charts',
     newFeature: true,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
@@ -424,6 +464,25 @@ const pages: MuiPage[] = [
     pathname: '/x/migration-group',
     title: 'Migration',
     children: [
+      {
+        pathname: '/x/migration-v7',
+        subheader: 'Upgrade to v7',
+        children: [
+          { pathname: '/x/migration/migration-data-grid-v6', title: 'Breaking changes: Data Grid' },
+          {
+            pathname: '/x/migration/migration-pickers-v6',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
+          {
+            pathname: '/x/migration/migration-tree-view-v6',
+            title: 'Breaking changes: Tree View',
+          },
+          {
+            pathname: '/x/migration/migration-charts-v6',
+            title: 'Breaking changes: Charts',
+          },
+        ],
+      },
       {
         pathname: '/x/migration-v6',
         subheader: 'Upgrade to v6',

@@ -5,15 +5,15 @@ export interface GridPremiumIconSlotsComponent {
    * Icon displayed in column menu for ungrouping
    * @default GridWorkspacesIcon
    */
-  ColumnMenuUngroupIcon: React.JSXElementConstructor<any>;
+  columnMenuUngroupIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed in column menu for grouping
    * @default GridGroupWorkIcon
    */
-  ColumnMenuGroupIcon: React.JSXElementConstructor<any>;
+  columnMenuGroupIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed in column menu for aggregation
    * @default GridFunctionsIcon
    */
-  ColumnMenuAggregationIcon: React.JSXElementConstructor<any>;
+  columnMenuAggregationIcon: React.JSXElementConstructor<any>;
 }

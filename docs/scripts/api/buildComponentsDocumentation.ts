@@ -83,11 +83,13 @@ function extractSlots(options: {
     project,
     checkDeclarations: true,
     shouldResolveObject: ({ name }) => {
-      return name === 'components';
+      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
+      return name === 'slots' || name === 'components';
     },
     shouldInclude: ({ name, depth }) => {
       // The keys allowed in the `components` prop have depth=2
-      return name === 'components' || depth === 2;
+      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
+      return name === 'slots' || name === 'components' || depth === 2;
     },
   });
 
@@ -96,7 +98,10 @@ function extractSlots(options: {
     throw new Error(`No proptypes found for \`${displayName}\``);
   }
 
-  const componentsProps = props.types.find((type) => type.name === 'components')!;
+  const componentsProps = props.types.find(
+    // TODO v7: Remove the `components` fallback once `slots` is used everywhere
+    (type) => type.name === 'slots' || type.name === 'components',
+  )!;
   if (!componentsProps) {
     return slots;
   }
@@ -129,10 +134,10 @@ function extractSlots(options: {
       return;
     }
 
-    // Workaround to generate correct (camelCase) keys for slots in v6 `API Reference` documentation
-    // TODO v7: Remove camelCase once `Grid(Pro|Premium)SlotsComponent` type is refactored to have `camelCase` names
-    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedGridSlotsComponent`
-    const slotName = camelCase(name);
+    // Workaround to generate correct (camelCase) keys for slots in `API Reference` documentation
+    // TODO v7: Remove camelCase from pickers once the `components` prop is removed
+    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedSlotsComponent`
+    const slotName = project.name.includes('grid') ? name : camelCase(name);
 
     slots[slotName] = {
       type,
@@ -481,7 +486,8 @@ const buildComponentDocumentation = async (options: {
   /**
    * Slot descriptions.
    */
-  if (componentApi.propDescriptions.components) {
+  // TODO v7: Remove the `components` fallback once `slots` is used everywhere
+  if (componentApi.propDescriptions.slots || componentApi.propDescriptions.components) {
     const slots = extractSlots({
       filename,
       name: reactApi.name, // e.g. DataGrid
