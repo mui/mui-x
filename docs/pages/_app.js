@@ -213,8 +213,11 @@ function AppWrapper(props) {
       metadata: '',
       name: 'MUI X',
       versions: [
-        { text: `next`, href: `https://next.mui.com${languagePrefix}/x/introduction/` },
-        { text: `v${process.env.LIB_VERSION}`, current: true },
+        {
+          text: `v${process.env.LIB_VERSION}`,
+          current: true,
+        },
+        { text: 'v6', href: `https://mui.com${languagePrefix}/x/introduction/` },
         { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
@@ -225,8 +228,11 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          { text: `next`, href: `https://next.mui.com${languagePrefix}/components/data-grid/` },
-          { text: `v${process.env.DATA_GRID_VERSION}`, current: true },
+          {
+            text: `v${process.env.DATA_GRID_VERSION}`,
+            current: true,
+          },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/components/data-grid/` },
           { text: 'v5', href: `https://v5.mui.com${languagePrefix}/components/data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
@@ -237,10 +243,13 @@ function AppWrapper(props) {
         name: 'Date Pickers',
         versions: [
           {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/react-date-pickers/getting-started`,
+            text: `v${process.env.DATE_PICKERS_VERSION}`,
+            current: true,
           },
-          { text: `v${process.env.DATE_PICKERS_VERSION}`, current: true },
+          {
+            text: 'v6',
+            href: `https://mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
+          },
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
@@ -253,10 +262,10 @@ function AppWrapper(props) {
         name: 'Charts',
         versions: [
           {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/react-charts/getting-started`,
+            text: `v${process.env.CHARTS_VERSION}`,
+            current: true,
           },
-          { text: `v${process.env.CHARTS_VERSION}`, current: true },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/getting-started` },
         ],
       };
     } else if (productId === 'x-tree-view') {
@@ -265,10 +274,13 @@ function AppWrapper(props) {
         name: 'Tree View',
         versions: [
           {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+            text: `v${process.env.TREE_VIEW_VERSION}`,
+            current: true,
           },
-          { text: `v${process.env.TREE_VIEW_VERSION}`, current: true },
+          {
+            text: 'v6',
+            href: `https://mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+          },
         ],
       };
     }
