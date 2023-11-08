@@ -38,7 +38,7 @@ type InteractionState = {
    */
   item: null | ItemInteractionData<ChartSeriesType>;
   /**
-   * The x and y axes currently interacting.
+   * The x- and y-axes currently interacting.
    */
   axis: AxisInteractionData;
   dispatch: React.Dispatch<InteractionActions>;

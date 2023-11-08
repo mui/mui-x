@@ -56,11 +56,11 @@ export interface LineChartProps
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along x and y axes.
-   * The two proerties accept the next values:
+   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
+   * The two properties accept the following values:
    * - 'none': display nothing.
    * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available  with band scale.
+   * - 'band': display a band at the current mouse position. Only available with band scale.
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
@@ -180,11 +180,11 @@ LineChart.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along x and y axes.
-   * The two proerties accept the next values:
+   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
+   * The two properties accept the following values:
    * - 'none': display nothing.
    * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available  with band scale.
+   * - 'band': display a band at the current mouse position. Only available with band scale.
    */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
@@ -231,13 +231,13 @@ LineChart.propTypes = {
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
-   * An array of object that can be used to populate series and axis data using there `dataKey` property.
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   /**
-   * If true, the charts will not listen to the mouse move event.
-   * It might breaks interactive features, but save some computation power.
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
    * @default false
    */
   disableAxisListener: PropTypes.bool,
@@ -300,9 +300,9 @@ LineChart.propTypes = {
   }),
   /**
    * The margin between the SVG and the drawing area.
-   * It's used for leving space for extra information wuch as axes, or legend.
-   * Accept and object with some of the next properties: `top`, `bottom`, `left`, and `right`.
-   * @default object depends on the charts type.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -455,8 +455,8 @@ LineChart.propTypes = {
    */
   width: PropTypes.number,
   /**
-   * The configuration of the x axes.
-   * If not provided, a default axis config is used with id `DEFAULT_X_AXIS_KEY`.
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
@@ -495,8 +495,8 @@ LineChart.propTypes = {
     }),
   ),
   /**
-   * The configuration of the y axes.
-   * If not provided, a default axis config is used with id `DEFAULT_Y_AXIS_KEY`.
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({

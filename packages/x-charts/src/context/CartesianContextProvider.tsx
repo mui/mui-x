@@ -30,17 +30,17 @@ import { getTickNumber } from '../hooks/useTicks';
 
 export type CartesianContextProviderProps = {
   /**
-   * The configuration of the x axes.
-   * If not provided, a default axis config is used with id `DEFAULT_X_AXIS_KEY`.
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
    */
   xAxis?: MakeOptional<AxisConfig, 'id'>[];
   /**
-   * The configuration of the y axes.
-   * If not provided, a default axis config is used with id `DEFAULT_Y_AXIS_KEY`.
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
    */
   yAxis?: MakeOptional<AxisConfig, 'id'>[];
   /**
-   * An array of object that can be used to populate series and axis data using there `dataKey` property.
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset?: DatasetType;
   children: React.ReactNode;
@@ -68,23 +68,23 @@ type DefaultizedAxisConfig = {
 
 export const CartesianContext = React.createContext<{
   /**
-   * Mapping from x axis key to scaling configuration
+   * Mapping from x-axis key to scaling configuration.
    */
   xAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
   } & DefaultizedAxisConfig;
   /**
-   * Mapping from y axis key to scaling configuration
+   * Mapping from y-axis key to scaling configuration.
    */
   yAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
   } & DefaultizedAxisConfig;
   /**
-   * The x axes ids sorted by order they got provided.
+   * The x-axes IDs sorted by order they got provided.
    */
   xAxisIds: string[];
   /**
-   * The y axes ids sorted by order they got provided.
+   * The y-axes IDs sorted by order they got provided.
    */
   yAxisIds: string[];
   // @ts-ignore
@@ -321,12 +321,12 @@ CartesianContextProvider.propTypes = {
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   /**
-   * An array of object that can be used to populate series and axis data using there `dataKey` property.
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   /**
-   * The configuration of the x axes.
-   * If not provided, a default axis config is used with id `DEFAULT_X_AXIS_KEY`.
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
@@ -365,8 +365,8 @@ CartesianContextProvider.propTypes = {
     }),
   ),
   /**
-   * The configuration of the y axes.
-   * If not provided, a default axis config is used with id `DEFAULT_Y_AXIS_KEY`.
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({

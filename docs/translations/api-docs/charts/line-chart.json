@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "axisHighlight": {
-      "description": "Object <code>{ x, y }</code> that defines how the charts highlight the mouse position along x and y axes. The two proerties accept the next values: - &#39;none&#39;: display nothing. - &#39;line&#39;: display a line at the current mouse position. - &#39;band&#39;: display a band at the current mouse position. Only available  with band scale.",
+      "description": "Object <code>{ x, y }</code> that defines how the charts highlight the mouse position along the x- and y-axes. The two properties accept the following values: - &#39;none&#39;: display nothing. - &#39;line&#39;: display a line at the current mouse position. - &#39;band&#39;: display a band at the current mouse position. Only available with band scale.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -17,12 +17,12 @@
       "typeDescriptions": {}
     },
     "dataset": {
-      "description": "An array of object that can be used to populate series and axis data using there <code>dataKey</code> property.",
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableAxisListener": {
-      "description": "If true, the charts will not listen to the mouse move event. It might breaks interactive features, but save some computation power.",
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -42,7 +42,7 @@
       "typeDescriptions": {}
     },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leving space for extra information wuch as axes, or legend. Accept and object with some of the next properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>.",
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -72,12 +72,12 @@
       "typeDescriptions": {}
     },
     "xAxis": {
-      "description": "The configuration of the x axes. If not provided, a default axis config is used with id <code>DEFAULT_X_AXIS_KEY</code>.",
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_X_AXIS_KEY</code>.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "yAxis": {
-      "description": "The configuration of the y axes. If not provided, a default axis config is used with id <code>DEFAULT_Y_AXIS_KEY</code>.",
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_Y_AXIS_KEY</code>.",
       "deprecated": "",
       "typeDescriptions": {}
     }

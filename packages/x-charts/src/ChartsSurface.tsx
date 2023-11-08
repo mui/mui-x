@@ -24,8 +24,8 @@ export interface ChartsSurfaceProps {
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
   /**
-   * If true, the charts will not listen to the mouse move event.
-   * It might breaks interactive features, but save some computation power.
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
    * @default false
    */
   disableAxisListener?: boolean;

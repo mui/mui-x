@@ -10,9 +10,9 @@ export type LayoutConfig = {
   height: number;
   /**
    * The margin between the SVG and the drawing area.
-   * It's used for leving space for extra information wuch as axes, or legend.
-   * Accept and object with some of the next properties: `top`, `bottom`, `left`, and `right`.
-   * @default object depends on the charts type.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default object Depends on the charts type.
    */
   margin?: Partial<CardinalDirections<number>>;
 };

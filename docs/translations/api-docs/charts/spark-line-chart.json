@@ -13,12 +13,12 @@
     },
     "data": { "description": "Data to plot.", "deprecated": "", "typeDescriptions": {} },
     "dataset": {
-      "description": "An array of object that can be used to populate series and axis data using there <code>dataKey</code> property.",
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableAxisListener": {
-      "description": "If true, the charts will not listen to the mouse move event. It might breaks interactive features, but save some computation power.",
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -28,7 +28,7 @@
       "typeDescriptions": {}
     },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leving space for extra information wuch as axes, or legend. Accept and object with some of the next properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>.",
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>.",
       "deprecated": "",
       "typeDescriptions": {}
     },

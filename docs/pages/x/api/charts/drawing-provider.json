@@ -5,7 +5,7 @@
         "name": "shape",
         "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
       },
-      "default": "object depends on the charts type."
+      "default": "object Depends on the charts type."
     }
   },
   "slots": [],

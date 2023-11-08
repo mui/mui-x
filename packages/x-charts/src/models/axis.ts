@@ -181,21 +181,21 @@ interface AxisScaleConfig {
 
 export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
   /**
-   * Id used to identify axis in different parts of the charts.
+   * Id used to identify the axis.
    */
   id: string;
   /**
    * The minimal value of the domain.
-   * If not provided, it get computed to display the entire chart data.
+   * If not provided, it gets computed to display the entire chart data.
    */
   min?: number | Date;
   /**
    * The maximal value of the domain.
-   * If not provided, it get computed to display the entire chart data.
+   * If not provided, it gets computed to display the entire chart data.
    */
   max?: number | Date;
   /**
-   * The data used by 'band' and 'point' scales.
+   * The data used by `'band'` and `'point'` scales.
    */
   data?: V[];
   /**
@@ -217,7 +217,7 @@ export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
 > &
   AxisScaleConfig[S] & {
     /**
-     * An indication of the number of ticks expected.
+     * An indication of the expected number of ticks.
      */
     tickNumber: number;
   };

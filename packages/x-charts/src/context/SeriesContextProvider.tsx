@@ -18,7 +18,8 @@ export type SeriesContextProviderProps = {
   dataset?: DatasetType;
   /**
    * The array of series to display.
-   * Each type of series has it's own specificity. Please refer the appropriated docs page to know it.
+   * Each type of series has its own specificity.
+   * Please refer to the appropriate docs page to learn more about it.
    */
   series: AllSeriesType[];
   /**

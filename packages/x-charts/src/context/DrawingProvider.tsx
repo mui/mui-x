@@ -13,19 +13,19 @@ export interface DrawingProviderProps extends LayoutConfig {
  */
 export type DrawingArea = {
   /**
-   * The gape between the left border of the SVG and the drawing area.
+   * The gap between the left border of the SVG and the drawing area.
    */
   left: number;
   /**
-   * The gape between the top border of the SVG and the drawing area.
+   * The gap between the top border of the SVG and the drawing area.
    */
   top: number;
   /**
-   * The gape between the bottom border of the SVG and the drawing area.
+   * The gap between the bottom border of the SVG and the drawing area.
    */
   bottom: number;
   /**
-   * The gape between the right border of the SVG and the drawing area.
+   * The gap between the right border of the SVG and the drawing area.
    */
   right: number;
   /**
@@ -72,9 +72,9 @@ DrawingProvider.propTypes = {
   height: PropTypes.number.isRequired,
   /**
    * The margin between the SVG and the drawing area.
-   * It's used for leving space for extra information wuch as axes, or legend.
-   * Accept and object with some of the next properties: `top`, `bottom`, `left`, and `right`.
-   * @default object depends on the charts type.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,

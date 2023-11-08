@@ -17,27 +17,27 @@ export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
 
 export type CartesianSeriesType = {
   /**
-   * The id of the x axis used to render the series.
+   * The id of the x-axis used to render the series.
    */
   xAxisKey?: string;
   /**
-   * The id of the y axis used to render the series.
+   * The id of the y-axis used to render the series.
    */
   yAxisKey?: string;
 };
 
 export type StackableSeriesType = {
   /**
-   * The key that identify the stacking group.
+   * The key that identifies the stacking group.
    * Series with the same `stack` property will be stacked together.
    */
   stack?: string;
   /**
-   * Defines hos staked series handle negative values.
+   * Defines how stacked series handle negative values.
    */
   stackOffset?: StackOffsetType;
   /**
-   * The order in which series of the  same staking group are staked together.
+   * The order in which series' of the same group are stacked together.
    */
   stackOrder?: StackOrderType;
 };
