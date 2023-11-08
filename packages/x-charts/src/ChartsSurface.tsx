@@ -9,7 +9,13 @@ type ViewBox = {
   height?: number;
 };
 export interface ChartsSurfaceProps {
+  /**
+   * The width of the chart in px.
+   */
   width: number;
+  /**
+   * The height of the chart in px.
+   */
   height: number;
   viewBox?: ViewBox;
   className?: string;
@@ -17,6 +23,11 @@ export interface ChartsSurfaceProps {
   desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
   disableAxisListener?: boolean;
 }
 

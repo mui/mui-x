@@ -22,7 +22,7 @@ interface GetWordsByLinesParams {
    */
   style?: ChartsTextStyle;
   /**
-   * If true, the line width is computed.
+   * If `true`, the line width is computed.
    * @default false
    */
   needsComputation?: boolean;
