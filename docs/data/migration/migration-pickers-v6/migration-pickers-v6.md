@@ -25,4 +25,3 @@ In `package.json`, change the version of the date pickers package to `next`.
 
 Since `v7` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
-
