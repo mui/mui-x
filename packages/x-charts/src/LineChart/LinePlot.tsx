@@ -77,7 +77,7 @@ function LinePlot(props: LinePlotProps) {
           }>()
             .x((d) => xScale(d.x))
             .defined((_, i) => connectNulls || data[i] != null)
-            .y((d) => yScale(d.y[1]));
+            .y((d) => yScale(d.y[1])!);
 
           const curve = getCurveFactory(series[seriesId].curve);
           const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];

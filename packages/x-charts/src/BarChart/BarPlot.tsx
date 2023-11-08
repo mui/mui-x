@@ -143,12 +143,12 @@ const useCompletedData = (): CompletedBarData[] => {
           layout: series[seriesId].layout,
           x: verticalLayout
             ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
-            : xScale(bottom),
-          y: verticalLayout ? yScale(top) : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
-          xOrigin: xScale(0),
-          yOrigin: yScale(0),
-          height: verticalLayout ? Math.abs(yScale(bottom) - yScale(top)) : barWidth,
-          width: verticalLayout ? barWidth : Math.abs(xScale(bottom) - xScale(top)),
+            : xScale(bottom)!,
+          y: verticalLayout ? yScale(top)! : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
+          xOrigin: xScale(0)!,
+          yOrigin: yScale(0)!,
+          height: verticalLayout ? Math.abs(yScale(bottom)! - yScale(top)!) : barWidth,
+          width: verticalLayout ? barWidth : Math.abs(xScale(bottom)! - xScale(top)!),
           color,
           highlightScope: series[seriesId].highlightScope,
         };
