@@ -44,8 +44,11 @@ const PlaygroundWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('lg')]: { flexWrap: 'wrap-reverse' },
 }));
 
-const PlaygroundDemoArea = styled(Box)(() => ({
+const PlaygroundDemoArea = styled(Box)(({ theme }) => ({
   minWidth: 320,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
 }));
 
 const PlaygroundConfigArea = styled(Box)(({ theme }) => ({
@@ -326,7 +329,7 @@ const CustomizationPlayground = function CustomizationPlayground({
       )}
       <PlaygroundWrapper>
         <PlaygroundDemoArea>
-          <StyledChild sx={{ width: 'fit-content' }}>
+          <StyledChild sx={{ width: 'fit-content', minHeight: '390px' }}>
             {React.Children.map(
               children,
               (child) =>
@@ -342,6 +345,7 @@ const CustomizationPlayground = function CustomizationPlayground({
                 ),
             )}
           </StyledChild>
+          {moreInformation}
         </PlaygroundDemoArea>
         {shouldBeInteractive && (
           <BrandingProvider>
@@ -396,12 +400,10 @@ const CustomizationPlayground = function CustomizationPlayground({
           </BrandingProvider>
         )}
       </PlaygroundWrapper>
-      <BrandingProvider>
-        {shouldBeInteractive && (
-          <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
-        )}
-        {moreInformation}
-      </BrandingProvider>
+
+      {shouldBeInteractive && (
+        <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
+      )}
     </Box>
   );
 };
