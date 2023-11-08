@@ -28,6 +28,7 @@ export type ChartsLegendProps = {
   classes?: Partial<ChartsLegendClasses>;
   /**
    * Set to true to hide the legend.
+   * @default false
    */
   hidden?: boolean;
   /**
