@@ -15,7 +15,7 @@ export default function DisableActionButtonsDataGridPro() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
-        components={{ Toolbar: GridToolbar }}
+        slots={{ toolbar: GridToolbar }}
         slotProps={{
           filterPanel: {
             disableAddFilterButton: true,

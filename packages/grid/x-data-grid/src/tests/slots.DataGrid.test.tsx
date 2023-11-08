@@ -5,7 +5,7 @@ import { spy } from 'sinon';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 
-describe('<DataGrid /> - Components', () => {
+describe('<DataGrid /> - Slots', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
@@ -42,43 +42,43 @@ describe('<DataGrid /> - Components', () => {
       }
       render(
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} hideFooter components={{ Footer: CustomFooter }} />
+          <DataGrid {...baselineProps} hideFooter slots={{ footer: CustomFooter }} />
         </div>,
       );
       expect(document.querySelectorAll('.customFooter').length).to.equal(0);
     });
   });
 
-  describe('componentsProps', () => {
-    it('should pass the props from componentsProps.cell to the cell', () => {
+  describe('slotProps', () => {
+    it('should pass the props from slotProps.cell to the cell', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
             {...baselineProps}
             hideFooter
             disableVirtualization
-            componentsProps={{ cell: { 'data-name': 'foobar' } }}
+            slotProps={{ cell: { 'data-name': 'foobar' } }}
           />
         </div>,
       );
       expect(getCell(0, 0)).to.have.attr('data-name', 'foobar');
     });
 
-    it('should pass the props from componentsProps.row to the row', () => {
+    it('should pass the props from slotProps.row to the row', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
             {...baselineProps}
             hideFooter
             disableVirtualization
-            componentsProps={{ row: { 'data-name': 'foobar' } }}
+            slotProps={{ row: { 'data-name': 'foobar' } }}
           />
         </div>,
       );
       expect(getRow(0)).to.have.attr('data-name', 'foobar');
     });
 
-    it('should pass the props from componentsProps.columnHeaderFilterIconButton to the column header filter icon', () => {
+    it('should pass the props from slotProps.columnHeaderFilterIconButton to the column header filter icon', () => {
       const onClick = spy();
       render(
         <div style={{ width: 300, height: 500 }}>
@@ -89,7 +89,7 @@ describe('<DataGrid /> - Components', () => {
               items: [{ field: 'brand', operator: 'contains', value: 'a' }],
             }}
             disableVirtualization
-            componentsProps={{ columnHeaderFilterIconButton: { onClick } }}
+            slotProps={{ columnHeaderFilterIconButton: { onClick } }}
           />
         </div>,
       );
@@ -101,16 +101,16 @@ describe('<DataGrid /> - Components', () => {
     });
   });
 
-  describe('components', () => {
-    it('should render the cell with the component given in components.Cell', () => {
+  describe('slots', () => {
+    it('should render the cell with the component given in slots.Cell', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
             {...baselineProps}
             hideFooter
             disableVirtualization
-            components={{
-              Cell: ({ rowIndex, colIndex }) => (
+            slots={{
+              cell: ({ rowIndex, colIndex }) => (
                 <span role="cell" data-rowindex={rowIndex} data-colindex={colIndex} />
               ),
             }}
@@ -120,14 +120,14 @@ describe('<DataGrid /> - Components', () => {
       expect(getCell(0, 0).tagName).to.equal('SPAN');
     });
 
-    it('should render the row with the component given in components.Row', () => {
+    it('should render the row with the component given in slots.Row', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
             {...baselineProps}
             hideFooter
             disableVirtualization
-            components={{ Row: ({ index }) => <span role="row" data-rowindex={index} /> }}
+            slots={{ row: ({ index }) => <span role="row" data-rowindex={index} /> }}
           />
         </div>,
       );

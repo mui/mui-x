@@ -46,8 +46,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
     it('should update the visible columns when props.onColumnVisibilityModelChange and props.columnVisibilityModel are not defined', () => {
       render(
         <TestDataGrid
-          components={{
-            Toolbar: GridToolbar,
+          slots={{
+            toolbar: GridToolbar,
           }}
         />,
       );
@@ -62,8 +62,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGrid
-          components={{
-            Toolbar: GridToolbar,
+          slots={{
+            toolbar: GridToolbar,
           }}
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
@@ -83,8 +83,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGrid
-          components={{
-            Toolbar: GridToolbar,
+          slots={{
+            toolbar: GridToolbar,
           }}
           columnVisibilityModel={{ idBis: false }}
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
@@ -106,8 +106,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGrid
-          components={{
-            Toolbar: GridToolbar,
+          slots={{
+            toolbar: GridToolbar,
           }}
           columnVisibilityModel={{ idBis: false }}
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
@@ -132,8 +132,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
     it('should not hide non hideable columns when toggling all columns', () => {
       render(
         <TestDataGrid
-          components={{
-            Toolbar: GridToolbar,
+          slots={{
+            toolbar: GridToolbar,
           }}
           columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
         />,
@@ -148,7 +148,9 @@ describe('<DataGridPro /> - Columns visibility', () => {
     it('should not show hidden non hideable columns when "Show all" is clicked', () => {
       render(
         <TestDataGrid
-          components={{ Toolbar: GridToolbar }}
+          slots={{
+            toolbar: GridToolbar,
+          }}
           columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
           initialState={{
             columns: {
@@ -167,7 +169,9 @@ describe('<DataGridPro /> - Columns visibility', () => {
     it('should not show non-hideable columns when "Hide all" is clicked', () => {
       render(
         <TestDataGrid
-          components={{ Toolbar: GridToolbar }}
+          slots={{
+            toolbar: GridToolbar,
+          }}
           columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
           initialState={{
             columns: {
@@ -243,8 +247,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
               columnVisibilityModel: { idBis: false },
             },
           }}
-          components={{
-            Toolbar: GridToolbar,
+          slots={{
+            toolbar: GridToolbar,
           }}
         />,
       );
@@ -259,10 +263,10 @@ describe('<DataGridPro /> - Columns visibility', () => {
   it('should autofocus the first switch element in columns panel when `autoFocusSearchField` disabled', () => {
     render(
       <TestDataGrid
-        components={{
-          Toolbar: GridToolbar,
+        slots={{
+          toolbar: GridToolbar,
         }}
-        componentsProps={{
+        slotProps={{
           columnsPanel: {
             autoFocusSearchField: false,
           },
@@ -278,10 +282,10 @@ describe('<DataGridPro /> - Columns visibility', () => {
   it('should hide `Hide all` in columns panel when `disableHideAllButton` is `true`', () => {
     render(
       <TestDataGrid
-        components={{
-          Toolbar: GridToolbar,
+        slots={{
+          toolbar: GridToolbar,
         }}
-        componentsProps={{
+        slotProps={{
           columnsPanel: {
             disableHideAllButton: true,
           },
@@ -296,10 +300,10 @@ describe('<DataGridPro /> - Columns visibility', () => {
   it('should hide `Show all` in columns panel when `disableShowAllButton` is `true`', () => {
     render(
       <TestDataGrid
-        components={{
-          Toolbar: GridToolbar,
+        slots={{
+          toolbar: GridToolbar,
         }}
-        componentsProps={{
+        slotProps={{
           columnsPanel: {
             disableShowAllButton: true,
           },

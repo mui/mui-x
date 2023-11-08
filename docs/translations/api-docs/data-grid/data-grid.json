@@ -71,16 +71,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "Overridable components props dynamically passed to the component at rendering.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "density": {
       "description": "Set the density of the grid.",
       "deprecated": "",
