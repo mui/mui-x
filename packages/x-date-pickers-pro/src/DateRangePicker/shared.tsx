@@ -9,8 +9,6 @@ import {
   BaseDateValidationProps,
   BasePickerInputProps,
   PickerViewRendererLookup,
-  UncapitalizeObjectKeys,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../models';
 import { DateRange } from '../internals/models';
@@ -32,7 +30,7 @@ export interface BaseDateRangePickerSlotsComponent<TDate>
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
 }
 
 export interface BaseDateRangePickerSlotsComponentsProps<TDate>
@@ -48,22 +46,10 @@ export interface BaseDateRangePickerProps<TDate>
     ExportedDateRangeCalendarProps<TDate>,
     BaseDateValidationProps<TDate> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseDateRangePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseDateRangePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseDateRangePickerSlotsComponent<TDate>>;
+  slots?: BaseDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -93,7 +79,7 @@ export function useDateRangePickerDefaultizedProps<
 ): UseDateRangePickerDefaultizedProps<TDate, Omit<Props, 'components' | 'componentsProps'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const { components, componentsProps, ...themeProps } = useThemeProps({
+  const themeProps = useThemeProps({
     props,
     name,
   });
@@ -118,8 +104,7 @@ export function useDateRangePickerDefaultizedProps<
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     slots: {
       toolbar: DateRangePickerToolbar,
-      ...(themeProps.slots ?? uncapitalizeObjectKeys(components)),
+      ...themeProps.slots,
     },
-    slotProps: themeProps.slotProps ?? componentsProps,
   };
 }

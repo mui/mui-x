@@ -3,7 +3,6 @@ import {
   DesktopDatePickerSlotsComponent,
   DesktopDatePickerSlotsComponentsProps,
 } from '../DesktopDatePicker';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileDatePickerProps,
   MobileDatePickerSlotsComponent,
@@ -33,22 +32,10 @@ export interface DatePickerProps<TDate>
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DatePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DatePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DatePickerSlotsComponents<TDate>>;
+  slots?: DatePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

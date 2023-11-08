@@ -18,7 +18,6 @@ import { TimeValidationError } from '../models';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeViewWithMeridiem } from '../internals/models';
 
@@ -27,7 +26,7 @@ export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsCompo
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
 }
 
 export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsComponentsProps {
@@ -43,22 +42,10 @@ export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem>
    */
   ampmInClock?: boolean;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseTimePickerSlotsComponentsProps;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseTimePickerSlotsComponent<TDate>>;
+  slots?: BaseTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -115,8 +102,6 @@ export function useTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
-  const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ampm,
@@ -131,14 +116,14 @@ export function useTimePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     slots: {
       toolbar: TimePickerToolbar,
-      ...slots,
+      ...themeProps.slots,
     },
     slotProps: {
-      ...slotProps,
+      ...themeProps.slotProps,
       toolbar: {
         ampm,
         ampmInClock: themeProps.ampmInClock,
-        ...slotProps?.toolbar,
+        ...themeProps.slotProps?.toolbar,
       },
     },
   };

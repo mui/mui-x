@@ -18,7 +18,6 @@ import generatePropTypeDescription, {
 } from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
 import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
-import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse } from 'react-docgen';
@@ -134,12 +133,7 @@ function extractSlots(options: {
       return;
     }
 
-    // Workaround to generate correct (camelCase) keys for slots in `API Reference` documentation
-    // TODO v7: Remove camelCase from pickers once the `components` prop is removed
-    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedSlotsComponent`
-    const slotName = project.name.includes('grid') ? name : camelCase(name);
-
-    slots[slotName] = {
+    slots[name] = {
       type,
       description,
       default: defaultValue,

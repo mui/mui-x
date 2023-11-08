@@ -11,7 +11,7 @@ import { applyDefaultViewProps } from '../internals/utils/views';
 import { DateValidationError, DateView } from '../models';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { BaseDateValidationProps, UncapitalizeObjectKeys } from '../internals';
+import { BaseDateValidationProps } from '../internals';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DatePickerToolbar,
@@ -20,14 +20,13 @@ import {
 } from './DatePickerToolbar';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
-import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DatePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
 }
 
 export interface BaseDatePickerSlotsComponentsProps<TDate>
@@ -39,22 +38,10 @@ export interface BaseDatePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateView, DateValidationError>,
     ExportedDateCalendarProps<TDate> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseDatePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseDatePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseDatePickerSlotsComponent<TDate>>;
+  slots?: BaseDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -103,7 +90,6 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   return {
     ...themeProps,
     localeText,
@@ -117,7 +103,6 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    slots: { toolbar: DatePickerToolbar, ...slots },
-    slotProps: themeProps.slotProps ?? themeProps.componentsProps,
+    slots: { toolbar: DatePickerToolbar, ...themeProps.slots },
   };
 }
