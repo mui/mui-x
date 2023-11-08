@@ -29,18 +29,16 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
    * Importance of the change when picking a shortcut:
    * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
    * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
-   * @default "accept"
    */
   changeImportance?: PickerShortcutChangeImportance;
 }
 
 export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  // TODO v7: Make changeImportance and shortcut mandatory.
   onChange: (
     newValue: TValue,
-    changeImportance?: PickerShortcutChangeImportance,
-    shortcut?: PickersShortcutsItemContext,
+    changeImportance: PickerShortcutChangeImportance,
+    shortcut: PickersShortcutsItemContext,
   ) => void;
   isValid: (value: TValue) => boolean;
 }
@@ -55,7 +53,7 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
  * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
  */
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, changeImportance, isLandscape, onChange, isValid, ...other } = props;
+  const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {
     return null;
