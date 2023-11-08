@@ -9,6 +9,7 @@ export default [
   { pathname: '/x/api/charts/charts-axis', title: 'ChartsAxis' },
   { pathname: '/x/api/charts/charts-axis-highlight', title: 'ChartsAxisHighlight' },
   { pathname: '/x/api/charts/charts-clip-path', title: 'ChartsClipPath' },
+  { pathname: '/x/api/charts/charts-reference-line', title: 'ChartsReferenceLine' },
   { pathname: '/x/api/charts/charts-tooltip', title: 'ChartsTooltip' },
   { pathname: '/x/api/charts/charts-x-axis', title: 'ChartsXAxis' },
   { pathname: '/x/api/charts/charts-y-axis', title: 'ChartsYAxis' },
