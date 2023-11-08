@@ -5,13 +5,13 @@ import {
   DATA_GRID_PROPS_DEFAULT_VALUES,
   GridValidRowModel,
 } from '@mui/x-data-grid';
-import { computeSlots, uncapitalizeObjectKeys, useProps } from '@mui/x-data-grid/internals';
+import { computeSlots, useProps } from '@mui/x-data-grid/internals';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
-import { GridProSlotsComponent, UncapitalizedGridProSlotsComponent } from '../models';
+import { GridProSlotsComponent } from '../models';
 import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
 /**
@@ -34,10 +34,10 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   unstable_headerFilters: false,
 };
 
-const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS)!;
+const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
-  const [components, componentsProps, themedProps] = useProps(
+  const themedProps = useProps(
     useThemeProps({
       props: inProps,
       name: 'MuiDataGrid',
@@ -49,14 +49,13 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
     [themedProps.localeText],
   );
 
-  const slots = React.useMemo<UncapitalizedGridProSlotsComponent>(
+  const slots = React.useMemo<GridProSlotsComponent>(
     () =>
       computeSlots<GridProSlotsComponent>({
         defaultSlots,
         slots: themedProps.slots,
-        components,
       }),
-    [components, themedProps.slots],
+    [themedProps.slots],
   );
 
   return React.useMemo<DataGridProProcessedProps<R>>(
@@ -65,9 +64,8 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
       ...themedProps,
       localeText,
       slots,
-      slotProps: themedProps.slotProps ?? componentsProps,
       signature: 'DataGridPro',
     }),
-    [themedProps, localeText, slots, componentsProps],
+    [themedProps, localeText, slots],
   );
 };

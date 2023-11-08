@@ -16,7 +16,6 @@ import JoyCircularProgress from '@mui/joy/CircularProgress';
 import JoyTooltip from '@mui/joy/Tooltip';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
-import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -434,7 +433,7 @@ const LoadingOverlay = React.forwardRef<
   );
 });
 
-const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
+const joySlots: Partial<GridSlotsComponent> = {
   ...joyIconSlots,
   baseCheckbox: Checkbox,
   baseTextField: TextField,

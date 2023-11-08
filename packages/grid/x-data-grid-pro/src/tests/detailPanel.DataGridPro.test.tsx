@@ -693,7 +693,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelHeight={() => 0}
         nbRows={1}
         getDetailPanelContent={() => <div />}
-        componentsProps={{
+        slotProps={{
           row: { style: { color: 'yellow' } },
         }}
       />,
