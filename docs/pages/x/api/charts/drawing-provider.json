@@ -1,5 +1,13 @@
 {
-  "props": {},
+  "props": {
+    "margin": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "object Depends on the charts type."
+    }
+  },
   "slots": [],
   "name": "DrawingProvider",
   "imports": [

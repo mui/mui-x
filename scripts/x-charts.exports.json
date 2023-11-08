@@ -117,7 +117,7 @@
   { "name": "PieValueType", "kind": "TypeAlias" },
   { "name": "referenceLineClasses", "kind": "Variable" },
   { "name": "ResponsiveChartContainer", "kind": "Variable" },
-  { "name": "ResponsiveChartContainerProps", "kind": "TypeAlias" },
+  { "name": "ResponsiveChartContainerProps", "kind": "Interface" },
   { "name": "ScaleName", "kind": "TypeAlias" },
   { "name": "Scatter", "kind": "Function" },
   { "name": "ScatterChart", "kind": "Variable" },
