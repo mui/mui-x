@@ -90,7 +90,6 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots;
   return {
     ...themeProps,
     localeText,
@@ -104,6 +103,6 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    slots: { toolbar: DatePickerToolbar, ...slots },
+    slots: { toolbar: DatePickerToolbar, ...themeProps.slots },
   };
 }
