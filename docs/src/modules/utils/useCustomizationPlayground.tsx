@@ -2,7 +2,7 @@ import * as React from 'react';
 import pick from 'lodash/pick';
 import { blue, pink } from '@mui/material/colors';
 import { BoxProps } from '@mui/material/Box';
-import { createTheme, ThemeProvider, styled, useTheme, Theme, alpha } from '@mui/material/styles';
+import { createTheme, ThemeProvider, styled, useTheme, Theme } from '@mui/material/styles';
 
 export type CustomizationLabelType = {
   [k in 'customTheme' | 'styledComponents' | 'sxProp']: string;
@@ -91,8 +91,8 @@ export function withStyles(
       border: `${selectedTokens.borderWidth}px solid`,
       backgroundColor:
         defaultTheme.palette.mode === 'light'
-          ? alpha(DEFAULT_COLORS[selectedTokens.color][200], 0.5)
-          : alpha(DEFAULT_COLORS[selectedTokens.color][900], 0.5),
+          ? DEFAULT_COLORS[selectedTokens.color][200]
+          : DEFAULT_COLORS[selectedTokens.color][900],
       color:
         defaultTheme.palette.mode === 'light'
           ? DEFAULT_COLORS[selectedTokens.color][800]
@@ -206,8 +206,8 @@ const getCodeExample = ({
     border: `${selectedTokens.borderWidth}px solid`,
     backgroundColor:
       theme.palette.mode === 'light'
-        ? alpha(DEFAULT_COLORS[selectedTokens.color][200], 0.5)
-        : alpha(DEFAULT_COLORS[selectedTokens.color][900], 0.5),
+        ? DEFAULT_COLORS[selectedTokens.color][200]
+        : DEFAULT_COLORS[selectedTokens.color][900],
     color:
       theme.palette.mode === 'light'
         ? DEFAULT_COLORS[selectedTokens.color][800]
