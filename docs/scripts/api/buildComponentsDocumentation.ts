@@ -134,12 +134,7 @@ function extractSlots(options: {
       return;
     }
 
-    // Workaround to generate correct (camelCase) keys for slots in v6 `API Reference` documentation
-    // TODO v7: Remove camelCase once `Grid(Pro|Premium)SlotsComponent` type is refactored to have `camelCase` names
-    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedGridSlotsComponent`
-    const slotName = camelCase(name);
-
-    slots[slotName] = {
+    slots[name] = {
       type,
       description,
       default: defaultValue,
