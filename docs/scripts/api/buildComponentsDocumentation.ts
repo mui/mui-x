@@ -18,7 +18,6 @@ import generatePropTypeDescription, {
 } from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
 import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
-import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse } from 'react-docgen';
