@@ -79,7 +79,7 @@ export function useDateRangePickerDefaultizedProps<
 ): UseDateRangePickerDefaultizedProps<TDate, Omit<Props, 'components' | 'componentsProps'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const { ...themeProps } = useThemeProps({
+  const themeProps = useThemeProps({
     props,
     name,
   });
