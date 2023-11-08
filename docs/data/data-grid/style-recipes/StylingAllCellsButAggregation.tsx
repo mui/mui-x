@@ -1,12 +1,33 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridColDef, DataGrid, GridCellParams, gridClasses } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  DataGridPremium,
+  GridCellParams,
+  gridClasses,
+} from '@mui/x-data-grid-premium';
+
+// eliminate rounding errors in aggregation row
+const valueFormatter: GridColDef['valueFormatter'] = ({ value }) =>
+  `${Math.floor(value * 1000) / 1000} °C`;
 
 const columns: GridColDef[] = [
   { field: 'city' },
-  { field: 'oct', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
-  { field: 'nov', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
-  { field: 'dec', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
+  {
+    field: 'oct',
+    type: 'number',
+    valueFormatter,
+  },
+  {
+    field: 'nov',
+    type: 'number',
+    valueFormatter,
+  },
+  {
+    field: 'dec',
+    type: 'number',
+    valueFormatter,
+  },
 ];
 
 const rows = [
@@ -16,7 +37,7 @@ const rows = [
   { id: 4, city: 'São Paulo', oct: 20.2, nov: 21.1, dec: 19.2 },
 ];
 
-export default function StylingAllCells() {
+export default function StylingAllCellsButAggregation() {
   return (
     <Box
       sx={{
@@ -32,14 +53,27 @@ export default function StylingAllCells() {
         },
       }}
     >
-      <DataGrid
+      <DataGridPremium
         rows={rows}
         columns={columns}
         getCellClassName={(params: GridCellParams<any, any, number>) => {
-          if (params.field === 'city' || params.value == null) {
+          if (
+            params.field === 'city' ||
+            params.value == null ||
+            params.id.toString().startsWith('auto-generated')
+          ) {
             return '';
           }
           return params.value >= 15 ? 'hot' : 'cold';
+        }}
+        initialState={{
+          aggregation: {
+            model: {
+              oct: 'avg',
+              nov: 'avg',
+              dec: 'avg',
+            },
+          },
         }}
       />
     </Box>
