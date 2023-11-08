@@ -185,12 +185,26 @@ interface AxisScaleConfig {
 }
 
 export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
+  /**
+   * Id used to identify the axis.
+   */
   id: string;
+  /**
+   * The minimal value of the domain.
+   * If not provided, it gets computed to display the entire chart data.
+   */
   min?: number | Date;
+  /**
+   * The maximal value of the domain.
+   * If not provided, it gets computed to display the entire chart data.
+   */
   max?: number | Date;
+  /**
+   * The data used by `'band'` and `'point'` scales.
+   */
   data?: V[];
   /**
-   * The key used to retrieve data from the dataset prop.
+   * The key used to retrieve `data` from the `dataset` prop.
    */
   dataKey?: string;
   valueFormatter?: (value: V) => string;
@@ -207,6 +221,9 @@ export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
   'scaleType'
 > &
   AxisScaleConfig[S] & {
+    /**
+     * An indication of the expected number of ticks.
+     */
     tickNumber: number;
   };
 
