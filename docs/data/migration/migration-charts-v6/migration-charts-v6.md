@@ -1,5 +1,5 @@
 ---
-productId: x-tree-view
+productId: x-charts
 ---
 
 # Migration from v6 to v7
