@@ -195,6 +195,8 @@ const getFilterCallbackFromItem = (
     );
   }
 
+  const publicApiRef = getPublicApiRef(apiRef);
+
   const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
   if (typeof applyFilterOnRow !== 'function') {
     return null;
@@ -206,7 +208,7 @@ const getFilterCallbackFromItem = (
       if (ignoreDiacritics) {
         value = removeDiacritics(value);
       }
-      return applyFilterOnRow(value, row, column, getPublicApiRef(apiRef));
+      return applyFilterOnRow(value, row, column, publicApiRef);
     },
   };
 };
@@ -317,6 +319,7 @@ const buildAggregatedQuickFilterApplier = (
   }[];
 
   const { ignoreDiacritics } = apiRef.current.rootProps;
+  const publicApiRef = getPublicApiRef(apiRef);
 
   columnFields.forEach((field) => {
     const column = apiRef.current.getColumn(field);
@@ -328,7 +331,7 @@ const buildAggregatedQuickFilterApplier = (
         appliers: quickFilterValues.map((quickFilterValue) => {
           const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
-            fn: getApplyQuickFilterFn(value, column, getPublicApiRef(apiRef)),
+            fn: getApplyQuickFilterFn(value, column, publicApiRef),
           };
         }),
       });
@@ -360,7 +363,7 @@ const buildAggregatedQuickFilterApplier = (
         if (ignoreDiacritics) {
           value = removeDiacritics(value);
         }
-        const isMatching = applier.fn(value, row, column, getPublicApiRef(apiRef));
+        const isMatching = applier.fn(value, row, column, publicApiRef);
         if (isMatching) {
           result[filterValue] = true;
           continue outer;

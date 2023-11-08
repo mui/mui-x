@@ -10,8 +10,9 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
+import RestoreIcon from '@mui/icons-material/Restore';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -714,6 +715,113 @@ describe('<DataGrid /> - Keyboard', () => {
 
     fireEvent.keyDown(firstCell, { key: 'ArrowDown' });
     expect(virtualScroller.scrollLeft).to.equal(0);
+  });
+
+  it('should focus actions cell with one disabled item', () => {
+    const columns = [
+      {
+        field: 'actions',
+        type: 'actions',
+        getActions: () => [
+          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_1'} disabled />,
+          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_2'} />,
+        ],
+      },
+      { field: 'id', width: 400 },
+      { field: 'name' },
+    ];
+    const rows = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Doe' },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+
+    const cell = getCell(0, 1);
+    userEvent.mousePress(cell);
+
+    fireEvent.keyDown(cell, { key: 'ArrowLeft' });
+    expect(getActiveCell()).to.equal(`0-0`);
+
+    // expect the only focusable button to be the active element
+    expect(document.activeElement?.id).to.equal('action_2');
+  });
+
+  it('should focus actions cell with all items disabled', () => {
+    const columns = [
+      {
+        field: 'actions',
+        type: 'actions',
+        getActions: () => [
+          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_1'} disabled />,
+          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_2'} disabled />,
+        ],
+      },
+      { field: 'id', width: 400 },
+      { field: 'name' },
+    ];
+    const rows = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Doe' },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+
+    const cell = getCell(0, 1);
+    userEvent.mousePress(cell);
+
+    fireEvent.keyDown(cell, { key: 'ArrowLeft' });
+    expect(getActiveCell()).to.equal(`0-0`);
+  });
+
+  it('should be able to navigate the actions', () => {
+    const columns = [
+      {
+        field: 'actions',
+        type: 'actions',
+        getActions: () => [
+          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_1'} disabled />,
+          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_2'} />,
+          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_3'} disabled />,
+          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_4'} disabled />,
+          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_5'} />,
+        ],
+      },
+      { field: 'id', width: 400 },
+      { field: 'name' },
+    ];
+    const rows = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Doe' },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+
+    const cell = getCell(0, 1);
+    userEvent.mousePress(cell);
+
+    fireEvent.keyDown(cell, { key: 'ArrowLeft' });
+    expect(getActiveCell()).to.equal(`0-0`);
+
+    // expect the only focusable button to be the active element
+    expect(document.activeElement?.id).to.equal('action_2');
+
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+
+    // expect the only focusable button to be the active element
+    expect(document.activeElement?.id).to.equal('action_5');
   });
 
   it('should not throw when moving into an empty grid', async () => {
