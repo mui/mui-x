@@ -142,12 +142,10 @@ function TextFieldMoreInfo() {
     <Typography>
       For more information on customizing the TextField component, you can see{' '}
       <Link
-        fontWeight={400}
-        underline="hover"
-        href="mui.com/material-ui/react-text-field/#customization"
+        href="/material-ui/react-text-field/#customization"
       >
         Material UI docs
-      </Link>
+      </Link>.
     </Typography>
   );
 }
