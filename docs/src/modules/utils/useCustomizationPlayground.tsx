@@ -370,10 +370,15 @@ export function useCustomizationPlayground({
       // set the array of customization options to the available options for the selected subcomponent
       setCustomizationOptions(pick(customizationLabels, customizationExamples));
       // set the selected customization option to the first available option for the selected subcomponent
-      setSelectedCustomizationOption(customizationExamples[0]);
+      if (
+        !selectedCustomizationOption ||
+        !customizationExamples.includes(selectedCustomizationOption)
+      ) {
+        setSelectedCustomizationOption(customizationExamples[0]);
+      }
       setSelectedSlot(slot);
     },
-    [examples, setSelectedCustomizationOption, setSelectedSlot],
+    [examples, setSelectedCustomizationOption, setSelectedSlot, selectedCustomizationOption],
   );
 
   React.useEffect(() => {
