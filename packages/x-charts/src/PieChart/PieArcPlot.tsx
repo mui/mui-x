@@ -14,11 +14,11 @@ import {
 } from './dataTransform/useTransformData';
 import { DefaultizedProps } from '../models/helpers';
 
-export interface PieArcPlotSlotsComponent {
+export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
 }
 
-export interface PieArcPlotSlotComponentProps {
+export interface PieArcPlotSlotProps {
   pieArc?: Partial<PieArcProps>;
 }
 
@@ -42,12 +42,12 @@ export interface PieArcPlotProps
    * Overridable component slots.
    * @default {}
    */
-  slots?: PieArcPlotSlotsComponent;
+  slots?: PieArcPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PieArcPlotSlotComponentProps;
+  slotProps?: PieArcPlotSlotProps;
   /**
    * Callback fired when a pie item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

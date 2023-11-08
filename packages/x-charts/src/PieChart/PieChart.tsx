@@ -11,31 +11,31 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
-  ChartsTooltipSlotComponentProps,
-  ChartsTooltipSlotsComponent,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
 } from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
-  ChartsLegendSlotComponentProps,
-  ChartsLegendSlotsComponent,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { PiePlot, PiePlotProps, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
+import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
-import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 
-export interface PieChartSlotsComponent
-  extends ChartsAxisSlotsComponent,
-    PiePlotSlotsComponent,
-    ChartsLegendSlotsComponent,
-    ChartsTooltipSlotsComponent {}
+export interface PieChartSlots
+  extends ChartsAxisSlots,
+    PiePlotSlots,
+    ChartsLegendSlots,
+    ChartsTooltipSlots {}
 
-export interface PieChartSlotComponentProps
-  extends ChartsAxisSlotComponentProps,
-    PiePlotSlotComponentProps,
-    ChartsLegendSlotComponentProps,
-    ChartsTooltipSlotComponentProps {}
+export interface PieChartSlotProps
+  extends ChartsAxisSlotProps,
+    PiePlotSlotProps,
+    ChartsLegendSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface PieChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -50,12 +50,12 @@ export interface PieChartProps
   legend?: ChartsLegendProps;
   onClick?: PiePlotProps['onClick'];
 
-  slots?: PieChartSlotsComponent;
+  slots?: PieChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PieChartSlotComponentProps;
+  slotProps?: PieChartSlotProps;
 }
 
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 100 };

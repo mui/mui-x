@@ -5,11 +5,11 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 
-export interface MarkPlotSlotsComponent {
+export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
 }
 
-export interface MarkPlotSlotComponentProps {
+export interface MarkPlotSlotProps {
   mark?: Partial<MarkElementProps>;
 }
 
@@ -18,12 +18,12 @@ export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
    * Overridable component slots.
    * @default {}
    */
-  slots?: MarkPlotSlotsComponent;
+  slots?: MarkPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MarkPlotSlotComponentProps;
+  slotProps?: MarkPlotSlotProps;
 }
 
 /**

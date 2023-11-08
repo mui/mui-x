@@ -1,13 +1,13 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { AreaPlot, AreaPlotSlotComponentProps, AreaPlotSlotsComponent } from './AreaPlot';
-import { LinePlot, LinePlotSlotComponentProps, LinePlotSlotsComponent } from './LinePlot';
+import { AreaPlot, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
+import { LinePlot, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { MarkPlot, MarkPlotSlotComponentProps, MarkPlotSlotsComponent } from './MarkPlot';
+import { MarkPlot, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
@@ -15,40 +15,40 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
-  ChartsTooltipSlotComponentProps,
-  ChartsTooltipSlotsComponent,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
 } from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
-  ChartsLegendSlotComponentProps,
-  ChartsLegendSlotsComponent,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
-import { ChartsAxisSlotComponentProps, ChartsAxisSlotsComponent } from '../models/axis';
+import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
 import {
   LineHighlightPlot,
-  LineHighlightPlotSlotsComponent,
-  LineHighlightPlotSlotComponentProps,
+  LineHighlightPlotSlots,
+  LineHighlightPlotSlotProps,
 } from './LineHighlightPlot';
 
-export interface LineChartSlotsComponent
-  extends ChartsAxisSlotsComponent,
-    AreaPlotSlotsComponent,
-    LinePlotSlotsComponent,
-    MarkPlotSlotsComponent,
-    LineHighlightPlotSlotsComponent,
-    ChartsLegendSlotsComponent,
-    ChartsTooltipSlotsComponent {}
-export interface LineChartSlotComponentProps
-  extends ChartsAxisSlotComponentProps,
-    AreaPlotSlotComponentProps,
-    LinePlotSlotComponentProps,
-    MarkPlotSlotComponentProps,
-    LineHighlightPlotSlotComponentProps,
-    ChartsLegendSlotComponentProps,
-    ChartsTooltipSlotComponentProps {}
+export interface LineChartSlots
+  extends ChartsAxisSlots,
+    AreaPlotSlots,
+    LinePlotSlots,
+    MarkPlotSlots,
+    LineHighlightPlotSlots,
+    ChartsLegendSlots,
+    ChartsTooltipSlots {}
+export interface LineChartSlotProps
+  extends ChartsAxisSlotProps,
+    AreaPlotSlotProps,
+    LinePlotSlotProps,
+    MarkPlotSlotProps,
+    LineHighlightPlotSlotProps,
+    ChartsLegendSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -75,12 +75,12 @@ export interface LineChartProps
    * Overridable component slots.
    * @default {}
    */
-  slots?: LineChartSlotsComponent;
+  slots?: LineChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: LineChartSlotComponentProps;
+  slotProps?: LineChartSlotProps;
 }
 
 /**

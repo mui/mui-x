@@ -9,6 +9,7 @@ export * from './ChartsAxis';
 export * from './ChartsXAxis';
 export * from './ChartsYAxis';
 export * from './ChartsTooltip';
+export * from './ChartsLegend';
 export * from './ChartsAxisHighlight';
 export * from './BarChart';
 export * from './LineChart';

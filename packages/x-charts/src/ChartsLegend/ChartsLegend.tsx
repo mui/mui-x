@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import { NoSsr } from '@mui/base/NoSsr';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -12,11 +13,11 @@ import { LegendParams } from '../models/seriesType/config';
 import { ChartsText, ChartsTextStyle, getWordsByLines } from '../internals/components/ChartsText';
 import { CardinalDirections } from '../models/layout';
 
-export interface ChartsLegendSlotsComponent {
+export interface ChartsLegendSlots {
   legend?: React.JSXElementConstructor<LegendRendererProps>;
 }
 
-export interface ChartsLegendSlotComponentProps {
+export interface ChartsLegendSlotProps {
   legend?: Partial<LegendRendererProps>;
 }
 
@@ -40,12 +41,12 @@ export type ChartsLegendProps = {
    * Overridable component slots.
    * @default {}
    */
-  slots?: ChartsLegendSlotsComponent;
+  slots?: ChartsLegendSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ChartsLegendSlotComponentProps;
+  slotProps?: ChartsLegendSlotProps;
 };
 
 type DefaultizedChartsLegendProps = DefaultizedProps<ChartsLegendProps, 'direction' | 'position'>;
@@ -345,7 +346,117 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   );
 }
 
-export function ChartsLegend(inProps: ChartsLegendProps) {
+DefaultChartsLegend.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object.isRequired,
+  /**
+   * The direction of the legend layout.
+   * The default depends on the chart.
+   */
+  direction: PropTypes.oneOf(['column', 'row']).isRequired,
+  drawingArea: PropTypes.shape({
+    bottom: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    left: PropTypes.number.isRequired,
+    right: PropTypes.number.isRequired,
+    top: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+  }).isRequired,
+  /**
+   * Set to true to hide the legend.
+   */
+  hidden: PropTypes.bool,
+  /**
+   * Space between two legend items (in px).
+   * @default 10
+   */
+  itemGap: PropTypes.number,
+  /**
+   * Height of the item mark (in px).
+   * @default 20
+   */
+  itemMarkHeight: PropTypes.number,
+  /**
+   * Width of the item mark (in px).
+   * @default 20
+   */
+  itemMarkWidth: PropTypes.number,
+  /**
+   * Style applied to legend labels.
+   * @default theme.typography.subtitle1
+   */
+  labelStyle: PropTypes.object,
+  /**
+   * Space between the mark and the label (in px).
+   * @default 5
+   */
+  markGap: PropTypes.number,
+  /**
+   * Legend padding (in px).
+   * Can either be a single number, or an object with top, left, bottom, right properties.
+   * @default 0
+   */
+  padding: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
+  position: PropTypes.shape({
+    horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+    vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+  }).isRequired,
+  series: PropTypes.shape({
+    bar: PropTypes.shape({
+      series: PropTypes.object.isRequired,
+      seriesOrder: PropTypes.arrayOf(PropTypes.string).isRequired,
+      stackingGroups: PropTypes.arrayOf(
+        PropTypes.shape({
+          ids: PropTypes.arrayOf(PropTypes.string).isRequired,
+          stackingOffset: PropTypes.func.isRequired,
+          stackingOrder: PropTypes.func.isRequired,
+        }),
+      ).isRequired,
+    }),
+    line: PropTypes.shape({
+      series: PropTypes.object.isRequired,
+      seriesOrder: PropTypes.arrayOf(PropTypes.string).isRequired,
+      stackingGroups: PropTypes.arrayOf(
+        PropTypes.shape({
+          ids: PropTypes.arrayOf(PropTypes.string).isRequired,
+          stackingOffset: PropTypes.func.isRequired,
+          stackingOrder: PropTypes.func.isRequired,
+        }),
+      ).isRequired,
+    }),
+    pie: PropTypes.shape({
+      series: PropTypes.object.isRequired,
+      seriesOrder: PropTypes.arrayOf(PropTypes.string).isRequired,
+    }),
+    scatter: PropTypes.shape({
+      series: PropTypes.object.isRequired,
+      seriesOrder: PropTypes.arrayOf(PropTypes.string).isRequired,
+    }),
+  }).isRequired,
+  seriesToDisplay: PropTypes.arrayOf(
+    PropTypes.shape({
+      color: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+} as any;
+
+function ChartsLegend(inProps: ChartsLegendProps) {
   const props: DefaultizedChartsLegendProps = useThemeProps({
     props: { ...defaultProps, ...inProps },
     name: 'MuiChartsLegend',
@@ -378,3 +489,39 @@ export function ChartsLegend(inProps: ChartsLegendProps) {
 
   return <ChartLegendRender {...chartLegendRenderProps} />;
 }
+
+ChartsLegend.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The direction of the legend layout.
+   * The default depends on the chart.
+   */
+  direction: PropTypes.oneOf(['column', 'row']),
+  /**
+   * Set to true to hide the legend.
+   */
+  hidden: PropTypes.bool,
+  position: PropTypes.shape({
+    horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+    vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+  }),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { ChartsLegend };

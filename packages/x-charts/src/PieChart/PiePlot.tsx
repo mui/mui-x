@@ -2,37 +2,24 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
-import {
-  PieArcPlot,
-  PieArcPlotProps,
-  PieArcPlotSlotComponentProps,
-  PieArcPlotSlotsComponent,
-} from './PieArcPlot';
-import {
-  PieArcLabelPlotSlotsComponent,
-  PieArcLabelPlotSlotComponentProps,
-  PieArcLabelPlot,
-} from './PieArcLabelPlot';
+import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
+import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
 
-export interface PiePlotSlotsComponent
-  extends PieArcPlotSlotsComponent,
-    PieArcLabelPlotSlotsComponent {}
+export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
-export interface PiePlotSlotComponentProps
-  extends PieArcPlotSlotComponentProps,
-    PieArcLabelPlotSlotComponentProps {}
+export interface PiePlotSlotProps extends PieArcPlotSlotProps, PieArcLabelPlotSlotProps {}
 
 export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'onClick'> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: PiePlotSlotsComponent;
+  slots?: PiePlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PiePlotSlotComponentProps;
+  slotProps?: PiePlotSlotProps;
   /**
    * Callback fired when a pie item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

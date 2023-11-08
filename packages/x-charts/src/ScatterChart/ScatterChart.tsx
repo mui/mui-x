@@ -1,10 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ScatterPlot,
-  ScatterPlotSlotComponentProps,
-  ScatterPlotSlotsComponent,
-} from './ScatterPlot';
+import { ScatterPlot, ScatterPlotSlotProps, ScatterPlotSlots } from './ScatterPlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -15,28 +11,28 @@ import { MakeOptional } from '../models/helpers';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
-  ChartsTooltipSlotComponentProps,
-  ChartsTooltipSlotsComponent,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
 } from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
-  ChartsLegendSlotComponentProps,
-  ChartsLegendSlotsComponent,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 
-export interface ScatterChartSlotsComponent
-  extends ChartsAxisSlotsComponent,
-    ScatterPlotSlotsComponent,
-    ChartsLegendSlotsComponent,
-    ChartsTooltipSlotsComponent {}
-export interface ScatterChartSlotComponentProps
-  extends ChartsAxisSlotComponentProps,
-    ScatterPlotSlotComponentProps,
-    ChartsLegendSlotComponentProps,
-    ChartsTooltipSlotComponentProps {}
+export interface ScatterChartSlots
+  extends ChartsAxisSlots,
+    ScatterPlotSlots,
+    ChartsLegendSlots,
+    ChartsTooltipSlots {}
+export interface ScatterChartSlotProps
+  extends ChartsAxisSlotProps,
+    ScatterPlotSlotProps,
+    ChartsLegendSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -52,12 +48,12 @@ export interface ScatterChartProps
    * Overridable component slots.
    * @default {}
    */
-  slots?: ScatterChartSlotsComponent;
+  slots?: ScatterChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ScatterChartSlotComponentProps;
+  slotProps?: ScatterChartSlotProps;
 }
 
 /**

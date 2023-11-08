@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { BarPlot, BarPlotProps, BarPlotSlotComponentProps, BarPlotSlotsComponent } from './BarPlot';
+import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -13,29 +13,29 @@ import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
-  ChartsTooltipSlotComponentProps,
-  ChartsTooltipSlotsComponent,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
 } from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
-  ChartsLegendSlotsComponent,
-  ChartsLegendSlotComponentProps,
+  ChartsLegendSlots,
+  ChartsLegendSlotProps,
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
-import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 
-export interface BarChartSlotsComponent
-  extends ChartsAxisSlotsComponent,
-    BarPlotSlotsComponent,
-    ChartsLegendSlotsComponent,
-    ChartsTooltipSlotsComponent {}
-export interface BarChartSlotComponentProps
-  extends ChartsAxisSlotComponentProps,
-    BarPlotSlotComponentProps,
-    ChartsLegendSlotComponentProps,
-    ChartsTooltipSlotComponentProps {}
+export interface BarChartSlots
+  extends ChartsAxisSlots,
+    BarPlotSlots,
+    ChartsLegendSlots,
+    ChartsTooltipSlots {}
+export interface BarChartSlotProps
+  extends ChartsAxisSlotProps,
+    BarPlotSlotProps,
+    ChartsLegendSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface BarChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -59,12 +59,12 @@ export interface BarChartProps
    * Overridable component slots.
    * @default {}
    */
-  slots?: BarChartSlotsComponent;
+  slots?: BarChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BarChartSlotComponentProps;
+  slotProps?: BarChartSlotProps;
   layout?: BarSeriesType['layout'];
 }
 
