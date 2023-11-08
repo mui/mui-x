@@ -170,3 +170,14 @@ You can choose their position with `position` props which accept `'top'`/`'botto
 Other props are similar to the ones defined in the [previous section](/x/react-charts/axis/#rendering).
 
 {{"demo": "AxisWithComposition.js"}}
+
+### Reference line
+
+The `<ChartsReferenceLine />` component add a reference line to the charts.
+You can provide an `x` or `y` prop to get a vertical or horizontal line respectively at this value.
+
+You can add a `label` to this reference line.
+It can be placed with `labelAlign` prop which accepts `'start'`, `'middle'`, and `'end'` values.
+Elements can be styled with `lineStyle` and `labelStyle` props.
+
+{{"demo": "ReferenceLine.js"}}
