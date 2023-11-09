@@ -121,9 +121,13 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 +ChartsTooltipSlotProps
 ```
 
-- [charts] Add <ChartsReferenceLine /> component (#10597) (#10946) @alexfauquette
+- [charts] Add `<ChartsReferenceLine />` component (#10597) (#10946) @alexfauquette
 - [charts] Improve properties JSDoc (#10931) (#10955) @alexfauquette
 - [charts] Rename `slots` and `slotProps` types (#10875) @alexfauquette
+
+### `@mui/x-codemod@__VERSION__`
+
+- [codemod] Add `v7.0.0/preset-safe` (#10973) @LukasTy
 
 ### Docs
 
