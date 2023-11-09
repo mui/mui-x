@@ -20,7 +20,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [DataGrid] Fix cell value type in quick filtering v7 (#10884) @cherniavskii
 - [DataGrid] Fix keyboard navigation for actions cell with disabled buttons (#10947) @michelengelen
-- [DataGrid] Fix undefined slot values (#10934) @romgrk
+- [DataGrid] Fix `undefined` slot values (#10934) @romgrk
 
 #### `@mui/x-data-grid-pro@6.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
