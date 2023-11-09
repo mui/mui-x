@@ -14,7 +14,6 @@ import {
 import {
   splitFieldInternalAndForwardedProps,
   FieldsTextFieldProps,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
@@ -92,10 +91,8 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     >(themeProps, 'date');
 
   const {
-    slots: innerSlots,
-    slotProps: innerSlotProps,
-    components,
-    componentsProps,
+    slots,
+    slotProps,
     disabled,
     autoFocus,
     unstableStartFieldRef,
@@ -103,9 +100,6 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     className,
     ...otherForwardedProps
   } = forwardedProps;
-
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   const ownerState = themeProps;
   const classes = useUtilityClasses(ownerState);
@@ -138,7 +132,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const Separator = slots?.separator ?? MultiInputDateRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
-    externalSlotProps: slotProps?.separator ?? componentsProps?.separator,
+    externalSlotProps: slotProps?.separator,
     ownerState,
     className: classes.separator,
   });
@@ -216,18 +210,6 @@ MultiInputDateRangeField.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   component: PropTypes.elementType,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value. Use when the component is not controlled.
    */

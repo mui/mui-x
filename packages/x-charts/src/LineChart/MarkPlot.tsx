@@ -5,11 +5,11 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 
-export interface MarkPlotSlotsComponent {
+export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
 }
 
-export interface MarkPlotSlotComponentProps {
+export interface MarkPlotSlotProps {
   mark?: Partial<MarkElementProps>;
 }
 
@@ -18,12 +18,12 @@ export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
    * Overridable component slots.
    * @default {}
    */
-  slots?: MarkPlotSlotsComponent;
+  slots?: MarkPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MarkPlotSlotComponentProps;
+  slotProps?: MarkPlotSlotProps;
 }
 
 /**
@@ -96,7 +96,7 @@ function MarkPlot(props: MarkPlotProps) {
               const value = data[index] == null ? null : stackedData[index][1];
               return {
                 x: xScale(x),
-                y: value === null ? null : yScale(value),
+                y: value === null ? null : yScale(value)!,
                 position: x,
                 value,
                 index,
@@ -131,7 +131,7 @@ function MarkPlot(props: MarkPlotProps) {
                   shape="circle"
                   color={series[seriesId].color}
                   x={x}
-                  y={y}
+                  y={y!} // Don't knwo why TS don't get from the filter that y can't be null
                   highlightScope={series[seriesId].highlightScope}
                   {...slotProps?.mark}
                 />

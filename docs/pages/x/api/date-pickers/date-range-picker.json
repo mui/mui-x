@@ -10,18 +10,6 @@
       "type": { "name": "bool" },
       "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"

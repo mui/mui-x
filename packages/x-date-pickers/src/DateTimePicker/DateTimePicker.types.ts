@@ -4,7 +4,6 @@ import {
   DesktopDateTimePickerSlotsComponentsProps,
 } from '../DesktopDateTimePicker';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileDateTimePickerProps,
   MobileDateTimePickerSlotsComponent,
@@ -34,22 +33,10 @@ export interface DateTimePickerProps<TDate>
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DateTimePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DateTimePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DateTimePickerSlotsComponents<TDate>>;
+  slots?: DateTimePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

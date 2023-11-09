@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Badge from '@mui/material/Badge';
-import { UncapitalizedGridSlotsComponent } from '../../models/gridSlotsComponent';
+import { GridSlotsComponent } from '../../models/gridSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -31,7 +31,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function getIcon(
-  icons: UncapitalizedGridSlotsComponent,
+  icons: GridSlotsComponent,
   direction: GridSortDirection,
   className: string,
   sortingOrder: readonly GridSortDirection[],

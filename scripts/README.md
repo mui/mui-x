@@ -50,11 +50,11 @@ The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` 
 <!-- #default-branch-switch -->
 
 ```bash
-git push upstream master:docs-v6 -f
+git push upstream next:docs-next -f
 ```
 
-You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v6)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v6` deployment.
+You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-next)
+Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-next` deployment.
 
 ### Publish GitHub release
 

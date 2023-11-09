@@ -24,7 +24,6 @@ import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValu
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView, TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types';
 
@@ -36,7 +35,7 @@ export interface DateCalendarSlotsComponent<TDate>
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
    * @default PickersCalendarHeader
    */
-  CalendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
+  calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
 }
 
 export interface DateCalendarSlotsComponentsProps<TDate>
@@ -95,8 +94,7 @@ export interface ExportedDateCalendarProps<TDate>
 
 export interface DateCalendarProps<TDate>
   extends ExportedDateCalendarProps<TDate>,
-    ExportedUseViewsOptions<DateView>,
-    SlotsAndSlotProps<DateCalendarSlotsComponent<TDate>, DateCalendarSlotsComponentsProps<TDate>> {
+    ExportedUseViewsOptions<DateView> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -125,6 +123,16 @@ export interface DateCalendarProps<TDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: DateCalendarSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DateCalendarSlotsComponentsProps<TDate>;
 }
 
 export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<

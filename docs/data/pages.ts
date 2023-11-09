@@ -113,6 +113,39 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/react-data-grid/server-side-data-group',
+        title: 'Server-side data 🚧',
+        plan: 'pro',
+        children: [
+          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
+          {
+            pathname: '/x/react-data-grid/server-side-data/lazy-loading',
+            title: 'Lazy loading 🚧',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-data-grid/server-side-data/infinite-loading',
+            title: 'Infinite loading 🚧',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-data-grid/server-side-data/tree-data',
+            title: 'Tree data 🚧',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-data-grid/server-side-data/row-grouping',
+            title: 'Row grouping 🚧',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-data-grid/server-side-data/aggregation',
+            title: 'Aggregation 🚧',
+            plan: 'premium',
+          },
+        ],
+      },
+      {
         title: 'Advanced',
         pathname: '/x/react-data-grid/advanced',
         children: [
@@ -431,6 +464,25 @@ const pages: MuiPage[] = [
     pathname: '/x/migration-group',
     title: 'Migration',
     children: [
+      {
+        pathname: '/x/migration-v7',
+        subheader: 'Upgrade to v7',
+        children: [
+          { pathname: '/x/migration/migration-data-grid-v6', title: 'Breaking changes: Data Grid' },
+          {
+            pathname: '/x/migration/migration-pickers-v6',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
+          {
+            pathname: '/x/migration/migration-tree-view-v6',
+            title: 'Breaking changes: Tree View',
+          },
+          {
+            pathname: '/x/migration/migration-charts-v6',
+            title: 'Breaking changes: Charts',
+          },
+        ],
+      },
       {
         pathname: '/x/migration-v6',
         subheader: 'Upgrade to v6',

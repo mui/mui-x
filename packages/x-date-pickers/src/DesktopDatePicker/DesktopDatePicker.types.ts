@@ -10,11 +10,10 @@ import {
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { DateView } from '../models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
   extends BaseDatePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopPickerSlotsComponent<TDate, DateView>, 'Field' | 'OpenPickerIcon'> {}
+    MakeOptional<UseDesktopPickerSlotsComponent<TDate, DateView>, 'field' | 'openPickerIcon'> {}
 
 export interface DesktopDatePickerSlotsComponentsProps<TDate>
   extends BaseDatePickerSlotsComponentsProps<TDate>,
@@ -29,22 +28,10 @@ export interface DesktopDatePickerProps<TDate>
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DesktopDatePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DesktopDatePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DesktopDatePickerSlotsComponent<TDate>>;
+  slots?: DesktopDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

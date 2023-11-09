@@ -36,11 +36,11 @@ function getItemLabel(
   return arcLabel(item);
 }
 
-export interface PieArcLabelPlotSlotsComponent {
+export interface PieArcLabelPlotSlots {
   pieArcLabel?: React.JSXElementConstructor<PieArcLabelProps>;
 }
 
-export interface PieArcLabelPlotSlotComponentProps {
+export interface PieArcLabelPlotSlotProps {
   pieArcLabel?: Partial<PieArcLabelProps>;
 }
 
@@ -66,12 +66,12 @@ export interface PieArcLabelPlotProps
    * Overridable component slots.
    * @default {}
    */
-  slots?: PieArcLabelPlotSlotsComponent;
+  slots?: PieArcLabelPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PieArcLabelPlotSlotComponentProps;
+  slotProps?: PieArcLabelPlotSlotProps;
   /**
    * If `true`, animations are skiped.
    * @default false
