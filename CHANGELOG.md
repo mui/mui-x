@@ -12,24 +12,50 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - ✨ v7 Alpha release
 - 🌍 Improve Czech (cs-CZ) locale
 
-From https://github.com/mui/mui-x/pull/10875
+### Data Grid
 
-### Breaking changes
+#### Breaking changes
 
-Types for `slots` and `slotProps` got renamed by removing the "Component" which is meaningless for charts.
-Unless you imported those types, to create a wrapper, you should not be impacted by this breaking change.
-
-Here is an example of the renaming for the `<ChartsTooltip />` component.
+- The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
+- The print export will now only print the selected rows if there are any.
+  If there are no selected rows, it will print all rows. This makes the print export consistent with the other exports.
+  You can [customize the rows to export by using the `getRowsToExport` function](/x/react-data-grid/export/#customizing-the-rows-to-export).
+- The `getApplyFilterFnV7` in `GridFilterOperator` was renamed to `getApplyFilterFn`.
+  If you use `getApplyFilterFnV7` directly - rename it to `getApplyFilterFn`.
+- The signature of the function returned by `getApplyFilterFn` has changed for performance reasons:
 
 ```diff
--ChartsTooltipSlotsComponent
-+ChartsTooltipSlots
-
--ChartsTooltipSlotComponentProps
-+ChartsTooltipSlotProps
+ const getApplyFilterFn: GetApplyFilterFn<any, unknown> = (filterItem) => {
+   if (!filterItem.value) {
+     return null;
+   }
+   const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
+-  return (cellParams) => {
+-  const { value } = cellParams;
++  return (value, row, colDef, apiRef) => {
+     return value != null ? filterRegex.test(String(value)) : false;
+   };
+ }
 ```
 
-### Data Grid
+- The `getApplyQuickFilterFnV7` in `GridColDef` was renamed to `getApplyQuickFilterFn`.
+  If you use `getApplyQuickFilterFnV7` directly - rename it to `getApplyQuickFilterFn`.
+- The signature of the function returned by `getApplyQuickFilterFn` has changed for performance reasons:
+
+```diff
+ const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
+   if (!value) {
+     return null;
+   }
+   const filterRegex = new RegExp(escapeRegExp(value), 'i');
+-  return (cellParams) => {
+-    const { formattedValue } = cellParams;
++  return (value, row, column, apiRef) => {
++    let formattedValue = apiRef.current.getRowFormattedValue(row, column);
+     return formattedValue != null ? filterRegex.test(formattedValue.toString()) : false;
+   };
+ };
+```
 
 #### `@mui/x-data-grid@7.0.0-alpha.0`
 
@@ -68,6 +94,21 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.0`, plus:
 Same changes as in `@mui/x-date-pickers@7.0.0-alpha.0`.
 
 ### Charts / `@mui/x-charts@7.0.0-alpha.0`
+
+#### Breaking changes
+
+Types for `slots` and `slotProps` got renamed by removing the "Component" which is meaningless for charts.
+Unless you imported those types, to create a wrapper, you should not be impacted by this breaking change.
+
+Here is an example of the renaming for the `<ChartsTooltip />` component.
+
+```diff
+-ChartsTooltipSlotsComponent
++ChartsTooltipSlots
+
+-ChartsTooltipSlotComponentProps
++ChartsTooltipSlotProps
+```
 
 - [charts] Add <ChartsReferenceLine /> component (#10597) (#10946) @alexfauquette
 - [charts] Improve properties JSDoc (#10931) (#10955) @alexfauquette
