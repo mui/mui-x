@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.0
+
+_Nov 9, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ v7 Alpha release
+- 🌍 Improve Czech (cs-CZ) locale
+
+From https://github.com/mui/mui-x/pull/10875
+
+#### Breaking changes
+
+Types for `slots` and `slotProps` got renamed by removing the "Component" which is meaningless for charts.
+Except if you imported those types, to create a wrapper, you should not be impacted by this breaking change.
+
+Here is an example of the renaming for the `<ChartsLegend />` component.
+
+```diff
+-ChartsTooltipSlotsComponent
++ChartsTooltipSlots
+
+-ChartsTooltipSlotComponentProps
++ChartsTooltipSlotProps
+```
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.0.0-alpha.0`
+
+- [DataGrid] Fix for error thrown when removing skeleton rows, after sorting is applied (#10807) @benjaminbialy
+- [DataGrid] Fix: `undefined` slot value (#10937) @romgrk
+- [DataGrid] Print selected rows by default (#10846) @cherniavskii
+- [DataGrid] Remove deprecated `components` and `componentsProps` (#10911) @MBilalShafi
+- [DataGrid] Remove legacy filtering API (#10897) @cherniavskii
+- [DataGrid] Fix keyboard navigation for actions cell with disabled buttons (#10882) @michelengelen
+- [DataGrid] Added a recipe for using non-native select in filter panel (#10916) @michelengelen
+- [DataGrid] Added a recipe to style cells without impacting the aggregation cells (#10913) @michelengelen
+- [l10n] Improve Czech (cs-CZ) locale (#10949) @luborepka
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.0`, plus:
+
+- [DataGridPro] Autosize Columns - Headers being cut off (#10666) @gitstart
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.0`, plus:
+
+- [DataGridPremium] Render aggregation label when `renderHeader` is used (#10936) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-alpha.0`
+
+- [fields] Fix `MultiInputTimeRangeField` section selection (#10922) @noraleonte
+- [pickers] Remove `components` and `componentsProps` props (#10700) @alexfauquette
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.0`.
+
+
+### Charts / `@mui/x-charts@7.0.0-alpha.0`
+
+- [charts] Add <ChartsReferenceLine /> component (#10597) (#10946) @alexfauquette
+- [charts] Improve properties JSDoc (#10931) (#10955) @alexfauquette
+- [charts] Rename `slots` and `slotProps` types (#10875) @alexfauquette
+
+### Docs
+
+- [docs] Add `@next` tag to the installation instructions (#10963) @MBilalShafi
+- [docs] Document how to hide the legend (#10951) @alexfauquette
+
+### Core
+
+- [core] Adds migration docs for charts, pickers and tree view (#10926) @michelengelen
+- [core] Bump monorepo (#10959) @LukasTy
+- [core] Changed prettier branch value to next (#10917) @michelengelen
+- [core] Fix GitHub title tag consistency @oliviertassinari
+- [core] Fixed wrong package names in migration docs (#10953) @michelengelen
+- [core] Merge `master` into `next` (#10929) @cherniavskii
+- [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
+- [license] Correctly throw errors (#10924) @oliviertassinari
+
 ## 6.18.1
 
 _Nov 9, 2023_
