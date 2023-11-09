@@ -412,9 +412,6 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
         extractAndReplaceTranslations(localePath);
 
       if (!transformedCode || Object.keys(existingTranslations).length === 0) {
-        console.info('returning:', localeCode, localePath, {
-          translationsLength: Object.keys(existingTranslations).length,
-        });
         return;
       }
 
