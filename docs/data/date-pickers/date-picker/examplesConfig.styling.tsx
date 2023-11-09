@@ -140,11 +140,11 @@ export const staticDatePickerExamples: PickersSubcomponentType = {
 function TextFieldMoreInfo() {
   return (
     <Typography>
-      For more information on customizing the TextField component, you can see{' '}
-      <Link href="/material-ui/react-text-field/#customization">
-        Material UI docs
-      </Link>
-      .
+      Check{' '}
+      <Link href="https://mui.com/material-ui/react-text-field/#customization">
+        TextField component docs
+      </Link>{' '}
+      for customization examples.
     </Typography>
   );
 }
