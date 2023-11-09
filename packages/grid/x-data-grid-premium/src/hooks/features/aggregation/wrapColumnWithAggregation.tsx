@@ -177,11 +177,13 @@ const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
   aggregationRule,
 }) => {
   const wrappedRenderHeader: GridBaseColDef['renderHeader'] = (params) => {
-    const aggregation = { aggregationRule };
-    if (renderHeader) {
-      return renderHeader({ ...params, aggregation });
-    }
-    return <GridAggregationHeader {...params} aggregation={aggregation} />;
+    return (
+      <GridAggregationHeader
+        {...params}
+        aggregation={{ aggregationRule }}
+        renderHeader={renderHeader}
+      />
+    );
   };
 
   return wrappedRenderHeader;
