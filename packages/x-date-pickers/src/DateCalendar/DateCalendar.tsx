@@ -136,8 +136,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     showDaysOutsideCurrentMonth,
     fixedWeekNumber,
     dayOfWeekFormatter,
-    components,
-    componentsProps,
     slots,
     slotProps,
     loading,
@@ -199,11 +197,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   const gridLabelId = `${id}-grid-label`;
   const hasFocus = focusedView !== null;
 
-  const CalendarHeader =
-    slots?.calendarHeader ?? components?.CalendarHeader ?? PickersCalendarHeader;
+  const CalendarHeader = slots?.calendarHeader ?? PickersCalendarHeader;
   const calendarHeaderProps: PickersCalendarHeaderProps<TDate> = useSlotProps({
     elementType: CalendarHeader,
-    externalSlotProps: slotProps?.calendarHeader ?? componentsProps?.calendarHeader,
+    externalSlotProps: slotProps?.calendarHeader,
     additionalProps: {
       views,
       view,
@@ -392,8 +389,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
-              components={components}
-              componentsProps={componentsProps}
               slots={slots}
               slotProps={slotProps}
               loading={loading}
@@ -420,18 +415,6 @@ DateCalendar.propTypes = {
   autoFocus: PropTypes.bool,
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter.  Deprecated, will be removed in v7: Use `date` instead.

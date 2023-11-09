@@ -1223,7 +1223,7 @@ describe('<DataGrid /> - Filter', () => {
               type: 'number',
             },
           ]}
-          components={{ Toolbar: GridToolbarFilterButton }}
+          slots={{ toolbar: GridToolbarFilterButton }}
         />,
       );
 
@@ -1287,7 +1287,7 @@ describe('<DataGrid /> - Filter', () => {
                 ] as GridFilterOperator<any, string>[],
               },
             ]}
-            components={{ Toolbar: GridToolbarFilterButton }}
+            slots={{ toolbar: GridToolbarFilterButton }}
           />
         </div>,
       );
@@ -1327,8 +1327,8 @@ describe('<DataGrid /> - Filter', () => {
                 },
               ],
             }}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
           />
         </div>

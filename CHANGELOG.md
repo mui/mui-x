@@ -357,7 +357,7 @@ Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
 
 - [core] Fix casing consistency with legal and marketing content @oliviertassinari
 - [core] Revert the link in the priority support ticket description (#10517) @michelengelen
-- [CHANGELOG] Polish image @oliviertassinari
+- [changelog] Polish image @oliviertassinari
 
 ## 6.16.0
 
@@ -1149,7 +1149,7 @@ Same changes as in `@mui/x-date-pickers@6.10.1`.
 ### Core
 
 - [core] Add `validate` command (#9714) @romgrk
-- [CHANGELOG] Update generator to new format @oliviertassinari
+- [changelog] Update generator to new format @oliviertassinari
 
 ## 6.10.0
 
@@ -1207,7 +1207,7 @@ Same changes as in `@mui/x-date-pickers@6.10.0`.
 
 - [core] Disambiguate eslint plugin name @oliviertassinari
 - [core] Update priority support issue template and prompt (#9574) @DanailH
-- [CHANGELOG] Clarify each plan (#9446) @oliviertassinari
+- [changelog] Clarify each plan (#9446) @oliviertassinari
 - [license] Fix error terminology (#9614) @oliviertassinari
 
 ## 6.9.2
@@ -1356,8 +1356,8 @@ Same changes as in `@mui/x-date-pickers@6.9.1`.
 - [core] Fix priority support prompt action (#9472) @DanailH
 - [core] Update `uses` for priority support action (#9480) @DanailH
 - [core] Bumb update monorepo (#9476) @alexfauquette
-- [CHANGELOG] Fix media quality (#9439) @oliviertassinari
-- [CHANGELOG] Remove height img attribute @oliviertassinari
+- [changelog] Fix media quality (#9439) @oliviertassinari
+- [changelog] Remove height img attribute @oliviertassinari
 - [test] Skip flaky row pinning tests in JSDOM (#9511) @cherniavskii
 
 ## 6.9.0

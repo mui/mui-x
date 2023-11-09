@@ -18,7 +18,7 @@ describe('<MobileDateTimePicker />', () => {
     render(
       <MobileDateTimePicker
         open
-        componentsProps={{ toolbar: { hidden: false } }}
+        slotProps={{ toolbar: { hidden: false } }}
         defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
       />,
     );
@@ -78,7 +78,7 @@ describe('<MobileDateTimePicker />', () => {
       render(
         <MobileDateTimePicker
           open
-          componentsProps={{ toolbar: { hidden: true } }}
+          slotProps={{ toolbar: { hidden: true } }}
           defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         />,
       );

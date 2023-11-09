@@ -72,8 +72,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     ampm = utils.is12HourCycleInCurrentLocale(),
     timeSteps: inTimeSteps,
     autoFocus,
-    components,
-    componentsProps,
     slots,
     slotProps,
     value: valueProp,
@@ -412,8 +410,8 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           autoFocus={autoFocus ?? focusedView === timeView}
           disabled={disabled}
           readOnly={readOnly}
-          slots={slots ?? components}
-          slotProps={slotProps ?? componentsProps}
+          slots={slots}
+          slotProps={slotProps}
           skipDisabled={skipDisabled}
           aria-label={localeText.selectViewText(timeView as TimeViewWithMeridiem)}
         />
@@ -444,18 +442,6 @@ MultiSectionDigitalClock.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overrideable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default selected value.
    * Used when the component is not controlled.

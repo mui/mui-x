@@ -49,7 +49,7 @@ export default function ExcelExportWithWebWorker() {
         loading={data.rows.length === 0}
         rowHeight={38}
         checkboxSelection
-        components={{ Toolbar: CustomToolbar }}
+        slots={{ toolbar: CustomToolbar }}
         onExcelExportStateChange={(newState) =>
           setInProgress(newState === 'pending')
         }

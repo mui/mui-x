@@ -22,8 +22,6 @@ type UseClearableFieldProps<
   onClear: React.MouseEventHandler<HTMLButtonElement>;
   slots?: { [K in keyof TFieldSlots as Uncapitalize<K & string>]: TFieldSlots[K] };
   slotProps?: TFieldSlotsComponentsProps;
-  components?: TFieldSlots;
-  componentsProps?: TFieldSlotsComponentsProps;
 };
 
 export const useClearableField = <
@@ -38,8 +36,6 @@ export const useClearableField = <
   onClear,
   slots,
   slotProps,
-  components,
-  componentsProps,
 }: UseClearableFieldProps<
   TFieldProps,
   TInputProps,
@@ -48,21 +44,21 @@ export const useClearableField = <
 >) => {
   const localeText = useLocaleText();
 
-  const IconButton = slots?.clearButton ?? components?.ClearButton ?? MuiIconButton;
+  const IconButton = slots?.clearButton ?? MuiIconButton;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState, ...iconButtonProps } = useSlotProps({
     elementType: IconButton,
-    externalSlotProps: slotProps?.clearButton ?? componentsProps?.clearButton,
+    externalSlotProps: slotProps?.clearButton,
     ownerState: {},
     className: 'clearButton',
     additionalProps: {
       title: localeText.fieldClearLabel,
     },
   });
-  const EndClearIcon = slots?.clearIcon ?? components?.ClearIcon ?? ClearIcon;
+  const EndClearIcon = slots?.clearIcon ?? ClearIcon;
   const endClearIconProps = useSlotProps({
     elementType: EndClearIcon,
-    externalSlotProps: slotProps?.clearIcon ?? componentsProps?.clearIcon,
+    externalSlotProps: slotProps?.clearIcon,
     ownerState: {},
   });
 

@@ -113,8 +113,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ampm = utils.is12HourCycleInCurrentLocale(),
     timeStep = 30,
     autoFocus,
-    components,
-    componentsProps,
     slots,
     slotProps,
     value: valueProp,
@@ -166,10 +164,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   const classes = useUtilityClasses(ownerState);
 
-  const ClockItem = slots?.digitalClockItem ?? components?.DigitalClockItem ?? DigitalClockItem;
+  const ClockItem = slots?.digitalClockItem ?? DigitalClockItem;
   const clockItemProps = useSlotProps({
     elementType: ClockItem,
-    externalSlotProps: slotProps?.digitalClockItem ?? componentsProps?.digitalClockItem,
+    externalSlotProps: slotProps?.digitalClockItem,
     ownerState: {},
     className: classes.item,
   });
@@ -345,18 +343,6 @@ DigitalClock.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overrideable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default selected value.
    * Used when the component is not controlled.

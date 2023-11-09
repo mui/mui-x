@@ -4,11 +4,11 @@ import { Scatter, ScatterProps } from './Scatter';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 
-export interface ScatterPlotSlotsComponent {
+export interface ScatterPlotSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
 }
 
-export interface ScatterPlotSlotComponentProps {
+export interface ScatterPlotSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
@@ -17,12 +17,12 @@ export interface ScatterPlotProps {
    * Overridable component slots.
    * @default {}
    */
-  slots?: ScatterPlotSlotsComponent;
+  slots?: ScatterPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ScatterPlotSlotComponentProps;
+  slotProps?: ScatterPlotSlotProps;
 }
 
 /**

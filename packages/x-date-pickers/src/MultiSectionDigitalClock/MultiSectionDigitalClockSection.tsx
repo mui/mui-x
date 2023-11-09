@@ -14,7 +14,6 @@ import type {
   MultiSectionDigitalClockSlotsComponent,
   MultiSectionDigitalClockSlotsComponentsProps,
 } from './MultiSectionDigitalClock.types';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
@@ -23,7 +22,7 @@ import {
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
   classes?: Partial<MultiSectionDigitalClockSectionClasses>;
-  slots?: UncapitalizeObjectKeys<MultiSectionDigitalClockSlotsComponent>;
+  slots?: MultiSectionDigitalClockSlotsComponent;
   slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
 }
 

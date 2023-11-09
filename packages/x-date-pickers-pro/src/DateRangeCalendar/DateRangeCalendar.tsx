@@ -25,8 +25,6 @@ import {
   useUtils,
   PickerSelectionState,
   useNow,
-  uncapitalizeObjectKeys,
-  UncapitalizeObjectKeys,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   buildWarning,
   useControlledValueWithTimezone,
@@ -193,10 +191,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     onRangePositionChange: inOnRangePositionChange,
     calendars,
     currentMonthCalendarPosition = 1,
-    components,
-    componentsProps,
-    slots: innerSlots,
-    slotProps: innerSlotProps,
+    slots,
+    slotProps,
     loading,
     renderLoading,
     disableHighlightToday,
@@ -225,9 +221,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
   const now = useNow<TDate>(timezone);
-
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   const { rangePosition, onRangePositionChange } = useRangePosition({
     rangePosition: rangePositionProp,
@@ -437,7 +430,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const slotsForDayCalendar = {
     day: DateRangePickerDay,
     ...slots,
-  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
+  } as DayCalendarSlotsComponent<TDate>;
 
   const slotPropsForDayCalendar = {
     ...slotProps,
@@ -619,18 +612,6 @@ DateRangeCalendar.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * Position the current month is rendered in.
    * @default 1

@@ -12,6 +12,26 @@
       "typeDescriptions": {}
     },
     "data": { "description": "Data to plot.", "deprecated": "", "typeDescriptions": {} },
+    "dataset": {
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "plotType": { "description": "Type of plot used.", "deprecated": "", "typeDescriptions": {} },
     "showHighlight": {
       "description": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band.",
@@ -37,6 +57,11 @@
       "description": "Formatter used by the tooltip.",
       "deprecated": "",
       "typeDescriptions": { "value": "The value to format.", "string": "the formatted value." }
+    },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element.",
+      "deprecated": "",
+      "typeDescriptions": {}
     },
     "xAxis": {
       "description": "The xAxis configuration. Notice it is a single configuration object, not an array of configuration.",

@@ -5,8 +5,8 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import {
-  ChartsAxisSlotComponentProps,
-  ChartsAxisSlotsComponent,
+  ChartsAxisSlotProps,
+  ChartsAxisSlots,
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
@@ -40,12 +40,12 @@ export interface ChartsAxisProps {
    * Overridable component slots.
    * @default {}
    */
-  slots?: ChartsAxisSlotsComponent;
+  slots?: ChartsAxisSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ChartsAxisSlotComponentProps;
+  slotProps?: ChartsAxisSlotProps;
 }
 
 const getAxisId = (
@@ -55,15 +55,15 @@ const getAxisId = (
     return null;
   }
   if (typeof propsValue === 'object') {
-    return propsValue.axisId;
+    return propsValue.axisId ?? null;
   }
   return propsValue;
 };
 
 const mergeProps = (
   axisConfig: undefined | null | string | ChartsXAxisProps | ChartsYAxisProps,
-  slots?: Partial<ChartsAxisSlotsComponent>,
-  slotProps?: Partial<ChartsAxisSlotComponentProps>,
+  slots?: Partial<ChartsAxisSlots>,
+  slotProps?: Partial<ChartsAxisSlotProps>,
 ) => {
   return typeof axisConfig === 'object'
     ? {
@@ -134,7 +134,7 @@ ChartsAxis.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -168,7 +168,7 @@ ChartsAxis.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -202,7 +202,7 @@ ChartsAxis.propTypes = {
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -246,7 +246,7 @@ ChartsAxis.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
