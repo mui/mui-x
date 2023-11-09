@@ -46,7 +46,7 @@ Same changes as in `@mui/x-date-pickers@6.18.1`.
 
 ### Charts / `@mui/x-charts@6.18.1`
 
-- [charts] Add <ChartsReferenceLine /> component (#10597) @wascou
+- [charts] Add `<ChartsReferenceLine />` component (#10597) @wascou
 - [charts] Improve properties JSDoc (#10931) @alexfauquette
 
 ### Docs
