@@ -164,7 +164,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
 function findLocales(localesDirectory: string, constantsPath: string) {
   const items = fse.readdirSync(localesDirectory);
   const locales: any[] = [];
-  const localeRegex = /^[a-z]{2}[A-Z]{2}/;
+  const localeRegex = /^[a-z]{2}([A-Z]{2})?/;
 
   items.forEach((item) => {
     const match = item.match(localeRegex);
@@ -173,6 +173,9 @@ function findLocales(localesDirectory: string, constantsPath: string) {
     }
 
     const localePath = path.resolve(localesDirectory, item);
+    if (fse.lstatSync(localePath).isDirectory()) {
+      return;
+    }
     const code = match[0];
     if (constantsPath !== localePath) {
       // Ignore the locale used as a reference
@@ -321,9 +324,10 @@ const generateDocReport = async (
         return;
       }
 
-      const languageTag = `${importName.slice(0, 2).toLowerCase()}-${importName
-        .slice(2)
-        .toUpperCase()}`;
+      const languageTag =
+        importName.length > 2
+          ? `${importName.slice(0, 2).toLowerCase()}-${importName.slice(2).toUpperCase()}`
+          : importName;
       const localeName = localeNames[languageTag];
 
       if (localeName === undefined) {

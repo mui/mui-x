@@ -1,11 +1,11 @@
 [
   {
-    "languageTag": "eu-ES",
-    "importName": "euES",
+    "languageTag": "eu",
+    "importName": "eu",
     "localeName": "Basque",
     "missingKeysCount": 0,
     "totalKeysCount": 37,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/euES.ts"
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/eu.ts"
   },
   {
     "languageTag": "be-BY",
