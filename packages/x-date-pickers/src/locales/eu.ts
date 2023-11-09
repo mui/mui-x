@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridianoa',
 };
 
-const euESPickers: Partial<PickersLocaleText<any>> = {
+const euPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Azken hilabetea',
   nextMonth: 'Hurrengo hilabetea',
@@ -84,4 +84,4 @@ const euESPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 };
 
-export const euES = getPickersLocalization(euESPickers);
+export const eu = getPickersLocalization(euPickers);
