@@ -10,7 +10,7 @@ _Nov 9, 2023_
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - ✨ Multi input date time field section selection
-- 📈 ChartsReferenceLine component is now available
+- 📈 <ChartsReferenceLine /> component is now available
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
