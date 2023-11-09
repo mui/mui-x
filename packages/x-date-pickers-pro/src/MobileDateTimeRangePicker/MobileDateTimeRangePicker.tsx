@@ -128,6 +128,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
         any,
         {}
       >;
+
       return typedViewRenderer({
         ...finalProps,
         views: views.filter(isDatePickerView),
@@ -171,18 +172,6 @@ MobileDateTimeRangePicker.propTypes = {
    * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * Position the current month is rendered in.
    * @default 1
