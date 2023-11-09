@@ -14,7 +14,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 From https://github.com/mui/mui-x/pull/10875
 
-#### Breaking changes
+### Breaking changes
 
 Types for `slots` and `slotProps` got renamed by removing the "Component" which is meaningless for charts.
 Except if you imported those types, to create a wrapper, you should not be impacted by this breaking change.
@@ -65,7 +65,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.0`, plus:
 #### `@mui/x-date-pickers-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@7.0.0-alpha.0`.
-
 
 ### Charts / `@mui/x-charts@7.0.0-alpha.0`
 
