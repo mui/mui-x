@@ -124,6 +124,7 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 
 - [docs] Add `@next` tag to the installation instructions (#10963) @MBilalShafi
 - [docs] Document how to hide the legend (#10951) @alexfauquette
+- [docs] Fix typo in the migration guide (#10972) @flaviendelangle
 
 ### Core
 
