@@ -29,7 +29,9 @@ Same changes as in `@mui/x-data-grid@6.18.1`, plus:
 
 #### `@mui/x-data-grid-premium@6.18.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@6.18.1`.
+Same changes as in `@mui/x-data-grid-pro@6.18.1`, plus:
+
+- [DataGridPremium] Render aggregation label when `renderHeader` is used (#10961) @cherniavskii
 
 ### Date Pickers
 
