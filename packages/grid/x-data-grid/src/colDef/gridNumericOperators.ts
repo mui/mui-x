@@ -1,7 +1,7 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterOperator } from '../models/gridFilterOperator';
-import type { GridApplyQuickFilter } from '../models/colDef/gridColDef';
+import type { GetApplyQuickFilterFn } from '../models/colDef/gridColDef';
 
 const parseNumericValue = (value: unknown) => {
   if (value == null) {
@@ -11,12 +11,14 @@ const parseNumericValue = (value: unknown) => {
   return Number(value);
 };
 
-export const getGridNumericQuickFilterFn = (value: any): GridApplyQuickFilter | null => {
+export const getGridNumericQuickFilterFn: GetApplyQuickFilterFn<any, number | string | null> = (
+  value,
+) => {
   if (value == null || Number.isNaN(value) || value === '') {
     return null;
   }
 
-  return (columnValue): boolean => {
+  return (columnValue) => {
     return parseNumericValue(columnValue) === parseNumericValue(value);
   };
 };

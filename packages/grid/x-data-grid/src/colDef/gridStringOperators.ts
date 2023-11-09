@@ -1,17 +1,17 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { escapeRegExp } from '../utils/utils';
-import type { GridApplyQuickFilter } from '../models/colDef/gridColDef';
+import type { GetApplyQuickFilterFn } from '../models/colDef/gridColDef';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { removeDiacritics } from '../hooks/features/filter/gridFilterUtils';
 
-export const getGridStringQuickFilterFn = (value: any): GridApplyQuickFilter | null => {
+export const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
   if (!value) {
     return null;
   }
   const filterRegex = new RegExp(escapeRegExp(value), 'i');
-  return (_, row, column, apiRef): boolean => {
+  return (_, row, column, apiRef) => {
     let columnValue = apiRef.current.getRowFormattedValue(row, column);
     if (apiRef.current.ignoreDiacritics) {
       columnValue = removeDiacritics(columnValue);
