@@ -1,4 +1,3 @@
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   DesktopDateTimeRangePickerProps,
   DesktopDateTimeRangePickerSlotsComponent,
@@ -28,22 +27,10 @@ export interface DateTimeRangePickerProps<TDate>
    */
   desktopModeMediaQuery?: string;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DateTimeRangePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DateTimeRangePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DateTimeRangePickerSlotsComponents<TDate>>;
+  slots?: DateTimeRangePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

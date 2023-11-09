@@ -9,8 +9,6 @@ import {
   BaseDateValidationProps,
   BasePickerInputProps,
   PickerViewRendererLookup,
-  UncapitalizeObjectKeys,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseClockProps,
@@ -44,12 +42,12 @@ export interface BaseDateTimeRangePickerSlotsComponent<TDate>
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimeRangePickerTabs
    */
-  Tabs?: React.ElementType<DateTimeRangePickerTabsProps>;
+  tabs?: React.ElementType<DateTimeRangePickerTabsProps>;
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimeRangePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<DateTimeRangePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<DateTimeRangePickerToolbarProps<TDate>>;
 }
 
 export interface BaseDateTimeRangePickerSlotsComponentsProps<TDate>
@@ -78,22 +76,10 @@ export interface BaseDateTimeRangePickerProps<TDate>
     BaseDateValidationProps<TDate>,
     DesktopOnlyTimePickerProps<TDate> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseDateTimeRangePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseDateTimeRangePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseDateTimeRangePickerSlotsComponent<TDate>>;
+  slots?: BaseDateTimeRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -135,7 +121,7 @@ export function useDateTimeRangePickerDefaultizedProps<
 ): UseDateTimeRangePickerDefaultizedProps<TDate, Omit<Props, 'components' | 'componentsProps'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const { components, componentsProps, ...themeProps } = useThemeProps({
+  const themeProps = useThemeProps({
     props,
     name,
   });
@@ -152,7 +138,6 @@ export function useDateTimeRangePickerDefaultizedProps<
   }, [themeProps.localeText]);
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const slotProps = themeProps.slotProps ?? componentsProps;
 
   return {
     ...themeProps,
@@ -173,12 +158,12 @@ export function useDateTimeRangePickerDefaultizedProps<
     slots: {
       tabs: DateTimeRangePickerTabs,
       toolbar: DateTimeRangePickerToolbar,
-      ...(themeProps.slots ?? uncapitalizeObjectKeys(components)),
+      ...themeProps.slots,
     },
     slotProps: {
-      ...slotProps,
+      ...themeProps.slotProps,
       toolbar: {
-        ...slotProps?.toolbar,
+        ...themeProps.slotProps?.toolbar,
         ampm,
       },
     },
