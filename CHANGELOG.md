@@ -9,6 +9,7 @@ _Nov 9, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
+- ✨ Render aggregation label when `renderHeader` is used
 - 📈 `<ChartsReferenceLine />` component is now available
 - 🐞 Bugfixes
 - 📚 Documentation improvements
