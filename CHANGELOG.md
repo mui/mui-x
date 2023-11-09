@@ -22,7 +22,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 #### Breaking changes
 
-- The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
+- The deprecated `components` and `componentsProps` props have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
 - The print export will now only print the selected rows if there are any.
   If there are no selected rows, it will print all rows. This makes the print export consistent with the other exports.
   You can [customize the rows to export by using the `getRowsToExport` function](/x/react-data-grid/export/#customizing-the-rows-to-export).
