@@ -51,6 +51,7 @@ Same changes as in `@mui/x-date-pickers@6.18.1`.
 ### Docs
 
 - [docs] Fix charts docs as stable (#10888) @alexfauquette
+- [docs] Document how to hide the legend (#10954) @alexfauquette
 
 ### Core
 
