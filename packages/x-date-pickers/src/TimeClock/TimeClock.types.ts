@@ -3,7 +3,6 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
@@ -28,22 +27,10 @@ export interface TimeClockProps<TDate, TView extends TimeViewWithMeridiem = Time
    */
   classes?: Partial<TimeClockClasses>;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: TimeClockSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: TimeClockSlotsComponentsProps;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TimeClockSlotsComponent>;
+  slots?: TimeClockSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}

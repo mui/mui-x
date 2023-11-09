@@ -169,5 +169,11 @@ describe('<MonthCalendar />', () => {
       expect(january).not.to.have.attribute('disabled');
       expect(february).to.have.attribute('disabled');
     });
+
+    it('should not mark the `referenceDate` month as selected', () => {
+      render(<MonthCalendar referenceDate={adapterToUse.date(new Date(2018, 1, 2))} />);
+
+      expect(screen.getByRole('radio', { name: 'February', checked: false })).to.not.equal(null);
+    });
   });
 });

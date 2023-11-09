@@ -75,7 +75,7 @@ describe('<DataGridPro /> - Filter', () => {
     ],
   };
 
-  it('componentsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
+  it('slotProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
     const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
       // remove already filtered fields from list of columns
       const filteredFields = currentFilters?.map((item) => item.field);
@@ -103,8 +103,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
@@ -132,8 +132,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             getColumnForNewFilter,
           },
@@ -158,8 +158,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
@@ -352,7 +352,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        componentsProps={{
+        slotProps={{
           filterPanel: {
             disableAddFilterButton: true,
           },
@@ -372,7 +372,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        componentsProps={{
+        slotProps={{
           filterPanel: {
             disableRemoveAllButton: true,
           },

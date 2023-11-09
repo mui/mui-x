@@ -18,7 +18,6 @@ import {
   useLocaleText,
   UsePickerResponse,
   WrapperVariant,
-  UncapitalizeObjectKeys,
   UsePickerProps,
   getActiveElement,
   FieldSlotsComponents,
@@ -37,24 +36,24 @@ import {
 import { UseRangePositionResponse } from './useRangePosition';
 
 export interface RangePickerFieldSlotsComponent extends FieldSlotsComponents {
-  Field: React.ElementType;
+  field: React.ElementType;
   /**
    * Element rendered at the root.
    * Ignored if the field has only one input.
    */
-  FieldRoot?: React.ElementType<StackProps>;
+  fieldRoot?: React.ElementType<StackProps>;
   /**
    * Element rendered between the two inputs.
    * Ignored if the field has only one input.
    */
-  FieldSeparator?: React.ElementType<TypographyProps>;
+  fieldSeparator?: React.ElementType<TypographyProps>;
   /**
    * Form control with an input to render a date or time inside the default field.
    * It is rendered twice: once for the start element and once for the end element.
    * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
-  TextField?: React.ElementType<TextFieldProps>;
+  textField?: React.ElementType<TextFieldProps>;
 }
 
 export interface RangePickerFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
@@ -100,7 +99,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   label?: React.ReactNode;
   localeText: PickersInputLocaleText<TDate> | undefined;
   pickerSlotProps: RangePickerFieldSlotsComponentsProps<TDate> | undefined;
-  pickerSlots: UncapitalizeObjectKeys<RangePickerFieldSlotsComponent> | undefined;
+  pickerSlots: RangePickerFieldSlotsComponent | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
   currentView?: TView | null;

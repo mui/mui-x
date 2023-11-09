@@ -11,8 +11,28 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "dataset": {
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "leftAxis": {
       "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -33,6 +53,21 @@
     },
     "topAxis": {
       "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "xAxis": {
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_X_AXIS_KEY</code>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "yAxis": {
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_Y_AXIS_KEY</code>.",
       "deprecated": "",
       "typeDescriptions": {}
     }

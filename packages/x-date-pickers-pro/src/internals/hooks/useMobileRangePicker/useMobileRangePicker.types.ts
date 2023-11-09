@@ -2,7 +2,6 @@ import {
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
   UsePickerViewsProps,
-  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
@@ -42,7 +41,7 @@ export interface UseMobileRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UncapitalizeObjectKeys<UseMobileRangePickerSlotsComponent<TDate, TView>>;
+  slots: UseMobileRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
