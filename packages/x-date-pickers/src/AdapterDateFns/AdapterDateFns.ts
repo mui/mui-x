@@ -300,8 +300,12 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return value === null;
   };
 
-  public isValid = (value: any) => {
-    return isValid(this.date(value));
+  public isValid = (value: Date | null) => {
+    if (value == null) {
+      return false;
+    }
+
+    return isValid(value);
   };
 
   public format = (value: Date, formatKey: keyof AdapterFormats) => {
