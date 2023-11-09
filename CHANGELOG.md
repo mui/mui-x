@@ -23,7 +23,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 #### `@mui/x-data-grid-pro@6.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@__VERSION__`, plus:
+Same changes as in `@mui/x-data-grid@6.18.1`, plus:
 
 - [DataGridPro] Add data source interface and basic documentation (#10543) @MBilalShafi
 
