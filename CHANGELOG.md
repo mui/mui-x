@@ -125,7 +125,7 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [charts] Improve properties JSDoc (#10931) (#10955) @alexfauquette
 - [charts] Rename `slots` and `slotProps` types (#10875) @alexfauquette
 
-### `@mui/x-codemod@__VERSION__`
+### `@mui/x-codemod@7.0.0-alpha.0`
 
 - [codemod] Add `v7.0.0/preset-safe` (#10973) @LukasTy
 
