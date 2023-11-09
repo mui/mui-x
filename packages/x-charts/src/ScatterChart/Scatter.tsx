@@ -31,8 +31,9 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, markerSize } = props;
 
+  const highlightScope = series.highlightScope ?? { highlighted: 'item', faded: 'global' };
   const { item } = React.useContext(InteractionContext);
-  const getInteractionItemProps = useInteractionItemProps(series.highlightScope);
+  const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const cleanData = React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);
@@ -49,6 +50,7 @@ function Scatter(props: ScatterProps) {
       x: number;
       y: number;
       id: string | number;
+      isHighlighted: boolean;
       isFaded: boolean;
       interactionProps: ReturnType<typeof getInteractionItemProps>;
     }[] = [];
@@ -64,12 +66,12 @@ function Scatter(props: ScatterProps) {
       const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
 
       if (isInRange) {
+        const isHighlighted = getIsHighlighted(item, pointCtx, highlightScope);
         temp.push({
           x,
           y,
-          isFaded:
-            !getIsHighlighted(item, pointCtx, series.highlightScope) &&
-            getIsFaded(item, pointCtx, series.highlightScope),
+          isHighlighted,
+          isFaded: !isHighlighted && getIsFaded(item, pointCtx, highlightScope),
           interactionProps: getInteractionItemProps(pointCtx),
           id: scatterPoint.id,
         });
@@ -77,15 +79,7 @@ function Scatter(props: ScatterProps) {
     }
 
     return temp;
-  }, [
-    yScale,
-    xScale,
-    getInteractionItemProps,
-    item,
-    series.data,
-    series.highlightScope,
-    series.id,
-  ]);
+  }, [xScale, yScale, series.data, series.id, item, highlightScope, getInteractionItemProps]);
 
   return (
     <g>
@@ -94,7 +88,7 @@ function Scatter(props: ScatterProps) {
           key={dataPoint.id}
           cx={0}
           cy={0}
-          r={markerSize}
+          r={(dataPoint.isHighlighted ? 1.2 : 1) * markerSize}
           transform={`translate(${dataPoint.x}, ${dataPoint.y})`}
           fill={color}
           opacity={(dataPoint.isFaded && 0.3) || 1}

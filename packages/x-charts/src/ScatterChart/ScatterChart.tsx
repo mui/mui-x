@@ -22,6 +22,7 @@ import {
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import ChartsVoronoidHandler from '../ChartsVoronoidHandler/ChartsVoronoidHandler';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -99,6 +100,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
       yAxis={yAxis}
       sx={sx}
     >
+      <ChartsVoronoidHandler />
       <ChartsAxis
         topAxis={topAxis}
         leftAxis={leftAxis}

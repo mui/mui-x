@@ -5,6 +5,9 @@ import { SVGContext, DrawingContext } from '../context/DrawingProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
 
+function getAsANumber(value: number | Date) {
+  return value instanceof Date ? value.getTime() : value;
+}
 export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = React.useContext(SVGContext);
   const { width, height, top, left } = React.useContext(DrawingContext);
@@ -38,18 +41,24 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         if (axisData === undefined) {
           return { value };
         }
-        const closestIndex = axisData?.findIndex((v: typeof value, index) => {
-          if (v > value) {
-            // @ts-ignore
-            if (index === 0 || Math.abs(value - v) <= Math.abs(value - axisData[index - 1])) {
+
+        const valueAsNumber = getAsANumber(value);
+        const closestIndex = axisData?.findIndex((pointValue: typeof value, index) => {
+          const v = getAsANumber(pointValue);
+          if (v > valueAsNumber) {
+            if (
+              index === 0 ||
+              Math.abs(valueAsNumber - v) <=
+                Math.abs(valueAsNumber - getAsANumber(axisData[index - 1]))
+            ) {
               return true;
             }
           }
-          if (v <= value) {
+          if (v <= valueAsNumber) {
             if (
               index === axisData.length - 1 ||
               // @ts-ignore
-              Math.abs(value - v) < Math.abs(value - axisData[index + 1])
+              Math.abs(value - v) < Math.abs(value - getAsANumber(axisData[index + 1]))
             ) {
               return true;
             }

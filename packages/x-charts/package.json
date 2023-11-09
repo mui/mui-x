@@ -46,6 +46,7 @@
     "d3-color": "^3.1.0",
     "d3-scale": "^4.0.2",
     "d3-shape": "^3.2.0",
+    "d3-delaunay": "^6.0.4",
     "prop-types": "^15.8.1"
   },
   "peerDependencies": {
@@ -67,7 +68,8 @@
   "devDependencies": {
     "@types/d3-color": "^3.1.2",
     "@types/d3-scale": "^4.0.6",
-    "@types/d3-shape": "^3.1.4"
+    "@types/d3-shape": "^3.1.4",
+    "@types/d3-delaunay": "^6.0.4"
   },
   "exports": {
     ".": {
