@@ -1,16 +1,13 @@
 import * as React from 'react';
 import {
-  GridCellParams,
   GridColDef,
   GridFilterItem,
   GridFilterModel,
   GridLogicOperator,
-  GridRowId,
   GridValidRowModel,
 } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GLOBAL_API_REF, isInternalFilter } from '../../../colDef/utils';
 import {
   getDefaultGridFilterModel,
   GridAggregatedFilterItemApplier,
@@ -36,17 +33,10 @@ try {
   hasEval = false;
 }
 
-type GridFilterItemApplier =
-  | {
-      v7: false;
-      fn: (rowId: GridRowId) => boolean;
-      item: GridFilterItem;
-    }
-  | {
-      v7: true;
-      fn: (row: GridValidRowModel) => boolean;
-      item: GridFilterItem;
-    };
+type GridFilterItemApplier = {
+  fn: (row: GridValidRowModel) => boolean;
+  item: GridFilterItem;
+};
 
 type GridFilterItemApplierNotAggregated = (
   row: GridValidRowModel,
@@ -205,46 +195,20 @@ const getFilterCallbackFromItem = (
     );
   }
 
-  const hasUserFunctionLegacy = !isInternalFilter(filterOperator.getApplyFilterFn);
-  const hasUserFunctionV7 = !isInternalFilter(filterOperator.getApplyFilterFnV7);
-
   const publicApiRef = getPublicApiRef(apiRef);
 
-  if (filterOperator.getApplyFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
-    const applyFilterOnRow = filterOperator.getApplyFilterFnV7(newFilterItem, column)!;
-    if (typeof applyFilterOnRow !== 'function') {
-      return null;
-    }
-    return {
-      v7: true,
-      item: newFilterItem,
-      fn: (row: GridValidRowModel) => {
-        let value = apiRef.current.getRowValue(row, column);
-        if (ignoreDiacritics) {
-          value = removeDiacritics(value);
-        }
-        return applyFilterOnRow(value, row, column, publicApiRef);
-      },
-    };
-  }
-
-  const applyFilterOnRow = filterOperator.getApplyFilterFn!(newFilterItem, column)!;
+  const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
   if (typeof applyFilterOnRow !== 'function') {
     return null;
   }
-
   return {
-    v7: false,
     item: newFilterItem,
-    fn: (rowId: GridRowId) => {
-      const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
-      GLOBAL_API_REF.current = publicApiRef;
+    fn: (row: GridValidRowModel) => {
+      let value = apiRef.current.getRowValue(row, column);
       if (ignoreDiacritics) {
-        params.value = removeDiacritics(params.value);
+        value = removeDiacritics(value);
       }
-      const result = applyFilterOnRow(params);
-      GLOBAL_API_REF.current = null;
-      return result;
+      return applyFilterOnRow(value, row, column, publicApiRef);
     },
   };
 };
@@ -280,9 +244,7 @@ const buildAggregatedFilterItemsApplier = (
       for (let i = 0; i < appliers.length; i += 1) {
         const applier = appliers[i];
         if (!shouldApplyFilter || shouldApplyFilter(applier.item.field)) {
-          resultPerItemId[applier.item.id!] = applier.v7
-            ? applier.fn(row)
-            : applier.fn(apiRef.current.getRowId(row));
+          resultPerItemId[applier.item.id!] = applier.fn(row);
         }
       }
 
@@ -309,7 +271,7 @@ const buildAggregatedFilterItemsApplier = (
             `${JSON.stringify(String(applier.item.id))}:
           !shouldApply${i} ?
             false :
-            ${applier.v7 ? `appliers[${i}].fn(row)` : `appliers[${i}].fn(getRowId(row))`},
+            appliers[${i}].fn(row),
       `,
         )
         .join('\n')}};
@@ -352,7 +314,6 @@ const buildAggregatedQuickFilterApplier = (
   const appliersPerField = [] as {
     column: GridColDef;
     appliers: {
-      v7: boolean;
       fn: null | ((...args: any[]) => boolean);
     }[];
   }[];
@@ -363,29 +324,13 @@ const buildAggregatedQuickFilterApplier = (
   columnFields.forEach((field) => {
     const column = apiRef.current.getColumn(field);
     const getApplyQuickFilterFn = column?.getApplyQuickFilterFn;
-    const getApplyQuickFilterFnV7 = column?.getApplyQuickFilterFnV7;
 
-    const hasUserFunctionLegacy = !isInternalFilter(getApplyQuickFilterFn);
-    const hasUserFunctionV7 = !isInternalFilter(getApplyQuickFilterFnV7);
-
-    if (getApplyQuickFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
+    if (getApplyQuickFilterFn) {
       appliersPerField.push({
         column,
         appliers: quickFilterValues.map((quickFilterValue) => {
           const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
           return {
-            v7: true,
-            fn: getApplyQuickFilterFnV7(value, column, publicApiRef),
-          };
-        }),
-      });
-    } else if (getApplyQuickFilterFn) {
-      appliersPerField.push({
-        column,
-        appliers: quickFilterValues.map((quickFilterValue) => {
-          const value = ignoreDiacritics ? removeDiacritics(quickFilterValue) : quickFilterValue;
-          return {
-            v7: false,
             fn: getApplyQuickFilterFn(value, column, publicApiRef),
           };
         }),
@@ -395,7 +340,6 @@ const buildAggregatedQuickFilterApplier = (
 
   return function isRowMatchingQuickFilter(row, shouldApplyFilter) {
     const result = {} as GridQuickFilterValueResult;
-    const usedCellParams = {} as { [field: string]: GridCellParams };
 
     /* eslint-disable no-restricted-syntax, no-labels */
     outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
@@ -416,29 +360,13 @@ const buildAggregatedQuickFilterApplier = (
           continue;
         }
 
-        if (applier.v7) {
-          if (ignoreDiacritics) {
-            value = removeDiacritics(value);
-          }
-          const isMatching = applier.fn(value, row, column, publicApiRef);
-          if (isMatching) {
-            result[filterValue] = true;
-            continue outer;
-          }
-        } else {
-          const cellParams =
-            usedCellParams[field] ??
-            apiRef.current.getCellParams(apiRef.current.getRowId(row), field);
-          if (ignoreDiacritics) {
-            cellParams.value = removeDiacritics(cellParams.value);
-          }
-          usedCellParams[field] = cellParams;
-
-          const isMatching = applier.fn(cellParams);
-          if (isMatching) {
-            result[filterValue] = true;
-            continue outer;
-          }
+        if (ignoreDiacritics) {
+          value = removeDiacritics(value);
+        }
+        const isMatching = applier.fn(value, row, column, publicApiRef);
+        if (isMatching) {
+          result[filterValue] = true;
+          continue outer;
         }
       }
 
