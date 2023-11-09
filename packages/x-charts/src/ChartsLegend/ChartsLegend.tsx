@@ -506,6 +506,7 @@ ChartsLegend.propTypes = {
   direction: PropTypes.oneOf(['column', 'row']),
   /**
    * Set to true to hide the legend.
+   * @default false
    */
   hidden: PropTypes.bool,
   position: PropTypes.shape({
