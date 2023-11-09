@@ -9,8 +9,14 @@ _Nov 9, 2023_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- ✨ v7 Alpha release
+- 🚀 First v7 alpha release
+- ✨ Fix aggregation label not showing when `renderHeader` is used (#10961) @cherniavskii
+- 📘 Server side data source [early documentation](https://mui.com/x/react-data-grid/server-side-data/) published
+- 💫 New recipes added for the data grid
+- 📈 `<ChartsReferenceLine />` component is now available
 - 🌍 Improve Czech (cs-CZ) locale
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 ### Data Grid
 
