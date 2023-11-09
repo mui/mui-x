@@ -124,6 +124,21 @@ export const mergeDateAndTime = <TDate>(
   return mergedDate;
 };
 
+export const isEqualTime = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  time1: TDate | null,
+  time2: TDate | null,
+) => {
+  if (!time1 || !time2) {
+    return false;
+  }
+  return (
+    utils.getHours(time1) === utils.getHours(time2) &&
+    utils.getMinutes(time1) === utils.getMinutes(time2) &&
+    utils.getSeconds(time1) === utils.getSeconds(time2)
+  );
+};
+
 export const getTodayDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
