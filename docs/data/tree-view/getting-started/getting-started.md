@@ -15,7 +15,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 Using your favorite package manager, install `@mui/x-tree-view`:
 
 :::warning
-Note we're using the `next` tag to download the latest v7 **alpha** version.
+The `next` tag is used to download the latest v7 **pre-release** version.
 :::
 
 <codeblock storageKey="package-manager">

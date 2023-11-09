@@ -19,7 +19,7 @@ Using your favorite package manager, install:
 - The date library to manipulate the date.
 
 :::warning
-Note we're using the `next` tag to download the latest v7 **alpha** version.
+The `next` tag is used to download the latest v7 **pre-release** version.
 :::
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}

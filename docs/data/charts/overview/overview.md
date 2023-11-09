@@ -26,7 +26,7 @@ To modify the styling of charts you can rely on all the MUI styling tools, such 
 ## Getting started
 
 :::warning
-Note we're using the `next` tag to download the latest v7 **alpha** version.
+The `next` tag is used to download the latest v7 **pre-release** version.
 :::
 
 To install this library, run
