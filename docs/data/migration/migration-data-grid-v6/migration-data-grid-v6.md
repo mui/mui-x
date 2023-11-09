@@ -115,18 +115,18 @@ Below are described the steps you need to make to migrate from v6 to v7.
 - The signature of the function returned by `getApplyFilterFn` has changed for performance reasons:
 
 ```diff
-const getApplyFilterFn: GetApplyFilterFn<any, unknown> = (filterItem) => {
-  if (!filterItem.value) {
-    return null;
-  }
+ const getApplyFilterFn: GetApplyFilterFn<any, unknown> = (filterItem) => {
+   if (!filterItem.value) {
+     return null;
+   }
 
-  const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
-- return (cellParams) => {
-- const { value } = cellParams;
-+ return (value, row, colDef, apiRef) => {
-    return value != null ? filterRegex.test(String(value)) : false;
-  };
-}
+   const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
+-  return (cellParams) => {
+-  const { value } = cellParams;
++  return (value, row, colDef, apiRef) => {
+     return value != null ? filterRegex.test(String(value)) : false;
+   };
+ }
 ```
 
 - The `getApplyQuickFilterFnV7` in `GridColDef` was renamed to `getApplyQuickFilterFn`.
@@ -135,18 +135,18 @@ const getApplyFilterFn: GetApplyFilterFn<any, unknown> = (filterItem) => {
 - The signature of the function returned by `getApplyQuickFilterFn` has changed for performance reasons:
 
 ```diff
-const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
-  if (!value) {
-    return null;
-  }
-  const filterRegex = new RegExp(escapeRegExp(value), 'i');
-- return (cellParams) => {
--   const { formattedValue } = cellParams;
-+ return (value, row, column, apiRef) => {
-+   let formattedValue = apiRef.current.getRowFormattedValue(row, column);
-    return formattedValue != null ? filterRegex.test(formattedValue.toString()) : false;
-  };
-};
+ const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
+   if (!value) {
+     return null;
+   }
+   const filterRegex = new RegExp(escapeRegExp(value), 'i');
+-  return (cellParams) => {
+-    const { formattedValue } = cellParams;
++  return (value, row, column, apiRef) => {
++    let formattedValue = apiRef.current.getRowFormattedValue(row, column);
+     return formattedValue != null ? filterRegex.test(formattedValue.toString()) : false;
+   };
+ };
 ```
 
 <!-- ### Editing
