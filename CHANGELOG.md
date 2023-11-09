@@ -90,6 +90,10 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.0`, plus:
 
 ### Date Pickers
 
+#### Breaking changes
+
+- The deprecated `components` and `componentsProps` props have been removed. Use `slots` and `slotProps` instead.
+
 #### `@mui/x-date-pickers@7.0.0-alpha.0`
 
 - [fields] Fix `MultiInputTimeRangeField` section selection (#10922) @noraleonte
