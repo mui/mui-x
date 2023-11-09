@@ -63,3 +63,14 @@ For example:
 
 The same applies to `slotProps` and `componentsProps`.
 :::
+
+### Adapters
+
+#### Change the input format of the `getYearRange` method
+
+The `getYearRange` method used to accept two params and now accepts a tuple to be consistent with the `isWithinRange` method:
+
+```diff
+- adapter.getYearRange(start, end);
++ adapter.getYearRange([start, end])
+```
