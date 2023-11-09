@@ -11,5 +11,14 @@ export function computeSlots<SlotComponents extends object>({
     return defaultSlots;
   }
 
-  return { ...defaultSlots, ...overrides };
+  const result = { ...defaultSlots };
+  Object.keys(overrides).forEach((key) => {
+    const k = key as keyof typeof overrides;
+
+    if (overrides[k] !== undefined) {
+      result[k] = overrides[k] as any;
+    }
+  });
+
+  return result;
 }
