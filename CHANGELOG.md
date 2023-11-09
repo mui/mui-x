@@ -47,7 +47,7 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 
 Same changes as in `@mui/x-data-grid@7.0.0-alpha.0`, plus:
 
-- [DataGridPro] Autosize Columns - Headers being cut off (#10666) @gitstart
+- [DataGridPro] Autosize Columns - Fix headers being cut off (#10666) @gitstart
 
 #### `@mui/x-data-grid-premium@7.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
