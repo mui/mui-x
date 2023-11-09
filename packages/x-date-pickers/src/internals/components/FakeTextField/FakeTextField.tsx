@@ -57,7 +57,6 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
 
   const [focused, setFocused] = React.useState(false);
 
-  const areAllSectionsEmpty = !valueStr && valueType !== 'placeholder';
   const id = useId(idOverride);
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
   const inputLabelId = label && id ? `${id}-label` : undefined;
@@ -105,12 +104,12 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
         ...other,
       }}
     >
-      <InputLabel htmlFor={id} id={inputLabelId} shrink={focused || !areAllSectionsEmpty}>
+      <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
         {label}
       </InputLabel>
       <FakeInput
         ref={ref}
-        {...{ elements, valueStr, valueType, areAllSectionsEmpty, onWrapperClick, inputProps }}
+        {...{ elements, valueStr, valueType, onWrapperClick, inputProps }}
         {...other}
         {...InputProps}
       />

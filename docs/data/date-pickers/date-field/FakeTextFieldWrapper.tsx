@@ -86,6 +86,7 @@ function AppContent() {
       color="secondary"
       fullWidth
       onChange={() => {}}
+      valueType="placeholder"
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -118,11 +119,11 @@ export default function FakeTextFieldWrapper() {
           helperText="test"
           fullWidth
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <CalendarMonthIcon />
-              </InputAdornment>
-            ),
+            // startAdornment: (
+            //   <InputAdornment position="start">
+            //     <CalendarMonthIcon />
+            //   </InputAdornment>
+            // ),
             endAdornment: (
               <InputAdornment position="end">
                 <CalendarMonthIcon />

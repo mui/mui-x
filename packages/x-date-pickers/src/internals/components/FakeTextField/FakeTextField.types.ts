@@ -12,12 +12,7 @@ export interface FakeTextFieldProps extends FakeInputProps {
   size?: 'small' | 'medium';
   variant?: 'filled' | 'outlined' | 'standard';
   valueStr: string;
-  // onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
-  // id?: string;
   InputProps: any;
-  // inputProps: any;
-  // autoFocus?: boolean;
-  // ownerState?: any;
   valueType: 'value' | 'placeholder';
   required?: boolean;
 }

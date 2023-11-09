@@ -6,6 +6,7 @@ import { styled, Theme } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
+  visuallyHidden,
 } from '@mui/utils';
 import { fakeInputClasses, getFakeInputUtilityClass } from './fakeTextFieldClasses';
 import Outline from './Outline';
@@ -67,12 +68,13 @@ const SectionsContainer = styled('div', {
   name: 'MuiFakeInput',
   slot: 'Input',
   overridesResolver: (props, styles) => styles.input,
-})(({ theme }) => {
+})(({ theme, valueType }) => {
   return {
     fontFamily: theme.typography.fontFamily,
     fontSize: 'inherit',
     lineHeight: '1.4375em', // 23px
     flexGrow: 1,
+    visibility: valueType === 'placeholder' ? 'hidden' : 'visible',
   };
 });
 const SectionContainer = styled('span', {
@@ -98,6 +100,14 @@ const SectionInput = styled('span', {
     letterSpacing: 'inherit',
     width: 'fit-content',
   };
+});
+
+const FakeHiddenInput = styled('input', {
+  name: 'MuiFakeInput',
+  slot: 'HiddenInput',
+  overridesResolver: (props, styles) => styles.hiddenInput,
+})({
+  ...visuallyHidden,
 });
 
 const NotchedOutlineRoot = styled(Outline, {
@@ -185,7 +195,6 @@ const FakeInput = React.forwardRef(function FakeInput(
     onFocus,
     onWrapperClick,
     onBlur,
-    areAllSectionsEmpty = false,
     valueStr,
     onValueStrChange,
     id,
@@ -203,7 +212,16 @@ const FakeInput = React.forwardRef(function FakeInput(
   const fcs = formControlState({
     props,
     muiFormControl,
-    states: ['color', 'disabled', 'error', 'focused', 'size', 'required', 'fullWidth'],
+    states: [
+      'color',
+      'disabled',
+      'error',
+      'focused',
+      'size',
+      'required',
+      'fullWidth',
+      'adornedStart',
+    ],
   });
 
   React.useEffect(() => {
@@ -233,25 +251,30 @@ const FakeInput = React.forwardRef(function FakeInput(
       ownerState={ownerState}
     >
       {startAdornment}
-      <SectionsContainer className={classes.input}>
-        {elements &&
-          elements.map(({ container, content, before, after }, elementIndex) => (
-            <SectionContainer key={elementIndex} {...container}>
-              <span {...before} className={clsx(fakeInputClasses.before, before?.className)} />
-              <SectionInput
-                {...content}
-                className={clsx(fakeInputClasses.content, content?.className)}
-                {...{ ownerState }}
-              />
-              <span {...after} className={clsx(fakeInputClasses.after, after?.className)} />
-            </SectionContainer>
-          ))}
-        <input type="hidden" value={valueStr} onChange={onValueStrChange} id={id} />
+      <SectionsContainer valueType={valueType} className={classes.input}>
+        {elements.map(({ container, content, before, after }, elementIndex) => (
+          <SectionContainer key={elementIndex} {...container}>
+            <span {...before} className={clsx(fakeInputClasses.before, before?.className)} />
+            <SectionInput
+              {...content}
+              className={clsx(fakeInputClasses.content, content?.className)}
+              {...{ ownerState }}
+            />
+            <span {...after} className={clsx(fakeInputClasses.after, after?.className)} />
+          </SectionContainer>
+        ))}
+        <FakeHiddenInput
+          value={valueStr}
+          onChange={onValueStrChange}
+          id={id}
+          aria-hidden="true"
+          tabIndex={-1}
+        />
       </SectionsContainer>
       {endAdornment}
       <NotchedOutlineRoot
-        shrink={fcs.focused || !areAllSectionsEmpty}
-        notched={fcs.focused || !areAllSectionsEmpty}
+        shrink={fcs.adornedStart || fcs.focused || valueStr === 'placeholder'}
+        notched={fcs.adornedStart || fcs.focused || valueStr === 'placeholder'}
         className={classes.notchedOutline}
         label={
           label != null && label !== '' && fcs.required ? (
