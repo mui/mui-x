@@ -9,7 +9,8 @@ _Nov 9, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- ✨ Render aggregation label when `renderHeader` is used
+- ✨ Fix aggregation label not showing when `renderHeader` is used (#10961) @cherniavskii
+- 📘 Server side data source [early documentation](https://mui.com/x/react-data-grid/server-side-data/) published
 - 📈 `<ChartsReferenceLine />` component is now available
 - 🐞 Bugfixes
 - 📚 Documentation improvements
