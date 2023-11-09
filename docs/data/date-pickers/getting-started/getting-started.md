@@ -18,6 +18,10 @@ Using your favorite package manager, install:
 - `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
 - The date library to manipulate the date.
 
+:::warning
+Note we're using the `next` tag to download the latest v7 **alpha** version.
+:::
+
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
 :::info
