@@ -144,29 +144,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.setLocale(expectedLocale);
   };
 
-  public date = (value?: any) => {
-    if (typeof value === 'undefined') {
-      return DateTime.local();
-    }
-
-    if (value === null) {
-      return null;
-    }
-
-    if (typeof value === 'string') {
-      // @ts-ignore
-      return DateTime.fromJSDate(new Date(value), { locale: this.locale });
-    }
-
-    if (DateTime.isDateTime(value)) {
-      return value;
-    }
-
-    // @ts-ignore
-    return DateTime.fromJSDate(value, { locale: this.locale });
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
+  public date = <T extends string | null | undefined>(
     value: T,
     timezone: PickersTimezone,
   ): DateBuilderReturnType<T, DateTime> => {

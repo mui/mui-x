@@ -220,17 +220,6 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * A map containing all the format that the field components can understand.
    */
   formatTokenMap: FieldFormatTokenMap;
-
-  // TODO v7: Replace with dateWithTimezone
-  /**
-   * Create a date in the date library format.
-   * If no `value` parameter is provided, creates a date with the current timestamp.
-   * If a `value` parameter is provided, pass it to the date library to try to parse it.
-   * @template TDate
-   * @param {any} value The optional value to parse.
-   * @returns {TDate | null} The parsed date.
-   */
-  date(value?: any): TDate | null;
   /**
    * Create a date in the date library format.
    * If no `value` parameter is provided, creates a date with the current timestamp.
@@ -240,7 +229,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @param {PickersTimezone} timezone The timezone of the date.
    * @returns {TDate | null} The parsed date.
    */
-  dateWithTimezone<T extends string | null | undefined>(
+  date<T extends string | null | undefined>(
     value: T,
     timezone: PickersTimezone,
   ): DateBuilderReturnType<T, TDate>;
