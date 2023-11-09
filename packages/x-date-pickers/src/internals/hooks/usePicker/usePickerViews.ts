@@ -124,7 +124,9 @@ export interface UsePickerViewParams<
   rendererInterceptor?: (
     viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>,
     popperView: TView,
-    rendererProps: any,
+    rendererProps: Omit<TExternalProps, 'className' | 'sx'> &
+      TAdditionalProps &
+      UsePickerValueViewsResponse<TValue>,
   ) => React.ReactNode;
 }
 

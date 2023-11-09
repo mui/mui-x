@@ -12,8 +12,13 @@ import {
   UncapitalizeObjectKeys,
   uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
-import { DesktopOnlyTimePickerProps } from '@mui/x-date-pickers/internals/models/props/clock';
+import {
+  BaseClockProps,
+  DesktopOnlyTimePickerProps,
+} from '@mui/x-date-pickers/internals/models/props/clock';
 import { applyDefaultViewProps } from '@mui/x-date-pickers/internals/utils/views';
+import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
+import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateTimeRangeValidationError } from '../models';
 import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import {
@@ -103,7 +108,11 @@ export interface BaseDateTimeRangePickerProps<TDate>
     PickerViewRendererLookup<
       DateRange<TDate>,
       DateTimeRangePickerView,
-      DateRangeViewRendererProps<TDate, 'day'>,
+      Omit<DateRangeViewRendererProps<TDate, 'day'>, 'view'> &
+        Omit<
+          TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
+          'view'
+        > & { view: DateTimeRangePickerView },
       {}
     >
   >;

@@ -6,10 +6,13 @@ import {
   extractValidationProps,
   isInternalTimeView,
   PickerViewRendererLookup,
+  isDatePickerView,
+  PickerViewRenderer,
 } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
 import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -83,8 +86,9 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     valueType: 'date-time',
     validator: validateDateRange,
     rendererInterceptor(inViewRenderers, popperView, rendererProps) {
+      const { view, views, openTo, ...otherRendererProps } = rendererProps;
       const finalProps = {
-        ...rendererProps,
+        ...otherRendererProps,
         focusedView: null,
         sx: {
           width: DIALOG_WIDTH,
@@ -99,14 +103,37 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
           ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
         },
       };
-      return isInternalTimeView(popperView) ? (
-        <DateTimeRangePickerTimeWrapper
-          {...finalProps}
-          viewRenderer={inViewRenderers[popperView]}
-        />
-      ) : (
-        inViewRenderers[popperView]?.(finalProps)
-      );
+      const isTimeView = isInternalTimeView(popperView);
+      const viewRenderer = inViewRenderers[popperView];
+      if (!viewRenderer) {
+        return null;
+      }
+      if (isTimeView) {
+        return (
+          <DateTimeRangePickerTimeWrapper
+            {...finalProps}
+            viewRenderer={
+              viewRenderer as PickerViewRenderer<DateRange<TDate>, TimeViewWithMeridiem, any, {}>
+            }
+            views={views.filter(isInternalTimeView)}
+            view={view && isInternalTimeView(view) ? view : 'hours'}
+            openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
+          />
+        );
+      }
+      // avoiding problem of `props: never`
+      const typedViewRenderer = viewRenderer as PickerViewRenderer<
+        DateRange<TDate>,
+        'day',
+        any,
+        {}
+      >;
+      return typedViewRenderer({
+        ...finalProps,
+        views: views.filter(isDatePickerView),
+        view: view && isDatePickerView(view) ? view : 'day',
+        openTo: isDatePickerView(openTo) ? openTo : 'day',
+      });
     },
   });
 

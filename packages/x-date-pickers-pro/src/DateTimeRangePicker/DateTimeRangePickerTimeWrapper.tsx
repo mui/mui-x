@@ -14,13 +14,13 @@ import { isRangeValid } from '../internals/utils/date-utils';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
 
 export type DateTimeRangePickerTimeWrapperProps<
-  TDate extends unknown,
+  TDate,
   TView extends TimeViewWithMeridiem,
-  TComponentProps extends BaseClockProps<TDate, TView>,
+  TComponentProps extends Omit<BaseClockProps<TDate, TView>, 'value' | 'defaultValue' | 'onChange'>,
 > = Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> &
   Omit<
     TComponentProps,
-    'views' | 'openTo' | 'view' | 'onViewChange' | 'value' | 'defaultValue' | 'onChange'
+    'views' | 'view' | 'onViewChange' | 'value' | 'defaultValue' | 'onChange'
   > & {
     view: TView;
     onViewChange?: (view: TView) => void;
@@ -32,7 +32,8 @@ export type DateTimeRangePickerTimeWrapperProps<
       selectionState: PickerSelectionState,
       selectedView: TView,
     ) => void;
-    viewRenderer: PickerViewRenderer<TDate, TView, any, {}>;
+    viewRenderer?: PickerViewRenderer<DateRange<TDate>, TView, any, TComponentProps> | null;
+    openTo?: TView;
   };
 
 const DateTimeRangePickerTimeWrapperRoot = styled('div', {
@@ -41,10 +42,10 @@ const DateTimeRangePickerTimeWrapperRoot = styled('div', {
   overridesResolver: (_, styles) => styles.root,
 })({});
 
-const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePickerTimeWrapper<
-  TDate extends unknown,
+function DateTimeRangePickerTimeWrapper<
+  TDate,
   TView extends TimeViewWithMeridiem,
-  TComponentProps extends BaseClockProps<TDate, TView>,
+  TComponentProps extends Omit<BaseClockProps<TDate, TView>, 'value' | 'defaultValue' | 'onChange'>,
 >(
   inProps: DateTimeRangePickerTimeWrapperProps<TDate, TView, TComponentProps>,
   ref: React.Ref<HTMLDivElement>,
@@ -64,6 +65,10 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
     className,
     ...other
   } = props;
+
+  if (!viewRenderer) {
+    return null;
+  }
 
   const currentValue = (rangePosition === 'start' ? value?.[0] : value?.[1]) ?? null;
   const currentDefaultValue =
@@ -104,6 +109,6 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
       })}
     </DateTimeRangePickerTimeWrapperRoot>
   );
-});
+}
 
 export { DateTimeRangePickerTimeWrapper };

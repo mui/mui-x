@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   extractValidationProps,
+  isDatePickerView,
   isInternalTimeView,
   PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
@@ -48,6 +49,7 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
       {inViewRenderers.day?.({
         ...rendererProps,
         view: !isTimeViewActive ? popperView : 'day',
+        views: rendererProps.views.filter(isDatePickerView),
       })}
       <Divider orientation="vertical" />
       <DateTimeRangePickerTimeWrapper
