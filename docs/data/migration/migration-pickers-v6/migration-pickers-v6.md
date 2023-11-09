@@ -85,18 +85,18 @@ The `isValid` method used to accept any type of value and tried to parse them be
 The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in our components)
 
 ```diff
-const adapterDayjs = new AdapterDayjs();
-const adapterLuxon = new AdapterLuxon();
-const adapterDateFns = new AdapterDateFns();
-const adapterMoment = new AdatperMoment();
+ const adapterDayjs = new AdapterDayjs();
+ const adapterLuxon = new AdapterLuxon();
+ const adapterDateFns = new AdapterDateFns();
+ const adapterMoment = new AdatperMoment();
 
-// Supported formats
-const isValid = adapterDayjs.isValid(null); // Same for the other adapters
-const isValid = adapterLuxon.isValid(DateTime.now());
-const isValid = adapterMoment.isValid(moment());
-const isValid = adapterDateFns.isValid(new Date());
+ // Supported formats
+ const isValid = adapterDayjs.isValid(null); // Same for the other adapters
+ const isValid = adapterLuxon.isValid(DateTime.now());
+ const isValid = adapterMoment.isValid(moment());
+ const isValid = adapterDateFns.isValid(new Date());
 
-// Non-supported formats (JS Date)
+ // Non-supported formats (JS Date)
 - const isValid = adapterDayjs.isValid(new Date('2022-04-17'));
 + const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
 
@@ -106,7 +106,7 @@ const isValid = adapterDateFns.isValid(new Date());
 - const isValid = adapterMoment.isValid(new Date('2022-04-17'));
 + const isValid = adapterMoment.isValid(moment('2022-04-17'));
 
-// Non-supported formats (string)
+ // Non-supported formats (string)
 - const isValid = adapterDayjs.isValid('2022-04-17');
 + const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
 
