@@ -17,7 +17,7 @@ From https://github.com/mui/mui-x/pull/10875
 ### Breaking changes
 
 Types for `slots` and `slotProps` got renamed by removing the "Component" which is meaningless for charts.
-Except if you imported those types, to create a wrapper, you should not be impacted by this breaking change.
+Unless you imported those types, to create a wrapper, you should not be impacted by this breaking change.
 
 Here is an example of the renaming for the `<ChartsLegend />` component.
 
