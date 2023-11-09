@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 6.18.1
+
 _Nov 9, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
@@ -15,34 +16,34 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 ### Data Grid
 
-#### `@mui/x-data-grid@__VERSION__`
+#### `@mui/x-data-grid@6.18.1`
 
 - [DataGrid] Fix cell value type in quick filtering v7 (#10884) @cherniavskii
 - [DataGrid] Fix keyboard navigation for actions cell with disabled buttons (#10947) @michelengelen
 - [DataGrid] Fix undefined slot values (#10934) @romgrk
 
-#### `@mui/x-data-grid-pro@__VERSION__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@6.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@__VERSION__`, plus:
 
 - [DataGridPro] Add data source interface and basic documentation (#10543) @MBilalShafi
 
-#### `@mui/x-data-grid-premium@__VERSION__` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@6.18.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@__VERSION__`.
 
 ### Date Pickers
 
-#### `@mui/x-date-pickers@__VERSION__`
+#### `@mui/x-date-pickers@6.18.1`
 
 - [fields] Fix multi input date time field section selection (#10915) @noraleonte
 - [pickers] Always use up-to-date `defaultView` (#10889) @LukasTy
 
-#### `@mui/x-date-pickers-pro@__VERSION__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@6.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@__VERSION__`.
+Same changes as in `@mui/x-date-pickers@6.18.1`.
 
-### Charts / `@mui/x-charts@__VERSION__`
+### Charts / `@mui/x-charts@6.18.1`
 
 - [charts] Add <ChartsReferenceLine /> component (#10597) @wascou
 - [charts] Improve properties JSDoc (#10931) @alexfauquette
