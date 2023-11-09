@@ -93,6 +93,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.0`, plus:
 #### `@mui/x-date-pickers@7.0.0-alpha.0`
 
 - [fields] Fix `MultiInputTimeRangeField` section selection (#10922) @noraleonte
+- [pickers] Refine `referenceDate` behavior in views (#10863) @LukasTy
 - [pickers] Remove `components` and `componentsProps` props (#10700) @alexfauquette
 
 #### `@mui/x-date-pickers-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
