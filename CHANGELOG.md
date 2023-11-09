@@ -19,7 +19,7 @@ From https://github.com/mui/mui-x/pull/10875
 Types for `slots` and `slotProps` got renamed by removing the "Component" which is meaningless for charts.
 Unless you imported those types, to create a wrapper, you should not be impacted by this breaking change.
 
-Here is an example of the renaming for the `<ChartsLegend />` component.
+Here is an example of the renaming for the `<ChartsTooltip />` component.
 
 ```diff
 -ChartsTooltipSlotsComponent
