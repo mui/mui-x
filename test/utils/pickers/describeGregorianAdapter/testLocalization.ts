@@ -30,7 +30,14 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
       const formatString = adapter.formats[formatKey];
       const expandedFormat = cleanText(adapter.expandFormat(formatString));
 
-      if (expandedFormat === formatString) {
+      if (
+        expandedFormat === formatString ||
+        (adapter.lib === 'luxon' && formatString === 'ccccc')
+      ) {
+        // Luxon format 'ccccc' is not supported by the field components since multiple day can have the same one-letter value (e.g: Tuesday and Thursday).
+        // It is used in the calendar header to display the day of the weeks.
+        // Format 'ccccc' is not supported for the field fomrat since multiple day can have the same short
+        // It's used to display calendar days.
         return;
       }
 
