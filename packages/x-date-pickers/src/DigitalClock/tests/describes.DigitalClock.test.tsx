@@ -8,6 +8,7 @@ import {
   digitalClockHandler,
   describeValidation,
   describeValue,
+  formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 
@@ -56,14 +57,11 @@ describe('<DigitalClock /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const selectedItem = screen.queryByRole('option', { selected: true });
       if (!expectedValue) {
         expect(selectedItem).to.equal(null);
       } else {
-        expect(selectedItem).to.have.text(
-          adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h'),
-        );
+        expect(selectedItem).to.have.text(formatFullTimeValue(adapterToUse, expectedValue));
       }
     },
     setNewValue: (value) => {

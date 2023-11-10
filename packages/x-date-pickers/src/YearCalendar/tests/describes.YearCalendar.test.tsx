@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { userEvent, screen, describeConformance } from '@mui-internal/test-utils';
-import {
-  pickersYearClasses,
-  YearCalendar,
-  yearCalendarClasses as classes,
-} from '@mui/x-date-pickers/YearCalendar';
+import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -44,13 +40,15 @@ describe('<YearCalendar /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const selectedCells = document.querySelectorAll(`.${pickersYearClasses.selected}`);
+      const activeYear = screen
+        .queryAllByRole('radio')
+        .find((cell) => cell.getAttribute('tabindex') === '0');
+      expect(activeYear).not.to.equal(null);
       if (expectedValue == null) {
-        expect(selectedCells).to.have.length(1);
-        expect(selectedCells[0]).to.have.text(adapterToUse.getYear(adapterToUse.date()).toString());
+        expect(activeYear).to.have.text(adapterToUse.getYear(adapterToUse.date()).toString());
       } else {
-        expect(selectedCells).to.have.length(1);
-        expect(selectedCells[0]).to.have.text(adapterToUse.getYear(expectedValue).toString());
+        expect(activeYear).to.have.text(adapterToUse.getYear(expectedValue).toString());
+        expect(activeYear).to.have.attribute('aria-checked', 'true');
       }
     },
     setNewValue: (value) => {

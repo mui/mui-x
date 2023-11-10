@@ -144,13 +144,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       return utils.getMonth(value);
     }
 
-    if (disableHighlightToday) {
-      return null;
-    }
-
-    return utils.getMonth(referenceDate);
-  }, [value, utils, disableHighlightToday, referenceDate]);
-  const [focusedMonth, setFocusedMonth] = React.useState(() => selectedMonth || todayMonth);
+    return null;
+  }, [value, utils]);
+  const [focusedMonth, setFocusedMonth] = React.useState(
+    () => selectedMonth || utils.getMonth(referenceDate),
+  );
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'MonthCalendar',
