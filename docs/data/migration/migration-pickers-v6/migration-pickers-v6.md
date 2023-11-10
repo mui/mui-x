@@ -292,10 +292,20 @@ The `mergeDateAndTime` method have been removed, you can use the `setHours`, `se
 The `parseISO` method have been removed, you can directly use your date library:
 
 ```diff
+  // For Day.js
 - const value = adapter.parseISO(isoString);
 + const value = dayjs(isoString);
+
+  // For Luxon
+- const value = adapter.parseISO(isoString);
 + const value = DateTime.fromISO(isoString);
+
+  // For DateFns
+- const value = adapter.parseISO(isoString);
 + const value = dateFns.parseISO(isoString);
+
+  // For Moment
+- const value = adapter.parseISO(isoString);
 + const value = moment(isoString, true);
 ```
 
