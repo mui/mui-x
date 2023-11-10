@@ -213,7 +213,11 @@ function AppWrapper(props) {
       metadata: '',
       name: 'MUI X',
       versions: [
-        { text: `v${process.env.LIB_VERSION}`, current: true },
+        {
+          text: `v${process.env.LIB_VERSION}`,
+          current: true,
+        },
+        { text: 'v6', href: `https://mui.com${languagePrefix}/x/introduction/` },
         { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
@@ -224,7 +228,11 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          { text: `v${process.env.DATA_GRID_VERSION}`, current: true },
+          {
+            text: `v${process.env.DATA_GRID_VERSION}`,
+            current: true,
+          },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/components/data-grid/` },
           { text: 'v5', href: `https://v5.mui.com${languagePrefix}/components/data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
@@ -234,7 +242,14 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          { text: `v${process.env.DATE_PICKERS_VERSION}`, current: true },
+          {
+            text: `v${process.env.DATE_PICKERS_VERSION}`,
+            current: true,
+          },
+          {
+            text: 'v6',
+            href: `https://mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
+          },
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
@@ -245,13 +260,28 @@ function AppWrapper(props) {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Charts',
-        versions: [{ text: `v${process.env.CHARTS_VERSION}`, current: true }],
+        versions: [
+          {
+            text: `v${process.env.CHARTS_VERSION}`,
+            current: true,
+          },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/getting-started` },
+        ],
       };
     } else if (productId === 'x-tree-view') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Tree View',
-        versions: [{ text: `v${process.env.TREE_VIEW_VERSION}`, current: true }],
+        versions: [
+          {
+            text: `v${process.env.TREE_VIEW_VERSION}`,
+            current: true,
+          },
+          {
+            text: 'v6',
+            href: `https://mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+          },
+        ],
       };
     }
 

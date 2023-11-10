@@ -6,5 +6,5 @@ import materialSlots from '../material';
 export const DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS: GridPremiumSlotsComponent = {
   ...DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS,
   ...materialSlots,
-  ColumnMenu: GridPremiumColumnMenu,
+  columnMenu: GridPremiumColumnMenu,
 };

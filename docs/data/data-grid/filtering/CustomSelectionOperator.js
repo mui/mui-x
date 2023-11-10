@@ -53,12 +53,13 @@ export default function CustomSelectionOperator() {
           return innerFilterFn;
         }
 
-        return (params) => {
-          if (rowSelectionModelLookupRef.current[params.id]) {
+        return (value, row, col, apiRef) => {
+          const rowId = apiRef.current.getRowId(row);
+          if (rowSelectionModelLookupRef.current[rowId]) {
             return true;
           }
 
-          return innerFilterFn(params);
+          return innerFilterFn(value, row, col, apiRef);
         };
       };
 

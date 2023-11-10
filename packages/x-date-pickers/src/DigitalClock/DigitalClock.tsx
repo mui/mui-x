@@ -113,8 +113,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ampm = utils.is12HourCycleInCurrentLocale(),
     timeStep = 30,
     autoFocus,
-    components,
-    componentsProps,
     slots,
     slotProps,
     value: valueProp,
@@ -166,10 +164,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   const classes = useUtilityClasses(ownerState);
 
-  const ClockItem = slots?.digitalClockItem ?? components?.DigitalClockItem ?? DigitalClockItem;
+  const ClockItem = slots?.digitalClockItem ?? DigitalClockItem;
   const clockItemProps = useSlotProps({
     elementType: ClockItem,
-    externalSlotProps: slotProps?.digitalClockItem ?? componentsProps?.digitalClockItem,
+    externalSlotProps: slotProps?.digitalClockItem,
     ownerState: {},
     className: classes.item,
   });
@@ -204,14 +202,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     if (containerRef.current === null) {
       return;
     }
-    const selectedItem = containerRef.current.querySelector<HTMLElement>(
-      '[role="listbox"] [role="option"][aria-selected="true"]',
+    const activeItem = containerRef.current.querySelector<HTMLElement>(
+      '[role="listbox"] [role="option"][tabindex="0"], [role="listbox"] [role="option"][aria-selected="true"]',
     );
 
-    if (!selectedItem) {
+    if (!activeItem) {
       return;
     }
-    const offsetTop = selectedItem.offsetTop;
+    const offsetTop = activeItem.offsetTop;
+    if (autoFocus || !!focusedView) {
+      activeItem.focus();
+    }
 
     // Subtracting the 4px of extra margin intended for the first visible section item
     containerRef.current.scrollTop = offsetTop - 4;
@@ -283,6 +284,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ];
   }, [valueOrReferenceDate, timeStep, utils]);
 
+  const focusedOptionIndex = timeOptions.findIndex((option) =>
+    utils.isEqual(option, valueOrReferenceDate),
+  );
+
   return (
     <DigitalClockRoot
       ref={handleRef}
@@ -291,16 +296,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       {...other}
     >
       <DigitalClockList
-        autoFocusItem={autoFocus || !!focusedView}
         role="listbox"
         aria-label={localeText.timePickerToolbarTitle}
         className={classes.list}
       >
-        {timeOptions.map((option) => {
+        {timeOptions.map((option, index) => {
           if (skipDisabled && isTimeDisabled(option)) {
             return null;
           }
           const isSelected = utils.isEqual(option, value);
+          const tabIndex =
+            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
           return (
             <ClockItem
               key={utils.toISO(option)}
@@ -312,6 +318,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
               // aria-readonly is not supported here and does not have any effect
               aria-disabled={readOnly}
               aria-selected={isSelected}
+              tabIndex={tabIndex}
               {...clockItemProps}
             >
               {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
@@ -345,18 +352,6 @@ DigitalClock.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overrideable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default selected value.
    * Used when the component is not controlled.

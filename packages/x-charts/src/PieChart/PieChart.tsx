@@ -11,31 +11,31 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
-  ChartsTooltipSlotComponentProps,
-  ChartsTooltipSlotsComponent,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
 } from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
-  ChartsLegendSlotComponentProps,
-  ChartsLegendSlotsComponent,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { PiePlot, PiePlotProps, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
+import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
-import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 
-export interface PieChartSlotsComponent
-  extends ChartsAxisSlotsComponent,
-    PiePlotSlotsComponent,
-    ChartsLegendSlotsComponent,
-    ChartsTooltipSlotsComponent {}
+export interface PieChartSlots
+  extends ChartsAxisSlots,
+    PiePlotSlots,
+    ChartsLegendSlots,
+    ChartsTooltipSlots {}
 
-export interface PieChartSlotComponentProps
-  extends ChartsAxisSlotComponentProps,
-    PiePlotSlotComponentProps,
-    ChartsLegendSlotComponentProps,
-    ChartsTooltipSlotComponentProps {}
+export interface PieChartSlotProps
+  extends ChartsAxisSlotProps,
+    PiePlotSlotProps,
+    ChartsLegendSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface PieChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -50,12 +50,12 @@ export interface PieChartProps
   legend?: ChartsLegendProps;
   onClick?: PiePlotProps['onClick'];
 
-  slots?: PieChartSlotsComponent;
+  slots?: PieChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PieChartSlotComponentProps;
+  slotProps?: PieChartSlotProps;
 }
 
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 100 };
@@ -157,7 +157,7 @@ PieChart.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -190,9 +190,21 @@ PieChart.propTypes = {
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
   disableAxisListener: PropTypes.bool,
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * @default undefined
+   */
   height: PropTypes.number,
   /**
    * Indicate which axis to display the left of the charts.
@@ -201,7 +213,7 @@ PieChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -242,6 +254,12 @@ PieChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
   }),
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default object Depends on the charts type.
+   */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -256,7 +274,7 @@ PieChart.propTypes = {
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -368,7 +386,7 @@ PieChart.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -401,7 +419,15 @@ PieChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * @default undefined
+   */
   width: PropTypes.number,
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
+   */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
@@ -438,6 +464,10 @@ PieChart.propTypes = {
       valueFormatter: PropTypes.func,
     }),
   ),
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
+   */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,

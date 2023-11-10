@@ -18,7 +18,6 @@ import {
   PickerSelectionState,
   DayCalendarProps,
   ExportedUseViewsOptions,
-  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, DayRangeValidationProps } from '../internals/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
@@ -29,14 +28,14 @@ export type DateRangePosition = 'start' | 'end';
 
 export interface DateRangeCalendarSlotsComponent<TDate>
   extends PickersArrowSwitcherSlotsComponent,
-    Omit<DayCalendarSlotsComponent<TDate>, 'Day'>,
+    Omit<DayCalendarSlotsComponent<TDate>, 'day'>,
     PickersCalendarHeaderSlotsComponent {
   /**
    * Custom component for day in range pickers.
    * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
    * @default DateRangePickersDay
    */
-  Day?: React.ElementType<DateRangePickerDayProps<TDate>>;
+  day?: React.ElementType<DateRangePickerDayProps<TDate>>;
 }
 
 export interface DateRangeCalendarSlotsComponentsProps<TDate>
@@ -136,22 +135,10 @@ export interface DateRangeCalendarProps<TDate>
    */
   sx?: SxProps<Theme>;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DateRangeCalendarSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DateRangeCalendarSlotsComponent<TDate>>;
+  slots?: DateRangeCalendarSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

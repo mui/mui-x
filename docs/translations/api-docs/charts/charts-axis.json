@@ -48,8 +48,8 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the group containing the axis label"
     },
-    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x axes" },
-    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y axes" },
+    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
+    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" },
     "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
     "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },

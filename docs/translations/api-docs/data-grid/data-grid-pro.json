@@ -86,16 +86,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "Overridable components props dynamically passed to the component at rendering.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "defaultGroupingExpansionDepth": {
       "description": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded.",
       "deprecated": "",

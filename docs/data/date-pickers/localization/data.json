@@ -1,5 +1,13 @@
 [
   {
+    "languageTag": "eu",
+    "importName": "eu",
+    "localeName": "Basque",
+    "missingKeysCount": 0,
+    "totalKeysCount": 37,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/eu.ts"
+  },
+  {
     "languageTag": "be-BY",
     "importName": "beBY",
     "localeName": "Belarusian",
@@ -203,7 +211,7 @@
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 1,
+    "missingKeysCount": 0,
     "totalKeysCount": 37,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/esES.ts"
   },
