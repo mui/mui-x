@@ -11,7 +11,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - 🚀 First v7 alpha release
 - ✨ Fix aggregation label not showing when `renderHeader` is used (#10961) @cherniavskii
-- 📘 Server side data source [early documentation](https://mui.com/x/react-data-grid/server-side-data/) published
+- 📘 Server side data source [early documentation](https://mui.com/x/react-data-grid/server-side-data/)
 - 💫 New recipes added for the data grid
 - 📈 `<ChartsReferenceLine />` component is now available
 - 🌍 Add Basque (eu) locale, improve Czech (cs-CZ) and Spanish (es-ES) locales
