@@ -145,6 +145,7 @@
   { "name": "elGR", "kind": "Variable" },
   { "name": "enUS", "kind": "Variable" },
   { "name": "esES", "kind": "Variable" },
+  { "name": "eu", "kind": "Variable" },
   { "name": "ExportedDateRangeCalendarProps", "kind": "Interface" },
   { "name": "ExportedDateTimeRangePickerTabsProps", "kind": "Interface" },
   { "name": "ExportedDigitalClockProps", "kind": "Interface" },

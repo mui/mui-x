@@ -129,4 +129,54 @@ describe('<AdapterLuxon />', () => {
       });
     });
   });
+
+  describe('Picker token "DD" expansion', () => {
+    const testDate = new Date(2018, 4, 15, 9, 35);
+    const localizedTexts = {
+      undefined: {
+        placeholder: 'MMMM DD, YYYY',
+        value: 'May 15, 2018',
+      },
+      fr: {
+        placeholder: 'DD MMMM YYYY',
+        value: '15 mai 2018',
+      },
+      de: {
+        placeholder: 'DD. MMMM YYYY',
+        value: '15. Mai 2018',
+      },
+      'pt-BR': {
+        placeholder: 'DD de MMMM de YYYY',
+        value: '15 de mai. de 2018',
+      },
+    };
+
+    Object.keys(localizedTexts).forEach((localeKey) => {
+      const localeName = localeKey === 'undefined' ? 'default' : `"${localeKey}"`;
+      const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
+
+      describe(`test with the ${localeName} locale`, () => {
+        const { render, adapter } = createPickerRenderer({
+          clock: 'fake',
+          adapterName: 'luxon',
+          locale: localeObject,
+        });
+
+        it('should have correct placeholder', () => {
+          render(<DateTimePicker format="DD" />);
+
+          expectInputPlaceholder(
+            screen.getByRole('textbox'),
+            localizedTexts[localeKey].placeholder,
+          );
+        });
+
+        it('should have well formatted value', () => {
+          render(<DateTimePicker value={adapter.date(testDate)} format="DD" />);
+
+          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+        });
+      });
+    });
+  });
 });
