@@ -345,8 +345,12 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value === null;
   };
 
-  public isValid = (value: any) => {
-    return this.moment(value).isValid();
+  public isValid = (value: Moment | null) => {
+    if (value == null) {
+      return false;
+    }
+
+    return value.isValid();
   };
 
   public format = (value: Moment, formatKey: keyof AdapterFormats) => {
