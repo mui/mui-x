@@ -26,6 +26,8 @@ In `package.json`, change the version of the date pickers package to `next`.
 Since `v7` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 
+## Component slots
+
 ### Rename `components` to `slots`
 
 The `components` and `componentsProps` props are renamed to `slots` and `slotProps` props respectively.
@@ -63,6 +65,40 @@ For example:
 
 The same applies to `slotProps` and `componentsProps`.
 :::
+
+### Slot `shortcuts`: add new parameters to the `onChange` callback
+
+:::warning
+The following breaking change only impacts you if you are overriding the `shortcuts` slot to create your own custom UI.
+If you are just passing shortcuts to the default UI using `slotProps={{ shortcuts: [...] }}` then you can safely skip this section.
+:::
+
+The `onChange` callback fired when selecting a shortcut now requires two new parameters:
+
+- The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
+- The `item` containing the entire shortcut object.
+
+```diff
+ const CustomShortcuts = (props) => {
+   return (
+     <React.Fragment>
+       {props.items.map(item => {
+         const value = item.getValue({ isValid: props.isValid });
+         return (
+           <button
+-            onClick={() => onChange(value)}
++            onClick={() => onChange(value, props.changeImportance ?? 'accept', item)}
+           >
+             {value}
+           </button>
+         )
+       }}
+     </React.Fragment>
+   )
+ }
+
+ <DatePicker slots={{ shortcuts: CustomShortcuts }} />
+```
 
 ## Field components
 
