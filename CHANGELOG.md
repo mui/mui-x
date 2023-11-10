@@ -3,6 +3,213 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.0
+
+_Nov 10, 2023_
+
+We're thrilled to announce the first alpha release of our next major version, v7.
+This release introduces a few breaking changes, paving the way for the upcoming features like Pivoting and DateTimeRangePicker.
+
+A special shoutout to thank the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 First v7 alpha release
+- ✨ Fix aggregation label not showing when `renderHeader` is used (#10961) @cherniavskii
+- 📘 Server side data source [early documentation](https://mui.com/x/react-data-grid/server-side-data/)
+- 💫 New recipes added for the data grid
+- 📈 `<ChartsReferenceLine />` component is now available
+- 🌍 Add Basque (eu) locale, improve Czech (cs-CZ) and Spanish (es-ES) locales
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### Breaking changes
+
+- The deprecated `components` and `componentsProps` props have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
+- The print export will now only print the selected rows if there are any.
+  If there are no selected rows, it will print all rows. This makes the print export consistent with the other exports.
+  You can [customize the rows to export by using the `getRowsToExport` function](/x/react-data-grid/export/#customizing-the-rows-to-export).
+- The `getApplyFilterFnV7` in `GridFilterOperator` was renamed to `getApplyFilterFn`.
+  If you use `getApplyFilterFnV7` directly - rename it to `getApplyFilterFn`.
+- The signature of the function returned by `getApplyFilterFn` has changed for performance reasons:
+
+```diff
+ const getApplyFilterFn: GetApplyFilterFn<any, unknown> = (filterItem) => {
+   if (!filterItem.value) {
+     return null;
+   }
+   const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
+-  return (cellParams) => {
+-  const { value } = cellParams;
++  return (value, row, colDef, apiRef) => {
+     return value != null ? filterRegex.test(String(value)) : false;
+   };
+ }
+```
+
+- The `getApplyQuickFilterFnV7` in `GridColDef` was renamed to `getApplyQuickFilterFn`.
+  If you use `getApplyQuickFilterFnV7` directly - rename it to `getApplyQuickFilterFn`.
+- The signature of the function returned by `getApplyQuickFilterFn` has changed for performance reasons:
+
+```diff
+ const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
+   if (!value) {
+     return null;
+   }
+   const filterRegex = new RegExp(escapeRegExp(value), 'i');
+-  return (cellParams) => {
+-    const { formattedValue } = cellParams;
++  return (value, row, column, apiRef) => {
++    let formattedValue = apiRef.current.getRowFormattedValue(row, column);
+     return formattedValue != null ? filterRegex.test(formattedValue.toString()) : false;
+   };
+ };
+```
+
+#### `@mui/x-data-grid@7.0.0-alpha.0`
+
+- [DataGrid] Fix for error thrown when removing skeleton rows, after sorting is applied (#10807) @benjaminbialy
+- [DataGrid] Fix: `undefined` slot value (#10937) @romgrk
+- [DataGrid] Print selected rows by default (#10846) @cherniavskii
+- [DataGrid] Remove deprecated `components` and `componentsProps` (#10911) @MBilalShafi
+- [DataGrid] Remove legacy filtering API (#10897) @cherniavskii
+- [DataGrid] Fix keyboard navigation for actions cell with disabled buttons (#10882) @michelengelen
+- [DataGrid] Added a recipe for using non-native select in filter panel (#10916) @michelengelen
+- [DataGrid] Added a recipe to style cells without impacting the aggregation cells (#10913) @michelengelen
+- [l10n] Improve Czech (cs-CZ) locale (#10949) @luborepka
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.0`, plus:
+
+- [DataGridPro] Autosize Columns - Fix headers being cut off (#10666) @gitstart
+- [DataGridPro] Add data source interface and basic documentation (#10543) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.0`, plus:
+
+- [DataGridPremium] Render aggregation label when `renderHeader` is used (#10936) @cherniavskii
+
+### Date Pickers
+
+#### Breaking changes
+
+- The deprecated `components` and `componentsProps` props have been removed. Use `slots` and `slotProps` instead.
+
+#### `@mui/x-date-pickers@7.0.0-alpha.0`
+
+- [pickers] Escape non tokens words (#10400) @alexfauquette
+- [fields] Fix `MultiInputTimeRangeField` section selection (#10922) @noraleonte
+- [pickers] Refine `referenceDate` behavior in views (#10863) @LukasTy
+- [pickers] Remove `components` and `componentsProps` props (#10700) @alexfauquette
+- [l10n] Add Basque (eu) locale and improve Spanish (es-ES) locale (#10819) @lajtomekadimon
+- [pickers] Add short weekdays token (#10988) @alexfauquette
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.0`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.0`
+
+#### Breaking changes
+
+Types for `slots` and `slotProps` got renamed by removing the "Component" which is meaningless for charts.
+Unless you imported those types, to create a wrapper, you should not be impacted by this breaking change.
+
+Here is an example of the renaming for the `<ChartsTooltip />` component.
+
+```diff
+-ChartsTooltipSlotsComponent
++ChartsTooltipSlots
+
+-ChartsTooltipSlotComponentProps
++ChartsTooltipSlotProps
+```
+
+- [charts] Add `<ChartsReferenceLine />` component (#10597) (#10946) @alexfauquette
+- [charts] Improve properties JSDoc (#10931) (#10955) @alexfauquette
+- [charts] Rename `slots` and `slotProps` types (#10875) @alexfauquette
+
+### `@mui/x-codemod@7.0.0-alpha.0`
+
+- [codemod] Add `v7.0.0/preset-safe` (#10973) @LukasTy
+
+### Docs
+
+- [docs] Add `@next` tag to the installation instructions (#10963) @MBilalShafi
+- [docs] Document how to hide the legend (#10951) @alexfauquette
+- [docs] Fix typo in the migration guide (#10972) @flaviendelangle
+
+### Core
+
+- [core] Adds migration docs for charts, pickers and tree view (#10926) @michelengelen
+- [core] Bump monorepo (#10959) @LukasTy
+- [core] Changed prettier branch value to next (#10917) @michelengelen
+- [core] Fix GitHub title tag consistency @oliviertassinari
+- [core] Fixed wrong package names in migration docs (#10953) @michelengelen
+- [core] Merge `master` into `next` (#10929) @cherniavskii
+- [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
+- [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.18.1
+
+_Nov 9, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Fix aggregation label not showing when `renderHeader` is used (#10961) @cherniavskii
+- 📘 Server side data source [early documentation](https://mui.com/x/react-data-grid/server-side-data/) published
+- 📈 `<ChartsReferenceLine />` component is now available
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.1`
+
+- [DataGrid] Fix cell value type in quick filtering v7 (#10884) @cherniavskii
+- [DataGrid] Fix keyboard navigation for actions cell with disabled buttons (#10947) @michelengelen
+- [DataGrid] Fix `undefined` slot values (#10934) @romgrk
+
+#### `@mui/x-data-grid-pro@6.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.1`, plus:
+
+- [DataGridPro] Add data source interface and basic documentation (#10543) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@6.18.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.1`, plus:
+
+- [DataGridPremium] Render aggregation label when `renderHeader` is used (#10961) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.1`
+
+- [fields] Fix multi input date time field section selection (#10915) @noraleonte
+- [pickers] Always use up-to-date `defaultView` (#10889) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.1`.
+
+### Charts / `@mui/x-charts@6.18.1`
+
+- [charts] Add `<ChartsReferenceLine />` component (#10597) @wascou
+- [charts] Improve properties JSDoc (#10931) @alexfauquette
+
+### Docs
+
+- [docs] Fix charts docs as stable (#10888) @alexfauquette
+- [docs] Document how to hide the legend (#10954) @alexfauquette
+
+### Core
+
+- [core] Adds new alpha version to version select on the docs (#10944) @michelengelen
+- [core] Fix GitHub title tag consistency @oliviertassinari
+
 ## 6.18.0
 
 _Nov 3, 2023_
