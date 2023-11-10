@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { animated, SpringValue, to } from '@react-spring/web';
 import { arc as d3Arc } from 'd3-shape';
 import composeClasses from '@mui/utils/composeClasses';
@@ -96,7 +97,7 @@ const getLabelPosition =
     return y;
   };
 
-export default function PieArcLabel(props: PieArcLabelProps) {
+function PieArcLabel(props: PieArcLabelProps) {
   const {
     id,
     classes: innerClasses,
@@ -143,3 +144,16 @@ export default function PieArcLabel(props: PieArcLabelProps) {
     </PieArcLabelRoot>
   );
 }
+
+PieArcLabel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  formattedArcLabel: PropTypes.string,
+  isFaded: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
+} as any;
+
+export { PieArcLabel };
