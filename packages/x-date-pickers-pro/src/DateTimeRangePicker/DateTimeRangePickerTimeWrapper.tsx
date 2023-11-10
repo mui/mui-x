@@ -98,9 +98,10 @@ function DateTimeRangePickerTimeWrapper<
   };
 
   return (
-    <DateTimeRangePickerTimeWrapperRoot ref={ref} className={className}>
+    <DateTimeRangePickerTimeWrapperRoot className={className}>
       {viewRenderer({
         ...other,
+        ref,
         views,
         onViewChange,
         value: currentValue,
