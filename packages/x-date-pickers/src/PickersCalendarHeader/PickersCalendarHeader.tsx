@@ -274,6 +274,11 @@ PickersCalendarHeader.propTypes = {
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,
   disablePast: PropTypes.bool,
+  /**
+   * Format used to display the date.
+   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   */
+  format: PropTypes.string,
   labelId: PropTypes.string,
   maxDate: PropTypes.any.isRequired,
   minDate: PropTypes.any.isRequired,
