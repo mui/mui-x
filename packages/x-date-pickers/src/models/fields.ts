@@ -151,4 +151,6 @@ export interface BaseSingleInputFieldProps<TValue, TDate, TSection extends Field
   };
   slots?: {};
   slotProps?: {};
+  clearable?: boolean;
+  onClear?: React.MouseEventHandler;
 }

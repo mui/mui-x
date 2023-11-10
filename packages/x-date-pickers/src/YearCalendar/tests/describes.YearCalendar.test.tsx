@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { userEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
+import { userEvent, screen, describeConformance } from '@mui-internal/test-utils';
+import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
 import {
-  pickersYearClasses,
-  YearCalendar,
-  yearCalendarClasses as classes,
-} from '@mui/x-date-pickers/YearCalendar';
-import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+  wrapPickerMount,
+  createPickerRenderer,
+  adapterToUse,
+  describeValidation,
+  describeValue,
+} from 'test/utils/pickers';
 
 describe('<YearCalendar /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -40,19 +40,21 @@ describe('<YearCalendar /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const selectedCells = document.querySelectorAll(`.${pickersYearClasses.selected}`);
+      const activeYear = screen
+        .queryAllByRole('radio')
+        .find((cell) => cell.getAttribute('tabindex') === '0');
+      expect(activeYear).not.to.equal(null);
       if (expectedValue == null) {
-        expect(selectedCells).to.have.length(1);
-        expect(selectedCells[0]).to.have.text(adapterToUse.getYear(adapterToUse.date()).toString());
+        expect(activeYear).to.have.text(adapterToUse.getYear(adapterToUse.date()).toString());
       } else {
-        expect(selectedCells).to.have.length(1);
-        expect(selectedCells[0]).to.have.text(adapterToUse.getYear(expectedValue).toString());
+        expect(activeYear).to.have.text(adapterToUse.getYear(expectedValue).toString());
+        expect(activeYear).to.have.attribute('aria-checked', 'true');
       }
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addYears(value, 1);
       userEvent.mousePress(
-        screen.getByRole('button', { name: adapterToUse.getYear(newValue).toString() }),
+        screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),
       );
 
       return newValue;

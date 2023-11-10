@@ -1,5 +1,5 @@
-export function isNumber(value: any): value is number {
-  return typeof value === 'number';
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number' && !Number.isNaN(value);
 }
 
 export function isFunction(value: any): value is Function {

@@ -6,11 +6,11 @@ import { LineHighlightElement, LineHighlightElementProps } from './LineHighlight
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { InteractionContext } from '../context/InteractionProvider';
 
-export interface LineHighlightPlotSlotsComponent {
+export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
 }
 
-export interface LineHighlightPlotSlotComponentProps {
+export interface LineHighlightPlotSlotProps {
   lineHighlight?: Partial<LineHighlightElementProps>;
 }
 
@@ -19,14 +19,24 @@ export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElemen
    * Overridable component slots.
    * @default {}
    */
-  slots?: LineHighlightPlotSlotsComponent;
+  slots?: LineHighlightPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: LineHighlightPlotSlotComponentProps;
+  slotProps?: LineHighlightPlotSlotProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [LineHighlightPlot API](https://mui.com/x/api/charts/line-highlight-plot/)
+ */
 function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
@@ -57,10 +67,11 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
+            data,
             disableHighlight,
           } = series[seriesId];
 
-          if (disableHighlight) {
+          if (disableHighlight || data[highlightedIndex] == null) {
             return null;
           }
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
@@ -73,7 +84,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             );
           }
           const x = xScale(xData[highlightedIndex]);
-          const y = yScale(stackedData[highlightedIndex][1]);
+          const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
           return (
             <Element
               key={`${seriesId}`}

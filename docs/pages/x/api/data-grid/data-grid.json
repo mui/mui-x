@@ -18,16 +18,6 @@
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnVisibilityModel": { "type": { "name": "object" } },
-    "components": {
-      "type": { "name": "object" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>slots</code> instead."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "deprecated": true,
-      "deprecationInfo": "Use the <code>slotProps</code> prop instead."
-    },
     "density": {
       "type": {
         "name": "enum",
@@ -114,6 +104,7 @@
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
+    "ignoreDiacritics": { "type": { "name": "bool" } },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -386,6 +377,7 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
+    "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
@@ -429,7 +421,7 @@
         "name": "union",
         "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
       },
-      "default": ": false"
+      "default": "false"
     }
   },
   "slots": [
@@ -840,6 +832,7 @@
       "aggregationColumnHeader--alignRight",
       "aggregationColumnHeaderLabel",
       "autoHeight",
+      "autosizing",
       "booleanCell",
       "cell--editable",
       "cell--editing",
@@ -851,6 +844,7 @@
       "cell--rangeBottom",
       "cell--rangeLeft",
       "cell--rangeRight",
+      "cell--selectionMode",
       "cell",
       "cellContent",
       "cellCheckbox",

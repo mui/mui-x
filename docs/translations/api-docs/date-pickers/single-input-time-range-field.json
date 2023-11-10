@@ -11,18 +11,13 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "clearable": {
+      "description": "If <code>true</code>, a clear button will be shown in the field allowing value clearing.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "color": {
-      "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#adding-new-colors\">palette customization guide</a>.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
+      "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -145,6 +140,11 @@
         "context": "The context containing the validation result of the current value."
       }
     },
+    "onClear": {
+      "description": "Callback fired when the clear button is clicked.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "onError": {
       "description": "Callback fired when the error associated to the current value changes.",
       "deprecated": "",
@@ -240,6 +240,8 @@
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
-    "textField": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "clearButton": "Button to clear the value.",
+    "clearIcon": "Icon to display inside the clear button.",
+    "textField": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>."
   }
 }

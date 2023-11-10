@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: React Date Time Picker component
-components: DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker
+components: DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DigitalClock, MultiSectionDigitalClock, TimeClock
 githubLabel: 'component: DateTimePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -116,4 +116,4 @@ You can find the documentation in the [Validation page](/x/react-date-pickers/va
 
 ## Localization
 
-You can find the documentation about localization in the [Date localization](/x/react-date-pickers/adapters-locale/) and [Component localization](/x/react-date-pickers/localization/).
+You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).

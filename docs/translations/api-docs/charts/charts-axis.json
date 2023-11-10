@@ -44,13 +44,16 @@
     },
     "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
     "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
-    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the axis label" },
-    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x axes" },
-    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y axes" },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group containing the axis label"
+    },
+    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
+    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" },
     "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
     "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },
     "right": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the right axis" }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": { "axisLabel": "", "axisLine": "", "axisTick": "", "axisTickLabel": "" }
 }

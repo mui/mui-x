@@ -4,7 +4,6 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { DateCalendar, DateCalendarProps } from '../DateCalendar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
-  MultiSectionDigitalClock,
   MultiSectionDigitalClockProps,
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
@@ -12,6 +11,12 @@ import { DateTimeViewWrapper } from '../internals/components/DateTimeViewWrapper
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import type { DateTimePickerProps } from '../DateTimePicker/DateTimePicker.types';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '../timeViewRenderers';
+import { digitalClockClasses } from '../DigitalClock';
+import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 export interface DateTimeViewRendererProps<TDate>
   extends Omit<
@@ -26,12 +31,13 @@ export interface DateTimeViewRendererProps<TDate>
       | 'slots'
       | 'slotProps'
     >,
-    Pick<DateTimePickerProps<TDate>, 'components' | 'componentsProps' | 'slots' | 'slotProps'> {
+    Pick<DateTimePickerProps<TDate>, 'slots' | 'slotProps'> {
   view: DateOrTimeViewWithMeridiem;
   onViewChange?: (view: DateOrTimeViewWithMeridiem) => void;
   views: readonly DateOrTimeViewWithMeridiem[];
   focusedView: DateOrTimeViewWithMeridiem | null;
   timeViewsCount: number;
+  shouldRenderTimeInASingleColumn: boolean;
 }
 
 export const renderDesktopDateTimeView = <TDate extends unknown>({
@@ -65,8 +71,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   onYearChange,
   yearsPerRow,
   defaultCalendarMonth,
-  components,
-  componentsProps,
   slots,
   slotProps,
   loading,
@@ -85,11 +89,40 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   timeSteps,
   skipDisabled,
   timeViewsCount,
+  shouldRenderTimeInASingleColumn,
 }: DateTimeViewRendererProps<TDate>) => {
-  const isActionBarVisible = !!resolveComponentProps(
-    slotProps?.actionBar ?? componentsProps?.actionBar,
-    {} as any,
-  )?.actions?.length;
+  const isActionBarVisible = !!resolveComponentProps(slotProps?.actionBar, {} as any)?.actions
+    ?.length;
+  const commonTimeProps = {
+    view: isInternalTimeView(view) ? view : 'hours',
+    onViewChange,
+    focusedView: focusedView && isInternalTimeView(focusedView) ? focusedView : null,
+    onFocusedViewChange,
+    views: views.filter(isInternalTimeView),
+    value,
+    defaultValue,
+    referenceDate,
+    onChange,
+    className,
+    classes,
+    disableFuture,
+    disablePast,
+    minTime,
+    maxTime,
+    shouldDisableTime,
+    shouldDisableClock,
+    minutesStep,
+    ampm,
+    slots,
+    slotProps,
+    readOnly,
+    disabled,
+    autoFocus,
+    disableIgnoringDatePartForTimeValidation,
+    timeSteps,
+    skipDisabled,
+    timezone,
+  };
   return (
     <React.Fragment>
       <DateTimeViewWrapper>
@@ -118,8 +151,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
           onYearChange={onYearChange}
           yearsPerRow={yearsPerRow}
           defaultCalendarMonth={defaultCalendarMonth}
-          components={components}
-          componentsProps={componentsProps}
           slots={slots}
           slotProps={slotProps}
           loading={loading}
@@ -138,46 +169,34 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
         {timeViewsCount > 0 && (
           <React.Fragment>
             <Divider orientation="vertical" />
-            <MultiSectionDigitalClock
-              view={isInternalTimeView(view) ? view : 'hours'}
-              onViewChange={onViewChange}
-              focusedView={focusedView && isInternalTimeView(focusedView) ? focusedView : null}
-              onFocusedViewChange={onFocusedViewChange}
-              views={views.filter(isInternalTimeView)}
-              value={value}
-              defaultValue={defaultValue}
-              referenceDate={referenceDate}
-              onChange={onChange}
-              className={className}
-              classes={classes}
-              disableFuture={disableFuture}
-              disablePast={disablePast}
-              minTime={minTime}
-              maxTime={maxTime}
-              shouldDisableTime={shouldDisableTime}
-              shouldDisableClock={shouldDisableClock}
-              minutesStep={minutesStep}
-              ampm={ampm}
-              components={components}
-              componentsProps={componentsProps}
-              slots={slots}
-              slotProps={slotProps}
-              readOnly={readOnly}
-              disabled={disabled}
-              sx={{
-                borderBottom: 0,
-                width: 'auto',
-                [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-                  maxHeight: '100%',
-                },
-                ...(Array.isArray(sx) ? sx : [sx]),
-              }}
-              autoFocus={autoFocus}
-              disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
-              timeSteps={timeSteps}
-              skipDisabled={skipDisabled}
-              timezone={timezone}
-            />
+            {shouldRenderTimeInASingleColumn
+              ? renderDigitalClockTimeView({
+                  ...commonTimeProps,
+                  view: 'hours',
+                  views: ['hours'],
+                  focusedView: focusedView && isInternalTimeView(focusedView) ? 'hours' : null,
+                  sx: {
+                    width: 'auto',
+                    [`&.${digitalClockClasses.root}`]: {
+                      maxHeight: VIEW_HEIGHT,
+                    },
+                    ...(Array.isArray(sx) ? sx : [sx]),
+                  },
+                })
+              : renderMultiSectionDigitalClockTimeView({
+                  ...commonTimeProps,
+                  view: isInternalTimeView(view) ? view : 'hours',
+                  views: views.filter(isInternalTimeView),
+                  focusedView: focusedView && isInternalTimeView(focusedView) ? focusedView : null,
+                  sx: {
+                    borderBottom: 0,
+                    width: 'auto',
+                    [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+                      maxHeight: '100%',
+                    },
+                    ...(Array.isArray(sx) ? sx : [sx]),
+                  },
+                })}
           </React.Fragment>
         )}
       </DateTimeViewWrapper>

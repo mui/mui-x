@@ -6,6 +6,7 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { gridExpandedRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
+import { GridValidRowModel } from '../../../models/gridRows';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridColumnDefinitionsSelector,
@@ -14,7 +15,7 @@ import {
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { getColumnsToExport } from './utils';
+import { defaultGetRowsToExport, getColumnsToExport } from './utils';
 import { mergeStateWithPaginationModel } from '../pagination/useGridPagination';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
@@ -22,6 +23,7 @@ import {
   GridPrintExportMenuItem,
 } from '../../../components/toolbar/GridToolbarExport';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 
 function raf() {
   return new Promise<void>((resolve) => {
@@ -35,7 +37,13 @@ type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
   options?: Pick<
     GridPrintExportOptions,
-    'copyStyles' | 'bodyClassName' | 'pageStyle' | 'hideToolbar' | 'hideFooter'
+    | 'copyStyles'
+    | 'bodyClassName'
+    | 'pageStyle'
+    | 'hideToolbar'
+    | 'hideFooter'
+    | 'includeCheckboxes'
+    | 'getRowsToExport'
   >,
 ) => void;
 
@@ -62,6 +70,7 @@ export const useGridPrintExport = (
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
   const previousColumnVisibility = React.useRef<{ [key: string]: boolean }>({});
+  const previousRows = React.useRef<GridValidRowModel[]>([]);
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
@@ -70,7 +79,7 @@ export const useGridPrintExport = (
   // Returns a promise because updateColumns triggers state update and
   // the new state needs to be in place before the grid can be sized correctly
   const updateGridColumnsForPrint = React.useCallback(
-    (fields?: string[], allColumns?: boolean) =>
+    (fields?: string[], allColumns?: boolean, includeCheckboxes?: boolean) =>
       new Promise<void>((resolve) => {
         const exportedColumnFields = getColumnsToExport({
           apiRef,
@@ -84,9 +93,22 @@ export const useGridPrintExport = (
           newColumnVisibilityModel[column.field] = exportedColumnFields.includes(column.field);
         });
 
+        if (includeCheckboxes) {
+          newColumnVisibilityModel[GRID_CHECKBOX_SELECTION_COL_DEF.field] = true;
+        }
+
         apiRef.current.setColumnVisibilityModel(newColumnVisibilityModel);
         resolve();
       }),
+    [apiRef],
+  );
+
+  const updateGridRowsForPrint = React.useCallback(
+    (getRowsToExport: NonNullable<GridPrintExportOptions['getRowsToExport']>) => {
+      const rowsToExportIds = getRowsToExport({ apiRef });
+      const newRows = rowsToExportIds.map((id) => apiRef.current.getRow(id));
+      apiRef.current.setRows(newRows);
+    },
     [apiRef],
   );
 
@@ -96,6 +118,7 @@ export const useGridPrintExport = (
         copyStyles: true,
         hideToolbar: false,
         hideFooter: false,
+        includeCheckboxes: false,
         ...options,
       };
 
@@ -141,14 +164,24 @@ export const useGridPrintExport = (
       }
 
       // Expand container height to accommodate all rows
-      gridClone.style.height = `${
+      const computedTotalHeight =
         rowsMeta.currentPageTotalHeight +
         getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
         gridToolbarElementHeight +
-        gridFooterElementHeight
-      }px`;
+        gridFooterElementHeight;
+      gridClone.style.height = `${computedTotalHeight}px`;
       // The height above does not include grid border width, so we need to exclude it
       gridClone.style.boxSizing = 'content-box';
+
+      // the footer is always being placed at the bottom of the page as if all rows are exported
+      // so if getRowsToExport is being used to only export a subset of rows then we need to
+      // adjust the footer position to be correctly placed at the bottom of the grid
+      const gridFooterElement: HTMLElement | null = gridClone.querySelector(
+        `.${gridClasses.footerContainer}`,
+      );
+      gridFooterElement!.style.position = 'absolute';
+      gridFooterElement!.style.width = '100%';
+      gridFooterElement!.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
 
       // printDoc.body.appendChild(gridClone); should be enough but a clone isolation bug in Safari
       // prevents us to do it
@@ -244,11 +277,13 @@ export const useGridPrintExport = (
         apiRef.current.setColumnVisibilityModel(previousColumnVisibility.current);
       }
 
-      apiRef.current.unstable_enableVirtualization();
+      apiRef.current.unstable_setVirtualization(true);
+      apiRef.current.setRows(previousRows.current);
 
       // Clear local state
       previousGridState.current = null;
       previousColumnVisibility.current = {};
+      previousRows.current = [];
     },
     [apiRef],
   );
@@ -264,6 +299,7 @@ export const useGridPrintExport = (
       previousGridState.current = apiRef.current.exportState();
       // It appends that the visibility model is not exported, especially if columnVisibility is not controlled
       previousColumnVisibility.current = gridColumnVisibilityModelSelector(apiRef);
+      previousRows.current = apiRef.current.getSortedRows();
 
       if (props.pagination) {
         const visibleRowCount = gridExpandedRowCountSelector(apiRef);
@@ -279,8 +315,15 @@ export const useGridPrintExport = (
         apiRef.current.forceUpdate();
       }
 
-      await updateGridColumnsForPrint(options?.fields, options?.allColumns);
-      apiRef.current.unstable_disableVirtualization();
+      await updateGridColumnsForPrint(
+        options?.fields,
+        options?.allColumns,
+        options?.includeCheckboxes,
+      );
+
+      updateGridRowsForPrint(options?.getRowsToExport ?? defaultGetRowsToExport);
+
+      apiRef.current.unstable_setVirtualization(false);
       await raf(); // wait for the state changes to take action
       const printWindow = buildPrintWindow(options?.fileName);
       if (process.env.NODE_ENV === 'test') {
@@ -310,6 +353,7 @@ export const useGridPrintExport = (
       handlePrintWindowLoad,
       handlePrintWindowAfterPrint,
       updateGridColumnsForPrint,
+      updateGridRowsForPrint,
     ],
   );
 

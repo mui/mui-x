@@ -15,7 +15,7 @@ import {
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
@@ -75,7 +75,7 @@ describe('<DataGridPro /> - Filter', () => {
     ],
   };
 
-  it('componentsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
+  it('slotProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
     const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
       // remove already filtered fields from list of columns
       const filteredFields = currentFilters?.map((item) => item.field);
@@ -103,8 +103,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
@@ -132,8 +132,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             getColumnForNewFilter,
           },
@@ -158,8 +158,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
@@ -352,7 +352,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        componentsProps={{
+        slotProps={{
           filterPanel: {
             disableAddFilterButton: true,
           },
@@ -372,7 +372,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        componentsProps={{
+        slotProps={{
           filterPanel: {
             disableRemoveAllButton: true,
           },
@@ -883,7 +883,7 @@ describe('<DataGridPro /> - Filter', () => {
       const filterCell = getColumnHeaderCell(0, 1);
       const filterCellInput = filterCell.querySelector('input')!;
       expect(filterCellInput).not.toHaveFocus();
-      fireEvent.mouseDown(filterCell);
+      fireEvent.mouseDown(filterCellInput);
       expect(filterCellInput).toHaveFocus();
       fireEvent.change(filterCellInput, { target: { value: 'ad' } });
       clock.tick(SUBMIT_FILTER_STROKE_TIME);

@@ -4,13 +4,28 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import { DateFieldProps } from './DateField.types';
+import {
+  DateFieldProps,
+  DateFieldSlotsComponent,
+  DateFieldSlotsComponentsProps,
+} from './DateField.types';
 import { useDateField } from './useDateField';
+import { useClearableField } from '../hooks';
 
 type DateFieldComponent = (<TDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateField](http://mui.com/x/react-date-pickers/date-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ *
+ * - [DateField API](https://mui.com/x/api/date-pickers/date-field/)
+ */
 const DateField = React.forwardRef(function DateField<TDate>(
   inProps: DateFieldProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -20,15 +35,14 @@ const DateField = React.forwardRef(function DateField<TDate>(
     name: 'MuiDateField',
   });
 
-  const { components, componentsProps, slots, slotProps, InputProps, inputProps, ...other } =
-    themeProps;
+  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? MuiTextField;
   const { inputRef: externalInputRef, ...textFieldProps }: DateFieldProps<TDate> = useSlotProps({
     elementType: TextField,
-    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
@@ -43,17 +57,36 @@ const DateField = React.forwardRef(function DateField<TDate>(
     onKeyDown,
     inputMode,
     readOnly,
+    clearable,
+    onClear,
     ...fieldProps
   } = useDateField<TDate, typeof textFieldProps>({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
+    typeof fieldProps,
+    typeof fieldProps.InputProps,
+    DateFieldSlotsComponent,
+    DateFieldSlotsComponentsProps<TDate>
+  >({
+    onClear,
+    clearable,
+    fieldProps,
+    InputProps: fieldProps.InputProps,
+    slots,
+    slotProps,
+  });
+
   return (
     <TextField
       ref={ref}
-      {...fieldProps}
-      InputProps={{ ...fieldProps.InputProps, readOnly }}
+      {...processedFieldProps}
+      InputProps={{
+        ...ProcessedInputProps,
+        readOnly,
+      }}
       inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
     />
   );
@@ -71,25 +104,18 @@ DateField.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable: PropTypes.bool,
+  /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
-   * [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+   * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   component: PropTypes.elementType,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -199,6 +225,10 @@ DateField.propTypes = {
    */
   onChange: PropTypes.func,
   /**
+   * Callback fired when the clear button is clicked.
+   */
+  onClear: PropTypes.func,
+  /**
    * Callback fired when the error associated to the current value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
@@ -259,6 +289,9 @@ DateField.propTypes = {
   ]),
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.

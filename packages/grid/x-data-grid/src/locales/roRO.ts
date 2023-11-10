@@ -86,7 +86,7 @@ const roROGrid: Partial<GridLocaleText> = {
   headerFilterOperatorIs: 'Este',
   headerFilterOperatorNot: 'Nu este',
   headerFilterOperatorAfter: 'Este după',
-  headerFilterOperatorOnOrAfter: 'Este la sau „după”',
+  headerFilterOperatorOnOrAfter: 'Este la sau după',
   headerFilterOperatorBefore: 'Este înainte de',
   headerFilterOperatorOnOrBefore: 'este la sau înainte de',
   headerFilterOperatorIsEmpty: 'Este gol',

@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
-import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
-import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { describeConformance, screen, userEvent } from '@mui-internal/test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -10,9 +7,12 @@ import {
   getTextbox,
   expectInputPlaceholder,
   expectInputValue,
+  describePicker,
+  describeValue,
+  describeRangeValidation,
 } from 'test/utils/pickers';
+import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

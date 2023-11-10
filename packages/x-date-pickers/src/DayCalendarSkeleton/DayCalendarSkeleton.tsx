@@ -84,10 +84,9 @@ const monthMap = [
 ];
 
 /**
- *
  * Demos:
  *
- * - [Date Picker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
  *
  * API:
  *

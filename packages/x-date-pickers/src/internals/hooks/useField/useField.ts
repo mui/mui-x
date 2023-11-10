@@ -55,6 +55,9 @@ export const useField = <
       onMouseUp,
       onPaste,
       error,
+      clearable,
+      onClear,
+      disabled,
       ...otherForwardedProps
     },
     fieldValueManager,
@@ -100,12 +103,17 @@ export const useField = <
       );
     }
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
-
     setSelectedSections(sectionIndex);
   };
 
-  const handleInputClick = useEventCallback((...args) => {
-    onClick?.(...(args as []));
+  const handleInputClick = useEventCallback((event: React.MouseEvent, ...args) => {
+    // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
+    // We avoid this by checking if the call of `handleInputClick` is actually intended, or a side effect.
+    if (event.isDefaultPrevented()) {
+      return;
+    }
+
+    onClick?.(event, ...(args as []));
     syncSelectionFromDOM();
   });
 
@@ -194,6 +202,12 @@ export const useField = <
     }
 
     const targetValue = event.target.value;
+    if (targetValue === '') {
+      resetCharacterQuery();
+      clearValue();
+      return;
+    }
+
     const eventData = (event.nativeEvent as InputEvent).data;
     // Calling `.fill(04/11/2022)` in playwright will trigger a change event with the requested content to insert in `event.nativeEvent.data`
     // usual changes have only the currently typed character in the `event.nativeEvent.data`
@@ -259,8 +273,14 @@ export const useField = <
       );
     }
 
-    if (isAndroid() && keyPressed.length === 0) {
-      setTempAndroidValueStr(valueStr);
+    if (keyPressed.length === 0) {
+      if (isAndroid()) {
+        setTempAndroidValueStr(valueStr);
+      } else {
+        resetCharacterQuery();
+        clearActiveSection();
+      }
+
       return;
     }
 
@@ -318,7 +338,7 @@ export const useField = <
       }
 
       // Reset the value of the selected section
-      case ['Backspace', 'Delete'].includes(event.key): {
+      case event.key === 'Delete': {
         event.preventDefault();
 
         if (readOnly) {
@@ -476,8 +496,12 @@ export const useField = <
   }, [selectedSectionIndexes, state.sections]);
 
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
-  const shouldShowPlaceholder =
-    !inputHasFocus && valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
+  const areAllSectionsEmpty = valueManager.areValuesEqual(
+    utils,
+    state.value,
+    valueManager.emptyValue,
+  );
+  const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
 
   React.useImperativeHandle(unstableFieldRef, () => ({
     getSections: () => state.sections,
@@ -499,9 +523,18 @@ export const useField = <
     setSelectedSections: (activeSectionIndex) => setSelectedSections(activeSectionIndex),
   }));
 
+  const handleClearValue = useEventCallback((event: React.MouseEvent, ...args) => {
+    event.preventDefault();
+    onClear?.(event, ...(args as []));
+    clearValue();
+    inputRef?.current?.focus();
+    setSelectedSections(0);
+  });
+
   return {
     placeholder,
     autoComplete: 'off',
+    disabled: Boolean(disabled),
     ...otherForwardedProps,
     value: shouldShowPlaceholder ? '' : valueStr,
     inputMode,
@@ -513,7 +546,9 @@ export const useField = <
     onChange: handleInputChange,
     onKeyDown: handleInputKeyDown,
     onMouseUp: handleInputMouseUp,
+    onClear: handleClearValue,
     error: inputError,
     ref: handleRef,
+    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 };

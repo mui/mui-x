@@ -475,7 +475,7 @@ export const doesSectionFormatHaveLeadingZeros = <TDate>(
     }
 
     case 'seconds': {
-      return utils.formatByString(utils.setMinutes(now, 1), format).length > 1;
+      return utils.formatByString(utils.setSeconds(now, 1), format).length > 1;
     }
 
     default: {
@@ -591,7 +591,12 @@ export const splitFormatIntoSections = <TDate>(
   const escapedParts = getEscapedPartsFromFormat(utils, expandedFormat);
 
   // This RegExp test if the beginning of a string correspond to a supported token
-  const isTokenStartRegExp = new RegExp(`^(${Object.keys(utils.formatTokenMap).join('|')})`);
+  const isTokenStartRegExp = new RegExp(
+    `^(${Object.keys(utils.formatTokenMap)
+      .sort((a, b) => b.length - a.length) // Sort to put longest word first
+      .join('|')})`,
+    'g', // used to get access to lastIndex state
+  );
 
   let currentTokenValue = '';
 
@@ -603,8 +608,11 @@ export const splitFormatIntoSections = <TDate>(
     const char = expandedFormat[i];
     const isEscapedChar = escapedPartOfCurrentChar != null;
     const potentialToken = `${currentTokenValue}${expandedFormat.slice(i)}`;
-    if (!isEscapedChar && char.match(/([A-Za-z]+)/) && isTokenStartRegExp.test(potentialToken)) {
-      currentTokenValue += char;
+    const regExpMatch = isTokenStartRegExp.test(potentialToken);
+
+    if (!isEscapedChar && char.match(/([A-Za-z]+)/) && regExpMatch) {
+      currentTokenValue = potentialToken.slice(0, isTokenStartRegExp.lastIndex);
+      i += isTokenStartRegExp.lastIndex - 1;
     } else {
       // If we are on the opening or closing character of an escaped part of the format,
       // Then we ignore this character.

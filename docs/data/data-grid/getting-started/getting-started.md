@@ -6,6 +6,10 @@
 
 Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-data-grid-premium` for the commercial version, or `@mui/x-data-grid` for the free community version.
 
+:::warning
+The `next` tag is used to download the latest v7 **pre-release** version.
+:::
+
 {{"component": "modules/components/DataGridInstallationInstructions.js"}}
 
 The Data Grid package has a peer dependency on `@mui/material`.
@@ -56,7 +60,7 @@ pnpm add @mui/styled-engine-sc styled-components
 
 </codeblock>
 
-Take a look at the [Styled engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
+Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
 ## Quickstart
 
@@ -178,6 +182,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column groups](/x/react-data-grid/column-groups/)                                     |    ✅     |                 ✅                 |                     ✅                     |
 | [Column spanning](/x/react-data-grid/column-spanning/)                                 |    ✅     |                 ✅                 |                     ✅                     |
 | [Column resizing](/x/react-data-grid/column-dimensions/#resizing)                      |    ❌     |                 ✅                 |                     ✅                     |
+| [Column autosizing](/x/react-data-grid/column-dimensions/#autosizing)                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/x/react-data-grid/column-ordering/)                                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                |           |                                    |                                            |

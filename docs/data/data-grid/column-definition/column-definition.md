@@ -121,7 +121,7 @@ const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    renderCell: (params: GridRenderCellParams<Date>) => (
+    renderCell: (params: GridRenderCellParams<any, Date>) => (
       <strong>
         {params.value.getFullYear()}
         <Button
@@ -302,26 +302,9 @@ However, some types require additional properties to be set to make them work co
 
 {{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
 
-## Custom column types
+### Custom column types
 
-You can extend the native column types with your own by simply spreading the necessary properties.
-
-The demo below defines a new column type: `usdPrice` that extends the native `number` column type.
-
-```ts
-const usdPrice: GridColTypeDef = {
-  type: 'number',
-  width: 130,
-  valueFormatter: ({ value }) => valueFormatter.format(Number(value)),
-  cellClassName: 'font-tabular-nums',
-};
-```
-
-{{"demo": "CustomColumnTypesGrid.js", "bg": "inline"}}
-
-:::info
-If an unsupported column type is used, the `string` column type will be used instead.
-:::
+Please refer to the [custom columns](/x/react-data-grid/custom-columns/) page for documentation and integration examples.
 
 ## Selectors
 

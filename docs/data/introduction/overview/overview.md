@@ -4,7 +4,7 @@ title: Overview
 
 # MUI X - Overview
 
-<p class="description">MUI X is a collection of advanced React UI components for complex use cases.</p>
+<p class="description">MUI X is a collection of advanced React UI components for complex use cases. Use the native integration with Material UI or extend your design system.</p>
 
 ## Introduction
 

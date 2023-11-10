@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireTouchChangedEvent, screen, userEvent, act } from '@mui/monorepo/test/utils';
+import { fireTouchChangedEvent, screen, userEvent, act } from '@mui-internal/test-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
@@ -32,7 +32,7 @@ describe('<MobileTimePicker />', () => {
           ampm
           onChange={handleChange}
           open
-          componentsProps={{ toolbar: { hidden: false } }}
+          slotProps={{ toolbar: { hidden: false } }}
           value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
         />,
       );

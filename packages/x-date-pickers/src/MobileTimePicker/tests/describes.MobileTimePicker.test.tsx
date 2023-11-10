@@ -4,9 +4,7 @@ import {
   screen,
   userEvent,
   fireTouchChangedEvent,
-} from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+} from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,
@@ -16,9 +14,12 @@ import {
   openPicker,
   getClockTouchEvent,
   getTextbox,
+  describeValidation,
+  describeValue,
+  describePicker,
+  formatFullTimeValue,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -73,7 +74,7 @@ describe('<MobileTimePicker /> - Describes', () => {
         expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
       const expectedValueStr = expectedValue
-        ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+        ? formatFullTimeValue(adapterToUse, expectedValue)
         : '';
 
       expectInputValue(input, expectedValueStr);

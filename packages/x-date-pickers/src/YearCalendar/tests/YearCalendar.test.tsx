@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { act, fireEvent, screen } from '@mui-internal/test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
@@ -11,7 +11,7 @@ describe('<YearCalendar />', () => {
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
     render(<YearCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChange} />);
-    const targetYear = screen.getByRole('button', { name: '2025' });
+    const targetYear = screen.getByRole('radio', { name: '2025' });
 
     // A native button implies Enter and Space keydown behavior
     // These keydown events only trigger click behavior if they're trusted (programmatically dispatched events aren't trusted).
@@ -30,7 +30,7 @@ describe('<YearCalendar />', () => {
     const onChange = spy();
     render(<YearCalendar onChange={onChange} />);
 
-    fireEvent.click(screen.getByRole('button', { name: '2025' }));
+    fireEvent.click(screen.getByRole('radio', { name: '2025' }));
 
     expect(onChange.callCount).to.equal(1);
     expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 0, 1, 0, 0, 0, 0));
@@ -45,7 +45,7 @@ describe('<YearCalendar />', () => {
         readOnly
       />,
     );
-    const targetYear = screen.getByRole('button', { name: '2025' });
+    const targetYear = screen.getByRole('radio', { name: '2025' });
     expect(targetYear.tagName).to.equal('BUTTON');
 
     fireEvent.click(targetYear);
@@ -64,7 +64,7 @@ describe('<YearCalendar />', () => {
         />,
       );
 
-      screen.getAllByRole('button').forEach((monthButton) => {
+      screen.getAllByRole('radio').forEach((monthButton) => {
         expect(monthButton).to.have.attribute('disabled');
         fireEvent.click(monthButton);
         expect(onChange.callCount).to.equal(0);
@@ -144,7 +144,7 @@ describe('<YearCalendar />', () => {
       />,
     );
 
-    const button2019 = screen.getByRole('button', { name: '2019' });
+    const button2019 = screen.getByRole('radio', { name: '2019' });
 
     act(() => button2019.focus());
     fireEvent.keyDown(button2019, { key: 'ArrowLeft' });
@@ -168,5 +168,11 @@ describe('<YearCalendar />', () => {
 
     expect(year2019).not.to.have.attribute('disabled');
     expect(year2020).to.have.attribute('disabled');
+  });
+
+  it('should not mark the `referenceDate` year as selected', () => {
+    render(<YearCalendar referenceDate={adapterToUse.date(new Date(2018, 1, 2))} />);
+
+    expect(screen.getByRole('radio', { name: '2018', checked: false })).to.not.equal(null);
   });
 });

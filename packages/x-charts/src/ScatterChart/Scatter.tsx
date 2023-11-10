@@ -18,6 +18,16 @@ export interface ScatterProps {
   color: string;
 }
 
+/**
+ * Demos:
+ *
+ * - [Scatter](https://mui.com/x/react-charts/scatter/)
+ * - [Scatter demonstration](https://mui.com/x/react-charts/scatter-demo/)
+ *
+ * API:
+ *
+ * - [Scatter API](https://mui.com/x/api/charts/scatter/)
+ */
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, markerSize } = props;
 

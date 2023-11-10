@@ -48,6 +48,16 @@ type MultiSectionDigitalClockComponent = (<TDate>(
   props: MultiSectionDigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [DigitalClock](https://mui.com/x/react-date-pickers/digital-clock/)
+ *
+ * API:
+ *
+ * - [MultiSectionDigitalClock API](https://mui.com/x/api/date-pickers/multi-section-digital-clock/)
+ */
 export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDigitalClock<
   TDate extends unknown,
 >(inProps: MultiSectionDigitalClockProps<TDate>, ref: React.Ref<HTMLDivElement>) {
@@ -62,8 +72,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     ampm = utils.is12HourCycleInCurrentLocale(),
     timeSteps: inTimeSteps,
     autoFocus,
-    components,
-    componentsProps,
     slots,
     slotProps,
     value: valueProp,
@@ -294,6 +302,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               isDisabled: (hours) => disabled || isTimeDisabled(hours, 'hours'),
               timeStep: timeSteps.hours,
               resolveAriaLabel: localeText.hoursClockNumberText,
+              valueOrReferenceDate,
             }),
           };
         }
@@ -340,12 +349,14 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
                 value: 'am',
                 label: amLabel,
                 isSelected: () => !!value && meridiemMode === 'am',
+                isFocused: () => !!valueOrReferenceDate && meridiemMode === 'am',
                 ariaLabel: amLabel,
               },
               {
                 value: 'pm',
                 label: pmLabel,
                 isSelected: () => !!value && meridiemMode === 'pm',
+                isFocused: () => !!valueOrReferenceDate && meridiemMode === 'pm',
                 ariaLabel: pmLabel,
               },
             ],
@@ -402,8 +413,8 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           autoFocus={autoFocus ?? focusedView === timeView}
           disabled={disabled}
           readOnly={readOnly}
-          slots={slots ?? components}
-          slotProps={slotProps ?? componentsProps}
+          slots={slots}
+          slotProps={slotProps}
           skipDisabled={skipDisabled}
           aria-label={localeText.selectViewText(timeView as TimeViewWithMeridiem)}
         />
@@ -434,18 +445,6 @@ MultiSectionDigitalClock.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overrideable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default selected value.
    * Used when the component is not controlled.

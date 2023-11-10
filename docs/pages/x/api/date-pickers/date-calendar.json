@@ -1,24 +1,12 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()",
+      "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(day: string) => string",
-        "describedArgs": ["day"],
+        "type": "function(day: string, date: TDate) => string",
+        "describedArgs": ["day", "date"],
         "returned": "string"
       }
     },
@@ -153,13 +141,13 @@
     {
       "class": null,
       "name": "calendarHeader",
-      "description": "Custom component for calendar header.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
       "default": "PickersCalendarHeader"
     },
     {
       "class": null,
       "name": "day",
-      "description": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+      "description": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
       "default": "PickersDay"
     },
     {
@@ -214,5 +202,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateCalendar/DateCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li>\n<li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }

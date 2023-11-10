@@ -88,13 +88,10 @@ There are a few ways to include or hide other columns.
 
 ## Exported rows
 
-:::warning
-This section only applies to the CSV and the Excel export.
-The print export always prints rows in their current state.
-:::
-
 By default, the data grid exports the selected rows if there are any.
 If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
+
+### Customizing the rows to export
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
@@ -186,7 +183,7 @@ With `pageStyle` option, you can override the main content color with a [more sp
 
 ### Customize grid display
 
-By default, the print export display all the DataGrid. It is possible to remove the footer and the toolbar by setting respectively `hideFooter` and `hideToolbar` to `true`.
+By default, the print export displays all the DataGrid. It is possible to remove the footer and the toolbar by setting respectively `hideFooter` and `hideToolbar` to `true`.
 
 ```jsx
 <GridToolbarExport
@@ -197,7 +194,17 @@ By default, the print export display all the DataGrid. It is possible to remove 
 />
 ```
 
-For more option to customize the print export, please visit the [`printOptions` API page](/x/api/data-grid/grid-print-export-options/).
+If rows are selected when exporting, the checkboxes will not be included in the printed page. To export the checkboxes you can set `includeCheckboxes` to `true`.
+
+```jsx
+<GridToolbarExport
+  printOptions={{
+    includeCheckboxes: true,
+  }}
+/>
+```
+
+For more options to customize the print export, please visit the [`printOptions` API page](/x/api/data-grid/grid-print-export-options/).
 
 ## Custom export format
 

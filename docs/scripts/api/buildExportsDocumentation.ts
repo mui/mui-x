@@ -1,13 +1,13 @@
 import path from 'path';
 import * as ts from 'typescript';
 import { writePrettifiedFile, resolveExportSpecifier } from './utils';
-import { Project, Projects } from '../getTypeScriptProjects';
+import { XTypeScriptProject, XTypeScriptProjects } from '../createXTypeScriptProjects';
 
 interface BuildExportsDocumentationOptions {
-  projects: Projects;
+  projects: XTypeScriptProjects;
 }
 
-const buildPackageExports = (project: Project) => {
+const buildPackageExports = (project: XTypeScriptProject) => {
   const syntaxKindToSyntaxName = {};
   Object.entries(ts.SyntaxKind).forEach(([syntaxName, syntaxKind]) => {
     syntaxKindToSyntaxName[syntaxKind] = syntaxName.replace('Declaration', '');

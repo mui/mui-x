@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent, describeConformance } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { screen, userEvent, describeConformance } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,
@@ -9,9 +7,12 @@ import {
   expectInputValue,
   expectInputPlaceholder,
   getTextbox,
+  describeValidation,
+  describeValue,
+  describePicker,
+  formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -68,9 +69,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
       }
       expectInputValue(
         input,
-        expectedValue
-          ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
-          : '',
+        expectedValue ? formatFullTimeValue(adapterToUse, expectedValue) : '',
       );
     },
     setNewValue: (value, { isOpened, applySameValue, selectSection }) => {

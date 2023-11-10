@@ -3,7 +3,14 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [
+    {
+      "class": null,
+      "name": "area",
+      "description": "The component that renders the root.",
+      "default": "AreaElementPath"
+    }
+  ],
   "name": "AreaElement",
   "imports": [
     "import { AreaElement } from '@mui/x-charts/LineChart';",

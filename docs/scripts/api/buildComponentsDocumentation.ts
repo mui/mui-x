@@ -1,4 +1,8 @@
-import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
+import { getPropTypesFromFile } from '@mui/monorepo/packages/typescript-to-proptypes';
+import {
+  UnionType,
+  InterfaceType,
+} from '@mui/monorepo/packages/typescript-to-proptypes/src/models';
 import * as fse from 'fs-extra';
 import fs from 'fs';
 import path from 'path';
@@ -14,20 +18,15 @@ import generatePropTypeDescription, {
 } from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
 import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
-import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse } from 'react-docgen';
-import {
-  renderInline as renderMarkdownInline,
-  getHeaders,
-  getTitle,
-} from '@mui/monorepo/packages/markdown';
+import { renderMarkdown, getHeaders, getTitle } from '@mui/monorepo/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-builder/ApiBuilders/ComponentApiBuilder';
 import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
-import { Project, Projects } from '../getTypeScriptProjects';
+import { XTypeScriptProject, XTypeScriptProjects } from '../createXTypeScriptProjects';
 import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
 type CoreReactApiProps = CoreReactApi['propsTable'][string];
@@ -73,45 +72,50 @@ function extractSlots(options: {
   filename: string;
   name: string;
   displayName: string;
-  project: Project;
+  project: XTypeScriptProject;
 }) {
   const { filename, name: componentName, displayName, project } = options;
   const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
-  const proptypes = ttp.parseFromProgram(filename, project.program, {
+  const components = getPropTypesFromFile({
+    filePath: filename,
+    project,
     checkDeclarations: true,
     shouldResolveObject: ({ name }) => {
-      return name === 'components';
+      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
+      return name === 'slots' || name === 'components';
     },
     shouldInclude: ({ name, depth }) => {
       // The keys allowed in the `components` prop have depth=2
-      return name === 'components' || depth === 2;
+      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
+      return name === 'slots' || name === 'components' || depth === 2;
     },
   });
 
-  const props = proptypes.body.find((prop) => prop.name === displayName);
+  const props = components.find((prop) => prop.name === displayName);
   if (!props) {
     throw new Error(`No proptypes found for \`${displayName}\``);
   }
 
-  const componentsProps = props.types.find((type) => type.name === 'components')!;
+  const componentsProps = props.types.find(
+    // TODO v7: Remove the `components` fallback once `slots` is used everywhere
+    (type) => type.name === 'slots' || type.name === 'components',
+  )!;
   if (!componentsProps) {
     return slots;
   }
 
-  const propType = componentsProps.propType as ttp.UnionType;
+  const propType = componentsProps.propType as UnionType;
   const propInterface = propType.types.find((type) => type.type === 'InterfaceNode');
   if (!propInterface) {
     throw new Error(`The \`components\` prop in \`${componentName}\` is not an interface.`);
   }
 
-  const types = [...(propInterface as ttp.InterfaceType).types].sort((a, b) =>
-    a[0] > b[0] ? 1 : -1,
-  );
+  const types = [...(propInterface as InterfaceType).types].sort((a, b) => (a[0] > b[0] ? 1 : -1));
 
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
-    const description = renderMarkdownInline(parsed.description);
+    const description = renderMarkdown(parsed.description);
     const defaultValue = getJsdocDefaultValue(parsed);
 
     let type: string | undefined;
@@ -129,12 +133,7 @@ function extractSlots(options: {
       return;
     }
 
-    // Workaround to generate correct (camelCase) keys for slots in v6 `API Reference` documentation
-    // TODO v7: Remove camelCase once `Grid(Pro|Premium)SlotsComponent` type is refactored to have `camelCase` names
-    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedGridSlotsComponent`
-    const slotName = camelCase(name);
-
-    slots[slotName] = {
+    slots[name] = {
       type,
       description,
       default: defaultValue,
@@ -284,8 +283,8 @@ function getComponentImports(name: string, filename: string): string[] {
 
 const buildComponentDocumentation = async (options: {
   filename: string;
-  project: Project;
-  projects: Projects;
+  project: XTypeScriptProject;
+  projects: XTypeScriptProjects;
   apiPagesFolder: string;
   documentedInterfaces: DocumentedInterfaces;
   pagesMarkdown: ReadonlyArray<PageMarkdown>;
@@ -371,7 +370,7 @@ const buildComponentDocumentation = async (options: {
         signatureReturn,
         requiresRef,
       } = generatePropDescription(prop, propName);
-      let description = renderMarkdownInline(jsDocText);
+      let description = renderMarkdown(jsDocText);
 
       const additionalInfo: CoreReactApiProps['additionalInfo'] = {};
       if (propName === 'classes') {
@@ -393,7 +392,7 @@ const buildComponentDocumentation = async (options: {
         .concat(signatureReturn || [])
         .forEach(({ name, description: paramDescription }) => {
           typeDescriptions[name] = linkify(
-            renderMarkdownInline(paramDescription),
+            renderMarkdown(paramDescription),
             documentedInterfaces,
             'html',
           );
@@ -453,8 +452,7 @@ const buildComponentDocumentation = async (options: {
           // undefined values are not serialized => saving some bytes
           required: requiredProp || undefined,
           deprecated: !!deprecation || undefined,
-          deprecationInfo:
-            renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
+          deprecationInfo: renderMarkdown(deprecation?.groups?.info || '').trim() || undefined,
           signature,
           additionalInfo: Object.keys(additionalInfo).length === 0 ? undefined : additionalInfo,
         },
@@ -482,7 +480,8 @@ const buildComponentDocumentation = async (options: {
   /**
    * Slot descriptions.
    */
-  if (componentApi.propDescriptions.components) {
+  // TODO v7: Remove the `components` fallback once `slots` is used everywhere
+  if (componentApi.propDescriptions.slots || componentApi.propDescriptions.components) {
     const slots = extractSlots({
       filename,
       name: reactApi.name, // e.g. DataGrid
@@ -624,7 +623,7 @@ Page.getInitialProps = () => {
 };
 
 interface BuildComponentsDocumentationOptions {
-  projects: Projects;
+  projects: XTypeScriptProjects;
   apiPagesFolder: string;
   dataFolder: string;
   documentedInterfaces: DocumentedInterfaces;

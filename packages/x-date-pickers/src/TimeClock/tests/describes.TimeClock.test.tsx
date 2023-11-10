@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { describeConformance, screen } from '@mui/monorepo/test/utils';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { describeConformance, screen } from '@mui-internal/test-utils';
 import {
   clockPointerClasses,
   TimeClock,
@@ -12,6 +11,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   timeClockHandler,
+  describeValue,
 } from 'test/utils/pickers';
 
 describe('<TimeClock /> - Describes', () => {

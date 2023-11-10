@@ -3,7 +3,6 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 import { styled } from '@mui/material/styles';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { MakeOptional } from '../models/helpers';
 
 const useChartDimensions = (
   inWidth?: number,
@@ -52,7 +51,7 @@ const useChartDimensions = (
     let animationFrame: number;
     const observer = new ResizeObserver(() => {
       // See https://github.com/mui/mui-x/issues/8733
-      animationFrame = window.requestAnimationFrame(() => {
+      animationFrame = requestAnimationFrame(() => {
         computeSize();
       });
     });
@@ -90,7 +89,19 @@ const useChartDimensions = (
   return [rootRef, inWidth ?? width, inHeight ?? height];
 };
 
-export type ResponsiveChartContainerProps = MakeOptional<ChartContainerProps, 'width' | 'height'>;
+export interface ResponsiveChartContainerProps
+  extends Omit<ChartContainerProps, 'width' | 'height'> {
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * @default undefined
+   */
+  width?: number;
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * @default undefined
+   */
+  height?: number;
+}
 
 const ResizableContainer = styled('div', {
   name: 'MuiResponsiveChart',
@@ -120,7 +131,9 @@ export const ResponsiveChartContainer = React.forwardRef(function ResponsiveChar
 
   return (
     <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
-      <ChartContainer {...other} width={width} height={height} ref={ref} />
+      {width && height ? (
+        <ChartContainer {...other} width={width} height={height} ref={ref} />
+      ) : null}
     </ResizableContainer>
   );
 });

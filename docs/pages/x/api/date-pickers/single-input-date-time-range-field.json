@@ -2,24 +2,13 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
+    "clearable": { "type": { "name": "bool" } },
     "color": {
       "type": {
         "name": "enum",
         "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
       },
       "default": "'primary'"
-    },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disabled": { "type": { "name": "bool" } },
@@ -64,6 +53,7 @@
         "describedArgs": ["value", "context"]
       }
     },
+    "onClear": { "type": { "name": "func" } },
     "onError": {
       "type": { "name": "func" },
       "signature": {
@@ -146,8 +136,20 @@
   "slots": [
     {
       "class": null,
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon"
+    },
+    {
+      "class": null,
       "name": "textField",
-      "description": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     }
   ],

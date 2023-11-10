@@ -8,7 +8,7 @@ import {
   describeConformance,
   fireTouchChangedEvent,
   userEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,
@@ -461,8 +461,8 @@ describe('<DateRangeCalendar />', () => {
     it('should render custom day component', () => {
       render(
         <DateRangeCalendar
-          components={{
-            Day: (day) => <div key={String(day)} data-testid="slot used" />,
+          slots={{
+            day: (day) => <div key={String(day)} data-testid="slot used" />,
           }}
         />,
       );

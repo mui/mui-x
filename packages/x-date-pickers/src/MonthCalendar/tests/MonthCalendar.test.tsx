@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireEvent, screen } from '@mui/monorepo/test/utils';
+import { fireEvent, screen } from '@mui-internal/test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
@@ -11,7 +11,7 @@ describe('<MonthCalendar />', () => {
   it('should allow to pick month standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
     render(<MonthCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChange} />);
-    const targetMonth = screen.getByRole('button', { name: 'Feb' });
+    const targetMonth = screen.getByRole('radio', { name: 'February' });
 
     // A native button implies Enter and Space keydown behavior
     // These keydown events only trigger click behavior if they're trusted (programmatically dispatched events aren't trusted).
@@ -30,7 +30,7 @@ describe('<MonthCalendar />', () => {
     const onChange = spy();
     render(<MonthCalendar onChange={onChange} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Feb' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'February' }));
 
     expect(onChange.callCount).to.equal(1);
     expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
@@ -79,7 +79,7 @@ describe('<MonthCalendar />', () => {
         />,
       );
 
-      screen.getAllByRole('button').forEach((monthButton) => {
+      screen.getAllByRole('radio').forEach((monthButton) => {
         expect(monthButton).to.have.attribute('disabled');
         fireEvent.click(monthButton);
         expect(onChange.callCount).to.equal(0);
@@ -168,6 +168,12 @@ describe('<MonthCalendar />', () => {
 
       expect(january).not.to.have.attribute('disabled');
       expect(february).to.have.attribute('disabled');
+    });
+
+    it('should not mark the `referenceDate` month as selected', () => {
+      render(<MonthCalendar referenceDate={adapterToUse.date(new Date(2018, 1, 2))} />);
+
+      expect(screen.getByRole('radio', { name: 'February', checked: false })).to.not.equal(null);
     });
   });
 });
