@@ -275,16 +275,12 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value === null;
   };
 
-  public isValid = (value: any): boolean => {
-    if (DateTime.isDateTime(value)) {
-      return value.isValid;
-    }
-
+  public isValid = (value: DateTime | null): boolean => {
     if (value === null) {
       return false;
     }
 
-    return this.isValid(this.date(value));
+    return value.isValid;
   };
 
   public format = (value: DateTime, formatKey: keyof AdapterFormats) => {
