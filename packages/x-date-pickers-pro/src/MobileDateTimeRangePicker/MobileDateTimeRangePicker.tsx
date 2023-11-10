@@ -17,7 +17,7 @@ import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
-import { validateDateRange } from '../internals/utils/validation/validateDateRange';
+import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
@@ -84,7 +84,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
-    validator: validateDateRange,
+    validator: validateDateTimeRange,
     rendererInterceptor(inViewRenderers, popperView, rendererProps) {
       const { view, views, openTo, ...otherRendererProps } = rendererProps;
       const finalProps = {

@@ -16,7 +16,7 @@ import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
-import { validateDateRange } from '../internals/utils/validation/validateDateRange';
+import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
@@ -122,7 +122,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
-    validator: validateDateRange,
+    validator: validateDateTimeRange,
     rendererInterceptor,
   });
 
