@@ -64,6 +64,8 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
+## Removed props
+
 ### Replace `defaultCalendarMonth` with `referenceDate`
 
 The `defaultCalendarMonth` has been removed in favor of the more flexible `referenceDate` prop.
@@ -74,4 +76,29 @@ The new `referenceDate` prop is not limited to the default month, learn more on 
 ```diff
 - <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
 + <DateCalendar referenceDate{dayjs('2022-04-01')} />
+```
+
+## Field components
+
+### Replace the section `hasLeadingZeros` property
+
+:::success
+This only impacts you if you are using the `unstableFieldRef` prop to imperatively access the section object.
+:::
+
+The property `hasLeadingZeros` has been removed from the sections in favor of the more precise `hasLeadingZerosInFormat` and `hasLeadingZerosInInput` properties.
+To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
+
+```diff
+ const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+
+ React.useEffect(() => {
+     const firstSection = fieldRef.current!.getSections()[0]
+-    console.log(firstSection.hasLeadingZeros)
++    console.log(firstSection.hasLeadingZerosInFormat)
+ }, [])
+
+ return (
+   <DateField unstableFieldRef={fieldRef} />
+ );
 ```
