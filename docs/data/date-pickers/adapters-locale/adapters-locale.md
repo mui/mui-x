@@ -250,7 +250,7 @@ The example below adds a dot at the end of each day in the calendar header:
 To customize the format used on the calendar header, use the `format` prop of the `calendarHeader` slot.
 
 :::info
-This prop is available on all pickers with date edition.
+This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
 :::
 
 {{"demo": "CustomCalendarHeaderFormat.js"}}
