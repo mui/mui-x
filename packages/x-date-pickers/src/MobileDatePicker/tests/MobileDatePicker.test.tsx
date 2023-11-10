@@ -128,14 +128,6 @@ describe('<MobileDatePicker />', () => {
     });
   });
 
-  it('prop `defaultCalendarMonth` – opens on provided month if date is `null`', () => {
-    render(
-      <MobileDatePicker open defaultCalendarMonth={adapterToUse.date(new Date(2018, 6, 1))} />,
-    );
-
-    expect(screen.getByText('July 2018')).toBeVisible();
-  });
-
   describe('picker state', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();

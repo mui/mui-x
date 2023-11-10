@@ -21,7 +21,7 @@ In `package.json`, change the version of the date pickers package to `next`.
 +"@mui/x-date-pickers": "next",
 ```
 
-## Breaking changes
+## All components
 
 Since `v7` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
@@ -63,3 +63,15 @@ For example:
 
 The same applies to `slotProps` and `componentsProps`.
 :::
+
+### Replace `defaultCalendarMonth` with `referenceDate`
+
+The `defaultCalendarMonth` has been removed in favor of the more flexible `referenceDate` prop.
+It was available in `DateCalendar` and all the pickers using it for date editing.
+
+The new `referenceDate` prop is not limited to the default month, learn more on this prop on [the `DateCalendar` doc](/x/react-date-pickers/date-calendar/#choose-the-initial-year-month) or [the `referenceDate` doc](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined).
+
+```diff
+- <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
++ <DateCalendar referenceDate{dayjs('2022-04-01')} />
+```

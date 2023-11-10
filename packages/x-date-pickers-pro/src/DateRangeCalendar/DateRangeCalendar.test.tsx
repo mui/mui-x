@@ -89,7 +89,7 @@ describe('<DateRangeCalendar />', () => {
       render(
         <DateRangeCalendar
           onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date(new Date(2019, 0, 1))}
+          referenceDate={adapterToUse.date(new Date(2019, 0, 1))}
         />,
       );
 

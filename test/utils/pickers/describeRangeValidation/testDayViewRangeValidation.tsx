@@ -41,7 +41,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
     const isDesktop = variant === 'desktop';
 
     const defaultProps = {
-      defaultCalendarMonth: adapterToUse.date(new Date(2018, 2, 12)),
+      referenceDate: adapterToUse.date(new Date(2018, 2, 12)),
       open: true,
     };
 
@@ -66,7 +66,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date(new Date());
-        const { defaultCalendarMonth, ...otherProps } = props;
+        const { referenceDate, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -90,7 +90,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date(new Date());
-        const { defaultCalendarMonth, ...otherProps } = props;
+        const { referenceDate, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
@@ -114,7 +114,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       render(
         <ElementToTest
           {...defaultProps}
-          defaultCalendarMonth={adapterToUse.date(new Date(2019, 5, 15))}
+          referenceDate={adapterToUse.date(new Date(2019, 5, 15))}
           minDate={adapterToUse.date(new Date(2019, 5, 4))}
         />,
       );
@@ -133,7 +133,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       render(
         <ElementToTest
           {...defaultProps}
-          defaultCalendarMonth={adapterToUse.date(new Date(2019, 5, 15))}
+          referenceDate={adapterToUse.date(new Date(2019, 5, 15))}
           maxDate={adapterToUse.date(new Date(2019, 5, 4))}
         />,
       );

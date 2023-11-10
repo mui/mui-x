@@ -62,10 +62,6 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   disableAutoMonthSwitching?: boolean;
   /**
-   * Default calendar month displayed when `value={[null, null]}`.
-   */
-  defaultCalendarMonth?: TDate;
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
