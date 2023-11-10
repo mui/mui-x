@@ -248,7 +248,7 @@ function AppWrapper(props) {
           },
           {
             text: 'v6',
-            href: `https://mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
+            href: `https://mui.com${languagePrefix}/x/react-date-pickers/`,
           },
           {
             text: 'v5',
