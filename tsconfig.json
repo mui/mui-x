@@ -34,6 +34,8 @@
       ],
       "@mui-internal/docs-utilities": ["./node_modules/@mui/monorepo/packages/docs-utilities"],
       "@mui-internal/docs-utilities/*": ["./node_modules/@mui/monorepo/packages/docs-utilities/*"],
+      "@mui-internal/test-utils": ["./node_modules/@mui/monorepo/packages/test-utils/src"],
+      "@mui-internal/test-utils/*": ["./node_modules/@mui/monorepo/packages/test-utils/src/*"],
       "typescript-to-proptypes": [
         "./node_modules/@mui/monorepo/packages/typescript-to-proptypes/src"
       ],
@@ -41,7 +43,7 @@
         "./node_modules/@mui/monorepo/packages/typescript-to-proptypes/src/*"
       ],
       "test/*": ["./test/*"],
-      "docs/*": ["./node_modules/@mui/monorepo/docs"],
+      "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
     }
   },

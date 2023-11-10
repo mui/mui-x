@@ -14,7 +14,6 @@ import {
 import {
   splitFieldInternalAndForwardedProps,
   FieldsTextFieldProps,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
@@ -63,6 +62,16 @@ type MultiInputDateRangeFieldComponent = (<TDate>(
   props: MultiInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateRangeField](http://mui.com/x/react-date-pickers/date-range-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ *
+ * - [MultiInputDateRangeField API](https://mui.com/x/api/multi-input-date-range-field/)
+ */
 const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<TDate>(
   inProps: MultiInputDateRangeFieldProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -75,14 +84,15 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const { internalProps: dateFieldInternalProps, forwardedProps } =
     splitFieldInternalAndForwardedProps<
       typeof themeProps,
-      keyof Omit<UseDateRangeFieldProps<any>, 'unstableFieldRef' | 'disabled'>
+      keyof Omit<
+        UseDateRangeFieldProps<any>,
+        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
+      >
     >(themeProps, 'date');
 
   const {
-    slots: innerSlots,
-    slotProps: innerSlotProps,
-    components,
-    componentsProps,
+    slots,
+    slotProps,
     disabled,
     autoFocus,
     unstableStartFieldRef,
@@ -90,9 +100,6 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     className,
     ...otherForwardedProps
   } = forwardedProps;
-
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   const ownerState = themeProps;
   const classes = useUtilityClasses(ownerState);
@@ -125,7 +132,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const Separator = slots?.separator ?? MultiInputDateRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
-    externalSlotProps: slotProps?.separator ?? componentsProps?.separator,
+    externalSlotProps: slotProps?.separator,
     ownerState,
     className: classes.separator,
   });
@@ -203,18 +210,6 @@ MultiInputDateRangeField.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   component: PropTypes.elementType,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -328,6 +323,9 @@ MultiInputDateRangeField.propTypes = {
   ]),
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.

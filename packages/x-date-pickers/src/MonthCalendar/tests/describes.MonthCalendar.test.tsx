@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { describeConformance, userEvent, screen } from '@mui/monorepo/test/utils';
-import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { describeConformance, userEvent, screen } from '@mui-internal/test-utils';
 import {
-  MonthCalendar,
-  monthCalendarClasses as classes,
-  pickersMonthClasses,
-} from '@mui/x-date-pickers/MonthCalendar';
+  wrapPickerMount,
+  createPickerRenderer,
+  adapterToUse,
+  describeValidation,
+  describeValue,
+} from 'test/utils/pickers';
+import { MonthCalendar, monthCalendarClasses as classes } from '@mui/x-date-pickers/MonthCalendar';
 
 describe('<MonthCalendar /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -38,17 +38,19 @@ describe('<MonthCalendar /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const selectedCells = document.querySelectorAll(`.${pickersMonthClasses.selected}`);
+      const activeMonth = screen
+        .queryAllByRole('radio')
+        .find((cell) => cell.getAttribute('tabindex') === '0');
+      expect(activeMonth).not.to.equal(null);
       if (expectedValue == null) {
-        expect(selectedCells).to.have.length(1);
-        expect(selectedCells[0]).to.have.text(
+        expect(activeMonth).to.have.text(
           adapterToUse.format(adapterToUse.date(), 'monthShort').toString(),
         );
       } else {
-        expect(selectedCells).to.have.length(1);
-        expect(selectedCells[0]).to.have.text(
+        expect(activeMonth).to.have.text(
           adapterToUse.format(expectedValue, 'monthShort').toString(),
         );
+        expect(activeMonth).to.have.attribute('aria-checked', 'true');
       }
     },
     setNewValue: (value) => {

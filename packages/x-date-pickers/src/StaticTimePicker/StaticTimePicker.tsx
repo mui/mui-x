@@ -13,6 +13,16 @@ type StaticTimePickerComponent = (<TDate>(
   props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [StaticTimePicker API](https://mui.com/x/api/date-pickers/static-time-picker/)
+ */
 const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
   inProps: StaticTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -86,18 +96,6 @@ StaticTimePicker.propTypes = {
    * Class name applied to the root element.
    */
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value.
    * Used when the component is not controlled.

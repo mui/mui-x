@@ -31,7 +31,6 @@ import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColu
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationModel } from '../gridPaginationProps';
-import { UncapitalizeObjectKeys } from '../../internals/utils';
 
 export interface GridExperimentalFeatures {
   /**
@@ -69,7 +68,7 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
-    Omit<DataGridPropsWithoutDefaultValue<R>, 'componentsProps'> {}
+    DataGridPropsWithoutDefaultValue<R> {}
 
 /**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
@@ -92,7 +91,7 @@ export type DataGridForcedPropsKey =
  * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
-  slots: UncapitalizeObjectKeys<GridSlotsComponent>;
+  slots: GridSlotsComponent;
   localeText: GridLocaleText;
 }
 
@@ -102,13 +101,8 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
    * Overridable components.
-   * @deprecated Use `slots` instead.
    */
-  components?: Partial<GridSlotsComponent>;
-  /**
-   * Overridable components.
-   */
-  slots?: UncapitalizeObjectKeys<Partial<GridSlotsComponent>>;
+  slots?: Partial<GridSlotsComponent>;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
@@ -268,6 +262,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   hideFooterSelectedRowCount: boolean;
   /**
+   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * @default false
+   */
+  ignoreDiacritics: boolean;
+  /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
    * when changing pages.
@@ -325,7 +325,7 @@ export interface DataGridPropsWithDefaultValues {
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */
-  sortingOrder: GridSortDirection[];
+  sortingOrder: readonly GridSortDirection[];
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
@@ -358,7 +358,7 @@ export interface DataGridPropsWithDefaultValues {
   /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default: false
+   * @default false
    */
   unstable_ignoreValueFormatterDuringExport:
     | boolean
@@ -371,6 +371,13 @@ export interface DataGridPropsWithDefaultValues {
    * @default '\t'
    */
   clipboardCopyCellDelimiter: string;
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: number;
 }
 
 /**
@@ -705,7 +712,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Set of columns of type [[GridColDef[]]].
    */
-  columns: GridColDef<R>[];
+  columns: readonly GridColDef<R>[];
   /**
    * Return the id of a given [[GridRowModel]].
    */
@@ -732,11 +739,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps?: GridSlotsComponentsProps;
-  /**
-   * Overridable components props dynamically passed to the component at rendering.
-   * @deprecated Use the `slotProps` prop instead.
-   */
-  componentsProps?: GridSlotsComponentsProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

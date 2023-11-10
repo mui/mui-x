@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { act } from '@mui/monorepo/test/utils';
+import { act } from '@mui-internal/test-utils';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
 
@@ -12,7 +12,7 @@ export function sleep(duration: number): Promise<void> {
 }
 
 export function microtasks() {
-  return act(() => Promise.resolve());
+  return act(() => Promise.resolve()) as unknown as Promise<void>;
 }
 
 export function spyApi(api: GridApiCommon, methodName: string) {

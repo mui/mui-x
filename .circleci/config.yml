@@ -195,7 +195,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.37.1-focal
+      - image: mcr.microsoft.com/playwright:v1.39.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -228,7 +228,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.37.1-focal
+      - image: mcr.microsoft.com/playwright:v1.39.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -241,7 +241,7 @@ jobs:
   test_e2e_website:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.37.1-focal
+      - image: mcr.microsoft.com/playwright:v1.39.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -256,7 +256,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.37.1-focal
+      - image: mcr.microsoft.com/playwright:v1.39.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -269,10 +269,10 @@ jobs:
       - run:
           name: Upload screenshots to Argos CI
           command: yarn test:argos
-  test_performance:
+  run_danger:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.37.1-focal
+      - image: mcr.microsoft.com/playwright:v1.39.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -280,18 +280,10 @@ jobs:
       - install_js:
           browsers: true
       - run:
-          name: Run performance tests
-          command: xvfb-run yarn test:performance
-      - store_artifacts:
-          name: Persist performance snapshot as pipeline artifact
-          path: performance-snapshot.json
-          destination: performance-snapshot.json
-      - run:
           name: Run danger on PRs
           command: yarn danger ci --fail-on-errors
           environment:
             DANGER_DISABLE_TRANSPILATION: 'true'
-            DANGER_COMMAND: 'reportPerformance'
 workflows:
   version: 2
   pipeline:
@@ -320,7 +312,7 @@ workflows:
       - test_regressions:
           requires:
             - checkout
-      - test_performance:
+      - run_danger:
           requires:
             - checkout
   e2e-website:

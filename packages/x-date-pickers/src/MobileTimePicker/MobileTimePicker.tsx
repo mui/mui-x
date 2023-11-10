@@ -19,6 +19,16 @@ type MobileTimePickerComponent = (<TDate>(
   props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
+ */
 const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   inProps: MobileTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -109,18 +119,6 @@ MobileTimePicker.propTypes = {
    * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value.
    * Used when the component is not controlled.

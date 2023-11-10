@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import { FieldSlotsComponents, FieldSlotsComponentsProps } from '@mui/x-date-pickers/internals';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
@@ -30,22 +30,10 @@ export type UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps ex
 export interface SingleInputDateTimeRangeFieldProps<TDate>
   extends UseSingleInputDateTimeRangeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: SingleInputDateTimeRangeFieldSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<SingleInputDateTimeRangeFieldSlotsComponent>;
+  slots?: SingleInputDateTimeRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
@@ -56,16 +44,17 @@ export interface SingleInputDateTimeRangeFieldProps<TDate>
 export type SingleInputDateTimeRangeFieldOwnerState<TDate> =
   SingleInputDateTimeRangeFieldProps<TDate>;
 
-export interface SingleInputDateTimeRangeFieldSlotsComponent {
+export interface SingleInputDateTimeRangeFieldSlotsComponent extends FieldSlotsComponents {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
-  TextField?: React.ElementType;
+  textField?: React.ElementType;
 }
 
-export interface SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate> {
+export interface SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate>
+  extends FieldSlotsComponentsProps {
   textField?: SlotComponentProps<
     typeof TextField,
     {},

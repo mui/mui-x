@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DATA_GRID_PRO_PROPS_DEFAULT_VALUES, GRID_DEFAULT_LOCALE_TEXT } from '@mui/x-data-grid-pro';
-import { computeSlots, useProps, uncapitalizeObjectKeys } from '@mui/x-data-grid-pro/internals';
+import { computeSlots, useProps } from '@mui/x-data-grid-pro/internals';
 import {
   DataGridPremiumProps,
   DataGridPremiumProcessedProps,
   DataGridPremiumPropsWithDefaultValue,
 } from '../models/dataGridPremiumProps';
-import { GridPremiumSlotsComponent, UncapitalizedGridPremiumSlotsComponent } from '../models';
+import { GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
 
@@ -32,10 +32,10 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   },
 };
 
-const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS)!;
+const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
-  const [components, componentsProps, themedProps] = useProps(
+  const themedProps = useProps(
     useThemeProps({
       props: inProps,
       name: 'MuiDataGrid',
@@ -47,25 +47,23 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     [themedProps.localeText],
   );
 
-  const slots = React.useMemo<UncapitalizedGridPremiumSlotsComponent>(
+  const slots = React.useMemo<GridPremiumSlotsComponent>(
     () =>
       computeSlots<GridPremiumSlotsComponent>({
         defaultSlots,
-        components,
         slots: themedProps.slots,
       }),
-    [components, themedProps.slots],
+    [themedProps.slots],
   );
 
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
       ...themedProps,
-      slotProps: themedProps.slotProps ?? componentsProps,
       localeText,
       slots,
       signature: 'DataGridPremium',
     }),
-    [themedProps, componentsProps, localeText, slots],
+    [themedProps, localeText, slots],
   );
 };

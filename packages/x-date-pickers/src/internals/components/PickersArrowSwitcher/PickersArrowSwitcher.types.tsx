@@ -3,14 +3,13 @@ import { SlotComponentProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
 import { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
-import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 
 export interface ExportedPickersArrowSwitcherProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<PickersArrowSwitcherSlotsComponent>;
+  slots?: PickersArrowSwitcherSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
@@ -42,22 +41,22 @@ export interface PickersArrowSwitcherSlotsComponent {
    * Button allowing to switch to the left view.
    * @default IconButton
    */
-  PreviousIconButton?: React.ElementType;
+  previousIconButton?: React.ElementType;
   /**
    * Button allowing to switch to the right view.
    * @default IconButton
    */
-  NextIconButton?: React.ElementType;
+  nextIconButton?: React.ElementType;
   /**
    * Icon displayed in the left view switch button.
    * @default ArrowLeft
    */
-  LeftArrowIcon?: React.ElementType;
+  leftArrowIcon?: React.ElementType;
   /**
    * Icon displayed in the right view switch button.
    * @default ArrowRight
    */
-  RightArrowIcon?: React.ElementType;
+  rightArrowIcon?: React.ElementType;
 }
 
 export interface PickersArrowSwitcherButtonSlotOwnerState extends PickersArrowSwitcherOwnerState {

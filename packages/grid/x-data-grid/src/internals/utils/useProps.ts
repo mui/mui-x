@@ -1,11 +1,4 @@
 import * as React from 'react';
-import { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
-import { GridSlotsComponent } from '../../models';
-
-interface WithComponents {
-  components?: Partial<GridSlotsComponent>;
-  componentsProps?: GridSlotsComponentsProps;
-}
 
 /** Gathers props for the root element into a single `.forwardedProps` field */
 function groupForwardedProps<
@@ -38,9 +31,9 @@ function groupForwardedProps<
   return newProps as T;
 }
 
-export function useProps<T extends WithComponents>(allProps: T) {
+export function useProps<T extends Record<string, any>>(allProps: T) {
   return React.useMemo(() => {
-    const { components, componentsProps, ...themedProps } = allProps;
-    return [components, componentsProps, groupForwardedProps(themedProps)] as const;
+    const { ...themedProps } = allProps;
+    return groupForwardedProps(themedProps);
   }, [allProps]);
 }

@@ -10,7 +10,7 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
+import { act, createRenderer, fireEvent, screen, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { getCell, spyApi } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
@@ -37,7 +37,7 @@ const generateDate = (
   return rawDate.getTime();
 };
 
-describe('<DataGridPro /> - Edit Components', () => {
+describe('<DataGridPro /> - Edit components', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -623,7 +623,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       userEvent.mousePress(screen.queryAllByRole('option')[1]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
-      fireEvent.keyDown(screen.getByRole('button', { name: 'Adidas' }), { key: 'Enter' });
+      fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Enter' });
       expect(screen.queryByRole('listbox')).to.equal(null);
 
       resolveCallback!();

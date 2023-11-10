@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, userEvent, act, getByRole } from '@mui/monorepo/test/utils';
+import { screen, fireEvent, userEvent, act, getByRole } from '@mui-internal/test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { DateRange, LocalizationProvider } from '@mui/x-date-pickers-pro';

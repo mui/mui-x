@@ -59,6 +59,13 @@ interface DataGridProComponent {
   propTypes?: any;
 }
 
+/**
+ * Demos:
+ * - [DataGridPro](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGridPro API](https://mui.com/x/api/data-grid/data-grid-pro/)
+ */
 export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
 DataGridProRaw.propTypes = {
@@ -90,6 +97,21 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   autoPageSize: PropTypes.bool,
+  /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: PropTypes.bool,
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions: PropTypes.shape({
+    columns: PropTypes.arrayOf(PropTypes.string),
+    expand: PropTypes.bool,
+    includeHeaders: PropTypes.bool,
+    includeOutliers: PropTypes.bool,
+    outliersFactor: PropTypes.number,
+  }),
   /**
    * Controls the modes of the cells.
    */
@@ -147,16 +169,6 @@ DataGridProRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overridable components.
-   * @deprecated Use the `slots` prop instead.
-   */
-  components: PropTypes.object,
-  /**
-   * Overridable components props dynamically passed to the component at rendering.
-   * @deprecated Use the `slotProps` prop instead.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
    * @default 0
@@ -173,6 +185,11 @@ DataGridProRaw.propTypes = {
   detailPanelExpandedRowIds: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   ),
+  /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: PropTypes.bool,
   /**
    * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
@@ -394,6 +411,12 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   hideFooterSelectedRowCount: PropTypes.bool,
+  /**
+   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * @default false
+   */
+  ignoreDiacritics: PropTypes.bool,
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -791,6 +814,13 @@ DataGridProRaw.propTypes = {
    */
   rowModesModel: PropTypes.object,
   /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: PropTypes.number,
+  /**
    * If `true`, the reordering of rows is enabled.
    * @default false
    */
@@ -904,7 +934,7 @@ DataGridProRaw.propTypes = {
   /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default: false
+   * @default false
    */
   unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
     PropTypes.shape({

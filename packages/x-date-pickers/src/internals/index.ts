@@ -66,6 +66,8 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
@@ -137,8 +139,6 @@ export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
 export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
-export { uncapitalizeObjectKeys } from './utils/slots-migration';
-export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {

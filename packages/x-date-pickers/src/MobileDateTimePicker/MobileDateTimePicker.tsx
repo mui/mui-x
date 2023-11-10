@@ -20,6 +20,16 @@ type MobileDateTimePickerComponent = (<TDate>(
   props: MobileDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
+ */
 const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDate>(
   inProps: MobileDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -118,22 +128,11 @@ MobileDateTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @param {string} day The day of week provided by the adapter.  Deprecated, will be removed in v7: Use `date` instead.
+   * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (day) => day.charAt(0).toUpperCase()
+   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -377,6 +376,9 @@ MobileDateTimePicker.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.

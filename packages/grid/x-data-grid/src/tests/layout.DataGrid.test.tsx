@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui-internal/test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -14,7 +14,7 @@ import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow, sleep } from 'test/utils/helperFn';
 
-describe('<DataGrid /> - Layout & Warnings', () => {
+describe('<DataGrid /> - Layout & warnings', () => {
   const { clock, render } = createRenderer();
 
   const baselineProps = {
@@ -886,8 +886,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
             localeText={{ toolbarDensity: 'Size' }}
           />
@@ -914,8 +914,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGrid
               {...baselineProps}
-              components={{
-                Toolbar: GridToolbar,
+              slots={{
+                toolbar: GridToolbar,
               }}
               {...props}
             />
@@ -1048,7 +1048,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+          <DataGrid {...baselineProps} slots={{ noRowsOverlay: NoRowsOverlay }} {...props} />
         </div>
       );
     }
@@ -1063,7 +1063,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+          <DataGrid {...baselineProps} slots={{ noRowsOverlay: NoRowsOverlay }} {...props} />
         </div>
       );
     }

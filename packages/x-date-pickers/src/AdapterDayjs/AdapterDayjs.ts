@@ -75,7 +75,7 @@ const defaultFormats: AdapterFormats = {
   monthShort: 'MMM',
   dayOfMonth: 'D',
   weekday: 'dddd',
-  weekdayShort: 'ddd',
+  weekdayShort: 'dd',
   hours24h: 'HH',
   hours12h: 'hh',
   meridiem: 'A',
@@ -326,15 +326,17 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getTimezone = (value: Dayjs): string => {
-    if (this.hasUTCPlugin() && value.isUTC()) {
-      return 'UTC';
-    }
-
     if (this.hasTimezonePlugin()) {
       // @ts-ignore
       const zone = value.$x?.$timezone;
 
-      return zone ?? 'system';
+      if (zone) {
+        return zone;
+      }
+    }
+
+    if (this.hasUTCPlugin() && value.isUTC()) {
+      return 'UTC';
     }
 
     return 'system';

@@ -11,21 +11,12 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "dayOfWeekFormatter": {
       "description": "Formats the day of week displayed in the calendar header.",
       "deprecated": "",
       "typeDescriptions": {
-        "day": "The day of week provided by the adapter&#39;s method <code>getWeekdays</code>.",
+        "day": "The day of week provided by the adapter.  Deprecated, will be removed in v7: Use <code>date</code> instead.",
+        "date": "The date of the day of week provided by the adapter.",
         "string": "The name to display."
       }
     },
@@ -166,7 +157,7 @@
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.",
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The date to test.",

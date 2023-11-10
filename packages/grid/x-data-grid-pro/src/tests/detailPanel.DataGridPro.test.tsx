@@ -18,7 +18,7 @@ import {
   waitFor,
   act,
   userEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import { getRow, getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -693,7 +693,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelHeight={() => 0}
         nbRows={1}
         getDetailPanelContent={() => <div />}
-        componentsProps={{
+        slotProps={{
           row: { style: { color: 'yellow' } },
         }}
       />,

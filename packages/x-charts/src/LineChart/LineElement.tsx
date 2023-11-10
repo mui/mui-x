@@ -110,6 +110,16 @@ export type LineElementProps = Omit<LineElementOwnerState, 'isFaded' | 'isHighli
     };
   };
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [LineElement API](https://mui.com/x/api/charts/line-element/)
+ */
 function LineElement(props: LineElementProps) {
   const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
 

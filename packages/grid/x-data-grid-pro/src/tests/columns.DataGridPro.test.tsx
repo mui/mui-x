@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -10,9 +10,10 @@ import {
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
   GridApi,
+  GridAutosizeOptions,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
-import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getCell, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -410,6 +411,91 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
+  describe('autosizing', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    const rows = [
+      {
+        id: 0,
+        brand: 'Nike',
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+      },
+      {
+        id: 3,
+        brand: 'Lululemon Athletica',
+      },
+    ];
+    const columns = [
+      { field: 'id', headerName: 'This is the ID column' },
+      { field: 'brand', headerName: 'This is the brand column' },
+    ];
+
+    const getWidths = () => {
+      return columns.map((_, i) => parseInt(getColumnHeaderCell(i).style.width, 10));
+    };
+
+    it('should work through the API', async () => {
+      render(<Test rows={rows} columns={columns} />);
+      await apiRef.current.autosizeColumns();
+      await microtasks();
+      expect(getWidths()).to.deep.equal([213, 235]);
+    });
+
+    it('should work through double-clicking the separator', async () => {
+      render(<Test rows={rows} columns={columns} />);
+      const separator = document.querySelectorAll(
+        `.${gridClasses['columnSeparator--resizable']}`,
+      )[1];
+      fireEvent.doubleClick(separator);
+      await microtasks();
+      expect(getWidths()).to.deep.equal([100, 235]);
+    });
+
+    it('should work on mount', async () => {
+      render(<Test rows={rows} columns={columns} autosizeOnMount />);
+      await microtasks(); /* first effect after render */
+      await microtasks(); /* async autosize operation */
+      expect(getWidths()).to.deep.equal([213, 235]);
+    });
+
+    describe('options', () => {
+      const autosize = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
+        render(<Test rows={rows} columns={columns} />);
+        await apiRef.current.autosizeColumns({ includeHeaders: false, ...options });
+        await microtasks();
+        expect(getWidths()).to.deep.equal(widths);
+      };
+
+      it('.columns works', async () => {
+        await autosize({ columns: [columns[0].field] }, [50, 100]);
+      });
+      it('.includeHeaders works', async () => {
+        await autosize({ includeHeaders: true }, [213, 235]);
+      });
+      it('.includeOutliers works', async () => {
+        await autosize({ includeOutliers: true }, [50, 144]);
+      });
+      it('.outliersFactor works', async () => {
+        await autosize({ outliersFactor: 40 }, [50, 144]);
+      });
+      it('.expand works', async () => {
+        await autosize({ expand: true }, [134, 148]);
+      });
+    });
+  });
+
   describe('column pipe processing', () => {
     type GridPrivateApiContextRef = ReturnType<typeof useGridPrivateApiContext>;
     it('should not loose column width when re-applying pipe processing', () => {
@@ -418,7 +504,7 @@ describe('<DataGridPro /> - Columns', () => {
         privateApi = useGridPrivateApiContext();
         return null;
       }
-      render(<Test checkboxSelection components={{ Footer }} />);
+      render(<Test checkboxSelection slots={{ footer: Footer }} />);
 
       act(() => apiRef.current.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
@@ -436,7 +522,7 @@ describe('<DataGridPro /> - Columns', () => {
         <Test
           checkboxSelection
           columns={[{ field: 'id' }, { field: 'brand' }]}
-          components={{ Footer }}
+          slots={{ footer: Footer }}
         />,
       );
 
@@ -453,7 +539,7 @@ describe('<DataGridPro /> - Columns', () => {
         privateApi = useGridPrivateApiContext();
         return null;
       }
-      render(<Test checkboxSelection components={{ Footer }} />);
+      render(<Test checkboxSelection slots={{ footer: Footer }} />);
 
       act(() => apiRef.current.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);

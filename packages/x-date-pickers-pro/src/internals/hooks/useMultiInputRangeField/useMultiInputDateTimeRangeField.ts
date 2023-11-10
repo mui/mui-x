@@ -30,6 +30,7 @@ import {
 } from '../../utils/validation/validateDateTimeRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
+import { excludeProps } from './shared';
 
 export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseMultiInputDateTimeRangeFieldProps<TDate>,
@@ -81,6 +82,8 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
     onChange,
     disabled,
     readOnly,
+    selectedSections,
+    onSelectedSectionsChange,
   } = sharedProps;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
@@ -143,6 +146,8 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
+    selectedSections,
+    onSelectedSectionsChange,
   };
 
   const endFieldProps: UseDateTimeFieldComponentProps<
@@ -160,6 +165,8 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
+    selectedSections,
+    onSelectedSectionsChange,
   };
 
   const startDateResponse = useDateTimeField({
@@ -172,5 +179,9 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
     inputRef: endInputRef,
   }) as UseFieldResponse<TTextFieldSlotProps>;
 
-  return { startDate: startDateResponse, endDate: endDateResponse };
+  /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
+  return {
+    startDate: excludeProps(startDateResponse, ['clearable', 'onClear']),
+    endDate: excludeProps(endDateResponse, ['clearable', 'onClear']),
+  };
 };

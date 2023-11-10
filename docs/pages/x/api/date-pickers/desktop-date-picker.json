@@ -6,24 +6,12 @@
       "type": { "name": "bool" },
       "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()",
+      "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(day: string) => string",
-        "describedArgs": ["day"],
+        "type": "function(day: string, date: TDate) => string",
+        "describedArgs": ["day", "date"],
         "returned": "string"
       }
     },
@@ -194,6 +182,18 @@
       "name": "calendarHeader",
       "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
       "default": "PickersCalendarHeader"
+    },
+    {
+      "class": null,
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon"
     },
     {
       "class": null,

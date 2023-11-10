@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue, getCleanedSelectedContent } from 'test/utils/pickers';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
+import { userEvent, fireEvent } from '@mui-internal/test-utils';
+import { expectInputValue, getCleanedSelectedContent, describeAdapters } from 'test/utils/pickers';
 
 describe('<TimeField /> - Editing', () => {
   describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
@@ -366,7 +365,7 @@ describe('<TimeField /> - Editing', () => {
 
         selectSection('hours');
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-        userEvent.keyPress(input, { key: 'Backspace' });
+        fireEvent.change(input, { target: { value: '' } });
         userEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"

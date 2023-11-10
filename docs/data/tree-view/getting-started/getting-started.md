@@ -14,17 +14,21 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 Using your favorite package manager, install `@mui/x-tree-view`:
 
+:::warning
+The `next` tag is used to download the latest v7 **pre-release** version.
+:::
+
 <codeblock storageKey="package-manager">
 ```bash npm
-npm install @mui/x-tree-view
+npm install @mui/x-tree-view@next
 ```
 
 ```bash yarn
-yarn add @mui/x-tree-view
+yarn add @mui/x-tree-view@next
 ```
 
 ```bash pnpm
-pnpm add @mui/x-tree-view
+pnpm add @mui/x-tree-view@next
 ```
 
 </codeblock>
