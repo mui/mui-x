@@ -63,3 +63,21 @@ For example:
 
 The same applies to `slotProps` and `componentsProps`.
 :::
+
+## Components with date edition
+
+### Remove the string argument of the `dayOfWeekFormatter` prop
+
+The string argument of the `dayOfWeekFormatter` has been replaced in favor of the date object to allow more flexibility.
+
+```diff
+ <DateCalendar
+   // If you were still using the day string
+-   dayOfWeekFormatter={dayStr => `${dayStr}.`}
++   dayOfWeekFormatter={day => `${day.format('dd')}.`}
+
+   // If you were already using the day object
+-   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
++   dayOfWeekFormatter={(day) => `${day.format('dd')}.`
+ />
+```
