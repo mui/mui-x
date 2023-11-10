@@ -107,7 +107,8 @@ If you are just passing an adapter to `LocalizationProvider`, then you can safel
 ### Restrict the input format of the `isValid` method
 
 The `isValid` method used to accept any type of value and tried to parse them before checking their validity.
-The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in our components)
+The method has been simplified and now only accepts an already-parsed date or `null`.
+Which is the same type as the one accepted by the components `value` prop.
 
 ```diff
  const adapterDayjs = new AdapterDayjs();
