@@ -265,7 +265,7 @@ function AppWrapper(props) {
             text: `v${process.env.CHARTS_VERSION}`,
             current: true,
           },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/getting-started` },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/` },
         ],
       };
     } else if (productId === 'x-tree-view') {
