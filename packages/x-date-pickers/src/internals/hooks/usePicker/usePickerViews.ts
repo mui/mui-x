@@ -121,6 +121,14 @@ export interface UsePickerViewParams<
   additionalViewProps: TAdditionalProps;
   inputRef?: React.RefObject<HTMLInputElement>;
   autoFocusView: boolean;
+  /**
+   * A function that intercepts the regular picker rendering.
+   * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.
+   * @param {PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>} viewRenderers The `viewRenderers` that were provided to the picker component.
+   * @param {TView} popperView The current picker view.
+   * @param {any} rendererProps All the props that are being passed down to the renderer.
+   * @returns {React.ReactNode} A React node that will be rendered instead of the default renderer.
+   */
   rendererInterceptor?: (
     viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>,
     popperView: TView,
