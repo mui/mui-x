@@ -63,8 +63,6 @@ For example:
 
 The same applies to `slotProps` and `componentsProps`.
 :::
-<<<<<<< Updated upstream
-=======
 
 ### Replace `defaultCalendarMonth` with `referenceDate`
 
@@ -103,4 +101,3 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
    <DateField unstableFieldRef={fieldRef} />
  );
 ```
->>>>>>> Stashed changes
