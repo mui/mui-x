@@ -182,11 +182,11 @@ describe('<DataGrid /> - Filter panel', () => {
 
     setColumnValue('slogan');
 
-    expect(getColumnValues(0)).to.deep.equal([]);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
       'equals',
     );
-    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Puma');
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('');
   });
 
   it('should reset value if operator is not available for the new column', () => {
@@ -340,7 +340,7 @@ describe('<DataGrid /> - Filter panel', () => {
 
     setColumnValue('origin');
 
-    expect(getColumnValues(0)).to.deep.equal(['REF_2', 'REF_3']);
+    expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
   });
 
   it('should reset filter value if not available in the new valueOptions with operator "isAnyOf"', () => {
@@ -411,7 +411,7 @@ describe('<DataGrid /> - Filter panel', () => {
 
     expect(getColumnValues(0)).to.deep.equal(['REF_1']);
     setColumnValue('origin');
-    expect(getColumnValues(0)).to.deep.equal(['REF_2', 'REF_3']);
+    expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
   });
 
   it('should reset filter value if moving from multiple to single value operator', () => {
