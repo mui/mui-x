@@ -194,14 +194,6 @@ export class AdapterMomentJalaali
       .replace(/,/g, '،');
   };
 
-  public isEqual = (value: any, comparing: any) => {
-    if (value === null && comparing === null) {
-      return true;
-    }
-
-    return this.moment(value).isSame(comparing);
-  };
-
   public isSameYear = (value: Moment, comparing: Moment) => {
     // `isSame` seems to mutate the date on `moment-jalaali`
     // @ts-ignore

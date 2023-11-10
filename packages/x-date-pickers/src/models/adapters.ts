@@ -360,7 +360,6 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {number} The diff between the two dates.
    */
   getDiff(value: TDate, comparing: TDate | string, unit?: AdapterUnits): number;
-  // TODO v7: Type `value` and `comparing` to be `TDate | null`.
   /**
    * Check if the two dates are equal (e.g: they represent the same timestamp).
    * @param {any} value The reference date.

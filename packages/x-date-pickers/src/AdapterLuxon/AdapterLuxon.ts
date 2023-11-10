@@ -311,17 +311,16 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.diff(comparing).as('millisecond');
   };
 
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: DateTime | null, comparing: DateTime | null) => {
     if (value === null && comparing === null) {
       return true;
     }
 
-    // Make sure that null will not be passed to this.date
     if (value === null || comparing === null) {
       return false;
     }
 
-    return +this.date(value)! === +this.date(comparing)!;
+    return +value === +comparing;
   };
 
   public isSameYear = (value: DateTime, comparing: DateTime) => {
