@@ -13,6 +13,39 @@ import { alpha } from '@mui/material/styles';
 
 const blogs = [
   {
+    title: 'MUI X v6.18.0',
+    description:
+      'New stable components, polished features, better performance and more.',
+    announcementDate: 'Monday, Nov 13, 2023',
+    url: 'https://mui.com/blog/mui-x-end-v6-features/',
+    highlightList: [
+      {
+        title: 'Charts - stable version',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#charts',
+      },
+      {
+        title: 'Tree view - stable version',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#tree-view',
+      },
+      {
+        title: 'Date and time clearable fields',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#clearable-field',
+      },
+      {
+        title: 'Customization Playgrounds for date and time pickers',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#customization-playgrounds',
+      },
+      {
+        title: 'DataGrid Column Autosizing',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
+      },
+      {
+        title: 'Sparklines on DataGrid ',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#sparkline-as-a-column-type',
+      },
+    ],
+  },
+  {
     title: 'MUI X v6.11.0',
     description: 'A roundup of all new features since v6.0.0.',
     announcementDate: 'Monday, Aug 14, 2023',
