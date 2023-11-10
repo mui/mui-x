@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 10, 2023_
 
-We're thrilled to announce the first alpha release of our next major version, v7. 
+We're thrilled to announce the first alpha release of our next major version, v7.
 This release introduces a few breaking changes, paving the way for the upcoming features like Pivoting and DateTimeRangePicker.
 
 A special shoutout to thank the 12 contributors who made this release possible. Here are some highlights ✨:
