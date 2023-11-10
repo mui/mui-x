@@ -64,7 +64,7 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
-## Components with date edition
+## Modified props
 
 ### Remove the string argument of the `dayOfWeekFormatter` prop
 
@@ -80,4 +80,29 @@ The string argument of the `dayOfWeekFormatter` has been replaced in favor of th
 -   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
 +   dayOfWeekFormatter={(day) => `${day.format('dd')}.`
  />
+```
+
+## Field components
+
+### Replace the section `hasLeadingZeros` property
+
+:::success
+This only impacts you if you are using the `unstableFieldRef` prop to imperatively access the section object.
+:::
+
+The property `hasLeadingZeros` has been removed from the sections in favor of the more precise `hasLeadingZerosInFormat` and `hasLeadingZerosInInput` properties.
+To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
+
+```diff
+ const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+
+ React.useEffect(() => {
+     const firstSection = fieldRef.current!.getSections()[0]
+-    console.log(firstSection.hasLeadingZeros)
++    console.log(firstSection.hasLeadingZerosInFormat)
+ }, [])
+
+ return (
+   <DateField unstableFieldRef={fieldRef} />
+ );
 ```
