@@ -320,13 +320,12 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {boolean} `true` if the date is null.
    */
   isNull(value: TDate | null): boolean;
-  // TODO v7: Type `value` to be `TDate | null` and make sure the `isValid(null)` returns `false`.
   /**
    * Check if the date is valid.
-   * @param {any} value The value to test.
-   * @returns {boolean} `true` if the value is valid.
+   * @param {TDate | null} value The value to test.
+   * @returns {boolean} `true` if the value is a valid date according to the date library.
    */
-  isValid(value: any): boolean;
+  isValid(value: TDate | null): boolean;
   /**
    * Format a date using an adapter format string (see the `AdapterFormats` interface)
    * @template TDate
@@ -360,7 +359,6 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {number} The diff between the two dates.
    */
   getDiff(value: TDate, comparing: TDate | string, unit?: AdapterUnits): number;
-  // TODO v7: Type `value` and `comparing` to be `TDate | null`.
   /**
    * Check if the two dates are equal (e.g: they represent the same timestamp).
    * @param {any} value The reference date.

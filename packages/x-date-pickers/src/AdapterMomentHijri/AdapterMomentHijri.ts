@@ -179,14 +179,6 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
       .replace(/,/g, '،');
   };
 
-  public isEqual = (value: any, comparing: any) => {
-    if (value === null && comparing === null) {
-      return true;
-    }
-
-    return this.moment(value).isSame(comparing);
-  };
-
   public startOfYear = (value: Moment) => {
     return value.clone().startOf('iYear');
   };

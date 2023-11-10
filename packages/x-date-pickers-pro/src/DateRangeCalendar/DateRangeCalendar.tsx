@@ -209,7 +209,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
+    TDate,
+    DateRange<TDate>,
+    NonNullable<typeof onChange>
+  >({
     name: 'DateRangeCalendar',
     timezone: timezoneProp,
     value: valueProp,

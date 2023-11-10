@@ -345,8 +345,12 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value === null;
   };
 
-  public isValid = (value: any) => {
-    return this.moment(value).isValid();
+  public isValid = (value: Moment | null) => {
+    if (value == null) {
+      return false;
+    }
+
+    return value.isValid();
   };
 
   public format = (value: Moment, formatKey: keyof AdapterFormats) => {
@@ -367,12 +371,16 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.diff(comparing, unit);
   };
 
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: Moment | null, comparing: Moment | null) => {
     if (value === null && comparing === null) {
       return true;
     }
 
-    return this.moment(value).isSame(comparing);
+    if (value === null || comparing === null) {
+      return false;
+    }
+
+    return value.isSame(comparing);
   };
 
   public isSameYear = (value: Moment, comparing: Moment) => {

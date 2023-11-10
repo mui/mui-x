@@ -275,16 +275,12 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value === null;
   };
 
-  public isValid = (value: any): boolean => {
-    if (DateTime.isDateTime(value)) {
-      return value.isValid;
-    }
-
+  public isValid = (value: DateTime | null): boolean => {
     if (value === null) {
       return false;
     }
 
-    return this.isValid(this.date(value));
+    return value.isValid;
   };
 
   public format = (value: DateTime, formatKey: keyof AdapterFormats) => {
@@ -311,17 +307,16 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.diff(comparing).as('millisecond');
   };
 
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: DateTime | null, comparing: DateTime | null) => {
     if (value === null && comparing === null) {
       return true;
     }
 
-    // Make sure that null will not be passed to this.date
     if (value === null || comparing === null) {
       return false;
     }
 
-    return +this.date(value)! === +this.date(comparing)!;
+    return +value === +comparing;
   };
 
   public isSameYear = (value: DateTime, comparing: DateTime) => {

@@ -255,9 +255,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.isValid(testDateIso)).to.equal(true);
     expect(adapter.isValid(testDateLocale)).to.equal(true);
     expect(adapter.isValid(invalidDate)).to.equal(false);
-    expect(adapter.isValid(undefined)).to.equal(true);
     expect(adapter.isValid(null)).to.equal(false);
-    expect(adapter.isValid('2018-42-30T11:60:00.000Z')).to.equal(false);
   });
 
   describe('Method: getDiff', () => {
