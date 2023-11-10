@@ -16,6 +16,11 @@ export interface ExportedPickersArrowSwitcherProps {
    */
   slotProps?: PickersArrowSwitcherSlotsComponentsProps;
   classes?: Partial<PickersArrowSwitcherClasses>;
+  /**
+   * Format used to display the date.
+   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   */
+  format?: string;
 }
 
 export interface PickersArrowSwitcherProps
