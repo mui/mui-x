@@ -116,7 +116,7 @@ describe('<DateCalendar />', () => {
     expect(screen.getByText('2019/01')).toBeVisible();
   });
 
-  it.only('should render column header according to dayOfWeekFormatter', () => {
+  it('should render column header according to dayOfWeekFormatter', () => {
     render(
       <DateCalendar
         defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
