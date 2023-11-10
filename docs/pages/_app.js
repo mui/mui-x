@@ -232,8 +232,8 @@ function AppWrapper(props) {
             text: `v${process.env.DATA_GRID_VERSION}`,
             current: true,
           },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/components/data-grid/` },
-          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/components/data-grid/` },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-data-grid/` },
+          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
