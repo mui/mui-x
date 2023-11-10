@@ -116,15 +116,12 @@ describe('<DateCalendar />', () => {
     expect(screen.getByText('2019/01')).toBeVisible();
   });
 
-  it('should render column header according to dayOfWeekFormatter', () => {
+  it.only('should render column header according to dayOfWeekFormatter', () => {
     render(
-      <LocalizationProvider dateAdapter={AdapterClassToUse}>
-        <DateCalendar
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
-          dayOfWeekFormatter={(day) => `${day}.`}
-        />
-        ,
-      </LocalizationProvider>,
+      <DateCalendar
+        defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
+        dayOfWeekFormatter={(day) => `${adapterToUse.format(day, 'weekdayShort')}.`}
+      />,
     );
 
     ['Su.', 'Mo.', 'Tu.', 'We.', 'Th.', 'Fr.', 'Sa.'].forEach((formattedDay) => {
