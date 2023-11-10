@@ -17,6 +17,7 @@ import {
   describeValidation,
   describeValue,
   describePicker,
+  formatFullTimeValue,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
@@ -73,7 +74,7 @@ describe('<MobileTimePicker /> - Describes', () => {
         expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
       const expectedValueStr = expectedValue
-        ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+        ? formatFullTimeValue(adapterToUse, expectedValue)
         : '';
 
       expectInputValue(input, expectedValueStr);

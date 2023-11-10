@@ -9,6 +9,7 @@ interface IGetHoursSectionOptions<TDate> {
   isDisabled: (value: number) => boolean;
   timeStep: number;
   resolveAriaLabel: (value: string) => string;
+  valueOrReferenceDate: TDate;
 }
 
 export const getHourSectionOptions = <TDate>({
@@ -19,25 +20,31 @@ export const getHourSectionOptions = <TDate>({
   isDisabled,
   resolveAriaLabel,
   timeStep,
+  valueOrReferenceDate,
 }: IGetHoursSectionOptions<TDate>): MultiSectionDigitalClockOption<number>[] => {
   const currentHours = value ? utils.getHours(value) : null;
 
   const result: MultiSectionDigitalClockOption<number>[] = [];
 
-  const isSelected = (hour: number) => {
-    if (currentHours === null) {
+  const isSelected = (hour: number, overriddenCurrentHours?: number) => {
+    const resolvedCurrentHours = overriddenCurrentHours ?? currentHours;
+    if (resolvedCurrentHours === null) {
       return false;
     }
 
     if (ampm) {
       if (hour === 12) {
-        return currentHours === 12 || currentHours === 0;
+        return resolvedCurrentHours === 12 || resolvedCurrentHours === 0;
       }
 
-      return currentHours === hour || currentHours - 12 === hour;
+      return resolvedCurrentHours === hour || resolvedCurrentHours - 12 === hour;
     }
 
-    return currentHours === hour;
+    return resolvedCurrentHours === hour;
+  };
+
+  const isFocused = (hour: number) => {
+    return isSelected(hour, utils.getHours(valueOrReferenceDate));
   };
 
   const endHour = ampm ? 11 : 23;
@@ -52,6 +59,7 @@ export const getHourSectionOptions = <TDate>({
       label,
       isSelected,
       isDisabled,
+      isFocused,
       ariaLabel,
     });
   }
@@ -83,6 +91,10 @@ export const getTimeSectionOptions = ({
     return hasValue && value === timeValue;
   };
 
+  const isFocused = (timeValue: number) => {
+    return value === timeValue;
+  };
+
   return [
     ...Array.from({ length: Math.ceil(60 / timeStep) }, (_, index) => {
       const timeValue = timeStep * index;
@@ -91,6 +103,7 @@ export const getTimeSectionOptions = ({
         label: resolveLabel(timeValue),
         isDisabled,
         isSelected,
+        isFocused,
         ariaLabel: resolveAriaLabel(timeValue.toString()),
       };
     }),

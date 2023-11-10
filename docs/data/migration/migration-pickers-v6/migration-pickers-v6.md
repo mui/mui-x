@@ -30,8 +30,8 @@ These changes were done for consistency, improved stability and to make room for
 
 The `components` and `componentsProps` props are renamed to `slots` and `slotProps` props respectively.
 This is a slow and ongoing effort between the different MUI libraries.
-To smooth the transition, they where deprecated during the [v6](/x/migration/migration-pickers-v5/#rename-components-to-slots-optional).
-And are removed fro the v7.
+To smooth the transition, they were deprecated during the [v6](/x/migration/migration-pickers-v5/#rename-components-to-slots-optional).
+And are removed from the v7.
 
 If not already done, this modification can be handled by the codemod
 
@@ -64,7 +64,32 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
-### Adapters
+## Field components
+
+### Replace the section `hasLeadingZeros` property
+
+:::success
+This only impacts you if you are using the `unstableFieldRef` prop to imperatively access the section object.
+:::
+
+The property `hasLeadingZeros` has been removed from the sections in favor of the more precise `hasLeadingZerosInFormat` and `hasLeadingZerosInInput` properties.
+To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
+
+```diff
+ const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+
+ React.useEffect(() => {
+     const firstSection = fieldRef.current!.getSections()[0]
+-    console.log(firstSection.hasLeadingZeros)
++    console.log(firstSection.hasLeadingZerosInFormat)
+ }, [])
+
+ return (
+   <DateField unstableFieldRef={fieldRef} />
+ );
+```
+
+## Adapters
 
 :::success
 The following breaking changes only impact you if you are using the adapters outside the pickers like displayed in the following example:
@@ -79,7 +104,7 @@ adapter.isValid(dayjs('2022-04-17T15:30'));
 If you are just passing an adapter to `LocalizationProvider`, then you can safely skip this section.
 :::
 
-#### Restrict the input format of the `isValid` method
+### Restrict the input format of the `isValid` method
 
 The `isValid` method used to accept any type of value and tried to parse them before checking their validity.
 The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in our components)
@@ -118,6 +143,4 @@ The method has been simplified and now only accepts an already-parsed date or `n
 
 - const isValid = adapterDateFns.isValid('2022-04-17');
 + const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
-
-
 ```

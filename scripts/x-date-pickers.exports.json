@@ -98,6 +98,7 @@
   { "name": "elGR", "kind": "Variable" },
   { "name": "enUS", "kind": "Variable" },
   { "name": "esES", "kind": "Variable" },
+  { "name": "eu", "kind": "Variable" },
   { "name": "ExportedDigitalClockProps", "kind": "Interface" },
   { "name": "ExportedMultiSectionDigitalClockSectionProps", "kind": "Interface" },
   { "name": "ExportedPickersCalendarHeaderProps", "kind": "TypeAlias" },
