@@ -56,8 +56,8 @@
     "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",
     "release:build": "lerna run --parallel --no-private --scope \"@mui/*\" build",
-    "release:publish": "lerna publish from-package --no-private --dist-tag latest --contents build",
-    "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
+    "release:publish": "lerna publish from-package --no-private --dist-tag next --contents build",
+    "release:publish:dry-run": "lerna publish from-package --dist-tag next --contents build --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
     "validate": "concurrently \"yarn prettier && yarn eslint\" \"yarn proptypes\" \"yarn docs:typescript:formatted\" \"yarn docs:api\""
   },
