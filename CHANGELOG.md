@@ -96,6 +96,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.0`, plus:
 
 #### `@mui/x-date-pickers@7.0.0-alpha.0`
 
+- [pickers] Escape non tokens words (#10400) @alexfauquette
 - [fields] Fix `MultiInputTimeRangeField` section selection (#10922) @noraleonte
 - [pickers] Refine `referenceDate` behavior in views (#10863) @LukasTy
 - [pickers] Remove `components` and `componentsProps` props (#10700) @alexfauquette
