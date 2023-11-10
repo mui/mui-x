@@ -34,6 +34,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   c: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   ccc: { sectionType: 'weekDay', contentType: 'letter' },
   cccc: { sectionType: 'weekDay', contentType: 'letter' },
+  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
   E: { sectionType: 'weekDay', contentType: 'digit', maxLength: 2 },
   EEE: { sectionType: 'weekDay', contentType: 'letter' },
   EEEE: { sectionType: 'weekDay', contentType: 'letter' },
