@@ -30,8 +30,8 @@ These changes were done for consistency, improved stability and to make room for
 
 The `components` and `componentsProps` props are renamed to `slots` and `slotProps` props respectively.
 This is a slow and ongoing effort between the different MUI libraries.
-To smooth the transition, they where deprecated during the [v6](/x/migration/migration-pickers-v5/#rename-components-to-slots-optional).
-And are removed fro the v7.
+To smooth the transition, they were deprecated during the [v6](/x/migration/migration-pickers-v5/#rename-components-to-slots-optional).
+And are removed from the v7.
 
 If not already done, this modification can be handled by the codemod
 

@@ -238,16 +238,26 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public expandFormat = (format: string) => {
     // Extract escaped section to avoid extending them
-    const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
+    const catchEscapedSectionsRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
+
+    // Extract words to test if they are a token or a word to escape.
+    const catchWordsRegexp = /(?:^|[^a-z])([a-z]+)(?:[^a-z]|$)|([a-z]+)/gi;
     return (
       format
-        .match(longFormatRegexp)!
+        .match(catchEscapedSectionsRegexp)!
         .map((token: string) => {
           const firstCharacter = token[0];
           if (firstCharacter === "'") {
             return token;
           }
-          return DateTime.expandFormat(token, { locale: this.locale });
+          const expandedToken = DateTime.expandFormat(token, { locale: this.locale });
+          return expandedToken.replace(catchWordsRegexp, (correspondance, g1, g2) => {
+            const word = g1 || g2; // words are either in group 1 or group 2
+            if (word === 'yyyyy' || formatTokenMap[word] !== undefined) {
+              return correspondance;
+            }
+            return `'${correspondance}'`;
+          });
         })
         .join('')
         // The returned format can contain `yyyyy` which means year between 4 and 6 digits.

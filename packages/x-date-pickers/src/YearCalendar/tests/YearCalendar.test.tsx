@@ -169,4 +169,10 @@ describe('<YearCalendar />', () => {
     expect(year2019).not.to.have.attribute('disabled');
     expect(year2020).to.have.attribute('disabled');
   });
+
+  it('should not mark the `referenceDate` year as selected', () => {
+    render(<YearCalendar referenceDate={adapterToUse.date(new Date(2018, 1, 2))} />);
+
+    expect(screen.getByRole('radio', { name: '2018', checked: false })).to.not.equal(null);
+  });
 });
