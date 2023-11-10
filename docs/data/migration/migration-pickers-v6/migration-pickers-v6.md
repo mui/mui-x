@@ -64,18 +64,6 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
-### Replace `defaultCalendarMonth` with `referenceDate`
-
-The `defaultCalendarMonth` has been removed in favor of the more flexible `referenceDate` prop.
-It was available in `DateCalendar` and all the pickers using it for date editing.
-
-The new `referenceDate` prop is not limited to the default month, learn more on this prop on [the `DateCalendar` doc](/x/react-date-pickers/date-calendar/#choose-the-initial-year-month) or [the `referenceDate` doc](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined).
-
-```diff
-- <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
-+ <DateCalendar referenceDate{dayjs('2022-04-01')} />
-```
-
 ## Field components
 
 ### Replace the section `hasLeadingZeros` property
@@ -84,7 +72,7 @@ The new `referenceDate` prop is not limited to the default month, learn more on 
 This only impacts you if you are using the `unstableFieldRef` prop to imperatively access the section object.
 :::
 
-The `hasLeadingZeros` has been removed from the sections in favor of the more precise `hasLeadingZerosInFormat` and `hasLeadingZerosInInput` properties.
+The property `hasLeadingZeros` has been removed from the sections in favor of the more precise `hasLeadingZerosInFormat` and `hasLeadingZerosInInput` properties.
 To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 
 ```diff
