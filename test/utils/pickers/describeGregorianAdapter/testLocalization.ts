@@ -30,7 +30,9 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
       const formatString = adapter.formats[formatKey];
       const expandedFormat = cleanText(adapter.expandFormat(formatString));
 
-      if (expandedFormat === formatString) {
+      if (expandedFormat === formatString || formatString === 'ccccc') {
+        // Format 'ccccc' is not supported for the field fomrat since multiple day can have the same short
+        // It's used to display calendar days.
         return;
       }
 
