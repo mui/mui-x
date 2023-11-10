@@ -80,10 +80,9 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 
  React.useEffect(() => {
      const firstSection = fieldRef.current!.getSections()[0]
--     console.log(firstSection.hasLeadingZeros)
-+     console.log(firstSection.hasLeadingZerosInFormat)
+-    console.log(firstSection.hasLeadingZeros)
++    console.log(firstSection.hasLeadingZerosInFormat)
  }, [])
-
 
  return (
    <DateField unstableFieldRef={fieldRef} />
