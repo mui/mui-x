@@ -302,6 +302,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               isDisabled: (hours) => disabled || isTimeDisabled(hours, 'hours'),
               timeStep: timeSteps.hours,
               resolveAriaLabel: localeText.hoursClockNumberText,
+              valueOrReferenceDate,
             }),
           };
         }
@@ -348,12 +349,14 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
                 value: 'am',
                 label: amLabel,
                 isSelected: () => !!value && meridiemMode === 'am',
+                isFocused: () => !!valueOrReferenceDate && meridiemMode === 'am',
                 ariaLabel: amLabel,
               },
               {
                 value: 'pm',
                 label: pmLabel,
                 isSelected: () => !!value && meridiemMode === 'pm',
+                isFocused: () => !!valueOrReferenceDate && meridiemMode === 'pm',
                 ariaLabel: pmLabel,
               },
             ],
