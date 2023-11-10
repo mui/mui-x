@@ -14,7 +14,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 📘 Server side data source [early documentation](https://mui.com/x/react-data-grid/server-side-data/) published
 - 💫 New recipes added for the data grid
 - 📈 `<ChartsReferenceLine />` component is now available
-- 🌍 Improve Czech (cs-CZ) locale
+- 🌍 Add Basque (eu) locale, improve Czech (cs-CZ) and Spanish (es-ES) locales
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
