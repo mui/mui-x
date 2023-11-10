@@ -274,8 +274,12 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
       .join('');
   };
 
-  public isValid = (value: any) => {
-    return isValid(this.date(value));
+  public isValid = (value: Date | null) => {
+    if (value == null) {
+      return false;
+    }
+
+    return isValid(value);
   };
 
   public format = (value: Date, formatKey: keyof AdapterFormats) => {

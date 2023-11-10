@@ -160,15 +160,6 @@ export class AdapterMomentJalaali
     return this.moment(value, format, true).locale('fa');
   };
 
-  public isValid = (value: any) => {
-    // We can't to `this.moment(value)` because moment-jalaali looses the invalidity information when creating a new moment object from an existing one
-    if (!this.moment.isMoment(value)) {
-      return false;
-    }
-
-    return value.isValid();
-  };
-
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat
       .replace(/\d/g, (match) => NUMBER_SYMBOL_MAP[match as keyof typeof NUMBER_SYMBOL_MAP])

@@ -242,13 +242,12 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {string} The expanded format.
    */
   expandFormat(format: string): string;
-  // TODO v7: Type `value` to be `TDate | null` and make sure the `isValid(null)` returns `false`.
   /**
    * Check if the date is valid.
-   * @param {any} value The value to test.
-   * @returns {boolean} `true` if the value is valid.
+   * @param {TDate | null} value The value to test.
+   * @returns {boolean} `true` if the value is a valid date according to the date library.
    */
-  isValid(value: any): boolean;
+  isValid(value: TDate | null): boolean;
   /**
    * Format a date using an adapter format string (see the `AdapterFormats` interface)
    * @template TDate
