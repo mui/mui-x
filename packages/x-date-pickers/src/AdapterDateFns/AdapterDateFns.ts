@@ -279,9 +279,13 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return numberToFormat;
   };
 
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: Date | null, comparing: Date | null) => {
     if (value === null && comparing === null) {
       return true;
+    }
+
+    if (value === null || comparing === null) {
+      return false;
     }
 
     return isEqual(value, comparing);

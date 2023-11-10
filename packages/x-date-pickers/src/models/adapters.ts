@@ -272,6 +272,16 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {string} The formatted number.
    */
   formatNumber(numberToFormat: string): string;
+  /**
+   * Compute the difference between the two dates in the unit provided.
+   * @deprecated  Will be removed in v7.
+   * @template TDate
+   * @param {TDate} value The reference date.
+   * @param {TDate | string} comparing The date to compare with the reference date.
+   * @param {AdapterUnits} unit The unit in which we want to the result to be.
+   * @returns {number} The diff between the two dates.
+   */
+  getDiff(value: TDate, comparing: TDate | string, unit?: AdapterUnits): number;
   // TODO v7: Type `value` and `comparing` to be `TDate | null`.
   /**
    * Check if the two dates are equal (e.g: they represent the same timestamp).

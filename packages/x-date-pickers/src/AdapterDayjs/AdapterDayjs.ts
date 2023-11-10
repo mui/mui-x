@@ -428,12 +428,16 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return numberToFormat;
   };
 
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: Dayjs | null, comparing: Dayjs | null) => {
     if (value === null && comparing === null) {
       return true;
     }
 
-    return this.dayjs(value).toDate().getTime() === this.dayjs(comparing).toDate().getTime();
+    if (value === null || comparing === null) {
+      return false;
+    }
+
+    return value.toDate().getTime() === comparing.toDate().getTime();
   };
 
   public isSameYear = (value: Dayjs, comparing: Dayjs) => {
