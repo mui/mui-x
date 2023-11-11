@@ -114,10 +114,14 @@ async function main() {
         );
 
         // Wait for the flags to load
-        await page.waitForFunction(() => {
-          const images = Array.from(document.querySelectorAll('img'));
-          return images.every((img) => img.complete);
-        });
+        await page.waitForFunction(
+          () => {
+            const images = Array.from(document.querySelectorAll('img'));
+            return images.every((img) => img.complete);
+          },
+          undefined,
+          { timeout: 1000 },
+        );
 
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
