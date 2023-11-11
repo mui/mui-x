@@ -101,12 +101,6 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
-        // Wait for the flags to load
-        await page.waitForFunction(() => {
-          const images = Array.from(document.querySelectorAll('img'));
-          return images.every((img) => img.complete);
-        });
-
         if (/^\docs-charts-.*/.test(pathURL)) {
           // Run one tick of the clock to get the final animation state
           await sleep(10);
@@ -118,6 +112,12 @@ async function main() {
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
+
+        // Wait for the flags to load
+        await page.waitForFunction(() => {
+          const images = Array.from(document.querySelectorAll('img'));
+          return images.every((img) => img.complete);
+        });
 
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
