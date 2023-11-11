@@ -119,6 +119,7 @@ async function main() {
             const images = Array.from(document.querySelectorAll('img'));
             return images.every((img) => {
               if (!img.complete && img.loading === 'lazy') {
+                // Force lazy-loaded images to load
                 img.setAttribute('loading', 'eager');
               }
               return img.complete;
