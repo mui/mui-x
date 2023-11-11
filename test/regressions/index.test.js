@@ -117,7 +117,12 @@ async function main() {
         await page.waitForFunction(
           () => {
             const images = Array.from(document.querySelectorAll('img'));
-            return images.every((img) => img.complete);
+            return images.every((img) => {
+              if (!img.complete && img.loading === 'lazy') {
+                img.setAttribute('loading', 'eager');
+              }
+              return img.complete;
+            });
           },
           undefined,
           { timeout: 1000 },
