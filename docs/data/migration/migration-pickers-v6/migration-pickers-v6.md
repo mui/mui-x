@@ -89,6 +89,27 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
  );
 ```
 
+## Removed formats
+
+### Remove the `monthAndYear` format
+
+The `monthAndYear` format has been removed.
+It was used in the header of the calendar views, you can replace it with the new `format` prop of the `calendarHeader` slot:
+
+```diff
+  <LocalizationProvider
+    adapter={AdapterDayJS}
+-   formats={{ monthAndYear: 'MM/YYYY' }}
+  />
+    <DatePicker
++     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+    />
+     <DateRangePicker
++     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+    />
+  <LocalizationProvider />
+```
+
 ## Adapters
 
 :::success
