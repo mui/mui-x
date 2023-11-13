@@ -101,7 +101,7 @@ You can learn more about the new approach on the [dedicated doc page](https://mu
     adapter={AdapterDayjs}
 -   dateLibInstance={dayjs.utc}
   >
-    <DatePicker value={dayjs.utc} />
+    <DatePicker value={dayjs.utc('2022-04-17')} />
   </LocalizationProvider>
 
   // When no `value` or `defaultValue` is provided
