@@ -16,7 +16,7 @@ describe('<DigitalClock />', () => {
   describe('Reference date', () => {
     it('should use `referenceDate` when no value defined', () => {
       const onChange = spy();
-      const referenceDate = new Date(2018, 0, 1, 12, 30);
+      const referenceDate = '2018-01-01T12:30:00';
 
       render(<DigitalClock onChange={onChange} referenceDate={adapterToUse.date(referenceDate)} />);
 
@@ -42,7 +42,7 @@ describe('<DigitalClock />', () => {
     });
 
     it('should fallback to making the first entry focusable when `referenceDate` does not map to any option', () => {
-      const referenceDate = new Date(2018, 0, 1, 12, 33);
+      const referenceDate = '2018-01-01T12:33:00';
 
       render(<DigitalClock referenceDate={adapterToUse.date(referenceDate)} />);
 
