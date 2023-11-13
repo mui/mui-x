@@ -287,7 +287,7 @@ The `parseISO` method have been removed, you can replace it with a very basic ch
 + const isNull = value === null;
 ```
 
-### Remove the `mergeDateAndTime` method:
+### Remove the `mergeDateAndTime` method
 
 The `mergeDateAndTime` method have been removed, you can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
 
