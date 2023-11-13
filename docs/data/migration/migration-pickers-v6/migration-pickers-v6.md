@@ -89,6 +89,27 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
  );
 ```
 
+## Removed formats
+
+### Remove the `monthAndYear` format
+
+The `monthAndYear` format has been removed.
+It was used in the header of the calendar views, you can replace it with the new `format` prop of the `calendarHeader` slot:
+
+```diff
+  <LocalizationProvider
+    adapter={AdapterDayJS}
+-   formats={{ monthAndYear: 'MM/YYYY' }}
+  />
+    <DatePicker
++     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+    />
+     <DateRangePicker
++     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+    />
+  <LocalizationProvider />
+```
+
 ## Adapters
 
 :::success
@@ -104,7 +125,222 @@ adapter.isValid(dayjs('2022-04-17T15:30'));
 If you are just passing an adapter to `LocalizationProvider`, then you can safely skip this section.
 :::
 
-### Change the input format of the `getYearRange` method
+### Remove the `getDiff` method
+
+The `getDiff` method have been removed, you can directly use your date library:
+
+```diff
+  // For Day.js
+- const diff = adapter.getDiff(value, comparing, unit);
++ const diff = value.diff(comparing, unit);
+
+  // For Luxon
+- const diff = adapter.getDiff(value, comparing, unit);
++ const getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
++   const parsedComparing = typeof comparing === 'string'
++     ? DateTime.fromJSDate(new Date(comparing))
++     : comparing;
++   if (unit) {
++     return Math.floor(value.diff(comparing).as(unit));
++   }
++   return value.diff(comparing).as('millisecond');
++ };
++
++ const diff = getDiff(value, comparing, unit);
+
+  // For DateFns
+- const diff = adapter.getDiff(value, comparing, unit);
++ const getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
++   const parsedComparing = typeof comparing === 'string' ? new Date(comparing) : comparing;
++   switch (unit) {
++     case 'years':
++       return dateFns.differenceInYears(value, parsedComparing);
++     case 'quarters':
++       return dateFns.differenceInQuarters(value, parsedComparing);
++     case 'months':
++       return dateFns.differenceInMonths(value, parsedComparing);
++     case 'weeks':
++       return dateFns.differenceInWeeks(value, parsedComparing);
++     case 'days':
++       return dateFns.differenceInDays(value, parsedComparing);
++     case 'hours':
++       return dateFns.differenceInHours(value, parsedComparing);
++     case 'minutes':
++       return dateFns.differenceInMinutes(value, parsedComparing);
++     case 'seconds':
++       return dateFns.differenceInSeconds(value, parsedComparing);
++     default: {
++       return dateFns.differenceInMilliseconds(value, parsedComparing);
++     }
++   }
++ };
++
++ const diff = getDiff(value, comparing, unit);
+
+  // For Moment
+- const diff = adapter.getDiff(value, comparing, unit);
++ const diff = value.diff(comparing, unit);
+```
+
+### Remove the `getFormatHelperText` method
+
+The `parseISO` method have been removed, you can use the `expandFormat` instead:
+
+```diff
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format);
+```
+
+And if you need the exact same output you can apply the following transformation:
+
+```diff
+  // For Day.js
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+
+  // For Luxon
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
+
+  // For DateFns
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format).replace(/(aaa|aa|a)/g, '(a|p)m').toLocaleLowerCase();
+
+  // For Moment
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+```
+
+### Remove the `getMeridiemText` method
+
+The `getMeridiemText` method have been removed, you can use the `setHours`, `date` and `format` methods to recreate its behavior:
+
+```diff
+- const meridiem = adapter.getMeridiemText('am');
++ const getMeridiemText = (meridiem: 'am' | 'pm') => {
++   const date = adapter.setHours(adapter.date()!, meridiem === 'am' ? 2 : 14);
++   return utils.format(date, 'meridiem');
++ };
++
++ const meridiem = getMeridiemText('am');
+```
+
+### Remove the `getMonthArray` method
+
+The `getMonthArray` method have been removed, you can use the `startOfYear` and `addMonths` methods to recreate its behavior:
+
+```diff
+- const monthArray = adapter.getMonthArray(value);
++ const getMonthArray = (year) => {
++   const firstMonth = utils.startOfYear(year);
++   const months = [firstMonth];
++
++   while (months.length < 12) {
++     const prevMonth = months[months.length - 1];
++     months.push(utils.addMonths(prevMonth, 1));
++   }
++
++   return months;
++ }
++
++ const monthArray = getMonthArray(value);
+```
+
+### Remove the `getNextMonth` method
+
+The `getNextMonth` method have been removed, you can use the `addMonths` method instead:
+
+```diff
+- const nextMonth = adapter.getNextMonth(value);
++ const nextMonth = adapter.addMonths(value, 1);
+```
+
+### Remove the `getPreviousMonth` method
+
+The `getPreviousMonth` method have been removed, you can use the `addMonths` method instead:
+
+```diff
+- const previousMonth = adapter.getPreviousMonth(value);
++ const previousMonth = adapter.addMonths(value, -1);
+```
+
+### Remove the `getWeekdays` method
+
+The `getWeekdays` method have been removed, you can use the `startOfWeek` and `addDays` methods instead:
+
+```diff
+- const weekDays = adapter.getWeekdays(value);
++ const getWeekdays = (value) => {
++   const start = adapter.startOfWeek(value);
++   return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
++ };
++
++ const weekDays = getWeekdays(value);
+```
+
+### Remove the `isNull` method
+
+The `parseISO` method have been removed, you can replace it with a very basic check:
+
+```diff
+- const isNull = adapter.isNull(value);
++ const isNull = value === null;
+```
+
+### Remove the `mergeDateAndTime` method
+
+The `mergeDateAndTime` method have been removed, you can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
+
+```diff
+- const result = adapter.mergeDateAndTime(valueWithDate, valueWithTime);
++ const mergeDateAndTime = <TDate>(
++   dateParam,
++   timeParam,
++ ) => {
++   let mergedDate = dateParam;
++   mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
++   mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
++   mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
++
++   return mergedDate;
++ };
++
++ const result = mergeDateAndTime(valueWithDate, valueWithTime);
+```
+
+### Remove the `parseISO` method
+
+The `parseISO` method have been removed, you can directly use your date library:
+
+```diff
+  // For Day.js
+- const value = adapter.parseISO(isoString);
++ const value = dayjs(isoString);
+
+  // For Luxon
+- const value = adapter.parseISO(isoString);
++ const value = DateTime.fromISO(isoString);
+
+  // For DateFns
+- const value = adapter.parseISO(isoString);
++ const value = dateFns.parseISO(isoString);
+
+  // For Moment
+- const value = adapter.parseISO(isoString);
++ const value = moment(isoString, true);
+```
+
+### Remove the `toISO` method
+
+The `toISO` method have been removed, you can directly use your date library:
+
+```diff
+- const isoString = adapter.toISO(value);
++ const isoString = value.toISOString();
++ const isoString = value.toUTC().toISO({ format: 'extended' });
++ const isoString = dateFns.formatISO(value, { format: 'extended' });
++ const isoString = value.toISOString();
+```
 
 The `getYearRange` method used to accept two params and now accepts a tuple to be consistent with the `isWithinRange` method:
 

@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { stub } from 'sinon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { cleanText } from 'test/utils/pickers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
@@ -10,19 +9,6 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
 
   it('Method: formatNumber', () => {
     expect(adapter.formatNumber('1')).to.equal('1');
-  });
-
-  it('Method: getMeridiemText', () => {
-    expect(adapter.getMeridiemText('am')).to.equal('AM');
-    expect(adapter.getMeridiemText('pm')).to.equal('PM');
-
-    // Moment only translates for 12-hour cycle.
-    if (adapter.lib === 'moment') {
-      const sinonStub = stub(adapter, 'is12HourCycleInCurrentLocale').returns(false);
-      expect(adapter.getMeridiemText('am')).to.equal('AM');
-      expect(adapter.getMeridiemText('pm')).to.equal('PM');
-      sinonStub.restore();
-    }
   });
 
   it('Method: expandFormat', () => {
@@ -53,15 +39,6 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
     Object.keys(adapter.formats).forEach((formatKey) => {
       testFormat(formatKey as keyof AdapterFormats);
     });
-  });
-
-  it('Method: getFormatHelperText', () => {
-    expect(adapter.getFormatHelperText(adapter.formats.keyboardDate)).to.equal(
-      adapter.lib === 'luxon' ? 'm/d/yyyy' : 'mm/dd/yyyy',
-    );
-    expect(adapter.getFormatHelperText(adapter.formats.keyboardDateTime12h)).to.equal(
-      adapter.lib === 'luxon' ? 'm/d/yyyy hh:mm (a|p)m' : 'mm/dd/yyyy hh:mm (a|p)m',
-    );
   });
 
   it('Method: getCurrentLocaleCode', () => {

@@ -6,16 +6,6 @@ import addHours from 'date-fns/addHours';
 import addWeeks from 'date-fns/addWeeks';
 import addMonths from 'date-fns/addMonths';
 import addYears from 'date-fns/addYears';
-import differenceInYears from 'date-fns/differenceInYears';
-import differenceInQuarters from 'date-fns/differenceInQuarters';
-import differenceInMonths from 'date-fns/differenceInMonths';
-import differenceInWeeks from 'date-fns/differenceInWeeks';
-import differenceInDays from 'date-fns/differenceInDays';
-import differenceInHours from 'date-fns/differenceInHours';
-import differenceInMinutes from 'date-fns/differenceInMinutes';
-import differenceInSeconds from 'date-fns/differenceInSeconds';
-import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
-import eachDayOfInterval from 'date-fns/eachDayOfInterval';
 import endOfDay from 'date-fns/endOfDay';
 import endOfWeek from 'date-fns/endOfWeek';
 import endOfYear from 'date-fns/endOfYear';
@@ -50,8 +40,6 @@ import startOfMonth from 'date-fns/startOfMonth';
 import endOfMonth from 'date-fns/endOfMonth';
 import startOfWeek from 'date-fns/startOfWeek';
 import startOfYear from 'date-fns/startOfYear';
-import parseISO from 'date-fns/parseISO';
-import formatISO from 'date-fns/formatISO';
 import isWithinInterval from 'date-fns/isWithinInterval';
 import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
@@ -59,7 +47,6 @@ import longFormatters from 'date-fns/_lib/format/longFormatters';
 import {
   AdapterFormats,
   AdapterOptions,
-  AdapterUnits,
   DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -146,21 +133,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'PP',
-  fullDateWithWeekday: 'PPPP',
   keyboardDate: 'P',
   shortDate: 'MMM d',
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
-  monthAndYear: 'LLLL yyyy',
-  monthAndDate: 'MMMM d',
 
   fullTime: 'p',
   fullTime12h: 'hh:mm aa',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'PP p',
-  fullDateTime12h: 'PP hh:mm aa',
-  fullDateTime24h: 'PP HH:mm',
   keyboardDateTime: 'P p',
   keyboardDateTime12h: 'P hh:mm aa',
   keyboardDateTime24h: 'P HH:mm',
@@ -241,14 +222,6 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return value;
   };
 
-  public parseISO = (isoString: string) => {
-    return parseISO(isoString);
-  };
-
-  public toISO = (value: Date) => {
-    return formatISO(value, { format: 'extended' });
-  };
-
   public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
@@ -290,16 +263,6 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
       .join('');
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format)
-      .replace(/(aaa|aa|a)/g, '(a|p)m')
-      .toLocaleLowerCase();
-  };
-
-  public isNull = (value: Date | null) => {
-    return value === null;
-  };
-
   public isValid = (value: Date | null) => {
     if (value == null) {
       return false;
@@ -318,30 +281,6 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
 
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
-  };
-
-  public getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
-    switch (unit) {
-      case 'years':
-        return differenceInYears(value, this.date(comparing)!);
-      case 'quarters':
-        return differenceInQuarters(value, this.date(comparing)!);
-      case 'months':
-        return differenceInMonths(value, this.date(comparing)!);
-      case 'weeks':
-        return differenceInWeeks(value, this.date(comparing)!);
-      case 'days':
-        return differenceInDays(value, this.date(comparing)!);
-      case 'hours':
-        return differenceInHours(value, this.date(comparing)!);
-      case 'minutes':
-        return differenceInMinutes(value, this.date(comparing)!);
-      case 'seconds':
-        return differenceInSeconds(value, this.date(comparing)!);
-      default: {
-        return differenceInMilliseconds(value, this.date(comparing)!);
-      }
-    }
   };
 
   public isEqual = (value: Date | null, comparing: Date | null) => {
@@ -520,44 +459,6 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return getDaysInMonth(value);
   };
 
-  public getNextMonth = (value: Date) => {
-    return addMonths(value, 1);
-  };
-
-  public getPreviousMonth = (value: Date) => {
-    return addMonths(value, -1);
-  };
-
-  public getMonthArray = (value: Date) => {
-    const firstMonth = startOfYear(value);
-    const monthArray = [firstMonth];
-
-    while (monthArray.length < 12) {
-      const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
-    }
-
-    return monthArray;
-  };
-
-  public mergeDateAndTime = (dateParam: Date, timeParam: Date) => {
-    return this.setSeconds(
-      this.setMinutes(
-        this.setHours(dateParam, this.getHours(timeParam)),
-        this.getMinutes(timeParam),
-      ),
-      this.getSeconds(timeParam),
-    );
-  };
-
-  public getWeekdays = () => {
-    const now = new Date();
-    return eachDayOfInterval({
-      start: startOfWeek(now, { locale: this.locale }),
-      end: endOfWeek(now, { locale: this.locale }),
-    }).map((day) => this.formatByString(day, 'EEEEEE'));
-  };
-
   public getWeekArray = (value: Date) => {
     const start = startOfWeek(startOfMonth(value), { locale: this.locale });
     const end = endOfWeek(endOfMonth(value), { locale: this.locale });
@@ -594,9 +495,5 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am' ? 'AM' : 'PM';
   };
 }

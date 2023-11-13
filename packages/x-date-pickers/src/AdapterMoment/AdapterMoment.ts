@@ -3,7 +3,6 @@ import defaultMoment, { Moment, LongDateFormatKey } from 'moment';
 import {
   AdapterFormats,
   AdapterOptions,
-  AdapterUnits,
   DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -69,21 +68,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'll',
-  fullDateWithWeekday: 'dddd, LL',
   keyboardDate: 'L',
   shortDate: 'MMM D',
   normalDate: 'D MMMM',
   normalDateWithWeekday: 'ddd, MMM D',
-  monthAndYear: 'MMMM YYYY',
-  monthAndDate: 'MMMM D',
 
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'lll',
-  fullDateTime12h: 'll hh:mm A',
-  fullDateTime24h: 'll HH:mm',
   keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
@@ -290,14 +283,6 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.toDate();
   };
 
-  public parseISO = (isoString: string) => {
-    return this.moment(isoString, true);
-  };
-
-  public toISO = (value: Moment) => {
-    return value.toISOString();
-  };
-
   public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
@@ -337,14 +322,6 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
       .join('');
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
-  };
-
-  public isNull = (value: Moment | null) => {
-    return value === null;
-  };
-
   public isValid = (value: Moment | null) => {
     if (value == null) {
       return false;
@@ -365,10 +342,6 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
-  };
-
-  public getDiff = (value: Moment, comparing: Moment | string, unit?: AdapterUnits) => {
-    return value.diff(comparing, unit);
   };
 
   public isEqual = (value: Moment | null, comparing: Moment | null) => {
@@ -561,36 +534,6 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.daysInMonth();
   };
 
-  public getNextMonth = (value: Moment) => {
-    return value.clone().add(1, 'month');
-  };
-
-  public getPreviousMonth = (value: Moment) => {
-    return value.clone().subtract(1, 'month');
-  };
-
-  public getMonthArray = (value: Moment) => {
-    const firstMonth = this.startOfYear(value);
-    const monthArray = [firstMonth];
-
-    while (monthArray.length < 12) {
-      const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
-    }
-
-    return monthArray;
-  };
-
-  public mergeDateAndTime = (dateParam: Moment, timeParam: Moment) => {
-    return dateParam
-      .clone()
-      .hour(timeParam.hour())
-      .minute(timeParam.minute())
-      .second(timeParam.second());
-  };
-
-  public getWeekdays = () => this.syncMomentLocale(() => defaultMoment.weekdaysShort(true));
-
   public getWeekArray = (value: Moment) => {
     const cleanValue = this.setLocaleToValue(value);
     const start = cleanValue.clone().startOf('month').startOf('week');
@@ -628,16 +571,5 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    if (this.is12HourCycleInCurrentLocale()) {
-      // AM/PM translation only possible in those who have 12 hour cycle in locale.
-      return defaultMoment
-        .localeData(this.getCurrentLocaleCode())
-        .meridiem(ampm === 'am' ? 0 : 13, 0, false);
-    }
-
-    return ampm === 'am' ? 'AM' : 'PM'; // fallback for de, ru, ...etc
   };
 }
