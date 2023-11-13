@@ -4,8 +4,7 @@ import { spy } from 'sinon';
 import { fireEvent, userEvent, screen } from '@mui-internal/test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { createPickerRenderer, AdapterClassToUse, adapterToUse } from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -105,13 +104,10 @@ describe('<DateCalendar />', () => {
 
   it('should render column header according to dayOfWeekFormatter', () => {
     render(
-      <LocalizationProvider dateAdapter={AdapterClassToUse}>
-        <DateCalendar
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
-          dayOfWeekFormatter={(day) => `${day}.`}
-        />
-        ,
-      </LocalizationProvider>,
+      <DateCalendar
+        defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
+        dayOfWeekFormatter={(day) => `${day}.`}
+      />,
     );
 
     ['Su.', 'Mo.', 'Tu.', 'We.', 'Th.', 'Fr.', 'Sa.'].forEach((formattedDay) => {
@@ -121,16 +117,27 @@ describe('<DateCalendar />', () => {
 
   it('should render week number when `displayWeekNumber=true`', () => {
     render(
-      <LocalizationProvider dateAdapter={AdapterClassToUse}>
-        <DateCalendar
-          value={adapterToUse.date(new Date(2019, 0, 1))}
-          onChange={() => {}}
-          displayWeekNumber
-        />
-      </LocalizationProvider>,
+      <DateCalendar
+        value={adapterToUse.date(new Date(2019, 0, 1))}
+        onChange={() => {}}
+        displayWeekNumber
+      />,
     );
 
     expect(screen.getAllByRole('rowheader').length).to.equal(5);
+  });
+
+  describe('Slot: calendarHeader', () => {
+    it('should allow to override the format', () => {
+      render(
+        <DateCalendar
+          defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
+          slotProps={{ calendarHeader: { format: 'yyyy/MM' } }}
+        />,
+      );
+
+      expect(screen.getByText('2019/01')).toBeVisible();
+    });
   });
 
   describe('view: day', () => {

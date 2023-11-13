@@ -146,6 +146,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     labelId,
     className,
     timezone,
+    format = `${utils.formats.month} ${utils.formats.year}`,
     ...other
   } = props;
 
@@ -207,7 +208,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     return null;
   }
 
-  const label = `${utils.format(month, 'month')} ${utils.format(month, 'year')}`;
+  const label = utils.formatByString(month, format);
 
   return (
     <PickersCalendarHeaderRoot
@@ -273,6 +274,11 @@ PickersCalendarHeader.propTypes = {
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,
   disablePast: PropTypes.bool,
+  /**
+   * Format used to display the date.
+   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   */
+  format: PropTypes.string,
   labelId: PropTypes.string,
   maxDate: PropTypes.any.isRequired,
   minDate: PropTypes.any.isRequired,
