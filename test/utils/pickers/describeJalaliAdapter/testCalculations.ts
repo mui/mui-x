@@ -366,7 +366,7 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
 
   it('Method: getYearRange', () => {
     const anotherDate = adapter.setYear(testDateIso, 1400);
-    const yearRange = adapter.getYearRange(testDateIso, anotherDate);
+    const yearRange = adapter.getYearRange([testDateIso, anotherDate]);
     expect(yearRange).to.have.length(4);
   });
 };

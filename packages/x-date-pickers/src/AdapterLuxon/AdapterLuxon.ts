@@ -216,16 +216,26 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public expandFormat = (format: string) => {
     // Extract escaped section to avoid extending them
-    const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
+    const catchEscapedSectionsRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
+
+    // Extract words to test if they are a token or a word to escape.
+    const catchWordsRegexp = /(?:^|[^a-z])([a-z]+)(?:[^a-z]|$)|([a-z]+)/gi;
     return (
       format
-        .match(longFormatRegexp)!
+        .match(catchEscapedSectionsRegexp)!
         .map((token: string) => {
           const firstCharacter = token[0];
           if (firstCharacter === "'") {
             return token;
           }
-          return DateTime.expandFormat(token, { locale: this.locale });
+          const expandedToken = DateTime.expandFormat(token, { locale: this.locale });
+          return expandedToken.replace(catchWordsRegexp, (correspondance, g1, g2) => {
+            const word = g1 || g2; // words are either in group 1 or group 2
+            if (word === 'yyyyy' || formatTokenMap[word] !== undefined) {
+              return correspondance;
+            }
+            return `'${correspondance}'`;
+          });
         })
         .join('')
         // The returned format can contain `yyyyy` which means year between 4 and 6 digits.
@@ -243,16 +253,12 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value === null;
   };
 
-  public isValid = (value: any): boolean => {
-    if (DateTime.isDateTime(value)) {
-      return value.isValid;
-    }
-
+  public isValid = (value: DateTime | null): boolean => {
     if (value === null) {
       return false;
     }
 
-    return this.isValid(this.date(value));
+    return value.isValid;
   };
 
   public format = (value: DateTime, formatKey: keyof AdapterFormats) => {
@@ -279,17 +285,16 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.diff(comparing).as('millisecond');
   };
 
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: DateTime | null, comparing: DateTime | null) => {
     if (value === null && comparing === null) {
       return true;
     }
 
-    // Make sure that null will not be passed to this.date
     if (value === null || comparing === null) {
       return false;
     }
 
-    return +this.date(value)! === +this.date(comparing)!;
+    return +value === +comparing;
   };
 
   public isSameYear = (value: DateTime, comparing: DateTime) => {
@@ -534,7 +539,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.weekNumber;
   };
 
-  public getYearRange = (start: DateTime, end: DateTime) => {
+  public getYearRange = ([start, end]: [DateTime, DateTime]) => {
     const startDate = start.startOf('year');
     const endDate = end.endOf('year');
 

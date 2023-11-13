@@ -435,8 +435,12 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value === null;
   };
 
-  public isValid = (value: any) => {
-    return this.dayjs(value).isValid();
+  public isValid = (value: Dayjs | null) => {
+    if (value == null) {
+      return false;
+    }
+
+    return value.isValid();
   };
 
   public format = (value: Dayjs, formatKey: keyof AdapterFormats) => {
@@ -455,12 +459,16 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.diff(comparing, unit as AdapterUnits);
   };
 
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: Dayjs | null, comparing: Dayjs | null) => {
     if (value === null && comparing === null) {
       return true;
     }
 
-    return this.dayjs(value).toDate().getTime() === this.dayjs(comparing).toDate().getTime();
+    if (value === null || comparing === null) {
+      return false;
+    }
+
+    return value.toDate().getTime() === comparing.toDate().getTime();
   };
 
   public isSameYear = (value: Dayjs, comparing: Dayjs) => {
@@ -714,7 +722,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.week();
   };
 
-  public getYearRange = (start: Dayjs, end: Dayjs) => {
+  public getYearRange = ([start, end]: [Dayjs, Dayjs]) => {
     const startDate = start.startOf('year');
     const endDate = end.endOf('year');
     const years: Dayjs[] = [];

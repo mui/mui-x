@@ -187,6 +187,7 @@
     "dayDragging": { "description": "Styles applied to the day calendar container when dragging" }
   },
   "slotDescriptions": {
+    "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "nextIconButton": "Button allowing to switch to the right view.",

@@ -558,7 +558,6 @@ export const splitFormatIntoSections = <TDate>(
       maxLength,
       value: sectionValue,
       placeholder: getSectionPlaceholder(utils, timezone, localeText, sectionConfig, token),
-      hasLeadingZeros: hasLeadingZerosInFormat,
       hasLeadingZerosInFormat,
       hasLeadingZerosInInput,
       startSeparator: sections.length === 0 ? startSeparator : '',
