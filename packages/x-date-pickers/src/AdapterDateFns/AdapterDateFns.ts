@@ -300,8 +300,12 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return value === null;
   };
 
-  public isValid = (value: any) => {
-    return isValid(this.date(value));
+  public isValid = (value: Date | null) => {
+    if (value == null) {
+      return false;
+    }
+
+    return isValid(value);
   };
 
   public format = (value: Date, formatKey: keyof AdapterFormats) => {
@@ -340,9 +344,13 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     }
   };
 
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: Date | null, comparing: Date | null) => {
     if (value === null && comparing === null) {
       return true;
+    }
+
+    if (value === null || comparing === null) {
+      return false;
     }
 
     return isEqual(value, comparing);
@@ -574,7 +582,7 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return getWeek(value, { locale: this.locale });
   };
 
-  public getYearRange = (start: Date, end: Date) => {
+  public getYearRange = ([start, end]: [Date, Date]) => {
     const startDate = startOfYear(start);
     const endDate = endOfYear(end);
     const years: Date[] = [];

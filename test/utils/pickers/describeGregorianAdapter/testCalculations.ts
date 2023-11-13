@@ -255,9 +255,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.isValid(testDateIso)).to.equal(true);
     expect(adapter.isValid(testDateLocale)).to.equal(true);
     expect(adapter.isValid(invalidDate)).to.equal(false);
-    expect(adapter.isValid(undefined)).to.equal(true);
     expect(adapter.isValid(null)).to.equal(false);
-    expect(adapter.isValid('2018-42-30T11:60:00.000Z')).to.equal(false);
   });
 
   describe('Method: getDiff', () => {
@@ -1012,15 +1010,15 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: getYearRange', () => {
-    const yearRange = adapter.getYearRange(testDateIso, adapter.setYear(testDateIso, 2124));
+    const yearRange = adapter.getYearRange([testDateIso, adapter.setYear(testDateIso, 2124)]);
 
     expect(yearRange).to.have.length(107);
     expect(adapter.getYear(yearRange[yearRange.length - 1])).to.equal(2124);
 
-    const emptyYearRange = adapter.getYearRange(
+    const emptyYearRange = adapter.getYearRange([
       testDateIso,
       adapter.setYear(testDateIso, adapter.getYear(testDateIso) - 1),
-    );
+    ]);
 
     expect(emptyYearRange).to.have.length(0);
   });
