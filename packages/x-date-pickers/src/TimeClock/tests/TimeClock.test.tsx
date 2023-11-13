@@ -23,7 +23,7 @@ describe('<TimeClock />', () => {
 
   it('has a name depending on the `date`', () => {
     render(
-      <TimeClock value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
+      <TimeClock value={adapterToUse.date('2018-01-01T04:20:00'))} onChange={() => {}} />,
     );
 
     const listbox = screen.getByRole('listbox');
@@ -32,7 +32,7 @@ describe('<TimeClock />', () => {
 
   it('renders the current value as an accessible option', () => {
     render(
-      <TimeClock value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
+      <TimeClock value={adapterToUse.date('2018-01-01T04:20:00'))} onChange={() => {}} />,
     );
 
     const listbox = screen.getByRole('listbox');
@@ -61,7 +61,7 @@ describe('<TimeClock />', () => {
 
   it('selects the current date on mount', () => {
     render(
-      <TimeClock value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
+      <TimeClock value={adapterToUse.date('2018-01-01T04:20:00'))} onChange={() => {}} />,
     );
 
     const selectedOption = screen.getByRole('option', { selected: true });
@@ -73,7 +73,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date('2018-01-01T04:20:00'))}
         onChange={handleChange}
       />,
     );
@@ -96,7 +96,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date('2018-01-01T04:20:00'))}
         onChange={handleChange}
       />,
     );
@@ -116,7 +116,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date('2018-01-01T04:20:00'))}
         onChange={handleChange}
       />,
     );
@@ -136,7 +136,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date('2018-01-01T04:20:00'))}
         onChange={handleChange}
       />,
     );
@@ -157,7 +157,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 18, 20))}
+        value={adapterToUse.date('2018-01-01T18:20:00')}
         onChange={() => {}}
         shouldDisableClock={shouldDisableClock}
         ampm
@@ -190,7 +190,7 @@ describe('<TimeClock />', () => {
     const onChangeMock = spy();
     render(
       <TimeClock
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2018-01-01')}
         onChange={onChangeMock}
         readOnly
       />,
@@ -224,7 +224,7 @@ describe('<TimeClock />', () => {
     const onChangeMock = spy();
     render(
       <TimeClock
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2018-01-01')}
         onChange={onChangeMock}
         disabled
       />,
@@ -290,9 +290,9 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           onViewChange={handleViewChange}
         />,
@@ -313,9 +313,9 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 13))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01T13:00:00')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           onViewChange={handleViewChange}
           view="minutes"
@@ -336,9 +336,9 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 20))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01T01:20:00')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           view="minutes"
         />,
@@ -355,8 +355,8 @@ describe('<TimeClock />', () => {
         <TimeClock
           ampm={false}
           value={null}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           view="minutes"
         />,
@@ -372,9 +372,9 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 13))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01T13:00:00')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           view="hours"
         />,
@@ -391,8 +391,8 @@ describe('<TimeClock />', () => {
         <TimeClock
           ampm={false}
           value={null}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           view="hours"
         />,
@@ -407,7 +407,7 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 13, 20))}
+          value={adapterToUse.date('2018-01-01T13:20:00')}
           minutesStep={15}
           onChange={() => {}}
           view="minutes"
@@ -424,9 +424,9 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 13, 20))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01T13:20:00')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           onViewChange={handleViewChange}
           views={['seconds']}
@@ -447,9 +447,9 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           views={['seconds']}
         />,
@@ -466,8 +466,8 @@ describe('<TimeClock />', () => {
         <TimeClock
           ampm={false}
           value={null}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           views={['seconds']}
         />,
@@ -485,7 +485,7 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           autoFocus
-          value={adapterToUse.date(new Date(2019, 0, 1, 4, 19, 47))}
+          value={adapterToUse.date('2018-01-01T04:19:47')}
           onChange={handleChange}
         />,
       );
@@ -522,7 +522,7 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           onChange={onChange}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
+          referenceDate={adapterToUse.date('2018-01-01T12:30:00')}
         />,
       );
 
@@ -541,8 +541,8 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           onChange={onChange}
-          value={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          value={adapterToUse.date('2018-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );
 
@@ -561,8 +561,8 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           onChange={onChange}
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          defaultValue={adapterToUse.date('2018-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );
 

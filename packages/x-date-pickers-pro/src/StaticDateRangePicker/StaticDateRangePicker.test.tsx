@@ -47,11 +47,11 @@ describe('<StaticDateRangePicker />', () => {
   it('allows disabling dates', () => {
     render(
       <StaticDateRangePicker
-        minDate={adapterToUse.date(new Date(2005, 0, 1))}
+        minDate={adapterToUse.date('2005-01-01')}
         shouldDisableDate={isWeekend}
         defaultValue={[
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 31)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-31'),
         ]}
       />,
     );
@@ -67,8 +67,8 @@ describe('<StaticDateRangePicker />', () => {
     render(
       <StaticDateRangePicker
         defaultValue={[
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 31)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-31'),
         ]}
       />,
     );

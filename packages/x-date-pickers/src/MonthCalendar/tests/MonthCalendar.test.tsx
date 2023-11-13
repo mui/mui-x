@@ -10,7 +10,7 @@ describe('<MonthCalendar />', () => {
 
   it('should allow to pick month standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
-    render(<MonthCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChange} />);
+    render(<MonthCalendar value={adapterToUse.date('2018-02-02')} onChange={onChange} />);
     const targetMonth = screen.getByRole('radio', { name: 'February' });
 
     // A native button implies Enter and Space keydown behavior
@@ -40,7 +40,7 @@ describe('<MonthCalendar />', () => {
     const onChangeMock = spy();
     render(
       <MonthCalendar
-        value={adapterToUse.date(new Date(2019, 1, 2))}
+        value={adapterToUse.date('2018-02-02')}
         onChange={onChangeMock}
         readOnly
       />,
@@ -60,7 +60,7 @@ describe('<MonthCalendar />', () => {
     const onSubmitMock = spy();
     render(
       <form onSubmit={onSubmitMock}>
-        <MonthCalendar defaultValue={adapterToUse.date(new Date(2019, 1, 2))} />
+        <MonthCalendar defaultValue={adapterToUse.date('2018-02-02')} />
       </form>,
     );
 
@@ -73,7 +73,7 @@ describe('<MonthCalendar />', () => {
       const onChange = spy();
       render(
         <MonthCalendar
-          value={adapterToUse.date(new Date(2019, 1, 15))}
+          value={adapterToUse.date('2018-02-15')}
           onChange={onChange}
           disabled
         />,
@@ -90,9 +90,9 @@ describe('<MonthCalendar />', () => {
       const onChange = spy();
       render(
         <MonthCalendar
-          value={adapterToUse.date(new Date(2019, 1, 15))}
+          value={adapterToUse.date('2018-02-15')}
           onChange={onChange}
-          minDate={adapterToUse.date(new Date(2019, 1, 12))}
+          minDate={adapterToUse.date('2018-02-12')}
         />,
       );
 
@@ -113,9 +113,9 @@ describe('<MonthCalendar />', () => {
       const onChange = spy();
       render(
         <MonthCalendar
-          value={adapterToUse.date(new Date(2019, 1, 15))}
+          value={adapterToUse.date('2018-02-15')}
           onChange={onChange}
-          maxDate={adapterToUse.date(new Date(2019, 3, 12))}
+          maxDate={adapterToUse.date('2018-04-12')}
         />,
       );
 
@@ -136,7 +136,7 @@ describe('<MonthCalendar />', () => {
       const onChange = spy();
       render(
         <MonthCalendar
-          value={adapterToUse.date(new Date(2019, 1, 2))}
+          value={adapterToUse.date('2018-02-02')}
           onChange={onChange}
           shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 3}
         />,
@@ -171,7 +171,7 @@ describe('<MonthCalendar />', () => {
     });
 
     it('should not mark the `referenceDate` month as selected', () => {
-      render(<MonthCalendar referenceDate={adapterToUse.date(new Date(2018, 1, 2))} />);
+      render(<MonthCalendar referenceDate={adapterToUse.date('2018-02-02')} />);
 
       expect(screen.getByRole('radio', { name: 'February', checked: false })).to.not.equal(null);
     });

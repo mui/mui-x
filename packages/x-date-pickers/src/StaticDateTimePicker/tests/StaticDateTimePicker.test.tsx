@@ -14,7 +14,7 @@ describe('<StaticDateTimePicker />', () => {
     render(
       <StaticDateTimePicker
         onChange={onChange}
-        defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+        defaultValue={adapterToUse.date('2018-01-01')}
       />,
     );
 

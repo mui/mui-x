@@ -18,7 +18,7 @@ const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput?: boolean) =
 };
 
 const dateParser = (value: (null | number[])[]) => {
-  return value.map((date) => (date === null ? date : adapterToUse.date(new Date(...(date as [])))));
+  return value.map((date) => (date === null ? date : adapterToUse.date().(date as [])))));
 };
 
 export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSuite = (
@@ -60,7 +60,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
         <ElementToTest
           onError={onErrorMock}
           shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 11)))
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-11'))
           }
         />,
       );
@@ -77,7 +77,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, false], isSingleInput);
 
       act(() => {
-        inputValue(adapterToUse.date(new Date(2018, 2, 13)), { setEndDate: true });
+        inputValue(adapterToUse.date('2018-03-13'), { setEndDate: true });
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -85,7 +85,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, true], isSingleInput);
 
       act(() => {
-        inputValue(adapterToUse.date(new Date(2018, 2, 12)));
+        inputValue(adapterToUse.date('2018-03-12'));
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -97,7 +97,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       setProps({
         shouldDisableDate: (date) =>
-          adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13))),
+          adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -107,7 +107,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
     it('should apply disablePast', function test() {
       const onErrorMock = spy();
-      const now = adapterToUse.date(new Date());
+      const now = adapterToUse.date();
       render(<ElementToTest disablePast onError={onErrorMock} />);
 
       let past: null | typeof now = null;
@@ -147,7 +147,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
     it('should apply disableFuture', function test() {
       const onErrorMock = spy();
-      const now = adapterToUse.date(new Date());
+      const now = adapterToUse.date();
       render(<ElementToTest disableFuture onError={onErrorMock} />);
 
       let future: null | typeof now = null;
@@ -194,7 +194,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       const onErrorMock = spy();
       render(
-        <ElementToTest onError={onErrorMock} minDate={adapterToUse.date(new Date(2018, 2, 15))} />,
+        <ElementToTest onError={onErrorMock} minDate={adapterToUse.date('2018-03-15')} />,
       );
 
       act(() => {
@@ -211,7 +211,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
 
       act(() => {
-        inputValue(adapterToUse.date(new Date(2018, 2, 15)));
+        inputValue(adapterToUse.date('2018-03-15'));
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -219,7 +219,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, true], isSingleInput);
 
       act(() => {
-        inputValue(adapterToUse.date(new Date(2018, 2, 16)), { setEndDate: true });
+        inputValue(adapterToUse.date('2018-03-16'), { setEndDate: true });
       });
 
       expect(onErrorMock.callCount).to.equal(4);
@@ -234,7 +234,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       const onErrorMock = spy();
       render(
-        <ElementToTest onError={onErrorMock} maxDate={adapterToUse.date(new Date(2018, 2, 15))} />,
+        <ElementToTest onError={onErrorMock} maxDate={adapterToUse.date('2018-03-15')} />,
       );
 
       act(() => {
@@ -251,7 +251,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, true], isSingleInput);
 
       act(() => {
-        inputValue(adapterToUse.date(new Date(2018, 2, 16)));
+        inputValue(adapterToUse.date('2018-03-16'));
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -268,7 +268,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       render(
         <ElementToTest
           onError={onErrorMock}
-          minTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0, 0))}
+          minTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -286,7 +286,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
 
       act(() => {
-        inputValue(adapterToUse.date(new Date(2018, 2, 10, 12, 10, 0)), { setEndDate: true });
+        inputValue(adapterToUse.date('2018-03-10T12:10:00'), { setEndDate: true });
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -294,7 +294,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, false], isSingleInput);
 
       act(() => {
-        inputValue(adapterToUse.date(new Date(2018, 2, 10, 12, 5, 0)));
+        inputValue(adapterToUse.date('2018-03-10T12:05:00'));
       });
 
       expect(onErrorMock.callCount).to.equal(4);
@@ -311,7 +311,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       render(
         <ElementToTest
           onError={onErrorMock}
-          maxTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
+          maxTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -329,7 +329,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, true], isSingleInput);
 
       act(() => {
-        inputValue(adapterToUse.date(new Date(2018, 2, 10, 12, 5, 0)));
+        inputValue(adapterToUse.date('2018-03-10T12:05:00'));
       });
 
       expect(onErrorMock.callCount).to.equal(2);

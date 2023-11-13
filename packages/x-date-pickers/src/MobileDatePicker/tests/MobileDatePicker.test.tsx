@@ -20,7 +20,7 @@ describe('<MobileDatePicker />', () => {
     render(
       <MobileDatePicker
         open
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2018-01-01')}
         onChange={onChangeMock}
       />,
     );
@@ -38,8 +38,8 @@ describe('<MobileDatePicker />', () => {
         open
         reduceAnimations
         openTo="year"
-        minDate={adapterToUse.date(new Date(2000, 0, 1))}
-        maxDate={adapterToUse.date(new Date(2010, 0, 1))}
+        minDate={adapterToUse.date('2000-01-01')}
+        maxDate={adapterToUse.date('2010-01-01')}
       />,
     );
 
@@ -93,7 +93,7 @@ describe('<MobileDatePicker />', () => {
       render(
         <MobileDatePicker
           open
-          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          defaultValue={adapterToUse.date('2018-01-01')}
           slotProps={{
             toolbar: {
               toolbarFormat: 'MMMM',
@@ -117,7 +117,7 @@ describe('<MobileDatePicker />', () => {
       render(
         <MobileDatePicker
           open
-          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          defaultValue={adapterToUse.date('2018-01-01')}
           slots={{
             day: (props) => <PickersDay {...props} data-testid="test-day" />,
           }}
@@ -130,7 +130,7 @@ describe('<MobileDatePicker />', () => {
 
   it('prop `defaultCalendarMonth` – opens on provided month if date is `null`', () => {
     render(
-      <MobileDatePicker open defaultCalendarMonth={adapterToUse.date(new Date(2018, 6, 1))} />,
+      <MobileDatePicker open defaultCalendarMonth={adapterToUse.date('2018-07-01')} />,
     );
 
     expect(screen.getByText('July 2018')).toBeVisible();
@@ -168,7 +168,7 @@ describe('<MobileDatePicker />', () => {
     });
 
     it('should update internal state when controled value is updated', () => {
-      const value = adapterToUse.date(new Date(2019, 0, 1));
+      const value = adapterToUse.date('2018-01-01');
 
       const { setProps } = render(<MobileDatePicker value={value} />);
 

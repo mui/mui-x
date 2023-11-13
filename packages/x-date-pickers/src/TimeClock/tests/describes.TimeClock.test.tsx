@@ -31,8 +31,8 @@ describe('<TimeClock /> - Describes', () => {
     render,
     componentFamily: 'clock',
     values: [
-      adapterToUse.date(new Date(2018, 0, 1, 12, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 13, 35)),
+      adapterToUse.date('2018-01-01T12:30:00'),
+      adapterToUse.date('2018-01-01T13:35:00'),
     ],
     emptyValue: null,
     clock,

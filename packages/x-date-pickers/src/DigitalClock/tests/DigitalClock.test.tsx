@@ -59,8 +59,8 @@ describe('<DigitalClock />', () => {
       render(
         <DigitalClock
           onChange={onChange}
-          value={adapterToUse.date(new Date(2019, 0, 1, 12, 30))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          value={adapterToUse.date('2018-01-01T12:30:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );
 
@@ -78,8 +78,8 @@ describe('<DigitalClock />', () => {
       render(
         <DigitalClock
           onChange={onChange}
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 30))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          defaultValue={adapterToUse.date('2018-01-01T12:30:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );
 

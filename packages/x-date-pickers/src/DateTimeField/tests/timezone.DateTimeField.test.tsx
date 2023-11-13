@@ -119,7 +119,7 @@ describe('<DateTimeField /> - Timezone', () => {
       const { setProps } = render(<DateTimeField />);
       const input = getTextbox();
 
-      const date = adapter.date(new Date('2020-06-18T14:30:10.000Z')).setZone('UTC');
+      const date = adapter.date('2020-06-18T14:30:10.000Z').setZone('UTC');
       setProps({ value: date });
 
       expectInputValue(input, '06/18/2020 02:30 PM');

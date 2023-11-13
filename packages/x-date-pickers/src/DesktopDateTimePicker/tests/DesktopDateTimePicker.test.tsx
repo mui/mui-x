@@ -33,7 +33,7 @@ describe('<DesktopDateTimePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          defaultValue={adapterToUse.date(new Date(2018, 0, 1, 11, 55))}
+          defaultValue={adapterToUse.date('2018-01-01T11:55:00')}
           openTo="year"
         />,
       );

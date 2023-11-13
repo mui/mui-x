@@ -78,7 +78,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             [2018, 2, 10],
           ])}
           shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
           }
         />,
       );
@@ -117,7 +117,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
           [2018, 2, 13],
         ]),
         shouldDisableDate: (date) =>
-          adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13))),
+          adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -140,7 +140,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
           ])}
           shouldDisableDate={(date, position) =>
             position === 'end'
-              ? adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
+              ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
               : false
           }
         />,
@@ -178,7 +178,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         ]),
         shouldDisableDate: (date, position) =>
           position === 'end'
-            ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13)))
+            ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13'))
             : false,
       });
 
@@ -202,7 +202,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
           ])}
           shouldDisableDate={(date, position) =>
             position === 'start'
-              ? adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
+              ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
               : false
           }
         />,
@@ -236,7 +236,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       setProps({
         shouldDisableDate: (date, position) =>
           position === 'start'
-            ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13)))
+            ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13'))
             : false,
       });
 
@@ -334,7 +334,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             [2018, 2, 9],
             [2018, 2, 10],
           ])}
-          minDate={adapterToUse.date(new Date(2018, 2, 15))}
+          minDate={adapterToUse.date('2018-03-15')}
         />,
       );
 
@@ -375,7 +375,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={dateParser([[2018, 2, 9], null])}
-          minDate={adapterToUse.date(new Date(2018, 2, 11))}
+          minDate={adapterToUse.date('2018-03-11')}
         />,
       );
 
@@ -402,7 +402,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={dateParser([null, [2018, 2, 9]])}
-          minDate={adapterToUse.date(new Date(2018, 2, 15))}
+          minDate={adapterToUse.date('2018-03-15')}
         />,
       );
 
@@ -432,7 +432,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             [2018, 2, 9],
             [2018, 2, 10],
           ])}
-          maxDate={adapterToUse.date(new Date(2018, 2, 15))}
+          maxDate={adapterToUse.date('2018-03-15')}
         />,
       );
 
@@ -475,7 +475,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             [2018, 2, 10, 9, 0, 0],
             [2018, 2, 10, 10, 0, 0],
           ])}
-          minTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
+          minTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -518,7 +518,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             [2018, 2, 5, 9, 0, 0],
             [2018, 2, 15, 10, 0, 0],
           ])}
-          minTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
+          minTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -548,7 +548,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={dateParser([[2018, 1, 1, 15], null])}
-          minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
+          minTime={adapterToUse.date('2018-02-01T12:00:00')}
         />,
       );
 
@@ -574,7 +574,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={dateParser([null, [2018, 1, 1, 15]])}
-          minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
+          minTime={adapterToUse.date('2018-02-01T12:00:00')}
         />,
       );
 
@@ -603,7 +603,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             [2018, 2, 10, 9, 0, 0],
             [2018, 2, 10, 10, 0, 0],
           ])}
-          maxTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
+          maxTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -645,7 +645,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             [2018, 2, 5, 9, 0, 0],
             [2018, 2, 15, 10, 0, 0],
           ])}
-          maxTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
+          maxTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -678,20 +678,20 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             [2018, 2, 1, 9, 0, 0],
             [2018, 2, 2, 12, 0, 0],
           ])}
-          maxDateTime={adapterToUse.date(new Date(2018, 2, 2, 13, 0))}
+          maxDateTime={adapterToUse.date('2018-03-02T13:00:00')}
         />,
       );
 
       expect(onErrorMock.callCount).to.equal(0);
       testInvalidStatus([false, false], isSingleInput);
 
-      setProps({ maxDateTime: adapterToUse.date(new Date(2018, 2, 2, 8, 0)) });
+      setProps({ maxDateTime: adapterToUse.date('2018-03-02T08:00:00') });
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
       testInvalidStatus([false, true], isSingleInput);
 
-      setProps({ maxDateTime: adapterToUse.date(new Date(2018, 2, 1, 5, 0)) });
+      setProps({ maxDateTime: adapterToUse.date('2018-03-01T05:00:00') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxDate']);
@@ -712,7 +712,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             [2018, 2, 1, 9, 0, 0],
             [2018, 2, 2, 12, 0, 0],
           ])}
-          minDateTime={adapterToUse.date(new Date(2018, 2, 2, 13, 0))}
+          minDateTime={adapterToUse.date('2018-03-02T13:00:00')}
         />,
       );
 
@@ -720,7 +720,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', 'minTime']);
       testInvalidStatus([true, true], isSingleInput);
 
-      setProps({ minDateTime: adapterToUse.date(new Date(2018, 2, 2, 8, 0)) });
+      setProps({ minDateTime: adapterToUse.date('2018-03-02T08:00:00') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);

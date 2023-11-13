@@ -41,7 +41,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
     const isDesktop = variant === 'desktop';
 
     const defaultProps = {
-      defaultCalendarMonth: adapterToUse.date(new Date(2018, 2, 12)),
+      defaultCalendarMonth: adapterToUse.date('2018-03-12'),
       open: true,
     };
 
@@ -51,7 +51,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         <ElementToTest
           {...defaultProps}
           shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
           }
         />,
       );
@@ -65,7 +65,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         const { defaultCalendarMonth, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }
@@ -89,7 +89,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         const { defaultCalendarMonth, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }
@@ -114,8 +114,8 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       render(
         <ElementToTest
           {...defaultProps}
-          defaultCalendarMonth={adapterToUse.date(new Date(2019, 5, 15))}
-          minDate={adapterToUse.date(new Date(2019, 5, 4))}
+          defaultCalendarMonth={adapterToUse.date('2019-06-15')}
+          minDate={adapterToUse.date('2019-06-04')}
         />,
       );
 
@@ -133,8 +133,8 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       render(
         <ElementToTest
           {...defaultProps}
-          defaultCalendarMonth={adapterToUse.date(new Date(2019, 5, 15))}
-          maxDate={adapterToUse.date(new Date(2019, 5, 4))}
+          defaultCalendarMonth={adapterToUse.date('2019-06-15')}
+          maxDate={adapterToUse.date('2019-06-04')}
         />,
       );
 

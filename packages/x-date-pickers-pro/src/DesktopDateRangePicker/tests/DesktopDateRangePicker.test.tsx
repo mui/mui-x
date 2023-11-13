@@ -26,8 +26,8 @@ describe('<DesktopDateRangePicker />', () => {
       <DesktopDateRangePicker
         reduceAnimations
         defaultValue={[
-          adapterToUse.date(new Date(2019, 4, 19)),
-          adapterToUse.date(new Date(2019, 9, 30)),
+          adapterToUse.date('2018-05-19'),
+          adapterToUse.date('2019-10-30'),
         ]}
       />,
     );
@@ -46,7 +46,7 @@ describe('<DesktopDateRangePicker />', () => {
   it(`should not crash when opening picker with invalid date value`, async () => {
     render(
       <DesktopDateRangePicker
-        defaultValue={[new Date(NaN), adapterToUse.date(new Date(2019, 0, 31))]}
+        defaultValue={[new Date(NaN), adapterToUse.date('2018-01-31')]}
       />,
     );
 
@@ -169,8 +169,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -211,8 +211,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -245,8 +245,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -272,8 +272,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -334,8 +334,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -418,8 +418,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -455,8 +455,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -518,8 +518,8 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 0, 6)),
+            adapterToUse.date('2018-01-01'),
+            adapterToUse.date('2018-01-06'),
           ]}
         />,
       );
@@ -545,8 +545,8 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 0, 6)),
+            adapterToUse.date('2018-01-01'),
+            adapterToUse.date('2018-01-06'),
           ]}
         />,
       );
@@ -588,7 +588,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should respect the minDate prop', () => {
-      render(<DesktopDateRangePicker minDate={adapterToUse.date(new Date(2018, 0, 15))} />);
+      render(<DesktopDateRangePicker minDate={adapterToUse.date('2018-01-15')} />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -600,7 +600,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should respect the maxDate prop', () => {
-      render(<DesktopDateRangePicker maxDate={adapterToUse.date(new Date(2018, 0, 15))} />);
+      render(<DesktopDateRangePicker maxDate={adapterToUse.date('2018-01-15')} />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
