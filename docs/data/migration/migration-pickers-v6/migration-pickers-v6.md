@@ -130,11 +130,11 @@ If you are just passing an adapter to `LocalizationProvider`, then you can safel
 The `getDiff` method have been removed, you can directly use your date library:
 
 ```diff
-// For Day.js
+  // For Day.js
 - const diff = adapter.getDiff(value, comparing, unit);
 + const diff = value.diff(comparing, unit);
 
-// For Luxon
+  // For Luxon
 - const diff = adapter.getDiff(value, comparing, unit);
 + const getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
 +   const parsedComparing = typeof comparing === 'string'
@@ -148,7 +148,7 @@ The `getDiff` method have been removed, you can directly use your date library:
 +
 + const diff = getDiff(value, comparing, unit);
 
-// For DateFns
+  // For DateFns
 - const diff = adapter.getDiff(value, comparing, unit);
 + const getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
 +   const parsedComparing = typeof comparing === 'string' ? new Date(comparing) : comparing;
@@ -177,7 +177,7 @@ The `getDiff` method have been removed, you can directly use your date library:
 +
 + const diff = getDiff(value, comparing, unit);
 
-// For Moment
+  // For Moment
 - const diff = adapter.getDiff(value, comparing, unit);
 + const diff = value.diff(comparing, unit);
 ```
@@ -194,19 +194,19 @@ The `parseISO` method have been removed, you can use the `expandFormat` instead:
 And if you need the exact same output you can apply the following transformation:
 
 ```diff
-// For Day.js
+  // For Day.js
 - const expandedFormat = adapter.getFormatHelperText(format);
 + const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
 
-// For Luxon
+  // For Luxon
 - const expandedFormat = adapter.getFormatHelperText(format);
 + const expandedFormat = adapter.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
 
-// For DateFns
+  // For DateFns
 - const expandedFormat = adapter.getFormatHelperText(format);
 + const expandedFormat = adapter.expandFormat(format).replace(/(aaa|aa|a)/g, '(a|p)m').toLocaleLowerCase();
 
-// For Moment
+  // For Moment
 - const expandedFormat = adapter.getFormatHelperText(format);
 + const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
 ```
