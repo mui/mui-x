@@ -25,7 +25,7 @@ describe('<DesktopDateRangePicker />', () => {
     render(
       <DesktopDateRangePicker
         reduceAnimations
-        defaultValue={[adapterToUse.date('2018-05-19'), adapterToUse.date('2019-10-30')]}
+        defaultValue={[adapterToUse.date('2019-05-19'), adapterToUse.date('2019-10-30')]}
       />,
     );
 

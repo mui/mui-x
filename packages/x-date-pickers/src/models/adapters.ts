@@ -187,6 +187,11 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
     timezone?: PickersTimezone,
   ): DateBuilderReturnType<T, TDate>;
   /**
+   * Creates an invalid date in the date library format.
+   * @returns {TDate} The invalid date.
+   */
+  getInvalidDate(): TDate;
+  /**
    * Extracts the timezone from a date.
    * @template TDate
    * @param {TDate} value The date from which we want to get the timezone.

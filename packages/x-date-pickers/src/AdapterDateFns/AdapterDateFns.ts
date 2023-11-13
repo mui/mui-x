@@ -205,6 +205,7 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return <R>new Date(value);
   };
 
+  public getInvalidDate = () => new Date('Invalid Date');
   public getTimezone = (): string => {
     return 'default';
   };

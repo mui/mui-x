@@ -217,6 +217,8 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return <R>new Date(value);
   };
 
+  public getInvalidDate = () => new Date('Invalid Date');
+
   public getTimezone = (): string => {
     return 'default';
   };

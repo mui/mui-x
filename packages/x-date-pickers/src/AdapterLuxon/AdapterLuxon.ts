@@ -155,6 +155,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return <R>DateTime.fromISO(value, { locale: this.locale, zone: timezone });
   };
 
+  public getInvalidDate = () => DateTime.fromJSDate(new Date('Invalid Date'));
+
   public getTimezone = (value: DateTime): string => {
     // When using the system zone, we want to return "system", not something like "Europe/Paris"
     if (value.zone.type === 'system') {

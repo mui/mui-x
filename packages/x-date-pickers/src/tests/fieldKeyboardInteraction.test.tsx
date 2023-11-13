@@ -18,7 +18,7 @@ import {
   cleanLeadingZeros,
 } from '../internals/hooks/useField/useField.utils';
 
-const testDate = new Date(2018, 4, 15, 9, 35, 10);
+const testDate = '2018-05-15T09:35:10';
 
 function updateDate<TDate>(
   date: TDate,

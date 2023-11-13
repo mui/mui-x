@@ -220,6 +220,8 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return <R>this.createTZDate(value, timezone);
   };
 
+  public getInvalidDate = () => this.moment(new Date('Invalid Date'));
+
   public getTimezone = (value: Moment): string => {
     // @ts-ignore
     // eslint-disable-next-line no-underscore-dangle

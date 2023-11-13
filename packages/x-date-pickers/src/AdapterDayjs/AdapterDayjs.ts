@@ -310,6 +310,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return <R>parsedValue.locale(this.locale);
   };
 
+  public getInvalidDate = () => defaultDayjs(new Date('Invalid date'));
+
   public getTimezone = (value: Dayjs): string => {
     if (this.hasTimezonePlugin()) {
       // @ts-ignore

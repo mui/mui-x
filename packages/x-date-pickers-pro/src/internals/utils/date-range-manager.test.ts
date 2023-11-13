@@ -5,7 +5,7 @@ import { DateRange } from '../models/range';
 
 const start2018 = adapterToUse.date('2018-01-01');
 const mid2018 = adapterToUse.date('2018-07-01');
-const end2019 = adapterToUse.date('2018-01-01');
+const end2019 = adapterToUse.date('2019-01-01');
 
 describe('date-range-manager', () => {
   [

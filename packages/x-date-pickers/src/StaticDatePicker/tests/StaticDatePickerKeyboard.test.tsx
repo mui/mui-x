@@ -192,7 +192,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
           views={[view]}
           reduceAnimations
           displayStaticWrapperAs="desktop"
-          defaultValue={adapterToUse.date('2022-08-13')}
+          defaultValue={adapterToUse.date('2020-08-13')}
         />,
       );
 

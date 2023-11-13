@@ -48,7 +48,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '15' })).to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
 
-      setProps({ value: adapterToUse.date('2018-01-01') });
+      setProps({ value: adapterToUse.date('2019-01-01') });
       clock.runToLast();
 
       expect(screen.getByRole('gridcell', { name: '1' })).not.to.have.attribute('disabled');

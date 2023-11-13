@@ -43,7 +43,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
     it('should apply disablePast', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date('');
+        now = adapterToUse.date(undefined);
         return <ElementToTest value={now} {...props} />;
       }
       render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -65,7 +65,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
     it('should apply disableFuture', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date('');
+        now = adapterToUse.date(undefined);
         return <ElementToTest value={now} {...props} />;
       }
       render(<WithFakeTimer {...defaultProps} disableFuture />);
