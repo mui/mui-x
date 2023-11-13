@@ -520,7 +520,7 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           onChange={onChange}
-          value={adapterToUse.date('2018-01-01T12:20:00')}
+          value={adapterToUse.date('2019-01-01T12:20:00')}
           referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );
@@ -540,7 +540,7 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           onChange={onChange}
-          defaultValue={adapterToUse.date('2018-01-01T12:20:00')}
+          defaultValue={adapterToUse.date('2019-01-01T12:20:00')}
           referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );

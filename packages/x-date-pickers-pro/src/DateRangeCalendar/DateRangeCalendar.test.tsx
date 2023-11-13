@@ -57,7 +57,7 @@ describe('<DateRangeCalendar />', () => {
       render(
         <DateRangeCalendar
           onChange={onChange}
-          defaultValue={[adapterToUse.date('2018-01-01'), null]}
+          defaultValue={[adapterToUse.date('2019-01-01'), null]}
         />,
       );
 
@@ -89,7 +89,7 @@ describe('<DateRangeCalendar />', () => {
       render(
         <DateRangeCalendar
           onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date('2018-01-01')}
+          defaultCalendarMonth={adapterToUse.date('2019-01-01')}
         />,
       );
 

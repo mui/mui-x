@@ -10,7 +10,7 @@ describe('<MonthCalendar />', () => {
 
   it('should allow to pick month standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
-    render(<MonthCalendar value={adapterToUse.date('2018-02-02')} onChange={onChange} />);
+    render(<MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />);
     const targetMonth = screen.getByRole('radio', { name: 'February' });
 
     // A native button implies Enter and Space keydown behavior

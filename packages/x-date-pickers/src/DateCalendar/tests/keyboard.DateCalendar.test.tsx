@@ -23,7 +23,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
       it(key, () => {
-        render(<DateCalendar defaultValue={adapterToUse.date('2022-08-13')} />);
+        render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
         act(() => screen.getByText('13').focus());
         // Don't care about what's focused.
@@ -37,7 +37,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
     });
 
     it('should manage a sequence of keyboard interactions', () => {
-      render(<DateCalendar defaultValue={adapterToUse.date('2022-08-13')} />);
+      render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
       act(() => screen.getByText('13').focus());
       const interactions = [
@@ -71,7 +71,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
       it(key, () => {
         render(<DateCalendar defaultValue={adapterToUse.date(`2020-08-${initialDay}`)} />);
 
-        act(() => screen.getByText(`${initialDay}`).focus());
+        act(() => screen.getByText(`${Number(initialDay)}`).focus());
         // Don't care about what's focused.
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
@@ -87,7 +87,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
       const disabledDates = [
         adapterToUse.date('2020-01-10'),
         // month extremities
-        adapterToUse.date('2020-11-31'),
+        adapterToUse.date('2019-12-31'),
         adapterToUse.date('2020-01-01'),
         adapterToUse.date('2020-01-02'),
         adapterToUse.date('2020-01-31'),
@@ -110,7 +110,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
             />,
           );
 
-          act(() => screen.getByText(`${initialDay}`).focus());
+          act(() => screen.getByText(`${Number(initialDay)}`).focus());
           // Don't care about what's focused.
           // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
           fireEvent.keyDown(document.activeElement!, { key });

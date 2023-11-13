@@ -42,7 +42,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   it(`should not crash when opening picker with invalid date value`, async () => {
     render(
-      <DesktopDateRangePicker defaultValue={[new Date(NaN), adapterToUse.date('2018-01-31')]} />,
+      <DesktopDateRangePicker defaultValue={[new Date(NaN), adapterToUse.date('2019-01-31')]} />,
     );
 
     openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
