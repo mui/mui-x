@@ -204,22 +204,17 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = (value?: any) => {
+  public date = <T extends string | null | undefined>(value: T): DateBuilderReturnType<T, Date> => {
+    type R = DateBuilderReturnType<T, Date>;
     if (typeof value === 'undefined') {
-      return new Date();
+      return <R>new Date();
     }
 
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
-    return new Date(value);
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
-    value: T,
-  ): DateBuilderReturnType<T, Date> => {
-    return <DateBuilderReturnType<T, Date>>this.date(value);
+    return <R>new Date(value);
   };
 
   public getTimezone = (): string => {

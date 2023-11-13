@@ -218,7 +218,7 @@ The `getMeridiemText` method have been removed, you can use the `setHours`, `dat
 ```diff
 - const meridiem = adapter.getMeridiemText('am');
 + const getMeridiemText = (meridiem: 'am' | 'pm') => {
-+   const date = adapter.setHours(adapter.date()!, meridiem === 'am' ? 2 : 14);
++   const date = adapter.setHours(adapter.date(undefined)!, meridiem === 'am' ? 2 : 14);
 +   return utils.format(date, 'meridiem');
 + };
 +

@@ -67,7 +67,7 @@ describe('findClosestEnabledDate', () => {
   });
 
   it('should return future 18th if disablePast', () => {
-    const today = adapterToUse.startOfDay(adapterToUse.date());
+    const today = adapterToUse.startOfDay(adapterToUse.date(undefined));
     const result = findClosestEnabledDate({
       date: adapterToUse.date(new Date(2000, 0, 1)),
       minDate: adapterToUse.date(new Date(1900, 0, 1)),
@@ -84,7 +84,7 @@ describe('findClosestEnabledDate', () => {
   });
 
   it('should return now if disablePast+disableFuture and now is valid', () => {
-    const today = adapterToUse.startOfDay(adapterToUse.date());
+    const today = adapterToUse.startOfDay(adapterToUse.date(undefined));
     const result = findClosestEnabledDate({
       date: adapterToUse.date(new Date(2000, 0, 1)),
       minDate: adapterToUse.date(new Date(1900, 0, 1)),
@@ -100,7 +100,7 @@ describe('findClosestEnabledDate', () => {
   });
 
   it('should fallback to today if disablePast+disableFuture and now is invalid', () => {
-    const today = adapterToUse.date();
+    const today = adapterToUse.date(undefined);
     const result = findClosestEnabledDate({
       date: adapterToUse.date(new Date(2000, 0, 1)),
       minDate: adapterToUse.date(new Date(1900, 0, 1)),
@@ -112,7 +112,7 @@ describe('findClosestEnabledDate', () => {
       timezone: 'default',
     });
 
-    expect(adapterToUse.isEqual(result, adapterToUse.date()));
+    expect(adapterToUse.isEqual(result, adapterToUse.date(undefined)));
   });
 
   it('should return minDate if it is after the date and valid', () => {

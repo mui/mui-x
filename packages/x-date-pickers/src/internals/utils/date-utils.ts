@@ -134,7 +134,7 @@ export const getTodayDate = <TDate>(
     : utils.date(undefined, timezone);
 
 export const formatMeridiem = <TDate>(utils: MuiPickersAdapter<TDate>, meridiem: 'am' | 'pm') => {
-  const date = utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14);
+  const date = utils.setHours(utils.date(undefined)!, meridiem === 'am' ? 2 : 14);
   return utils.format(date, 'meridiem');
 };
 

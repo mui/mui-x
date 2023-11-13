@@ -179,12 +179,12 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * If a `value` parameter is provided, pass it to the date library to try to parse it.
    * @template TDate
    * @param {string | null | undefined} value The optional value to parse.
-   * @param {PickersTimezone} timezone The timezone of the date.
+   * @param {PickersTimezone} timezone The timezone of the date. Default: "default"
    * @returns {TDate | null} The parsed date.
    */
   date<T extends string | null | undefined>(
     value: T,
-    timezone: PickersTimezone,
+    timezone?: PickersTimezone,
   ): DateBuilderReturnType<T, TDate>;
   /**
    * Extracts the timezone from a date.

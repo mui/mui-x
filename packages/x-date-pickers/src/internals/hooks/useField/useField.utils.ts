@@ -361,10 +361,8 @@ const getSectionPlaceholder = <TDate>(
   switch (sectionConfig.type) {
     case 'year': {
       return localeText.fieldYearPlaceholder({
-        digitAmount: utils.formatByString(
-          utils.date(undefined, timezone),
-          currentTokenValue,
-        ).length,
+        digitAmount: utils.formatByString(utils.date(undefined, timezone), currentTokenValue)
+          .length,
       });
     }
 
@@ -508,7 +506,7 @@ export const splitFormatIntoSections = <TDate>(
 ) => {
   let startSeparator: string = '';
   const sections: FieldSectionWithoutPosition[] = [];
-  const now = utils.date()!;
+  const now = utils.date(undefined)!;
 
   const commitToken = (token: string) => {
     if (token === '') {

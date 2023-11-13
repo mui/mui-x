@@ -285,17 +285,9 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value;
   };
 
-  public date = (value?: any) => {
-    if (value === null) {
-      return null;
-    }
-
-    return this.dayjs(value);
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
+  public date = <T extends string | null | undefined>(
     value: T,
-    timezone: PickersTimezone,
+    timezone: PickersTimezone = 'default',
   ): DateBuilderReturnType<T, Dayjs> => {
     type R = DateBuilderReturnType<T, Dayjs>;
     if (value === null) {

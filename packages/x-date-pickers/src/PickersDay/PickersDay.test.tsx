@@ -11,7 +11,7 @@ describe('<PickersDay />', () => {
 
   describeConformance(
     <PickersDay
-      day={adapterToUse.date()}
+      day={adapterToUse.date(undefined)}
       outsideCurrentMonth={false}
       isFirstVisibleCell={false}
       isLastVisibleCell={false}
@@ -33,7 +33,7 @@ describe('<PickersDay />', () => {
 
   it('selects the date on click, Enter and Space', () => {
     const handleDaySelect = spy();
-    const day = adapterToUse.date();
+    const day = adapterToUse.date(undefined);
     render(
       <PickersDay
         day={day}

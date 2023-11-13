@@ -28,7 +28,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     : adapterTZ.date('2022-03-27')!;
   const testDateLocale = adapter.date(TEST_DATE_LOCALE_STRING)!;
 
-
   describe('Method: date', () => {
     it('should parse ISO strings', () => {
       if (adapter.isTimezoneCompatible) {
@@ -56,12 +55,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         // Reset to the default timezone
         setDefaultTimezone(undefined);
       } else {
-        expect(adapter.date(TEST_DATE_ISO_STRING, 'system')).toEqualDateTime(
-          TEST_DATE_ISO_STRING,
-        );
-        expect(adapter.date(TEST_DATE_ISO_STRING, 'default')).toEqualDateTime(
-          TEST_DATE_ISO_STRING,
-        );
+        expect(adapter.date(TEST_DATE_ISO_STRING, 'system')).toEqualDateTime(TEST_DATE_ISO_STRING);
+        expect(adapter.date(TEST_DATE_ISO_STRING, 'default')).toEqualDateTime(TEST_DATE_ISO_STRING);
       }
     });
 
@@ -116,10 +111,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         testTodayZone('America/New_York');
       } else {
         expect(
-          Math.abs(
-            adapterTZ.toJsDate(adapter.date(undefined, 'system')).getTime() -
-              Date.now(),
-          ),
+          Math.abs(adapterTZ.toJsDate(adapter.date(undefined, 'system')).getTime() - Date.now()),
         ).to.be.lessThan(5);
       }
     });
@@ -131,9 +123,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     }
 
     const testTimezone = (timezone: string, expectedTimezone = timezone) => {
-      expect(adapter.getTimezone(adapter.date(undefined, timezone))).to.equal(
-        expectedTimezone,
-      );
+      expect(adapter.getTimezone(adapter.date(undefined, timezone))).to.equal(expectedTimezone);
     };
 
     testTimezone('system');
@@ -361,11 +351,11 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
   describe('Method: isAfter', () => {
     it('should work with the same timezone', () => {
-      expect(adapter.isAfter(adapter.date()!, testDateIso)).to.equal(true);
-      expect(adapter.isAfter(testDateIso, adapter.date()!)).to.equal(false);
+      expect(adapter.isAfter(adapter.date(undefined)!, testDateIso)).to.equal(true);
+      expect(adapter.isAfter(testDateIso, adapter.date(undefined)!)).to.equal(false);
 
-      expect(adapter.isAfter(adapter.date()!, testDateLocale)).to.equal(true);
-      expect(adapter.isAfter(testDateLocale, adapter.date()!)).to.equal(false);
+      expect(adapter.isAfter(adapter.date(undefined)!, testDateLocale)).to.equal(true);
+      expect(adapter.isAfter(testDateLocale, adapter.date(undefined)!)).to.equal(false);
     });
 
     it('should work with different timezones', function test() {
@@ -458,11 +448,11 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
   describe('Method: isBefore', () => {
     it('should work with the same timezone', () => {
-      expect(adapter.isBefore(testDateIso, adapter.date()!)).to.equal(true);
-      expect(adapter.isBefore(adapter.date()!, testDateIso)).to.equal(false);
+      expect(adapter.isBefore(testDateIso, adapter.date(undefined)!)).to.equal(true);
+      expect(adapter.isBefore(adapter.date(undefined)!, testDateIso)).to.equal(false);
 
-      expect(adapter.isBefore(testDateLocale, adapter.date()!)).to.equal(true);
-      expect(adapter.isBefore(adapter.date()!, testDateLocale)).to.equal(false);
+      expect(adapter.isBefore(testDateLocale, adapter.date(undefined)!)).to.equal(true);
+      expect(adapter.isBefore(adapter.date(undefined)!, testDateLocale)).to.equal(false);
     });
 
     it('should work with different timezones', function test() {

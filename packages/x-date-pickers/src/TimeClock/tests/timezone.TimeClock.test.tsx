@@ -26,7 +26,7 @@ describe('<TimeClock /> - Timezone', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
-      const expectedDate = adapter.setHours(adapter.date(), 8);
+      const expectedDate = adapter.setHours(adapter.date(undefined), 8);
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;

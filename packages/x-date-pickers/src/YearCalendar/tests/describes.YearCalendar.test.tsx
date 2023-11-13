@@ -22,7 +22,7 @@ describe('<YearCalendar /> - Describes', () => {
     componentFamily: 'calendar',
   }));
 
-  describeConformance(<YearCalendar defaultValue={adapterToUse.date()} />, () => ({
+  describeConformance(<YearCalendar defaultValue={adapterToUse.date(undefined)} />, () => ({
     classes,
     inheritComponent: 'div',
     wrapMount: wrapPickerMount,
@@ -45,7 +45,9 @@ describe('<YearCalendar /> - Describes', () => {
         .find((cell) => cell.getAttribute('tabindex') === '0');
       expect(activeYear).not.to.equal(null);
       if (expectedValue == null) {
-        expect(activeYear).to.have.text(adapterToUse.getYear(adapterToUse.date()).toString());
+        expect(activeYear).to.have.text(
+          adapterToUse.getYear(adapterToUse.date(undefined)).toString(),
+        );
       } else {
         expect(activeYear).to.have.text(adapterToUse.getYear(expectedValue).toString());
         expect(activeYear).to.have.attribute('aria-checked', 'true');
