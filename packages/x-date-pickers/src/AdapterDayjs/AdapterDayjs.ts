@@ -8,7 +8,6 @@ import {
   FieldFormatTokenMap,
   MuiPickersAdapter,
   AdapterFormats,
-  AdapterUnits,
   AdapterOptions,
   PickersTimezone,
   DateBuilderReturnType,
@@ -83,21 +82,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'll',
-  fullDateWithWeekday: 'dddd, LL',
   keyboardDate: 'L',
   shortDate: 'MMM D',
   normalDate: 'D MMMM',
   normalDateWithWeekday: 'ddd, MMM D',
-  monthAndYear: 'MMMM YYYY',
-  monthAndDate: 'MMMM D',
 
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'lll',
-  fullDateTime12h: 'll hh:mm A',
-  fullDateTime24h: 'll HH:mm',
   keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
@@ -379,14 +372,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.toDate();
   };
 
-  public parseISO = (isoString: string) => {
-    return this.dayjs(isoString);
-  };
-
-  public toISO = (value: Dayjs) => {
-    return value.toISOString();
-  };
-
   public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
@@ -427,14 +412,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     );
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
-  };
-
-  public isNull = (value: Dayjs | null) => {
-    return value === null;
-  };
-
   public isValid = (value: Dayjs | null) => {
     if (value == null) {
       return false;
@@ -453,10 +430,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
-  };
-
-  public getDiff = (value: Dayjs, comparing: Dayjs | string, unit?: AdapterUnits) => {
-    return value.diff(comparing, unit as AdapterUnits);
   };
 
   public isEqual = (value: Dayjs | null, comparing: Dayjs | null) => {
@@ -665,37 +638,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.daysInMonth();
   };
 
-  public getNextMonth = (value: Dayjs) => {
-    return this.addMonths(value, 1);
-  };
-
-  public getPreviousMonth = (value: Dayjs) => {
-    return this.addMonths(value, -1);
-  };
-
-  public getMonthArray = (value: Dayjs) => {
-    const firstMonth = value.startOf('year');
-    const monthArray = [firstMonth];
-
-    while (monthArray.length < 12) {
-      const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.addMonths(prevMonth, 1));
-    }
-
-    return monthArray;
-  };
-
-  public mergeDateAndTime = (dateParam: Dayjs, timeParam: Dayjs) => {
-    return dateParam.hour(timeParam.hour()).minute(timeParam.minute()).second(timeParam.second());
-  };
-
-  public getWeekdays = () => {
-    const start = this.dayjs().startOf('week');
-    return [0, 1, 2, 3, 4, 5, 6].map((diff) =>
-      this.formatByString(this.addDays(start, diff), 'dd'),
-    );
-  };
-
   public getWeekArray = (value: Dayjs) => {
     const cleanValue = this.setLocaleToValue(value);
     const start = cleanValue.startOf('month').startOf('week');
@@ -734,9 +676,5 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am' ? 'AM' : 'PM';
   };
 }

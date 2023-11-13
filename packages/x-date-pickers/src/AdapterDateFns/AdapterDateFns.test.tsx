@@ -28,12 +28,6 @@ describe('<AdapterDateFns />', () => {
       const adapter = new AdapterDateFns({ locale: enUS });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
-      // TODO v7: can be removed after v7 release
-      it('getWeekdays: should start on Sunday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
-      });
-
       it('getWeekArray: should start on Sunday', () => {
         const result = adapter.getWeekArray(date);
         expect(adapter.formatByString(result[0][0], 'EEEEEE')).to.equal('Su');
@@ -46,11 +40,6 @@ describe('<AdapterDateFns />', () => {
 
     describe('Russian', () => {
       const adapter = new AdapterDateFns({ locale: ru });
-
-      it('getWeekDays: should start on Monday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']);
-      });
 
       it('getWeekArray: should start on Monday', () => {
         const date = adapter.date(TEST_DATE_ISO_STRING)!;
@@ -83,14 +72,6 @@ describe('<AdapterDateFns />', () => {
       };
 
       expectDate('fullDate', 'Feb 1, 2020', '1 фев. 2020 г.');
-      expectDate(
-        'fullDateWithWeekday',
-        'Saturday, February 1st, 2020',
-        'суббота, 1 февраля 2020 г.',
-      );
-      expectDate('fullDateTime', 'Feb 1, 2020 11:44 PM', '1 фев. 2020 г. 23:44');
-      expectDate('fullDateTime12h', 'Feb 1, 2020 11:44 PM', '1 фев. 2020 г. 11:44 ПП');
-      expectDate('fullDateTime24h', 'Feb 1, 2020 23:44', '1 фев. 2020 г. 23:44');
       expectDate('keyboardDate', '02/01/2020', '01.02.2020');
       expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 ПП');

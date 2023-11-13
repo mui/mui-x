@@ -3,7 +3,6 @@ import { DateTime, Info } from 'luxon';
 import {
   AdapterFormats,
   AdapterOptions,
-  AdapterUnits,
   DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -70,21 +69,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'DD',
-  fullDateWithWeekday: 'DDDD',
   keyboardDate: 'D',
   shortDate: 'MMM d',
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
-  monthAndYear: 'LLLL yyyy',
-  monthAndDate: 'MMMM d',
 
   fullTime: 't',
   fullTime12h: 'hh:mm a',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'ff',
-  fullDateTime12h: 'DD, hh:mm a',
-  fullDateTime24h: 'DD, T',
   keyboardDateTime: 'D t',
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
@@ -183,14 +176,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.toJSDate();
   };
 
-  public parseISO = (isoString: string) => {
-    return DateTime.fromISO(isoString);
-  };
-
-  public toISO = (value: DateTime) => {
-    return value.toUTC().toISO({ format: 'extended' })!;
-  };
-
   public parse = (value: string, formatString: string) => {
     if (value === '') {
       return null;
@@ -245,14 +230,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     );
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
-  };
-
-  public isNull = (value: DateTime | null) => {
-    return value === null;
-  };
-
   public isValid = (value: DateTime | null): boolean => {
     if (value === null) {
       return false;
@@ -271,18 +248,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
-  };
-
-  public getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
-    if (typeof comparing === 'string') {
-      comparing = DateTime.fromJSDate(new Date(comparing));
-    }
-
-    if (unit) {
-      return Math.floor(value.diff(comparing).as(unit));
-    }
-
-    return value.diff(comparing).as('millisecond');
   };
 
   public isEqual = (value: DateTime | null, comparing: DateTime | null) => {
@@ -478,38 +443,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.daysInMonth!;
   };
 
-  public getNextMonth = (value: DateTime) => {
-    return value.plus({ months: 1 });
-  };
-
-  public getPreviousMonth = (value: DateTime) => {
-    return value.minus({ months: 1 });
-  };
-
-  public getMonthArray = (value: DateTime) => {
-    const firstMonth = value.startOf('year');
-    const monthArray = [firstMonth];
-
-    while (monthArray.length < 12) {
-      const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.addMonths(prevMonth, 1));
-    }
-
-    return monthArray;
-  };
-
-  public mergeDateAndTime = (dateParam: DateTime, timeParam: DateTime) => {
-    return dateParam.set({
-      second: timeParam.second,
-      hour: timeParam.hour,
-      minute: timeParam.minute,
-    });
-  };
-
-  public getWeekdays = () => {
-    return Info.weekdaysFormat('narrow', { locale: this.locale });
-  };
-
   public getWeekArray = (value: DateTime) => {
     const cleanValue = this.setLocaleToValue(value);
     const { days } = cleanValue
@@ -552,11 +485,5 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return Info.meridiems({ locale: this.locale }).find(
-      (v) => v.toLowerCase() === ampm.toLowerCase(),
-    )!;
   };
 }

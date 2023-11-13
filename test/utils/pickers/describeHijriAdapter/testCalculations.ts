@@ -148,30 +148,6 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
     expect(adapter.setDate(testDateIso, 22)).toEqualDateTime('2018-10-31T11:44:00.000Z');
   });
 
-  it('Method: getNextMonth', () => {
-    expect(adapter.getNextMonth(testDateIso)).toEqualDateTime('2018-11-29T11:44:00.000Z');
-  });
-
-  it('Method: getPreviousMonth', () => {
-    expect(adapter.getPreviousMonth(testDateIso)).toEqualDateTime(
-      new Date('2018-10-01T11:44:00.000Z'),
-    );
-  });
-
-  it('Method: getMonthArray', () => {
-    const monthArray = adapter.getMonthArray(testDateIso);
-    let expectedDate = adapter.date('2018-09-11T00:00:00.000Z')!;
-
-    monthArray.forEach((month) => {
-      expect(month).toEqualDateTime(expectedDate);
-      expectedDate = adapter.addMonths(expectedDate, 1)!;
-    });
-  });
-
-  it('Method: getWeekdays', () => {
-    expect(adapter.getWeekdays()).to.deep.equal(['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س']);
-  });
-
   it('Method: getWeekArray', () => {
     const weekArray = adapter.getWeekArray(testDateIso);
     const expectedDate = new Date('2018-10-07T00:00:00.000Z');
