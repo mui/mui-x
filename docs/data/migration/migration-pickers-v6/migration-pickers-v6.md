@@ -66,7 +66,7 @@ The same applies to `slotProps` and `componentsProps`.
 
 ### Change the imports of the `¢alendarHeader` slot
 
-The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DatePicker` to `@mui/x-date-pickers/PIckersCalendarHeader`:
+The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DateCalendar` to `@mui/x-date-pickers/PIckersCalendarHeader`:
 
 ```diff
   export {
@@ -78,7 +78,7 @@ The imports related to the `calendarHeader` slot have been moved from `@mui/x-da
     PickersCalendarHeaderSlotsComponent,
     PickersCalendarHeaderSlotsComponentsProps,
     ExportedPickersCalendarHeaderProps,
-- } from '@mui/x-date-pickers/DatePicker';
+- } from '@mui/x-date-pickers/DateCalendar';
 + } from '@mui/x-date-pickers/PickersCalendarHeader';
 ```
 
