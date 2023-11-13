@@ -363,7 +363,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   isBeforeDay(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if the value is withing the provided range.
+   * Check if the value is within the provided range.
    * @template TDate
    * @param {TDate} value The value to test.
    * @param {[TDate, TDate]} range The range in which the value should be.
@@ -609,13 +609,11 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {number} The number of the week of the given date.
    */
   getWeekNumber(value: TDate): number;
-  // TODO v7: Replace with a single range param `[TDate, TDate]`, to be coherent with `isWithingRange`.
   /**
-   * Create a list with all the years between the start end the end date.
+   * Create a list with all the years between the start and the end date.
    * @template TDate
-   * @param {TDate} start The start of the range.
-   * @param {TDate} end The end of the range.
+   * @param {[TDate, TDate]} range The range of year to create.
    * @returns {TDate[]} List of all the years between the start end the end date.
    */
-  getYearRange(start: TDate, end: TDate): TDate[];
+  getYearRange(range: [TDate, TDate]): TDate[];
 }

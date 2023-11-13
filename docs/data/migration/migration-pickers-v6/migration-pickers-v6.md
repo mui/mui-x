@@ -342,6 +342,13 @@ The `toISO` method have been removed, you can directly use your date library:
 + const isoString = value.toISOString();
 ```
 
+The `getYearRange` method used to accept two params and now accepts a tuple to be consistent with the `isWithinRange` method:
+
+```diff
+- adapter.getYearRange(start, end);
++ adapter.getYearRange([start, end])
+```
+
 ### Restrict the input format of the `isEqual` method
 
 The `isEqual` method used to accept any type of value for its two input and tried to parse them before checking if they were equal.
