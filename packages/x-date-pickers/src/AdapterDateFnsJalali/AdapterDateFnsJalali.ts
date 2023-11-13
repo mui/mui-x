@@ -6,21 +6,10 @@ import addDays from 'date-fns-jalali/addDays';
 import addWeeks from 'date-fns-jalali/addWeeks';
 import addMonths from 'date-fns-jalali/addMonths';
 import addYears from 'date-fns-jalali/addYears';
-import differenceInYears from 'date-fns-jalali/differenceInYears';
-import differenceInQuarters from 'date-fns-jalali/differenceInQuarters';
-import differenceInMonths from 'date-fns-jalali/differenceInMonths';
-import differenceInWeeks from 'date-fns-jalali/differenceInWeeks';
-import differenceInDays from 'date-fns-jalali/differenceInDays';
-import differenceInHours from 'date-fns-jalali/differenceInHours';
-import differenceInMinutes from 'date-fns-jalali/differenceInMinutes';
-import differenceInSeconds from 'date-fns-jalali/differenceInSeconds';
-import differenceInMilliseconds from 'date-fns-jalali/differenceInMilliseconds';
-import eachDayOfInterval from 'date-fns-jalali/eachDayOfInterval';
 import endOfDay from 'date-fns-jalali/endOfDay';
 import endOfWeek from 'date-fns-jalali/endOfWeek';
 import endOfYear from 'date-fns-jalali/endOfYear';
 import dateFnsFormat from 'date-fns-jalali/format';
-import formatISO from 'date-fns-jalali/formatISO';
 import getHours from 'date-fns-jalali/getHours';
 import getSeconds from 'date-fns-jalali/getSeconds';
 import getMilliseconds from 'date-fns-jalali/getMilliseconds';
@@ -39,7 +28,6 @@ import isSameMonth from 'date-fns-jalali/isSameMonth';
 import isSameHour from 'date-fns-jalali/isSameHour';
 import isValid from 'date-fns-jalali/isValid';
 import dateFnsParse from 'date-fns-jalali/parse';
-import parseISO from 'date-fns-jalali/parseISO';
 import setDate from 'date-fns-jalali/setDate';
 import setHours from 'date-fns-jalali/setHours';
 import setMinutes from 'date-fns-jalali/setMinutes';
@@ -59,7 +47,6 @@ import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
 import {
   AdapterFormats,
   AdapterOptions,
-  AdapterUnits,
   DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -146,17 +133,10 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'PPP',
-  fullDateWithWeekday: 'PPPP',
   keyboardDate: 'P',
   shortDate: 'd MMM',
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, d MMMM',
-  monthAndYear: 'LLLL yyyy',
-  monthAndDate: 'd MMMM',
-
-  fullDateTime: 'PPP p',
-  fullDateTime12h: 'PPP hh:mm aa',
-  fullDateTime24h: 'PPP HH:mm',
 
   fullTime: 'p',
   fullTime12h: 'hh:mm aaa',
@@ -254,14 +234,6 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return value;
   };
 
-  public parseISO = (isoString: string) => {
-    return parseISO(isoString);
-  };
-
-  public toISO = (value: Date) => {
-    return formatISO(value, { format: 'extended' });
-  };
-
   public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
@@ -302,16 +274,6 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
       .join('');
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format)
-      .replace(/(aaa|aa|a)/g, '(a|p)m')
-      .toLocaleLowerCase();
-  };
-
-  public isNull = (value: Date | null) => {
-    return value === null;
-  };
-
   public isValid = (value: Date | null) => {
     if (value == null) {
       return false;
@@ -332,30 +294,6 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return numberToFormat
       .replace(/\d/g, (match) => NUMBER_SYMBOL_MAP[match as keyof typeof NUMBER_SYMBOL_MAP])
       .replace(/,/g, '،');
-  };
-
-  public getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
-    switch (unit) {
-      case 'years':
-        return differenceInYears(value, this.date(comparing)!);
-      case 'quarters':
-        return differenceInQuarters(value, this.date(comparing)!);
-      case 'months':
-        return differenceInMonths(value, this.date(comparing)!);
-      case 'weeks':
-        return differenceInWeeks(value, this.date(comparing)!);
-      case 'days':
-        return differenceInDays(value, this.date(comparing)!);
-      case 'hours':
-        return differenceInHours(value, this.date(comparing)!);
-      case 'minutes':
-        return differenceInMinutes(value, this.date(comparing)!);
-      case 'seconds':
-        return differenceInSeconds(value, this.date(comparing)!);
-      default: {
-        return differenceInMilliseconds(value, this.date(comparing)!);
-      }
-    }
   };
 
   public isEqual = (value: Date | null, comparing: Date | null) => {
@@ -534,44 +472,6 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return getDaysInMonth(value);
   };
 
-  public getNextMonth = (value: Date) => {
-    return addMonths(value, 1);
-  };
-
-  public getPreviousMonth = (value: Date) => {
-    return addMonths(value, -1);
-  };
-
-  public getMonthArray = (value: Date) => {
-    const firstMonth = startOfYear(value);
-    const monthArray = [firstMonth];
-
-    while (monthArray.length < 12) {
-      const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
-    }
-
-    return monthArray;
-  };
-
-  public mergeDateAndTime = (dateParam: Date, timeParam: Date) => {
-    return this.setSeconds(
-      this.setMinutes(
-        this.setHours(dateParam, this.getHours(timeParam)),
-        this.getMinutes(timeParam),
-      ),
-      this.getSeconds(timeParam),
-    );
-  };
-
-  public getWeekdays = () => {
-    const now = new Date();
-    return eachDayOfInterval({
-      start: startOfWeek(now, { locale: this.locale }),
-      end: endOfWeek(now, { locale: this.locale }),
-    }).map((day) => this.formatByString(day, 'EEEEEE'));
-  };
-
   public getWeekArray = (value: Date) => {
     const start = startOfWeek(startOfMonth(value), { locale: this.locale });
     const end = endOfWeek(endOfMonth(value), { locale: this.locale });
@@ -608,9 +508,5 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am' ? 'ق.ظ' : 'ب.ظ';
   };
 }

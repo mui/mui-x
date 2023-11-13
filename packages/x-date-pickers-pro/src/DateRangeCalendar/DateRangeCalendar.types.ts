@@ -4,6 +4,8 @@ import { SlotComponentProps } from '@mui/base/utils';
 import { Theme } from '@mui/material/styles';
 import { TimezoneProps } from '@mui/x-date-pickers/models';
 import {
+  PickersCalendarHeader,
+  PickersCalendarHeaderProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
@@ -31,6 +33,12 @@ export interface DateRangeCalendarSlotsComponent<TDate>
     Omit<DayCalendarSlotsComponent<TDate>, 'day'>,
     PickersCalendarHeaderSlotsComponent {
   /**
+   * Custom component for calendar header.
+   * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
+   * @default PickersCalendarHeader
+   */
+  calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
+  /**
    * Custom component for day in range pickers.
    * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
    * @default DateRangePickersDay
@@ -42,6 +50,11 @@ export interface DateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
     Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'>,
     PickersCalendarHeaderSlotsComponentsProps<TDate> {
+  calendarHeader?: SlotComponentProps<
+    typeof PickersCalendarHeader,
+    {},
+    DateRangeCalendarProps<TDate>
+  >;
   day?: SlotComponentProps<
     typeof DateRangePickerDay,
     {},

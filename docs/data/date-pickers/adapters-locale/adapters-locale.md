@@ -219,7 +219,7 @@ Some locales might keep using English placeholders, because that format is commo
 
 ### Custom toolbar format
 
-To customize the format used in the toolbar, use the `toolbarFormat` prop of the toolbar slot.
+To customize the format used in the toolbar, use the `toolbarFormat` prop of the `toolbar` slot.
 
 :::info
 This prop is available on all pickers.
@@ -244,3 +244,13 @@ This prop is available on all components that render a day calendar, including t
 The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
+
+### Custom calendar header format
+
+To customize the format used on the calendar header, use the `format` prop of the `calendarHeader` slot.
+
+:::info
+This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
+:::
+
+{{"demo": "CustomCalendarHeaderFormat.js"}}
