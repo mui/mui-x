@@ -127,6 +127,12 @@
     },
     {
       "class": null,
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
+    },
+    {
+      "class": null,
       "name": "day",
       "description": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
       "default": "DateRangePickersDay"

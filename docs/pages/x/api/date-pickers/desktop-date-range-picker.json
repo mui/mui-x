@@ -146,6 +146,12 @@
     },
     {
       "class": null,
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
+    },
+    {
+      "class": null,
       "name": "clearButton",
       "description": "Button to clear the value.",
       "default": "IconButton"
