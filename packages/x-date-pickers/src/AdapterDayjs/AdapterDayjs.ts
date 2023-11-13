@@ -722,7 +722,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.week();
   };
 
-  public getYearRange = (start: Dayjs, end: Dayjs) => {
+  public getYearRange = ([start, end]: [Dayjs, Dayjs]) => {
     const startDate = start.startOf('year');
     const endDate = end.endOf('year');
     const years: Dayjs[] = [];

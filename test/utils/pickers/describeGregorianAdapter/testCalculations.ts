@@ -1010,15 +1010,15 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: getYearRange', () => {
-    const yearRange = adapter.getYearRange(testDateIso, adapter.setYear(testDateIso, 2124));
+    const yearRange = adapter.getYearRange([testDateIso, adapter.setYear(testDateIso, 2124)]);
 
     expect(yearRange).to.have.length(107);
     expect(adapter.getYear(yearRange[yearRange.length - 1])).to.equal(2124);
 
-    const emptyYearRange = adapter.getYearRange(
+    const emptyYearRange = adapter.getYearRange([
       testDateIso,
       adapter.setYear(testDateIso, adapter.getYear(testDateIso) - 1),
-    );
+    ]);
 
     expect(emptyYearRange).to.have.length(0);
   });

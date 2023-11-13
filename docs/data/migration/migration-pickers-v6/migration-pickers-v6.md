@@ -104,6 +104,15 @@ adapter.isValid(dayjs('2022-04-17T15:30'));
 If you are just passing an adapter to `LocalizationProvider`, then you can safely skip this section.
 :::
 
+### Change the input format of the `getYearRange` method
+
+The `getYearRange` method used to accept two params and now accepts a tuple to be consistent with the `isWithinRange` method:
+
+```diff
+- adapter.getYearRange(start, end);
++ adapter.getYearRange([start, end])
+```
+
 ### Restrict the input format of the `isEqual` method
 
 The `isEqual` method used to accept any type of value for its two input and tried to parse them before checking if they were equal.

@@ -561,7 +561,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.weekNumber;
   };
 
-  public getYearRange = (start: DateTime, end: DateTime) => {
+  public getYearRange = ([start, end]: [DateTime, DateTime]) => {
     const startDate = start.startOf('year');
     const endDate = end.endOf('year');
 

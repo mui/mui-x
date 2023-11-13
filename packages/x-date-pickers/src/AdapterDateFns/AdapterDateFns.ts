@@ -582,7 +582,7 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return getWeek(value, { locale: this.locale });
   };
 
-  public getYearRange = (start: Date, end: Date) => {
+  public getYearRange = ([start, end]: [Date, Date]) => {
     const startDate = startOfYear(start);
     const endDate = endOfYear(end);
     const years: Date[] = [];

@@ -295,7 +295,7 @@ export class AdapterMomentJalaali
     return value.jWeek();
   };
 
-  public getYearRange = (start: Moment, end: Moment) => {
+  public getYearRange = ([start, end]: [Moment, Moment]) => {
     const startDate = this.moment(start).startOf('jYear');
     const endDate = this.moment(end).endOf('jYear');
     const years: Moment[] = [];

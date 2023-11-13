@@ -288,7 +288,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
       aria-labelledby={gridLabelId}
       {...other}
     >
-      {utils.getYearRange(minDate, maxDate).map((year) => {
+      {utils.getYearRange([minDate, maxDate]).map((year) => {
         const yearNumber = utils.getYear(year);
         const isSelected = yearNumber === selectedYear;
         const isDisabled = disabled || isYearDisabled(year);
