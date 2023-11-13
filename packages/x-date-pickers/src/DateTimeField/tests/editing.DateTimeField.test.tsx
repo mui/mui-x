@@ -37,7 +37,7 @@ describe('<DateTimeField /> - Editing', () => {
 
     it('should not use the referenceDate prop when a value is defined', () => {
       const onChange = spy();
-      const value = adapterToUse.date('2018-11-03T25:15:00');
+      const value = adapterToUse.date('2018-11-03T22:15:00');
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const { input, selectSection } = renderWithProps({
@@ -56,7 +56,7 @@ describe('<DateTimeField /> - Editing', () => {
 
     it('should not use the referenceDate prop when a defaultValue is defined', () => {
       const onChange = spy();
-      const defaultValue = adapterToUse.date('2018-11-03T25:15:00');
+      const defaultValue = adapterToUse.date('2018-11-03T22:15:00');
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const { input, selectSection } = renderWithProps({
@@ -126,7 +126,7 @@ describe('<DateTimeField /> - Editing', () => {
     describe('Reference value based on validation props', () => {
       it("should create a reference date just after the `minDate` if it's after the current date", () => {
         const onChange = spy();
-        const minDate = adapterToUse.date('2032-05-05T18:30:00');
+        const minDate = adapterToUse.date('2030-05-05T18:30:00');
 
         const { input, selectSection } = renderWithProps({
           onChange,
