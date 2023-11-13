@@ -2839,10 +2839,10 @@
   resolved "https://registry.yarnpkg.com/@types/d3-time/-/d3-time-3.0.0.tgz#e1ac0f3e9e195135361fa1a1d62f795d87e6e819"
   integrity sha512-sZLCdHvBUcNby1cB6Fd3ZBrABbjz3v1Vm90nysCQ6Vt7vd6e/h9Lt7SiJUoEX0l4Dzc7P5llKyhqSi1ycSf1Hg==
 
-"@types/doctrine@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@types/doctrine/-/doctrine-0.0.8.tgz#e6d6572ddc6f424aef73245cf411724e225dfa11"
-  integrity sha512-mGinUwtyZsYnU2ana2wyteVHD0PFPukcZMOZWMtSRJBTFMirYy6RlV286CjttvPoNYYgW9jWf0MXKniV7f2oVw==
+"@types/doctrine@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@types/doctrine/-/doctrine-0.0.9.tgz#d86a5f452a15e3e3113b99e39616a9baa0f9863f"
+  integrity sha512-eOIHzCUSH7SMfonMG1LsC2f8vxBFtho6NGBznK41R84YzPuvSBzrhEps33IsQiOW9+VL6NQ9DbjQJznk/S4uRA==
 
 "@types/enzyme@^3.10.12":
   version "3.10.12"
