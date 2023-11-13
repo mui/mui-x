@@ -312,8 +312,12 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return value === null;
   };
 
-  public isValid = (value: any) => {
-    return isValid(this.date(value));
+  public isValid = (value: Date | null) => {
+    if (value == null) {
+      return false;
+    }
+
+    return isValid(value);
   };
 
   public format = (value: Date, formatKey: keyof AdapterFormats) => {
@@ -592,7 +596,7 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return getWeek(date, { locale: this.locale });
   };
 
-  public getYearRange = (start: Date, end: Date) => {
+  public getYearRange = ([start, end]: [Date, Date]) => {
     const startDate = startOfYear(start);
     const endDate = endOfYear(end);
     const years: Date[] = [];

@@ -192,7 +192,7 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
     it('Minimum limit', () => {
       const anotherYear = adapter.setYear(testDateIso, 1355);
 
-      expect(() => adapter.getYearRange(anotherYear, testDateIso)).to.throw(
+      expect(() => adapter.getYearRange([anotherYear, testDateIso])).to.throw(
         'min date must be on or after 1356-01-01 H (1937-03-14)',
       );
     });
@@ -200,7 +200,7 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
     it('Maximum limit', () => {
       const anotherYear = adapter.setYear(testDateIso, 1500);
 
-      expect(() => adapter.getYearRange(testDateIso, anotherYear)).to.throw(
+      expect(() => adapter.getYearRange([testDateIso, anotherYear])).to.throw(
         'max date must be on or before 1499-12-29 H (2076-11-26)',
       );
     });
@@ -208,7 +208,7 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
 
   it('Method: getYearRange', () => {
     const anotherDate = adapter.setYear(testDateIso, 1445);
-    const yearRange = adapter.getYearRange(testDateIso, anotherDate);
+    const yearRange = adapter.getYearRange([testDateIso, anotherDate]);
     expect(yearRange).to.have.length(6);
   });
 };

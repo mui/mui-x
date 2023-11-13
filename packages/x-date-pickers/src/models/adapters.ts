@@ -320,13 +320,12 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {boolean} `true` if the date is null.
    */
   isNull(value: TDate | null): boolean;
-  // TODO v7: Type `value` to be `TDate | null` and make sure the `isValid(null)` returns `false`.
   /**
    * Check if the date is valid.
-   * @param {any} value The value to test.
-   * @returns {boolean} `true` if the value is valid.
+   * @param {TDate | null} value The value to test.
+   * @returns {boolean} `true` if the value is a valid date according to the date library.
    */
-  isValid(value: any): boolean;
+  isValid(value: TDate | null): boolean;
   /**
    * Format a date using an adapter format string (see the `AdapterFormats` interface)
    * @template TDate
@@ -452,7 +451,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   isBeforeDay(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if the value is withing the provided range.
+   * Check if the value is within the provided range.
    * @template TDate
    * @param {TDate} value The value to test.
    * @param {[TDate, TDate]} range The range in which the value should be.
@@ -738,15 +737,13 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {number} The number of the week of the given date.
    */
   getWeekNumber(value: TDate): number;
-  // TODO v7: Replace with a single range param `[TDate, TDate]`, to be coherent with `isWithingRange`.
   /**
-   * Create a list with all the years between the start end the end date.
+   * Create a list with all the years between the start and the end date.
    * @template TDate
-   * @param {TDate} start The start of the range.
-   * @param {TDate} end The end of the range.
+   * @param {[TDate, TDate]} range The range of year to create.
    * @returns {TDate[]} List of all the years between the start end the end date.
    */
-  getYearRange(start: TDate, end: TDate): TDate[];
+  getYearRange(range: [TDate, TDate]): TDate[];
   /**
    * Allow to customize how the "am"` and "pm" strings are rendered.
    * @deprecated Use `utils.format(utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14), 'meridiem')` instead.
