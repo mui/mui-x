@@ -36,7 +36,7 @@
     "@mui/utils": "^5.14.16",
     "@react-spring/web": "^9.7.3",
     "@trendmicro/react-interpolate": "^0.5.5",
-    "@types/lodash": "^4.14.200",
+    "@types/lodash": "^4.14.201",
     "@types/moment-hijri": "^2.1.3",
     "@types/react-dom": "^18.2.14",
     "@types/react-router-dom": "^5.3.3",
