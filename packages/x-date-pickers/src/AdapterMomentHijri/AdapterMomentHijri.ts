@@ -179,14 +179,6 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
       .replace(/,/g, '،');
   };
 
-  public isEqual = (value: any, comparing: any) => {
-    if (value === null && comparing === null) {
-      return true;
-    }
-
-    return this.moment(value).isSame(comparing);
-  };
-
   public startOfYear = (value: Moment) => {
     return value.clone().startOf('iYear');
   };
@@ -278,7 +270,7 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return value.iWeek();
   };
 
-  public getYearRange = (start: Moment, end: Moment) => {
+  public getYearRange = ([start, end]: [Moment, Moment]) => {
     // moment-hijri only supports dates between 1356-01-01 H and 1499-12-29 H
     // We need to throw if outside min/max bounds, otherwise the while loop below will be infinite.
     if (start.isBefore('1937-03-14')) {
