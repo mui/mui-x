@@ -129,7 +129,7 @@ describe('<AdapterMoment />', () => {
   });
 
   describe('Picker localization', () => {
-    const testDate = '2018-05-15:09:35:00';
+    const testDate = '2018-05-15T09:35:00';
 
     const localizedTexts = {
       en: {

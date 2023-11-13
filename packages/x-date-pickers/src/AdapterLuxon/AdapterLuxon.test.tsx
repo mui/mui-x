@@ -75,7 +75,7 @@ describe('<AdapterLuxon />', () => {
   });
 
   describe('Picker localization', () => {
-    const testDate = '2018-04-15T09:35:00';
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       undefined: {
         placeholder: 'MM/DD/YYYY hh:mm aa',
