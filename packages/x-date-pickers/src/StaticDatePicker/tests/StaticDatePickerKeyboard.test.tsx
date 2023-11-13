@@ -34,7 +34,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
           <StaticDatePicker
             autoFocus
             displayStaticWrapperAs="desktop"
-            defaultValue={adapterToUse.date('2022-08-13')}
+            defaultValue={adapterToUse.date('2020-08-13')}
           />,
         );
 

@@ -161,8 +161,8 @@ describe('<MobileDatePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
     });
 
-    it('should update internal state when controled value is updated', () => {
-      const value = adapterToUse.date('2018-01-01');
+    it('should update internal state when controlled value is updated', () => {
+      const value = adapterToUse.date('2019-01-01');
 
       const { setProps } = render(<MobileDatePicker value={value} />);
 

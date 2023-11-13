@@ -33,7 +33,7 @@ describe('<MobileTimePicker />', () => {
           onChange={handleChange}
           open
           slotProps={{ toolbar: { hidden: false } }}
-          value={adapterToUse.date('2018-01-01T04:20:00')}
+          value={adapterToUse.date('2019-01-01T04:20:00')}
         />,
       );
       const buttonPM = screen.getByRole('button', { name: 'PM' });
