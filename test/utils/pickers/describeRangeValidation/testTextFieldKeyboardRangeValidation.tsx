@@ -17,10 +17,6 @@ const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput?: boolean) =
   });
 };
 
-const dateParser = (value: (null | number[])[]) => {
-  return value.map((date) => (date === null ? date : adapterToUse.date().(date as [])))));
-};
-
 export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSuite = (
   ElementToTest,
   getOptions,
@@ -38,10 +34,10 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       expect(onErrorMock.callCount).to.equal(0);
       act(() => {
-        dateParser([
-          [2018, 0, 2, 12, 0, 0],
-          [2018, 0, 1, 11, 0, 0],
-        ]).forEach((date, index) => {
+        [
+          adapterToUse.date('2018-01-02T12:00:00'),
+          adapterToUse.date('2018-01-01T11:00:00'),
+        ].forEach((date, index) => {
           inputValue(date, { setEndDate: index === 1 });
         });
       });
@@ -59,18 +55,15 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date('2018-03-11'))
-          }
+          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-11'))}
         />,
       );
       act(() => {
-        dateParser([
-          [2018, 2, 9],
-          [2018, 2, 10],
-        ]).forEach((date, index) => {
-          inputValue(date, { setEndDate: index === 1 });
-        });
+        [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')].forEach(
+          (date, index) => {
+            inputValue(date, { setEndDate: index === 1 });
+          },
+        );
       });
 
       expect(onErrorMock.callCount).to.equal(0);
@@ -96,8 +89,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
 
       setProps({
-        shouldDisableDate: (date) =>
-          adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
+        shouldDisableDate: (date) => adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -107,7 +99,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
     it('should apply disablePast', function test() {
       const onErrorMock = spy();
-      const now = adapterToUse.date();
+      const now = adapterToUse.date(undefined);
       render(<ElementToTest disablePast onError={onErrorMock} />);
 
       let past: null | typeof now = null;
@@ -147,7 +139,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
     it('should apply disableFuture', function test() {
       const onErrorMock = spy();
-      const now = adapterToUse.date();
+      const now = adapterToUse.date(undefined);
       render(<ElementToTest disableFuture onError={onErrorMock} />);
 
       let future: null | typeof now = null;
@@ -193,17 +185,14 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       }
 
       const onErrorMock = spy();
-      render(
-        <ElementToTest onError={onErrorMock} minDate={adapterToUse.date('2018-03-15')} />,
-      );
+      render(<ElementToTest onError={onErrorMock} minDate={adapterToUse.date('2018-03-15')} />);
 
       act(() => {
-        dateParser([
-          [2018, 2, 9],
-          [2018, 2, 10],
-        ]).forEach((date, index) => {
-          inputValue(date, { setEndDate: index === 1 });
-        });
+        [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')].forEach(
+          (date, index) => {
+            inputValue(date, { setEndDate: index === 1 });
+          },
+        );
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -233,17 +222,14 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       }
 
       const onErrorMock = spy();
-      render(
-        <ElementToTest onError={onErrorMock} maxDate={adapterToUse.date('2018-03-15')} />,
-      );
+      render(<ElementToTest onError={onErrorMock} maxDate={adapterToUse.date('2018-03-15')} />);
 
       act(() => {
-        dateParser([
-          [2018, 2, 15],
-          [2018, 2, 17],
-        ]).forEach((date, index) => {
-          inputValue(date, { setEndDate: index === 1 });
-        });
+        [adapterToUse.date('2018-03-15'), adapterToUse.date('2018-03-17')].forEach(
+          (date, index) => {
+            inputValue(date, { setEndDate: index === 1 });
+          },
+        );
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -266,17 +252,14 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       const onErrorMock = spy();
       render(
-        <ElementToTest
-          onError={onErrorMock}
-          minTime={adapterToUse.date('2018-03-10T12:00:00')}
-        />,
+        <ElementToTest onError={onErrorMock} minTime={adapterToUse.date('2018-03-10T12:00:00')} />,
       );
 
       act(() => {
-        dateParser([
-          [2018, 2, 10, 9, 0, 0],
-          [2018, 2, 10, 10, 0, 0],
-        ]).forEach((date, index) => {
+        [
+          adapterToUse.date('2018-03-10T09:00:00'),
+          adapterToUse.date('2018-03-10T10:00:00'),
+        ].forEach((date, index) => {
           inputValue(date, { setEndDate: index === 1 });
         });
       });
@@ -309,17 +292,14 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       const onErrorMock = spy();
       render(
-        <ElementToTest
-          onError={onErrorMock}
-          maxTime={adapterToUse.date('2018-03-10T12:00:00')}
-        />,
+        <ElementToTest onError={onErrorMock} maxTime={adapterToUse.date('2018-03-10T12:00:00')} />,
       );
 
       act(() => {
-        dateParser([
-          [2018, 2, 10, 9, 0, 0],
-          [2018, 2, 10, 12, 15, 0],
-        ]).forEach((date, index) => {
+        [
+          adapterToUse.date('2018-03-10T09:00:00'),
+          adapterToUse.date('2018-03-10T12:15:00'),
+        ].forEach((date, index) => {
           inputValue(date, { setEndDate: index === 1 });
         });
       });

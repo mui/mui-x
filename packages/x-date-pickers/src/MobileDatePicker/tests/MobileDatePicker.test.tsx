@@ -18,11 +18,7 @@ describe('<MobileDatePicker />', () => {
   it('allows to change only year', () => {
     const onChangeMock = spy();
     render(
-      <MobileDatePicker
-        open
-        value={adapterToUse.date('2018-01-01')}
-        onChange={onChangeMock}
-      />,
+      <MobileDatePicker open value={adapterToUse.date('2018-01-01')} onChange={onChangeMock} />,
     );
 
     fireEvent.click(screen.getByLabelText(/switch to year view/i));
@@ -129,9 +125,7 @@ describe('<MobileDatePicker />', () => {
   });
 
   it('prop `defaultCalendarMonth` – opens on provided month if date is `null`', () => {
-    render(
-      <MobileDatePicker open defaultCalendarMonth={adapterToUse.date('2018-07-01')} />,
-    );
+    render(<MobileDatePicker open defaultCalendarMonth={adapterToUse.date('2018-07-01')} />);
 
     expect(screen.getByText('July 2018')).toBeVisible();
   });

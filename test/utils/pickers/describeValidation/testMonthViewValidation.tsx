@@ -43,7 +43,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
     it('should apply disablePast', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date();
+        now = adapterToUse.date(undefined);
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -77,7 +77,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
     it('should apply disableFuture', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date();
+        now = adapterToUse.date(undefined);
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);

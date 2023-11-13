@@ -84,7 +84,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       );
     });
 
-    it.only('should apply minDate', function test() {
+    it('should apply minDate', function test() {
       render(
         <ElementToTest
           {...defaultProps}

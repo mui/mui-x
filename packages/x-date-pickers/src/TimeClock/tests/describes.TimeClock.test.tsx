@@ -30,10 +30,7 @@ describe('<TimeClock /> - Describes', () => {
   describeValue(TimeClock, () => ({
     render,
     componentFamily: 'clock',
-    values: [
-      adapterToUse.date('2018-01-01T12:30:00'),
-      adapterToUse.date('2018-01-01T13:35:00'),
-    ],
+    values: [adapterToUse.date('2018-01-01T12:30:00'), adapterToUse.date('2018-01-01T13:35:00')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {

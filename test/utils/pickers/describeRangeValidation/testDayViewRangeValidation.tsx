@@ -50,9 +50,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       render(
         <ElementToTest
           {...defaultProps}
-          shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
-          }
+          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
         />,
       );
 
@@ -65,7 +63,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date();
+        now = adapterToUse.date(undefined);
         const { defaultCalendarMonth, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }
@@ -89,7 +87,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date();
+        now = adapterToUse.date(undefined);
         const { defaultCalendarMonth, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }

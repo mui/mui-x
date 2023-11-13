@@ -25,10 +25,7 @@ describe('<DesktopDateRangePicker />', () => {
     render(
       <DesktopDateRangePicker
         reduceAnimations
-        defaultValue={[
-          adapterToUse.date('2018-05-19'),
-          adapterToUse.date('2019-10-30'),
-        ]}
+        defaultValue={[adapterToUse.date('2018-05-19'), adapterToUse.date('2019-10-30')]}
       />,
     );
 
@@ -45,9 +42,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   it(`should not crash when opening picker with invalid date value`, async () => {
     render(
-      <DesktopDateRangePicker
-        defaultValue={[new Date(NaN), adapterToUse.date('2018-01-31')]}
-      />,
+      <DesktopDateRangePicker defaultValue={[new Date(NaN), adapterToUse.date('2018-01-31')]} />,
     );
 
     openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
@@ -517,10 +512,7 @@ describe('<DesktopDateRangePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          defaultValue={[
-            adapterToUse.date('2018-01-01'),
-            adapterToUse.date('2018-01-06'),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-06')]}
         />,
       );
 
@@ -544,10 +536,7 @@ describe('<DesktopDateRangePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          defaultValue={[
-            adapterToUse.date('2018-01-01'),
-            adapterToUse.date('2018-01-06'),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-06')]}
         />,
       );
 

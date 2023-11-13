@@ -142,18 +142,14 @@ describe('<MobileDateTimePicker />', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
       expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2010-01-15T11:00:00'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:00:00'));
 
       // Change the minutes
       const minuteClockEvent = getClockTouchEvent(53, 'minutes');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
       expect(onChange.callCount).to.equal(4);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2010-01-15T11:53:00'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:53:00'));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });

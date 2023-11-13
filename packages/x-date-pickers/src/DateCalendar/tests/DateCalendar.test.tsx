@@ -238,9 +238,7 @@ describe('<DateCalendar />', () => {
 
       userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(
-        adapterToUse.date('2018-01-02T11:11:11'),
-      );
+      expect(onChange.lastCall.firstArg).toEqualDateTime(adapterToUse.date('2018-01-02T11:11:11'));
     });
 
     it('should complete weeks when showDaysOutsideCurrentMonth=true', () => {

@@ -24,9 +24,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         <ElementToTest
           onError={onErrorMock}
           value={adapterToUse.date('2018-03-12')}
-          shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
-          }
+          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
         />,
       );
 
@@ -204,7 +202,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date();
+        now = adapterToUse.date(undefined);
         return <ElementToTest value={now} {...props} />;
       }
 
@@ -237,7 +235,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date();
+        now = adapterToUse.date(undefined);
         return <ElementToTest value={now} {...props} />;
       }
 

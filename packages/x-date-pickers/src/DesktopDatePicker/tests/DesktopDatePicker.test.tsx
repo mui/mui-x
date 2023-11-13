@@ -102,10 +102,7 @@ describe('<DesktopDatePicker />', () => {
 
     it('should go to the relevant `view` when `views` prop changes', () => {
       const { setProps } = render(
-        <DesktopDatePicker
-          defaultValue={adapterToUse.date('2018-01-01')}
-          views={['year']}
-        />,
+        <DesktopDatePicker defaultValue={adapterToUse.date('2018-01-01')} views={['year']} />,
       );
 
       openPicker({ type: 'date', variant: 'desktop' });
@@ -276,7 +273,7 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-02-10')}
-          minDate={adapterToUse.date('2018-01-31'))}
+          minDate={adapterToUse.date('2018-01-31')}
         />,
       );
 

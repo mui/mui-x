@@ -25,9 +25,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
         <ElementToTest
           {...defaultProps}
           value={adapterToUse.date('2018-03-12')}
-          shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
-          }
+          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
         />,
       );
 
@@ -82,7 +80,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
     it('should apply disablePast', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date();
+        now = adapterToUse.date(undefined);
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -114,7 +112,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
     it('should apply disableFuture', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date();
+        now = adapterToUse.date(undefined);
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);

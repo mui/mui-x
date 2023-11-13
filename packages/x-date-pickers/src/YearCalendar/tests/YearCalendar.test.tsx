@@ -39,11 +39,7 @@ describe('<YearCalendar />', () => {
   it('does not allow to pick year if readOnly prop is passed', () => {
     const onChangeMock = spy();
     render(
-      <YearCalendar
-        value={adapterToUse.date('2018-02-02')}
-        onChange={onChangeMock}
-        readOnly
-      />,
+      <YearCalendar value={adapterToUse.date('2018-02-02')} onChange={onChangeMock} readOnly />,
     );
     const targetYear = screen.getByRole('radio', { name: '2025' });
     expect(targetYear.tagName).to.equal('BUTTON');
@@ -56,13 +52,7 @@ describe('<YearCalendar />', () => {
   describe('Disabled', () => {
     it('should disable all years if props.disabled = true', () => {
       const onChange = spy();
-      render(
-        <YearCalendar
-          value={adapterToUse.date('2017-02-15')}
-          onChange={onChange}
-          disabled
-        />,
-      );
+      render(<YearCalendar value={adapterToUse.date('2017-02-15')} onChange={onChange} disabled />);
 
       screen.getAllByRole('radio').forEach((monthButton) => {
         expect(monthButton).to.have.attribute('disabled');

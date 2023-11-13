@@ -35,10 +35,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     type: 'date-time',
     variant: 'mobile',
     clock,
-    values: [
-      adapterToUse.date('2018-01-01T11:30:00'),
-      adapterToUse.date('2018-01-02T12:35:00'),
-    ],
+    values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-02T12:35:00')],
     emptyValue: null,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();

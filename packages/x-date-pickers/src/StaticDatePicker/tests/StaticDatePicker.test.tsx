@@ -17,9 +17,7 @@ describe('<StaticDatePicker />', () => {
   });
 
   it('switches between months', () => {
-    render(
-      <StaticDatePicker reduceAnimations defaultValue={adapterToUse.date('2018-01-01')} />,
-    );
+    render(<StaticDatePicker reduceAnimations defaultValue={adapterToUse.date('2018-01-01')} />);
 
     expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2019');
 

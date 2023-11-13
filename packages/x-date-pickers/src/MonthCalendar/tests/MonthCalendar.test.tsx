@@ -39,11 +39,7 @@ describe('<MonthCalendar />', () => {
   it('does not allow to pick months if readOnly prop is passed', () => {
     const onChangeMock = spy();
     render(
-      <MonthCalendar
-        value={adapterToUse.date('2018-02-02')}
-        onChange={onChangeMock}
-        readOnly
-      />,
+      <MonthCalendar value={adapterToUse.date('2018-02-02')} onChange={onChangeMock} readOnly />,
     );
 
     fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
@@ -72,11 +68,7 @@ describe('<MonthCalendar />', () => {
     it('should disable all months if props.disabled = true', () => {
       const onChange = spy();
       render(
-        <MonthCalendar
-          value={adapterToUse.date('2018-02-15')}
-          onChange={onChange}
-          disabled
-        />,
+        <MonthCalendar value={adapterToUse.date('2018-02-15')} onChange={onChange} disabled />,
       );
 
       screen.getAllByRole('radio').forEach((monthButton) => {
