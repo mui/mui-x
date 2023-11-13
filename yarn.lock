@@ -2783,10 +2783,10 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.9.tgz#144d762491967db8c6dea38e03d2206c2623feec"
   integrity sha512-69TtiDzu0bcmKQv3yg1Zx409/Kd7r0b5F1PfpYJfSHzLGtB53547V4u+9iqKYsTu/O2ai6KTb0TInNpvuQ3qmg==
 
-"@types/chance@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@types/chance/-/chance-1.1.5.tgz#c851fce6e7ed118b71322ad4efd90f5c5147b0af"
-  integrity sha512-aeEqLplovJlvHzbb9pFJw/pe7iGjPnhDFQmQ4MOoShCm3N09rCpU++A0WPCSavcMXAzc91ofRy3vXbIqLzn1aw==
+"@types/chance@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@types/chance/-/chance-1.1.6.tgz#2fe3de58742629602c3fbab468093b27207f04ad"
+  integrity sha512-V+pm3stv1Mvz8fSKJJod6CglNGVqEQ6OyuqitoDkWywEODM/eJd1eSuIp9xt6DrX8BWZ2eDSIzbw1tPCUTvGbQ==
 
 "@types/cheerio@*":
   version "0.22.30"
