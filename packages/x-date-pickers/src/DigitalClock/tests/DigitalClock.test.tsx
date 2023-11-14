@@ -23,13 +23,13 @@ describe('<DigitalClock />', () => {
       // the first item should not be initially focusable when `referenceDate` is defined
       expect(
         screen.getByRole('option', {
-          name: formatFullTimeValue(adapterToUse, new Date(2018, 0, 1, 0, 0, 0)),
+          name: formatFullTimeValue(adapterToUse, adapterToUse.date('2018-01-01T00:00:00')),
         }),
       ).to.have.attribute('tabindex', '-1');
       // check that the relevant time based on the `referenceDate` is focusable
       expect(
         screen.getByRole('option', {
-          name: formatFullTimeValue(adapterToUse, referenceDate),
+          name: formatFullTimeValue(adapterToUse, adapterToUse.date(referenceDate)),
         }),
       ).to.have.attribute('tabindex', '0');
 
