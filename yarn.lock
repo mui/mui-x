@@ -146,12 +146,12 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@argos-ci/core@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@argos-ci/core/-/core-1.0.0.tgz#7f6ca7f3ce07fd050282e1016e397828757bc37e"
-  integrity sha512-ZrD7p6sOAk8gnOSJOEp94y0GHns8O9QFAbClsp4Hax5gSlFMcN0UxoVk2K8f7SFKFwudHJeoK3NzypBrotAlIw==
+"@argos-ci/core@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@argos-ci/core/-/core-1.2.1.tgz#86de9b94873318c6482b58cacf0119ecc82f2e99"
+  integrity sha512-mutWqVyL7ffduFznkPZiFirusx9dLsHzdxnmmh2HARrkQlqfKFwMYgRedY87ifZrOLdoPYBDB+RwRImU9ZQX3w==
   dependencies:
-    "@argos-ci/util" "1.0.0"
+    "@argos-ci/util" "1.1.0"
     axios "^1.5.0"
     convict "^6.2.4"
     debug "^4.3.4"
@@ -159,10 +159,10 @@
     sharp "^0.32.5"
     tmp "^0.2.1"
 
-"@argos-ci/util@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@argos-ci/util/-/util-1.0.0.tgz#52f5270f5377e25f471951d0620c8a6b82e5aee6"
-  integrity sha512-aljQTWre/WoLY88WlXyK72cxxI391bQYoSVDFfcZ17dKw/BKnzVSfL7yB/oD9XrsZahzEwGZmooFPs8c27hNaQ==
+"@argos-ci/util@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@argos-ci/util/-/util-1.1.0.tgz#c9dc4c85d94da15d7343489cc250d2484d231320"
+  integrity sha512-ppdHKkzE+eGFlXbNspqhaHrjp7GZmd0rZ3qT4C4HsX9qU8fuIFeRc5dMh2o72jXsDnZu14NUYXUmCPQaFnJpCw==
 
 "@babel/cli@^7.23.0":
   version "7.23.0"
