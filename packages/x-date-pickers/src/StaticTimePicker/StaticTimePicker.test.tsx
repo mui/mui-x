@@ -117,7 +117,7 @@ describe('<StaticTimePicker />', () => {
     const onViewChange = spy();
     render(
       <StaticTimePicker
-        value={adapterToUse.date('2018-01-01')}
+        value={adapterToUse.date('2019-01-01')}
         onChange={onChange}
         onViewChange={onViewChange}
         disabled

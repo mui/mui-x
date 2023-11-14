@@ -22,14 +22,14 @@ describe('<TimeClock />', () => {
   });
 
   it('has a name depending on the `date`', () => {
-    render(<TimeClock value={adapterToUse.date('2018-01-01T04:20:00')} onChange={() => {}} />);
+    render(<TimeClock value={adapterToUse.date('2019-01-01T04:20:00')} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveAccessibleName('Select hours. Selected time is 4:20 AM');
   });
 
   it('renders the current value as an accessible option', () => {
-    render(<TimeClock value={adapterToUse.date('2018-01-01T04:20:00')} onChange={() => {}} />);
+    render(<TimeClock value={adapterToUse.date('2019-01-01T04:20:00')} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     const selectedOption = within(listbox).getByRole('option', { selected: true });
@@ -56,7 +56,7 @@ describe('<TimeClock />', () => {
   });
 
   it('selects the current date on mount', () => {
-    render(<TimeClock value={adapterToUse.date('2018-01-01T04:20:00')} onChange={() => {}} />);
+    render(<TimeClock value={adapterToUse.date('2019-01-01T04:20:00')} onChange={() => {}} />);
 
     const selectedOption = screen.getByRole('option', { selected: true });
     expect(selectedOption).toHaveAccessibleName('4 hours');
@@ -67,7 +67,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date('2018-01-01T04:20:00')}
+        value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
@@ -90,7 +90,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date('2018-01-01T04:20:00')}
+        value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
@@ -110,7 +110,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date('2018-01-01T04:20:00')}
+        value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
@@ -130,7 +130,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date('2018-01-01T04:20:00')}
+        value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
@@ -151,7 +151,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date('2018-01-01T18:20:00')}
+        value={adapterToUse.date('2019-01-01T18:20:00')}
         onChange={() => {}}
         shouldDisableClock={shouldDisableClock}
         ampm
@@ -182,7 +182,7 @@ describe('<TimeClock />', () => {
       ],
     };
     const onChangeMock = spy();
-    render(<TimeClock value={adapterToUse.date('2018-01-01')} onChange={onChangeMock} readOnly />);
+    render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} readOnly />);
 
     fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
     expect(onChangeMock.callCount).to.equal(0);
@@ -210,7 +210,7 @@ describe('<TimeClock />', () => {
       ],
     };
     const onChangeMock = spy();
-    render(<TimeClock value={adapterToUse.date('2018-01-01')} onChange={onChangeMock} disabled />);
+    render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} disabled />);
 
     fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
     expect(onChangeMock.callCount).to.equal(0);
@@ -467,7 +467,7 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           autoFocus
-          value={adapterToUse.date('2018-01-01T04:19:47')}
+          value={adapterToUse.date('2019-01-01T04:19:47')}
           onChange={handleChange}
         />,
       );

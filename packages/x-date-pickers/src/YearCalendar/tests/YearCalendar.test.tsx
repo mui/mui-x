@@ -10,7 +10,7 @@ describe('<YearCalendar />', () => {
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
-    render(<YearCalendar value={adapterToUse.date('2018-02-02')} onChange={onChange} />);
+    render(<YearCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />);
     const targetYear = screen.getByRole('radio', { name: '2025' });
 
     // A native button implies Enter and Space keydown behavior
@@ -39,7 +39,7 @@ describe('<YearCalendar />', () => {
   it('does not allow to pick year if readOnly prop is passed', () => {
     const onChangeMock = spy();
     render(
-      <YearCalendar value={adapterToUse.date('2018-02-02')} onChange={onChangeMock} readOnly />,
+      <YearCalendar value={adapterToUse.date('2019-02-02')} onChange={onChangeMock} readOnly />,
     );
     const targetYear = screen.getByRole('radio', { name: '2025' });
     expect(targetYear.tagName).to.equal('BUTTON');
@@ -85,7 +85,7 @@ describe('<YearCalendar />', () => {
       const onChange = spy();
       render(
         <YearCalendar
-          value={adapterToUse.date('2018-02-15')}
+          value={adapterToUse.date('2019-02-15')}
           onChange={onChange}
           maxDate={adapterToUse.date('2025-04-12')}
         />,
@@ -105,7 +105,7 @@ describe('<YearCalendar />', () => {
       const onChange = spy();
       render(
         <YearCalendar
-          value={adapterToUse.date('2018-01-02')}
+          value={adapterToUse.date('2019-01-02')}
           onChange={onChange}
           shouldDisableYear={(month) => adapterToUse.getYear(month) === 2024}
         />,

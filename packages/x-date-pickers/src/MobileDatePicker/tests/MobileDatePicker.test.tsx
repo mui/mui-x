@@ -18,7 +18,7 @@ describe('<MobileDatePicker />', () => {
   it('allows to change only year', () => {
     const onChangeMock = spy();
     render(
-      <MobileDatePicker open value={adapterToUse.date('2018-01-01')} onChange={onChangeMock} />,
+      <MobileDatePicker open value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} />,
     );
 
     fireEvent.click(screen.getByLabelText(/switch to year view/i));

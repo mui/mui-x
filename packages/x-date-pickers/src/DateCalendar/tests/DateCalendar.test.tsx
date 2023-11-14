@@ -105,7 +105,7 @@ describe('<DateCalendar />', () => {
   it('should render column header according to dayOfWeekFormatter', () => {
     render(
       <DateCalendar
-        defaultValue={adapterToUse.date('2018-01-01')}
+        defaultValue={adapterToUse.date('2019-01-01')}
         dayOfWeekFormatter={(day) => `${day}.`}
       />,
     );

@@ -177,7 +177,7 @@ describe('<DateTimeField /> - Editing', () => {
 
       it("should ignore the `maxDate` if  it's after the current date", () => {
         const onChange = spy();
-        const maxDate = adapterToUse.date('2032-05-05T18:30:00');
+        const maxDate = adapterToUse.date('2030-05-05T18:30:00');
 
         const { input, selectSection } = renderWithProps({
           onChange,

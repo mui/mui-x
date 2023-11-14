@@ -39,7 +39,7 @@ describe('<MonthCalendar />', () => {
   it('does not allow to pick months if readOnly prop is passed', () => {
     const onChangeMock = spy();
     render(
-      <MonthCalendar value={adapterToUse.date('2018-02-02')} onChange={onChangeMock} readOnly />,
+      <MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChangeMock} readOnly />,
     );
 
     fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
@@ -68,7 +68,7 @@ describe('<MonthCalendar />', () => {
     it('should disable all months if props.disabled = true', () => {
       const onChange = spy();
       render(
-        <MonthCalendar value={adapterToUse.date('2018-02-15')} onChange={onChange} disabled />,
+        <MonthCalendar value={adapterToUse.date('2019-02-15')} onChange={onChange} disabled />,
       );
 
       screen.getAllByRole('radio').forEach((monthButton) => {
@@ -82,9 +82,9 @@ describe('<MonthCalendar />', () => {
       const onChange = spy();
       render(
         <MonthCalendar
-          value={adapterToUse.date('2018-02-15')}
+          value={adapterToUse.date('2019-02-15')}
           onChange={onChange}
-          minDate={adapterToUse.date('2018-02-12')}
+          minDate={adapterToUse.date('2019-02-12')}
         />,
       );
 
@@ -105,9 +105,9 @@ describe('<MonthCalendar />', () => {
       const onChange = spy();
       render(
         <MonthCalendar
-          value={adapterToUse.date('2018-02-15')}
+          value={adapterToUse.date('2019-02-15')}
           onChange={onChange}
-          maxDate={adapterToUse.date('2018-04-12')}
+          maxDate={adapterToUse.date('2019-04-12')}
         />,
       );
 
@@ -128,7 +128,7 @@ describe('<MonthCalendar />', () => {
       const onChange = spy();
       render(
         <MonthCalendar
-          value={adapterToUse.date('2018-02-02')}
+          value={adapterToUse.date('2019-02-02')}
           onChange={onChange}
           shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 3}
         />,
