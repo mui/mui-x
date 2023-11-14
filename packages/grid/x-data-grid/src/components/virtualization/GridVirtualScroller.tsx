@@ -34,7 +34,7 @@ const Scroller = styled('div', {
   height: '100%',
 
   overflow: 'scroll',
-  'scrollbar-width': 'none' /* Firefox */,
+  scrollbarWidth: 'none' /* Firefox */,
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
   },
