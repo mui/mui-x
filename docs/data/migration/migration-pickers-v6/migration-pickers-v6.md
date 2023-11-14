@@ -364,7 +364,7 @@ The `getYearRange` method used to accept two params and now accepts a tuple to b
 The `date` method now have the behavior of the v6 `dateWithTimezone` method.
 The following changes have been applied:
 
-- It's first argument is now mandatory, you need pas pass `undefined` to get a date with the current timestamp instead of passing no argument
+- Its first argument is now mandatory, you need to pass `undefined` to get a date with the current timestamp instead of passing no argument
 
   ```diff
   - adapter.date();
