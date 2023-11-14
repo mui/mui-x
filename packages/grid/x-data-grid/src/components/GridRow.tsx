@@ -370,8 +370,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
           contentWidth={contentWidth}
           field={column.field}
           align={column.align}
-          pinnedOffset={pinnedOffset}
-          pinnedPosition={pinnedPosition}
         />
       );
     }
