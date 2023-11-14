@@ -2962,10 +2962,10 @@
   dependencies:
     moment ">=2.14.0"
 
-"@types/moment-jalaali@^0.7.8":
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/@types/moment-jalaali/-/moment-jalaali-0.7.8.tgz#42ab59989928c94207aff35e5d834f55c2b8bdb0"
-  integrity sha512-Yfbgpos2bZBlSclui5iccntZ06eBUnSDypKbZwt9PENPv4Jpl1DHsvsd3XCgWGd9AC4gcHDeInsR8nCv9Sx+vA==
+"@types/moment-jalaali@^0.7.9":
+  version "0.7.9"
+  resolved "https://registry.yarnpkg.com/@types/moment-jalaali/-/moment-jalaali-0.7.9.tgz#c8daf05753427ac9bbc098f0b73f7f884d810269"
+  integrity sha512-gsDOoAzRnCfQTbfdlUrCvX6R0wIto6CvwfvV2C3j4qJLK+DEiTK8Rl/xlOCBO9C6qeUfX8oyZ2UfjnXJTOvHSA==
   dependencies:
     moment ">=2.14.0"
 
