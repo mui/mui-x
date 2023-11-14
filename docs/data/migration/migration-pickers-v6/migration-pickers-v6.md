@@ -125,6 +125,16 @@ adapter.isValid(dayjs('2022-04-17T15:30'));
 If you are just passing an adapter to `LocalizationProvider`, then you can safely skip this section.
 :::
 
+### Remove the `dateWithTimezone` method
+
+The `dateWithTimezone` method has been removed and its content has been moved the `date` method.
+You can use the `date` method instead:
+
+```diff
+- adater.dateWithTimezone(undefined, 'system');
++ adater.date(undefined, 'system');
+```
+
 ### Remove the `getDiff` method
 
 The `getDiff` method have been removed, you can directly use your date library:
@@ -348,6 +358,34 @@ The `getYearRange` method used to accept two params and now accepts a tuple to b
 - adapter.getYearRange(start, end);
 + adapter.getYearRange([start, end])
 ```
+
+### Restrict the input format of the `date` method
+
+The `date` method now have the behavior of the v6 `dateWithTimezone` method.
+The following changes have been applied:
+
+- It's first argument is now mandatory, you need pas pass `undefined` to get a date with the current timestamp instead of passing no argument
+
+  ```diff
+  - adapter.date();
+  + adapter.date(undefined);
+  ```
+
+- It no longer accept `any` as a value but only `string | null | undefined`
+
+  ```diff
+  - adapter.date(new Date());
+  + adapter.date(undefined);
+
+  - adapter.date(new Date('2022-04-17');
+  + adapter.date('2022-04-17');
+
+  - adapter.date(new Date(2022, 3, 17));
+  + adapter.date('2022-04-17');
+
+  - adpater.date(new Date('Invalid Date'));
+  + adapter.getInvalidDate();
+  ```
 
 ### Restrict the input format of the `isEqual` method
 
