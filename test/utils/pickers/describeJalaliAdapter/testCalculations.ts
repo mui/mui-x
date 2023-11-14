@@ -14,73 +14,6 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
     expect(adapter.parse('01/01/1395', adapter.formats.keyboardDate)).not.to.equal(null);
   });
 
-  it('Method: parseISO', () => {
-    expect(adapter.parseISO(TEST_DATE_ISO_STRING)).toEqualDateTime(testDateIso);
-  });
-
-  it('Method: toISO', () => {
-    const outputtedISO = adapter.toISO(testDateIso);
-
-    if (adapter.lib === 'date-fns-jalali') {
-      // date-fns never suppress useless milliseconds in the end
-      expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING.replace('.000Z', 'Z'));
-    } else {
-      expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING);
-    }
-  });
-
-  it('Method: isNull', () => {
-    expect(adapter.isNull(null)).to.equal(true);
-    expect(adapter.isNull(testDateIso)).to.equal(false);
-  });
-
-  describe('Method: getDiff', () => {
-    it('should compute the millisecond diff when there is no unit', () => {
-      expect(adapter.getDiff(testDateIso, adapter.date('2018-10-29T11:44:00.000Z')!)).to.equal(
-        86400000,
-      );
-      expect(adapter.getDiff(testDateIso, adapter.date('2018-10-31T11:44:00.000Z')!)).to.equal(
-        -86400000,
-      );
-      expect(adapter.getDiff(testDateIso, adapter.date('2018-10-31T11:44:00.000Z')!)).to.equal(
-        -86400000,
-      );
-    });
-
-    it('should compute the diff in the provided unit (ISO)', () => {
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2017-09-29T11:44:00.000Z')!, 'years'),
-      ).to.equal(1);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-08-29T11:44:00.000Z')!, 'months'),
-      ).to.equal(2);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-05-29T11:44:00.000Z')!, 'quarters'),
-      ).to.equal(1);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'days'),
-      ).to.equal(31);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'weeks'),
-      ).to.equal(4);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'hours'),
-      ).to.equal(744);
-
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'minutes'),
-      ).to.equal(44640);
-
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-10-30T10:44:00.000Z')!, 'seconds'),
-      ).to.equal(3600);
-
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-10-30T10:44:00.000Z')!, 'milliseconds'),
-      ).to.equal(3600000);
-    });
-  });
-
   it('Method: isEqual', () => {
     const anotherDate = adapter.date(TEST_DATE_ISO_STRING);
 
@@ -307,45 +240,6 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
 
   it('Method: setMilliseconds', () => {
     expect(adapter.setMilliseconds(testDateIso, 11)).toEqualDateTime('2018-10-30T11:44:00.011Z');
-  });
-
-  it('Method: getNextMonth', () => {
-    expect(adapter.getNextMonth(testDateIso)).toEqualDateTime('2018-11-29T11:44:00.000Z');
-  });
-
-  it('Method: getPreviousMonth', () => {
-    expect(adapter.getPreviousMonth(testDateIso)).toEqualDateTime(
-      new Date('2018-09-30T11:44:00.000Z'),
-    );
-  });
-
-  it('Method: getMonthArray', () => {
-    const monthArray = adapter.getMonthArray(testDateIso);
-    let expectedDate = adapter.date('2018-03-21T00:00:00.000Z')!;
-
-    monthArray.forEach((month) => {
-      expect(month).toEqualDateTime(expectedDate);
-      expectedDate = adapter.addMonths(expectedDate, 1)!;
-    });
-  });
-
-  it('Method: mergeDateAndTime', () => {
-    const mergedDate = adapter.mergeDateAndTime(
-      testDateIso,
-      adapter.date('2018-01-01T14:15:16.000Z')!,
-    );
-
-    expect(adapter.toJsDate(mergedDate)).toEqualDateTime('2018-10-30T14:15:16.000Z');
-  });
-
-  it('Method: getWeekdays', () => {
-    // TODO: AdapterDateFnsJalali `getWeekDays` method seems broken
-    // Same behavior with the date-io adapter.
-    expect(adapter.getWeekdays()).to.deep.equal(
-      adapter.lib === 'date-fns-jalali'
-        ? ['ش', '1ش', '2ش', '3ش', '4ش', '5ش', 'ج']
-        : ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'],
-    );
   });
 
   it('Method: getWeekArray', () => {

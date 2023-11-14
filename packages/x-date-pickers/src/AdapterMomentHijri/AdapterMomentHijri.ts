@@ -59,21 +59,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'iYYYY, iMMMM Do',
-  fullDateWithWeekday: 'iYYYY, iMMMM Do, dddd',
   keyboardDateTime: 'iYYYY/iMM/iDD LT',
   shortDate: 'iD iMMM',
   normalDate: 'dddd, iD iMMM',
   normalDateWithWeekday: 'DD iMMMM',
-  monthAndYear: 'iMMMM iYYYY',
-  monthAndDate: 'iD iMMMM',
 
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'iYYYY, iMMMM Do, hh:mm A',
-  fullDateTime12h: 'iD iMMMM hh:mm A',
-  fullDateTime24h: 'iD iMMMM HH:mm',
   keyboardDate: 'iYYYY/iMM/iDD',
   keyboardDateTime12h: 'iYYYY/iMM/iDD hh:mm A',
   keyboardDateTime24h: 'iYYYY/iMM/iDD HH:mm',
@@ -164,15 +158,6 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return this.moment(value, format, true).locale('ar-SA');
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format)
-      .replace(/a/gi, '(a|p)m')
-      .replace('iY', 'Y')
-      .replace('iM', 'M')
-      .replace('iD', 'D')
-      .toLocaleLowerCase();
-  };
-
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat
       .replace(/\d/g, (match) => NUMBER_SYMBOL_MAP[match as keyof typeof NUMBER_SYMBOL_MAP])
@@ -231,20 +216,6 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return value.clone().iDate(date);
   };
 
-  public getNextMonth = (value: Moment) => {
-    return value.clone().add(1, 'iMonth');
-  };
-
-  public getPreviousMonth = (value: Moment) => {
-    return value.clone().subtract(1, 'iMonth');
-  };
-
-  public getWeekdays = () => {
-    return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-      return this.date()!.weekday(dayOfWeek).format('dd');
-    });
-  };
-
   public getWeekArray = (value: Moment) => {
     const start = value.clone().startOf('iMonth').startOf('week');
 
@@ -291,9 +262,5 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am' ? this.date()!.hours(2).format('A') : this.date()!.hours(14).format('A');
   };
 }

@@ -36,12 +36,6 @@ describe('<AdapterLuxon />', () => {
     describe('Russian', () => {
       const adapter = new AdapterLuxon({ locale: 'ru' });
 
-      // TODO v7: can be removed after v7 release
-      it('getWeekDays: should start on Monday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['П', 'В', 'С', 'Ч', 'П', 'С', 'В']);
-      });
-
       it('getWeekArray: should start on Monday', () => {
         const date = adapter.date(TEST_DATE_ISO_STRING)!;
         const result = adapter.getWeekArray(date);
@@ -73,10 +67,6 @@ describe('<AdapterLuxon />', () => {
       };
 
       expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
-      expectDate('fullDateWithWeekday', 'Saturday, February 1, 2020', 'суббота, 1 февраля 2020 г.');
-      expectDate('fullDateTime', 'Feb 1, 2020, 11:44 PM', '1 февр. 2020 г., 23:44');
-      expectDate('fullDateTime12h', 'Feb 1, 2020, 11:44 PM', '1 февр. 2020 г., 11:44 PM');
-      expectDate('fullDateTime24h', 'Feb 1, 2020, 23:44', '1 февр. 2020 г., 23:44');
       expectDate('keyboardDate', '2/1/2020', '01.02.2020');
       expectDate('keyboardDateTime', '2/1/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '2/1/2020 11:44 PM', '01.02.2020 11:44 PM');

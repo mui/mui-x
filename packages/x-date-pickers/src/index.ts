@@ -43,6 +43,9 @@ export * from './PickersLayout';
 export * from './PickersActionBar';
 export * from './PickersShortcuts';
 
+// Other slots
+export * from './PickersCalendarHeader';
+
 export { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from './internals/utils/utils';
 
 export * from './models';
