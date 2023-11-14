@@ -143,8 +143,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public lib = 'dayjs';
 
-  public rawDayJsInstance?: typeof defaultDayjs;
-
   public dayjs: Constructor;
 
   public locale?: string;
@@ -155,9 +153,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultDayjs> = {}) {
-    this.rawDayJsInstance = instance;
-    this.dayjs = withLocale(this.rawDayJsInstance ?? defaultDayjs, locale);
+  constructor({ locale, formats }: AdapterOptions<string, never> = {}) {
+    this.dayjs = withLocale(defaultDayjs, locale);
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
 
@@ -201,12 +198,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   private createSystemDate = (value: string | undefined): Dayjs => {
-    // TODO v7: Stop using `this.rawDayJsInstance` (drop the `instance` param on the adapters)
-    /* istanbul ignore next */
-    if (this.rawDayJsInstance) {
-      return this.rawDayJsInstance(value);
-    }
-
     if (this.hasUTCPlugin() && this.hasTimezonePlugin()) {
       const timezone = defaultDayjs.tz.guess();
 

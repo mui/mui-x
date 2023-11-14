@@ -1,23 +1,17 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import dayjs, { Dayjs } from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { screen } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
-  buildPickerDragInteractions,
-  MockedDataTransfer,
   expectInputPlaceholder,
   expectInputValue,
   createPickerRenderer,
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
 } from 'test/utils/pickers';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
 // We import the plugins here just to have the typing
@@ -153,68 +147,6 @@ describe('<AdapterDayjs />', () => {
           expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
         });
       });
-    });
-  });
-
-  // TODO v7: Remove
-  describe('UTC plugin - LEGACY APPROACH', () => {
-    const { render } = createPickerRenderer({
-      clock: 'fake',
-      adapterName: 'dayjs',
-    });
-
-    it('should not create UTC dates when no instance passed', () => {
-      const onChange = spy();
-      render(<DateCalendar defaultValue={dayjs('2022-04-17')} onChange={onChange} />);
-
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
-
-      const date = onChange.lastCall.firstArg;
-      expect(date).to.not.equal(null);
-      expect(date!.isUTC()).to.equal(false);
-    });
-
-    it('should create UTC dates when the instance is a UTC instance', () => {
-      const onChange = spy();
-      render(
-        <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
-          <DateCalendar defaultValue={dayjs.utc('2022-04-17')} onChange={onChange} />
-        </LocalizationProvider>,
-      );
-
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
-
-      const date = onChange.lastCall.firstArg;
-      expect(date).to.not.equal(null);
-      expect(date!.isUTC()).to.equal(true);
-    });
-
-    it('should not loose UTC when dragging', function test() {
-      if (!document.elementFromPoint) {
-        this.skip();
-      }
-
-      const dataTransfer = new MockedDataTransfer();
-      const { executeDateDrag } = buildPickerDragInteractions(() => dataTransfer);
-
-      const onChange = spy();
-      const initialValue: [any, any] = [dayjs.utc('2022-04-17'), dayjs.utc('2022-04-21')];
-      render(
-        <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
-          <DateRangeCalendar onChange={onChange} defaultValue={initialValue} calendars={1} />
-        </LocalizationProvider>,
-      );
-
-      executeDateDrag(
-        screen.getByRole('gridcell', { name: '21', selected: true }),
-        screen.getByRole('gridcell', { name: '22' }),
-        screen.getByRole('gridcell', { name: '23' }),
-      );
-
-      expect(onChange.callCount).to.equal(1);
-      const [startDate, endDate] = onChange.lastCall.firstArg;
-      expect(startDate.isUTC()).to.equal(true);
-      expect(endDate.isUTC()).to.equal(true);
     });
   });
 });

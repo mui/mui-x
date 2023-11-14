@@ -110,6 +110,31 @@ It was used in the header of the calendar views, you can replace it with the new
   <LocalizationProvider />
 ```
 
+## Use UTC with the Day.js adapter
+
+The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.
+This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
+You can learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
+
+```diff
+  // When a `value` or a `defaultValue` is provided
+  <LocalizationProvider
+    adapter={AdapterDayjs}
+-   dateLibInstance={dayjs.utc}
+  >
+    <DatePicker value={dayjs.utc('2022-04-17')} />
+  </LocalizationProvider>
+
+  // When no `value` or `defaultValue` is provided
+  <LocalizationProvider
+    adapter={AdapterDayjs}
+-   dateLibInstance={dayjs.utc}
+  >
+-   <DatePicker />
++   <DatePicker timezone="UTC" />
+  </LocalizationProvider>
+```
+
 ## Adapters
 
 :::success
