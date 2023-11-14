@@ -11,6 +11,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "format": {
+      "description": "Format used to display the date.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "slotProps": {
       "description": "The props used for each component slot.",
       "deprecated": "",

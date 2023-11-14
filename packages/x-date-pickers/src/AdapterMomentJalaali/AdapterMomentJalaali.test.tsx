@@ -43,10 +43,6 @@ describe('<AdapterMomentJalaali />', () => {
       };
 
       expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
-      expectDate('fullDateWithWeekday', 'شنبه ۱م بهمن ۱۳۹۸');
-      expectDate('fullDateTime', '۱۳۹۸، بهمن ۱م، ۱۱:۴۴ ب.ظ');
-      expectDate('fullDateTime12h', '۱۲ بهمن ۱۱:۴۴ ب.ظ');
-      expectDate('fullDateTime24h', '۱۲ بهمن ۲۳:۴۴');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
       expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ ب.ظ');
