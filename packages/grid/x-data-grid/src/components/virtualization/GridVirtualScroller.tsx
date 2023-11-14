@@ -30,7 +30,7 @@ const Scroller = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
   overridesResolver: (props, styles) => styles.virtualScroller,
-})({
+})<{ ownerState: OwnerState }>({
   height: '100%',
 
   overflow: 'scroll',
@@ -68,7 +68,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
 
   return (
     <Container {...getContainerProps()}>
-      <Scroller className={classes.scroller} {...getScrollerProps()}>
+      <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
         <GridTopContainer>
           <GridHeaders />
           <GridOverlays />
