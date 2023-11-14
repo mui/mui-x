@@ -117,65 +117,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(virtualScroller.scrollLeft).to.equal(100);
   });
 
-  it('should apply .Mui-hovered on the entire row when the mouse enters the row', () => {
-    render(<TestCase initialState={{ pinnedColumns: { left: ['id'], right: ['price16M'] } }} />);
-    const leftColumns = document.querySelector(`.${gridClasses['pinnedColumns--left']}`);
-    const rightColumns = document.querySelector(`.${gridClasses['pinnedColumns--right']}`);
-    const renderZone = document.querySelector(`.${gridClasses.virtualScrollerRenderZone}`);
-    expect(leftColumns!.querySelector('[data-rowindex="0"]')).not.to.have.class('Mui-hovered');
-    expect(rightColumns!.querySelector('[data-rowindex="0"]')).not.to.have.class('Mui-hovered');
-    expect(renderZone!.querySelector('[data-rowindex="0"]')).not.to.have.class('Mui-hovered');
-    const cell = getCell(0, 0);
-    fireEvent.mouseEnter(cell);
-    expect(leftColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-    expect(rightColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-    expect(renderZone!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-  });
-
-  it('should remove .Mui-hovered from the entire row when the mouse leaves the row', () => {
-    render(<TestCase initialState={{ pinnedColumns: { left: ['id'], right: ['price16M'] } }} />);
-    const cell = getCell(0, 0);
-    fireEvent.mouseEnter(cell);
-    const leftColumns = document.querySelector(`.${gridClasses['pinnedColumns--left']}`);
-    const rightColumns = document.querySelector(`.${gridClasses['pinnedColumns--right']}`);
-    const renderZone = document.querySelector(`.${gridClasses.virtualScrollerRenderZone}`);
-    expect(leftColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-    expect(rightColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-    expect(renderZone!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-    fireEvent.mouseLeave(cell);
-    expect(leftColumns!.querySelector('[data-rowindex="0"]')).not.to.have.class('Mui-hovered');
-    expect(rightColumns!.querySelector('[data-rowindex="0"]')).not.to.have.class('Mui-hovered');
-    expect(renderZone!.querySelector('[data-rowindex="0"]')).not.to.have.class('Mui-hovered');
-  });
-
-  // https://github.com/mui/mui-x/issues/10176
-  it('should keep .Mui-hovered on the entire row when row is selected and deselected', () => {
-    render(
-      <TestCase
-        initialState={{
-          pinnedColumns: { left: [GRID_CHECKBOX_SELECTION_FIELD], right: ['price16M'] },
-        }}
-        checkboxSelection
-      />,
-    );
-    const leftColumns = document.querySelector(`.${gridClasses['pinnedColumns--left']}`);
-    const rightColumns = document.querySelector(`.${gridClasses['pinnedColumns--right']}`);
-    const renderZone = document.querySelector(`.${gridClasses.virtualScrollerRenderZone}`);
-    const cell = getCell(0, 0);
-
-    fireEvent.mouseEnter(cell);
-    expect(leftColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-    expect(rightColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-    expect(renderZone!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-
-    const checkbox = cell.querySelector('input[type="checkbox"]')!;
-    fireEvent.click(checkbox);
-    fireEvent.click(checkbox);
-    expect(leftColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-    expect(rightColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-    expect(renderZone!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
-  });
-
   it('should update the render zone offset after resize', function test() {
     if (isJSDOM) {
       // Need layouting

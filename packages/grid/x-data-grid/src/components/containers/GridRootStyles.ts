@@ -347,7 +347,7 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       width: 'var(--DataGrid-columnsTotalWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
-      '&:hover, &.Mui-hovered': {
+      '&:hover': {
         backgroundColor: (theme.vars || theme).palette.action.hover,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
@@ -358,7 +358,7 @@ export const GridRootStyles = styled('div', {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
           : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-        '&:hover, &.Mui-hovered': {
+        '&:hover': {
           backgroundColor: theme.vars
             ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(
                 ${theme.vars.palette.action.selectedOpacity} + 
@@ -399,7 +399,7 @@ export const GridRootStyles = styled('div', {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
           : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-        '&:hover, &.Mui-hovered': {
+        '&:hover': {
           backgroundColor: theme.vars
             ? `rgba(${theme.vars.palette.primary.mainChannel} / ${
                 theme.vars.palette.action.selectedOpacity + theme.palette.action.hoverOpacity
