@@ -64,6 +64,24 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
+### Change the imports of the `calendarHeader` slot
+
+The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DateCalendar` to `@mui/x-date-pickers/PIckersCalendarHeader`:
+
+```diff
+  export {
+    pickersCalendarHeaderClasses,
+    PickersCalendarHeaderClassKey,
+    PickersCalendarHeaderClasses,
+    PickersCalendarHeader,
+    PickersCalendarHeaderProps,
+    PickersCalendarHeaderSlotsComponent,
+    PickersCalendarHeaderSlotsComponentsProps,
+    ExportedPickersCalendarHeaderProps,
+- } from '@mui/x-date-pickers/DateCalendar';
++ } from '@mui/x-date-pickers/PickersCalendarHeader';
+```
+
 ## Field components
 
 ### Replace the section `hasLeadingZeros` property

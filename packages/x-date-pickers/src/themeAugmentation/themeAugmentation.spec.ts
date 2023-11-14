@@ -2,9 +2,9 @@ import { createTheme } from '@mui/material/styles';
 import {
   dateCalendarClasses,
   dayPickerClasses,
-  pickersCalendarHeaderClasses,
   pickersSlideTransitionClasses,
 } from '../DateCalendar';
+import { pickersCalendarHeaderClasses } from '../PickersCalendarHeader';
 import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
   clockClasses,
