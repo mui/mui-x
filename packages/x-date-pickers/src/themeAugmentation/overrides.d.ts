@@ -1,10 +1,10 @@
 import {
   DateCalendarClassKey,
   DayCalendarClassKey,
-  PickersCalendarHeaderClassKey,
   PickersFadeTransitionGroupClassKey,
   PickersSlideTransitionClassKey,
 } from '../DateCalendar';
+import { PickersCalendarHeaderClassKey } from '../PickersCalendarHeader';
 import { DayCalendarSkeletonClassKey } from '../DayCalendarSkeleton';
 import {
   ClockClassKey,

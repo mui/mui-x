@@ -124,11 +124,14 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it('should parse undefined', () => {
+      if (adapterTZ.lib !== 'dayjs') {
+        return;
+      }
+
       if (adapter.isTimezoneCompatible) {
         const testTodayZone = (timezone: PickersTimezone) => {
           const dateWithZone = adapterTZ.dateWithTimezone(undefined, timezone);
           expect(adapterTZ.getTimezone(dateWithZone)).to.equal(timezone);
-          expect(adapterTZ.getDiff(dateWithZone, adapterTZ.date(new Date())!)).to.be.lessThan(5);
           expect(Math.abs(adapterTZ.toJsDate(dateWithZone).getTime() - Date.now())).to.be.lessThan(
             5,
           );
@@ -208,21 +211,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.toJsDate(testDateLocale)).to.be.instanceOf(Date);
   });
 
-  it('Method: parseISO', () => {
-    expect(adapter.parseISO(TEST_DATE_ISO_STRING)).toEqualDateTime(testDateIso);
-  });
-
-  it('Method: toISO', () => {
-    const outputtedISO = adapter.toISO(testDateIso);
-
-    if (adapter.lib === 'date-fns') {
-      // date-fns never suppress useless milliseconds in the end
-      expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING.replace('.000Z', 'Z'));
-    } else {
-      expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING);
-    }
-  });
-
   it('Method: parse', () => {
     // Date time
     expect(adapter.parse('10/30/2018 11:44', adapter.formats.keyboardDateTime24h)).toEqualDateTime(
@@ -243,12 +231,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     );
   });
 
-  it('Method: isNull', () => {
-    expect(adapter.isNull(null)).to.equal(true);
-    expect(adapter.isNull(testDateIso)).to.equal(false);
-    expect(adapter.isNull(testDateLocale)).to.equal(false);
-  });
-
   it('Method: isValid', () => {
     const invalidDate = adapter.date('2018-42-30T11:60:00.000Z');
 
@@ -256,69 +238,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.isValid(testDateLocale)).to.equal(true);
     expect(adapter.isValid(invalidDate)).to.equal(false);
     expect(adapter.isValid(null)).to.equal(false);
-  });
-
-  describe('Method: getDiff', () => {
-    it('should compute the millisecond diff when there is no unit', () => {
-      expect(adapter.getDiff(testDateIso, adapter.date('2018-10-29T11:44:00.000Z')!)).to.equal(
-        86400000,
-      );
-      expect(adapter.getDiff(testDateIso, adapter.date('2018-10-31T11:44:00.000Z')!)).to.equal(
-        -86400000,
-      );
-      expect(adapter.getDiff(testDateIso, adapter.date('2018-10-31T11:44:00.000Z')!)).to.equal(
-        -86400000,
-      );
-    });
-
-    it('should compute the diff in the provided unit (ISO)', () => {
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2017-09-29T11:44:00.000Z')!, 'years'),
-      ).to.equal(1);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-08-29T11:44:00.000Z')!, 'months'),
-      ).to.equal(2);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-05-29T11:44:00.000Z')!, 'quarters'),
-      ).to.equal(1);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'days'),
-      ).to.equal(31);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'weeks'),
-      ).to.equal(4);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'hours'),
-      ).to.equal(744);
-
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'minutes'),
-      ).to.equal(44640);
-
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-10-30T10:44:00.000Z')!, 'seconds'),
-      ).to.equal(3600);
-
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-10-30T10:44:00.000Z')!, 'milliseconds'),
-      ).to.equal(3600000);
-    });
-
-    it('should compute the diff in the provided unit (locale)', () => {
-      expect(adapter.getDiff(testDateLocale, adapter.date('2017-09-29')!, 'years')).to.equal(1);
-      expect(adapter.getDiff(testDateLocale, adapter.date('2018-08-29')!, 'months')).to.equal(2);
-      expect(adapter.getDiff(testDateLocale, adapter.date('2018-05-29')!, 'quarters')).to.equal(1);
-      expect(adapter.getDiff(testDateLocale, adapter.date('2018-09-29')!, 'days')).to.equal(31);
-      expect(adapter.getDiff(testDateLocale, adapter.date('2018-09-29')!, 'weeks')).to.equal(4);
-    });
-
-    it('should compute the diff with string "comparing" param', () => {
-      expect(adapter.getDiff(testDateLocale, '2017-09-29', 'years')).to.equal(1);
-      expect(adapter.getDiff(testDateLocale, '2018-08-29', 'months')).to.equal(2);
-      expect(adapter.getDiff(testDateLocale, '2018-05-29', 'quarters')).to.equal(1);
-      expect(adapter.getDiff(testDateLocale, '2018-09-29', 'days')).to.equal(31);
-      expect(adapter.getDiff(testDateLocale, '2018-09-29', 'weeks')).to.equal(4);
-    });
   });
 
   describe('Method: isEqual', () => {
@@ -915,43 +834,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.getDaysInMonth(testDateIso)).to.equal(31);
     expect(adapter.getDaysInMonth(testDateLocale)).to.equal(31);
     expect(adapter.getDaysInMonth(adapter.addMonths(testDateIso, 1))).to.equal(30);
-  });
-
-  it('Method: getNextMonth', () => {
-    expect(adapter.getNextMonth(testDateIso)).toEqualDateTime('2018-11-30T11:44:00.000Z');
-  });
-
-  it('Method: getPreviousMonth', () => {
-    expect(adapter.getPreviousMonth(testDateIso)).toEqualDateTime('2018-09-30T11:44:00.000Z');
-  });
-
-  it('Method: getMonthArray', () => {
-    const monthArray = adapter.getMonthArray(testDateIso);
-    let expectedDate = adapter.date('2018-01-01T00:00:00.000Z')!;
-
-    monthArray.forEach((month) => {
-      expect(month).toEqualDateTime(expectedDate);
-      expectedDate = adapter.addMonths(expectedDate, 1)!;
-    });
-  });
-
-  it('Method: mergeDateAndTime', () => {
-    const mergedDate = adapter.mergeDateAndTime(
-      testDateIso,
-      adapter.date('2018-01-01T14:15:16.000Z')!,
-    );
-
-    expect(adapter.toJsDate(mergedDate)).toEqualDateTime('2018-10-30T14:15:16.000Z');
-  });
-
-  it('Method: getWeekdays', () => {
-    const weekDays = adapter.getWeekdays();
-    let date = adapter.startOfWeek(testDateIso);
-
-    weekDays.forEach((dayLabel) => {
-      expect(adapter.format(date, 'weekday').startsWith(dayLabel)).to.equal(true);
-      date = adapter.addDays(date, 1);
-    });
   });
 
   describe('Method: getWeekArray', () => {

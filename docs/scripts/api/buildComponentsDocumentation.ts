@@ -81,14 +81,10 @@ function extractSlots(options: {
     filePath: filename,
     project,
     checkDeclarations: true,
-    shouldResolveObject: ({ name }) => {
-      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
-      return name === 'slots' || name === 'components';
-    },
+    shouldResolveObject: ({ name }) => name === 'slots',
     shouldInclude: ({ name, depth }) => {
       // The keys allowed in the `components` prop have depth=2
-      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
-      return name === 'slots' || name === 'components' || depth === 2;
+      return name === 'slots' || depth === 2;
     },
   });
 
@@ -97,10 +93,7 @@ function extractSlots(options: {
     throw new Error(`No proptypes found for \`${displayName}\``);
   }
 
-  const componentsProps = props.types.find(
-    // TODO v7: Remove the `components` fallback once `slots` is used everywhere
-    (type) => type.name === 'slots' || type.name === 'components',
-  )!;
+  const componentsProps = props.types.find((type) => type.name === 'slots')!;
   if (!componentsProps) {
     return slots;
   }
@@ -480,8 +473,7 @@ const buildComponentDocumentation = async (options: {
   /**
    * Slot descriptions.
    */
-  // TODO v7: Remove the `components` fallback once `slots` is used everywhere
-  if (componentApi.propDescriptions.slots || componentApi.propDescriptions.components) {
+  if (componentApi.propDescriptions.slots) {
     const slots = extractSlots({
       filename,
       name: reactApi.name, // e.g. DataGrid
