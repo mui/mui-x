@@ -878,8 +878,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         expect(getLocaleFromDate(weekArray[0][0])).to.match(/en/);
       }
 
-      // Week should start on Monday (28th of March) for adapters supporting locale-based week start.
-      expect(adapter.getDate(weekArray[0][0])).to.equal(adapter.lib === 'luxon' ? 28 : 27);
+      // Week should start on Monday (28th of March).
+      expect(adapter.getDate(weekArray[0][0])).to.equal(27);
     });
   });
 

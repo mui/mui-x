@@ -316,7 +316,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public isAfterDay = (value: DateTime, comparing: DateTime) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
-    const diff = value.diff(this.endOfYear(comparingInValueTimezone), 'days').toObject();
+    const diff = value.diff(this.endOfDay(comparingInValueTimezone), 'days').toObject();
     return diff.days! > 0;
   };
 
