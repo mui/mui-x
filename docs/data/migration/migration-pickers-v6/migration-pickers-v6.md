@@ -90,7 +90,7 @@ The string argument of the `dayOfWeekFormatter` has been replaced in favor of th
 
 ```diff
  <DateCalendar
-   // If you were still using the day string
+   // If you were still using the day string, you can get it back with your date library.
 -   dayOfWeekFormatter={dayStr => `${dayStr}.`}
 +   dayOfWeekFormatter={day => `${day.format('dd')}.`}
 
