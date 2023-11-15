@@ -10,6 +10,7 @@ import {
   describeValidation,
   describeValue,
   describePicker,
+  formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 
@@ -68,9 +69,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
       }
       expectInputValue(
         input,
-        expectedValue
-          ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
-          : '',
+        expectedValue ? formatFullTimeValue(adapterToUse, expectedValue) : '',
       );
     },
     setNewValue: (value, { isOpened, applySameValue, selectSection }) => {
