@@ -94,7 +94,7 @@ The string argument of the `dayOfWeekFormatter` has been replaced in favor of th
 -   dayOfWeekFormatter={dayStr => `${dayStr}.`}
 +   dayOfWeekFormatter={day => `${day.format('dd')}.`}
 
-   // If you were already using the day object
+   // If you were already using the day object, just remove the first argument.
 -   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
 +   dayOfWeekFormatter={day => `${day.format('dd')}.`
  />
