@@ -1,7 +1,6 @@
 import { TimeView } from '@mui/x-date-pickers/models';
 import {
   MakeOptional,
-  UncapitalizeObjectKeys,
   DesktopOnlyTimePickerProps,
   TimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
@@ -18,7 +17,7 @@ import {
 
 export interface DesktopTimeRangePickerSlotsComponent<TDate>
   extends BaseTimeRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, TimeViewWithMeridiem>, 'Field'> {}
+    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, TimeViewWithMeridiem>, 'field'> {}
 
 export interface DesktopTimeRangePickerSlotsComponentsProps<TDate>
   extends BaseTimeRangePickerSlotsComponentsProps,
@@ -33,22 +32,10 @@ export interface DesktopTimeRangePickerProps<TDate>
    */
   views?: readonly TimeView[];
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DesktopTimeRangePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DesktopTimeRangePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DesktopTimeRangePickerSlotsComponent<TDate>>;
+  slots?: DesktopTimeRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

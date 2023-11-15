@@ -23,7 +23,7 @@ import {
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
-import { GridProSlotsComponent, UncapitalizedGridProSlotsComponent } from './gridProSlotsComponent';
+import { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
 import { GridAutosizeOptions } from '../hooks';
 
@@ -38,13 +38,8 @@ interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
   /**
    * Overridable components.
-   * @deprecated Use the `slots` prop instead.
    */
-  components?: Partial<GridProSlotsComponent>;
-  /**
-   * Overridable components.
-   */
-  slots?: Partial<UncapitalizedGridProSlotsComponent>;
+  slots?: Partial<GridProSlotsComponent>;
 }
 
 /**
@@ -60,7 +55,7 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
 
 interface DataGridProPropsWithComplexDefaultValueAfterProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'slots'> {
-  slots: UncapitalizedGridProSlotsComponent;
+  slots: GridProSlotsComponent;
 }
 
 /**
@@ -269,9 +264,4 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps?: GridProSlotProps;
-  /**
-   * Overridable components props dynamically passed to the component at rendering.
-   * @deprecated Use the `slotProps` prop instead.
-   */
-  componentsProps?: GridProSlotProps;
 }

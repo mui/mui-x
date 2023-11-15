@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "6.18.0",
+  "version": "7.0.0-alpha.0",
   "description": "The community edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -97,12 +97,12 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.3",
-    "@types/moment-jalaali": "^0.7.8",
+    "@types/luxon": "^3.3.4",
+    "@types/moment-jalaali": "^0.7.9",
     "date-fns": "^2.30.0",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.11.10",
-    "luxon": "^3.4.3",
+    "luxon": "^3.4.4",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
     "moment-jalaali": "^0.10.0"

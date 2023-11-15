@@ -4,7 +4,6 @@ import {
   UsePickerParams,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
-  UncapitalizeObjectKeys,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -38,7 +37,7 @@ export interface UseStaticRangePickerProps<
    * Overridable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<UseStaticRangePickerSlotsComponent<TDate, TView>>;
+  slots?: UseStaticRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

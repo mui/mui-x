@@ -1,9 +1,5 @@
 import { TimeView } from '@mui/x-date-pickers/models';
-import {
-  MakeOptional,
-  TimeViewWithMeridiem,
-  UncapitalizeObjectKeys,
-} from '@mui/x-date-pickers/internals';
+import { MakeOptional, TimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
 import {
   UseMobileRangePickerSlotsComponent,
   ExportedUseMobileRangePickerSlotsComponentsProps,
@@ -19,7 +15,7 @@ export interface MobileTimeRangePickerSlotsComponent<
   TDate,
   TView extends TimeViewWithMeridiem = TimeView,
 > extends BaseTimeRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobileRangePickerSlotsComponent<TDate, TView>, 'Field'> {}
+    MakeOptional<UseMobileRangePickerSlotsComponent<TDate, TView>, 'field'> {}
 
 export interface MobileTimeRangePickerSlotsComponentsProps<
   TDate,
@@ -31,22 +27,10 @@ export interface MobileTimeRangePickerProps<TDate, TView extends TimeViewWithMer
   extends BaseTimeRangePickerProps<TDate, TView>,
     MobileRangeOnlyPickerProps<TDate> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: MobileTimeRangePickerSlotsComponent<TDate, TView>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: MobileTimeRangePickerSlotsComponentsProps<TDate, TView>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<MobileTimeRangePickerSlotsComponent<TDate, TView>>;
+  slots?: MobileTimeRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

@@ -1,7 +1,6 @@
 [
   { "name": "AdapterFormats", "kind": "Interface" },
   { "name": "AdapterOptions", "kind": "TypeAlias" },
-  { "name": "AdapterUnits", "kind": "TypeAlias" },
   { "name": "ArrowDropDownIcon", "kind": "Variable" },
   { "name": "ArrowLeftIcon", "kind": "Variable" },
   { "name": "ArrowRightIcon", "kind": "Variable" },
@@ -132,6 +131,7 @@
   { "name": "elGR", "kind": "Variable" },
   { "name": "enUS", "kind": "Variable" },
   { "name": "esES", "kind": "Variable" },
+  { "name": "eu", "kind": "Variable" },
   { "name": "ExportedDateRangeCalendarProps", "kind": "Interface" },
   { "name": "ExportedDigitalClockProps", "kind": "Interface" },
   { "name": "ExportedMultiSectionDigitalClockSectionProps", "kind": "Interface" },

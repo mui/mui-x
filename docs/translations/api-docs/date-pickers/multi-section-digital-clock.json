@@ -16,16 +16,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overrideable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "defaultValue": {
       "description": "The default selected value. Used when the component is not controlled.",
       "deprecated": "",
@@ -48,11 +38,6 @@
     },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "fitWidth": {
-      "description": "If <code>true</code>, the component will take all the width of its parent.",
       "deprecated": "",
       "typeDescriptions": {}
     },

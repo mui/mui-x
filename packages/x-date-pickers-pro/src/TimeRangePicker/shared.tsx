@@ -6,8 +6,6 @@ import {
   DefaultizedProps,
   BasePickerInputProps,
   PickerViewRendererLookup,
-  UncapitalizeObjectKeys,
-  uncapitalizeObjectKeys,
   BaseTimeValidationProps,
   BaseClockProps,
   ExportedBaseClockProps,
@@ -47,22 +45,10 @@ export interface BaseTimeRangePickerProps<TDate, TView extends TimeViewWithMerid
     >,
     ExportedBaseClockProps<TDate> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseTimeRangePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseTimeRangePickerSlotsComponentsProps;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseTimeRangePickerSlotsComponent<TDate>>;
+  slots?: BaseTimeRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

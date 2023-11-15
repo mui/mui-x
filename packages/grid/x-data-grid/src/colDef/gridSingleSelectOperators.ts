@@ -2,7 +2,6 @@ import { GridFilterInputSingleSelect } from '../components/panel/filterPanel/Gri
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 import { isObject } from '../utils/utils';
-import { convertLegacyOperators } from './utils';
 
 const parseObjectValue = (value: unknown) => {
   if (value == null || !isObject<{ value: unknown }>(value)) {
@@ -11,37 +10,36 @@ const parseObjectValue = (value: unknown) => {
   return value.value;
 };
 
-export const getGridSingleSelectOperators = (): GridFilterOperator[] =>
-  convertLegacyOperators([
-    {
-      value: 'is',
-      getApplyFilterFnV7: (filterItem) => {
-        if (filterItem.value == null || filterItem.value === '') {
-          return null;
-        }
-        return (value): boolean => parseObjectValue(value) === parseObjectValue(filterItem.value);
-      },
-      InputComponent: GridFilterInputSingleSelect,
+export const getGridSingleSelectOperators = (): GridFilterOperator[] => [
+  {
+    value: 'is',
+    getApplyFilterFn: (filterItem) => {
+      if (filterItem.value == null || filterItem.value === '') {
+        return null;
+      }
+      return (value): boolean => parseObjectValue(value) === parseObjectValue(filterItem.value);
     },
-    {
-      value: 'not',
-      getApplyFilterFnV7: (filterItem) => {
-        if (filterItem.value == null || filterItem.value === '') {
-          return null;
-        }
-        return (value): boolean => parseObjectValue(value) !== parseObjectValue(filterItem.value);
-      },
-      InputComponent: GridFilterInputSingleSelect,
+    InputComponent: GridFilterInputSingleSelect,
+  },
+  {
+    value: 'not',
+    getApplyFilterFn: (filterItem) => {
+      if (filterItem.value == null || filterItem.value === '') {
+        return null;
+      }
+      return (value): boolean => parseObjectValue(value) !== parseObjectValue(filterItem.value);
     },
-    {
-      value: 'isAnyOf',
-      getApplyFilterFnV7: (filterItem) => {
-        if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
-          return null;
-        }
-        const filterItemValues = filterItem.value.map(parseObjectValue);
-        return (value): boolean => filterItemValues.includes(parseObjectValue(value));
-      },
-      InputComponent: GridFilterInputMultipleSingleSelect,
+    InputComponent: GridFilterInputSingleSelect,
+  },
+  {
+    value: 'isAnyOf',
+    getApplyFilterFn: (filterItem) => {
+      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
+        return null;
+      }
+      const filterItemValues = filterItem.value.map(parseObjectValue);
+      return (value): boolean => filterItemValues.includes(parseObjectValue(value));
     },
-  ]);
+    InputComponent: GridFilterInputMultipleSingleSelect,
+  },
+];

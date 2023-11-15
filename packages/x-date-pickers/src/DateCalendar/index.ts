@@ -21,6 +21,3 @@ export type {
   PickersSlideTransitionClasses,
 } from './pickersSlideTransitionClasses';
 export type { ExportedSlideTransitionProps } from './PickersSlideTransition';
-
-// TODO v7: Remove and export the `PickersCalendarHeader` folder from the root instead.
-export * from '../PickersCalendarHeader';

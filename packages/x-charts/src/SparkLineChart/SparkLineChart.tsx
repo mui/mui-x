@@ -10,36 +10,33 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
-  ChartsTooltipSlotComponentProps,
-  ChartsTooltipSlotsComponent,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
 } from '../ChartsTooltip';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
 import { LineSeriesType } from '../models/seriesType/line';
-import { AreaPlotSlotsComponent, AreaPlotSlotComponentProps } from '../LineChart/AreaPlot';
-import { LinePlotSlotsComponent, LinePlotSlotComponentProps } from '../LineChart/LinePlot';
-import { MarkPlotSlotsComponent, MarkPlotSlotComponentProps } from '../LineChart/MarkPlot';
-import {
-  LineHighlightPlotSlotsComponent,
-  LineHighlightPlotSlotComponentProps,
-} from '../LineChart/LineHighlightPlot';
-import { BarPlotSlotsComponent, BarPlotSlotComponentProps } from '../BarChart/BarPlot';
+import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
+import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
+import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
+import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
+import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
 
-export interface SparkLineChartSlotsComponent
-  extends AreaPlotSlotsComponent,
-    LinePlotSlotsComponent,
-    MarkPlotSlotsComponent,
-    LineHighlightPlotSlotsComponent,
-    BarPlotSlotsComponent,
-    ChartsTooltipSlotsComponent {}
-export interface SparkLineChartSlotComponentProps
-  extends AreaPlotSlotComponentProps,
-    LinePlotSlotComponentProps,
-    MarkPlotSlotComponentProps,
-    LineHighlightPlotSlotComponentProps,
-    BarPlotSlotComponentProps,
-    ChartsTooltipSlotComponentProps {}
+export interface SparkLineChartSlots
+  extends AreaPlotSlots,
+    LinePlotSlots,
+    MarkPlotSlots,
+    LineHighlightPlotSlots,
+    BarPlotSlots,
+    ChartsTooltipSlots {}
+export interface SparkLineChartSlotProps
+  extends AreaPlotSlotProps,
+    LinePlotSlotProps,
+    MarkPlotSlotProps,
+    LineHighlightPlotSlotProps,
+    BarPlotSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis'> {
@@ -91,12 +88,12 @@ export interface SparkLineChartProps
    * Overridable component slots.
    * @default {}
    */
-  slots?: SparkLineChartSlotsComponent;
+  slots?: SparkLineChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: SparkLineChartSlotComponentProps;
+  slotProps?: SparkLineChartSlotProps;
 }
 
 const SPARKLINE_DEFAULT_MARGIN = {
@@ -233,10 +230,28 @@ SparkLineChart.propTypes = {
    * Data to plot.
    */
   data: PropTypes.arrayOf(PropTypes.number).isRequired,
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
   disableAxisListener: PropTypes.bool,
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * @default undefined
+   */
   height: PropTypes.number,
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default object Depends on the charts type.
+   */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -296,6 +311,10 @@ SparkLineChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * @default undefined
+   */
   width: PropTypes.number,
   /**
    * The xAxis configuration.

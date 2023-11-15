@@ -1,4 +1,4 @@
-import { TimeViewWithMeridiem, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
 import {
   DesktopTimeRangePickerProps,
   DesktopTimeRangePickerSlotsComponent,
@@ -28,22 +28,10 @@ export interface TimeRangePickerProps<TDate>
    */
   desktopModeMediaQuery?: string;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: TimeRangePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: TimeRangePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TimeRangePickerSlotsComponents<TDate>>;
+  slots?: TimeRangePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

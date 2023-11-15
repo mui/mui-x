@@ -9,8 +9,8 @@ import materialSlots from '../material';
 export const DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS: GridProSlotsComponent = {
   ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
   ...materialSlots,
-  ColumnMenu: GridProColumnMenu,
-  ColumnHeaders: GridColumnHeaders,
-  HeaderFilterCell: GridHeaderFilterCell,
-  HeaderFilterMenu: GridHeaderFilterMenu,
+  columnMenu: GridProColumnMenu,
+  columnHeaders: GridColumnHeaders,
+  headerFilterCell: GridHeaderFilterCell,
+  headerFilterMenu: GridHeaderFilterMenu,
 };

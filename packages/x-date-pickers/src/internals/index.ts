@@ -150,8 +150,6 @@ export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
 export { applyDefaultViewProps } from './utils/views';
 export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
-export { uncapitalizeObjectKeys } from './utils/slots-migration';
-export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {

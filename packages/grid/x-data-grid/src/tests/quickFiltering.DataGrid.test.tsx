@@ -5,6 +5,7 @@ import { spy } from 'sinon';
 import {
   DataGrid,
   DataGridProps,
+  GetApplyQuickFilterFn,
   GridFilterModel,
   GridLogicOperator,
   GridToolbar,
@@ -270,13 +271,13 @@ describe('<DataGrid /> - Quick filter', () => {
     });
 
     it('should apply filters on column visibility change when quickFilterExcludeHiddenColumns=true', () => {
-      const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
+      const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
         <TestCase
           columns={[
             {
               field: 'id',
-              getApplyQuickFilterFnV7: getApplyQuickFilterFnV7Spy,
+              getApplyQuickFilterFn: getApplyQuickFilterFnSpy,
             },
             { field: 'brand' },
           ]}
@@ -293,25 +294,25 @@ describe('<DataGrid /> - Quick filter', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(2);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(2);
 
       setProps({ columnVisibilityModel: { brand: false } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
-      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(3);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(3);
 
       setProps({ columnVisibilityModel: { brand: true } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(4);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(4);
     });
 
     it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=true but no quick filter values', () => {
-      const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
+      const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
         <TestCase
           columns={[
-            { field: 'id', getApplyQuickFilterFnV7: getApplyQuickFilterFnV7Spy },
+            { field: 'id', getApplyQuickFilterFn: getApplyQuickFilterFnSpy },
             { field: 'brand' },
           ]}
           initialState={{
@@ -326,25 +327,25 @@ describe('<DataGrid /> - Quick filter', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(0);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
 
       setProps({ columnVisibilityModel: { brand: false } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(0);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
 
       setProps({ columnVisibilityModel: { brand: true } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(0);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
     });
 
     it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=false', () => {
-      const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
+      const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
         <TestCase
           columns={[
-            { field: 'id', getApplyQuickFilterFnV7: getApplyQuickFilterFnV7Spy },
+            { field: 'id', getApplyQuickFilterFn: getApplyQuickFilterFnSpy },
             { field: 'brand' },
           ]}
           initialState={{
@@ -360,17 +361,17 @@ describe('<DataGrid /> - Quick filter', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(2);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(2);
 
       setProps({ columnVisibilityModel: { brand: false } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(2);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(2);
 
       setProps({ columnVisibilityModel: { brand: true } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(2);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(2);
     });
   });
 
@@ -651,14 +652,14 @@ describe('<DataGrid /> - Quick filter', () => {
 
   // https://github.com/mui/mui-x/issues/9666
   it('should not fail when the data changes', () => {
-    function getApplyQuickFilterFn(value: any) {
+    const getApplyQuickFilterFn: GetApplyQuickFilterFn<any, string> = (value) => {
       if (!value) {
         return null;
       }
-      return (params: any) => {
-        return String(params?.value).toLowerCase().includes(String(value).toLowerCase());
+      return (cellValue) => {
+        return String(cellValue).toLowerCase().includes(String(value).toLowerCase());
       };
-    }
+    };
 
     const { setProps } = render(
       <TestCase

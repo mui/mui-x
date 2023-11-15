@@ -106,7 +106,7 @@ describe('<MobileDatePicker />', () => {
     });
 
     it('should render the toolbar when `hidden` is `false`', () => {
-      render(<MobileDatePicker open componentsProps={{ toolbar: { hidden: false } }} />);
+      render(<MobileDatePicker open slotProps={{ toolbar: { hidden: false } }} />);
 
       expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
     });

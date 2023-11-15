@@ -8,6 +8,16 @@
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
     },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "disableAxisListener": { "type": { "name": "bool" } },
+    "height": { "type": { "name": "number" }, "default": "undefined" },
+    "margin": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "object Depends on the charts type."
+    },
     "plotType": {
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
@@ -24,6 +34,7 @@
         "returned": "string"
       }
     },
+    "width": { "type": { "name": "number" }, "default": "undefined" },
     "xAxis": {
       "type": {
         "name": "shape",

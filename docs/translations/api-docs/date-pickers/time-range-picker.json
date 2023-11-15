@@ -21,16 +21,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "defaultRangePosition": {
       "description": "The initial position in the edited date range. Used when the component is not controlled.",
       "deprecated": "",
@@ -259,6 +249,7 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "Toolbar": "Custom component for the toolbar rendered above the views.",
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display inside the clear button.",
@@ -278,7 +269,6 @@
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
-    "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element. Receives the same props as <code>@mui/material/TextField</code>.",
-    "toolbar": "Custom component for the toolbar rendered above the views."
+    "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element. Receives the same props as <code>@mui/material/TextField</code>."
   }
 }

@@ -8,9 +8,10 @@ import {
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
   GridFilterItem,
-  GridCellParams,
   GridColTypeDef,
   GridFilterInputValueProps,
+  GetApplyFilterFn,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -30,7 +31,7 @@ function buildApplyDateFilterFn(
   filterItem: GridFilterItem,
   compareFn: (value1: number, value2: number) => boolean,
   showTime: boolean = false,
-) {
+): ReturnType<GetApplyFilterFn<any, Date, string>> {
   if (!filterItem.value) {
     return null;
   }
@@ -41,7 +42,7 @@ function buildApplyDateFilterFn(
 
   const filterValueMs = filterValueCopy.getTime();
 
-  return ({ value }: GridCellParams<any, Date>): boolean => {
+  return (value) => {
     if (!value) {
       return false;
     }
@@ -62,7 +63,7 @@ function buildApplyDateFilterFn(
 
 function getDateFilterOperators(
   showTime: boolean = false,
-): GridColTypeDef['filterOperators'] {
+): GridFilterOperator<any, Date, string>[] {
   return [
     {
       value: 'is',
@@ -139,7 +140,7 @@ function getDateFilterOperators(
     {
       value: 'isEmpty',
       getApplyFilterFn: () => {
-        return ({ value }): boolean => {
+        return (value): boolean => {
           return value == null;
         };
       },
@@ -148,7 +149,7 @@ function getDateFilterOperators(
     {
       value: 'isNotEmpty',
       getApplyFilterFn: () => {
-        return ({ value }): boolean => {
+        return (value): boolean => {
           return value != null;
         };
       },

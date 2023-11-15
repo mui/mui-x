@@ -1,4 +1,4 @@
-import { MakeOptional, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import { MakeOptional } from '@mui/x-date-pickers/internals';
 import {
   StaticRangeOnlyPickerProps,
   UseStaticRangePickerSlotsComponent,
@@ -22,22 +22,10 @@ export interface StaticDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,
     MakeOptional<StaticRangeOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: StaticDateRangePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: StaticDateRangePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<StaticDateRangePickerSlotsComponent<TDate>>;
+  slots?: StaticDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

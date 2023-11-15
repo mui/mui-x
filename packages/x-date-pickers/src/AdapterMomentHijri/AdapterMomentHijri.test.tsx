@@ -35,12 +35,10 @@ describe('<AdapterMomentHijri />', () => {
 
       expectDate('keyboardDate', '١٤٤١/٠٥/٠٦');
       expectDate('fullDate', '١٤٤١، جمادى الأولى ١');
-      expectDate('fullDateWithWeekday', '١٤٤١، جمادى الأولى ١، الأربعاء');
       expectDate('normalDate', 'الأربعاء، ٦ جمادى ١');
       expectDate('shortDate', '٦ جمادى ١');
       expectDate('year', '١٤٤١');
       expectDate('month', 'جمادى الأولى');
-      expectDate('monthAndDate', '٦ جمادى الأولى');
       expectDate('weekday', 'الأربعاء');
       expectDate('weekdayShort', 'أربعاء');
       expectDate('dayOfMonth', '٦');
@@ -50,8 +48,6 @@ describe('<AdapterMomentHijri />', () => {
       expectDate('hours24h', '٢٣');
       expectDate('minutes', '٤٤');
       expectDate('seconds', '٠٠');
-      expectDate('fullDateTime12h', '٦ جمادى الأولى ١١:٤٤ م');
-      expectDate('fullDateTime24h', '٦ جمادى الأولى ٢٣:٤٤');
     });
   });
 
