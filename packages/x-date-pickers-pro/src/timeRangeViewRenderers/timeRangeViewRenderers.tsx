@@ -49,8 +49,6 @@ export const renderTimeRangeViewClock = <TDate extends unknown>({
   minutesStep,
   ampm,
   ampmInClock,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -102,8 +100,6 @@ export const renderTimeRangeViewClock = <TDate extends unknown>({
       minutesStep={minutesStep}
       ampm={ampm}
       ampmInClock={ampmInClock}
-      components={components}
-      componentsProps={componentsProps}
       slots={slots}
       slotProps={slotProps}
       readOnly={readOnly}

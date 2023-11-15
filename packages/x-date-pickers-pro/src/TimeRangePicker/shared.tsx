@@ -85,22 +85,16 @@ type UseTimeRangePickerDefaultizedProps<
   TDate,
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimeRangePickerProps<TDate, TView>,
-> = Omit<
-  LocalizedComponent<
-    TDate,
-    DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
-  >,
-  'components' | 'componentsProps'
+> = LocalizedComponent<
+  TDate,
+  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
 >;
 
 export function useTimeRangePickerDefaultizedProps<
   TDate,
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimeRangePickerProps<TDate, TView>,
->(
-  props: Props,
-  name: string,
-): UseTimeRangePickerDefaultizedProps<TDate, TView, Omit<Props, 'components' | 'componentsProps'>> {
+>(props: Props, name: string): UseTimeRangePickerDefaultizedProps<TDate, TView, Props> {
   const utils = useUtils<TDate>();
 
   const themeProps = useThemeProps({
@@ -121,9 +115,6 @@ export function useTimeRangePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
-  const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
-
   return {
     ...themeProps,
     ampm,
@@ -138,13 +129,13 @@ export function useTimeRangePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     slots: {
       toolbar: TimeRangePickerToolbar,
-      ...slots,
+      ...themeProps.slots,
     },
     slotProps: {
-      ...slotProps,
+      ...themeProps.slotProps,
       toolbar: {
         ampm,
-        ...slotProps?.toolbar,
+        ...themeProps.slotProps?.toolbar,
       },
     },
   };
