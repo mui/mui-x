@@ -18,7 +18,7 @@ describe('<DateField /> - Editing', () => {
     it('should decrement the year when a value is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.year,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         key: 'ArrowDown',
         expectedValue: '2021',
       });
@@ -35,7 +35,7 @@ describe('<DateField /> - Editing', () => {
     it('should decrement the month when a value is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.month,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         key: 'ArrowDown',
         expectedValue: 'May',
       });
@@ -61,7 +61,7 @@ describe('<DateField /> - Editing', () => {
     it('should decrement the day when a value is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         key: 'ArrowDown',
         expectedValue: '14',
       });
@@ -98,7 +98,7 @@ describe('<DateField /> - Editing', () => {
     it('should not edit the value when props.readOnly = true and a value is provided (ArrowDown)', () => {
       testFieldKeyPress({
         format: adapter.formats.year,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         readOnly: true,
         key: 'ArrowDown',
         expectedValue: '2022',
@@ -118,7 +118,7 @@ describe('<DateField /> - Editing', () => {
     it('should increment the year when a value is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.year,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         key: 'ArrowUp',
         expectedValue: '2023',
       });
@@ -135,7 +135,7 @@ describe('<DateField /> - Editing', () => {
     it('should increment the month when a value is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.month,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         key: 'ArrowUp',
         expectedValue: 'July',
       });
@@ -161,7 +161,7 @@ describe('<DateField /> - Editing', () => {
     it('should increment the day when a value is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         key: 'ArrowUp',
         expectedValue: '16',
       });
@@ -198,7 +198,7 @@ describe('<DateField /> - Editing', () => {
     it('should not edit the value when props.readOnly = true and a value is provided (ArrowUp)', () => {
       testFieldKeyPress({
         format: adapter.formats.year,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         readOnly: true,
         key: 'ArrowUp',
         expectedValue: '2022',
@@ -226,7 +226,7 @@ describe('<DateField /> - Editing', () => {
     it('should clear the selected section when all sections are completed', () => {
       testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         key: 'Delete',
         expectedValue: 'MMMM 2022',
       });
@@ -235,7 +235,7 @@ describe('<DateField /> - Editing', () => {
     it('should clear all the sections when all sections are selected and all sections are completed', () => {
       const { input, selectSection } = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
       });
 
       selectSection('month');
@@ -287,7 +287,7 @@ describe('<DateField /> - Editing', () => {
     it('should not clear the sections when props.readOnly = true', () => {
       testFieldKeyPress({
         format: adapter.formats.year,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         readOnly: true,
         key: 'Delete',
         expectedValue: '2022',
@@ -316,7 +316,7 @@ describe('<DateField /> - Editing', () => {
 
       const { selectSection, input } = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         onChange: handleChange,
       });
 
@@ -338,7 +338,7 @@ describe('<DateField /> - Editing', () => {
 
       const { selectSection, input } = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         onChange: handleChange,
       });
 
@@ -538,7 +538,7 @@ describe('<DateField /> - Editing', () => {
     it('should not edit value when props.readOnly = true and a value is provided', () => {
       testFieldChange({
         format: adapter.formats.year,
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         readOnly: true,
         keyStrokes: [{ value: '1', expected: '2022' }],
       });
@@ -559,7 +559,7 @@ describe('<DateField /> - Editing', () => {
       it('should select the first matching month with no previous query and a value is provided (letter format)', () => {
         testFieldChange({
           format: adapter.formats.month,
-          defaultValue: adapter.date(undefined),
+          defaultValue: adapter.date(),
           keyStrokes: [{ value: 'm', expected: 'March' }],
         });
       });
@@ -590,7 +590,7 @@ describe('<DateField /> - Editing', () => {
       it('should select the first matching month with no previous query and a value is provided (digit format)', () => {
         testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
-          defaultValue: adapter.date(undefined),
+          defaultValue: adapter.date(),
           keyStrokes: [{ value: 'm', expected: '03' }],
         });
       });
@@ -623,7 +623,7 @@ describe('<DateField /> - Editing', () => {
       it('should not edit value when props.readOnly = true and a value is provided (letter)', () => {
         testFieldKeyPress({
           format: adapter.formats.month,
-          defaultValue: adapter.date(undefined),
+          defaultValue: adapter.date(),
           readOnly: true,
           key: 'd',
           expectedValue: 'June',
@@ -649,7 +649,7 @@ describe('<DateField /> - Editing', () => {
       it('should clear the selected section when all sections are completed (Backspace)', () => {
         testFieldChange({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          defaultValue: adapter.date(undefined),
+          defaultValue: adapter.date(),
           keyStrokes: [{ value: ' 2022', expected: 'MMMM 2022' }],
         });
       });
@@ -657,7 +657,7 @@ describe('<DateField /> - Editing', () => {
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
         testFieldChange({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          defaultValue: adapter.date(undefined),
+          defaultValue: adapter.date(),
           keyStrokes: [{ value: '', expected: 'MMMM YYYY' }],
         });
       });
@@ -686,7 +686,7 @@ describe('<DateField /> - Editing', () => {
       it('should not clear the sections when props.readOnly = true (Backspace)', () => {
         testFieldChange({
           format: adapter.formats.year,
-          defaultValue: adapter.date(undefined),
+          defaultValue: adapter.date(),
           readOnly: true,
           keyStrokes: [{ value: '2', expected: '2022' }],
         });
@@ -709,7 +709,7 @@ describe('<DateField /> - Editing', () => {
 
         const { selectSection, input } = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          defaultValue: adapter.date(undefined),
+          defaultValue: adapter.date(),
           onChange,
         });
 
@@ -731,7 +731,7 @@ describe('<DateField /> - Editing', () => {
 
         testFieldChange({
           format: adapter.formats.year,
-          defaultValue: adapter.date(undefined),
+          defaultValue: adapter.date(),
           keyStrokes: [
             { value: '', expected: 'YYYY' },
             { value: '', expected: 'YYYY' },
@@ -776,7 +776,7 @@ describe('<DateField /> - Editing', () => {
       const onChange = spy();
 
       const { input, selectSection } = renderWithProps({
-        defaultValue: adapter.date(undefined),
+        defaultValue: adapter.date(),
         onChange,
       });
 

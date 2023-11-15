@@ -178,7 +178,7 @@ describe('<AdapterMoment />', () => {
     const spiedInstance = spy(moment);
 
     const adapter = new AdapterMoment({ instance: spiedInstance as unknown as typeof moment });
-    adapter.date(undefined)!;
+    adapter.date()!;
     expect(spiedInstance.callCount).to.equal(1);
   });
 });

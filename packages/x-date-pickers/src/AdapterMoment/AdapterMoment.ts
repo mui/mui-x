@@ -201,7 +201,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public date = <T extends string | null | undefined>(
-    value: T,
+    value?: T,
     timezone: PickersTimezone = 'default',
   ): DateBuilderReturnType<T, Moment> => {
     type R = DateBuilderReturnType<T, Moment>;

@@ -236,11 +236,11 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         let startOfToday: any;
         if (pickerParams.type === 'date') {
-          startOfToday = adapterToUse.startOfDay(adapterToUse.date(undefined));
+          startOfToday = adapterToUse.startOfDay(adapterToUse.date());
         } else if (pickerParams.type === 'date-range') {
-          startOfToday = [adapterToUse.date(undefined), adapterToUse.date(undefined)];
+          startOfToday = [adapterToUse.date(), adapterToUse.date()];
         } else {
-          startOfToday = adapterToUse.date(undefined);
+          startOfToday = adapterToUse.date();
         }
 
         expect(onChange.callCount).to.equal(1);

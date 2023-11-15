@@ -192,7 +192,9 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = <T extends string | null | undefined>(value: T): DateBuilderReturnType<T, Date> => {
+  public date = <T extends string | null | undefined>(
+    value?: T,
+  ): DateBuilderReturnType<T, Date> => {
     type R = DateBuilderReturnType<T, Date>;
     if (typeof value === 'undefined') {
       return <R>new Date();

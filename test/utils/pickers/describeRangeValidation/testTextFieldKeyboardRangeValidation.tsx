@@ -99,7 +99,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
     it('should apply disablePast', function test() {
       const onErrorMock = spy();
-      const now = adapterToUse.date(undefined);
+      const now = adapterToUse.date();
       render(<ElementToTest disablePast onError={onErrorMock} />);
 
       let past: null | typeof now = null;
@@ -139,7 +139,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
     it('should apply disableFuture', function test() {
       const onErrorMock = spy();
-      const now = adapterToUse.date(undefined);
+      const now = adapterToUse.date();
       render(<ElementToTest disableFuture onError={onErrorMock} />);
 
       let future: null | typeof now = null;

@@ -8,7 +8,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(`key: Delete`, SingleInputDateRangeField, ({ adapter, renderWithProps }) => {
     it('should clear all the sections when all sections are selected and all sections are completed', () => {
       const { input, selectSection } = renderWithProps({
-        defaultValue: [adapter.date(undefined), adapter.addYears(adapter.date(undefined), 1)],
+        defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
@@ -64,7 +64,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       const { selectSection, input } = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: [adapter.date(undefined), adapter.addYears(adapter.date(undefined), 1)],
+        defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         onChange: handleChange,
       });
 
@@ -78,7 +78,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expect(handleChange.callCount).to.equal(2);
       expect(handleChange.lastCall.firstArg[0]).to.equal(null);
       expect(handleChange.lastCall.firstArg[1]).toEqualDateTime(
-        adapter.addYears(adapter.date(undefined), 1),
+        adapter.addYears(adapter.date(), 1),
       );
 
       // End date
@@ -97,7 +97,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       const { selectSection, input } = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: [adapter.date(undefined), adapter.addYears(adapter.date(undefined), 1)],
+        defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         onChange: handleChange,
       });
 
@@ -116,7 +116,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     ({ adapter, renderWithProps, testFieldChange }) => {
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
         testFieldChange({
-          defaultValue: [adapter.date(undefined), adapter.addYears(adapter.date(undefined), 1)],
+          defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           keyStrokes: [{ value: '', expected: 'MMMM YYYY – MMMM YYYY' }],
         });
@@ -148,7 +148,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         const { selectSection, input } = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          defaultValue: [adapter.date(undefined), adapter.addYears(adapter.date(undefined), 1)],
+          defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           onChange,
         });
 
@@ -161,9 +161,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         fireEvent.change(input, { target: { value: 'MMMM  – June 2023' } });
         expect(onChange.callCount).to.equal(2);
         expect(onChange.lastCall.firstArg[0]).to.equal(null);
-        expect(onChange.lastCall.firstArg[1]).toEqualDateTime(
-          adapter.addYears(adapter.date(undefined), 1),
-        );
+        expect(onChange.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
 
         // End date
         userEvent.keyPress(input, { key: 'ArrowRight' });
@@ -181,7 +179,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         testFieldChange({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          defaultValue: [adapter.date(undefined), adapter.addYears(adapter.date(undefined), 1)],
+          defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           onChange,
           keyStrokes: [
             { value: ' 2022 – June 2023', expected: 'MMMM 2022 – June 2023' },

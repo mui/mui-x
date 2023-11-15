@@ -286,7 +286,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public date = <T extends string | null | undefined>(
-    value: T,
+    value?: T,
     timezone: PickersTimezone = 'default',
   ): DateBuilderReturnType<T, Dayjs> => {
     type R = DateBuilderReturnType<T, Dayjs>;

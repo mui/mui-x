@@ -66,7 +66,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
     it('should apply disablePast', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(undefined);
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -111,7 +111,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
     it('should apply disableFuture', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(undefined);
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);

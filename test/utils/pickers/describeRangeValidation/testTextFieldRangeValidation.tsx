@@ -201,7 +201,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(undefined);
+        now = adapterToUse.date();
         return <ElementToTest value={[now, now]} {...props} />;
       }
 
@@ -239,7 +239,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(undefined);
+        now = adapterToUse.date();
         return <ElementToTest value={[now, now]} {...props} />;
       }
 

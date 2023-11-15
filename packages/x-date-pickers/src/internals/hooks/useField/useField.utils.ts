@@ -506,7 +506,7 @@ export const splitFormatIntoSections = <TDate>(
 ) => {
   let startSeparator: string = '';
   const sections: FieldSectionWithoutPosition[] = [];
-  const now = utils.date(undefined)!;
+  const now = utils.date()!;
 
   const commitToken = (token: string) => {
     if (token === '') {

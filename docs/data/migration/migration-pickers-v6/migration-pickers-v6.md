@@ -368,14 +368,14 @@ The following changes have been applied:
 
   ```diff
   - adapter.date();
-  + adapter.date(undefined);
+  + adapter.date();
   ```
 
 - It no longer accept `any` as a value but only `string | null | undefined`
 
   ```diff
   - adapter.date(new Date());
-  + adapter.date(undefined);
+  + adapter.date();
 
   - adapter.date(new Date('2022-04-17');
   + adapter.date('2022-04-17');

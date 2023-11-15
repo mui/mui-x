@@ -20,7 +20,7 @@ describe('<MonthCalendar /> - Describes', () => {
     componentFamily: 'calendar',
   }));
 
-  describeConformance(<MonthCalendar defaultValue={adapterToUse.date(undefined)} />, () => ({
+  describeConformance(<MonthCalendar defaultValue={adapterToUse.date()} />, () => ({
     classes,
     inheritComponent: 'div',
     render,
@@ -44,7 +44,7 @@ describe('<MonthCalendar /> - Describes', () => {
       expect(activeMonth).not.to.equal(null);
       if (expectedValue == null) {
         expect(activeMonth).to.have.text(
-          adapterToUse.format(adapterToUse.date(undefined), 'monthShort').toString(),
+          adapterToUse.format(adapterToUse.date(), 'monthShort').toString(),
         );
       } else {
         expect(activeMonth).to.have.text(

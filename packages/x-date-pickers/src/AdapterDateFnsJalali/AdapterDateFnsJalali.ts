@@ -204,7 +204,9 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = <T extends string | null | undefined>(value: T): DateBuilderReturnType<T, Date> => {
+  public date = <T extends string | null | undefined>(
+    value?: T,
+  ): DateBuilderReturnType<T, Date> => {
     type R = DateBuilderReturnType<T, Date>;
     if (typeof value === 'undefined') {
       return <R>new Date();

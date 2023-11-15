@@ -21,7 +21,7 @@ describe('<DateCalendar /> - Describes', () => {
     componentFamily: 'calendar',
   }));
 
-  describeConformance(<DateCalendar defaultValue={adapterToUse.date(undefined)} />, () => ({
+  describeConformance(<DateCalendar defaultValue={adapterToUse.date()} />, () => ({
     classes,
     inheritComponent: 'div',
     render,

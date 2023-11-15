@@ -138,7 +138,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public date = <T extends string | null | undefined>(
-    value: T,
+    value?: T,
     timezone: PickersTimezone = 'default',
   ): DateBuilderReturnType<T, DateTime> => {
     type R = DateBuilderReturnType<T, DateTime>;

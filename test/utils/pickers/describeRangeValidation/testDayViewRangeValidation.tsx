@@ -63,7 +63,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(undefined);
+        now = adapterToUse.date();
         const { defaultCalendarMonth, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }
@@ -87,7 +87,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(undefined);
+        now = adapterToUse.date();
         const { defaultCalendarMonth, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }

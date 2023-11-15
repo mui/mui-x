@@ -202,7 +202,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(undefined);
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
 
@@ -235,7 +235,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(undefined);
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
 

@@ -507,7 +507,7 @@ describe('<TimeClock />', () => {
 
       timeClockHandler.setViewValue(
         adapterToUse,
-        adapterToUse.setHours(adapterToUse.date(undefined), 3),
+        adapterToUse.setHours(adapterToUse.date(), 3),
         'hours',
       );
       expect(onChange.callCount).to.equal(2);
@@ -527,7 +527,7 @@ describe('<TimeClock />', () => {
 
       timeClockHandler.setViewValue(
         adapterToUse,
-        adapterToUse.setHours(adapterToUse.date(undefined), 3),
+        adapterToUse.setHours(adapterToUse.date(), 3),
         'hours',
       );
       expect(onChange.callCount).to.equal(2);
@@ -547,7 +547,7 @@ describe('<TimeClock />', () => {
 
       timeClockHandler.setViewValue(
         adapterToUse,
-        adapterToUse.setHours(adapterToUse.date(undefined), 3),
+        adapterToUse.setHours(adapterToUse.date(), 3),
         'hours',
       );
       expect(onChange.callCount).to.equal(2);

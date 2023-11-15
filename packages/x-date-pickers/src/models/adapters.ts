@@ -183,7 +183,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {TDate | null} The parsed date.
    */
   date<T extends string | null | undefined>(
-    value: T,
+    value?: T,
     timezone?: PickersTimezone,
   ): DateBuilderReturnType<T, TDate>;
   /**

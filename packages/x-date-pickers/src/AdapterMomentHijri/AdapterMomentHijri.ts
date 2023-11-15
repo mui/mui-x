@@ -129,7 +129,7 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
   }
 
   public date = <T extends string | null | undefined>(
-    value: T,
+    value?: T,
   ): DateBuilderReturnType<T, Moment> => {
     type R = DateBuilderReturnType<T, Moment>;
     if (value === null) {

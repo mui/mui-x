@@ -22,8 +22,8 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
   });
 
   it('Method: isAfter', () => {
-    expect(adapter.isAfter(adapter.date(undefined)!, testDateIso)).to.equal(true);
-    expect(adapter.isAfter(testDateIso, adapter.date(undefined)!)).to.equal(false);
+    expect(adapter.isAfter(adapter.date()!, testDateIso)).to.equal(true);
+    expect(adapter.isAfter(testDateIso, adapter.date()!)).to.equal(false);
   });
 
   it('Method: isAfterYear', () => {
@@ -38,8 +38,8 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
   });
 
   it('Method: isBefore', () => {
-    expect(adapter.isBefore(testDateIso, adapter.date(undefined)!)).to.equal(true);
-    expect(adapter.isBefore(adapter.date(undefined)!, testDateIso)).to.equal(false);
+    expect(adapter.isBefore(testDateIso, adapter.date()!)).to.equal(true);
+    expect(adapter.isBefore(adapter.date()!, testDateIso)).to.equal(false);
   });
 
   it('Method: isBeforeYear', () => {

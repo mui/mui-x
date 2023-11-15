@@ -38,7 +38,7 @@ describe('<MultiSectionDigitalClock />', () => {
 
       multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
-        adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(undefined), 15), 30),
+        adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
       expect(onChange.callCount).to.equal(3);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
@@ -80,7 +80,7 @@ describe('<MultiSectionDigitalClock />', () => {
 
       multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
-        adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(undefined), 15), 30),
+        adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
       expect(onChange.callCount).to.equal(3);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
@@ -99,7 +99,7 @@ describe('<MultiSectionDigitalClock />', () => {
 
       multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
-        adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(undefined), 15), 30),
+        adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
       expect(onChange.callCount).to.equal(3);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
