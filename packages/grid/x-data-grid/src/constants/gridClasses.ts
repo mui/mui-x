@@ -397,14 +397,6 @@ export interface GridClasses {
    */
   pinnedColumns: string;
   /**
-   * Styles applied to the left pinned columns.
-   */
-  'pinnedColumns--left': string;
-  /**
-   * Styles applied to the right pinned columns.
-   */
-  'pinnedColumns--right': string;
-  /**
    * Styles applied to the pinned column headers.
    */
   pinnedColumnHeaders: string;
@@ -530,6 +522,18 @@ export interface GridClasses {
    * Styles applied the cell if `showColumnVerticalBorder={true}`.
    */
   'cell--withRightBorder': string;
+  /**
+   * Styles applied the cell if `showColumnVerticalBorder={true}`.
+   */
+  'cell--withLeftBorder': string;
+  /**
+   * Styles applied for column pinning.
+   */
+  'cell--withRightShadow': string;
+  /**
+   * Styles applied for column pinning.
+   */
+  'cell--withLeftShadow': string;
   /**
    * Styles applied the column header if `showColumnVerticalBorder={true}`.
    */
@@ -699,13 +703,14 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
   'pinnedColumns',
-  'pinnedColumns--left',
-  'pinnedColumns--right',
   'pinnedColumnHeaders',
   'pinnedColumnHeaders--left',
   'pinnedColumnHeaders--right',
   'withBorderColor',
   'cell--withRightBorder',
+  'cell--withLeftBorder',
+  'cell--withRightShadow',
+  'cell--withLeftShadow',
   'columnHeader--withRightBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',

@@ -3,6 +3,7 @@ import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import type { GridRowProps } from '../components/GridRow';
 import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
+import type { GridCellProps } from '../components/cell/GridCell';
 
 export interface GridBaseSlots {
   /**
@@ -85,7 +86,7 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * Component rendered for each cell.
    * @default GridCell
    */
-  cell: React.JSXElementConstructor<any>;
+  cell: React.JSXElementConstructor<GridCellProps>;
   /**
    * Component rendered for each skeleton cell.
    * @default GridSkeletonCell

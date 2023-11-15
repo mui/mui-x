@@ -340,7 +340,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const getCell = (
     column: GridStateColDef,
+    indexInSection: number,
     indexRelativeToAllColumns: number,
+    sectionLength: number,
     pinnedPosition = PinnedPosition.NONE,
   ) => {
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
@@ -399,7 +401,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         width={width}
         rowId={rowId}
         height={rowHeight}
-        showRightBorder={rootProps.showCellVerticalBorder}
         align={column.align || 'left'}
         colIndex={indexRelativeToAllColumns}
         colSpan={colSpan}
@@ -409,6 +410,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         {...slotProps?.cell}
         pinnedOffset={pinnedOffset}
         pinnedPosition={pinnedPosition}
+        sectionIndex={indexInSection}
+        sectionLength={sectionLength}
       />
     );
   };
@@ -423,12 +426,24 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const leftCells = pinnedColumns.left.map((column, i) => {
     const indexRelativeToAllColumns = i;
-    return getCell(column, indexRelativeToAllColumns, PinnedPosition.LEFT);
+    return getCell(
+      column,
+      i,
+      indexRelativeToAllColumns,
+      pinnedColumns.left.length,
+      PinnedPosition.LEFT
+    );
   });
 
   const rightCells = pinnedColumns.right.map((column, i) => {
     const indexRelativeToAllColumns = visibleColumns.length - pinnedColumns.right.length + i;
-    return getCell(column, indexRelativeToAllColumns, PinnedPosition.RIGHT);
+    return getCell(
+      column,
+      i,
+      indexRelativeToAllColumns,
+      pinnedColumns.right.length,
+      PinnedPosition.RIGHT
+    );
   });
 
   const cells = [] as React.ReactNode[];
@@ -445,7 +460,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     }
 
-    cells.push(getCell(column, indexRelativeToAllColumns));
+    cells.push(getCell(
+      column,
+      i,
+      indexRelativeToAllColumns,
+      renderedColumns.length,
+    ));
   }
 
   const emptyCellWidth = containerWidth - columnsTotalWidth;

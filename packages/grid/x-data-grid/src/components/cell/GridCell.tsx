@@ -46,7 +46,6 @@ export type GridCellProps = {
   column: GridColDef;
   rowId: GridRowId;
   height: number | 'auto';
-  showRightBorder?: boolean;
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
@@ -54,6 +53,8 @@ export type GridCellProps = {
   editCellState: GridEditCellProps<any> | null;
   pinnedOffset: number;
   pinnedPosition: PinnedPosition;
+  sectionIndex: number;
+  sectionLength: number;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -92,7 +93,11 @@ const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
   api: {} as any,
 };
 
-type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'pinnedPosition'> & {
+type OwnerState = Pick<GridCellProps, 'align' | 'pinnedPosition'> & {
+  showLeftBorder: boolean,
+  showRightBorder: boolean,
+  showLeftShadow: boolean,
+  showRightShadow: boolean,
   isEditable?: boolean;
   isSelected?: boolean;
   isSelectionMode?: boolean;
@@ -102,7 +107,10 @@ type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'pinnedPosit
 const useUtilityClasses = (ownerState: OwnerState) => {
   const {
     align,
+    showLeftBorder,
     showRightBorder,
+    showLeftShadow,
+    showRightShadow,
     pinnedPosition,
     isEditable,
     isSelected,
@@ -116,7 +124,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       `cell--text${capitalize(align)}`,
       isEditable && 'cell--editable',
       isSelected && 'selected',
+      showLeftBorder && 'cell--withLeftBorder',
       showRightBorder && 'cell--withRightBorder',
+      showLeftShadow && 'cell--withLeftShadow',
+      showRightShadow && 'cell--withRightShadow',
       pinnedPosition === PinnedPosition.LEFT && 'cell--pinnedLeft',
       pinnedPosition === PinnedPosition.RIGHT && 'cell--pinnedRight',
       isSelectionMode && !isEditable && 'cell--selectionMode',
@@ -143,7 +154,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     height,
     width,
     className,
-    showRightBorder,
     extendRowFullWidth,
     row,
     colSpan,
@@ -151,6 +161,8 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     isNotVisible,
     pinnedOffset,
     pinnedPosition,
+    sectionIndex,
+    sectionLength,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -235,9 +247,18 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const focusElementRef = React.useRef<FocusElement>(null);
   // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.unstable_cellSelection ?? false;
+
+  const showLeftBorder = rootProps.showCellVerticalBorder && pinnedPosition === PinnedPosition.RIGHT;
+  const showRightBorder = rootProps.showCellVerticalBorder;
+  const showLeftShadow = pinnedPosition === PinnedPosition.RIGHT && sectionIndex === 0;
+  const showRightShadow = pinnedPosition === PinnedPosition.LEFT && sectionIndex === sectionLength - 1;
+
   const ownerState = {
     align,
+    showLeftBorder,
     showRightBorder,
+    showLeftShadow,
+    showRightShadow,
     isEditable,
     classes: rootProps.classes,
     pinnedPosition,
@@ -469,7 +490,6 @@ GridCell.propTypes = {
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  showRightBorder: PropTypes.bool,
   width: PropTypes.number.isRequired,
 } as any;
 

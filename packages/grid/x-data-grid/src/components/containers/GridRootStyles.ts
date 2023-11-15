@@ -484,9 +484,19 @@ export const GridRootStyles = styled('div', {
     [`.${gridClasses.withBorderColor}`]: {
       borderColor,
     },
+    [`& .${gridClasses['cell--withLeftBorder']}`]: {
+      borderLeftWidth: '1px',
+      borderLeftStyle: 'solid',
+    },
     [`& .${gridClasses['cell--withRightBorder']}`]: {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
+    },
+    [`& .${gridClasses['cell--withLeftShadow']}`]: {
+      boxShadow: theme.shadows[2], // XXX: shadow is wrong here
+    },
+    [`& .${gridClasses['cell--withRightShadow']}`]: {
+      boxShadow: theme.shadows[2], // XXX: shadow is wrong here
     },
     [`& .${gridClasses['columnHeader--withRightBorder']}`]: {
       borderRightWidth: '1px',
