@@ -117,58 +117,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(virtualScroller.scrollLeft).to.equal(100);
   });
 
-  it('should update the render zone offset after resize', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-    render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
-    const renderZone = document.querySelector<HTMLDivElement>(
-      `.${gridClasses.virtualScrollerRenderZone}`,
-    )!;
-    expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
-    const columnHeader = getColumnHeaderCell(0);
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-    fireEvent.mouseDown(separator, { clientX: 100 });
-    fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
-    fireEvent.mouseUp(separator);
-    clock.runToLast();
-    expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
-  });
-
-  it('should update the column headers offset after resize', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-    render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
-    const columnHeadersInner = document.querySelector<HTMLDivElement>(
-      `.${gridClasses.columnHeadersInner}`,
-    )!;
-    expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
-    const columnHeader = getColumnHeaderCell(0);
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-    fireEvent.mouseDown(separator, { clientX: 100 });
-    fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
-    fireEvent.mouseUp(separator);
-    expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
-  });
-
-  it('should update the render zone offset after pinning the column', function test() {
-    render(<TestCase />);
-    const renderZone = document.querySelector<HTMLDivElement>(
-      `.${gridClasses.virtualScrollerRenderZone}`,
-    )!;
-    expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(0px, 0px, 0px)' });
-
-    const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-    fireEvent.click(menuIconButton);
-
-    fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
-    expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
-  });
-
   it('should increase the width of right pinned columns by resizing to the left', function test() {
     if (isJSDOM) {
       // Need layouting
