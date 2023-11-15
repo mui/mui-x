@@ -22,7 +22,7 @@ import {
 
 type DesktopTimeRangePickerComponent = (<TDate>(
   props: DesktopTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<TDate>(
   inProps: DesktopTimeRangePickerProps<TDate>,
