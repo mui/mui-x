@@ -1,7 +1,7 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { animated, SpringValue, to } from '@react-spring/web';
 import { arc as d3Arc } from 'd3-shape';
-import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -97,7 +97,7 @@ const getLabelPosition =
     return y;
   };
 
-export default function PieArcLabel(props: PieArcLabelProps) {
+function PieArcLabel(props: PieArcLabelProps) {
   const {
     id,
     classes: innerClasses,
@@ -151,12 +151,9 @@ PieArcLabel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
-  cornerRadius: PropTypes.number,
-  dataIndex: PropTypes.number.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
-  innerRadius: PropTypes.number,
-  outerRadius: PropTypes.number.isRequired,
+  formattedArcLabel: PropTypes.string,
+  isFaded: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
 } as any;
+
+export { PieArcLabel };

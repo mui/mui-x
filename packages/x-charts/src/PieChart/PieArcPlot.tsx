@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTransition } from '@react-spring/web';
-import PieArc, { PieArcProps } from './PieArc';
+import { PieArc, PieArcProps } from './PieArc';
 import {
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
