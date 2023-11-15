@@ -82,6 +82,21 @@ The imports related to the `calendarHeader` slot have been moved from `@mui/x-da
 + } from '@mui/x-date-pickers/PickersCalendarHeader';
 ```
 
+## Removed props
+
+### Replace `shouldDisableClock` with `shouldDisableTime`
+
+The `shouldDisableClock` prop has been removed in favor of the more flexible `shouldDisableTime` prop.
+The `shouldDisableClock` prop received `value` as a `number` of hours, minutes, or seconds.
+Instead, the `shouldDisableTime` prop receives the date object (based on the used adapter).
+
+```diff
+ <DateTimePicker
+-  shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
++  shouldDisableTime={(value, view) => view === 'hours' && value.hour() < 12}
+ />
+```
+
 ## Field components
 
 ### Replace the section `hasLeadingZeros` property

@@ -103,49 +103,6 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
     });
 
-    it('should apply shouldDisableClock', function test() {
-      if (!withTime) {
-        return;
-      }
-
-      const onErrorMock = spy();
-      const { setProps } = render(
-        <ElementToTest
-          onError={onErrorMock}
-          shouldDisableClock={(value: number) => value === 10}
-          value={adapterToUse.date(new Date(2018, 2, 12, 10, 5, 0))}
-        />,
-      );
-
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-hours');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
-
-      setProps({ value: adapterToUse.date(new Date(2019, 2, 12, 9, 5, 0)) });
-
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
-
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 10, 0)) });
-
-      expect(onErrorMock.callCount).to.equal(3);
-      expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-minutes');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
-
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 0)) });
-
-      expect(onErrorMock.callCount).to.equal(4);
-      expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
-
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 10)) });
-
-      expect(onErrorMock.callCount).to.equal(5);
-      expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-seconds');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
-    });
-
     it('should apply shouldDisableTime', function test() {
       if (!withTime) {
         return;

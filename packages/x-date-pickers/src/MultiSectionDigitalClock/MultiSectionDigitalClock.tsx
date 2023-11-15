@@ -83,7 +83,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     disableFuture,
     disablePast,
     minutesStep = 1,
-    shouldDisableClock,
     shouldDisableTime,
     onChange,
     view: inView,
@@ -201,10 +200,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           return false;
         }
 
-        if (shouldDisableClock?.(timeValue, viewType)) {
-          return false;
-        }
-
         if (shouldDisableTime) {
           switch (viewType) {
             case 'hours':
@@ -267,7 +262,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       meridiemMode,
       minTime,
       minutesStep,
-      shouldDisableClock,
       shouldDisableTime,
       utils,
       disableFuture,
@@ -526,14 +520,6 @@ MultiSectionDigitalClock.propTypes = {
    * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
    */
   referenceDate: PropTypes.any,
-  /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
    * @template TDate

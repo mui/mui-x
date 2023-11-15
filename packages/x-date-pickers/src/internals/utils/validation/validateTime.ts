@@ -23,7 +23,6 @@ export const validateTime: Validator<
     minTime,
     maxTime,
     minutesStep,
-    shouldDisableClock,
     shouldDisableTime,
     disableIgnoringDatePartForTimeValidation = false,
     disablePast,
@@ -61,19 +60,6 @@ export const validateTime: Validator<
 
     case Boolean(shouldDisableTime && shouldDisableTime(value, 'seconds')):
       return 'shouldDisableTime-seconds';
-
-    case Boolean(shouldDisableClock && shouldDisableClock(adapter.utils.getHours(value), 'hours')):
-      return 'shouldDisableClock-hours';
-
-    case Boolean(
-      shouldDisableClock && shouldDisableClock(adapter.utils.getMinutes(value), 'minutes'),
-    ):
-      return 'shouldDisableClock-minutes';
-
-    case Boolean(
-      shouldDisableClock && shouldDisableClock(adapter.utils.getSeconds(value), 'seconds'),
-    ):
-      return 'shouldDisableClock-seconds';
 
     case Boolean(minutesStep && adapter.utils.getMinutes(value) % minutesStep !== 0):
       return 'minutesStep';
