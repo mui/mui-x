@@ -423,30 +423,21 @@ The `getYearRange` method used to accept two params and now accepts a tuple to b
 ### Restrict the input format of the `date` method
 
 The `date` method now have the behavior of the v6 `dateWithTimezone` method.
-The following changes have been applied:
+It no longer accept `any` as a value but only `string | null | undefined`
 
-- Its first argument is now mandatory, you need to pass `undefined` to get a date with the current timestamp instead of passing no argument
+```diff
+- adapter.date(new Date());
++ adapter.date();
 
-  ```diff
-  - adapter.date();
-  + adapter.date();
-  ```
+- adapter.date(new Date('2022-04-17');
++ adapter.date('2022-04-17');
 
-- It no longer accept `any` as a value but only `string | null | undefined`
+- adapter.date(new Date(2022, 3, 17));
++ adapter.date('2022-04-17');
 
-  ```diff
-  - adapter.date(new Date());
-  + adapter.date();
-
-  - adapter.date(new Date('2022-04-17');
-  + adapter.date('2022-04-17');
-
-  - adapter.date(new Date(2022, 3, 17));
-  + adapter.date('2022-04-17');
-
-  - adpater.date(new Date('Invalid Date'));
-  + adapter.getInvalidDate();
-  ```
+- adpater.date(new Date('Invalid Date'));
++ adapter.getInvalidDate();
+```
 
 ### Restrict the input format of the `isEqual` method
 
