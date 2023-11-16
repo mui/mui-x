@@ -432,8 +432,8 @@ It no longer accept `any` as a value but only `string | null | undefined`
 - adapter.date(new Date('2022-04-17');
 + adapter.date('2022-04-17');
 
-- adapter.date(new Date(2022, 3, 17));
-+ adapter.date('2022-04-17');
+- adapter.date(new Date(2022, 3, 17, 4, 5, 34));
++ adapter.date('2022-04-17T04:05:34');
 
 - adpater.date(new Date('Invalid Date'));
 + adapter.getInvalidDate();
