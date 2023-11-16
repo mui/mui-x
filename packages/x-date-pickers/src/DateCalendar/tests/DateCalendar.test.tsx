@@ -106,7 +106,7 @@ describe('<DateCalendar />', () => {
     render(
       <DateCalendar
         defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
-        dayOfWeekFormatter={(day) => `${day}.`}
+        dayOfWeekFormatter={(day) => `${adapterToUse.format(day, 'weekdayShort')}.`}
       />,
     );
 

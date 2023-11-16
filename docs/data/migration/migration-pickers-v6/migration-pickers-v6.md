@@ -82,6 +82,24 @@ The imports related to the `calendarHeader` slot have been moved from `@mui/x-da
 + } from '@mui/x-date-pickers/PickersCalendarHeader';
 ```
 
+## Modified props
+
+### Remove the string argument of the `dayOfWeekFormatter` prop
+
+The string argument of the `dayOfWeekFormatter` has been replaced in favor of the date object to allow more flexibility.
+
+```diff
+ <DateCalendar
+   // If you were still using the day string, you can get it back with your date library.
+-   dayOfWeekFormatter={dayStr => `${dayStr}.`}
++   dayOfWeekFormatter={day => `${day.format('dd')}.`}
+
+   // If you were already using the day object, just remove the first argument.
+-   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
++   dayOfWeekFormatter={day => `${day.format('dd')}.`
+ />
+```
+
 ## Field components
 
 ### Replace the section `hasLeadingZeros` property
