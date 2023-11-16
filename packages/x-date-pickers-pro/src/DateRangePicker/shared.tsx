@@ -73,10 +73,7 @@ type UseDateRangePickerDefaultizedProps<
 export function useDateRangePickerDefaultizedProps<
   TDate,
   Props extends BaseDateRangePickerProps<TDate>,
->(
-  props: Props,
-  name: string,
-): UseDateRangePickerDefaultizedProps<TDate, Omit<Props, 'components' | 'componentsProps'>> {
+>(props: Props, name: string): UseDateRangePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
