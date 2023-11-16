@@ -44,7 +44,7 @@ If you want to run the transformers one by one, check out the transformers inclu
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
 
-If you have already applied the `v6.0.0/pickers/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items.
+If you have already applied the `v7.0.0/pickers/preset-safe` (or `v7.0.0/preset-safe`) codemod, then you should not need to take any further action on these items.
 
 All other changes must be handled manually.
 
