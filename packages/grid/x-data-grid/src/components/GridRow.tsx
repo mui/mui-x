@@ -505,7 +505,7 @@ GridRow.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  containerWidth: PropTypes.number.isRequired,
+  dimensions: PropTypes.object.isRequired,
   firstColumnToRender: PropTypes.number.isRequired,
   /**
    * Determines which cell has focus.
