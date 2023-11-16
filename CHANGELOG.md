@@ -14,6 +14,8 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 ### Date Pickers
 
+#### `@mui/x-date-pickers@7.0.0-alpha.1` / `@mui/x-date-pickers-pro@7.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
 #### Breaking changes
 
 - The string argument of the `dayOfWeekFormatter` has been replaced in favor of the date object to allow more flexibility.
@@ -383,7 +385,7 @@ And if you need the exact same output you can apply the following transformation
   + const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
   ```
 
-#### `@mui/x-date-pickers@7.0.0-alpha.1`
+#### Changes
 
 - [pickers] Change the input format of `adapter.getYearRange` to be consistent with `adapter.isWithinRange` (#10978) @flaviendelangle
 - [pickers] Clean remaining `components` / `componentsProps` typings (#11040) @flaviendelangle
@@ -394,10 +396,6 @@ And if you need the exact same output you can apply the following transformation
 - [pickers] Remove the legacy UTC implementation for `dayjs` (#11023) @flaviendelangle
 - [pickers] Remove unused code (#11048) @flaviendelangle
 - [pickers] v7: Move the exports of the `calendarHeader` slot to `@mui/x-date-pickers/PickersCalendarHeader` (#11020) @flaviendelangle
-
-#### `@mui/x-date-pickers-pro@7.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-date-pickers@7.0.0-alpha.1`.
 
 ### Docs
 
