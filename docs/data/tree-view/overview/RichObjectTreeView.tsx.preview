@@ -1,8 +1,8 @@
-<TreeView
+<SimpleTreeView
   aria-label="rich object"
   defaultCollapseIcon={<ExpandMoreIcon />}
   defaultExpanded={['root']}
   defaultExpandIcon={<ChevronRightIcon />}
 >
   {renderTree(data)}
-</TreeView>
+</SimpleTreeView>

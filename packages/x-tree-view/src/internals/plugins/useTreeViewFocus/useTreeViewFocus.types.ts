@@ -32,5 +32,5 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<
   {},
   UseTreeViewFocusState,
   never,
-  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature<any>, UseTreeViewExpansionSignature]
+  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]
 >;

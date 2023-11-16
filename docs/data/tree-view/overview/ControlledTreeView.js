@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from 'packages/x-tree-view/src/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function ControlledTreeView() {
@@ -40,7 +40,7 @@ export default function ControlledTreeView() {
           {selected.length === 0 ? 'Select all' : 'Unselect all'}
         </Button>
       </Box>
-      <TreeView
+      <SimpleTreeView
         aria-label="controlled"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
@@ -63,7 +63,7 @@ export default function ControlledTreeView() {
             </TreeItem>
           </TreeItem>
         </TreeItem>
-      </TreeView>
+      </SimpleTreeView>
     </Box>
   );
 }

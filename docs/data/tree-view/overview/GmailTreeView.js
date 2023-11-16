@@ -12,7 +12,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from 'packages/x-tree-view/src/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
@@ -94,7 +94,7 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 
 export default function GmailTreeView() {
   return (
-    <TreeView
+    <SimpleTreeView
       aria-label="gmail"
       defaultExpanded={['3']}
       defaultCollapseIcon={<ArrowDropDownIcon />}
@@ -147,6 +147,6 @@ export default function GmailTreeView() {
         />
       </StyledTreeItem>
       <StyledTreeItem nodeId="4" labelText="History" labelIcon={Label} />
-    </TreeView>
+    </SimpleTreeView>
   );
 }

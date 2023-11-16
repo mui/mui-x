@@ -11,6 +11,11 @@ export interface TreeViewComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiTreeView'];
     variants?: ComponentsVariants['MuiTreeView'];
   };
+  MuiSimpleTreeView?: {
+    defaultProps?: ComponentsProps['MuiSimpleTreeView'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiSimpleTreeView'];
+    variants?: ComponentsVariants['MuiSimpleTreeView'];
+  };
 }
 
 declare module '@mui/material/styles' {

@@ -4,7 +4,7 @@ import Switch from '@mui/material/Switch';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from 'packages/x-tree-view/src/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function DisabledTreeItems() {
@@ -27,7 +27,7 @@ export default function DisabledTreeItems() {
           label="Focus disabled items"
         />
       </Box>
-      <TreeView
+      <SimpleTreeView
         aria-label="disabled items"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
@@ -44,7 +44,7 @@ export default function DisabledTreeItems() {
             <TreeItem nodeId="8" label="index.js" />
           </TreeItem>
         </TreeItem>
-      </TreeView>
+      </SimpleTreeView>
     </Box>
   );
 }

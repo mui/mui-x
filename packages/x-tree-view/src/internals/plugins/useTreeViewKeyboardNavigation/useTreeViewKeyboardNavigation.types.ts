@@ -17,7 +17,7 @@ export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<
   never,
   [
     UseTreeViewNodesSignature,
-    UseTreeViewSelectionSignature<any>,
+    UseTreeViewSelectionSignature,
     UseTreeViewFocusSignature,
     UseTreeViewExpansionSignature,
   ]

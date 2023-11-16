@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from 'packages/x-tree-view/src/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 const data = {
@@ -37,14 +37,14 @@ export default function RichObjectTreeView() {
 
   return (
     <Box sx={{ minHeight: 110, flexGrow: 1, maxWidth: 300 }}>
-      <TreeView
+      <SimpleTreeView
         aria-label="rich object"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpanded={['root']}
         defaultExpandIcon={<ChevronRightIcon />}
       >
         {renderTree(data)}
-      </TreeView>
+      </SimpleTreeView>
     </Box>
   );
 }

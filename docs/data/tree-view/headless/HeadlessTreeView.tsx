@@ -3,9 +3,10 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
-import { TreeViewPropsBase } from '@mui/x-tree-view/TreeView';
+import { TreeViewPropsBase } from 'packages/x-tree-view/src/TreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
   TreeViewPlugin,
@@ -84,8 +85,13 @@ const TreeViewRoot = styled('ul', {
   outline: 0,
 });
 
+interface Row {
+  nodeId: TreeViewItemId;
+  label: string;
+}
+
 export interface TreeViewProps<Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<Multiple>,
+  extends DefaultTreeViewPluginParameters<Row, Multiple>,
     TreeViewLogExpandedParameters,
     TreeViewPropsBase {}
 

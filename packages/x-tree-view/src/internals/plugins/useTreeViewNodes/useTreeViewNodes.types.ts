@@ -9,16 +9,17 @@ export interface UseTreeViewNodesInstance {
   isNodeDisabled: (nodeId: string | null) => nodeId is string;
 }
 
-export interface UseTreeViewNodesParameters {
+export interface UseTreeViewNodesParameters<R extends {}> {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
    */
   disabledItemsFocusable?: boolean;
+  items: readonly R[];
 }
 
-export type UseTreeViewNodesDefaultizedParameters = DefaultizedProps<
-  UseTreeViewNodesParameters,
+export type UseTreeViewNodesDefaultizedParameters<R extends {}> = DefaultizedProps<
+  UseTreeViewNodesParameters<R>,
   'disabledItemsFocusable'
 >;
 
@@ -29,8 +30,8 @@ interface UseTreeViewNodesEventLookup {
 }
 
 export type UseTreeViewNodesSignature = TreeViewPluginSignature<
-  UseTreeViewNodesParameters,
-  UseTreeViewNodesDefaultizedParameters,
+  UseTreeViewNodesParameters<any>,
+  UseTreeViewNodesDefaultizedParameters<any>,
   UseTreeViewNodesInstance,
   UseTreeViewNodesEventLookup,
   {},

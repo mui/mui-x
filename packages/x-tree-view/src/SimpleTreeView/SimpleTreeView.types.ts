@@ -1,10 +1,16 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { TreeViewClasses } from './treeViewClasses';
+import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
 import { DefaultTreeViewPluginParameters } from '../internals/plugins/defaultPlugins';
 
-export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
+export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
+  extends Omit<DefaultTreeViewPluginParameters<any, Multiple>, 'items'>,
+    React.HTMLAttributes<HTMLUListElement> {
+  /**
+   * The content of the component.
+   */
+  children?: React.ReactNode;
   /**
    * className applied to the root element.
    */
@@ -12,13 +18,9 @@ export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<TreeViewClasses>;
+  classes?: Partial<SimpleTreeViewClasses>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
 }
-
-export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<R, Multiple>,
-    TreeViewPropsBase {}
