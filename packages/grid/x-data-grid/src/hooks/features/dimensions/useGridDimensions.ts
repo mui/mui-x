@@ -53,6 +53,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   hasScrollY: false,
   scrollbarSize: 0,
   headerHeight: 0,
+  rowWidth: 0,
   columnsTotalWidth: 0,
   headersTotalHeight: 0,
   topContainerHeight: 0,
@@ -209,6 +210,8 @@ export function useGridDimensions(
       }
     }
 
+    const rowWidth = Math.max(viewportInnerSize.width, columnsTotalWidth);
+
     const newFullDimensions: GridDimensions = {
       isReady: true,
       root: rootDimensionsRef.current,
@@ -219,6 +222,7 @@ export function useGridDimensions(
       hasScrollY,
       scrollbarSize,
       headerHeight,
+      rowWidth,
       columnsTotalWidth,
       headersTotalHeight,
       topContainerHeight,
@@ -274,6 +278,7 @@ export function useGridDimensions(
     root.style.setProperty('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
     root.style.setProperty('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
     root.style.setProperty('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);
+    root.style.setProperty('--DataGrid-rowWidth', `${dimensions.rowWidth}px`);
     root.style.setProperty('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
     root.style.setProperty('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
     root.style.setProperty('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);

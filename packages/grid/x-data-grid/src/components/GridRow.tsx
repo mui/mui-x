@@ -15,10 +15,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import type { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
-import {
-  gridColumnPositionsSelector,
-  gridColumnsTotalWidthSelector,
-} from '../hooks/features/columns/gridColumnsSelector';
+import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
@@ -26,12 +23,13 @@ import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
+import { type GridDimensions } from '../hooks/features/dimensions';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
+import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 import { randomNumberBetween } from '../utils/utils';
 import { PinnedPosition } from './cell/GridCell';
-import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   rowId: GridRowId;
@@ -42,7 +40,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   index: number;
   rowHeight: number | 'auto';
-  containerWidth: number;
+  dimensions: GridDimensions;
   firstColumnToRender: number;
   lastColumnToRender: number;
   visibleColumns: GridStateColDef[];
@@ -117,7 +115,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     visibleColumns,
     renderedColumns,
     pinnedColumns,
-    containerWidth,
+    dimensions,
     firstColumnToRender,
     lastColumnToRender,
     isLastVisible = false,
@@ -137,7 +135,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
@@ -358,7 +355,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       pinnedPosition === PinnedPosition.LEFT
         ? columnPositions[indexRelativeToAllColumns]
         : pinnedPosition === PinnedPosition.RIGHT
-        ? columnsTotalWidth - columnPositions[indexRelativeToAllColumns] - column.computedWidth
+        ? dimensions.columnsTotalWidth - columnPositions[indexRelativeToAllColumns] - column.computedWidth
         : 0;
 
     if (rowNode?.type === 'skeletonRow') {
@@ -468,7 +465,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     ));
   }
 
-  const emptyCellWidth = containerWidth - columnsTotalWidth;
+  const emptyCellWidth = dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth;
 
   const eventHandlers = row
     ? {
@@ -496,9 +493,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     >
       {leftCells}
       {cells}
+      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
       {rightCells.length > 0 && <div role="presentation" style={{ flex: '1' }} />}
       {rightCells}
-      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
     </div>
   );
 });

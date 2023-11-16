@@ -145,6 +145,7 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-offsetTop': '0px',
     '--DataGrid-offsetLeft': '0px',
     '--DataGrid-scrollbarSize': '10px',
+    '--DataGrid-rowWidth': '0px',
     '--DataGrid-columnsTotalWidth': '0px',
     '--DataGrid-headersTotalHeight': '0px',
     '--DataGrid-topContainerHeight': '0px',
@@ -293,7 +294,7 @@ export const GridRootStyles = styled('div', {
       color: borderColor,
     },
     [`& .${gridClasses.columnHeaders}`]: {
-      width: 'var(--DataGrid-columnsTotalWidth)',
+      width: 'var(--DataGrid-rowWidth)',
     },
     '@media (hover: hover)': {
       [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
@@ -345,7 +346,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses.row}`]: {
       display: 'flex',
-      width: 'var(--DataGrid-columnsTotalWidth)',
+      width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
       '&:hover': {
         backgroundColor: (theme.vars || theme).palette.action.hover,

@@ -605,7 +605,7 @@ export const useGridVirtualScroller = () => {
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
           index={index}
-          containerWidth={outerSize.width}
+          dimensions={dimensions}
           isLastVisible={isLastVisible}
           {...rowProps}
         />,

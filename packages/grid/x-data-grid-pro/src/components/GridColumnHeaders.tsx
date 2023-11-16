@@ -238,6 +238,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
           })}
         </GridColumnHeadersInner>
         <GridScrollArea scrollDirection="right" />
+        <div style={{ flex: 1 }} />
         {rightRenderContext && (
           <GridColumnHeadersPinnedColumnHeaders
             ownerState={{

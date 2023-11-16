@@ -35,6 +35,10 @@ export interface GridDimensions {
    */
   scrollbarSize: number;
   /**
+   * Width of a row.
+   */
+  rowWidth: number;
+  /**
    * Size of all the visible columns.
    */
   columnsTotalWidth: number;
