@@ -79,7 +79,7 @@ function MyApp() {
 
 ```jsx
 // ✅ The `toolbar` slot is defined only once, it will never remount.
-const CustomActionBar = ({ name, setName }) => (
+const CustomToolbar = ({ name, setName }) => (
   <input value={name} onChange={(event) => setName(event.target.value)} />
 );
 

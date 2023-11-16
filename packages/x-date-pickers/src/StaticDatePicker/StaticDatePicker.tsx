@@ -85,7 +85,6 @@ StaticDatePicker.propTypes = {
   className: PropTypes.string,
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter.  Deprecated, will be removed in v7: Use `date` instead.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
    * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()

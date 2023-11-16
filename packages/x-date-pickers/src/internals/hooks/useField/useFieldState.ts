@@ -400,7 +400,7 @@ export const useFieldState = <
   }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
-    let shouldUpdate = false;
+    let shouldUpdate: boolean;
     if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
       shouldUpdate = true;
     } else {

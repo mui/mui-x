@@ -64,6 +64,42 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
+### Change the imports of the `calendarHeader` slot
+
+The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DateCalendar` to `@mui/x-date-pickers/PIckersCalendarHeader`:
+
+```diff
+  export {
+    pickersCalendarHeaderClasses,
+    PickersCalendarHeaderClassKey,
+    PickersCalendarHeaderClasses,
+    PickersCalendarHeader,
+    PickersCalendarHeaderProps,
+    PickersCalendarHeaderSlotsComponent,
+    PickersCalendarHeaderSlotsComponentsProps,
+    ExportedPickersCalendarHeaderProps,
+- } from '@mui/x-date-pickers/DateCalendar';
++ } from '@mui/x-date-pickers/PickersCalendarHeader';
+```
+
+## Modified props
+
+### Remove the string argument of the `dayOfWeekFormatter` prop
+
+The string argument of the `dayOfWeekFormatter` has been replaced in favor of the date object to allow more flexibility.
+
+```diff
+ <DateCalendar
+   // If you were still using the day string, you can get it back with your date library.
+-   dayOfWeekFormatter={dayStr => `${dayStr}.`}
++   dayOfWeekFormatter={day => `${day.format('dd')}.`}
+
+   // If you were already using the day object, just remove the first argument.
+-   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
++   dayOfWeekFormatter={day => `${day.format('dd')}.`
+ />
+```
+
 ## Field components
 
 ### Replace the section `hasLeadingZeros` property
@@ -108,6 +144,31 @@ It was used in the header of the calendar views, you can replace it with the new
 +     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
     />
   <LocalizationProvider />
+```
+
+## Use UTC with the Day.js adapter
+
+The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.
+This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
+You can learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
+
+```diff
+  // When a `value` or a `defaultValue` is provided
+  <LocalizationProvider
+    adapter={AdapterDayjs}
+-   dateLibInstance={dayjs.utc}
+  >
+    <DatePicker value={dayjs.utc('2022-04-17')} />
+  </LocalizationProvider>
+
+  // When no `value` or `defaultValue` is provided
+  <LocalizationProvider
+    adapter={AdapterDayjs}
+-   dateLibInstance={dayjs.utc}
+  >
+-   <DatePicker />
++   <DatePicker timezone="UTC" />
+  </LocalizationProvider>
 ```
 
 ## Adapters
