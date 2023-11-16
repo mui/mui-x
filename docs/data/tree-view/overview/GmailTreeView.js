@@ -12,7 +12,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
-import { SimpleTreeView } from 'packages/x-tree-view/src/SimpleTreeView';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({

@@ -4,7 +4,7 @@ import Switch from '@mui/material/Switch';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { SimpleTreeView } from 'packages/x-tree-view/src/SimpleTreeView';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function DisabledTreeItems() {

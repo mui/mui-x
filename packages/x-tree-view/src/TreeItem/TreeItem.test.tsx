@@ -10,7 +10,7 @@ import {
   fireEvent,
   screen,
 } from '@mui-internal/test-utils';
-import { SimpleTreeView } from 'packages/x-tree-view/src/SimpleTreeView';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 
 describe('<TreeItem />', () => {
