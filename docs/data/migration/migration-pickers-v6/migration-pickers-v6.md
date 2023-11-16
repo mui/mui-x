@@ -245,14 +245,14 @@ The `getDiff` method have been removed, you can directly use your date library:
 
 ### Remove the `getFormatHelperText` method
 
-The `parseISO` method have been removed, you can use the `expandFormat` instead:
+The `getFormatHelperText` method have been removed, you can use the `expandFormat` instead:
 
 ```diff
 - const expandedFormat = adapter.getFormatHelperText(format);
 + const expandedFormat = adapter.expandFormat(format);
 ```
 
-And if you need the exact same output you can apply the following transformation:
+And if you need the exact same output, you can apply the following transformation:
 
 ```diff
   // For Day.js
@@ -341,7 +341,7 @@ The `getWeekdays` method have been removed, you can use the `startOfWeek` and `a
 
 ### Remove the `isNull` method
 
-The `parseISO` method have been removed, you can replace it with a very basic check:
+The `isNull` method have been removed, you can replace it with a very basic check:
 
 ```diff
 - const isNull = adapter.isNull(value);
@@ -422,33 +422,33 @@ The method has been simplified and now only accepts an already-parsed date or `n
  const adapterMoment = new AdatperMoment();
 
  // Supported formats
- const isValid = adapterDayjs.isEqual(null, null); // Same for the other adapters
- const isValid = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
- const isValid = adapterMoment.isEqual(moment(), moment('2022-04-17'));
- const isValid = adapterDateFns.isEqual(new Date(), new Date('2022-04-17'));
+ const isEqual = adapterDayjs.isEqual(null, null); // Same for the other adapters
+ const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
+ const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
+ const isEqual = adapterDateFns.isEqual(new Date(), new Date('2022-04-17'));
 
  // Non-supported formats (JS Date)
-- const isValid = adapterDayjs.isEqual(new Date(), new Date('2022-04-17'));
-+ const isValid = adapterDayjs.isEqual(dayjs(), dayjs('2022-04-17'));
+- const isEqual = adapterDayjs.isEqual(new Date(), new Date('2022-04-17'));
++ const isEqual = adapterDayjs.isEqual(dayjs(), dayjs('2022-04-17'));
 
-- const isValid = adapterLuxon.isEqual(new Date(), new Date('2022-04-17'));
-+ const isValid = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
+- const isEqual = adapterLuxon.isEqual(new Date(), new Date('2022-04-17'));
++ const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
 
-- const isValid = adapterMoment.isEqual(new Date(), new Date('2022-04-17'));
-+ const isValid = adapterMoment.isEqual(moment(), moment('2022-04-17'));
+- const isEqual = adapterMoment.isEqual(new Date(), new Date('2022-04-17'));
++ const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
 
  // Non-supported formats (string)
-- const isValid = adapterDayjs.isEqual('2022-04-16', '2022-04-17');
-+ const isValid = adapterDayjs.isEqual(dayjs('2022-04-17'), dayjs('2022-04-17'));
+- const isEqual = adapterDayjs.isEqual('2022-04-16', '2022-04-17');
++ const isEqual = adapterDayjs.isEqual(dayjs('2022-04-17'), dayjs('2022-04-17'));
 
-- const isValid = adapterLuxon.isEqual('2022-04-16', '2022-04-17');
-+ const isValid = adapterLuxon.isEqual(DateTime.fromISO('2022-04-17'), DateTime.fromISO('2022-04-17'));
+- const isEqual = adapterLuxon.isEqual('2022-04-16', '2022-04-17');
++ const isEqual = adapterLuxon.isEqual(DateTime.fromISO('2022-04-17'), DateTime.fromISO('2022-04-17'));
 
-- const isValid = adapterMoment.isEqual('2022-04-16', '2022-04-17');
-+ const isValid = adapterMoment.isEqual(moment('2022-04-17'), moment('2022-04-17'));
+- const isEqual = adapterMoment.isEqual('2022-04-16', '2022-04-17');
++ const isEqual = adapterMoment.isEqual(moment('2022-04-17'), moment('2022-04-17'));
 
-- const isValid = adapterDateFns.isEqual('2022-04-16', '2022-04-17');
-+ const isValid = adapterDateFns.isEqual(new Date('2022-04-17'), new Date('2022-04-17'));
+- const isEqual = adapterDateFns.isEqual('2022-04-16', '2022-04-17');
++ const isEqual = adapterDateFns.isEqual(new Date('2022-04-17'), new Date('2022-04-17'));
 ```
 
 ### Restrict the input format of the `isValid` method
