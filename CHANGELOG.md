@@ -3,6 +3,132 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.1
+
+_Nov 16, 2023_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+#### Breaking changes
+
+- The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore (#11023). This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
+  You can learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
+
+  ```diff
+    // When a `value` or a `defaultValue` is provided
+    <LocalizationProvider
+      adapter={AdapterDayjs}
+  -   dateLibInstance={dayjs.utc}
+    >
+      <DatePicker value={dayjs.utc('2022-04-17')} />
+    </LocalizationProvider>
+
+    // When no `value` or `defaultValue` is provided
+    <LocalizationProvider
+      adapter={AdapterDayjs}
+  -   dateLibInstance={dayjs.utc}
+    >
+  -   <DatePicker />
+  +   <DatePicker timezone="UTC" />
+    </LocalizationProvider>
+  ```
+
+- The property `hasLeadingZeros` has been removed from the sections in favor of the more precise `hasLeadingZerosInFormat` and `hasLeadingZerosInInput` properties (#10994). To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`:
+
+  ```diff
+   const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+
+   React.useEffect(() => {
+       const firstSection = fieldRef.current!.getSections()[0]
+  -    console.log(firstSection.hasLeadingZeros)
+  +    console.log(firstSection.hasLeadingZerosInFormat)
+   }, [])
+
+   return (
+     <DateField unstableFieldRef={fieldRef} />
+   );
+  ```
+
+- The `adapter.getYearRange` method used to accept two params and now accepts a tuple to be consistent with the `adapter.isWithinRange` method (#10978):
+
+  ```diff
+  - adapter.getYearRange(start, end);
+  + adapter.getYearRange([start, end])
+  ```
+
+- The `adapter.isValid` method used to accept any type of value and tried to parse them before checking their validity (#10971).
+  The method has been simplified and now only accepts an already-parsed date or `null`.
+  Which is the same type as the one accepted by the components `value` prop.
+
+  ```diff
+   const adapterDayjs = new AdapterDayjs();
+   const adapterLuxon = new AdapterLuxon();
+   const adapterDateFns = new AdapterDateFns();
+   const adapterMoment = new AdatperMoment();
+
+   // Supported formats
+   const isValid = adapterDayjs.isValid(null); // Same for the other adapters
+   const isValid = adapterLuxon.isValid(DateTime.now());
+   const isValid = adapterMoment.isValid(moment());
+   const isValid = adapterDateFns.isValid(new Date());
+
+   // Non-supported formats (JS Date)
+  - const isValid = adapterDayjs.isValid(new Date('2022-04-17'));
+  + const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
+
+  - const isValid = adapterLuxon.isValid(new Date('2022-04-17'));
+  + const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
+
+  - const isValid = adapterMoment.isValid(new Date('2022-04-17'));
+  + const isValid = adapterMoment.isValid(moment('2022-04-17'));
+
+   // Non-supported formats (string)
+  - const isValid = adapterDayjs.isValid('2022-04-17');
+  + const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
+
+  - const isValid = adapterLuxon.isValid('2022-04-17');
+  + const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
+
+  - const isValid = adapterMoment.isValid('2022-04-17');
+  + const isValid = adapterMoment.isValid(moment('2022-04-17'));
+
+  - const isValid = adapterDateFns.isValid('2022-04-17');
+  + const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
+  ```
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-alpha.1`
+
+- [pickers] Change the input format of `adapter.getYearRange` to be consistent with `adapter.isWithinRange` (#10978) @flaviendelangle
+- [pickers] Clean remaining `components` / `componentsProps` typings (#11040) @flaviendelangle
+- [pickers] Modify `adapter.isEqual` method to accept `TDate | null` instead of any (#10976) @flaviendelangle
+- [pickers] Modify `adapter.isValid` method to accept `TDate | null` instead of `any` (#10971) @flaviendelangle
+- [pickers] Remove the `hasLeadingZeros` property from `FieldSection` (#10994) @flaviendelangle
+- [pickers] Remove the deprecated methods and formats from the adapters (#10776) @flaviendelangle
+- [pickers] Remove the legacy UTC implementation for `dayjs` (#11023) @flaviendelangle
+- [pickers] Remove unused code (#11048) @flaviendelangle
+- [pickers] v7: Move the exports of the `calendarHeader` slot to `@mui/x-date-pickers/PickersCalendarHeader` (#11020) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.1`.
+
+### Docs
+
+- [docs] Fix incorrect component name in the "Custom slots and subcomponents" page (#11024) @flaviendelangle
+
+### Core
+
+- [core] Clean the component slots doc generation (#11021) @flaviendelangle
+- [core] Fix to release `next` (#10996) @LukasTy
+- [DateCalendar] Allow to override the format of the header with a prop (#10990) @flaviendelangle
+- [DateCalendar] Remove the string argument of the `dayOfWeekFormatter` prop (#10992) @flaviendelangle
+- [test] Wait for images to load (#11004) @cherniavskii
+
 ## 7.0.0-alpha.0
 
 _Nov 10, 2023_
@@ -384,7 +510,7 @@ Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
 
 - [charts] Add reference links to area + bar chart components (#10652) @michelengelen
 - [charts] Add reference links to line chart + sparkline components (#10650) @michelengelen
-- [charts] Add reference links to pie + scatter chart components  (#10653) @michelengelen
+- [charts] Add reference links to pie + scatter chart components (#10653) @michelengelen
 - [charts] Render only when `width` and `height` are resolved (#10714) @alexfauquette
 - [charts] Support animation on `BarChart` (#9926) @alexfauquette
 - [charts] Use new text component to avoid tick label overflow on x-axis (#10648) @alexfauquette
@@ -460,6 +586,7 @@ It adds line break support and avoids overlapping text in the legend.
 This comes with some breaking changes.
 
 - The DOM structure is modified. An intermediary `<tspan />` element has been added. This can impact how your style is applied.
+
   ```diff
   - <text>The label</text>
   + <text><tspan>The label</tspan></text>
