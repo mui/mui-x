@@ -27,8 +27,8 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
   +   dayOfWeekFormatter={day => `${day.format('dd')}.`}
 
      // If you were already using the day object, just remove the first argument.
-  -   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
-  +   dayOfWeekFormatter={day => `${day.format('dd')}.`
+  -   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`}
+  +   dayOfWeekFormatter={day => `${day.format('dd')}.`}
    />
   ```
 
