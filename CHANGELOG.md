@@ -402,6 +402,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.1`.
 ### Docs
 
 - [docs] Fix incorrect component name in the "Custom slots and subcomponents" page (#11024) @flaviendelangle
+- [docs] Fix typos in pickers migration guide (#11057) @flaviendelangle
 
 ### Core
 
