@@ -12,6 +12,8 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
+### Date Pickers
+
 #### Breaking changes
 
 - The string argument of the `dayOfWeekFormatter` has been replaced in favor of the date object to allow more flexibility.
@@ -21,7 +23,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
      // If you were still using the day string, you can get it back with your date library.
   -   dayOfWeekFormatter={dayStr => `${dayStr}.`}
   +   dayOfWeekFormatter={day => `${day.format('dd')}.`}
-  
+
      // If you were already using the day object, just remove the first argument.
   -   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
   +   dayOfWeekFormatter={day => `${day.format('dd')}.`
@@ -43,9 +45,11 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
   - } from '@mui/x-date-pickers/DateCalendar';
   + } from '@mui/x-date-pickers/PickersCalendarHeader';
 
+  ```
+
 - The `monthAndYear` format has been removed.
   It was used in the header of the calendar views, you can replace it with the new `format` prop of the `calendarHeader` slot:
-  
+
   ```diff
     <LocalizationProvider
       adapter={AdapterDayJS}
@@ -61,12 +65,12 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
   ```
 
 - The `adapter.getDiff` method have been removed, you can directly use your date library:
-  
+
   ```diff
     // For Day.js
   - const diff = adapter.getDiff(value, comparing, unit);
   + const diff = value.diff(comparing, unit);
-  
+
     // For Luxon
   - const diff = adapter.getDiff(value, comparing, unit);
   + const getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
@@ -80,7 +84,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
   + };
   +
   + const diff = getDiff(value, comparing, unit);
-  
+
     // For DateFns
   - const diff = adapter.getDiff(value, comparing, unit);
   + const getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
@@ -109,7 +113,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
   + };
   +
   + const diff = getDiff(value, comparing, unit);
-  
+
     // For Moment
   - const diff = adapter.getDiff(value, comparing, unit);
   + const diff = value.diff(comparing, unit);
@@ -225,21 +229,21 @@ And if you need the exact same output you can apply the following transformation
   + const result = mergeDateAndTime(valueWithDate, valueWithTime);
   ```
 
-  - The `adapter.parseISO` method have been removed, you can directly use your date library:
+- The `adapter.parseISO` method have been removed, you can directly use your date library:
 
   ```diff
     // For Day.js
   - const value = adapter.parseISO(isoString);
   + const value = dayjs(isoString);
-  
+
     // For Luxon
   - const value = adapter.parseISO(isoString);
   + const value = DateTime.fromISO(isoString);
-  
+
     // For DateFns
   - const value = adapter.parseISO(isoString);
   + const value = dateFns.parseISO(isoString);
-  
+
     // For Moment
   - const value = adapter.parseISO(isoString);
   + const value = moment(isoString, true);
@@ -255,42 +259,41 @@ And if you need the exact same output you can apply the following transformation
   + const isoString = value.toISOString();
   ```
 
-
 - The `adapter.isEqual` method used to accept any type of value for its two input and tried to parse them before checking if they were equal.
-The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in the pickers)
+  The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in the pickers)
 
   ```diff
    const adapterDayjs = new AdapterDayjs();
    const adapterLuxon = new AdapterLuxon();
    const adapterDateFns = new AdapterDateFns();
    const adapterMoment = new AdatperMoment();
-  
+
    // Supported formats
    const isEqual = adapterDayjs.isEqual(null, null); // Same for the other adapters
    const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
    const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
    const isEqual = adapterDateFns.isEqual(new Date(), new Date('2022-04-17'));
-  
+
    // Non-supported formats (JS Date)
   - const isEqual = adapterDayjs.isEqual(new Date(), new Date('2022-04-17'));
   + const isEqual = adapterDayjs.isEqual(dayjs(), dayjs('2022-04-17'));
-  
+
   - const isEqual = adapterLuxon.isEqual(new Date(), new Date('2022-04-17'));
   + const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
-  
+
   - const isEqual = adapterMoment.isEqual(new Date(), new Date('2022-04-17'));
   + const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
-  
+
    // Non-supported formats (string)
   - const isEqual = adapterDayjs.isEqual('2022-04-16', '2022-04-17');
   + const isEqual = adapterDayjs.isEqual(dayjs('2022-04-17'), dayjs('2022-04-17'));
-  
+
   - const isEqual = adapterLuxon.isEqual('2022-04-16', '2022-04-17');
   + const isEqual = adapterLuxon.isEqual(DateTime.fromISO('2022-04-17'), DateTime.fromISO('2022-04-17'));
-  
+
   - const isEqual = adapterMoment.isEqual('2022-04-16', '2022-04-17');
   + const isEqual = adapterMoment.isEqual(moment('2022-04-17'), moment('2022-04-17'));
-  
+
   - const isEqual = adapterDateFns.isEqual('2022-04-16', '2022-04-17');
   + const isEqual = adapterDateFns.isEqual(new Date('2022-04-17'), new Date('2022-04-17'));
   ```
@@ -379,8 +382,6 @@ The method has been simplified and now only accepts an already-parsed date or `n
   - const isValid = adapterDateFns.isValid('2022-04-17');
   + const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
   ```
-
-### Date Pickers
 
 #### `@mui/x-date-pickers@7.0.0-alpha.1`
 
