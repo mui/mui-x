@@ -395,7 +395,7 @@ describe('<TimeField /> - Editing', () => {
   );
 
   describeAdapters('props: minutesStep', TimeField, ({ adapter, testFieldKeyPress }) => {
-    it('should use `minitesStep` to set initial minutes with ArrowUp', () => {
+    it('should use `minutesStep` to set initial minutes with ArrowUp', () => {
       testFieldKeyPress({
         format: adapter.formats.minutes,
         key: 'ArrowUp',
@@ -404,7 +404,7 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should use `minitesStep` to set initial minutes with ArrowDown', () => {
+    it('should use `minutesStep` to set initial minutes with ArrowDown', () => {
       testFieldKeyPress({
         format: adapter.formats.minutes,
         key: 'ArrowDown',
@@ -413,7 +413,7 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should use `minitesStep` to increase minutes', () => {
+    it('should use `minutesStep` to increase minutes', () => {
       testFieldKeyPress({
         format: adapter.formats.minutes,
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 0, 25)),
@@ -423,7 +423,7 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should use `minitesStep` to decrease minutes', () => {
+    it('should use `minutesStep` to decrease minutes', () => {
       testFieldKeyPress({
         format: adapter.formats.minutes,
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 0, 25)),
@@ -433,7 +433,7 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should go to the closest valid values acording to `minitesStep` when pressing ArrowDown', () => {
+    it('should go to the closest valid values according to `minutesStep` when pressing ArrowDown', () => {
       testFieldKeyPress({
         format: adapter.formats.minutes,
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 2, 25)),
@@ -443,7 +443,7 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should go to the closest valid values acording to `minitesStep` when pressing ArrowUp', () => {
+    it('should go to the closest valid values according to `minutesStep` when pressing ArrowUp', () => {
       testFieldKeyPress({
         format: adapter.formats.minutes,
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 2, 25)),

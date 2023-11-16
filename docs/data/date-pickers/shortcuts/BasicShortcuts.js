@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 const getMonthWeekday = (monthIndex, weekdayIndex, dayRank) => {
-  // Helper to find for example the 3rd monday in Jun
+  // Helper to find, for example, the 3rd monday in Jun
   const today = dayjs();
   const firstDayOfMonth = today.month(monthIndex).startOf('month');
   const weekDay = firstDayOfMonth.day(); // 0 (Sunday) to 6 (Saturday)

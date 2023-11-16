@@ -9,7 +9,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 
 const getMonthWeekday = (monthIndex, weekdayIndex, dayRank) => {
-  // Helper to find for example the 3rd monday in Jun
+  // Helper to find, for example, the 3rd monday in Jun
   const today = dayjs();
   const firstDayOfMonth = today.month(monthIndex).startOf('month');
   const weekDay = firstDayOfMonth.day(); // 0 (Sunday) to 6 (Saturday)

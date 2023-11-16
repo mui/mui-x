@@ -151,13 +151,13 @@ describe('<MobileDatePicker />', () => {
     it('should call `onAccept` even if controlled', () => {
       const onAccept = spy();
 
-      function ControledMobileDatePicker(props) {
+      function ControlledMobileDatePicker(props) {
         const [value, setValue] = React.useState(null);
 
         return <MobileDatePicker {...props} value={value} onChange={setValue} />;
       }
 
-      render(<ControledMobileDatePicker onAccept={onAccept} />);
+      render(<ControlledMobileDatePicker onAccept={onAccept} />);
 
       userEvent.mousePress(screen.getByRole('textbox'));
 
@@ -167,7 +167,7 @@ describe('<MobileDatePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
     });
 
-    it('should update internal state when controled value is updated', () => {
+    it('should update internal state when controlled value is updated', () => {
       const value = adapterToUse.date(new Date(2019, 0, 1));
 
       const { setProps } = render(<MobileDatePicker value={value} />);

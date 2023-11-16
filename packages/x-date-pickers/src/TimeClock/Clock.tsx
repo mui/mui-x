@@ -310,7 +310,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
 
     switch (event.key) {
       case 'Home':
-        // annulate both hours and minutes
+        // reset both hours and minutes
         handleValueChange(0, 'partial');
         event.preventDefault();
         break;
