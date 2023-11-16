@@ -21,15 +21,7 @@ import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 export interface DateTimeViewRendererProps<TDate>
   extends Omit<
       DateCalendarProps<TDate> & MultiSectionDigitalClockProps<TDate>,
-      | 'views'
-      | 'openTo'
-      | 'view'
-      | 'onViewChange'
-      | 'focusedView'
-      | 'components'
-      | 'componentsProps'
-      | 'slots'
-      | 'slotProps'
+      'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView' | 'slots' | 'slotProps'
     >,
     Pick<DateTimePickerProps<TDate>, 'slots' | 'slotProps'> {
   view: DateOrTimeViewWithMeridiem;

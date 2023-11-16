@@ -72,10 +72,7 @@ type UseTimePickerDefaultizedProps<
   Props extends BaseTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
   TDate,
-  Omit<
-    DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>,
-    'components' | 'componentsProps'
-  >
+  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
 >;
 
 export function useTimePickerDefaultizedProps<
