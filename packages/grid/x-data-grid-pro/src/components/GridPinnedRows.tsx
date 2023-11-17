@@ -30,7 +30,11 @@ export function GridPinnedRows({ position, virtualScroller, ...other }: GridPinn
   });
 
   return (
-    <div {...other} className={clsx(classes.root, other.className, gridClasses[`pinnedRows--${position}`])} role="presentation">
+    <div
+      {...other}
+      className={clsx(classes.root, other.className, gridClasses[`pinnedRows--${position}`])}
+      role="presentation"
+    >
       {pinnedRows}
     </div>
   );

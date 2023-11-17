@@ -355,7 +355,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       pinnedPosition === PinnedPosition.LEFT
         ? columnPositions[indexRelativeToAllColumns]
         : pinnedPosition === PinnedPosition.RIGHT
-        ? dimensions.columnsTotalWidth - columnPositions[indexRelativeToAllColumns] - column.computedWidth
+        ? dimensions.columnsTotalWidth -
+          columnPositions[indexRelativeToAllColumns] -
+          column.computedWidth
         : 0;
 
     if (rowNode?.type === 'skeletonRow') {
@@ -428,7 +430,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       i,
       indexRelativeToAllColumns,
       pinnedColumns.left.length,
-      PinnedPosition.LEFT
+      PinnedPosition.LEFT,
     );
   });
 
@@ -439,7 +441,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       i,
       indexRelativeToAllColumns,
       pinnedColumns.right.length,
-      PinnedPosition.RIGHT
+      PinnedPosition.RIGHT,
     );
   });
 
@@ -457,12 +459,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     }
 
-    cells.push(getCell(
-      column,
-      i,
-      indexRelativeToAllColumns,
-      renderedColumns.length,
-    ));
+    cells.push(getCell(column, i, indexRelativeToAllColumns, renderedColumns.length));
   }
 
   const emptyCellWidth = dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth;

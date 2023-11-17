@@ -430,9 +430,12 @@ export const createColumnsState = ({
 
 export function updatePinnedColumns(columnsState: GridColumnsState, theme: Theme) {
   const model = columnsState.pinnedColumns.model;
-  const visibleColumnFields = gridVisibleColumnFieldsSelector({
-    columns: columnsState,
-  } as GridStateCommunity, { id: -1 });
+  const visibleColumnFields = gridVisibleColumnFieldsSelector(
+    {
+      columns: columnsState,
+    } as GridStateCommunity,
+    { id: -1 },
+  );
   const visiblePinnedFields = filterVisibleColumns(
     model,
     visibleColumnFields,

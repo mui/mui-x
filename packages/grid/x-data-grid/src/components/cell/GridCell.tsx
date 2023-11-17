@@ -94,10 +94,10 @@ const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
 };
 
 type OwnerState = Pick<GridCellProps, 'align' | 'pinnedPosition'> & {
-  showLeftBorder: boolean,
-  showRightBorder: boolean,
-  showLeftShadow: boolean,
-  showRightShadow: boolean,
+  showLeftBorder: boolean;
+  showRightBorder: boolean;
+  showLeftShadow: boolean;
+  showRightShadow: boolean;
   isEditable?: boolean;
   isSelected?: boolean;
   isSelectionMode?: boolean;
@@ -248,10 +248,12 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.unstable_cellSelection ?? false;
 
-  const showLeftBorder = rootProps.showCellVerticalBorder && pinnedPosition === PinnedPosition.RIGHT;
+  const showLeftBorder =
+    rootProps.showCellVerticalBorder && pinnedPosition === PinnedPosition.RIGHT;
   const showRightBorder = rootProps.showCellVerticalBorder;
   const showLeftShadow = pinnedPosition === PinnedPosition.RIGHT && sectionIndex === 0;
-  const showRightShadow = pinnedPosition === PinnedPosition.LEFT && sectionIndex === sectionLength - 1;
+  const showRightShadow =
+    pinnedPosition === PinnedPosition.LEFT && sectionIndex === sectionLength - 1;
 
   const ownerState = {
     align,

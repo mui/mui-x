@@ -17,10 +17,7 @@ export const useGridNativeEventListener = <
   const [added, setAdded] = React.useState(false);
   const handlerRef = React.useRef(handler);
 
-  const targetElement =
-    isFunction(ref) ?
-      ref() :
-      (ref && ref.current ? ref.current : null);
+  const targetElement = isFunction(ref) ? ref() : ref && ref.current ? ref.current : null;
 
   const wrapHandler = React.useCallback((event: HTMLElementEventMap[K]) => {
     return handlerRef.current && handlerRef.current(event);

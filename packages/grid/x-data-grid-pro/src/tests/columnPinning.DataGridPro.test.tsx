@@ -10,9 +10,8 @@ import {
   GridPinnedPosition,
   GridColumnGroupingModel,
   GridColDef,
-  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid-pro';
-import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import {
   createRenderer,
   fireEvent,
@@ -21,7 +20,14 @@ import {
   act,
   userEvent,
 } from '@mui-internal/test-utils';
-import { $, $$, getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
+import {
+  $,
+  $$,
+  microtasks,
+  getCell,
+  getColumnHeaderCell,
+  getColumnHeadersTextContent,
+} from 'test/utils/helperFn';
 
 // TODO Move to utils
 // Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
@@ -237,7 +243,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       });
     });
 
-    it('should not change the pinned columns when it is called', () => {
+    it('should not change the pinned columns when it is called', async () => {
       const handlePinnedColumnsChange = spy();
       render(
         <TestCase
@@ -245,13 +251,10 @@ describe('<DataGridPro /> - Column pinning', () => {
           onPinnedColumnsChange={handlePinnedColumnsChange}
         />,
       );
-      expect(
-        document.querySelectorAll(`[role="cell"].${gridClasses['cell--pinnedLeft']}`),
-      ).to.have.length(1);
+      expect($$(`[role="cell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
       act(() => apiRef.current.pinColumn('price17M', GridPinnedPosition.left));
-      expect(
-        document.querySelectorAll(`[role="cell"].${gridClasses['cell--pinnedRight']}`),
-      ).to.have.length(1);
+      await microtasks();
+      expect($$(`[role="cell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
       expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
         left: ['currencyPair', 'price17M'],
         right: [],
@@ -263,7 +266,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should pin the columns specified', () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'] }} />);
       const cell = document.querySelector<HTMLDivElement>(
-        `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`
+        `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`,
       )!;
       expect(cell).not.to.equal(null);
     });
@@ -271,25 +274,23 @@ describe('<DataGridPro /> - Column pinning', () => {
     it("should not change the pinned columns if the prop didn't change", () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'] }} />);
       expect(
-        document.querySelector(
-          `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`,
-        ),
+        document.querySelector(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`),
       ).not.to.equal(null);
       act(() => apiRef.current.pinColumn('price17M', GridPinnedPosition.left));
       expect(
-        document.querySelector(
-          `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`,
-        ),
+        document.querySelector(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`),
       ).not.to.equal(null);
     });
 
     it('should filter our duplicated columns', () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'], right: ['currencyPair'] }} />);
       const cell = document.querySelector<HTMLDivElement>(
-        `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`
+        `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`,
       )!;
       expect(cell).not.to.equal(null);
-      expect(document.querySelector(`.${gridClasses['cell--pinnedRight']}[data-field="currencyPair"]`)).to.equal(null);
+      expect(
+        document.querySelector(`.${gridClasses['cell--pinnedRight']}[data-field="currencyPair"]`),
+      ).to.equal(null);
     });
   });
 
@@ -332,24 +333,16 @@ describe('<DataGridPro /> - Column pinning', () => {
   describe('apiRef', () => {
     it('should reorder the columns to render the left pinned columns before all other columns', () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['currencyPair', 'price1M'] } }} />);
-      const renderZone = $(
-        `.${gridClasses.virtualScrollerRenderZone}`,
-      )!;
-      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(
+        null,
+      );
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="price1M"]`)).not.to.equal(null);
-      expect(renderZone.querySelector('[data-field="currencyPair"]')).to.equal(null);
-      expect(renderZone.querySelector('[data-field="price1M"]')).to.equal(null);
     });
 
     it('should reorder the columns to render the right pinned columns after all other columns', () => {
       render(<TestCase initialState={{ pinnedColumns: { right: ['price16M', 'price17M'] } }} />);
-      const renderZone = document.querySelector<HTMLDivElement>(
-        `.${gridClasses.virtualScrollerRenderZone}`,
-      )!;
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="price16M"]`)).not.to.equal(null);
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="price17M"]`)).not.to.equal(null);
-      expect(renderZone.querySelector('[data-field="price16M"]')).to.equal(null);
-      expect(renderZone.querySelector('[data-field="price17M"]')).to.equal(null);
     });
 
     it('should not crash if a non-existent column is pinned', () => {
@@ -362,38 +355,39 @@ describe('<DataGridPro /> - Column pinning', () => {
     describe('pinColumn', () => {
       it('should pin the given column', () => {
         render(<TestCase />);
-        const renderZone = $(
-          `.${gridClasses.virtualScrollerRenderZone}`,
-        )!;
-        expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
+        expect($('[data-field="currencyPair"]')?.className).not.to.include('pinned');
         act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
-        expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(null);
-        expect(renderZone.querySelector('[data-field="currencyPair"]')).to.equal(null);
+        expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(
+          null,
+        );
       });
 
       it('should change the side when called on a pinned column', () => {
         render(<TestCase />);
-        const renderZone = document.querySelector<HTMLDivElement>(
-          `.${gridClasses.virtualScrollerRenderZone}`,
-        )!;
-        expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
-        expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
+
+        const renderZone = $(`.${gridClasses.virtualScrollerRenderZone}`)!;
+
+        expect($(renderZone, '[data-field="currencyPair"]')!.className).not.to.include('pinned');
 
         act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
-        expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(null);
-        expect(renderZone.querySelector('[data-field="currencyPair"]')).to.equal(null);
+        expect($(renderZone, `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(
+          null,
+        );
+        expect($(renderZone, '[data-field="currencyPair"]')!.className).to.include('pinned');
 
         act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.right));
-        expect($$(`.${gridClasses['cell--pinnedLeft']}`).length).to.equal(0);
-        expect($(`.${gridClasses['cell--pinnedRight']}[data-field="currencyPair"]`)).not.to.equal(null);
+        expect($$(renderZone, `.${gridClasses['cell--pinnedLeft']}`).length).to.equal(0);
+        expect($(renderZone, `.${gridClasses['cell--pinnedRight']}[data-field="currencyPair"]`)).not.to.equal(
+          null,
+        );
       });
 
       it('should not change the columns when called on a pinned column with the same side ', () => {
         render(<TestCase />);
         act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
-        expect($(`.${gridClasses['cell--pinnedLeft']}[data-id="0"]`)?.children).to.have.length(1);
+        expect($$(`.${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
         act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
-        expect($(`.${gridClasses['cell--pinnedLeft']}[data-id="0"]`)?.children).to.have.length(1);
+        expect($$(`.${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
       });
     });
 
@@ -439,9 +433,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
-      expect(
-        $(`.${gridClasses['cell--pinnedLeft']} [data-field="id"]`),
-      ).not.to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedLeft']} [data-field="id"]`)).not.to.equal(null);
     });
 
     it('should pin the column to the right when clicking the "Pin to right" pinning button', () => {
@@ -450,9 +442,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
-      expect(
-        $(`.${gridClasses['cell--pinnedRight']} [data-field="id"]`),
-      ).not.to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedRight']} [data-field="id"]`)).not.to.equal(null);
     });
 
     it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', () => {
@@ -461,12 +451,8 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
-      expect(
-        $(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`),
-      ).to.equal(null);
-      expect(
-        $(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`),
-      ).not.to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
     });
 
     it('should allow to invert the side when clicking on "Pin to left" pinning button on a right pinned column', () => {
@@ -475,12 +461,8 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
-      expect(
-        $(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`),
-      ).to.equal(null);
-      expect(
-        $(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`),
-      ).not.to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
     });
 
     it('should allow to unpin a pinned left column when clicking "Unpin" pinning button', () => {
@@ -489,9 +471,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Unpin' }));
-      expect(
-        $(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`),
-      ).to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
     });
 
     it('should not render menu items if the column has `pinnable` equals to false', () => {
