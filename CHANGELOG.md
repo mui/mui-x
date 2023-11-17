@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 #### Breaking changes
 
-- The string argument of the `dayOfWeekFormatter` has been replaced in favor of the date object to allow more flexibility.
+- The string argument of the `dayOfWeekFormatter` prop has been replaced in favor of the date object to allow more flexibility.
 
   ```diff
    <DateCalendar
@@ -396,6 +396,8 @@ And if you need the exact same output you can apply the following transformation
 - [pickers] Remove the legacy UTC implementation for `dayjs` (#11023) @flaviendelangle
 - [pickers] Remove unused code (#11048) @flaviendelangle
 - [pickers] v7: Move the exports of the `calendarHeader` slot to `@mui/x-date-pickers/PickersCalendarHeader` (#11020) @flaviendelangle
+- [DateCalendar] Allow to override the format of the header with a prop (#10990) @flaviendelangle
+- [DateCalendar] Remove the string argument of the `dayOfWeekFormatter` prop (#10992) @flaviendelangle
 
 ### Docs
 
@@ -406,8 +408,6 @@ And if you need the exact same output you can apply the following transformation
 
 - [core] Clean the component slots doc generation (#11021) @flaviendelangle
 - [core] Fix to release `next` (#10996) @LukasTy
-- [DateCalendar] Allow to override the format of the header with a prop (#10990) @flaviendelangle
-- [DateCalendar] Remove the string argument of the `dayOfWeekFormatter` prop (#10992) @flaviendelangle
 - [test] Wait for images to load (#11004) @cherniavskii
 
 ## 7.0.0-alpha.0
