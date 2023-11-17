@@ -61,12 +61,11 @@ export interface ExportedDayCalendarProps<TDate> extends ExportedPickersDayProps
   renderLoading?: () => React.ReactNode;
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter.  Deprecated, will be removed in v7: Use `date` instead.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
    * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
-  dayOfWeekFormatter?: (day: string, date: TDate) => string;
+  dayOfWeekFormatter?: (date: TDate) => string;
   /**
    * If `true`, the week number will be display in the calendar.
    */
@@ -334,6 +333,7 @@ function WrappedDay<TDate extends unknown>({
  */
 export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDayCalendar' });
+  const utils = useUtils<TDate>();
 
   const {
     onFocusedDayChange,
@@ -356,7 +356,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     shouldDisableDate,
     shouldDisableMonth,
     shouldDisableYear,
-    dayOfWeekFormatter: dayOfWeekFormatterFromProps,
+    dayOfWeekFormatter = (date) => utils.format(date, 'weekdayShort').charAt(0).toUpperCase(),
     hasFocus,
     onFocusedViewChange,
     gridLabelId,
@@ -367,15 +367,9 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   } = props;
 
   const now = useNow<TDate>(timezone);
-  const utils = useUtils<TDate>();
   const classes = useUtilityClasses(props);
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
-
-  // before we could define this outside of the component scope, but now we need utils, which is only defined here
-  const dayOfWeekFormatter =
-    dayOfWeekFormatterFromProps ||
-    ((_day: string, date: TDate) => utils.format(date, 'weekdayShort').charAt(0).toUpperCase());
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -570,20 +564,17 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             {localeText.calendarWeekNumberHeaderText}
           </PickersCalendarWeekNumberLabel>
         )}
-        {getWeekdays(utils, now).map((weekday, i) => {
-          const day = utils.format(weekday, 'weekdayShort');
-          return (
-            <PickersCalendarWeekDayLabel
-              key={day + i.toString()}
-              variant="caption"
-              role="columnheader"
-              aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
-              className={classes.weekDayLabel}
-            >
-              {dayOfWeekFormatter?.(day, weekday) ?? day}
-            </PickersCalendarWeekDayLabel>
-          );
-        })}
+        {getWeekdays(utils, now).map((weekday, i) => (
+          <PickersCalendarWeekDayLabel
+            key={i.toString()}
+            variant="caption"
+            role="columnheader"
+            aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
+            className={classes.weekDayLabel}
+          >
+            {dayOfWeekFormatter(weekday)}
+          </PickersCalendarWeekDayLabel>
+        ))}
       </PickersCalendarDayHeader>
 
       {loading ? (
