@@ -433,7 +433,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
-      expect($(`.${gridClasses['cell--pinnedLeft']} [data-field="id"]`)).not.to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
     });
 
     it('should pin the column to the right when clicking the "Pin to right" pinning button', () => {
@@ -442,7 +442,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
-      expect($(`.${gridClasses['cell--pinnedRight']} [data-field="id"]`)).not.to.equal(null);
+      expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
     });
 
     it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', () => {
