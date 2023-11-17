@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import Box from '@mui/material/Box';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled, Theme } from '@mui/material/styles';
+import useForkRef from '@mui/utils/useForkRef';
 import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
@@ -10,7 +11,7 @@ import {
 } from '@mui/utils';
 import { fakeInputClasses, getFakeInputUtilityClass } from './fakeTextFieldClasses';
 import Outline from './Outline';
-import { FakeInputProps } from './FakeInput.types';
+import { FakeInputElement, FakeInputProps } from './FakeInput.types';
 
 const SectionsWrapper = styled(Box, {
   name: 'MuiFakeInput',
@@ -124,6 +125,39 @@ const NotchedOutlineRoot = styled(Outline, {
   };
 });
 
+function InputContent({
+  elements,
+  contentEditable,
+  ownerState,
+}: {
+  elements: FakeInputElement[];
+  contentEditable?: string | boolean;
+  ownerState: OwnerStateType;
+}) {
+  if (contentEditable) {
+    console.log(elements);
+    return elements
+      .map(({ content, before, after }) => `${before.children}${content.children}${after.children}`)
+      .join('');
+  }
+
+  return (
+    <React.Fragment>
+      {elements.map(({ container, content, before, after }, elementIndex) => (
+        <SectionContainer key={elementIndex} {...container}>
+          <span {...before} className={clsx(fakeInputClasses.before, before?.className)} />
+          <SectionInput
+            {...content}
+            className={clsx(fakeInputClasses.content, content?.className)}
+            {...{ ownerState }}
+          />
+          <span {...after} className={clsx(fakeInputClasses.after, after?.className)} />
+        </SectionContainer>
+      ))}
+    </React.Fragment>
+  );
+}
+
 const useUtilityClasses = (ownerState: OwnerStateType) => {
   const {
     focused,
@@ -208,6 +242,9 @@ const FakeInput = React.forwardRef(function FakeInput(
     ...other
   } = props;
 
+  const inputRef = React.useRef<HTMLDivElement>(null);
+  const handleInputRef = useForkRef(ref, inputRef);
+
   const muiFormControl = useFormControl();
   const fcs = formControlState({
     props,
@@ -244,25 +281,16 @@ const FakeInput = React.forwardRef(function FakeInput(
 
   return (
     <SectionsWrapper
-      ref={ref}
+      ref={handleInputRef}
       {...other}
       className={classes.root}
       onClick={onWrapperClick}
       ownerState={ownerState}
+      aria-invalid={fcs.error}
     >
       {startAdornment}
       <SectionsContainer valueType={valueType} className={classes.input}>
-        {elements.map(({ container, content, before, after }, elementIndex) => (
-          <SectionContainer key={elementIndex} {...container}>
-            <span {...before} className={clsx(fakeInputClasses.before, before?.className)} />
-            <SectionInput
-              {...content}
-              className={clsx(fakeInputClasses.content, content?.className)}
-              {...{ ownerState }}
-            />
-            <span {...after} className={clsx(fakeInputClasses.after, after?.className)} />
-          </SectionContainer>
-        ))}
+        <InputContent {...{ elements, contentEditable: other.contentEditable, ownerState }} />
         <FakeHiddenInput
           value={valueStr}
           onChange={onValueStrChange}

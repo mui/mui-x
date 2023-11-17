@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import useForkRef from '@mui/utils/useForkRef';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -52,10 +53,15 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
     inputProps,
     InputProps,
     required = false,
+    focused: focusedProp,
+    ownerState: ownerStateProp,
     ...other
   } = props;
 
-  const [focused, setFocused] = React.useState(false);
+  const [focused, setFocused] = React.useState(focusedProp);
+
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, rootRef);
 
   const id = useId(idOverride);
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
@@ -76,11 +82,10 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
   const onWrapperClick = () => {
     if (!focused) {
       setFocused(true);
-      // Access the container element using ref.current
-      const container = ref?.current;
+      const container = rootRef.current;
 
       // Find the first input element within the container
-      const firstInput = container.querySelector('.content');
+      const firstInput = container?.querySelector('.content');
 
       // Check if the input element exists before focusing it
       if (firstInput) {
@@ -92,6 +97,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
   return (
     <FakeTextFieldRoot
       className={clsx(classes.root, className)}
+      ref={handleRef}
       {...{
         focused,
         disabled,
@@ -108,7 +114,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
         {label}
       </InputLabel>
       <FakeInput
-        ref={ref}
+        ref={InputProps?.ref}
         {...{ elements, valueStr, valueType, onWrapperClick, inputProps }}
         {...other}
         {...InputProps}
