@@ -395,7 +395,7 @@ And if you need the exact same output you can apply the following transformation
 - [pickers] Remove the deprecated methods and formats from the adapters (#10776) @flaviendelangle
 - [pickers] Remove the legacy UTC implementation for `dayjs` (#11023) @flaviendelangle
 - [pickers] Remove unused code (#11048) @flaviendelangle
-- [pickers] v7: Move the exports of the `calendarHeader` slot to `@mui/x-date-pickers/PickersCalendarHeader` (#11020) @flaviendelangle
+- [pickers] Move the exports of the `calendarHeader` slot to `@mui/x-date-pickers/PickersCalendarHeader` (#11020) @flaviendelangle
 - [DateCalendar] Allow to override the format of the header with a prop (#10990) @flaviendelangle
 - [DateCalendar] Remove the string argument of the `dayOfWeekFormatter` prop (#10992) @flaviendelangle
 
