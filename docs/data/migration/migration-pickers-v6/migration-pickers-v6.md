@@ -86,7 +86,7 @@ The imports related to the `calendarHeader` slot have been moved from `@mui/x-da
 
 ### Remove the string argument of the `dayOfWeekFormatter` prop
 
-The string argument of the `dayOfWeekFormatter` has been replaced in favor of the date object to allow more flexibility.
+The string argument of the `dayOfWeekFormatter` prop has been replaced in favor of the date object to allow more flexibility.
 
 ```diff
  <DateCalendar
