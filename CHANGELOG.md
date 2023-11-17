@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.0.0-alpha.1
 
-_Nov 16, 2023_
+_Nov 17, 2023_
 
 We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
@@ -389,7 +389,7 @@ And if you need the exact same output you can apply the following transformation
 
 - [pickers] Change the input format of `adapter.getYearRange` to be consistent with `adapter.isWithinRange` (#10978) @flaviendelangle
 - [pickers] Clean remaining `components` / `componentsProps` typings (#11040) @flaviendelangle
-- [pickers] Modify `adapter.isEqual` method to accept `TDate | null` instead of any (#10976) @flaviendelangle
+- [pickers] Modify `adapter.isEqual` method to accept `TDate | null` instead of `any` (#10976) @flaviendelangle
 - [pickers] Modify `adapter.isValid` method to accept `TDate | null` instead of `any` (#10971) @flaviendelangle
 - [pickers] Remove the `hasLeadingZeros` property from `FieldSection` (#10994) @flaviendelangle
 - [pickers] Remove the deprecated methods and formats from the adapters (#10776) @flaviendelangle
@@ -407,7 +407,7 @@ And if you need the exact same output you can apply the following transformation
 ### Core
 
 - [core] Clean the component slots doc generation (#11021) @flaviendelangle
-- [core] Fix to release `next` (#10996) @LukasTy
+- [core] Fix script to release with `next` tag (#10996) @LukasTy
 - [test] Wait for images to load (#11004) @cherniavskii
 
 ## 7.0.0-alpha.0
