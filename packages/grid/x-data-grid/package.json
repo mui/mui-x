@@ -12,7 +12,7 @@
   "sideEffects": false,
   "funding": {
     "type": "opencollective",
-    "url": "https://opencollective.com/mui"
+    "url": "https://opencollective.com/mui-org"
   },
   "publishConfig": {
     "access": "public"

@@ -11,7 +11,7 @@
   "homepage": "https://mui.com/x/react-date-pickers/",
   "funding": {
     "type": "opencollective",
-    "url": "https://opencollective.com/mui"
+    "url": "https://opencollective.com/mui-org"
   },
   "sideEffects": false,
   "publishConfig": {

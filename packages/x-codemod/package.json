@@ -28,7 +28,7 @@
   "homepage": "https://github.com/mui/mui-x/tree/master/packages/x-codemod",
   "funding": {
     "type": "opencollective",
-    "url": "https://opencollective.com/mui"
+    "url": "https://opencollective.com/mui-org"
   },
   "dependencies": {
     "@babel/core": "^7.23.2",
