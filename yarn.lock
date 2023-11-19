@@ -3055,10 +3055,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/requestidlecallback@^0.3.6":
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/@types/requestidlecallback/-/requestidlecallback-0.3.6.tgz#96a4b1eaa7587170fff72a8277d5ddce3c15c4db"
-  integrity sha512-0KKbiCnbiEMX0C6sDCF/K8qHrbb9N/Eg/gTAwcb+fW37AsherVgrINKr9oCnTphONaQvEb7k7hQLrS2TPw1pIA==
+"@types/requestidlecallback@^0.3.7":
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/@types/requestidlecallback/-/requestidlecallback-0.3.7.tgz#ecd1422a96e6cfa2c538504a6bb30f50fdb0b27e"
+  integrity sha512-5/EwNH3H/+M2zxATq9UidyD7rCq3WhK5Te/XhdhqP270QoGInVkoNBj6kK2Ah5slkZewkX8XJb7WDaYhmJu+eg==
 
 "@types/responselike@*", "@types/responselike@^1.0.0":
   version "1.0.0"
