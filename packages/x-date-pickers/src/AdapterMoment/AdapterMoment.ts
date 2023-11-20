@@ -183,20 +183,9 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return parsedValue.locale(this.locale);
   };
 
-  public date = (value?: any) => {
-    if (value === null) {
-      return null;
-    }
-
-    const moment = this.moment(value);
-    moment.locale(this.getCurrentLocaleCode());
-
-    return moment;
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
-    value: T,
-    timezone: PickersTimezone,
+  public date = <T extends string | null | undefined>(
+    value?: T,
+    timezone: PickersTimezone = 'default',
   ): DateBuilderReturnType<T, Moment> => {
     type R = DateBuilderReturnType<T, Moment>;
     if (value === null) {
@@ -213,6 +202,8 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
     return <R>this.createTZDate(value, timezone);
   };
+
+  public getInvalidDate = () => this.moment(new Date('Invalid Date'));
 
   public getTimezone = (value: Moment): string => {
     // @ts-ignore

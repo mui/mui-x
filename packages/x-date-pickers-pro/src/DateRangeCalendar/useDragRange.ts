@@ -45,7 +45,7 @@ const resolveDateFromTarget = <TDate>(
     return null;
   }
   const timestamp = +timestampString;
-  return utils.dateWithTimezone(new Date(timestamp).toISOString(), timezone);
+  return utils.date(new Date(timestamp).toISOString(), timezone);
 };
 
 const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
