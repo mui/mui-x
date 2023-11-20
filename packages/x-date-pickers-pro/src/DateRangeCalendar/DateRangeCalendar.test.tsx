@@ -57,7 +57,7 @@ describe('<DateRangeCalendar />', () => {
       render(
         <DateRangeCalendar
           onChange={onChange}
-          defaultValue={[adapterToUse.date(new Date(2019, 0, 1)), null]}
+          defaultValue={[adapterToUse.date('2019-01-01'), null]}
         />,
       );
 
@@ -89,7 +89,7 @@ describe('<DateRangeCalendar />', () => {
       render(
         <DateRangeCalendar
           onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date(new Date(2019, 0, 1))}
+          defaultCalendarMonth={adapterToUse.date('2019-01-01')}
         />,
       );
 
@@ -109,10 +109,7 @@ describe('<DateRangeCalendar />', () => {
     it('should highlight the selected range of dates', () => {
       render(
         <DateRangeCalendar
-          defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 0, 31)),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
         />,
       );
 
@@ -122,10 +119,7 @@ describe('<DateRangeCalendar />', () => {
     it('prop: disableDragEditing - should not allow dragging range', () => {
       render(
         <DateRangeCalendar
-          defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 0, 31)),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
           disableDragEditing
         />,
       );
@@ -181,10 +175,7 @@ describe('<DateRangeCalendar />', () => {
         render(
           <DateRangeCalendar
             onChange={onChange}
-            defaultValue={[
-              adapterToUse.date(new Date(2018, 0, 1)),
-              adapterToUse.date(new Date(2018, 0, 31)),
-            ]}
+            defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
           />,
         );
 
@@ -205,10 +196,7 @@ describe('<DateRangeCalendar />', () => {
         render(
           <DateRangeCalendar
             onChange={onChange}
-            defaultValue={[
-              adapterToUse.date(new Date(2018, 0, 1)),
-              adapterToUse.date(new Date(2018, 0, 10)),
-            ]}
+            defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-10')]}
           />,
         );
 
@@ -228,8 +216,8 @@ describe('<DateRangeCalendar />', () => {
       it('should emit "onChange" when dragging end date', () => {
         const onChange = spy();
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 10)),
-          adapterToUse.date(new Date(2018, 0, 31)),
+          adapterToUse.date('2018-01-10'),
+          adapterToUse.date('2018-01-31'),
         ];
         render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
@@ -274,8 +262,8 @@ describe('<DateRangeCalendar />', () => {
         }
         const onChange = spy();
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 2)),
-          adapterToUse.date(new Date(2018, 0, 11)),
+          adapterToUse.date('2018-01-02'),
+          adapterToUse.date('2018-01-11'),
         ];
         render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
@@ -316,8 +304,8 @@ describe('<DateRangeCalendar />', () => {
       it('should emit "onChange" when dragging start date', () => {
         const onChange = spy();
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 20)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-20'),
         ];
         render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
@@ -352,8 +340,8 @@ describe('<DateRangeCalendar />', () => {
         }
         const onChange = spy();
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 10)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-10'),
         ];
         render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
@@ -393,8 +381,8 @@ describe('<DateRangeCalendar />', () => {
 
       it('should dynamically update "shouldDisableDate" when flip dragging', () => {
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 7)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-07'),
         ];
         render(
           <DateRangeCalendar
@@ -426,8 +414,8 @@ describe('<DateRangeCalendar />', () => {
           this.skip();
         }
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 7)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-07'),
         ];
         render(
           <DateRangeCalendar
@@ -475,10 +463,7 @@ describe('<DateRangeCalendar />', () => {
     it('should go to the month of the end date when changing the start date', () => {
       render(
         <DateRangeCalendar
-          defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 6, 1)),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
         />,
       );
 
@@ -490,10 +475,7 @@ describe('<DateRangeCalendar />', () => {
     it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', () => {
       render(
         <DateRangeCalendar
-          defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 6, 1)),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
           disableAutoMonthSwitching
         />,
       );
@@ -506,12 +488,12 @@ describe('<DateRangeCalendar />', () => {
     it('should go to the month of the start date when changing both date from the outside', () => {
       const { setProps } = render(
         <DateRangeCalendar
-          value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 6, 1))]}
+          value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
         />,
       );
 
       setProps({
-        value: [adapterToUse.date(new Date(2018, 3, 1)), adapterToUse.date(new Date(2018, 3, 1))],
+        value: [adapterToUse.date('2018-04-01'), adapterToUse.date('2018-04-01')],
       });
       clock.runToLast();
       expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
@@ -523,10 +505,7 @@ describe('<DateRangeCalendar />', () => {
       const handleChange = spy();
       render(
         <DateRangeCalendar
-          value={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 0, 10)),
-          ]}
+          value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-10')]}
           onChange={handleChange}
           {...{ [prop]: true }}
         />,

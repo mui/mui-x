@@ -69,7 +69,7 @@ export const getDaysInWeekStr = <TDate>(
 ) => {
   const elements: TDate[] = [];
 
-  const now = utils.dateWithTimezone(undefined, timezone);
+  const now = utils.date(undefined, timezone);
   const startDate = utils.startOfWeek(now);
   const endDate = utils.endOfWeek(now);
 
@@ -90,7 +90,7 @@ export const getLetterEditingOptions = <TDate>(
 ) => {
   switch (sectionType) {
     case 'month': {
-      return getMonthsInYear(utils, utils.dateWithTimezone(undefined, timezone)).map((month) =>
+      return getMonthsInYear(utils, utils.date(undefined, timezone)).map((month) =>
         utils.formatByString(month, format!),
       );
     }
@@ -100,7 +100,7 @@ export const getLetterEditingOptions = <TDate>(
     }
 
     case 'meridiem': {
-      const now = utils.dateWithTimezone(undefined, timezone);
+      const now = utils.date(undefined, timezone);
       return [utils.startOfDay(now), utils.endOfDay(now)].map((date) =>
         utils.formatByString(date, format),
       );
@@ -207,7 +207,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
 
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
-        return utils.formatByString(utils.dateWithTimezone(undefined, timezone), section.format);
+        return utils.formatByString(utils.date(undefined, timezone), section.format);
       }
 
       if (delta > 0 || isStart) {
@@ -361,10 +361,8 @@ const getSectionPlaceholder = <TDate>(
   switch (sectionConfig.type) {
     case 'year': {
       return localeText.fieldYearPlaceholder({
-        digitAmount: utils.formatByString(
-          utils.dateWithTimezone(undefined, timezone),
-          currentTokenValue,
-        ).length,
+        digitAmount: utils.formatByString(utils.date(undefined, timezone), currentTokenValue)
+          .length,
       });
     }
 
@@ -425,7 +423,7 @@ const isFourDigitYearFormat = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   format: string,
-) => utils.formatByString(utils.dateWithTimezone(undefined, timezone), format).length === 4;
+) => utils.formatByString(utils.date(undefined, timezone), format).length === 4;
 
 export const doesSectionFormatHaveLeadingZeros = <TDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -438,7 +436,7 @@ export const doesSectionFormatHaveLeadingZeros = <TDate>(
     return false;
   }
 
-  const now = utils.dateWithTimezone(undefined, timezone);
+  const now = utils.date(undefined, timezone);
 
   switch (sectionType) {
     // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
@@ -709,7 +707,7 @@ export const getSectionsBoundaries = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
 ): FieldSectionsValueBoundaries<TDate> => {
-  const today = utils.dateWithTimezone(undefined, timezone);
+  const today = utils.date(undefined, timezone);
   const endOfYear = utils.endOfYear(today);
   const endOfDay = utils.endOfDay(today);
 

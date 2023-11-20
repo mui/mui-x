@@ -36,9 +36,9 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       render(
         <ElementToTest
           {...defaultProps}
-          value={adapterToUse.date(new Date(2018, 2, 12, 8, 15, 0))}
+          value={adapterToUse.date('2018-03-12T08:15:00')}
           shouldDisableTime={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 12, 8, 20, 0)))
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-12T08:20:00'))
           }
         />,
       );
@@ -66,7 +66,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
     it('should apply disablePast', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -111,7 +111,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
     it('should apply disableFuture', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
@@ -157,8 +157,8 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       render(
         <ElementToTest
           {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15, 11, 15, 0))}
-          maxTime={adapterToUse.date(new Date(2019, 5, 15, 11, 20, 0))}
+          value={adapterToUse.date('2019-06-15T11:15:00')}
+          maxTime={adapterToUse.date('2019-06-15T11:20:00')}
         />,
       );
       expect(screen.getByRole('option', { name: toMinutesLabel('10') })).not.to.have.attribute(
@@ -179,8 +179,8 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       render(
         <ElementToTest
           {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15, 11, 15, 0))}
-          minTime={adapterToUse.date(new Date(2019, 5, 15, 11, 10, 0))}
+          value={adapterToUse.date('2019-06-15T11:15:00')}
+          minTime={adapterToUse.date('2019-06-15T11:10:00')}
         />,
       );
       expect(screen.getByRole('option', { name: toMinutesLabel('0') })).to.have.attribute(
