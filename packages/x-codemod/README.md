@@ -56,13 +56,60 @@ through jscodeshift's `printOptions` command line argument
 npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
 ```
 
-## Included scripts
+## v7.0.0
 
-### v6.0.0
+### 🚀 `preset-safe` for v7.0.0
 
-#### 🚀 `preset-safe`
+A combination of all important transformers for migrating v6 to v7.
+⚠️ This codemod should be run only once.
+It runs codemods for both Data Grid and Date and Time Pickers packages.
+To run codemods for a specific package, refer to the respective section.
 
-A combination of all important transformers for migrating v5 to v6. ⚠️ This codemod should be run only once. It runs codemods for both Data Grid and Date and Time Pickers packages. To run codemods for a specific package, refer to the respective section.
+```bash
+npx @mui/x-codemod v7.0.0/preset-safe <path|folder>
+```
+
+The corresponding sub-sections are listed below
+
+- [`preset-safe-for-pickers`](#preset-safe-for-pickers-v700)
+- [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v700)
+
+### Pickers codemods
+
+#### `preset-safe` for pickers v6.0.0
+
+The `preset-safe` codemods for pickers.
+
+```bash
+npx @mui/x-codemod v6.0.0/pickers/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+NO CODEMOD ADDED YET
+
+### Data grid codemods
+
+#### `preset-safe` for data grid v7.0.0
+
+The `preset-safe` codemods for data grid.
+
+```bash
+npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+NO CODEMOD ADDED YET
+
+## v6.0.0
+
+### 🚀 `preset-safe` for v6.0.0
+
+A combination of all important transformers for migrating v5 to v6.
+⚠️ This codemod should be run only once.
+It runs codemods for both Data Grid and Date and Time Pickers packages.
+To run codemods for a specific package, refer to the respective section.
 
 ```bash
 npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
@@ -70,12 +117,12 @@ npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
 
 The corresponding sub-sections are listed below
 
-- [`preset-safe-for-pickers`](#preset-safe-for-pickers)
-- [`preset-safe-for-data-grid`](#preset-safe-for-data-grid)
+- [`preset-safe-for-pickers`](#preset-safe-for-pickers-v600)
+- [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v600)
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers
+#### `preset-safe` for pickers v6.0.0
 
 The `preset-safe` codemods for pickers.
 
@@ -402,7 +449,7 @@ npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 
 ### Data grid codemods
 
-#### `preset-safe` for data grid
+#### `preset-safe` for data grid v6.0.0
 
 The `preset-safe` codemods for data grid.
 
