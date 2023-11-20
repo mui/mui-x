@@ -151,7 +151,7 @@
       "typeDescriptions": {}
     },
     "name": {
-      "description": "The <code>name</code> attribute used on the <code>field</code> component. It serves as a <code>shortcut</code> for applying the <code>name</code> attribute on the <code>input</code> HTML element. Ignored if the field has several inputs.",
+      "description": "Name attribute used by the <code>input</code> element in the Field.",
       "deprecated": "",
       "typeDescriptions": {}
     },

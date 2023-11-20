@@ -214,9 +214,7 @@ DesktopDateRangePicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * The `name` attribute used on the `field` component.
-   * It serves as a `shortcut` for applying the `name` attribute on the `input` HTML element.
-   * Ignored if the field has several inputs.
+   * Name attribute used by the `input` element in the Field.
    */
   name: PropTypes.string,
   /**
