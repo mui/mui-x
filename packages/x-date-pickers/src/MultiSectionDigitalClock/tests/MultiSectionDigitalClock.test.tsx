@@ -18,7 +18,7 @@ describe('<MultiSectionDigitalClock />', () => {
   describe('Reference date', () => {
     it('should use `referenceDate` when no value defined', () => {
       const onChange = spy();
-      const referenceDate = new Date(2018, 0, 1, 13, 30);
+      const referenceDate = '2018-01-01T13:30:00';
 
       render(
         <MultiSectionDigitalClock
@@ -45,7 +45,7 @@ describe('<MultiSectionDigitalClock />', () => {
     });
 
     it('should fallback to making the first entry focusable when `referenceDate` does not map to an option', () => {
-      const referenceDate = new Date(2018, 0, 1, 13, 33);
+      const referenceDate = '2018-01-01T13:33:00';
 
       render(<MultiSectionDigitalClock referenceDate={adapterToUse.date(referenceDate)} />);
 
@@ -73,8 +73,8 @@ describe('<MultiSectionDigitalClock />', () => {
       render(
         <ControlledMultiSectionDigitalClock
           onChange={onChange}
-          value={adapterToUse.date(new Date(2019, 0, 1, 12, 30))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          value={adapterToUse.date('2019-01-01T12:30:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );
 
@@ -92,8 +92,8 @@ describe('<MultiSectionDigitalClock />', () => {
       render(
         <MultiSectionDigitalClock
           onChange={onChange}
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 30))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          defaultValue={adapterToUse.date('2019-01-01T12:30:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );
 

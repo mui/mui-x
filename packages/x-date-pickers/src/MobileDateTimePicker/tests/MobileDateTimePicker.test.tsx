@@ -19,7 +19,7 @@ describe('<MobileDateTimePicker />', () => {
       <MobileDateTimePicker
         open
         slotProps={{ toolbar: { hidden: false } }}
-        defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
       />,
     );
 
@@ -34,7 +34,7 @@ describe('<MobileDateTimePicker />', () => {
     render(
       <MobileDateTimePicker
         open
-        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        value={adapterToUse.date('2021-11-20T10:01:22')}
         defaultValue={(params) => <TextField {...params} />}
       />,
     );
@@ -50,7 +50,7 @@ describe('<MobileDateTimePicker />', () => {
         slotProps={{ toolbar: { hidden: false } }}
         openTo="seconds"
         views={['seconds']}
-        defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
       />,
     );
     expect(screen.getByMuiTest('seconds')).to.have.text('22');
@@ -61,7 +61,7 @@ describe('<MobileDateTimePicker />', () => {
       render(
         <MobileDateTimePicker
           open
-          defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
           slotProps={{
             tabs: { hidden: true },
           }}
@@ -79,7 +79,7 @@ describe('<MobileDateTimePicker />', () => {
         <MobileDateTimePicker
           open
           slotProps={{ toolbar: { hidden: true } }}
-          defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
         />,
       );
 
@@ -108,7 +108,7 @@ describe('<MobileDateTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
+      const defaultValue = adapterToUse.date('2018-01-01');
 
       render(
         <MobileDateTimePicker
@@ -142,18 +142,14 @@ describe('<MobileDateTimePicker />', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
       expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2010, 0, 15, 11)),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:00:00'));
 
       // Change the minutes
       const minuteClockEvent = getClockTouchEvent(53, 'minutes');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
       expect(onChange.callCount).to.equal(4);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2010, 0, 15, 11, 53)),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:53:00'));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });

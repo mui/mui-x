@@ -43,7 +43,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
     it('should apply disablePast', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
       render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -65,7 +65,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
     it('should apply disableFuture', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
       render(<WithFakeTimer {...defaultProps} disableFuture />);
@@ -88,8 +88,8 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       render(
         <ElementToTest
           {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15))}
-          minDate={adapterToUse.date(new Date(2019, 5, 4))}
+          value={adapterToUse.date('2019-06-15')}
+          minDate={adapterToUse.date('2019-06-04')}
         />,
       );
 
@@ -102,8 +102,8 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       render(
         <ElementToTest
           {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15))}
-          maxDate={adapterToUse.date(new Date(2019, 5, 4))}
+          value={adapterToUse.date('2019-06-15')}
+          maxDate={adapterToUse.date('2019-06-04')}
         />,
       );
 

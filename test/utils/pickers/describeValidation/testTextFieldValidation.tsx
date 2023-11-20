@@ -23,10 +23,8 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2018, 2, 12))}
-          shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
-          }
+          value={adapterToUse.date('2018-03-12')}
+          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
         />,
       );
 
@@ -35,7 +33,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         expect(onErrorMock.callCount).to.equal(1);
         expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableDate');
 
-        setProps({ value: adapterToUse.date(new Date(2018, 2, 9)) });
+        setProps({ value: adapterToUse.date('2018-03-09') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
@@ -56,7 +54,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2018, 2, 12))}
+          value={adapterToUse.date('2018-03-12')}
           shouldDisableYear={(date) => adapterToUse.getYear(date) === 2018}
         />,
       );
@@ -65,7 +63,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableYear');
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2019, 2, 9)) });
+      setProps({ value: adapterToUse.date('2019-03-09') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
@@ -83,7 +81,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         <ElementToTest
           onError={onErrorMock}
           shouldDisableMonth={(date) => adapterToUse.getMonth(date) === 2}
-          value={adapterToUse.date(new Date(2018, 2, 12))}
+          value={adapterToUse.date('2018-03-12')}
         />,
       );
 
@@ -91,12 +89,12 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableMonth');
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2019, 2, 9)) });
+      setProps({ value: adapterToUse.date('2019-03-09') });
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 3, 9)) });
+      setProps({ value: adapterToUse.date('2018-04-09') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
@@ -113,7 +111,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         <ElementToTest
           onError={onErrorMock}
           shouldDisableClock={(value: number) => value === 10}
-          value={adapterToUse.date(new Date(2018, 2, 12, 10, 5, 0))}
+          value={adapterToUse.date('2018-03-12T10:05:00')}
         />,
       );
 
@@ -121,25 +119,25 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-hours');
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2019, 2, 12, 9, 5, 0)) });
+      setProps({ value: adapterToUse.date('2019-03-12T09:05:00') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 10, 0)) });
+      setProps({ value: adapterToUse.date('2018-03-12T09:10:00') });
 
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-minutes');
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 0)) });
+      setProps({ value: adapterToUse.date('2018-03-12T09:09:00') });
 
       expect(onErrorMock.callCount).to.equal(4);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 10)) });
+      setProps({ value: adapterToUse.date('2018-03-12T09:09:10') });
 
       expect(onErrorMock.callCount).to.equal(5);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-seconds');
@@ -164,7 +162,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
             }
             return comparingValue === 10;
           }}
-          value={adapterToUse.date(new Date(2018, 2, 12, 10, 5, 0))}
+          value={adapterToUse.date('2018-03-12T10:05:00')}
         />,
       );
 
@@ -172,25 +170,25 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableTime-hours');
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2019, 2, 12, 9, 5, 0)) });
+      setProps({ value: adapterToUse.date('2019-03-12T09:05:00') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 10, 0)) });
+      setProps({ value: adapterToUse.date('2018-03-12T09:10:00') });
 
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableTime-minutes');
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 0)) });
+      setProps({ value: adapterToUse.date('2018-03-12T09:09:00') });
 
       expect(onErrorMock.callCount).to.equal(4);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 10)) });
+      setProps({ value: adapterToUse.date('2018-03-12T09:09:10') });
 
       expect(onErrorMock.callCount).to.equal(5);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableTime-seconds');
@@ -204,7 +202,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
 
@@ -237,7 +235,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
 
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
 
@@ -270,8 +268,8 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 1))}
-          minDate={adapterToUse.date(new Date(2019, 5, 15))}
+          value={adapterToUse.date('2019-06-01')}
+          minDate={adapterToUse.date('2019-06-15')}
         />,
       );
 
@@ -280,7 +278,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         expect(onErrorMock.lastCall.args[0]).to.equal('minDate');
         expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 20)) });
+        setProps({ value: adapterToUse.date('2019-06-20') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
@@ -300,8 +298,8 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 25))}
-          maxDate={adapterToUse.date(new Date(2019, 5, 15))}
+          value={adapterToUse.date('2019-06-25')}
+          maxDate={adapterToUse.date('2019-06-15')}
         />,
       );
 
@@ -310,7 +308,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         expect(onErrorMock.lastCall.args[0]).to.equal('maxDate');
         expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 10)) });
+        setProps({ value: adapterToUse.date('2019-06-10') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
@@ -330,8 +328,8 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
-          minTime={adapterToUse.date(new Date(2010, 0, 1, 12, 0))}
+          value={adapterToUse.date('2019-06-15T10:15:00')}
+          minTime={adapterToUse.date('2010-01-01T12:00:00')}
         />,
       );
       if (withTime) {
@@ -339,7 +337,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         expect(onErrorMock.lastCall.args[0]).to.equal('minTime');
         expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 13, 10)) });
+        setProps({ value: adapterToUse.date('2019-06-15T13:10:00') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
@@ -359,15 +357,15 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          maxTime={adapterToUse.date(new Date(2010, 0, 1, 12, 0))}
-          value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
+          maxTime={adapterToUse.date('2010-01-01T12:00:00')}
+          value={adapterToUse.date('2019-06-15T10:15:00')}
         />,
       );
       if (withTime) {
         expect(onErrorMock.callCount).to.equal(0);
         expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 13, 10)) });
+        setProps({ value: adapterToUse.date('2019-06-15T13:10:00') });
 
         expect(onErrorMock.callCount).to.equal(1);
         expect(onErrorMock.lastCall.args[0]).to.equal('maxTime');
@@ -388,8 +386,8 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 15, 13, 15))}
-          maxDateTime={adapterToUse.date(new Date(2019, 5, 15, 12, 0))}
+          value={adapterToUse.date('2019-06-15T13:15:00')}
+          maxDateTime={adapterToUse.date('2019-06-15T12:00:00')}
         />,
       );
       expect(onErrorMock.callCount).to.equal(1);
@@ -397,18 +395,18 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
       // Test 5 minutes before
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 11, 55)) });
+      setProps({ value: adapterToUse.date('2019-06-15T11:55:00') });
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
 
       // Test 1 day before
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 14, 20, 10)) });
+      setProps({ value: adapterToUse.date('2019-06-14T20:10:00') });
       expect(onErrorMock.callCount).to.equal(2);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
 
       // Test 1 day after
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 16, 10, 0)) });
+      setProps({ value: adapterToUse.date('2019-06-16T10:00:00') });
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.equal('maxDate');
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
@@ -424,27 +422,27 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 15, 13, 15))}
-          minDateTime={adapterToUse.date(new Date(2019, 5, 15, 12, 0))}
+          value={adapterToUse.date('2019-06-15T13:15:00')}
+          minDateTime={adapterToUse.date('2019-06-15T12:00:00')}
         />,
       );
       expect(onErrorMock.callCount).to.equal(0);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
 
       // Test 5 minutes before (invalid)
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 11, 55)) });
+      setProps({ value: adapterToUse.date('2019-06-15T11:55:00') });
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('minTime');
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
       // Test 1 day before (invalid)
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 14, 20, 10)) });
+      setProps({ value: adapterToUse.date('2019-06-14T20:10:00') });
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal('minDate');
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
       // Test 1 day after
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 16, 10, 0)) });
+      setProps({ value: adapterToUse.date('2019-06-16T10:00:00') });
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
@@ -459,7 +457,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
+          value={adapterToUse.date('2019-06-15T10:15:00')}
           minutesStep={30}
         />,
       );
@@ -468,7 +466,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         expect(onErrorMock.lastCall.args[0]).to.equal('minutesStep');
         expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 10, 30)) });
+        setProps({ value: adapterToUse.date('2019-06-15T10:30:00') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
