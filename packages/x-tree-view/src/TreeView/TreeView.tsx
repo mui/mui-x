@@ -9,7 +9,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
 import { TreeItem } from '../internals/components/TreeItem';
-import { TreeViewItem } from '@mui/x-tree-view/models';
+import { TreeViewItem } from '../models';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,

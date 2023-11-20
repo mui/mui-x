@@ -1,22 +1,11 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { spy } from 'sinon';
-import {
-  act,
-  createRenderer,
-  ErrorBoundary,
-  fireEvent,
-  screen,
-  describeConformance,
-} from '@mui-internal/test-utils';
-import Portal from '@mui/material/Portal';
+import { createRenderer, describeConformance } from '@mui-internal/test-utils';
 import { TreeView, treeViewClasses as classes } from '@mui/x-tree-view/TreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 describe('<TreeView />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<TreeView />, () => ({
+  describeConformance(<TreeView items={[]} />, () => ({
     classes,
     inheritComponent: 'ul',
     render,
