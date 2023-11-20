@@ -3,10 +3,9 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
-
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 /* eslint-disable */
 import { DEFAULT_TREE_VIEW_PLUGINS } from '@mui/x-tree-view/internals/plugins/defaultPlugins';
@@ -71,6 +70,7 @@ function TreeView(inProps) {
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
+    items,
     logMessage,
     areLogsEnabled,
     // Component implementation
@@ -96,6 +96,7 @@ function TreeView(inProps) {
     defaultParentIcon,
     logMessage,
     areLogsEnabled,
+    items,
     plugins,
   });
 
@@ -114,6 +115,22 @@ function TreeView(inProps) {
   );
 }
 
+const ITEMS = [
+  {
+    nodeId: '1',
+    label: 'Application',
+    children: [{ nodeId: '2', label: 'Calendar' }],
+  },
+  {
+    nodeId: '5',
+    label: 'Documents',
+    children: [
+      { nodeId: '10', label: 'OSS' },
+      { nodeId: '6', label: 'MUI', children: [{ nodeId: '8', label: 'index.js' }] },
+    ],
+  },
+];
+
 export default function HeadlessTreeView() {
   const [logs, setLogs] = React.useState([]);
 
@@ -124,23 +141,14 @@ export default function HeadlessTreeView() {
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
         sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+        items={ITEMS}
         areLogsEnabled
         logMessage={(message) =>
           setLogs((prev) =>
             prev[prev.length - 1] === message ? prev : [...prev, message],
           )
         }
-      >
-        <TreeItem nodeId="1" label="Applications">
-          <TreeItem nodeId="2" label="Calendar" />
-        </TreeItem>
-        <TreeItem nodeId="5" label="Documents">
-          <TreeItem nodeId="10" label="OSS" />
-          <TreeItem nodeId="6" label="MUI">
-            <TreeItem nodeId="8" label="index.js" />
-          </TreeItem>
-        </TreeItem>
-      </TreeView>
+      />
       <Stack spacing={1}>
         {logs.map((log, index) => (
           <Typography key={index}>{log}</Typography>
