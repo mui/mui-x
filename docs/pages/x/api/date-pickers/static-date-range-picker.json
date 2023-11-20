@@ -6,18 +6,6 @@
       "default": "2"
     },
     "className": { "type": { "name": "string" } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"
@@ -26,8 +14,8 @@
       "type": { "name": "func" },
       "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(day: string, date: TDate) => string",
-        "describedArgs": ["day", "date"],
+        "type": "function(date: TDate) => string",
+        "describedArgs": ["date"],
         "returned": "string"
       }
     },
@@ -136,6 +124,12 @@
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar"
+    },
+    {
+      "class": null,
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
     },
     {
       "class": null,

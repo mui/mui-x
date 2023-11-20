@@ -5,7 +5,6 @@ import {
   PickersModalDialogSlotsComponentsProps,
   ExportedBaseToolbarProps,
   UsePickerViewsProps,
-  UncapitalizeObjectKeys,
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
@@ -61,7 +60,7 @@ export interface UseMobileRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UncapitalizeObjectKeys<UseMobileRangePickerSlotsComponent<TDate, TView>>;
+  slots: UseMobileRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

@@ -1,6 +1,7 @@
 import { GridFilterModel } from '../gridFilterModel';
 import { GridFilterItem, GridLogicOperator } from '../gridFilterItem';
 import { GridControlledStateReasonLookup } from '../events';
+import { DataGridProcessedProps } from '../props/DataGridProps';
 
 /**
  * The filter API interface that is available in the grid [[apiRef]].
@@ -52,8 +53,12 @@ export interface GridFilterApi {
     reason?: GridControlledStateReasonLookup['filter'],
   ) => void;
   /**
-   * Set the quick filter values ot the one given by `values`
+   * Set the quick filter values to the one given by `values`
    * @param {any[]} values The list of element to quick filter
    */
   setQuickFilterValues: (values: any[]) => void;
+  /**
+   * Returns the value of the `ignoreDiacritics` prop.
+   */
+  ignoreDiacritics: DataGridProcessedProps['ignoreDiacritics'];
 }

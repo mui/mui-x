@@ -12,3 +12,9 @@ Removing the visible `focus` state hurts the accessibility of the grid.
 :::
 
 {{"demo": "CellFocusNoOutline.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Styling Cells without impacting aggregation cells [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+Aggregation cells do not receive a special class, so styling cells without impacting them needs a small workaround in the `getClassName` function.
+
+{{"demo": "StylingAllCellsButAggregation.js", "bg": "inline", "defaultCodeOpen": false}}

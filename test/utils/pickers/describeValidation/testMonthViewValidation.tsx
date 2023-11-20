@@ -43,7 +43,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
     it('should apply disablePast', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -77,7 +77,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
     it('should apply disableFuture', function test() {
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
+        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
@@ -112,8 +112,8 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       render(
         <ElementToTest
           {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15))}
-          minDate={adapterToUse.date(new Date(2019, 5, 4))}
+          value={adapterToUse.date('2019-06-15')}
+          minDate={adapterToUse.date('2019-06-04')}
         />,
       );
 
@@ -130,8 +130,8 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       render(
         <ElementToTest
           {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15))}
-          maxDate={adapterToUse.date(new Date(2019, 5, 4))}
+          value={adapterToUse.date('2019-06-15')}
+          maxDate={adapterToUse.date('2019-06-04')}
         />,
       );
 

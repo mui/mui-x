@@ -31,7 +31,7 @@ export const validateTime: Validator<
     timezone,
   } = props;
 
-  const now = adapter.utils.dateWithTimezone(undefined, timezone);
+  const now = adapter.utils.date(undefined, timezone);
   const isAfter = createIsAfterIgnoreDatePart(
     disableIgnoringDatePartForTimeValidation,
     adapter.utils,

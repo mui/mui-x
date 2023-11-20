@@ -79,13 +79,16 @@ This function takes as an input a value of the quick filter and returns another 
 In the example below, a custom filter is created for the `date` column to check if it contains the correct year.
 
 ```ts
-getApplyQuickFilterFn: (value: string) => {
+const getApplyQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
   if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
     // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
     return null;
   }
-  return (params: GridCellParams): boolean => {
-    return params.value.getFullYear() === Number(value);
+  return (cellValue) => {
+    if (cellValue instanceof Date) {
+      return cellValue.getFullYear() === Number(value);
+    }
+    return false;
   };
 };
 ```
@@ -121,6 +124,23 @@ For example, the following parser allows to search words containing a space by u
 In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will return rows with country is Saint Martin or Saint Lucia.
 
 {{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Ignore diacritics (accents)
+
+In some languages, the letters can have diacritics (accents) - for instance, the letter `é` in French.
+By default, these letters are considered different from their non-accented versions when filtering.
+
+To ignore diacritics, set the `ignoreDiacritics` prop to `true`:
+
+```tsx
+<DataGrid ignoreDiacritics />
+```
+
+{{"demo": "QuickFilteringDiacritics.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+Note that the `ignoreDiacritics` prop affects all columns and all filter types: [normal filters](/x/react-data-grid/filtering/), [quick filter](/x/react-data-grid/filtering/quick-filter/) and [header filters](/x/react-data-grid/filtering/header-filters/).
+:::
 
 ## API
 

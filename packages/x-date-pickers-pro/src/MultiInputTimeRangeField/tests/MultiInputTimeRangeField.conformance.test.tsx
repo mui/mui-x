@@ -14,6 +14,6 @@ describe('<MultiInputTimeRangeField />', () => {
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     // cannot test reactTestRenderer because of required context
-    skip: ['reactTestRenderer', 'themeVariants'],
+    skip: ['reactTestRenderer', 'themeVariants', 'componentProp', 'componentsProp'],
   }));
 });

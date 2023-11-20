@@ -21,17 +21,9 @@ import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 export interface DateTimeViewRendererProps<TDate>
   extends Omit<
       DateCalendarProps<TDate> & MultiSectionDigitalClockProps<TDate>,
-      | 'views'
-      | 'openTo'
-      | 'view'
-      | 'onViewChange'
-      | 'focusedView'
-      | 'components'
-      | 'componentsProps'
-      | 'slots'
-      | 'slotProps'
+      'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView' | 'slots' | 'slotProps'
     >,
-    Pick<DateTimePickerProps<TDate>, 'components' | 'componentsProps' | 'slots' | 'slotProps'> {
+    Pick<DateTimePickerProps<TDate>, 'slots' | 'slotProps'> {
   view: DateOrTimeViewWithMeridiem;
   onViewChange?: (view: DateOrTimeViewWithMeridiem) => void;
   views: readonly DateOrTimeViewWithMeridiem[];
@@ -71,8 +63,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   onYearChange,
   yearsPerRow,
   defaultCalendarMonth,
-  components,
-  componentsProps,
   slots,
   slotProps,
   loading,
@@ -93,10 +83,8 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   timeViewsCount,
   shouldRenderTimeInASingleColumn,
 }: DateTimeViewRendererProps<TDate>) => {
-  const isActionBarVisible = !!resolveComponentProps(
-    slotProps?.actionBar ?? componentsProps?.actionBar,
-    {} as any,
-  )?.actions?.length;
+  const isActionBarVisible = !!resolveComponentProps(slotProps?.actionBar, {} as any)?.actions
+    ?.length;
   const commonTimeProps = {
     view: isInternalTimeView(view) ? view : 'hours',
     onViewChange,
@@ -117,8 +105,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
     shouldDisableClock,
     minutesStep,
     ampm,
-    components,
-    componentsProps,
     slots,
     slotProps,
     readOnly,
@@ -157,8 +143,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
           onYearChange={onYearChange}
           yearsPerRow={yearsPerRow}
           defaultCalendarMonth={defaultCalendarMonth}
-          components={components}
-          componentsProps={componentsProps}
           slots={slots}
           slotProps={slotProps}
           loading={loading}

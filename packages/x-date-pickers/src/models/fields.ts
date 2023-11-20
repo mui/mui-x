@@ -47,12 +47,6 @@ export interface FieldSection {
   /**
    * If `true`, the value of this section is supposed to have leading zeroes when parsed by the date library.
    * For example, the value `1` should be rendered as "01" instead of "1".
-   * @deprecated Will be removed in v7, use `hasLeadingZerosInFormat` instead.
-   */
-  hasLeadingZeros: boolean;
-  /**
-   * If `true`, the value of this section is supposed to have leading zeroes when parsed by the date library.
-   * For example, the value `1` should be rendered as "01" instead of "1".
    */
   hasLeadingZerosInFormat: boolean;
   /**

@@ -23,7 +23,7 @@ export const findClosestEnabledDate = <TDate>({
   utils,
   timezone,
 }: FindClosestDateParams<TDate>) => {
-  const today = utils.startOfDay(utils.dateWithTimezone(undefined, timezone));
+  const today = utils.startOfDay(utils.date(undefined, timezone));
 
   if (disablePast && utils.isBefore(minDate!, today)) {
     minDate = today;
@@ -130,8 +130,8 @@ export const getTodayDate = <TDate>(
   valueType?: FieldValueType,
 ) =>
   valueType === 'date'
-    ? utils.startOfDay(utils.dateWithTimezone(undefined, timezone))
-    : utils.dateWithTimezone(undefined, timezone);
+    ? utils.startOfDay(utils.date(undefined, timezone))
+    : utils.date(undefined, timezone);
 
 export const formatMeridiem = <TDate>(utils: MuiPickersAdapter<TDate>, meridiem: 'am' | 'pm') => {
   const date = utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14);

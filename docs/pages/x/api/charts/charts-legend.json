@@ -1,0 +1,22 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "direction": { "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" } },
+    "hidden": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [{ "class": null, "name": "legend", "description": "" }],
+  "name": "ChartsLegend",
+  "imports": [
+    "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
+    "import { ChartsLegend } from '@mui/x-charts';"
+  ],
+  "styles": {
+    "classes": ["root", "series", "mark", "label", "column", "row"],
+    "globalClasses": {},
+    "name": "MuiChartsLegend"
+  },
+  "filename": "/packages/x-charts/src/ChartsLegend/ChartsLegend.tsx",
+  "demos": "<ul></ul>"
+}

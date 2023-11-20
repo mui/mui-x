@@ -29,10 +29,6 @@ describe('<AdapterDateFnsJalali />', () => {
       };
 
       expectDate('fullDate', '۱۳۹۸، Bahman ۱م');
-      expectDate('fullDateWithWeekday', 'شنبه ۱م Bahman ۱۳۹۸');
-      expectDate('fullDateTime', '۱۳۹۸، Bahman ۱م، ۱۱:۴۴ بعد از ظهر');
-      expectDate('fullDateTime12h', '۱۲ Bahman ۱۱:۴۴ بعد از ظهر');
-      expectDate('fullDateTime24h', '۱۲ Bahman ۲۳:۴۴');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
       expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ بعد از ظهر');
@@ -41,7 +37,7 @@ describe('<AdapterDateFnsJalali />', () => {
   });
 
   describe('Picker localization', () => {
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       enUS: {
         placeholder: 'MM/DD/YYYY hh:mm aa',

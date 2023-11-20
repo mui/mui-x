@@ -4,9 +4,9 @@ import { spy } from 'sinon';
 import {
   DataGrid,
   DataGridProps,
-  GridCellParams,
   GridFilterInputValue,
   GridFilterInputValueProps,
+  GridFilterOperator,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
@@ -103,14 +103,13 @@ describe('<DataGrid /> - Filter panel', () => {
                 sensitivity: 'base',
                 usage: 'search',
               });
-              return (params: GridCellParams): boolean => {
-                const value = params.value!;
+              return (value) => {
                 return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
               };
             },
             InputComponent: GridFilterInputValue,
           },
-        ],
+        ] as GridFilterOperator<any, string>[],
       },
       { field: 'isPublished', type: 'boolean' },
       {
