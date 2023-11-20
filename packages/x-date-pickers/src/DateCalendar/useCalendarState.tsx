@@ -162,7 +162,7 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
-    focusedDay: value || now,
+    focusedDay: utils.isValid(value) ? value! : now,
     currentMonth: utils.startOfMonth(referenceDate),
     slideDirection: 'left',
   });
