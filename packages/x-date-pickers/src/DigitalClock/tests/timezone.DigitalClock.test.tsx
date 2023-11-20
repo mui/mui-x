@@ -27,7 +27,7 @@ describe('<DigitalClock /> - Timezone', () => {
 
       userEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
 
-      const expectedDate = adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 8);
+      const expectedDate = adapter.setHours(adapter.date(), 8);
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
@@ -47,7 +47,7 @@ describe('<DigitalClock /> - Timezone', () => {
           userEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
 
           const expectedDate = adapter.setHours(
-            adapter.startOfDay(adapter.dateWithTimezone(undefined, timezone)),
+            adapter.startOfDay(adapter.date(undefined, timezone)),
             8,
           );
 
@@ -59,7 +59,7 @@ describe('<DigitalClock /> - Timezone', () => {
 
         it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
           const onChange = spy();
-          const value = adapter.dateWithTimezone('2022-04-17T04:30', timezone);
+          const value = adapter.date('2022-04-17T04:30', timezone);
 
           render(
             <DigitalClock defaultValue={value} onChange={onChange} timezone="America/Chicago" />,

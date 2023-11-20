@@ -33,7 +33,7 @@ describe('<MobileTimePicker />', () => {
           onChange={handleChange}
           open
           slotProps={{ toolbar: { hidden: false } }}
-          value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+          value={adapterToUse.date('2019-01-01T04:20:00')}
         />,
       );
       const buttonPM = screen.getByRole('button', { name: 'PM' });
@@ -54,7 +54,7 @@ describe('<MobileTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
+      const defaultValue = adapterToUse.date('2018-01-01');
 
       render(
         <MobileTimePicker
@@ -72,18 +72,14 @@ describe('<MobileTimePicker />', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 1, 11)),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:00:00'));
 
       // Change the minutes
       const minuteClockEvent = getClockTouchEvent(53, 'minutes');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 1, 11, 53)),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:53:00'));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });

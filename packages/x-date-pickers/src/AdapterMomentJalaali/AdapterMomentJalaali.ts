@@ -130,18 +130,15 @@ export class AdapterMomentJalaali
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = (value?: any) => {
+  public date = <T extends string | null | undefined>(
+    value?: T,
+  ): DateBuilderReturnType<T, Moment> => {
+    type R = DateBuilderReturnType<T, Moment>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
-    return this.moment(value).locale('fa');
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
-    value: T,
-  ): DateBuilderReturnType<T, Moment> => {
-    return <DateBuilderReturnType<T, Moment>>this.date(value);
+    return <R>this.moment(value).locale('fa');
   };
 
   public getTimezone = (): string => {
