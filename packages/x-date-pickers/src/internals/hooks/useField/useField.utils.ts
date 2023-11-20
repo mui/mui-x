@@ -642,7 +642,6 @@ export const splitFormatIntoSections = <TDate>(
       format: '',
       value: '',
       placeholder: '',
-      hasLeadingZeros: false,
       hasLeadingZerosInFormat: false,
       hasLeadingZerosInInput: false,
       startSeparator,
