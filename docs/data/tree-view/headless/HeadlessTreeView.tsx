@@ -3,11 +3,10 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeViewItemId } from '@mui/x-tree-view/models';
+import { TreeViewItem } from '@mui/x-tree-view/models';
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewPropsBase } from 'packages/x-tree-view/src/TreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
   TreeViewPlugin,
   TreeViewPluginSignature,
@@ -85,13 +84,8 @@ const TreeViewRoot = styled('ul', {
   outline: 0,
 });
 
-interface Row {
-  nodeId: TreeViewItemId;
-  label: string;
-}
-
 export interface TreeViewProps<Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<Row, Multiple>,
+  extends DefaultTreeViewPluginParameters<Multiple>,
     TreeViewLogExpandedParameters,
     TreeViewPropsBase {}
 
@@ -120,6 +114,7 @@ function TreeView<Multiple extends boolean | undefined>(
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
+    items,
     logMessage,
     areLogsEnabled,
     // Component implementation
@@ -145,6 +140,7 @@ function TreeView<Multiple extends boolean | undefined>(
     defaultParentIcon,
     logMessage,
     areLogsEnabled,
+    items,
     plugins,
   });
 
@@ -163,6 +159,22 @@ function TreeView<Multiple extends boolean | undefined>(
   );
 }
 
+const ITEMS: TreeViewItem[] = [
+  {
+    nodeId: '1',
+    label: 'Application',
+    children: [{ nodeId: '2', label: 'Calendar' }],
+  },
+  {
+    nodeId: '5',
+    label: 'Documents',
+    children: [
+      { nodeId: '10', label: 'OSS' },
+      { nodeId: '6', label: 'MUI', children: [{ nodeId: '8', label: 'index.js' }] },
+    ],
+  },
+];
+
 export default function HeadlessTreeView() {
   const [logs, setLogs] = React.useState<string[]>([]);
 
@@ -173,23 +185,14 @@ export default function HeadlessTreeView() {
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
         sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+        items={ITEMS}
         areLogsEnabled
         logMessage={(message) =>
           setLogs((prev) =>
             prev[prev.length - 1] === message ? prev : [...prev, message],
           )
         }
-      >
-        <TreeItem nodeId="1" label="Applications">
-          <TreeItem nodeId="2" label="Calendar" />
-        </TreeItem>
-        <TreeItem nodeId="5" label="Documents">
-          <TreeItem nodeId="10" label="OSS" />
-          <TreeItem nodeId="6" label="MUI">
-            <TreeItem nodeId="8" label="index.js" />
-          </TreeItem>
-        </TreeItem>
-      </TreeView>
+      />
       <Stack spacing={1}>
         {logs.map((log, index) => (
           <Typography key={index}>{log}</Typography>
