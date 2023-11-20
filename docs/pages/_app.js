@@ -241,7 +241,7 @@ function AppWrapper(props) {
         versions: [
           {
             text: 'v7 (next)',
-            href: `https://next.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
+            href: `https://next.mui.com${languagePrefix}/x/react-date-pickers/`,
           },
           { text: `v${process.env.DATE_PICKERS_VERSION}`, current: true },
           {
@@ -257,7 +257,7 @@ function AppWrapper(props) {
         versions: [
           {
             text: 'v7 (next)',
-            href: `https://next.mui.com${languagePrefix}/x/react-charts/getting-started`,
+            href: `https://next.mui.com${languagePrefix}/x/react-charts/`,
           },
           { text: `v${process.env.CHARTS_VERSION}`, current: true },
         ],
