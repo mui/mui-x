@@ -1,16 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "orientation": {
       "description": "Force rendering in particular orientation.",
       "deprecated": "",

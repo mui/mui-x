@@ -58,7 +58,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it('should display export option', () => {
-      render(<TestCaseExcelExport components={{ Toolbar: GridToolbar }} />);
+      render(<TestCaseExcelExport slots={{ toolbar: GridToolbar }} />);
 
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);

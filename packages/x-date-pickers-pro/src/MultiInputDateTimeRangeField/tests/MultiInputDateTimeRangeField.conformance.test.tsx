@@ -14,6 +14,6 @@ describe('<MultiInputDateTimeRangeField />', () => {
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     // cannot test reactTestRenderer because of required context
-    skip: ['reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
   }));
 });

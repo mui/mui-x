@@ -41,16 +41,6 @@
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnVisibilityModel": { "type": { "name": "object" } },
-    "components": {
-      "type": { "name": "object" },
-      "deprecated": true,
-      "deprecationInfo": "Use the <code>slots</code> prop instead."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "deprecated": true,
-      "deprecationInfo": "Use the <code>slotProps</code> prop instead."
-    },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {

@@ -17,7 +17,6 @@ import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
@@ -81,10 +80,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     ampm = utils.is12HourCycleInCurrentLocale(),
     ampmInClock = false,
     autoFocus,
-    components,
-    componentsProps,
-    slots: innerSlots,
-    slotProps: innerSlotProps,
+    slots,
+    slotProps,
     value: valueProp,
     defaultValue,
     referenceDate: referenceDateProp,
@@ -110,9 +107,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     timezone: timezoneProp,
     ...other
   } = props;
-
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'TimeClock',
@@ -416,18 +410,6 @@ TimeClock.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default selected value.
    * Used when the component is not controlled.

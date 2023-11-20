@@ -52,8 +52,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
             rowHeight={rowHeight}
           />
@@ -79,8 +79,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
             rowHeight={rowHeight}
           />
@@ -156,8 +156,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
           />
         </div>,
@@ -176,8 +176,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
           />
         </div>,
@@ -206,8 +206,8 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
             initialState={{
               columns: {
@@ -229,8 +229,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
           />
         </div>,
@@ -273,10 +273,10 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
-            componentsProps={{
+            slotProps={{
               columnsPanel: {
                 searchPredicate: columnSearchPredicate,
               },

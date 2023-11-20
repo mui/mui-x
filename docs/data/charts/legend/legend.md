@@ -30,6 +30,12 @@ By default, the legend is placed above the charts.
 
 {{"demo": "LegendPositionNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
+### Hidding
+
+You can hide the legend with the property `slotProps.legend.hidden`.
+
+{{"demo": "HiddenLegend.js"}}
+
 ### Dimensions
 
 Inside the legend, you can customize the pixel value of the width and height of the mark with the `itemMarkWidth` and `itemMarkHeight` props.

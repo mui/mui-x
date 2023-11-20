@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
 export interface GridBaseSlots {
@@ -7,70 +6,68 @@ export interface GridBaseSlots {
    * The custom Checkbox component used in the grid for both header and cells.
    * @default Checkbox
    */
-  BaseCheckbox: React.JSXElementConstructor<any>;
+  baseCheckbox: React.JSXElementConstructor<any>;
   /**
    * The custom Chip component used in the grid.
    * @default Chip
    */
-  BaseChip: React.JSXElementConstructor<any>;
+  baseChip: React.JSXElementConstructor<any>;
   /**
    * The custom InputAdornment component used in the grid.
    * @default InputAdornment
    */
-  BaseInputAdornment: React.JSXElementConstructor<any>;
+  baseInputAdornment: React.JSXElementConstructor<any>;
   /**
    * The custom TextField component used in the grid.
    * @default TextField
    */
-  BaseTextField: React.JSXElementConstructor<any>;
+  baseTextField: React.JSXElementConstructor<any>;
   /**
    * The custom FormControl component used in the grid.
    * @default FormControl
    */
-  BaseFormControl: React.JSXElementConstructor<any>;
+  baseFormControl: React.JSXElementConstructor<any>;
   /**
    * The custom Select component used in the grid.
    * @default Select
    */
-  BaseSelect: React.JSXElementConstructor<any>;
+  baseSelect: React.JSXElementConstructor<any>;
   /**
    * The custom Switch component used in the grid.
    * @default Switch
    */
-  BaseSwitch: React.JSXElementConstructor<any>;
+  baseSwitch: React.JSXElementConstructor<any>;
   /**
    * The custom Button component used in the grid.
    * @default Button
    */
-  BaseButton: React.JSXElementConstructor<any>;
+  baseButton: React.JSXElementConstructor<any>;
   /**
    * The custom IconButton component used in the grid.
    * @default IconButton
    */
-  BaseIconButton: React.JSXElementConstructor<any>;
+  baseIconButton: React.JSXElementConstructor<any>;
   /**
    * The custom Tooltip component used in the grid.
    * @default Tooltip
    */
-  BaseTooltip: React.JSXElementConstructor<any>;
+  baseTooltip: React.JSXElementConstructor<any>;
   /**
    * The custom Popper component used in the grid.
    * @default Popper
    */
-  BasePopper: React.JSXElementConstructor<any>;
+  basePopper: React.JSXElementConstructor<any>;
   /**
    * The custom InputLabel component used in the grid.
    * @default InputLabel
    */
-  BaseInputLabel: React.JSXElementConstructor<any>;
+  baseInputLabel: React.JSXElementConstructor<any>;
   /**
    * The custom SelectOption component used in the grid.
    * @default MenuItem
    */
-  BaseSelectOption: React.JSXElementConstructor<any>;
+  baseSelectOption: React.JSXElementConstructor<any>;
 }
-
-// TODO v7: camelCase GridSlotsComponent, the `componenets` prop is going away.
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -80,93 +77,90 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * The custom Chip component used in the grid.
    * @default Chip
    */
-  BaseChip: React.JSXElementConstructor<any>;
+  baseChip: React.JSXElementConstructor<any>;
   /**
    * Component rendered for each cell.
    * @default GridCell
    */
-  Cell: React.JSXElementConstructor<any>;
+  cell: React.JSXElementConstructor<any>;
   /**
    * Component rendered for each skeleton cell.
    * @default GridSkeletonCell
    */
-  SkeletonCell: React.JSXElementConstructor<any>;
+  skeletonCell: React.JSXElementConstructor<any>;
   /**
    * Filter icon component rendered in each column header.
    * @default GridColumnHeaderFilterIconButton
    */
-  ColumnHeaderFilterIconButton: React.JSXElementConstructor<any>;
+  columnHeaderFilterIconButton: React.JSXElementConstructor<any>;
   /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    * @default GridColumnMenu
    */
-  ColumnMenu: React.JSXElementConstructor<any>;
+  columnMenu: React.JSXElementConstructor<any>;
   /**
    * Component responsible for rendering the column headers.
    * @default DataGridColumnHeaders
    */
-  ColumnHeaders: React.JSXElementConstructor<any>;
+  columnHeaders: React.JSXElementConstructor<any>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    * @default GridFooter
    */
-  Footer: React.JSXElementConstructor<any>;
+  footer: React.JSXElementConstructor<any>;
   /**
    * Row count component rendered in the footer
    * @default GridRowCount
    */
-  FooterRowCount: React.JSXElementConstructor<any>;
+  footerRowCount: React.JSXElementConstructor<any>;
   /**
    * Toolbar component rendered inside the Header component.
    * @default null
    */
-  Toolbar: React.JSXElementConstructor<any> | null;
+  toolbar: React.JSXElementConstructor<any> | null;
   /**
    * PreferencesPanel component rendered inside the Header component.
    * @default GridPreferencesPanel
    */
-  PreferencesPanel: React.JSXElementConstructor<any>;
+  preferencesPanel: React.JSXElementConstructor<any>;
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    * @default GridLoadingOverlay
    */
-  LoadingOverlay: React.JSXElementConstructor<any>;
+  loadingOverlay: React.JSXElementConstructor<any>;
   /**
    * No results overlay component rendered when the grid has no results after filtering.
    * @default GridNoResultsOverlay
    */
-  NoResultsOverlay: React.JSXElementConstructor<any>;
+  noResultsOverlay: React.JSXElementConstructor<any>;
   /**
    * No rows overlay component rendered when the grid has no rows.
    * @default GridNoRowsOverlay
    */
-  NoRowsOverlay: React.JSXElementConstructor<any>;
+  noRowsOverlay: React.JSXElementConstructor<any>;
   /**
    * Pagination component rendered in the grid footer by default.
    * @default Pagination
    */
-  Pagination: React.JSXElementConstructor<any> | null;
+  pagination: React.JSXElementConstructor<any> | null;
   /**
    * Filter panel component rendered when clicking the filter button.
    * @default GridFilterPanel
    */
-  FilterPanel: React.JSXElementConstructor<any>;
+  filterPanel: React.JSXElementConstructor<any>;
   /**
    * GridColumns panel component rendered when clicking the columns button.
    * @default GridColumnsPanel
    */
-  ColumnsPanel: React.JSXElementConstructor<any>;
+  columnsPanel: React.JSXElementConstructor<any>;
   /**
    * Panel component wrapping the filters and columns panels.
    * @default GridPanel
    */
-  Panel: React.JSXElementConstructor<any>;
+  panel: React.JSXElementConstructor<any>;
   /**
    * Component rendered for each row.
    * @default GridRow
    */
-  Row: React.JSXElementConstructor<any>;
+  row: React.JSXElementConstructor<any>;
 }
-
-export interface UncapitalizedGridSlotsComponent
-  extends UncapitalizeObjectKeys<GridSlotsComponent> {}

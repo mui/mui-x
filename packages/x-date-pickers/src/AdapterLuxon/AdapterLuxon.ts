@@ -3,7 +3,6 @@ import { DateTime, Info } from 'luxon';
 import {
   AdapterFormats,
   AdapterOptions,
-  AdapterUnits,
   DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -70,21 +69,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'DD',
-  fullDateWithWeekday: 'DDDD',
   keyboardDate: 'D',
   shortDate: 'MMM d',
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
-  monthAndYear: 'LLLL yyyy',
-  monthAndDate: 'MMMM d',
 
   fullTime: 't',
   fullTime12h: 'hh:mm a',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'ff',
-  fullDateTime12h: 'DD, hh:mm a',
-  fullDateTime24h: 'DD, T',
   keyboardDateTime: 'D t',
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
@@ -205,14 +198,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.toJSDate();
   };
 
-  public parseISO = (isoString: string) => {
-    return DateTime.fromISO(isoString);
-  };
-
-  public toISO = (value: DateTime) => {
-    return value.toUTC().toISO({ format: 'extended' })!;
-  };
-
   public parse = (value: string, formatString: string) => {
     if (value === '') {
       return null;
@@ -238,16 +223,26 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public expandFormat = (format: string) => {
     // Extract escaped section to avoid extending them
-    const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
+    const catchEscapedSectionsRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
+
+    // Extract words to test if they are a token or a word to escape.
+    const catchWordsRegexp = /(?:^|[^a-z])([a-z]+)(?:[^a-z]|$)|([a-z]+)/gi;
     return (
       format
-        .match(longFormatRegexp)!
+        .match(catchEscapedSectionsRegexp)!
         .map((token: string) => {
           const firstCharacter = token[0];
           if (firstCharacter === "'") {
             return token;
           }
-          return DateTime.expandFormat(token, { locale: this.locale });
+          const expandedToken = DateTime.expandFormat(token, { locale: this.locale });
+          return expandedToken.replace(catchWordsRegexp, (correspondance, g1, g2) => {
+            const word = g1 || g2; // words are either in group 1 or group 2
+            if (word === 'yyyyy' || formatTokenMap[word] !== undefined) {
+              return correspondance;
+            }
+            return `'${correspondance}'`;
+          });
         })
         .join('')
         // The returned format can contain `yyyyy` which means year between 4 and 6 digits.
@@ -257,24 +252,12 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     );
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
-  };
-
-  public isNull = (value: DateTime | null) => {
-    return value === null;
-  };
-
-  public isValid = (value: any): boolean => {
-    if (DateTime.isDateTime(value)) {
-      return value.isValid;
-    }
-
+  public isValid = (value: DateTime | null): boolean => {
     if (value === null) {
       return false;
     }
 
-    return this.isValid(this.date(value));
+    return value.isValid;
   };
 
   public format = (value: DateTime, formatKey: keyof AdapterFormats) => {
@@ -289,29 +272,16 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return numberToFormat;
   };
 
-  public getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
-    if (typeof comparing === 'string') {
-      comparing = DateTime.fromJSDate(new Date(comparing));
-    }
-
-    if (unit) {
-      return Math.floor(value.diff(comparing).as(unit));
-    }
-
-    return value.diff(comparing).as('millisecond');
-  };
-
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: DateTime | null, comparing: DateTime | null) => {
     if (value === null && comparing === null) {
       return true;
     }
 
-    // Make sure that null will not be passed to this.date
     if (value === null || comparing === null) {
       return false;
     }
 
-    return +this.date(value)! === +this.date(comparing)!;
+    return +value === +comparing;
   };
 
   public isSameYear = (value: DateTime, comparing: DateTime) => {
@@ -495,38 +465,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.daysInMonth!;
   };
 
-  public getNextMonth = (value: DateTime) => {
-    return value.plus({ months: 1 });
-  };
-
-  public getPreviousMonth = (value: DateTime) => {
-    return value.minus({ months: 1 });
-  };
-
-  public getMonthArray = (value: DateTime) => {
-    const firstMonth = value.startOf('year');
-    const monthArray = [firstMonth];
-
-    while (monthArray.length < 12) {
-      const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.addMonths(prevMonth, 1));
-    }
-
-    return monthArray;
-  };
-
-  public mergeDateAndTime = (dateParam: DateTime, timeParam: DateTime) => {
-    return dateParam.set({
-      second: timeParam.second,
-      hour: timeParam.hour,
-      minute: timeParam.minute,
-    });
-  };
-
-  public getWeekdays = () => {
-    return Info.weekdaysFormat('narrow', { locale: this.locale });
-  };
-
   public getWeekArray = (value: DateTime) => {
     const cleanValue = this.setLocaleToValue(value);
     const { days } = cleanValue
@@ -556,7 +494,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.weekNumber;
   };
 
-  public getYearRange = (start: DateTime, end: DateTime) => {
+  public getYearRange = ([start, end]: [DateTime, DateTime]) => {
     const startDate = start.startOf('year');
     const endDate = end.endOf('year');
 
@@ -569,11 +507,5 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return Info.meridiems({ locale: this.locale }).find(
-      (v) => v.toLowerCase() === ampm.toLowerCase(),
-    )!;
   };
 }

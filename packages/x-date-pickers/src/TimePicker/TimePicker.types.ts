@@ -4,7 +4,6 @@ import {
   DesktopTimePickerSlotsComponentsProps,
 } from '../DesktopTimePicker';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileTimePickerProps,
   MobileTimePickerSlotsComponent,
@@ -29,22 +28,10 @@ export interface TimePickerProps<TDate>
    */
   desktopModeMediaQuery?: string;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: TimePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: TimePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TimePickerSlotsComponents<TDate>>;
+  slots?: TimePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

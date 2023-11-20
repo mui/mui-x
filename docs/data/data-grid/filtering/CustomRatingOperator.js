@@ -4,6 +4,14 @@ import Rating from '@mui/material/Rating';
 import { DataGrid, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
+function Toolbar() {
+  return (
+    <div>
+      <GridToolbarFilterButton />
+    </div>
+  );
+}
+
 function RatingInputValue(props) {
   const { item, applyValue, focusElementRef } = props;
 
@@ -50,9 +58,8 @@ const ratingOnlyOperators = [
       if (!filterItem.field || !filterItem.value || !filterItem.operator) {
         return null;
       }
-
-      return (params) => {
-        return Number(params.value) >= Number(filterItem.value);
+      return (value) => {
+        return Number(value) >= Number(filterItem.value);
       };
     },
     InputComponent: RatingInputValue,
@@ -89,7 +96,7 @@ export default function CustomRatingOperator() {
         {...data}
         columns={columns}
         slots={{
-          toolbar: GridToolbarFilterButton,
+          toolbar: Toolbar,
         }}
         initialState={{
           ...data.initialState,

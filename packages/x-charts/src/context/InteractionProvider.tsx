@@ -33,7 +33,13 @@ type InteractionActions<T extends ChartSeriesType = ChartSeriesType> =
     };
 
 type InteractionState = {
+  /**
+   * The item currently interacting.
+   */
   item: null | ItemInteractionData<ChartSeriesType>;
+  /**
+   * The x- and y-axes currently interacting.
+   */
   axis: AxisInteractionData;
   dispatch: React.Dispatch<InteractionActions>;
 };

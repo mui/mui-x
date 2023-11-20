@@ -8,6 +8,7 @@ export type {
   GridColumnsMeta,
   GridSingleSelectColDef,
   GridActionsColDef,
+  GetApplyQuickFilterFn,
 } from './gridColDef';
 
 // Other types
