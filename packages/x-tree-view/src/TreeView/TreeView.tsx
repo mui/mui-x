@@ -8,9 +8,11 @@ import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
+import { TreeItem } from '../internals/components/TreeItem';
+import { TreeViewItem } from '@mui/x-tree-view/models';
 
-const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
-  ownerState: TreeViewProps<R, Multiple>,
+const useUtilityClasses = <Multiple extends boolean | undefined>(
+  ownerState: TreeViewProps<Multiple>,
 ) => {
   const { classes } = ownerState;
 
@@ -25,15 +27,15 @@ const TreeViewRoot = styled('ul', {
   name: 'MuiTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeViewProps<any, any> }>({
+})<{ ownerState: TreeViewProps<any> }>({
   padding: 0,
   margin: 0,
   listStyle: 'none',
   outline: 0,
 });
 
-type TreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
-  props: TreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
+type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
+  props: TreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -47,11 +49,10 @@ type TreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = 
  * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
  */
 const TreeView = React.forwardRef(function TreeView<
-  R extends {},
   Multiple extends boolean | undefined = undefined,
->(inProps: TreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
+>(inProps: TreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
-  const ownerState = themeProps as TreeViewProps<any, any>;
+  const ownerState = themeProps as TreeViewProps<any>;
 
   const {
     // Headless implementation
@@ -72,9 +73,8 @@ const TreeView = React.forwardRef(function TreeView<
     defaultParentIcon,
     items,
     // Component implementation
-    children,
     ...other
-  } = themeProps as TreeViewProps<any, any>;
+  } = themeProps as TreeViewProps<any>;
 
   const { getRootProps, contextValue } = useTreeView({
     disabledItemsFocusable,
@@ -108,9 +108,18 @@ const TreeView = React.forwardRef(function TreeView<
     ownerState,
   });
 
+  const renderItem = (item: TreeViewItem) => {
+    const { children: itemChildren, ...itemProperties } = item;
+    return (
+      <TreeItem {...itemProperties} key={item.nodeId}>
+        {itemChildren?.map(renderItem)}
+      </TreeItem>
+    );
+  };
+
   return (
     <TreeViewProvider value={contextValue}>
-      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
+      <TreeViewRoot {...rootProps}>{items.map(renderItem)}</TreeViewRoot>
     </TreeViewProvider>
   );
 }) as TreeViewComponent;

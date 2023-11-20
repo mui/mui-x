@@ -4,6 +4,7 @@ import { TreeViewNode, TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewNodesSignature } from './useTreeViewNodes.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
+import { TreeViewItem } from '../../../models';
 
 export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   instance,
@@ -72,9 +73,36 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     return childrenIds;
   };
 
+  React.useEffect(() => {
+    const newNodeMap: { [nodeId: string]: TreeViewNode } = {};
+
+    const processItem = (item: TreeViewItem, index: number, parentId: string | null) => {
+      newNodeMap[item.nodeId] = {
+        id: item.nodeId,
+        idAttribute: item.id,
+        index,
+        parentId,
+        expandable: !!item.children?.length,
+        disabled: item.disabled,
+      };
+
+      item.children?.forEach((child, childIndex) => processItem(child, childIndex, item.nodeId));
+    };
+
+    params.items.forEach((item, itemIndex) => processItem(item, itemIndex, null));
+
+    Object.values(nodeMap.current).forEach((node) => {
+      if (!newNodeMap[node.id]) {
+        publishTreeViewEvent(instance, 'removeNode', { id: node.id });
+      }
+    });
+
+    nodeMap.current = newNodeMap;
+  }, [instance, params.items]);
+
   populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,
-    updateNode: insertNode,
+    insertNode,
     removeNode,
     getChildrenIds,
     getNavigableChildrenIds,

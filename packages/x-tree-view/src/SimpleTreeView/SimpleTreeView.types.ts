@@ -5,7 +5,7 @@ import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
 import { DefaultTreeViewPluginParameters } from '../internals/plugins/defaultPlugins';
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
-  extends Omit<DefaultTreeViewPluginParameters<any, Multiple>, 'items'>,
+  extends Omit<DefaultTreeViewPluginParameters<Multiple>, 'items'>,
     React.HTMLAttributes<HTMLUListElement> {
   /**
    * The content of the component.

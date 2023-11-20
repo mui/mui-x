@@ -57,7 +57,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   React.useEffect(() => {
     // On the first render a node's index will be -1. We want to wait for the real index.
     if (instance && index !== -1) {
-      instance.updateNode({
+      instance.insertNode({
         id: nodeId,
         idAttribute: id,
         index,

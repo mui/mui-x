@@ -21,8 +21,8 @@ export const DEFAULT_TREE_VIEW_PLUGINS = [
 export type DefaultTreeViewPlugins = ConvertPluginsIntoSignatures<typeof DEFAULT_TREE_VIEW_PLUGINS>;
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
-export interface DefaultTreeViewPluginParameters<R extends {}, Multiple extends boolean | undefined>
-  extends UseTreeViewNodesParameters<R>,
+export interface DefaultTreeViewPluginParameters<Multiple extends boolean | undefined>
+  extends UseTreeViewNodesParameters,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
