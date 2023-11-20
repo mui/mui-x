@@ -3,6 +3,413 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.1
+
+_Nov 17, 2023_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-alpha.1` / `@mui/x-date-pickers-pro@7.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+#### Breaking changes
+
+- The string argument of the `dayOfWeekFormatter` prop has been replaced in favor of the date object to allow more flexibility.
+
+  ```diff
+   <DateCalendar
+     // If you were still using the day string, you can get it back with your date library.
+  -   dayOfWeekFormatter={dayStr => `${dayStr}.`}
+  +   dayOfWeekFormatter={day => `${day.format('dd')}.`}
+
+     // If you were already using the day object, just remove the first argument.
+  -   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`}
+  +   dayOfWeekFormatter={day => `${day.format('dd')}.`}
+   />
+  ```
+
+- The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DateCalendar` to `@mui/x-date-pickers/PIckersCalendarHeader`:
+
+  ```diff
+    export {
+      pickersCalendarHeaderClasses,
+      PickersCalendarHeaderClassKey,
+      PickersCalendarHeaderClasses,
+      PickersCalendarHeader,
+      PickersCalendarHeaderProps,
+      PickersCalendarHeaderSlotsComponent,
+      PickersCalendarHeaderSlotsComponentsProps,
+      ExportedPickersCalendarHeaderProps,
+  - } from '@mui/x-date-pickers/DateCalendar';
+  + } from '@mui/x-date-pickers/PickersCalendarHeader';
+
+  ```
+
+- The `monthAndYear` format has been removed.
+  It was used in the header of the calendar views, you can replace it with the new `format` prop of the `calendarHeader` slot:
+
+  ```diff
+    <LocalizationProvider
+      adapter={AdapterDayJS}
+  -   formats={{ monthAndYear: 'MM/YYYY' }}
+    />
+      <DatePicker
+  +     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+      />
+       <DateRangePicker
+  +     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+      />
+    <LocalizationProvider />
+  ```
+
+- The `adapter.getDiff` method have been removed, you can directly use your date library:
+
+  ```diff
+    // For Day.js
+  - const diff = adapter.getDiff(value, comparing, unit);
+  + const diff = value.diff(comparing, unit);
+
+    // For Luxon
+  - const diff = adapter.getDiff(value, comparing, unit);
+  + const getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
+  +   const parsedComparing = typeof comparing === 'string'
+  +     ? DateTime.fromJSDate(new Date(comparing))
+  +     : comparing;
+  +   if (unit) {
+  +     return Math.floor(value.diff(comparing).as(unit));
+  +   }
+  +   return value.diff(comparing).as('millisecond');
+  + };
+  +
+  + const diff = getDiff(value, comparing, unit);
+
+    // For DateFns
+  - const diff = adapter.getDiff(value, comparing, unit);
+  + const getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
+  +   const parsedComparing = typeof comparing === 'string' ? new Date(comparing) : comparing;
+  +   switch (unit) {
+  +     case 'years':
+  +       return dateFns.differenceInYears(value, parsedComparing);
+  +     case 'quarters':
+  +       return dateFns.differenceInQuarters(value, parsedComparing);
+  +     case 'months':
+  +       return dateFns.differenceInMonths(value, parsedComparing);
+  +     case 'weeks':
+  +       return dateFns.differenceInWeeks(value, parsedComparing);
+  +     case 'days':
+  +       return dateFns.differenceInDays(value, parsedComparing);
+  +     case 'hours':
+  +       return dateFns.differenceInHours(value, parsedComparing);
+  +     case 'minutes':
+  +       return dateFns.differenceInMinutes(value, parsedComparing);
+  +     case 'seconds':
+  +       return dateFns.differenceInSeconds(value, parsedComparing);
+  +     default: {
+  +       return dateFns.differenceInMilliseconds(value, parsedComparing);
+  +     }
+  +   }
+  + };
+  +
+  + const diff = getDiff(value, comparing, unit);
+
+    // For Moment
+  - const diff = adapter.getDiff(value, comparing, unit);
+  + const diff = value.diff(comparing, unit);
+  ```
+
+- The `adapter.getFormatHelperText` method have been removed, you can use the `adapter.expandFormat` instead:
+
+```diff
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format);
+```
+
+And if you need the exact same output you can apply the following transformation:
+
+```diff
+  // For Day.js
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+
+  // For Luxon
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
+
+  // For DateFns
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format).replace(/(aaa|aa|a)/g, '(a|p)m').toLocaleLowerCase();
+
+  // For Moment
+- const expandedFormat = adapter.getFormatHelperText(format);
++ const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+```
+
+- The `adapter.getMeridiemText` method have been removed, you can use the `adapter.setHours`, `adapter.date` and `adapter.format` methods to recreate its behavior:
+
+  ```diff
+  - const meridiem = adapter.getMeridiemText('am');
+  + const getMeridiemText = (meridiem: 'am' | 'pm') => {
+  +   const date = adapter.setHours(adapter.date()!, meridiem === 'am' ? 2 : 14);
+  +   return utils.format(date, 'meridiem');
+  + };
+  +
+  + const meridiem = getMeridiemText('am');
+  ```
+
+- The `adapter.getMonthArray` method have been removed, you can use the `adapter.startOfYear` and `adapter.addMonths` methods to recreate its behavior:
+
+  ```diff
+  - const monthArray = adapter.getMonthArray(value);
+  + const getMonthArray = (year) => {
+  +   const firstMonth = utils.startOfYear(year);
+  +   const months = [firstMonth];
+  +
+  +   while (months.length < 12) {
+  +     const prevMonth = months[months.length - 1];
+  +     months.push(utils.addMonths(prevMonth, 1));
+  +   }
+  +
+  +   return months;
+  + }
+  +
+  + const monthArray = getMonthArray(value);
+  ```
+
+- The `adapter.getNextMonth` method have been removed, you can use the `adapter.addMonths` method instead:
+
+  ```diff
+  - const nextMonth = adapter.getNextMonth(value);
+  + const nextMonth = adapter.addMonths(value, 1);
+  ```
+
+- The `adapter.getPreviousMonth` method have been removed, you can use the `adapter.addMonths` method instead:
+
+  ```diff
+  - const previousMonth = adapter.getPreviousMonth(value);
+  + const previousMonth = adapter.addMonths(value, -1);
+  ```
+
+- The `adapter.getWeekdays` method have been removed, you can use the `adapter.startOfWeek` and `adapter.addDays` methods instead:
+
+  ```diff
+  - const weekDays = adapter.getWeekdays(value);
+  + const getWeekdays = (value) => {
+  +   const start = adapter.startOfWeek(value);
+  +   return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
+  + };
+  +
+  + const weekDays = getWeekdays(value);
+  ```
+
+- The `isNull` method have been removed, you can replace it with a very basic check:
+
+  ```diff
+  - const isNull = adapter.isNull(value);
+  + const isNull = value === null;
+  ```
+
+- The `adapter.mergeDateAndTime` method have been removed, you can use the `adapter.setHours`, `adapter.setMinutes`, and `adapter.setSeconds` methods to recreate its behavior:
+
+  ```diff
+  - const result = adapter.mergeDateAndTime(valueWithDate, valueWithTime);
+  + const mergeDateAndTime = <TDate>(
+  +   dateParam,
+  +   timeParam,
+  + ) => {
+  +   let mergedDate = dateParam;
+  +   mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
+  +   mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
+  +   mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
+  +
+  +   return mergedDate;
+  + };
+  +
+  + const result = mergeDateAndTime(valueWithDate, valueWithTime);
+  ```
+
+- The `adapter.parseISO` method have been removed, you can directly use your date library:
+
+  ```diff
+    // For Day.js
+  - const value = adapter.parseISO(isoString);
+  + const value = dayjs(isoString);
+
+    // For Luxon
+  - const value = adapter.parseISO(isoString);
+  + const value = DateTime.fromISO(isoString);
+
+    // For DateFns
+  - const value = adapter.parseISO(isoString);
+  + const value = dateFns.parseISO(isoString);
+
+    // For Moment
+  - const value = adapter.parseISO(isoString);
+  + const value = moment(isoString, true);
+  ```
+
+- The `adapter.toISO` method have been removed, you can directly use your date library:
+
+  ```diff
+  - const isoString = adapter.toISO(value);
+  + const isoString = value.toISOString();
+  + const isoString = value.toUTC().toISO({ format: 'extended' });
+  + const isoString = dateFns.formatISO(value, { format: 'extended' });
+  + const isoString = value.toISOString();
+  ```
+
+- The `adapter.isEqual` method used to accept any type of value for its two input and tried to parse them before checking if they were equal.
+  The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in the pickers)
+
+  ```diff
+   const adapterDayjs = new AdapterDayjs();
+   const adapterLuxon = new AdapterLuxon();
+   const adapterDateFns = new AdapterDateFns();
+   const adapterMoment = new AdatperMoment();
+
+   // Supported formats
+   const isEqual = adapterDayjs.isEqual(null, null); // Same for the other adapters
+   const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
+   const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
+   const isEqual = adapterDateFns.isEqual(new Date(), new Date('2022-04-17'));
+
+   // Non-supported formats (JS Date)
+  - const isEqual = adapterDayjs.isEqual(new Date(), new Date('2022-04-17'));
+  + const isEqual = adapterDayjs.isEqual(dayjs(), dayjs('2022-04-17'));
+
+  - const isEqual = adapterLuxon.isEqual(new Date(), new Date('2022-04-17'));
+  + const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
+
+  - const isEqual = adapterMoment.isEqual(new Date(), new Date('2022-04-17'));
+  + const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
+
+   // Non-supported formats (string)
+  - const isEqual = adapterDayjs.isEqual('2022-04-16', '2022-04-17');
+  + const isEqual = adapterDayjs.isEqual(dayjs('2022-04-17'), dayjs('2022-04-17'));
+
+  - const isEqual = adapterLuxon.isEqual('2022-04-16', '2022-04-17');
+  + const isEqual = adapterLuxon.isEqual(DateTime.fromISO('2022-04-17'), DateTime.fromISO('2022-04-17'));
+
+  - const isEqual = adapterMoment.isEqual('2022-04-16', '2022-04-17');
+  + const isEqual = adapterMoment.isEqual(moment('2022-04-17'), moment('2022-04-17'));
+
+  - const isEqual = adapterDateFns.isEqual('2022-04-16', '2022-04-17');
+  + const isEqual = adapterDateFns.isEqual(new Date('2022-04-17'), new Date('2022-04-17'));
+  ```
+
+- The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore (#11023). This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
+  You can learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
+
+  ```diff
+    // When a `value` or a `defaultValue` is provided
+    <LocalizationProvider
+      adapter={AdapterDayjs}
+  -   dateLibInstance={dayjs.utc}
+    >
+      <DatePicker value={dayjs.utc('2022-04-17')} />
+    </LocalizationProvider>
+
+    // When no `value` or `defaultValue` is provided
+    <LocalizationProvider
+      adapter={AdapterDayjs}
+  -   dateLibInstance={dayjs.utc}
+    >
+  -   <DatePicker />
+  +   <DatePicker timezone="UTC" />
+    </LocalizationProvider>
+  ```
+
+- The property `hasLeadingZeros` has been removed from the sections in favor of the more precise `hasLeadingZerosInFormat` and `hasLeadingZerosInInput` properties (#10994). To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`:
+
+  ```diff
+   const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+
+   React.useEffect(() => {
+       const firstSection = fieldRef.current!.getSections()[0]
+  -    console.log(firstSection.hasLeadingZeros)
+  +    console.log(firstSection.hasLeadingZerosInFormat)
+   }, [])
+
+   return (
+     <DateField unstableFieldRef={fieldRef} />
+   );
+  ```
+
+- The `adapter.getYearRange` method used to accept two params and now accepts a tuple to be consistent with the `adapter.isWithinRange` method (#10978):
+
+  ```diff
+  - adapter.getYearRange(start, end);
+  + adapter.getYearRange([start, end])
+  ```
+
+- The `adapter.isValid` method used to accept any type of value and tried to parse them before checking their validity (#10971).
+  The method has been simplified and now only accepts an already-parsed date or `null`.
+  Which is the same type as the one accepted by the components `value` prop.
+
+  ```diff
+   const adapterDayjs = new AdapterDayjs();
+   const adapterLuxon = new AdapterLuxon();
+   const adapterDateFns = new AdapterDateFns();
+   const adapterMoment = new AdatperMoment();
+
+   // Supported formats
+   const isValid = adapterDayjs.isValid(null); // Same for the other adapters
+   const isValid = adapterLuxon.isValid(DateTime.now());
+   const isValid = adapterMoment.isValid(moment());
+   const isValid = adapterDateFns.isValid(new Date());
+
+   // Non-supported formats (JS Date)
+  - const isValid = adapterDayjs.isValid(new Date('2022-04-17'));
+  + const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
+
+  - const isValid = adapterLuxon.isValid(new Date('2022-04-17'));
+  + const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
+
+  - const isValid = adapterMoment.isValid(new Date('2022-04-17'));
+  + const isValid = adapterMoment.isValid(moment('2022-04-17'));
+
+   // Non-supported formats (string)
+  - const isValid = adapterDayjs.isValid('2022-04-17');
+  + const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
+
+  - const isValid = adapterLuxon.isValid('2022-04-17');
+  + const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
+
+  - const isValid = adapterMoment.isValid('2022-04-17');
+  + const isValid = adapterMoment.isValid(moment('2022-04-17'));
+
+  - const isValid = adapterDateFns.isValid('2022-04-17');
+  + const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
+  ```
+
+#### Changes
+
+- [pickers] Change the input format of `adapter.getYearRange` to be consistent with `adapter.isWithinRange` (#10978) @flaviendelangle
+- [pickers] Clean remaining `components` / `componentsProps` typings (#11040) @flaviendelangle
+- [pickers] Modify `adapter.isEqual` method to accept `TDate | null` instead of `any` (#10976) @flaviendelangle
+- [pickers] Modify `adapter.isValid` method to accept `TDate | null` instead of `any` (#10971) @flaviendelangle
+- [pickers] Remove the `hasLeadingZeros` property from `FieldSection` (#10994) @flaviendelangle
+- [pickers] Remove the deprecated methods and formats from the adapters (#10776) @flaviendelangle
+- [pickers] Remove the legacy UTC implementation for `dayjs` (#11023) @flaviendelangle
+- [pickers] Remove unused code (#11048) @flaviendelangle
+- [pickers] Move the exports of the `calendarHeader` slot to `@mui/x-date-pickers/PickersCalendarHeader` (#11020) @flaviendelangle
+- [DateCalendar] Allow to override the format of the header with a prop (#10990) @flaviendelangle
+- [DateCalendar] Remove the string argument of the `dayOfWeekFormatter` prop (#10992) @flaviendelangle
+
+### Docs
+
+- [docs] Fix incorrect component name in the "Custom slots and subcomponents" page (#11024) @flaviendelangle
+- [docs] Fix typos in pickers migration guide (#11057) @flaviendelangle
+
+### Core
+
+- [core] Clean the component slots doc generation (#11021) @flaviendelangle
+- [core] Fix script to release with `next` tag (#10996) @LukasTy
+- [test] Wait for images to load (#11004) @cherniavskii
+
 ## 7.0.0-alpha.0
 
 _Nov 10, 2023_
@@ -384,7 +791,7 @@ Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
 
 - [charts] Add reference links to area + bar chart components (#10652) @michelengelen
 - [charts] Add reference links to line chart + sparkline components (#10650) @michelengelen
-- [charts] Add reference links to pie + scatter chart components  (#10653) @michelengelen
+- [charts] Add reference links to pie + scatter chart components (#10653) @michelengelen
 - [charts] Render only when `width` and `height` are resolved (#10714) @alexfauquette
 - [charts] Support animation on `BarChart` (#9926) @alexfauquette
 - [charts] Use new text component to avoid tick label overflow on x-axis (#10648) @alexfauquette
@@ -460,6 +867,7 @@ It adds line break support and avoids overlapping text in the legend.
 This comes with some breaking changes.
 
 - The DOM structure is modified. An intermediary `<tspan />` element has been added. This can impact how your style is applied.
+
   ```diff
   - <text>The label</text>
   + <text><tspan>The label</tspan></text>
