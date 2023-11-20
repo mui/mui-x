@@ -104,7 +104,7 @@
     "@types/react-test-renderer": "^18.0.5",
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^10.0.20",
-    "@types/yargs": "^17.0.29",
+    "@types/yargs": "^17.0.31",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.9.1",
     "axe-core": "4.8.2",
