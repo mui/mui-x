@@ -115,5 +115,9 @@
   "prHourlyLimit": 0,
   "rangeStrategy": "bump",
   "schedule": "on sunday before 6:00am",
-  "timezone": "UTC"
+  "timezone": "UTC",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": "before 6:00am on the first day of the month"
+  }
 }
