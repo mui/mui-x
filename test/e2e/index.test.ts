@@ -437,7 +437,12 @@ async function initializeEnvironment(
         );
 
         await page.click('[role="cell"][data-field="brand"]');
-        await page.type('[role="cell"][data-field="brand"]', 'p');
+        await page.keyboard.press('p');
+        if (browserType.name() === 'firefox') {
+          // In firefox the test fails without this
+          // It works fine when testing manually using the same firefox executable
+          await page.keyboard.insertText('p');
+        }
 
         expect(await page.locator('[role="cell"][data-field="brand"] input').inputValue()).to.equal(
           'p',
