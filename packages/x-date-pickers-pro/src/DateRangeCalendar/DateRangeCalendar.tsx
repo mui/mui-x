@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { resolveComponentProps } from '@mui/base/utils';
+import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Watermark } from '@mui/x-license-pro';
-import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
+import {
+  PickersCalendarHeader,
+  PickersCalendarHeaderProps,
+} from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   applyDefaultDate,
   BaseDateValidationProps,
@@ -209,7 +212,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
+    TDate,
+    DateRange<TDate>,
+    NonNullable<typeof onChange>
+  >({
     name: 'DateRangeCalendar',
     timezone: timezoneProp,
     value: valueProp,
@@ -329,6 +336,32 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     timezone,
   });
 
+  // When disabled, limit the view to the selected date
+  const minDateWithDisabled = (disabled && value[0]) || minDate;
+  const maxDateWithDisabled = (disabled && value[1]) || maxDate;
+
+  const CalendarHeader = slots?.calendarHeader ?? PickersCalendarHeader;
+  const calendarHeaderProps: PickersCalendarHeaderProps<TDate> = useSlotProps({
+    elementType: CalendarHeader,
+    externalSlotProps: slotProps?.calendarHeader,
+    additionalProps: {
+      views: ['day'],
+      view: 'day',
+      currentMonth: calendarState.currentMonth,
+      onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
+      minDate: minDateWithDisabled,
+      maxDate: maxDateWithDisabled,
+      disabled,
+      disablePast,
+      disableFuture,
+      reduceAnimations,
+      slots,
+      slotProps,
+      timezone,
+    },
+    ownerState: props,
+  });
+
   const prevValue = React.useRef<DateRange<TDate> | null>(null);
   React.useEffect(() => {
     const date = rangePosition === 'start' ? value[0] : value[1];
@@ -396,10 +429,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     readOnly,
     disabled,
   };
-
-  // When disabled, limit the view to the selected date
-  const minDateWithDisabled = (disabled && value[0]) || minDate;
-  const maxDateWithDisabled = (disabled && value[1]) || maxDate;
 
   const [rangePreviewDay, setRangePreviewDay] = React.useState<TDate | null>(null);
 
@@ -530,21 +559,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       {calendarMonths.map((month, index) => (
         <DateRangeCalendarMonthContainer key={month} className={classes.monthContainer}>
           {calendars === 1 ? (
-            <PickersCalendarHeader
-              views={['day']}
-              view={'day'}
-              currentMonth={calendarState.currentMonth}
-              onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
-              minDate={minDateWithDisabled}
-              maxDate={maxDateWithDisabled}
-              disabled={disabled}
-              disablePast={disablePast}
-              disableFuture={disableFuture}
-              reduceAnimations={reduceAnimations}
-              slots={slots}
-              slotProps={slotProps}
-              timezone={timezone}
-            />
+            <CalendarHeader {...calendarHeaderProps} />
           ) : (
             <DateRangeCalendarArrowSwitcher
               onGoToPrevious={selectPreviousMonth}
@@ -558,7 +573,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               slots={slots}
               slotProps={slotProps}
             >
-              {utils.format(visibleMonths[month], 'monthAndYear')}
+              {utils.formatByString(
+                visibleMonths[month],
+                calendarHeaderProps.format ?? `${utils.formats.month} ${utils.formats.year}`,
+              )}
             </DateRangeCalendarArrowSwitcher>
           )}
 
@@ -619,7 +637,6 @@ DateRangeCalendar.propTypes = {
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter.  Deprecated, will be removed in v7: Use `date` instead.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
    * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()

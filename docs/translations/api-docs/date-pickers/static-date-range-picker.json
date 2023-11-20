@@ -25,7 +25,6 @@
       "description": "Formats the day of week displayed in the calendar header.",
       "deprecated": "",
       "typeDescriptions": {
-        "day": "The day of week provided by the adapter.  Deprecated, will be removed in v7: Use <code>date</code> instead.",
         "date": "The date of the day of week provided by the adapter.",
         "string": "The name to display."
       }
@@ -214,6 +213,7 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
