@@ -8,7 +8,6 @@ import { SimpleTreeViewProps } from './SimpleTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
-import { useTreeViewJSXNodes } from './useTreeViewJSXNodes';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: SimpleTreeViewProps<Multiple>,
@@ -36,8 +35,6 @@ const SimpleTreeViewRoot = styled('ul', {
 type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
   props: SimpleTreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
-
-const plugins = [useTreeViewJSXNodes, ...DEFAULT_TREE_VIEW_PLUGINS] as const;
 
 const EMPTY_ITEMS: any[] = [];
 
@@ -96,7 +93,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     defaultExpandIcon,
     defaultParentIcon,
     items: EMPTY_ITEMS,
-    plugins,
+    plugins: DEFAULT_TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
 
