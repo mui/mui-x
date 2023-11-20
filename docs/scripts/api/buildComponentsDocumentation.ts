@@ -83,7 +83,7 @@ function extractSlots(options: {
     checkDeclarations: true,
     shouldResolveObject: ({ name }) => name === 'slots',
     shouldInclude: ({ name, depth }) => {
-      // The keys allowed in the `components` prop have depth=2
+      // The keys allowed in the `slots` prop have depth=2
       return name === 'slots' || depth === 2;
     },
   });
@@ -101,7 +101,7 @@ function extractSlots(options: {
   const propType = componentsProps.propType as UnionType;
   const propInterface = propType.types.find((type) => type.type === 'InterfaceNode');
   if (!propInterface) {
-    throw new Error(`The \`components\` prop in \`${componentName}\` is not an interface.`);
+    throw new Error(`The \`slots\` prop in \`${componentName}\` is not an interface.`);
   }
 
   const types = [...(propInterface as InterfaceType).types].sort((a, b) => (a[0] > b[0] ? 1 : -1));
