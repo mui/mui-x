@@ -3089,10 +3089,10 @@
   resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-8.1.1.tgz#b49c2c70150141a15e0fa7e79cf1f92a72934ce3"
   integrity sha512-0kSuKjAS0TrGLJ0M/+8MaFkGsQhZpB6pxOmvS3K8FYI72K//YmdfoW9X2qPsAKh1mkwxGD5zib9s1FIFed6E8g==
 
-"@types/stylis@^4.0.2", "@types/stylis@^4.2.2":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@types/stylis/-/stylis-4.2.2.tgz#baabb6b3aa6787e90a6bd6cd75cd8fb9a4f256a3"
-  integrity sha512-Rm17MsTpQQP5Jq4BF7CdrxJsDufoiL/q5IbJZYZmOZAJALyijgF7BzLgobXUqraNcQdqFYLYGeglDp6QzaxPpg==
+"@types/stylis@^4.0.2", "@types/stylis@^4.2.3":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/@types/stylis/-/stylis-4.2.3.tgz#0dff504fc23487a02a29209b162249070e83a0da"
+  integrity sha512-86XLCVEmWagiUEbr2AjSbeY4qHN9jMm3pgM3PuBYfLIbT0MpDSnA3GA/4W7KoH/C/eeK77kNaeIxZzjhKYIBgw==
 
 "@types/yargs-parser@*":
   version "20.2.1"
