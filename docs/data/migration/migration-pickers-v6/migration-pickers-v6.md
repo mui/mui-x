@@ -21,10 +21,48 @@ In `package.json`, change the version of the date pickers package to `next`.
 +"@mui/x-date-pickers": "next",
 ```
 
-## Breaking changes
-
 Since `v7` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from v6 to v7.
+
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7. You can run `v7.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v7.0.0/preset-safe` to target Data Grid as well.
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
+
+```bash
+// Date and Time Pickers specific
+npx @mui/x-codemod v7.0.0/pickers/preset-safe <path>
+// Target Data Grid as well
+npx @mui/x-codemod v7.0.0/preset-safe <path>
+```
+
+:::info
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers-v700) for more details.
+:::
+
+Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
+
+If you have already applied the `v7.0.0/pickers/preset-safe` (or `v7.0.0/preset-safe`) codemod, then you should not need to take any further action on these items.
+
+All other changes must be handled manually.
+
+:::warning
+Not all use cases are covered by codemods. In some scenarios, like props spreading, cross-file dependencies, etc., the changes are not properly identified and therefore must be handled manually.
+
+For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
+
+```tsx
+<DatePicker {...pickerProps} />
+```
+
+After running the codemods, make sure to test your application and that you don't have any console errors.
+
+Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
+:::
+
+## Component slots
 
 ### Rename `components` to `slots`
 
@@ -66,7 +104,7 @@ The same applies to `slotProps` and `componentsProps`.
 
 ### Change the imports of the `calendarHeader` slot
 
-The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DateCalendar` to `@mui/x-date-pickers/PIckersCalendarHeader`:
+The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DateCalendar` to `@mui/x-date-pickers/PickersCalendarHeader`:
 
 ```diff
   export {
