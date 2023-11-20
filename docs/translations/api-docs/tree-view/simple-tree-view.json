@@ -1,6 +1,11 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "children": {
+      "description": "The content of the component.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "classes": {
       "description": "Override or extend the styles applied to the component.",
       "deprecated": "",

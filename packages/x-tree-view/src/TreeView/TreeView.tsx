@@ -130,10 +130,6 @@ TreeView.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The content of the component.
-   */
-  children: PropTypes.node,
-  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
@@ -194,6 +190,15 @@ TreeView.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      children: PropTypes.arrayOf(PropTypes.object),
+      disabled: PropTypes.bool,
+      id: PropTypes.string,
+      label: PropTypes.string.isRequired,
+      nodeId: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
   /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false
