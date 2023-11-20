@@ -140,7 +140,7 @@
       "typeDescriptions": {}
     },
     "name": {
-      "description": "Name attribute used by the <code>input</code> element in the Field.",
+      "description": "Name attribute used by the <code>input</code> element in the Field. Ignored if the field has several inputs.",
       "deprecated": "",
       "typeDescriptions": {}
     },

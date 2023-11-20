@@ -185,6 +185,7 @@ DateRangePicker.propTypes = {
   minDate: PropTypes.any,
   /**
    * Name attribute used by the `input` element in the Field.
+   * Ignored if the field has several inputs.
    */
   name: PropTypes.string,
   /**
