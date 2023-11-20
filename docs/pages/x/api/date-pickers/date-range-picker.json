@@ -18,8 +18,8 @@
       "type": { "name": "func" },
       "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(day: string, date: TDate) => string",
-        "describedArgs": ["day", "date"],
+        "type": "function(date: TDate) => string",
+        "describedArgs": ["date"],
         "returned": "string"
       }
     },
@@ -147,6 +147,12 @@
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar"
+    },
+    {
+      "class": null,
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
     },
     {
       "class": null,
