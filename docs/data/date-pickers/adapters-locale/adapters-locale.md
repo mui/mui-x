@@ -217,6 +217,11 @@ Placeholders translations depend on locale.
 Some locales might keep using English placeholders, because that format is commonly used in a given locale.
 :::
 
+Certain formats might result in a placeholder that is not the most ideal for your use case.
+You can use the appropriate `localeText` prop field to adjust the resulting placeholder to your needs.
+
+{{"demo": "FieldPlaceholderCustomization.js"}}
+
 ### Custom toolbar format
 
 To customize the format used in the toolbar, use the `toolbarFormat` prop of the `toolbar` slot.
