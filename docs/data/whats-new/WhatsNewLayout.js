@@ -24,7 +24,7 @@ const blogs = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#charts',
       },
       {
-        title: 'Tree view - stable version',
+        title: 'Tree View - stable version',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#tree-view',
       },
       {
@@ -32,7 +32,7 @@ const blogs = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#clearable-field',
       },
       {
-        title: 'Customization Playgrounds for date and time pickers',
+        title: 'Customization playgrounds for Date and Time Pickers',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#customization-playgrounds',
       },
       {
@@ -40,7 +40,7 @@ const blogs = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
       },
       {
-        title: 'Sparklines on DataGrid ',
+        title: 'Sparklines on Data Grid ',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#sparkline-as-a-column-type',
       },
     ],
