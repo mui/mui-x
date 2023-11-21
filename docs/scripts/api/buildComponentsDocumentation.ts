@@ -75,7 +75,6 @@ function extractSlots(options: {
   project: XTypeScriptProject;
 }) {
   const { filename, name: componentName, displayName, project } = options;
-  const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
   const components = getPropTypesFromFile({
     filePath: filename,
@@ -93,18 +92,19 @@ function extractSlots(options: {
     throw new Error(`No proptypes found for \`${displayName}\``);
   }
 
-  const componentsProps = props.types.find((type) => type.name === 'slots')!;
-  if (!componentsProps) {
-    return slots;
+  const rawSlots = props.types.find((type) => type.name === 'slots')!;
+  if (!rawSlots) {
+    return {};
   }
 
-  const propType = componentsProps.propType as UnionType;
+  const propType = rawSlots.propType as UnionType;
   const propInterface = propType.types.find((type) => type.type === 'InterfaceNode');
   if (!propInterface) {
     throw new Error(`The \`slots\` prop in \`${componentName}\` is not an interface.`);
   }
 
   const types = [...(propInterface as InterfaceType).types].sort((a, b) => (a[0] > b[0] ? 1 : -1));
+  const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
