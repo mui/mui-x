@@ -54,7 +54,7 @@
   },
   "spread": true,
   "forwardsRefTo": "HTMLLIElement",
-  "filename": "/@mui/x-tree-view/SimpleTreeItem/SimpleTreeItem.tsx",
+  "filename": "/packages/x-tree-view/src/SimpleTreeItem/SimpleTreeItem.tsx",
   "inheritance": null,
   "demos": "<ul></ul>"
 }

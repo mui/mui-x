@@ -13,7 +13,7 @@ import Portal from '@mui/material/Portal';
 import {
   SimpleTreeView,
   simpleTreeViewClasses as classes,
-} from 'packages/x-tree-view/src/SimpleTreeView';
+} from '@mui/x-tree-view/src/SimpleTreeView';
 import { SimpleTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
 
 describe('<SimpleTreeView />', () => {

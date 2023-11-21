@@ -6,7 +6,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeViewItem } from '@mui/x-tree-view/models';
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
-import { TreeViewPropsBase } from 'packages/x-tree-view/src/TreeView';
+import { TreeViewPropsBase } from '@mui/x-tree-view/src/TreeView';
 import {
   TreeViewPlugin,
   TreeViewPluginSignature,
