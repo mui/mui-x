@@ -872,7 +872,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).toHaveVirtualFocus();
         });
 
-        it.only('moves focus to the next node with the same starting character', () => {
+        it('moves focus to the next node with the same starting character', () => {
           const { getByRole, getByTestId } = render(
             <SimpleTreeView id="tree">
               <TreeItem nodeId="one" label="one" data-testid="one" />
