@@ -48,7 +48,7 @@ const blogs: Blog[] = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
       },
       {
-        title: 'Sparklines on DataGrid ',
+        title: 'Sparklines on Data Grid ',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#sparkline-as-a-column-type',
       },
     ],
