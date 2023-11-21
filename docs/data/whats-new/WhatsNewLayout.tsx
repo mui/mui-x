@@ -32,7 +32,7 @@ const blogs: Blog[] = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#charts',
       },
       {
-        title: 'Tree view - stable version',
+        title: 'Tree View - stable version',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#tree-view',
       },
       {
@@ -40,7 +40,7 @@ const blogs: Blog[] = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#clearable-field',
       },
       {
-        title: 'Customization Playgrounds for date and time pickers',
+        title: 'Customization playgrounds for Date and Time Pickers',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#customization-playgrounds',
       },
       {
