@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateField } from '@mui/x-date-pickers/DateField';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function FieldPlaceholderCustomization() {
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDayjs}
-      localeText={{
-        fieldMonthPlaceholder: () => 'MMM',
-      }}
-    >
-      <DateField format="DD MMM YYYY" />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DatePicker
+        format="DD MMM YYYY"
+        localeText={{
+          // Define it on the `LocalizationProvider` if you want to change this translation globally
+          fieldMonthPlaceholder: () => 'MMM',
+        }}
+      />
     </LocalizationProvider>
   );
 }

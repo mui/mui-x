@@ -1,1 +1,7 @@
-<DateField format="DD MMM YYYY" />
+<DatePicker
+  format="DD MMM YYYY"
+  localeText={{
+    // Define it on the `LocalizationProvider` if you want to change this translation globally
+    fieldMonthPlaceholder: () => 'MMM',
+  }}
+/>
