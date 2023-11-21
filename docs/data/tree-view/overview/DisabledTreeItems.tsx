@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { SimpleTreeItem } from 'packages/x-tree-view/src/SimpleTreeItem';
 
 export default function DisabledTreeItems() {
   const [focusDisabledItems, setFocusDisabledItems] = React.useState(false);
@@ -34,16 +34,16 @@ export default function DisabledTreeItems() {
         disabledItemsFocusable={focusDisabledItems}
         multiSelect
       >
-        <TreeItem nodeId="1" label="Applications">
-          <TreeItem nodeId="2" label="Calendar" />
-        </TreeItem>
-        <TreeItem nodeId="11" label="Blog" disabled />
-        <TreeItem nodeId="5" label="Documents">
-          <TreeItem nodeId="10" label="OSS" />
-          <TreeItem nodeId="6" label="MUI">
-            <TreeItem nodeId="8" label="index.js" />
-          </TreeItem>
-        </TreeItem>
+        <SimpleTreeItem nodeId="1" label="Applications">
+          <SimpleTreeItem nodeId="2" label="Calendar" />
+        </SimpleTreeItem>
+        <SimpleTreeItem nodeId="11" label="Blog" disabled />
+        <SimpleTreeItem nodeId="5" label="Documents">
+          <SimpleTreeItem nodeId="10" label="OSS" />
+          <SimpleTreeItem nodeId="6" label="MUI">
+            <SimpleTreeItem nodeId="8" label="index.js" />
+          </SimpleTreeItem>
+        </SimpleTreeItem>
       </SimpleTreeView>
     </Box>
   );

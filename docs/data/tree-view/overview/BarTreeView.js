@@ -3,7 +3,10 @@ import { styled, alpha } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
+import {
+  SimpleTreeItem,
+  useTreeItem,
+} from 'packages/x-tree-view/src/SimpleTreeItem';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -115,7 +118,7 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
 });
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  return <TreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
+  return <SimpleTreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
 });
 
 export default function BarTreeView() {

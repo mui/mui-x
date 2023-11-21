@@ -13,7 +13,11 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import {
+  SimpleTreeItem,
+  TreeItemProps,
+  treeItemClasses,
+} from 'packages/x-tree-view/src/SimpleTreeItem';
 
 declare module 'react' {
   interface CSSProperties {
@@ -32,7 +36,7 @@ type StyledTreeItemProps = TreeItemProps & {
   labelText: string;
 };
 
-const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
+const StyledTreeItemRoot = styled(SimpleTreeItem)(({ theme }) => ({
   color: theme.palette.text.secondary,
   [`& .${treeItemClasses.content}`]: {
     color: theme.palette.text.secondary,
@@ -61,7 +65,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
       paddingLeft: theme.spacing(2),
     },
   },
-})) as unknown as typeof TreeItem;
+})) as unknown as typeof SimpleTreeItem;
 
 const StyledTreeItem = React.forwardRef(function StyledTreeItem(
   props: StyledTreeItemProps,

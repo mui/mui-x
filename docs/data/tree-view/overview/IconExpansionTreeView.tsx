@@ -6,11 +6,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
-  TreeItem,
+  SimpleTreeItem,
   TreeItemProps,
   useTreeItem,
   TreeItemContentProps,
-} from '@mui/x-tree-view/TreeItem';
+} from 'packages/x-tree-view/src/SimpleTreeItem';
 
 const CustomContent = React.forwardRef(function CustomContent(
   props: TreeItemContentProps,
@@ -85,7 +85,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  return <TreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
+  return <SimpleTreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
 });
 
 export default function IconExpansionTreeView() {

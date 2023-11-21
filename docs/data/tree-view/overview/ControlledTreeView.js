@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { SimpleTreeItem } from 'packages/x-tree-view/src/SimpleTreeItem';
 
 export default function ControlledTreeView() {
   const [expanded, setExpanded] = React.useState([]);
@@ -50,19 +50,19 @@ export default function ControlledTreeView() {
         onNodeSelect={handleSelect}
         multiSelect
       >
-        <TreeItem nodeId="1" label="Applications">
-          <TreeItem nodeId="2" label="Calendar" />
-          <TreeItem nodeId="3" label="Chrome" />
-          <TreeItem nodeId="4" label="Webstorm" />
-        </TreeItem>
-        <TreeItem nodeId="5" label="Documents">
-          <TreeItem nodeId="6" label="MUI">
-            <TreeItem nodeId="7" label="src">
-              <TreeItem nodeId="8" label="index.js" />
-              <TreeItem nodeId="9" label="tree-view.js" />
-            </TreeItem>
-          </TreeItem>
-        </TreeItem>
+        <SimpleTreeItem nodeId="1" label="Applications">
+          <SimpleTreeItem nodeId="2" label="Calendar" />
+          <SimpleTreeItem nodeId="3" label="Chrome" />
+          <SimpleTreeItem nodeId="4" label="Webstorm" />
+        </SimpleTreeItem>
+        <SimpleTreeItem nodeId="5" label="Documents">
+          <SimpleTreeItem nodeId="6" label="MUI">
+            <SimpleTreeItem nodeId="7" label="src">
+              <SimpleTreeItem nodeId="8" label="index.js" />
+              <SimpleTreeItem nodeId="9" label="tree-view.js" />
+            </SimpleTreeItem>
+          </SimpleTreeItem>
+        </SimpleTreeItem>
       </SimpleTreeView>
     </Box>
   );

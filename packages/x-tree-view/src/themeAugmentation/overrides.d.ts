@@ -1,4 +1,4 @@
-import { TreeItemClassKey } from '../TreeItem';
+import { TreeItemClassKey } from '../SimpleTreeItem';
 import { TreeViewClassKey } from '../TreeView';
 import { SimpleTreeViewClassKey } from '../SimpleTreeView';
 

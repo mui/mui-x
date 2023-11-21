@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { SimpleTreeItem } from 'packages/x-tree-view/src/SimpleTreeItem';
 
 interface RenderTree {
   id: string;
@@ -34,11 +34,11 @@ const data: RenderTree = {
 
 export default function RichObjectTreeView() {
   const renderTree = (nodes: RenderTree) => (
-    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+    <SimpleTreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
         : null}
-    </TreeItem>
+    </SimpleTreeItem>
   );
 
   return (

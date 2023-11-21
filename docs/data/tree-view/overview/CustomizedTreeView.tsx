@@ -6,7 +6,11 @@ import { TransitionProps } from '@mui/material/transitions';
 import Collapse from '@mui/material/Collapse';
 import { alpha, styled } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import {
+  SimpleTreeItem,
+  TreeItemProps,
+  treeItemClasses,
+} from 'packages/x-tree-view/src/SimpleTreeItem';
 
 function MinusSquare(props: SvgIconProps) {
   return (
@@ -57,7 +61,7 @@ function TransitionComponent(props: TransitionProps) {
 
 const CustomTreeItem = React.forwardRef(
   (props: TreeItemProps, ref: React.Ref<HTMLLIElement>) => (
-    <TreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
+    <SimpleTreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
   ),
 );
 

@@ -8,10 +8,10 @@ import {
   TreeItemDescendant,
   useDescendant,
 } from '../internals/TreeViewProvider/DescendantProvider';
-import { TreeItemProps } from './TreeItem.types';
+import { SimpleTreeItemProps } from './SimpleTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
-import { TreeItem as BaseTreeItem } from '../internals/components/TreeItem';
+import { TreeItem } from '../internals/components/TreeItem';
 
 /**
  *
@@ -23,8 +23,8 @@ import { TreeItem as BaseTreeItem } from '../internals/components/TreeItem';
  *
  * - [TreeItem API](https://mui.com/x/api/tree-view/tree-item/)
  */
-export const TreeItem = React.forwardRef(function TreeItem(
-  props: TreeItemProps,
+export const SimpleTreeItem = React.forwardRef(function SimpleTreeItem(
+  props: SimpleTreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
   const {
@@ -96,12 +96,12 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   return (
     <DescendantProvider id={nodeId}>
-      <BaseTreeItem {...props} ref={handleRef} ContentProps={ContentProps} />
+      <TreeItem {...props} ref={handleRef} ContentProps={ContentProps} />
     </DescendantProvider>
   );
 });
 
-TreeItem.propTypes = {
+SimpleTreeItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
