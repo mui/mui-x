@@ -127,6 +127,7 @@ The imports related to the `calendarHeader` slot have been moved from `@mui/x-da
 The deprecated `shouldDisableClock` prop has been removed in favor of the more flexible `shouldDisableTime` prop.
 The `shouldDisableClock` prop received `value` as a `number` of hours, minutes, or seconds.
 Instead, the `shouldDisableTime` prop receives the date object (based on the used adapter).
+You can read more about the deprecation of this prop in [v6 migration guide](/x/migration/migration-pickers-v5/#%E2%9C%85-rename-or-refactor-shoulddisabletime-prop).
 
 ```diff
  <DateTimePicker
