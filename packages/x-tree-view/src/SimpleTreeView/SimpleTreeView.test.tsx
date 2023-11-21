@@ -10,10 +10,7 @@ import {
   describeConformance,
 } from '@mui-internal/test-utils';
 import Portal from '@mui/material/Portal';
-import {
-  SimpleTreeView,
-  simpleTreeViewClasses as classes,
-} from '@mui/x-tree-view/src/SimpleTreeView';
+import { SimpleTreeView, simpleTreeViewClasses as classes } from '@mui/x-tree-view/SimpleTreeView';
 import { SimpleTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
 
 describe('<SimpleTreeView />', () => {
