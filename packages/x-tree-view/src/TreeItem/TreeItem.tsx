@@ -27,7 +27,14 @@ export const TreeItem = React.forwardRef(function TreeItem(
   props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const { children, disabled: disabledProp, label, nodeId, id: idProp } = props;
+  const {
+    children,
+    disabled: disabledProp,
+    label,
+    nodeId,
+    id: idProp,
+    ContentProps: inContentProps,
+  } = props;
 
   const { treeId, instance } = useTreeViewContext<DefaultTreeViewPlugins>();
 
@@ -74,7 +81,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   React.useEffect(() => {
     if (instance && label) {
-      return instance.mapFirstChar(
+      return instance.mapFirstCharFromJSX(
         nodeId,
         (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
       );
@@ -82,9 +89,14 @@ export const TreeItem = React.forwardRef(function TreeItem(
     return undefined;
   }, [instance, nodeId, label]);
 
+  const ContentProps = {
+    ...inContentProps,
+    ref: contentRef,
+  };
+
   return (
     <DescendantProvider id={nodeId}>
-      <BaseTreeItem {...props} ref={handleRef} />
+      <BaseTreeItem {...props} ref={handleRef} ContentProps={ContentProps} />
     </DescendantProvider>
   );
 });

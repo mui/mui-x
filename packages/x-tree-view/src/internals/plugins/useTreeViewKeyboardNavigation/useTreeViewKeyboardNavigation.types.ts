@@ -5,7 +5,7 @@ import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewKeyboardNavigationInstance {
-  mapFirstChar: (nodeId: string, firstChar: string) => () => void;
+  mapFirstCharFromJSX: (nodeId: string, firstChar: string) => () => void;
 }
 
 export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<

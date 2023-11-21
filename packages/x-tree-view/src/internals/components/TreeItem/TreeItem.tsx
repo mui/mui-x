@@ -137,14 +137,7 @@ const TreeItemGroup = styled(Collapse, {
 });
 
 /**
- *
- * Demos:
- *
- * - [Tree View](https://mui.com/x/react-tree-view/)
- *
- * API:
- *
- * - [TreeItem API](https://mui.com/x/api/tree-view/tree-item/)
+ * @ignore - do not document.
  */
 export const TreeItem = React.forwardRef(function TreeItem(
   inProps: TreeItemProps,
@@ -185,8 +178,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
   } else if (treeId && nodeId) {
     id = `${treeId}-${nodeId}`;
   }
-
-  const contentRef = React.useRef<HTMLDivElement>(null);
 
   const expandable = Boolean(Array.isArray(children) ? children.length : children);
   const expanded = instance ? instance.isNodeExpanded(nodeId) : false;
@@ -270,7 +261,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     >
       <StyledTreeItemContent
         as={ContentComponent}
-        ref={contentRef}
         classes={{
           root: classes.content,
           expanded: classes.expanded,

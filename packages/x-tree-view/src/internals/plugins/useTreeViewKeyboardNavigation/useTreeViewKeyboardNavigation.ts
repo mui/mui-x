@@ -32,8 +32,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';
   const firstCharMap = React.useRef<{ [nodeId: string]: string }>({});
+  const hasUsedJSXToMapFirstChar = React.useRef(false);
 
-  const mapFirstChar = useEventCallback((nodeId: string, firstChar: string) => {
+  const mapFirstCharFromJSX = useEventCallback((nodeId: string, firstChar: string) => {
+    hasUsedJSXToMapFirstChar.current = true;
     firstCharMap.current[nodeId] = firstChar;
 
     return () => {
@@ -44,6 +46,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   });
 
   React.useEffect(() => {
+    if (hasUsedJSXToMapFirstChar.current) {
+      return;
+    }
+
     const newFirstCharMap: { [nodeId: string]: string } = {};
 
     const processItem = (item: TreeViewItem) => {
@@ -57,7 +63,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   }, [params.items]);
 
   populateInstance<UseTreeViewKeyboardNavigationSignature>(instance, {
-    mapFirstChar,
+    mapFirstCharFromJSX,
   });
 
   const handleNextArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {
