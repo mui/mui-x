@@ -1,7 +1,14 @@
 import * as React from 'react';
-import { createRenderer, screen, userEvent, within, act } from '@mui-internal/test-utils';
+import {
+  createRenderer,
+  screen,
+  userEvent,
+  within,
+  act,
+  fireEvent,
+} from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
@@ -12,6 +19,7 @@ import {
   GridRenderCellParams,
   GridGroupNode,
   useGridApiRef,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -145,6 +153,35 @@ describe('<DataGridPremium /> - Aggregation', () => {
         expect(getColumnHeaderCell(0, 0).textContent).to.equal('idmax');
         setProps({ aggregationModel: {} });
         expect(getColumnHeaderCell(0, 0).textContent).to.equal('id');
+      });
+
+      // See https://github.com/mui/mui-x/issues/10864
+      it('should correctly handle changing aggregated column from non-editable to editable', async () => {
+        const column: GridColDef = { field: 'value', type: 'number', editable: false };
+        const { setProps } = render(
+          <Test
+            columns={[column]}
+            rows={[
+              { id: 1, value: 1 },
+              { id: 2, value: 10 },
+            ]}
+            aggregationModel={{ value: 'sum' }}
+          />,
+        );
+
+        const cell = getCell(0, 0);
+
+        fireEvent.doubleClick(cell);
+        expect(cell.querySelector('input')).to.equal(null);
+
+        setProps({ columns: [{ ...column, editable: true }] });
+        fireEvent.doubleClick(cell);
+        expect(cell.querySelector('input')).not.to.equal(null);
+        userEvent.mousePress(getCell(1, 0));
+
+        setProps({ columns: [column] });
+        fireEvent.doubleClick(cell);
+        expect(cell.querySelector('input')).to.equal(null);
       });
     });
   });
