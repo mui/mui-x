@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { SimpleTreeItem } from 'packages/x-tree-view/src/SimpleTreeItem';
+import { SimpleTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
 
 export default function ControlledTreeView() {
   const [expanded, setExpanded] = React.useState<string[]>([]);

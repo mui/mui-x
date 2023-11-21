@@ -7,10 +7,10 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
   SimpleTreeItem,
-  TreeItemProps,
+  SimpleTreeItemProps,
   useTreeItem,
   TreeItemContentProps,
-} from 'packages/x-tree-view/src/SimpleTreeItem';
+} from '@mui/x-tree-view/SimpleTreeItem';
 
 const CustomContent = React.forwardRef(function CustomContent(
   props: TreeItemContentProps,
@@ -82,7 +82,7 @@ const CustomContent = React.forwardRef(function CustomContent(
 });
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItemProps,
+  props: SimpleTreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
   return <SimpleTreeItem ContentComponent={CustomContent} {...props} ref={ref} />;

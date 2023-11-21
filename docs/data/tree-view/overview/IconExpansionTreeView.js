@@ -5,10 +5,7 @@ import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import {
-  SimpleTreeItem,
-  useTreeItem,
-} from 'packages/x-tree-view/src/SimpleTreeItem';
+import { SimpleTreeItem, useTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
 
 const CustomContent = React.forwardRef(function CustomContent(props, ref) {
   const {

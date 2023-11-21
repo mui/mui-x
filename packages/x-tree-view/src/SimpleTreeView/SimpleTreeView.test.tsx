@@ -14,7 +14,7 @@ import {
   SimpleTreeView,
   simpleTreeViewClasses as classes,
 } from 'packages/x-tree-view/src/SimpleTreeView';
-import { SimpleTreeItem } from 'packages/x-tree-view/src/SimpleTreeItem';
+import { SimpleTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
 
 describe('<SimpleTreeView />', () => {
   const { render } = createRenderer();

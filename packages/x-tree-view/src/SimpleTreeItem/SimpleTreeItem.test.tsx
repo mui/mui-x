@@ -11,10 +11,7 @@ import {
   screen,
 } from '@mui-internal/test-utils';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import {
-  SimpleTreeItem,
-  treeItemClasses as classes,
-} from 'packages/x-tree-view/src/SimpleTreeItem';
+import { SimpleTreeItem, treeItemClasses as classes } from '@mui/x-tree-view/SimpleTreeItem';
 
 describe('<SimpleTreeItem />', () => {
   const { render } = createRenderer();

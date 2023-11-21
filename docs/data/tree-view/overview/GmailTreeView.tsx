@@ -15,9 +15,9 @@ import { SvgIconProps } from '@mui/material/SvgIcon';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
   SimpleTreeItem,
-  TreeItemProps,
+  SimpleTreeItemProps,
   treeItemClasses,
-} from 'packages/x-tree-view/src/SimpleTreeItem';
+} from '@mui/x-tree-view/SimpleTreeItem';
 
 declare module 'react' {
   interface CSSProperties {
@@ -26,7 +26,7 @@ declare module 'react' {
   }
 }
 
-type StyledTreeItemProps = TreeItemProps & {
+type StyledTreeItemProps = SimpleTreeItemProps & {
   bgColor?: string;
   bgColorForDarkMode?: string;
   color?: string;

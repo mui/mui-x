@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { SimpleTreeItem } from 'packages/x-tree-view/src/SimpleTreeItem';
+import { SimpleTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
 
 export default function DisabledTreeItems() {
   const [focusDisabledItems, setFocusDisabledItems] = React.useState(false);

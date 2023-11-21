@@ -6,10 +6,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import Collapse from '@mui/material/Collapse';
 import { alpha, styled } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import {
-  SimpleTreeItem,
-  treeItemClasses,
-} from 'packages/x-tree-view/src/SimpleTreeItem';
+import { SimpleTreeItem, treeItemClasses } from '@mui/x-tree-view/SimpleTreeItem';
 
 function MinusSquare(props) {
   return (

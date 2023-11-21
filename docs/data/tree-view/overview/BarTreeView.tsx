@@ -5,10 +5,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
   SimpleTreeItem,
-  TreeItemProps,
+  SimpleTreeItemProps,
   useTreeItem,
   TreeItemContentProps,
-} from 'packages/x-tree-view/src/SimpleTreeItem';
+} from '@mui/x-tree-view/SimpleTreeItem';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -123,7 +123,7 @@ const CustomContent = React.forwardRef(function CustomContent(
 });
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItemProps,
+  props: SimpleTreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
   return <SimpleTreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
