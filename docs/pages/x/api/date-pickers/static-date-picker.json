@@ -23,7 +23,11 @@
         "returned": "string"
       }
     },
-    "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultCalendarMonth": {
+      "type": { "name": "any" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>referenceDate</code> instead."
+    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
