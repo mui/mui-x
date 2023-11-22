@@ -92,7 +92,7 @@ The list includes these transformers
 
 #### `rename-components-to-slots-pickers`
 
-Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+Renames the `components` and `componentsProps` props to `slots` and `slotProps` respectively.
 
 This change only affects pickers components.
 
