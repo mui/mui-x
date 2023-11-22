@@ -1,4 +1,9 @@
-function defaultizeValueFormatter<ISeries extends {}, IFormatter extends (v: any) => string>(
+import { isFunction } from './utils';
+
+function defaultizeValueFormatter<
+  ISeries extends { valueFormatter?: IFormatter },
+  IFormatter extends (v: any) => string,
+>(
   series: {
     [id: string]: ISeries;
   },
@@ -15,8 +20,8 @@ function defaultizeValueFormatter<ISeries extends {}, IFormatter extends (v: any
   } = {};
   Object.keys(series).forEach((seriesId) => {
     defaultizedSeries[seriesId] = {
-      valueFormatter: defaultValueFormatter,
       ...series[seriesId],
+      valueFormatter: isFunction(series[seriesId]) ? series[seriesId] : defaultValueFormatter,
     };
   });
   return defaultizedSeries;
