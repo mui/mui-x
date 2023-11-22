@@ -35,6 +35,12 @@ const MUI_X_PRODUCTS = [
       { nodeId: 'tree-view-pro', label: '@mui/x-tree-view-pro', disabled: true },
     ],
   },
+  {
+    nodeId: 'scheduler',
+    label: 'Scheduler',
+    disabled: true,
+    children: [{ nodeId: 'scheduler-community', label: '@mui/x-scheduler' }],
+  },
 ];
 
 const isItemDisabled = (item) => !!item.disabled;
