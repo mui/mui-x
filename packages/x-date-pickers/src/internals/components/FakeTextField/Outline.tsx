@@ -18,7 +18,7 @@ const OutlineRoot = styled('fieldset')({
   minWidth: '0%',
 });
 
-const OutlineLegend = styled('legend')(({ ownerState, theme }) => ({
+const OutlineLegend = styled('legend')<{ ownerState: any }>(({ ownerState, theme }) => ({
   float: 'unset', // Fix conflict with bootstrap
   width: 'auto', // Fix conflict with bootstrap
   overflow: 'hidden', // Fix Horizontal scroll when label too long
