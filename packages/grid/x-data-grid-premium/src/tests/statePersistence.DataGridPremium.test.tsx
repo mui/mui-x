@@ -8,10 +8,9 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, act } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { getColumnValues } from '../../../../../test/utils/helperFn';
+import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -48,7 +47,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
 };
 
-describe('<DataGridPremium /> - State Persistence', () => {
+describe('<DataGridPremium /> - State persistence', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;

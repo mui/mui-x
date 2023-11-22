@@ -6,6 +6,9 @@ export type {
   GridColDef,
   GridColTypeDef,
   GridColumnsMeta,
+  GridSingleSelectColDef,
+  GridActionsColDef,
+  GetApplyQuickFilterFn,
 } from './gridColDef';
 
 // Other types

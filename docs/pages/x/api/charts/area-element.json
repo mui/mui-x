@@ -1,0 +1,26 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [
+    {
+      "class": null,
+      "name": "area",
+      "description": "The component that renders the root.",
+      "default": "AreaElementPath"
+    }
+  ],
+  "name": "AreaElement",
+  "imports": [
+    "import { AreaElement } from '@mui/x-charts/LineChart';",
+    "import { AreaElement } from '@mui/x-charts';"
+  ],
+  "styles": {
+    "classes": ["root", "highlighted", "faded"],
+    "globalClasses": {},
+    "name": "MuiAreaElement"
+  },
+  "filename": "/packages/x-charts/src/LineChart/AreaElement.tsx",
+  "demos": "<ul></ul>"
+}

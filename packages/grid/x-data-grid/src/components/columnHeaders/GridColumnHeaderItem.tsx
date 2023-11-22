@@ -21,8 +21,6 @@ interface GridColumnHeaderItemProps {
   headerHeight: number;
   isDragging: boolean;
   isResizing: boolean;
-  isLastColumn: boolean;
-  extendRowFullWidth: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
   filterItemsCounter?: number;
@@ -75,13 +73,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     colIndex,
     headerHeight,
     isResizing,
-    isLastColumn,
     sortDirection,
     sortIndex,
     filterItemsCounter,
     hasFocus,
     tabIndex,
-    extendRowFullWidth,
     disableReorder,
     separatorSide,
   } = props;
@@ -92,10 +88,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
-  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
-    hasScrollX: false,
-    hasScrollY: false,
-  };
 
   const isDraggable = React.useMemo(
     () => !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder,
@@ -107,15 +99,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     headerComponent = colDef.renderHeader(apiRef.current.getColumnHeaderParams(colDef.field));
   }
 
-  const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
-  const showRightBorder = !isLastColumn
-    ? rootProps.showColumnVerticalBorder
-    : !removeLastBorderRight && !extendRowFullWidth;
-
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showRightBorder,
+    showRightBorder: rootProps.showColumnVerticalBorder,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -165,7 +152,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   const columnHeaderSeparatorProps = React.useMemo(
-    () => ({ onMouseDown: publish('columnSeparatorMouseDown') }),
+    () => ({
+      onMouseDown: publish('columnSeparatorMouseDown'),
+      onDoubleClick: publish('columnSeparatorDoubleClick'),
+    }),
     [publish],
   );
 
@@ -196,21 +186,21 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       field={colDef.field}
       open={columnMenuOpen}
       target={iconButtonRef.current}
-      ContentComponent={rootProps.components.ColumnMenu}
-      contentComponentProps={rootProps.componentsProps?.columnMenu}
+      ContentComponent={rootProps.slots.columnMenu}
+      contentComponentProps={rootProps.slotProps?.columnMenu}
       onExited={handleExited}
     />
   );
 
-  const sortingOrder: GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
+  const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
 
   const columnTitleIconButtons = (
     <React.Fragment>
       {!rootProps.disableColumnFilter && (
-        <rootProps.components.ColumnHeaderFilterIconButton
+        <rootProps.slots.columnHeaderFilterIconButton
           field={colDef.field}
           counter={filterItemsCounter}
-          {...rootProps.componentsProps?.columnHeaderFilterIconButton}
+          {...rootProps.slotProps?.columnHeaderFilterIconButton}
         />
       )}
 
@@ -281,12 +271,10 @@ GridColumnHeaderItem.propTypes = {
   colIndex: PropTypes.number.isRequired,
   columnMenuOpen: PropTypes.bool.isRequired,
   disableReorder: PropTypes.bool,
-  extendRowFullWidth: PropTypes.bool.isRequired,
   filterItemsCounter: PropTypes.number,
   hasFocus: PropTypes.bool,
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
-  isLastColumn: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
   separatorSide: PropTypes.oneOf(['left', 'right']),
   sortDirection: PropTypes.oneOf(['asc', 'desc']),

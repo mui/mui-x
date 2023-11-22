@@ -6,7 +6,6 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ei rivejä',
   noResultsOverlayLabel: 'Ei tuloksia.',
-  errorOverlayDefaultLabel: 'Tapahtui virhe.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tiiveys',
@@ -48,8 +47,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
+  filterPanelRemoveAll: 'Poista kaikki',
   filterPanelDeleteIconLabel: 'Poista',
-  filterPanelLinkOperator: 'Logiikkaoperaattori',
+  filterPanelLogicOperator: 'Logiikkaoperaattori',
   filterPanelOperator: 'Operaattorit',
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',
@@ -59,7 +59,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'sisältää',
-  filterOperatorEquals: 'on yhtä suuri',
+  filterOperatorEquals: 'on yhtä suuri kuin',
   filterOperatorStartsWith: 'alkaa',
   filterOperatorEndsWith: 'päättyy',
   filterOperatorIs: 'on',
@@ -70,7 +70,34 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'on sama tai ennen',
   filterOperatorIsEmpty: 'on tyhjä',
   filterOperatorIsNotEmpty: 'ei ole tyhjä',
-  filterOperatorIsAnyOf: 'mikä tahansa seuraavista',
+  filterOperatorIsAnyOf: 'on mikä tahansa seuraavista',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Sisältää',
+  headerFilterOperatorEquals: 'On yhtä suuri kuin',
+  headerFilterOperatorStartsWith: 'Alkaa',
+  headerFilterOperatorEndsWith: 'Päättyy',
+  headerFilterOperatorIs: 'On',
+  headerFilterOperatorNot: 'Ei ole',
+  headerFilterOperatorAfter: 'On jälkeen',
+  headerFilterOperatorOnOrAfter: 'On sama tai jälkeen',
+  headerFilterOperatorBefore: 'On ennen',
+  headerFilterOperatorOnOrBefore: 'On sama tai ennen',
+  headerFilterOperatorIsEmpty: 'On tyhjä',
+  headerFilterOperatorIsNotEmpty: 'Ei ole tyhjä',
+  headerFilterOperatorIsAnyOf: 'On mikä tahansa seuraavista',
+  'headerFilterOperator=': 'On yhtä suuri kuin',
+  'headerFilterOperator!=': 'Ei ole yhtä suuri kuin',
+  'headerFilterOperator>': 'Enemmän kuin',
+  'headerFilterOperator>=': 'Enemmän tai yhtä paljon kuin',
+  'headerFilterOperator<': 'Vähemmän kuin',
+  'headerFilterOperator<=': 'Vähemmän tai yhtä paljon kuin',
 
   // Filter values text
   filterValueAny: 'mikä tahansa',
@@ -80,7 +107,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Valikko',
   columnMenuShowColumns: 'Näytä sarakkeet',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Hallitse sarakkeita',
   columnMenuFilter: 'Suodata',
   columnMenuHideColumn: 'Piilota',
   columnMenuUnsort: 'Poista järjestys',

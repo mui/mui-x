@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -7,7 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 function ActionList(props) {
   const { onAccept, onClear, onCancel, onSetToday, className } = props;
@@ -32,19 +31,11 @@ function ActionList(props) {
   );
 }
 
-ActionList.propTypes = {
-  className: PropTypes.string,
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
-};
-
 export default function MovingActions() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
-        componentsProps={{
+      <StaticDatePicker
+        slotProps={{
           layout: {
             sx: {
               [`.${pickersLayoutClasses.actionBar}`]: {
@@ -54,8 +45,8 @@ export default function MovingActions() {
             },
           },
         }}
-        components={{
-          ActionBar: ActionList,
+        slots={{
+          actionBar: ActionList,
         }}
       />
     </LocalizationProvider>

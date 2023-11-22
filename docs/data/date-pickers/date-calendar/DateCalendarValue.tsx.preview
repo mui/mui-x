@@ -1,5 +1,5 @@
 <DemoItem label="Uncontrolled calendar">
-  <DateCalendar defaultValue={dayjs('2022-04-07')} />
+  <DateCalendar defaultValue={dayjs('2022-04-17')} />
 </DemoItem>
 <DemoItem label="Controlled calendar">
   <DateCalendar value={value} onChange={(newValue) => setValue(newValue)} />

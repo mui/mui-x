@@ -1,12 +1,12 @@
 ---
-product: date-pickers
-title: Date and Time Pickers - Localization
+productId: x-date-pickers
+title: Date and Time Pickers - Translated components
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Date and Time Pickers - Localization
+# Translated components
 
 <p class="description">Date and Time Pickers support translations between languages.</p>
 
@@ -18,7 +18,7 @@ The default locale of MUI is English (United States). If you want to use other l
 
 :::warning
 This page focuses on translating the text inside the Date and Time Pickers.
-If you need to change the formatting of the text to conform to a given locale, visit the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
+If you need to change the formatting of the text to conform to a given locale, visit the [Date format and localization](/x/react-date-pickers/adapters-locale/) page.
 :::
 
 ## Set translations globally
@@ -26,11 +26,11 @@ If you need to change the formatting of the text to conform to a given locale, v
 ### Using the theme
 
 To translate all your components from `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`,
-you just have to import the locale from `@mui/x-date-pikers` (see the [list of supported locales below](#supported-locales)).
+import the locale from `@mui/x-date-pickers` (see the [list of supported locales below](#supported-locales)).
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { deDE } from '@mui/x-date-pickers';
+import { deDE } from '@mui/x-date-pickers/locales';
 
 const theme = createTheme(
   {
@@ -53,7 +53,7 @@ If you are already using the [translations of the core components](/material-ui/
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { deDE as dataGridDeDE } from '@mui/x-data-grid';
 import { deDE as coreDeDE } from '@mui/material/locale';
-import { deDE } from '@mui/x-date-pickers';
+import { deDE } from '@mui/x-date-pickers/locales';
 
 const theme = createTheme(
   {
@@ -77,7 +77,9 @@ If you want to pass language translations without using `createTheme` and `Theme
 you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
 
 ```jsx
-import { LocalizationProvider, deDE, DatePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { deDE } from '@mui/x-date-pickers/locales';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 <LocalizationProvider
   localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}

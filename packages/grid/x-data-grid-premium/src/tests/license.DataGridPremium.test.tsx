@@ -1,10 +1,9 @@
 import * as React from 'react';
 import addYears from 'date-fns/addYears';
 import { expect } from 'chai';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer } from '@mui/monorepo/test/utils';
-import { DataGridPremium, LicenseInfo } from '@mui/x-data-grid-premium';
-import { generateLicense } from '@mui/x-license-pro';
+import { createRenderer, screen, waitFor } from '@mui-internal/test-utils';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { generateLicense, LicenseInfo } from '@mui/x-license-pro';
 
 describe('<DataGridPremium /> - License', () => {
   const { render } = createRenderer();
@@ -14,11 +13,24 @@ describe('<DataGridPremium /> - License', () => {
       generateLicense({
         expiryDate: addYears(new Date(), 1),
         orderNumber: 'Test',
+        licensingModel: 'subscription',
         scope: 'pro',
       }),
     );
     expect(() => render(<DataGridPremium columns={[]} rows={[]} autoHeight />)).toErrorDev([
       'MUI: License key plan mismatch',
     ]);
+  });
+
+  it('should render watermark when the license is missing', async () => {
+    LicenseInfo.setLicenseKey('');
+
+    expect(() => render(<DataGridPremium columns={[]} rows={[]} autoHeight />)).toErrorDev([
+      'MUI: Missing license key.',
+    ]);
+
+    await waitFor(() => {
+      expect(screen.getByText('MUI X Missing license key')).to.not.equal(null);
+    });
   });
 });

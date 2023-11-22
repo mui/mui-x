@@ -5,6 +5,7 @@ import {
   DATA_GRID_PROPS_DEFAULT_VALUES,
   GridValidRowModel,
 } from '@mui/x-data-grid';
+import { computeSlots, useProps } from '@mui/x-data-grid/internals';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
@@ -21,6 +22,8 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   scrollEndThreshold: 80,
   treeData: false,
   defaultGroupingExpansionDepth: 0,
+  autosizeOnMount: false,
+  disableAutosize: false,
   disableColumnPinning: false,
   keepColumnPositionIfDraggedOutside: false,
   disableChildrenFiltering: false,
@@ -28,42 +31,41 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   rowReordering: false,
   rowsLoadingMode: 'client',
   getDetailPanelHeight: () => 500,
+  unstable_headerFilters: false,
 };
 
+const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
+
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
-  const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
+  const themedProps = useProps(
+    useThemeProps({
+      props: inProps,
+      name: 'MuiDataGrid',
+    }),
+  );
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),
     [themedProps.localeText],
   );
 
-  const components = React.useMemo<GridProSlotsComponent>(() => {
-    const overrides = themedProps.components;
-
-    if (!overrides) {
-      return { ...DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS };
-    }
-
-    const mergedComponents = {} as GridProSlotsComponent;
-
-    type GridSlots = keyof GridProSlotsComponent;
-    Object.entries(DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS).forEach(([key, defaultComponent]) => {
-      mergedComponents[key as GridSlots] =
-        overrides[key as GridSlots] === undefined ? defaultComponent : overrides[key as GridSlots];
-    });
-
-    return mergedComponents;
-  }, [themedProps.components]);
+  const slots = React.useMemo<GridProSlotsComponent>(
+    () =>
+      computeSlots<GridProSlotsComponent>({
+        defaultSlots,
+        slots: themedProps.slots,
+      }),
+    [themedProps.slots],
+  );
 
   return React.useMemo<DataGridProProcessedProps<R>>(
     () => ({
       ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
       ...themedProps,
       localeText,
-      components,
+      slots,
       signature: 'DataGridPro',
     }),
-    [themedProps, localeText, components],
+    [themedProps, localeText, slots],
   );
 };

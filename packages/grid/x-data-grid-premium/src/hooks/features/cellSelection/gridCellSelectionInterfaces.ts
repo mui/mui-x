@@ -28,8 +28,8 @@ export interface GridCellSelectionApi {
   unstable_setCellSelectionModel: (newModel: GridCellSelectionModel) => void;
   /**
    * Selects all cells that are inside the range given by `start` and `end` coordinates.
-   * @param {GridCellCoordinates} start Object containg the row ID and field of the first cell to select.
-   * @param {GridCellCoordinates} end Object containg the row ID and field of the last cell to select.
+   * @param {GridCellCoordinates} start Object containing the row ID and field of the first cell to select.
+   * @param {GridCellCoordinates} end Object containing the row ID and field of the last cell to select.
    * @param {boolean} keepOtherSelected Whether to keep current selected cells or discard. Default is false.
    */
   unstable_selectCellRange: (
@@ -38,7 +38,7 @@ export interface GridCellSelectionApi {
     keepOtherSelected?: boolean,
   ) => void;
   /**
-   * Returns an array containg only the selected cells.
+   * Returns an array containing only the selected cells.
    * Each item is an object with the ID and field of the cell.
    * @returns {GridCellCoordinates[]} Array with the selected cells.
    */

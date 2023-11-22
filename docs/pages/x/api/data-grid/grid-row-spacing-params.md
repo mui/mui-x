@@ -2,6 +2,15 @@
 
 <p class="description">Object passed as parameter in the row `getRowSpacing` callback prop.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Row spacing](/x/react-data-grid/row-height/#row-spacing)
+
+:::
+
 ## Import
 
 ```js

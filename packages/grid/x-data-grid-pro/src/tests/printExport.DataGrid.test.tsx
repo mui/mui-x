@@ -9,8 +9,7 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, fireEvent, act } from '@mui-internal/test-utils';
 
 describe('<DataGridPro /> - Print export', () => {
   const { render, clock } = createRenderer();
@@ -22,7 +21,7 @@ describe('<DataGridPro /> - Print export', () => {
   const baselineProps = {
     ...defaultData,
     // A hack to remove the warning on print
-    rowsPerPageOptions: [NB_ROWS, 100],
+    pageSizeOptions: [NB_ROWS, 100],
   };
 
   function Test(props: Partial<DataGridProProps>) {
@@ -58,8 +57,8 @@ describe('<DataGridPro /> - Print export', () => {
     clock.withFakeTimers();
 
     it('should display print button by default', () => {
-      render(<Test components={{ Toolbar: GridToolbar }} />);
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      render(<Test slots={{ toolbar: GridToolbar }} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Print' })).not.to.equal(null);
     });
@@ -67,11 +66,11 @@ describe('<DataGridPro /> - Print export', () => {
     it('should disable print export when passing `printOptions.disableToolbarButton`', () => {
       render(
         <Test
-          components={{ Toolbar: GridToolbar }}
-          componentsProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
         />,
       );
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Print' })).to.equal(null);
     });

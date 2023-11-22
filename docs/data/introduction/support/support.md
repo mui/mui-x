@@ -14,7 +14,7 @@ You can search through existing issues and pull requests to see if someone has r
 
 Visit Stack Overflow to ask questions and read crowdsourced answers from expert developers in the MUI community, as well as MUI maintainers.
 
-[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui) on Stack Overflow.
+[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui-x) on Stack Overflow using the "mui-x" tag.
 
 ## Technical support
 
@@ -25,11 +25,27 @@ The technical support covers only MUI X components.
 When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your subscription.
 Support is available on multiple channels, but the recommended channels are:
 
-- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
+- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
 - Email: If you need to share **private information** you can [submit a request](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to [x@mui.com](mailto:x@mui.com).
 
-Including your Order ID in the issue helps us prioritize the issues based on the following support levels:
+Including your Order ID (or Support key) in the issue helps us prioritize the issues based on the following support levels:
 
 1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
 2. MUI X Premium: The same as MUI X Pro, but with higher priority.
-3. MUI X Priority support add-on (coming soon): Provides a 24h SLA for the first answer.
+3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
+
+### Long-term support (LTS)
+
+Bug fixes, performance enhancements, and other improvements are delivered in new releases. However, MUI remains committed to providing security updates and addressing regressions for the immediate predecessor of the current major version.
+
+This includes issues introduced by external sources, like browser upgrades or changes to upstream dependencies.
+
+### Supported versions
+
+- MUI X v7: ✅ Pre-release (Continuous support - Stable release: March 2024)
+- MUI X v6: ✅ Stable major (Continuous support)
+- MUI X v5: ⚠️ Long term support (Guaranteed Support for security issues and regressions).
+- MUI X v4: 🅧 No longer supported.
+- MUI X v3: 🅧 Never existed.
+- MUI X v2: 🅧 Never existed.
+- MUI X v1: 🅧 Never existed.

@@ -6,38 +6,59 @@
 
 Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-data-grid-premium` for the commercial version, or `@mui/x-data-grid` for the free community version.
 
-```sh
-// with npm
-npm install @mui/x-data-grid
+:::warning
+The `next` tag is used to download the latest v7 **pre-release** version.
+:::
 
-// with yarn
-yarn add @mui/x-data-grid
-```
+{{"component": "modules/components/DataGridInstallationInstructions.js"}}
 
-The grid package has a peer dependency on `@mui/material`.
+The Data Grid package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
-```sh
-// with npm
+<codeblock storageKey="package-manager">
+```bash npm
 npm install @mui/material @emotion/react @emotion/styled
+```
 
-// with yarn
+```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
 
+```bash pnpm
+pnpm add @mui/material @emotion/react @emotion/styled
+```
+
+</codeblock>
+
 <!-- #react-peer-version -->
 
-Please note that [react](https://www.npmjs.com/package/react) >= 17.0.0 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.0 are peer dependencies.
+Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
 
-MUI is using [emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
-
-```sh
-// with npm
-npm install @mui/material @mui/styled-engine-sc styled-components
-
-// with yarn
-yarn add @mui/material @mui/styled-engine-sc styled-components
+```json
+"peerDependencies": {
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
+},
 ```
+
+### Style engine
+
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+
+<codeblock storageKey="package-manager">
+```bash npm
+npm install @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
+```
+
+```bash pnpm
+pnpm add @mui/styled-engine-sc styled-components
+```
+
+</codeblock>
 
 :::info
 Take a look at the [Styled Engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
@@ -113,7 +134,7 @@ export default function App() {
 
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#global-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
+In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
@@ -145,7 +166,7 @@ Please pay attention to the license.
 
 The component comes [in different plans](https://mui.com/pricing/):
 
-- **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+- **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://www.tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 - **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
 - **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
 
@@ -163,6 +184,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column groups](/x/react-data-grid/column-groups/)                                     |    ✅     |                 ✅                 |                     ✅                     |
 | [Column spanning](/x/react-data-grid/column-spanning/)                                 |    ✅     |                 ✅                 |                     ✅                     |
 | [Column resizing](/x/react-data-grid/column-dimensions/#resizing)                      |    ❌     |                 ✅                 |                     ✅                     |
+| [Column autosizing](/x/react-data-grid/column-dimensions/#autosizing)                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/x/react-data-grid/column-ordering/)                                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                |           |                                    |                                            |
@@ -176,9 +198,10 @@ The enterprise components come in two plans: Pro and Premium.
 | [Multiple row selection](/x/react-data-grid/row-selection/#multiple-row-selection)     |    ❌     |                 ✅                 |                     ✅                     |
 | [Cell range selection](/x/react-data-grid/cell-selection/)                             |    ❌     |                 ❌                 |                     ✅                     |
 | **Filtering**                                                                          |           |                                    |                                            |
-| [Quick filter](/x/react-data-grid/filtering/#quick-filter)                             |    ✅     |                 ✅                 |                     ✅                     |
-| [Column filters](/x/react-data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |
-| [Multi-column filtering](/x/react-data-grid/filtering/#multi-filtering)                |    ❌     |                 ✅                 |                     ✅                     |
+| [Quick filter](/x/react-data-grid/filtering/quick-filter/)                             |    ✅     |                 ✅                 |                     ✅                     |
+| [Column filters](/x/react-data-grid/filtering/#single-and-multi-filters)               |    ✅     |                 ✅                 |                     ✅                     |
+| [Multi-column filtering](/x/react-data-grid/filtering/multi-filters/)                  |    ❌     |                 ✅                 |                     ✅                     |
+| [Header filtering](/x/react-data-grid/filtering/header-filters/)                       |    ❌     |                 ✅                 |                     ✅                     |
 | **Sorting**                                                                            |           |                                    |                                            |
 | [Column sorting](/x/react-data-grid/sorting/)                                          |    ✅     |                 ✅                 |                     ✅                     |
 | [Multi-column sorting](/x/react-data-grid/sorting/#multi-sorting)                      |    ❌     |                 ✅                 |                     ✅                     |
@@ -191,7 +214,8 @@ The enterprise components come in two plans: Pro and Premium.
 | **Import & export**                                                                    |           |                                    |                                            |
 | [CSV export](/x/react-data-grid/export/#csv-export)                                    |    ✅     |                 ✅                 |                     ✅                     |
 | [Print](/x/react-data-grid/export/#print-export)                                       |    ✅     |                 ✅                 |                     ✅                     |
-| [Clipboard](/x/react-data-grid/export/#clipboard)                                      |    ❌     |                 🚧                 |                     🚧                     |
+| [Clipboard copy](/x/react-data-grid/clipboard/#clipboard-copy)                         |    ✅     |                 ✅                 |                     ✅                     |
+| [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste)                       |    ❌     |                 ❌                 |                     ✅                     |
 | [Excel export](/x/react-data-grid/export/#excel-export)                                |    ❌     |                 ❌                 |                     ✅                     |
 | **Rendering**                                                                          |           |                                    |                                            |
 | [Customizable components](/x/react-data-grid/components/)                              |    ✅     |                 ✅                 |                     ✅                     |

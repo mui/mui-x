@@ -19,8 +19,7 @@ export const useGridLazyLoaderPreProcessors = (
 
   const addSkeletonRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
-      const tree = { ...groupingParams.tree };
-      const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+      const rootGroup = groupingParams.tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
 
       if (
         !lazyLoading ||
@@ -31,6 +30,7 @@ export const useGridLazyLoaderPreProcessors = (
         return groupingParams;
       }
 
+      const tree = { ...groupingParams.tree };
       const rootGroupChildren = [...rootGroup.children];
 
       for (let i = 0; i < props.rowCount - rootGroup.children.length; i += 1) {

@@ -1,6 +1,6 @@
 <SingleInputDateRangeField
   label="Uncontrolled field"
-  defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-13')]}
+  defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
 />
 <SingleInputDateRangeField
   label="Controlled field"

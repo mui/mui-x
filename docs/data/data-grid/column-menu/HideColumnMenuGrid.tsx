@@ -6,9 +6,9 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
   return (
     <GridColumnMenu
       {...props}
-      components={{
-        // Hide `ColumnMenuColumnsItem`
-        ColumnMenuColumnsItem: null,
+      slots={{
+        // Hide `columnMenuColumnsItem`
+        columnMenuColumnsItem: null,
       }}
     />
   );
@@ -23,7 +23,7 @@ export default function HideColumnMenuGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} components={{ ColumnMenu: CustomColumnMenu }} />
+      <DataGrid {...data} slots={{ columnMenu: CustomColumnMenu }} />
     </div>
   );
 }

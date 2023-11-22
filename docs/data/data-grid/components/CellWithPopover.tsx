@@ -31,7 +31,7 @@ export default function CellWithPopover() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        componentsProps={{
+        slotProps={{
           cell: {
             onMouseEnter: handlePopoverOpen,
             onMouseLeave: handlePopoverClose,

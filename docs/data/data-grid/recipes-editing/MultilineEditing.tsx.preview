@@ -1,1 +1,12 @@
-<DataGridPro rows={rows} columns={columns} />
+<DataGrid
+  rows={rows}
+  columns={columns}
+  onCellEditStop={(params, event) => {
+    if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+      return;
+    }
+    if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
+      event.defaultMuiPrevented = true;
+    }
+  }}
+/>

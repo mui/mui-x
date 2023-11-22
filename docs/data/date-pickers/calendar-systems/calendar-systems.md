@@ -1,12 +1,12 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Support for other calendar systems
+productId: x-date-pickers
+title: Date and Time Pickers - Calendar systems
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Support for other calendar systems
+# Calendar systems
 
 <p class="description">Use the Date and Time Pickers with non-Gregorian calendars.</p>
 
@@ -23,7 +23,7 @@ The following demo shows how to use the date-fns plugin:
 
 :::error
 The adapter with `moment-hijri` does not support the new fields components because the date library seems buggy when parsing a month only.
-If you want to help on the support of hijri calendar, please have a look at [this PR](https://github.com/xsoh/moment-hijri/issues/83).
+If you want to help on the support of hijri calendar, please have a look at [this issue](https://github.com/xsoh/moment-hijri/issues/83).
 :::
 
 You can use the `AdapterMomentHijri` adapter, which is based on [moment-hijri](https://www.npmjs.com/package/moment-hijri):

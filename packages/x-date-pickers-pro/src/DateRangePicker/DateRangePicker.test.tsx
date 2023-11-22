@@ -1,56 +1,18 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import { describeConformance } from '@mui/monorepo/test/utils';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
-import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
+import { fireEvent, screen } from '@mui-internal/test-utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
+import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
 
 describe('<DateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  describeConformance(
-    <DateRangePicker
-      onChange={() => {}}
-      renderInput={(props) => <TextField {...props} />}
-      value={[null, null]}
-    />,
-    () => ({
-      classes: {},
-      muiName: 'MuiDateRangePicker',
-      wrapMount: wrapPickerMount,
-      refInstanceof: window.HTMLDivElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'themeDefaultProps',
-        'themeStyleOverrides',
-        'themeVariants',
-        'mergeClassName',
-        'propsSpread',
-        'rootClass',
-        'reactTestRenderer',
-      ],
-    }),
-  );
-
-  describeRangeValidation(DateRangePicker, () => ({
-    render,
-    clock,
-    componentFamily: 'legacy-picker',
-    views: ['day'],
-  }));
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
+  });
 
   it('should not open mobile picker dialog when clicked on input', () => {
-    render(
-      <DateRangePicker
-        renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
-        value={[null, null]}
-      />,
-    );
-    fireEvent.click(screen.getByRole('textbox'));
+    render(<DateRangePicker />);
+    fireEvent.click(screen.getAllByRole('textbox')[0]);
     clock.runToLast();
 
     expect(screen.queryByRole('tooltip')).not.to.equal(null);
@@ -61,14 +23,8 @@ describe('<DateRangePicker />', () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = stubMatchMedia(false);
 
-    render(
-      <DateRangePicker
-        renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
-        value={[null, null]}
-      />,
-    );
-    fireEvent.click(screen.getByRole('textbox'));
+    render(<DateRangePicker />);
+    fireEvent.click(screen.getAllByRole('textbox')[0]);
     clock.runToLast();
 
     expect(screen.getByRole('dialog')).not.to.equal(null);

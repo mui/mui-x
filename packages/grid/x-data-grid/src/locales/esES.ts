@@ -5,15 +5,14 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const esESGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Sin filas',
-  // noResultsOverlayLabel: 'No results found.',
-  errorOverlayDefaultLabel: 'Ha ocurrido un error.',
+  noResultsOverlayLabel: 'Resultados no encontrados',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidad',
   toolbarDensityLabel: 'Densidad',
   toolbarDensityCompact: 'Compacta',
-  toolbarDensityStandard: 'Standard',
-  toolbarDensityComfortable: 'Comoda',
+  toolbarDensityStandard: 'Estándar',
+  toolbarDensityComfortable: 'Cómoda',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columnas',
@@ -28,28 +27,29 @@ const esESGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtros activos` : `${count} filtro activo`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Buscar…',
+  toolbarQuickFilterLabel: 'Buscar',
+  toolbarQuickFilterDeleteIconLabel: 'Limpiar',
 
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Descargar como CSV',
-  // toolbarExportPrint: 'Print',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportPrint: 'Imprimir',
+  toolbarExportExcel: 'Descargar como Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Columna de búsqueda',
   columnsPanelTextFieldPlaceholder: 'Título de columna',
-  columnsPanelDragIconLabel: 'Reorder columna',
+  columnsPanelDragIconLabel: 'Reordenar columna',
   columnsPanelShowAllButton: 'Mostrar todo',
   columnsPanelHideAllButton: 'Ocultar todo',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
+  filterPanelRemoveAll: 'Remover todos',
   filterPanelDeleteIconLabel: 'Borrar',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operadores',
   filterPanelOperatorAnd: 'Y',
   filterPanelOperatorOr: 'O',
@@ -68,19 +68,46 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'es en o posterior',
   filterOperatorBefore: 'es anterior',
   filterOperatorOnOrBefore: 'es en o anterior',
-  filterOperatorIsEmpty: 'está vacío',
+  filterOperatorIsEmpty: 'esta vacío',
   filterOperatorIsNotEmpty: 'no esta vacío',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'es cualquiera de',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Contiene',
+  headerFilterOperatorEquals: 'Es igual a',
+  headerFilterOperatorStartsWith: 'Comienza con',
+  headerFilterOperatorEndsWith: 'Termina con',
+  headerFilterOperatorIs: 'Es',
+  headerFilterOperatorNot: 'No es',
+  headerFilterOperatorAfter: 'Esta después de',
+  headerFilterOperatorOnOrAfter: 'Esta en o después de',
+  headerFilterOperatorBefore: 'Esta antes de',
+  headerFilterOperatorOnOrBefore: 'Esta en o antes de',
+  headerFilterOperatorIsEmpty: 'Esta vacío',
+  headerFilterOperatorIsNotEmpty: 'No esta vacío',
+  headerFilterOperatorIsAnyOf: 'Es cualquiera de',
+  'headerFilterOperator=': 'Es igual a',
+  'headerFilterOperator!=': 'Es diferente a',
+  'headerFilterOperator>': 'Es mayor que',
+  'headerFilterOperator>=': 'Es mayor o igual que',
+  'headerFilterOperator<': 'Es menor que',
+  'headerFilterOperator<=': 'Es menor o igual que',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'cualquiera',
+  filterValueTrue: 'verdadero',
+  filterValueFalse: 'falso',
 
   // Column menu text
   columnMenuLabel: 'Menú',
   columnMenuShowColumns: 'Mostrar columnas',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Administrar columnas',
   columnMenuFilter: 'Filtro',
   columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desordenar',
@@ -107,49 +134,49 @@ const esESGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionHeaderName: 'Seleccionar casilla',
+  checkboxSelectionSelectAllRows: 'Seleccionar todas las filas',
+  checkboxSelectionUnselectAllRows: 'Deseleccionar todas las filas',
+  checkboxSelectionSelectRow: 'Seleccionar fila',
+  checkboxSelectionUnselectRow: 'Deseleccionar fila',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'yes',
-  // booleanCellFalseLabel: 'no',
+  booleanCellTrueLabel: 'si',
+  booleanCellFalseLabel: 'no',
 
   // Actions cell more text
   actionsCellMore: 'más',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Anclar a la izquierda',
+  pinToRight: 'Anclar a la derecha',
+  unpin: 'Desanclar',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Grupo',
+  treeDataExpand: 'mostrar hijos',
+  treeDataCollapse: 'ocultar hijos',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Grupo',
+  groupColumn: (name) => `Agrupar por ${name}`,
+  unGroupColumn: (name) => `No agrupar por ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'Alternar detalle',
+  expandDetailPanel: 'Expandir',
+  collapseDetailPanel: 'Contraer',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Reordenar filas',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agregación',
+  aggregationFunctionLabelSum: 'sum',
+  aggregationFunctionLabelAvg: 'avg',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'tamaño',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);

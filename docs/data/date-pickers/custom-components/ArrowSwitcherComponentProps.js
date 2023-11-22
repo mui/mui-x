@@ -1,16 +1,16 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import TextField from '@mui/material/TextField';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker, StaticTimePicker } from '@mui/x-date-pickers';
-import { StaticDateRangePicker } from '@mui/x-date-pickers-pro';
 import Stack from '@mui/material/Stack';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Box from '@mui/material/Box';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { TimeClock } from '@mui/x-date-pickers/TimeClock';
+import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 
-const componentsProps = {
+const slotProps = {
   leftArrowIcon: { fontSize: 'large' },
   rightArrowIcon: { fontSize: 'large' },
   previousIconButton: {
@@ -22,13 +22,6 @@ const componentsProps = {
 };
 
 export default function ArrowSwitcherComponentProps() {
-  const [date, setDate] = React.useState(() => dayjs());
-  const [time, setTime] = React.useState(() => dayjs());
-  const [dateRange, setDateRange] = React.useState(() => [
-    dayjs(),
-    dayjs().add(3, 'day'),
-  ]);
-
   const [currentComponent, setCurrentComponent] = React.useState('date');
 
   const handleCurrentComponentChange = (event, nextCurrentComponent) => {
@@ -47,39 +40,28 @@ export default function ArrowSwitcherComponentProps() {
           onChange={handleCurrentComponentChange}
           exclusive
         >
-          <ToggleButton value={'date'}>date picker</ToggleButton>
-          <ToggleButton value={'time'}>time picker</ToggleButton>
-          <ToggleButton value={'dateRange'}>date range picker</ToggleButton>
+          <ToggleButton value={'date'}>date</ToggleButton>
+          <ToggleButton value={'time'}>time</ToggleButton>
+          <ToggleButton value={'dateRange'}>date range</ToggleButton>
         </ToggleButtonGroup>
         {currentComponent === 'date' && (
-          <StaticDatePicker
-            displayStaticWrapperAs="desktop"
-            onChange={(newValue) => setDate(newValue)}
-            value={date}
-            renderInput={(params) => <TextField {...params} />}
-            componentsProps={componentsProps}
-          />
+          <DateCalendar defaultValue={dayjs('2022-04-17')} slotProps={slotProps} />
         )}
 
         {currentComponent === 'time' && (
           <Box sx={{ position: 'relative' }}>
-            <StaticTimePicker
-              displayStaticWrapperAs="desktop"
-              onChange={(newValue) => setTime(newValue)}
-              value={time}
-              renderInput={(params) => <TextField {...params} />}
-              componentsProps={componentsProps}
+            <TimeClock
+              defaultValue={dayjs('2022-04-17T15:30')}
+              slotProps={slotProps}
+              showViewSwitcher
             />
           </Box>
         )}
 
         {currentComponent === 'dateRange' && (
-          <StaticDateRangePicker
-            displayStaticWrapperAs="desktop"
-            onChange={(newValue) => setDateRange(newValue)}
-            value={dateRange}
-            renderInput={(params) => <TextField {...params} />}
-            componentsProps={componentsProps}
+          <DateRangeCalendar
+            defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
+            slotProps={slotProps}
           />
         )}
       </Stack>

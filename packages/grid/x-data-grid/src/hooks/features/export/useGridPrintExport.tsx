@@ -3,9 +3,10 @@ import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
+import { gridExpandedRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
+import { GridValidRowModel } from '../../../models/gridRows';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridColumnDefinitionsSelector,
@@ -14,13 +15,15 @@ import {
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { getColumnsToExport } from './utils';
+import { defaultGetRowsToExport, getColumnsToExport } from './utils';
+import { mergeStateWithPaginationModel } from '../pagination/useGridPagination';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GridExportDisplayOptions,
   GridPrintExportMenuItem,
 } from '../../../components/toolbar/GridToolbarExport';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 
 function raf() {
   return new Promise<void>((resolve) => {
@@ -34,9 +37,24 @@ type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
   options?: Pick<
     GridPrintExportOptions,
-    'copyStyles' | 'bodyClassName' | 'pageStyle' | 'hideToolbar' | 'hideFooter'
+    | 'copyStyles'
+    | 'bodyClassName'
+    | 'pageStyle'
+    | 'hideToolbar'
+    | 'hideFooter'
+    | 'includeCheckboxes'
+    | 'getRowsToExport'
   >,
 ) => void;
+
+function buildPrintWindow(title?: string): HTMLIFrameElement {
+  const iframeEl = document.createElement('iframe');
+  iframeEl.style.position = 'absolute';
+  iframeEl.style.width = '0px';
+  iframeEl.style.height = '0px';
+  iframeEl.title = title || document.title;
+  return iframeEl;
+}
 
 /**
  * @requires useGridColumns (state)
@@ -46,12 +64,13 @@ type PrintWindowOnLoad = (
  */
 export const useGridPrintExport = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'headerHeight'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
   const previousColumnVisibility = React.useRef<{ [key: string]: boolean }>({});
+  const previousRows = React.useRef<GridValidRowModel[]>([]);
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
@@ -60,14 +79,8 @@ export const useGridPrintExport = (
   // Returns a promise because updateColumns triggers state update and
   // the new state needs to be in place before the grid can be sized correctly
   const updateGridColumnsForPrint = React.useCallback(
-    (fields?: string[], allColumns?: boolean) =>
+    (fields?: string[], allColumns?: boolean, includeCheckboxes?: boolean) =>
       new Promise<void>((resolve) => {
-        // TODO remove unused Promise
-        if (!fields && !allColumns) {
-          resolve();
-          return;
-        }
-
         const exportedColumnFields = getColumnsToExport({
           apiRef,
           options: { fields, allColumns },
@@ -80,23 +93,24 @@ export const useGridPrintExport = (
           newColumnVisibilityModel[column.field] = exportedColumnFields.includes(column.field);
         });
 
+        if (includeCheckboxes) {
+          newColumnVisibilityModel[GRID_CHECKBOX_SELECTION_COL_DEF.field] = true;
+        }
+
         apiRef.current.setColumnVisibilityModel(newColumnVisibilityModel);
         resolve();
       }),
     [apiRef],
   );
 
-  // TODO move outside of this scope and remove React.useCallback
-  const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
-    const iframeEl = document.createElement('iframe');
-
-    iframeEl.style.position = 'absolute';
-    iframeEl.style.width = '0px';
-    iframeEl.style.height = '0px';
-    iframeEl.title = title || document.title;
-
-    return iframeEl;
-  }, []);
+  const updateGridRowsForPrint = React.useCallback(
+    (getRowsToExport: NonNullable<GridPrintExportOptions['getRowsToExport']>) => {
+      const rowsToExportIds = getRowsToExport({ apiRef });
+      const newRows = rowsToExportIds.map((id) => apiRef.current.getRow(id));
+      apiRef.current.setRows(newRows);
+    },
+    [apiRef],
+  );
 
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
     (printWindow, options): void => {
@@ -104,6 +118,7 @@ export const useGridPrintExport = (
         copyStyles: true,
         hideToolbar: false,
         hideFooter: false,
+        includeCheckboxes: false,
         ...options,
       };
 
@@ -117,18 +132,13 @@ export const useGridPrintExport = (
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
-      const gridCloneViewport: HTMLElement | null = gridClone.querySelector(
-        `.${gridClasses.virtualScroller}`,
-      );
-      // Expand the viewport window to prevent clipping
-      gridCloneViewport!.style.height = 'auto';
-      gridCloneViewport!.style.width = 'auto';
-      gridCloneViewport!.parentElement!.style.width = 'auto';
-      gridCloneViewport!.parentElement!.style.height = 'auto';
 
       // Allow to overflow to not hide the border of the last row
       const gridMain: HTMLElement | null = gridClone.querySelector(`.${gridClasses.main}`);
       gridMain!.style.overflow = 'visible';
+
+      // See https://support.google.com/chrome/thread/191619088?hl=en&msgid=193009642
+      gridClone!.style.contain = 'size';
 
       const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
       const columnHeadersInner = columnHeaders!.querySelector<HTMLElement>(
@@ -137,9 +147,11 @@ export const useGridPrintExport = (
       columnHeadersInner.style.width = '100%';
 
       let gridToolbarElementHeight =
-        gridRootElement!.querySelector(`.${gridClasses.toolbarContainer}`)?.clientHeight || 0;
+        gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.toolbarContainer}`)
+          ?.offsetHeight || 0;
       let gridFooterElementHeight =
-        gridRootElement!.querySelector(`.${gridClasses.footerContainer}`)?.clientHeight || 0;
+        gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.footerContainer}`)
+          ?.offsetHeight || 0;
 
       if (normalizeOptions.hideToolbar) {
         gridClone.querySelector(`.${gridClasses.toolbarContainer}`)?.remove();
@@ -152,12 +164,24 @@ export const useGridPrintExport = (
       }
 
       // Expand container height to accommodate all rows
-      gridClone.style.height = `${
+      const computedTotalHeight =
         rowsMeta.currentPageTotalHeight +
-        getTotalHeaderHeight(apiRef, props.headerHeight) +
+        getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
         gridToolbarElementHeight +
-        gridFooterElementHeight
-      }px`;
+        gridFooterElementHeight;
+      gridClone.style.height = `${computedTotalHeight}px`;
+      // The height above does not include grid border width, so we need to exclude it
+      gridClone.style.boxSizing = 'content-box';
+
+      // the footer is always being placed at the bottom of the page as if all rows are exported
+      // so if getRowsToExport is being used to only export a subset of rows then we need to
+      // adjust the footer position to be correctly placed at the bottom of the grid
+      const gridFooterElement: HTMLElement | null = gridClone.querySelector(
+        `.${gridClasses.footerContainer}`,
+      );
+      gridFooterElement!.style.position = 'absolute';
+      gridFooterElement!.style.width = '100%';
+      gridFooterElement!.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
 
       // printDoc.body.appendChild(gridClone); should be enough but a clone isolation bug in Safari
       // prevents us to do it
@@ -180,8 +204,15 @@ export const useGridPrintExport = (
         printDoc.body.classList.add(...normalizeOptions.bodyClassName.split(' '));
       }
 
+      const stylesheetLoadPromises: Promise<void>[] = [];
+
       if (normalizeOptions.copyStyles) {
-        const headStyleElements = doc.current!.querySelectorAll("style, link[rel='stylesheet']");
+        const rootCandidate = gridRootElement!.getRootNode();
+        const root =
+          rootCandidate.constructor.name === 'ShadowRoot'
+            ? (rootCandidate as ShadowRoot)
+            : doc.current;
+        const headStyleElements = root!.querySelectorAll("style, link[rel='stylesheet']");
 
         for (let i = 0; i < headStyleElements.length; i += 1) {
           const node = headStyleElements[i];
@@ -212,6 +243,12 @@ export const useGridPrintExport = (
               }
             }
 
+            stylesheetLoadPromises.push(
+              new Promise((resolve) => {
+                newHeadStyleElements.addEventListener('load', () => resolve());
+              }),
+            );
+
             printDoc.head.appendChild(newHeadStyleElements);
           }
         }
@@ -219,10 +256,13 @@ export const useGridPrintExport = (
 
       // Trigger print
       if (process.env.NODE_ENV !== 'test') {
-        printWindow.contentWindow!.print();
+        // wait for remote stylesheets to load
+        Promise.all(stylesheetLoadPromises).then(() => {
+          printWindow.contentWindow!.print();
+        });
       }
     },
-    [apiRef, doc, props.headerHeight],
+    [apiRef, doc, props.columnHeaderHeight],
   );
 
   const handlePrintWindowAfterPrint = React.useCallback(
@@ -237,11 +277,13 @@ export const useGridPrintExport = (
         apiRef.current.setColumnVisibilityModel(previousColumnVisibility.current);
       }
 
-      apiRef.current.unstable_enableVirtualization();
+      apiRef.current.unstable_setVirtualization(true);
+      apiRef.current.setRows(previousRows.current);
 
       // Clear local state
       previousGridState.current = null;
       previousColumnVisibility.current = {};
+      previousRows.current = [];
     },
     [apiRef],
   );
@@ -257,14 +299,31 @@ export const useGridPrintExport = (
       previousGridState.current = apiRef.current.exportState();
       // It appends that the visibility model is not exported, especially if columnVisibility is not controlled
       previousColumnVisibility.current = gridColumnVisibilityModelSelector(apiRef);
+      previousRows.current = apiRef.current.getSortedRows();
 
       if (props.pagination) {
-        const visibleRowCount = gridVisibleRowCountSelector(apiRef);
-        apiRef.current.setPageSize(visibleRowCount);
+        const visibleRowCount = gridExpandedRowCountSelector(apiRef);
+        const paginationModel = {
+          page: 0,
+          pageSize: visibleRowCount,
+        };
+        apiRef.current.updateControlState(
+          'pagination',
+          // Using signature `DataGridPro` to allow more than 100 rows in the print export
+          mergeStateWithPaginationModel(visibleRowCount, 'DataGridPro', paginationModel),
+        );
+        apiRef.current.forceUpdate();
       }
 
-      await updateGridColumnsForPrint(options?.fields, options?.allColumns);
-      apiRef.current.unstable_disableVirtualization();
+      await updateGridColumnsForPrint(
+        options?.fields,
+        options?.allColumns,
+        options?.includeCheckboxes,
+      );
+
+      updateGridRowsForPrint(options?.getRowsToExport ?? defaultGetRowsToExport);
+
+      apiRef.current.unstable_setVirtualization(false);
       await raf(); // wait for the state changes to take action
       const printWindow = buildPrintWindow(options?.fileName);
       if (process.env.NODE_ENV === 'test') {
@@ -275,9 +334,14 @@ export const useGridPrintExport = (
       } else {
         printWindow.onload = () => {
           handlePrintWindowLoad(printWindow, options);
-          printWindow.contentWindow!.onafterprint = () => {
-            handlePrintWindowAfterPrint(printWindow);
-          };
+
+          const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
+          mediaQueryList.addEventListener('change', (mql) => {
+            const isAfterPrint = mql.matches === false;
+            if (isAfterPrint) {
+              handlePrintWindowAfterPrint(printWindow);
+            }
+          });
         };
         doc.current!.body.appendChild(printWindow);
       }
@@ -286,10 +350,10 @@ export const useGridPrintExport = (
       props,
       logger,
       apiRef,
-      buildPrintWindow,
       handlePrintWindowLoad,
       handlePrintWindowAfterPrint,
       updateGridColumnsForPrint,
+      updateGridRowsForPrint,
     ],
   );
 

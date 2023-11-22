@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "6.0.0-alpha.13",
+  "version": "7.0.0-alpha.1",
   "description": "The Pro plan edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -42,20 +42,20 @@
     "directory": "packages/grid/x-data-grid-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.20.6",
-    "@mui/utils": "^5.10.16",
-    "@mui/x-data-grid": "6.0.0-alpha.13",
-    "@mui/x-license-pro": "6.0.0-alpha.9",
-    "@types/format-util": "^1.0.2",
-    "clsx": "^1.2.1",
+    "@babel/runtime": "^7.23.2",
+    "@mui/utils": "^5.14.18",
+    "@mui/x-data-grid": "7.0.0-alpha.1",
+    "@mui/x-license-pro": "7.0.0-alpha.1",
+    "@types/format-util": "^1.0.4",
+    "clsx": "^2.0.0",
     "prop-types": "^15.8.1",
-    "reselect": "^4.1.7"
+    "reselect": "^4.1.8"
   },
   "peerDependencies": {
     "@mui/material": "^5.4.1",
     "@mui/system": "^5.4.1",
-    "react": "^17.0.2 || ^18.0.0",
-    "react-dom": "^17.0.2 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

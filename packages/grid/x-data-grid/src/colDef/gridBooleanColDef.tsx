@@ -12,6 +12,25 @@ function gridBooleanFormatter({ value, api }: GridValueFormatterParams) {
     : api.getLocaleText('booleanCellFalseLabel');
 }
 
+const stringToBoolean = (value: string) => {
+  switch (value.toLowerCase().trim()) {
+    case 'true':
+    case 'yes':
+    case '1':
+      return true;
+
+    case 'false':
+    case 'no':
+    case '0':
+    case 'null':
+    case 'undefined':
+      return false;
+
+    default:
+      return undefined;
+  }
+};
+
 export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   ...GRID_STRING_COL_DEF,
   type: 'boolean',
@@ -25,4 +44,6 @@ export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   getApplyQuickFilterFn: undefined,
   // @ts-ignore
   aggregable: false,
+  // @ts-ignore
+  pastedValueParser: (value) => stringToBoolean(value),
 };

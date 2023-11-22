@@ -1,0 +1,12 @@
+<DatePicker
+  label="Small picker"
+  slotProps={{ textField: { size: 'small' } }}
+/>
+<DatePicker
+  label="Picker with helper text"
+  slotProps={{ textField: { helperText: 'Please fill this field' } }}
+/>
+<DatePicker
+  label="Filled picker"
+  slotProps={{ textField: { variant: 'filled' } }}
+/>

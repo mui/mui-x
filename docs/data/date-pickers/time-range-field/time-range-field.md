@@ -1,29 +1,36 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Time Range Field components
-components: MultiInputTimeRangeField
+components: MultiInputTimeRangeField, SingleInputTimeRangeField
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Time Range Field [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Time Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The Time Range Field let the user select a time range with the keyboard.</p>
-
-:::warning
-This component is unstable, and its props are subject to breaking changes before it gets a stable release.
-:::
+<p class="description">The Time Range Field let the user select a range of time with the keyboard.</p>
 
 ## Basic usage
 
 :::info
-A single input version of the Time Range Field will soon be available just like for the Date Range Field.
+All the topics covered below are applicable to both `SingleInputTimeRangeField` and `MultiInputTimeRangeField` unless explicitly mentioned.
 :::
+
+You can render your Time Range Field with either one input using `SingleInputTimeRangeField`
+or two inputs using `MultiInputTimeRangeField` as show below.
 
 {{"demo": "BasicTimeRangeField.js"}}
 
-## Uncontrolled vs. Controlled
+## Uncontrolled vs. controlled value
 
-The component can be uncontrolled or controlled
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "TimeRangeFieldValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::

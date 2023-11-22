@@ -1,12 +1,10 @@
 <DataGrid
   rows={rows}
   {...data}
-  pagination
-  pageSize={PAGE_SIZE}
-  rowsPerPageOptions={[PAGE_SIZE]}
+  pageSizeOptions={[PAGE_SIZE]}
   rowCount={rowCountState}
   paginationMode="server"
-  onPageChange={handlePageChange}
-  page={page}
+  onPaginationModelChange={handlePaginationModelChange}
+  paginationModel={paginationModel}
   loading={isLoading}
 />

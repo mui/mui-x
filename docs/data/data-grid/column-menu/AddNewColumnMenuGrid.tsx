@@ -27,11 +27,11 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
   return (
     <GridColumnMenu
       {...props}
-      components={{
+      slots={{
         // Add new item
-        ColumnMenuUserItem: CustomUserItem,
+        columnMenuUserItem: CustomUserItem,
       }}
-      componentsProps={{
+      slotProps={{
         columnMenuUserItem: {
           // set `displayOrder` for new item
           displayOrder: 15,
@@ -53,7 +53,7 @@ export default function AddNewColumnMenuGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} components={{ ColumnMenu: CustomColumnMenu }} />
+      <DataGrid {...data} slots={{ columnMenu: CustomColumnMenu }} />
     </div>
   );
 }

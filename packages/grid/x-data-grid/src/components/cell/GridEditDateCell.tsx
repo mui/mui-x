@@ -98,24 +98,32 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
+  const hasUpdatedEditValueOnMount = React.useRef(false);
+
+  const parseValueToDate = React.useCallback((value: string) => {
+    if (value === '') {
+      return null;
+    }
+
+    const [date, time] = value.split('T');
+    const [year, month, day] = date.split('-');
+
+    const parsedDate = new Date();
+    parsedDate.setFullYear(Number(year), Number(month) - 1, Number(day));
+    parsedDate.setHours(0, 0, 0, 0);
+
+    if (time) {
+      const [hours, minutes] = time.split(':');
+      parsedDate.setHours(Number(hours), Number(minutes), 0, 0);
+    }
+
+    return parsedDate;
+  }, []);
+
   const handleChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const newFormattedDate = event.target.value;
-      let newParsedDate: Date | null;
-
-      if (newFormattedDate === '') {
-        newParsedDate = null;
-      } else {
-        const [date, time] = newFormattedDate.split('T');
-        const [year, month, day] = date.split('-');
-        newParsedDate = new Date();
-        newParsedDate.setFullYear(Number(year), Number(month) - 1, Number(day));
-        newParsedDate.setHours(0, 0, 0, 0);
-        if (time) {
-          const [hours, minutes] = time.split(':');
-          newParsedDate.setHours(Number(hours), Number(minutes), 0, 0);
-        }
-      }
+      const newParsedDate = parseValueToDate(newFormattedDate);
 
       if (onValueChange) {
         await onValueChange(event, newParsedDate);
@@ -124,7 +132,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
       apiRef.current.setEditCellValue({ id, field, value: newParsedDate }, event);
     },
-    [apiRef, field, id, onValueChange],
+    [apiRef, field, id, onValueChange, parseValueToDate],
   );
 
   React.useEffect(() => {
@@ -145,9 +153,23 @@ function GridEditDateCell(props: GridEditDateCellProps) {
     }
   }, [hasFocus]);
 
+  const meta = apiRef.current.unstable_getEditCellMeta(id, field);
+
+  const handleInputRef = (el: HTMLInputElement) => {
+    inputRef.current = el;
+
+    if (meta?.unstable_updateValueOnRender && !hasUpdatedEditValueOnMount.current) {
+      const inputValue = inputRef.current.value;
+      const parsedDate = parseValueToDate(inputValue);
+      setValueState({ parsed: parsedDate, formatted: inputValue });
+      apiRef.current.setEditCellValue({ id, field, value: parsedDate });
+      hasUpdatedEditValueOnMount.current = true;
+    }
+  };
+
   return (
     <StyledInputBase
-      inputRef={inputRef}
+      inputRef={handleInputRef}
       fullWidth
       className={classes.root}
       type={isDateTime ? 'datetime-local' : 'date'}

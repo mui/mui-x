@@ -6,7 +6,6 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'بدون سطر',
   noResultsOverlayLabel: 'نتیجه ای پیدا نشد.',
-  errorOverlayDefaultLabel: 'خطایی روی داد.',
 
   // Density selector toolbar button text
   toolbarDensity: 'تراکم',
@@ -48,8 +47,9 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',
+  filterPanelRemoveAll: 'حذف همه',
   filterPanelDeleteIconLabel: 'حذف',
-  filterPanelLinkOperator: 'عملگر منطقی',
+  filterPanelLogicOperator: 'عملگر منطقی',
   filterPanelOperator: 'عملگرها',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'یا',
@@ -71,6 +71,33 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'خالی است',
   filterOperatorIsNotEmpty: 'خالی نیست',
   filterOperatorIsAnyOf: 'هر یک از',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'شامل',
+  headerFilterOperatorEquals: 'مساوی',
+  headerFilterOperatorStartsWith: 'شروع با',
+  headerFilterOperatorEndsWith: 'پایان با',
+  headerFilterOperatorIs: 'هست',
+  headerFilterOperatorNot: 'نیست',
+  headerFilterOperatorAfter: 'بعد از',
+  headerFilterOperatorOnOrAfter: 'معادل یا بعد از',
+  headerFilterOperatorBefore: 'قبل از',
+  headerFilterOperatorOnOrBefore: 'معادل یا قبل از',
+  headerFilterOperatorIsEmpty: 'خالی است',
+  headerFilterOperatorIsNotEmpty: 'خالی نیست',
+  headerFilterOperatorIsAnyOf: 'هر یک از',
+  'headerFilterOperator=': 'مساوی',
+  'headerFilterOperator!=': 'نامساوی',
+  'headerFilterOperator>': 'بزرگتر',
+  'headerFilterOperator>=': 'بزرگتر یا مساوی',
+  'headerFilterOperator<': 'کوچکتر',
+  'headerFilterOperator<=': 'کوچکتر یا مساوی',
 
   // Filter values text
   filterValueAny: 'هرچیزی',
@@ -80,7 +107,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'فهرست',
   columnMenuShowColumns: 'نمایش ستون‌ها',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'مدیریت ستون‌ها',
   columnMenuFilter: 'فیلتر',
   columnMenuHideColumn: 'مخفی',
   columnMenuUnsort: 'نامرتب‌کردن',

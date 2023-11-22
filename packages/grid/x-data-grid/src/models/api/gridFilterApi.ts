@@ -1,7 +1,7 @@
-import { GridRowId, GridRowModel } from '../gridRows';
 import { GridFilterModel } from '../gridFilterModel';
-import { GridFilterItem, GridLinkOperator } from '../gridFilterItem';
+import { GridFilterItem, GridLogicOperator } from '../gridFilterItem';
 import { GridControlledStateReasonLookup } from '../events';
+import { DataGridProcessedProps } from '../props/DataGridProps';
 
 /**
  * The filter API interface that is available in the grid [[apiRef]].
@@ -10,8 +10,10 @@ export interface GridFilterApi {
   /**
    * Shows the filter panel. If `targetColumnField` is given, a filter for this field is also added.
    * @param {string} targetColumnField The column field to add a filter.
+   * @param {string} panelId The unique panel id
+   * @param {string} labelId The unique button id
    */
-  showFilterPanel: (targetColumnField?: string) => void;
+  showFilterPanel: (targetColumnField?: string, panelId?: string, labelId?: string) => void;
   /**
    * Hides the filter panel.
    */
@@ -37,10 +39,10 @@ export interface GridFilterApi {
    */
   deleteFilterItem: (item: GridFilterItem) => void;
   /**
-   * Changes the [[GridLinkOperator]] used to connect the filters.
-   * @param {GridLinkOperator} operator The new link operator. It can be: `"and"` or `"or`".
+   * Changes the [[GridLogicOperator]] used to connect the filters.
+   * @param {GridLogicOperator} operator The new logic operator. It can be: `"and"` or `"or`".
    */
-  setFilterLinkOperator: (operator: GridLinkOperator) => void;
+  setFilterLogicOperator: (operator: GridLogicOperator) => void;
   /**
    * Sets the filter model to the one given by `model`.
    * @param {GridFilterModel} model The new filter model.
@@ -51,13 +53,12 @@ export interface GridFilterApi {
     reason?: GridControlledStateReasonLookup['filter'],
   ) => void;
   /**
-   * Returns a sorted `Map` containing only the visible rows.
-   * @returns {Map<GridRowId, GridRowModel>} The sorted `Map`.
-   */
-  getVisibleRowModels: () => Map<GridRowId, GridRowModel>;
-  /**
-   * Set the quick filter values ot the one given by `values`
+   * Set the quick filter values to the one given by `values`
    * @param {any[]} values The list of element to quick filter
    */
   setQuickFilterValues: (values: any[]) => void;
+  /**
+   * Returns the value of the `ignoreDiacritics` prop.
+   */
+  ignoreDiacritics: DataGridProcessedProps['ignoreDiacritics'];
 }

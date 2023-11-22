@@ -19,6 +19,10 @@ export type GridRowModesModel = Record<GridRowId, GridRowModesModelProps>;
 
 export interface GridEditCellMeta {
   changeReason?: 'debouncedSetEditCellValue' | 'setEditCellValue';
+  /**
+   * Determines if `setEditCellValue` should be called on the first render to sync the value.
+   */
+  unstable_updateValueOnRender?: boolean;
 }
 
 export interface GridEditingSharedApi {
@@ -44,21 +48,21 @@ export interface GridEditingSharedApi {
    * In row editing, `field` is ignored and all fields are considered.
    * @param {GridRowId} id The row id being edited.
    * @param {string} field The field being edited.
-   * @ignore - do not document.
+   * @returns {GridRowModel} The row with edited values.
    */
-  unstable_getRowWithUpdatedValues: (id: GridRowId, field: string) => GridRowModel;
+  getRowWithUpdatedValues: (id: GridRowId, field: string) => GridRowModel;
   /**
    * Gets the meta information for the edit cell.
    * @param {GridRowId} id The row id being edited.
    * @param {string} field The field being edited.
    * @ignore - do not document.
    */
-  unstable_getEditCellMeta: (id: GridRowId, field: string) => GridEditCellMeta;
+  unstable_getEditCellMeta: (id: GridRowId, field: string) => GridEditCellMeta | null;
 }
 
 export interface GridEditingSharedPrivateApi {
   /**
-   * Immediatelly updates the value of the cell, without waiting for the debounce.
+   * Immediately updates the value of the cell, without waiting for the debounce.
    * @param {GridRowId} id The row id.
    * @param {string} field The field to update. If not passed, updates all fields in the given row id.
    */
@@ -179,7 +183,7 @@ export interface GridCellEditingApi extends GridEditingSharedApi {
   startCellEditMode(params: GridStartCellEditModeParams): void;
   /**
    * Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.
-   * If `params.ignoreModifications` is `false` it will discard the modifications made.
+   * If `params.ignoreModifications` is `true` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    */
   stopCellEditMode(params: GridStopCellEditModeParams): void;
@@ -219,7 +223,7 @@ export interface GridRowEditingApi extends GridEditingSharedApi {
   startRowEditMode(params: GridStartRowEditModeParams): void;
   /**
    * Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.
-   * If `params.ignoreModifications` is `false` it will discard the modifications made.
+   * If `params.ignoreModifications` is `true` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    */
   stopRowEditMode(params: GridStopRowEditModeParams): void;

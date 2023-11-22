@@ -4,30 +4,27 @@ import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { Time, DateRange } from '../internals/components/icons';
-import {
-  WrapperVariantContext,
-  WrapperVariant,
-} from '../internals/components/wrappers/WrapperVariantContext';
-import { DateOrTimeView } from '../internals/models';
+import { TimeIcon, DateRangeIcon } from '../icons';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
   DateTimePickerTabsClasses,
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
+import { isDatePickerView } from '../internals/utils/date-utils';
 
 type TabValue = 'date' | 'time';
 
-const viewToTab = (view: DateOrTimeView): TabValue => {
-  if (['day', 'month', 'year'].includes(view)) {
+const viewToTab = (view: DateOrTimeViewWithMeridiem): TabValue => {
+  if (isDatePickerView(view)) {
     return 'date';
   }
 
   return 'time';
 };
 
-const tabToView = (tab: TabValue): DateOrTimeView => {
+const tabToView = (tab: TabValue): DateOrTimeViewWithMeridiem => {
   if (tab === 'date') {
     return 'day';
   }
@@ -55,16 +52,14 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
 
 export interface DateTimePickerTabsProps
   extends ExportedDateTimePickerTabsProps,
-    BaseTabsProps<DateOrTimeView> {
+    BaseTabsProps<DateOrTimeViewWithMeridiem> {
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateTimePickerTabsClasses>;
 }
 
-type OwnerState = DateTimePickerTabsProps & { wrapperVariant: WrapperVariant };
-
-const useUtilityClasses = (ownerState: OwnerState) => {
+const useUtilityClasses = (ownerState: DateTimePickerTabsProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -77,33 +72,39 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   name: 'MuiDateTimePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: DateTimePickerTabsProps }>(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
-  ...(ownerState.wrapperVariant === 'desktop' && {
-    // TODO v6: Drop `order` with the legacy pickers
-    order: 1,
+  '&:last-child': {
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
       bottom: 'auto',
       top: 0,
     },
-  }),
+  },
 }));
 
+/**
+ * Demos:
+ *
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Custom slots and subcomponents](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [DateTimePickerTabs API](https://mui.com/x/api/date-pickers/date-time-picker-tabs/)
+ */
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
-    dateIcon = <DateRange />,
+    dateIcon = <DateRangeIcon />,
     onViewChange,
-    timeIcon = <Time />,
+    timeIcon = <TimeIcon />,
     view,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
   } = props;
 
   const localeText = useLocaleText();
-  const wrapperVariant = React.useContext(WrapperVariantContext);
-  const ownerState = { ...props, wrapperVariant };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
     onViewChange(tabToView(value));
@@ -115,7 +116,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
 
   return (
     <DateTimePickerTabsRoot
-      ownerState={ownerState}
+      ownerState={props}
       variant="fullWidth"
       value={viewToTab(view)}
       onChange={handleChange}
@@ -168,7 +169,8 @@ DateTimePickerTabs.propTypes = {
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year'])
+    .isRequired,
 } as any;
 
 export { DateTimePickerTabs };

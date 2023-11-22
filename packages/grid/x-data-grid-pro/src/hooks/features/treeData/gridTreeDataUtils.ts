@@ -7,16 +7,17 @@ import {
 } from '@mui/x-data-grid';
 import {
   GridAggregatedFilterItemApplier,
-  GridApiCommunity,
+  GridAggregatedFilterItemApplierResult,
   passFilterLogic,
 } from '@mui/x-data-grid/internals';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   disableChildrenFiltering: boolean;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.MutableRefObject<GridPrivateApiPro>;
 }
 
 export const TREE_DATA_STRATEGY = 'tree-data';
@@ -29,10 +30,15 @@ export const TREE_DATA_STRATEGY = 'tree-data';
 export const filterRowTreeFromTreeData = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
-  const { rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
-  const visibleRowsLookup: Record<GridRowId, boolean> = {};
+  const { apiRef, rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
+  const filterCache = {};
+
+  const filterResults: GridAggregatedFilterItemApplierResult = {
+    passingFilterItems: null,
+    passingQuickFilterValues: null,
+  };
 
   const filterTreeNode = (
     node: GridTreeNode,
@@ -47,12 +53,14 @@ export const filterRowTreeFromTreeData = (
     } else if (!isRowMatchingFilters || node.type === 'footer') {
       isMatchingFilters = true;
     } else {
-      const { passingFilterItems, passingQuickFilterValues } = isRowMatchingFilters(node.id);
+      const row = apiRef.current.getRow(node.id);
+      isRowMatchingFilters(row, undefined, filterResults);
       isMatchingFilters = passFilterLogic(
-        [passingFilterItems],
-        [passingQuickFilterValues],
+        [filterResults.passingFilterItems],
+        [filterResults.passingQuickFilterValues],
         params.filterModel,
         params.apiRef,
+        filterCache,
       );
     }
 
@@ -86,14 +94,7 @@ export const filterRowTreeFromTreeData = (
       }
     }
 
-    visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
     filteredRowsLookup[node.id] = shouldPassFilters;
-
-    // TODO: Should we keep storing the visibility status of footer independently or rely on the group visibility in the selector ?
-    if (node.type === 'group' && node.footerId != null) {
-      visibleRowsLookup[node.footerId] =
-        shouldPassFilters && areAncestorsExpanded && !!node.childrenExpanded;
-    }
 
     if (!shouldPassFilters) {
       return 0;
@@ -117,7 +118,6 @@ export const filterRowTreeFromTreeData = (
   }
 
   return {
-    visibleRowsLookup,
     filteredRowsLookup,
     filteredDescendantCountLookup,
   };

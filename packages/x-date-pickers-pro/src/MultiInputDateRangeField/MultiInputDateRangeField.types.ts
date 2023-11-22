@@ -3,19 +3,23 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { UseDateRangeFieldProps } from '../internal/models/dateRange';
-import { RangePosition } from '../internal/models/range';
+import { FieldRef } from '@mui/x-date-pickers/models';
+import { UseDateRangeFieldProps } from '../internals/models/dateRange';
+import { RangePosition } from '../internals/models/range';
+import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
+import { RangeFieldSection } from '../internals/models/fields';
+import { MultiInputRangeFieldClasses } from '../models';
 
-export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate>> &
-    UseMultiInputDateRangeFieldProps<TDate>;
-  startInputProps: TChildProps;
-  endInputProps: TChildProps;
-  startInputRef?: React.Ref<HTMLInputElement>;
-  endInputRef?: React.Ref<HTMLInputElement>;
+export type UseMultiInputDateRangeFieldParams<
+  TDate,
+  TTextFieldSlotProps extends {},
+> = UseMultiInputRangeFieldParams<UseMultiInputDateRangeFieldProps<TDate>, TTextFieldSlotProps>;
+
+export interface UseMultiInputDateRangeFieldProps<TDate>
+  extends Omit<UseDateRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'> {
+  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
-
-export interface UseMultiInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
 
 export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
@@ -24,20 +28,22 @@ export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends
   UseMultiInputDateRangeFieldProps<TDate>;
 
 export interface MultiInputDateRangeFieldProps<TDate>
-  extends UseMultiInputDateRangeFieldComponentProps<
-    TDate,
-    Omit<StackProps, 'position'> & { autoFocus?: boolean }
-  > {
+  extends UseMultiInputDateRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
+  autoFocus?: boolean;
   /**
-   * Overrideable components.
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<MultiInputRangeFieldClasses>;
+  /**
+   * Overridable component slots.
    * @default {}
    */
-  components?: MultiInputDateRangeFieldSlotsComponent;
+  slots?: MultiInputDateRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type MultiInputDateRangeFieldOwnerState<TDate> = MultiInputDateRangeFieldProps<TDate>;
@@ -47,22 +53,24 @@ export interface MultiInputDateRangeFieldSlotsComponent {
    * Element rendered at the root.
    * @default MultiInputDateRangeFieldRoot
    */
-  Root?: React.ElementType;
+  root?: React.ElementType;
   /**
-   * Input rendered for the start or end date.
-   * @default TextField
+   * Form control with an input to render a date.
+   * It is rendered twice: once for the start date and once for the end date.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType;
+  textField?: React.ElementType;
   /**
    * Element rendered between the two inputs.
    * @default MultiInputDateRangeFieldSeparator
    */
-  Separator?: React.ElementType;
+  separator?: React.ElementType;
 }
 
 export interface MultiInputDateRangeFieldSlotsComponentsProps<TDate> {
   root?: SlotComponentProps<typeof Stack, {}, MultiInputDateRangeFieldOwnerState<TDate>>;
-  input?: SlotComponentProps<
+  textField?: SlotComponentProps<
     typeof TextField,
     {},
     MultiInputDateRangeFieldOwnerState<TDate> & { position: RangePosition }

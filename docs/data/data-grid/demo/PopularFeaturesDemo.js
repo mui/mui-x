@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGridPremium,
   gridClasses,
@@ -9,7 +8,6 @@ import {
 } from '@mui/x-data-grid-premium';
 import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
@@ -30,7 +28,11 @@ import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid
 import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
-import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
+import EditingWithDatePickers from '../custom-columns/EditingWithDatePickers';
+import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
+import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
+import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
+import ClipboardPaste from '../clipboard/ClipboardPaste';
 
 export const featuresSet = [
   {
@@ -40,6 +42,7 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/master-detail/',
     demo: <BasicDetailPanels />,
+    linkToCode: '/master-detail/#system-BasicDetailPanels.tsx',
   },
   {
     id: 2,
@@ -49,6 +52,7 @@ export const featuresSet = [
     plan: 'Community',
     detailPage: '/editing/',
     demo: <EditingWithDatePickers />,
+    linkToCode: '/recipes-editing/#system-EditingWithDatePickers.tsx',
   },
   {
     id: 3,
@@ -58,15 +62,16 @@ export const featuresSet = [
     detailPage: '/column-groups/',
     newBadge: true,
     demo: <BasicGroupingDemo />,
+    linkToCode: '/column-groups/#system-BasicGroupingDemo.tsx',
   },
   {
     id: 4,
-    name: 'Lazy Loading',
+    name: 'Lazy loading',
     description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Pro',
     detailPage: '/pagination/',
-    newBadge: true,
     demo: <LazyLoadingGrid />,
+    linkToCode: '/row-updates/#system-LazyLoadingGrid.tsx',
   },
   {
     id: 5,
@@ -76,14 +81,16 @@ export const featuresSet = [
     plan: 'Community',
     detailPage: '/state/#save-and-restore-the-state',
     demo: <RestoreStateInitialState />,
+    linkToCode: '/state/#system-RestoreStateInitialState.tsx',
   },
   {
     id: 6,
-    name: 'Row Grouping',
+    name: 'Row grouping',
     description: 'Group rows with repeating column values',
     plan: 'Premium',
     detailPage: '/row-grouping/',
     demo: <RowGroupingInitialState />,
+    linkToCode: '/row-grouping/#system-RowGroupingInitialState.tsx',
   },
   {
     id: 7,
@@ -93,14 +100,16 @@ export const featuresSet = [
     plan: 'Premium',
     detailPage: '/export/#excel-export',
     demo: <ExcelExport />,
+    linkToCode: '/export/#system-ExcelExport.tsx',
   },
   {
     id: 8,
     name: 'Quick filter',
     description: 'Use a single text input to filter multiple fields',
     plan: 'Community',
-    detailPage: '/filtering/#quick-filter',
+    detailPage: '/filtering/quick-filter/',
     demo: <QuickFilteringGrid />,
+    linkToCode: '/filtering/quick-filter/#system-QuickFilteringGrid.tsx',
   },
   {
     id: 9,
@@ -109,6 +118,7 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/row-ordering/',
     demo: <RowOrderingGrid />,
+    linkToCode: '/row-ordering/#system-RowOrderingGrid.tsx',
   },
   {
     id: 10,
@@ -117,45 +127,48 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/column-pinning/',
     demo: <BasicColumnPinning />,
+    linkToCode: '/column-pinning/#system-BasicColumnPinning.tsx',
   },
   {
     id: 11,
-    name: 'Row Pinning',
+    name: 'Row pinning',
     description: 'Pin your rows up or down',
     plan: 'Pro',
     detailPage: '/row-pinning/',
     demo: <RowPinningWithPagination />,
-    newBadge: true,
+    linkToCode: '/row-pinning/#system-RowPinningWithPagination.tsx',
   },
   {
     id: 12,
-    name: 'Aggretation and Summary rows',
+    name: 'Aggregation and Summary rows',
     description: 'Set summary footer rows or inline summaries with row grouping',
     plan: 'Premium',
     detailPage: '/aggregation/',
     demo: <AggregationRowGrouping />,
-    newBadge: true,
+    linkToCode: '/aggregation/#system-AggregationRowGrouping.tsx',
   },
   {
     id: 13,
-    name: 'Column Visibility',
+    name: 'Column visibility',
     description:
       'Display different columns in different use cases by defining which columns are visible',
     plan: 'Community',
     detailPage: '/column-visibility/',
     demo: <ColumnSelectorGrid />,
+    linkToCode: '/column-visibility/#system-ColumnSelectorGrid.tsx',
   },
   {
     id: 14,
-    name: 'Column Virtualization',
+    name: 'Column virtualization',
     description: 'High performance support for thousands of columns',
     plan: 'Community',
     detailPage: '/virtualization/#column-virtualization',
     demo: <ColumnVirtualizationGrid />,
+    linkToCode: '/virtualization/#system-ColumnVirtualizationGrid.tsx',
   },
   {
     id: 15,
-    name: 'Row Virtualization',
+    name: 'Row virtualization',
     description: 'High performance support for vast volume of data',
     plan: 'Pro',
     detailPage: '/virtualization/#row-virtualization',
@@ -168,38 +181,84 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/tree-data/',
     demo: <TreeDataFullExample />,
+    linkToCode: '/tree-data/#system-TreeDataFullExample.tsx',
+  },
+  {
+    id: 17,
+    name: 'Cell selection',
+    description:
+      'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
+    plan: 'Premium',
+    detailPage: '/cell-selection/',
+    demo: <CellSelectionGrid />,
+    linkToCode: '/cell-selection/#system-CellSelectionGrid.tsx',
+    newBadge: true,
+  },
+  {
+    id: 18,
+    name: 'Column menu',
+    description: 'More customization and improved design on v6',
+    plan: 'Community',
+    detailPage: '/column-menu/',
+    demo: <AddNewColumnMenuGrid />,
+    linkToCode: '/column-menu/#system-AddNewColumnMenuGrid.tsx',
+    newBadge: true,
+  },
+  {
+    id: 19,
+    name: 'Clipboard paste',
+    description:
+      'Copy and paste the selected cells and rows using the copy/paste keyboard shortcuts.',
+    plan: 'Premium',
+    detailPage: '/clipboard/#clipboard-paste',
+    demo: <ClipboardPaste />,
+    linkToCode: '/clipboard/#system-ClipboardPaste.tsx',
+    newBadge: true,
+  },
+  {
+    id: 20,
+    name: 'Header filters',
+    description:
+      'Quickly accessible and customizable header filters to filter the data',
+    plan: 'Pro',
+    detailPage: '/filtering/#header-filters',
+    demo: <HeaderFilteringDataGridPro />,
+    linkToCode: '/filtering/header-filters/#system-HeaderFilteringDataGridPro.tsx',
+    newBadge: true,
   },
 ];
 
-const getChipProperties = (plan) => {
-  switch (plan.toLowerCase()) {
-    case 'premium':
+function getChipProperties(plan) {
+  switch (plan) {
+    case 'Premium':
       return { avatarLink: '/static/x/premium.svg', color: '#ffecc8' };
-    case 'pro':
+    case 'Pro':
       return { avatarLink: '/static/x/pro.svg', color: '#c8e9ff' };
     default:
       return { avatarLink: undefined, color: '#c8ffdb' };
   }
-};
+}
 
 function PlanTag(props) {
   const chipPropperties = getChipProperties(props.plan);
   const avatar = !chipPropperties.avatarLink ? undefined : (
-    <Avatar src={chipPropperties.avatarLink} />
+    <img src={chipPropperties.avatarLink} width={21} height={24} alt="" />
   );
 
   return (
     <Chip
       avatar={avatar}
-      sx={{ background: chipPropperties.color, color: 'rgba(0, 0, 0, 0.87)' }}
+      sx={{
+        backgroundColor: chipPropperties.color,
+        color: 'rgba(0, 0, 0, 0.87)',
+        '& .MuiChip-avatar': {
+          width: 21,
+        },
+      }}
       label={props.plan}
     />
   );
 }
-
-PlanTag.propTypes = {
-  plan: PropTypes.string.isRequired,
-};
 
 function CustomToolbar() {
   return (
@@ -216,27 +275,41 @@ function RowDemo(props) {
   const panelColor = theme.palette.mode === 'dark' ? 'transparent' : '#efefef';
 
   return (
-    <Box sx={{ py: 2, background: panelColor }}>
-      <Box style={{ width: '90%', margin: 'auto', background: gridBgColor }}>
-        {row.demo}
-      </Box>
+    <Box sx={{ py: 2, backgroundColor: panelColor }}>
+      <div style={{ width: '90%', margin: 'auto' }}>
+        <Box sx={{ backgroundColor: gridBgColor }}>{row.demo}</Box>
+        {row.linkToCode ? (
+          <Typography sx={{ marginTop: 1 }} variant="body2">
+            <Link href={`/x/react-data-grid${row.linkToCode}`} target="_blank">
+              Open demo source
+            </Link>
+          </Typography>
+        ) : null}
+      </div>
     </Box>
   );
 }
 
-RowDemo.propTypes = {
-  row: PropTypes.object.isRequired,
-};
+function CustomSizeAggregationFooter(props) {
+  return (
+    <Typography sx={{ fontWeight: 500, fontSize: '1em' }} color="primary">
+      Total: {props.value}
+    </Typography>
+  );
+}
 
 const columns = [
   {
     field: 'name',
     headerName: 'Feature name',
-    maxWidth: 160,
+    maxWidth: 172,
     flex: 0.2,
     minWidth: 100,
     groupable: false,
     renderCell: (params) => {
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+      }
       if (!params.value) {
         return '';
       }
@@ -297,6 +370,9 @@ const columns = [
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
     renderCell: (params) => {
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+      }
       if (!params.value) {
         return '';
       }
@@ -350,19 +426,19 @@ export default function PopularFeaturesDemo() {
   }, []);
 
   return (
-    <div style={{ height: 'fit-content', width: '100%' }}>
+    <Box sx={{ minHeight: 1000, width: '100%' }}>
       <DataGridPremium
         apiRef={apiRef}
         autoHeight
         disableRowSelectionOnClick
         onRowClick={onRowClick}
-        components={{
-          Toolbar: CustomToolbar,
-          DetailPanelExpandIcon: ArrowDown,
-          DetailPanelCollapseIcon: ArrowUp,
+        slots={{
+          toolbar: CustomToolbar,
+          detailPanelExpandIcon: ArrowDown,
+          detailPanelCollapseIcon: ArrowUp,
         }}
-        componentsProps={{
-          toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+        slotProps={{
+          toolbar: { showQuickFilter: true },
         }}
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}
@@ -396,6 +472,6 @@ export default function PopularFeaturesDemo() {
         hideFooter
         groupingColDef={memoizedGroupingDef}
       />
-    </div>
+    </Box>
   );
 }

@@ -15,6 +15,12 @@ export interface GridFocusApi {
    * @param {string} event The event that triggers the action.
    */
   setColumnHeaderFocus: (field: string, event?: MuiBaseEvent) => void;
+  /**
+   * Sets the focus to the column header filter at the given `field`.
+   * @param {string} field The column field.
+   * @param {string} event The event that triggers the action.
+   */
+  setColumnHeaderFilterFocus: (field: string, event?: MuiBaseEvent) => void;
 }
 
 export interface GridFocusPrivateApi {

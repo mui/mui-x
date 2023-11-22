@@ -27,10 +27,17 @@ export default function UseGridApiContext() {
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
-          Toolbar: CustomToolbar,
+        slots={{
+          toolbar: CustomToolbar,
         }}
-        pageSize={10}
+        initialState={{
+          ...data.initialState,
+          pagination: {
+            paginationModel: {
+              pageSize: 10,
+            },
+          },
+        }}
       />
     </Box>
   );

@@ -1,5 +1,7 @@
 /**
  * Filter item definition interface.
+ * @demos
+ *   - [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)
  */
 export interface GridFilterItem {
   /**
@@ -22,9 +24,9 @@ export interface GridFilterItem {
   operator: string;
 }
 
-enum GridLinkOperator {
+enum GridLogicOperator {
   And = 'and',
   Or = 'or',
 }
 
-export { GridLinkOperator };
+export { GridLogicOperator };

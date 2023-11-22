@@ -1,4 +1,5 @@
-import { GridValidRowModel, GridRowId, GridTreeNode } from '../gridRows';
+import { GridColDef } from '../colDef';
+import { GridValidRowModel, GridRowId, GridTreeNode, GridRowModel } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridRowParams } from '../params/gridRowParams';
@@ -13,6 +14,26 @@ export interface GridParamsApi {
    */
   getCellValue: <V extends any = any>(id: GridRowId, field: string) => V;
   /**
+   * Gets the cell value.
+   * Use it instead of `getCellValue` for better performance if you have `row` and `colDef`.
+   * @template V
+   * @param {GridRowModel} row The row model.
+   * @param {GridColDef} colDef The column definition.
+   * @returns {v} The cell value.
+   * @ignore - do not document
+   */
+  getRowValue: <V extends any = any>(row: GridRowModel, colDef: GridColDef) => V;
+  /**
+   * Gets the cell formatted value
+   * Use it instead of `getCellParams` for better performance if you only need the formatted value.
+   * @template V
+   * @param {GridRowModel} row The row model.
+   * @param {GridColDef} colDef The column definition.
+   * @returns {v} The cell value.
+   * @ignore - do not document
+   */
+  getRowFormattedValue: <V extends any = any>(row: GridRowModel, colDef: GridColDef) => V;
+  /**
    * Gets the underlying DOM element for a cell at the given `id` and `field`.
    * @param {GridRowId} id The id of the row.
    * @param {string} field The column field.
@@ -26,14 +47,14 @@ export interface GridParamsApi {
    * @returns {GridCellParams} The cell params.
    */
   getCellParams: <
-    V = any,
     R extends GridValidRowModel = any,
+    V = unknown,
     F = V,
     N extends GridTreeNode = GridTreeNode,
   >(
     id: GridRowId,
     field: string,
-  ) => GridCellParams<V, R, F, N>;
+  ) => GridCellParams<R, V, F, N>;
   /**
    * Gets the [[GridRowParams]] object that is passed as argument in events.
    * @param {GridRowId} id The id of the row.

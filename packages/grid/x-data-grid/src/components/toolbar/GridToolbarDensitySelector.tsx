@@ -10,7 +10,7 @@ import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
-import { GridMenu, GridMenuProps } from '../menu/GridMenu';
+import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../constants/gridClasses';
 
@@ -29,17 +29,17 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
 
     const densityOptions: GridDensityOption[] = [
       {
-        icon: <rootProps.components.DensityCompactIcon />,
+        icon: <rootProps.slots.densityCompactIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityCompact'),
         value: 'compact',
       },
       {
-        icon: <rootProps.components.DensityStandardIcon />,
+        icon: <rootProps.slots.densityStandardIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityStandard'),
         value: 'standard',
       },
       {
-        icon: <rootProps.components.DensityComfortableIcon />,
+        icon: <rootProps.slots.densityComfortableIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
         value: 'comfortable',
       },
@@ -48,11 +48,11 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     const startIcon = React.useMemo<React.ReactElement>(() => {
       switch (densityValue) {
         case 'compact':
-          return <rootProps.components.DensityCompactIcon />;
+          return <rootProps.slots.densityCompactIcon />;
         case 'comfortable':
-          return <rootProps.components.DensityComfortableIcon />;
+          return <rootProps.slots.densityComfortableIcon />;
         default:
-          return <rootProps.components.DensityStandardIcon />;
+          return <rootProps.slots.densityStandardIcon />;
       }
     }, [densityValue, rootProps]);
 
@@ -60,14 +60,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
       setOpen((prevOpen) => !prevOpen);
       onClick?.(event);
     };
-    const handleDensitySelectorClickAway: GridMenuProps['onClickAway'] = (event) => {
-      if (
-        buttonRef.current === event.target ||
-        // if user clicked on the icon
-        buttonRef.current?.contains(event.target as Element)
-      ) {
-        return;
-      }
+    const handleDensitySelectorClose = () => {
       setOpen(false);
     };
     const handleDensityUpdate = (newDensity: GridDensity) => {
@@ -102,25 +95,25 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
 
     return (
       <React.Fragment>
-        <rootProps.components.BaseButton
+        <rootProps.slots.baseButton
           ref={handleRef}
           size="small"
           startIcon={startIcon}
           aria-label={apiRef.current.getLocaleText('toolbarDensityLabel')}
-          aria-expanded={open ? 'true' : undefined}
           aria-haspopup="menu"
-          aria-controls={densityMenuId}
+          aria-expanded={open}
+          aria-controls={open ? densityMenuId : undefined}
           id={densityButtonId}
           {...other}
           onClick={handleDensitySelectorOpen}
-          {...rootProps.componentsProps?.baseButton}
+          {...rootProps.slotProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarDensity')}
-        </rootProps.components.BaseButton>
+        </rootProps.slots.baseButton>
         <GridMenu
           open={open}
           target={buttonRef.current}
-          onClickAway={handleDensitySelectorClickAway}
+          onClose={handleDensitySelectorClose}
           position="bottom-start"
         >
           <MenuList

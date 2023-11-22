@@ -6,7 +6,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有資料',
   noResultsOverlayLabel: '沒有結果',
-  errorOverlayDefaultLabel: '發生錯誤',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -47,8 +46,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
+  filterPanelRemoveAll: '清除所有',
   filterPanelDeleteIconLabel: '刪除',
-  filterPanelLinkOperator: '邏輯運算子',
+  filterPanelLogicOperator: '邏輯運算子',
   filterPanelOperator: '運算子',
   filterPanelOperatorAnd: '且',
   filterPanelOperatorOr: '或',
@@ -70,6 +70,33 @@ const zhTWGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '為空',
   filterOperatorIsNotEmpty: '不為空',
   filterOperatorIsAnyOf: '是其中之一',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: '包含',
+  headerFilterOperatorEquals: '等於',
+  headerFilterOperatorStartsWith: '以...開頭',
+  headerFilterOperatorEndsWith: '以...結束',
+  headerFilterOperatorIs: '為',
+  headerFilterOperatorNot: '不為',
+  headerFilterOperatorAfter: '...之後',
+  headerFilterOperatorOnOrAfter: '...(含)之後',
+  headerFilterOperatorBefore: '...之前',
+  headerFilterOperatorOnOrBefore: '...(含)之前',
+  headerFilterOperatorIsEmpty: '為空',
+  headerFilterOperatorIsNotEmpty: '不為空',
+  headerFilterOperatorIsAnyOf: '是其中之一',
+  'headerFilterOperator=': '等於',
+  'headerFilterOperator!=': '不等於',
+  'headerFilterOperator>': '大於',
+  'headerFilterOperator>=': '大於或等於',
+  'headerFilterOperator<': '小於',
+  'headerFilterOperator<=': '小於或等於',
 
   // Filter values text
   filterValueAny: '任何值',
@@ -79,7 +106,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '選單',
   columnMenuShowColumns: '顯示欄位',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: '管理欄位',
   columnMenuFilter: '篩選器',
   columnMenuHideColumn: '隱藏',
   columnMenuUnsort: '預設排序',
@@ -139,12 +166,12 @@ const zhTWGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: '排序',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: '集合',
+  aggregationFunctionLabelSum: '總數',
+  aggregationFunctionLabelAvg: '平均數',
+  aggregationFunctionLabelMin: '最小',
+  aggregationFunctionLabelMax: '最大',
+  aggregationFunctionLabelSize: '尺寸',
 };
 
 export const zhTW: Localization = getGridLocalization(zhTWGrid, zhTWCore);

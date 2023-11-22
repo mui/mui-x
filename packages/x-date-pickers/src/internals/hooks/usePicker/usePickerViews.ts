@@ -1,16 +1,20 @@
 import * as React from 'react';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { DateOrTimeView } from '../../models';
 import { useViews, UseViewsOptions } from '../useViews';
-import type { UsePickerValueViewsResponse } from './usePickerValue';
+import type { UsePickerValueViewsResponse } from './usePickerValue.types';
+import { isTimeView } from '../../utils/time-utils';
+import { DateOrTimeViewWithMeridiem } from '../../models';
+import { TimezoneProps } from '../../../models';
 
-interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeView>
-  extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
+interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
+  extends Omit<UsePickerViewsProps<any, any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
 
 export type PickerViewsRendererProps<
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
 > = TExternalProps &
@@ -24,7 +28,7 @@ export type PickerViewsRendererProps<
 
 type PickerViewRenderer<
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
 > = (
@@ -33,11 +37,11 @@ type PickerViewRenderer<
 
 export type PickerViewRendererLookup<
   TValue,
-  TView extends DateOrTimeView,
-  TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
+  TView extends DateOrTimeViewWithMeridiem,
+  TExternalProps extends PickerViewsRendererBaseExternalProps<any>,
   TAdditionalProps extends {},
 > = {
-  [K in TView]: PickerViewRenderer<TValue, TView, TExternalProps, TAdditionalProps> | null;
+  [K in TView]: PickerViewRenderer<TValue, K, TExternalProps, TAdditionalProps> | null;
 };
 
 /**
@@ -45,10 +49,12 @@ export type PickerViewRendererLookup<
  */
 export interface UsePickerViewsBaseProps<
   TValue,
-  TView extends DateOrTimeView,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
-> extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'> {
+> extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'>,
+    TimezoneProps {
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -59,6 +65,16 @@ export interface UsePickerViewsBaseProps<
    * If `undefined`, internally defined view will be the used.
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
+  /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
+   */
+  reduceAnimations?: boolean;
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
+   */
+  referenceDate?: TDate;
 }
 
 /**
@@ -66,7 +82,7 @@ export interface UsePickerViewsBaseProps<
  */
 export interface UsePickerViewsNonStaticProps {
   /**
-   * Do not render open picker button (renders only the field).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker?: boolean;
@@ -77,16 +93,27 @@ export interface UsePickerViewsNonStaticProps {
  */
 export interface UsePickerViewsProps<
   TValue,
-  TView extends DateOrTimeView,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerViewsNonStaticProps {}
+> extends UsePickerViewsBaseProps<TValue, TDate, TView, TExternalProps, TAdditionalProps>,
+    UsePickerViewsNonStaticProps {
+  className?: string;
+  sx?: SxProps<Theme>;
+}
 
 export interface UsePickerViewParams<
   TValue,
-  TView extends DateOrTimeView,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TExternalProps extends UsePickerViewsProps<
+    TValue,
+    TDate,
+    TView,
+    TExternalProps,
+    TAdditionalProps
+  >,
   TAdditionalProps extends {},
 > {
   props: TExternalProps;
@@ -96,7 +123,7 @@ export interface UsePickerViewParams<
   autoFocusView: boolean;
 }
 
-export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
+export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
   /**
    * Does the picker have at least one view that should be rendered in UI mode ?
    * If not, we can hide the icon to open the picker.
@@ -107,7 +134,7 @@ export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
   layoutProps: UsePickerViewsLayoutResponse<TView>;
 }
 
-export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeView> {
+export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMeridiem> {
   view: TView | null;
   onViewChange: (view: TView) => void;
   views: readonly TView[];
@@ -121,8 +148,9 @@ export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeView> {
  */
 export const usePickerViews = <
   TValue,
-  TView extends DateOrTimeView,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
 >({
   props,
@@ -132,21 +160,24 @@ export const usePickerViews = <
   autoFocusView,
 }: UsePickerViewParams<
   TValue,
+  TDate,
   TView,
   TExternalProps,
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
-  const { views, openTo, onViewChange, disableOpenPicker, viewRenderers } = props;
+  const { views, openTo, onViewChange, disableOpenPicker, viewRenderers, timezone } = props;
+  const { className, sx, ...propsToForwardToView } = props;
 
-  const { view, setView, focusedView, setFocusedView, setValueAndGoToNextView } = useViews({
-    view: undefined,
-    views,
-    openTo,
-    onChange,
-    onViewChange,
-    autoFocus: autoFocusView,
-  });
+  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
+    useViews({
+      view: undefined,
+      views,
+      openTo,
+      onChange,
+      onViewChange,
+      autoFocus: autoFocusView,
+    });
 
   const { hasUIView, viewModeLookup } = React.useMemo(
     () =>
@@ -173,6 +204,17 @@ export const usePickerViews = <
     [disableOpenPicker, viewRenderers, views],
   );
 
+  const timeViewsCount = React.useMemo(
+    () =>
+      views.reduce((acc, viewForReduce) => {
+        if (viewRenderers[viewForReduce] != null && isTimeView(viewForReduce)) {
+          return acc + 1;
+        }
+        return acc;
+      }, 0),
+    [viewRenderers, views],
+  );
+
   const currentViewMode = viewModeLookup[view];
   const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'UI');
 
@@ -184,12 +226,14 @@ export const usePickerViews = <
   }
 
   useEnhancedEffect(() => {
+    // Handle case of `DateTimePicker` without time renderers
     if (currentViewMode === 'field' && open) {
       onClose();
-      onSelectedSectionsChange('hours');
-
       setTimeout(() => {
+        // focusing the input before the range selection is done
+        // calling `onSelectedSectionsChange` outside of timeout results in an inconsistent behavior between Safari And Chrome
         inputRef?.current!.focus();
+        onSelectedSectionsChange(view);
       });
     }
   }, [view]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -199,9 +243,26 @@ export const usePickerViews = <
       return;
     }
 
+    let newView = view;
+
+    // If the current view is a field view, go to the last popper view
     if (currentViewMode === 'field' && popperView != null) {
-      setView(popperView);
+      newView = popperView;
     }
+
+    // If the current view is not the default view and both are UI views
+    if (
+      newView !== defaultView &&
+      viewModeLookup[newView] === 'UI' &&
+      viewModeLookup[defaultView] === 'UI'
+    ) {
+      newView = defaultView;
+    }
+
+    if (newView !== view) {
+      setView(newView);
+    }
+    setFocusedView(newView, true);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const layoutProps: UsePickerViewsLayoutResponse<TView> = {
@@ -225,15 +286,18 @@ export const usePickerViews = <
       }
 
       return renderer({
-        ...props,
+        ...propsToForwardToView,
         ...additionalViewProps,
         ...propsFromPickerValue,
         views,
+        timezone,
         onChange: setValueAndGoToNextView,
         view: popperView,
         onViewChange: setView,
         focusedView,
         onFocusedViewChange: setFocusedView,
+        showViewSwitcher: timeViewsCount > 1,
+        timeViewsCount,
       });
     },
   };

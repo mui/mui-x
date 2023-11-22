@@ -1,106 +1,91 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  BaseTimePickerProps,
-  BaseTimePickerSlotsComponent,
-  BaseTimePickerSlotsComponentsProps,
-  useTimePickerDefaultizedProps,
-  timeValueManager,
-} from '../TimePicker/shared';
-import {
-  MobileWrapper,
-  MobileWrapperProps,
-  MobileWrapperSlotsComponent,
-  MobileWrapperSlotsComponentsProps,
-} from '../internals/components/wrappers/MobileWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
-import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
-import { usePickerState } from '../internals/hooks/usePickerState';
-
-export interface MobileTimePickerSlotsComponent<TDate>
-  extends BaseTimePickerSlotsComponent<TDate>,
-    MobileWrapperSlotsComponent,
-    DateInputSlotsComponent {}
-
-export interface MobileTimePickerSlotsComponentsProps
-  extends BaseTimePickerSlotsComponentsProps,
-    MobileWrapperSlotsComponentsProps {}
-
-export interface MobileTimePickerProps<TDate>
-  extends BaseTimePickerProps<TDate>,
-    MobileWrapperProps {
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: MobileTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: MobileTimePickerSlotsComponentsProps;
-}
+import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { TimeField } from '../TimeField';
+import { MobileTimePickerProps } from './MobileTimePicker.types';
+import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { validateTime } from '../internals/utils/validation/validateTime';
+import { TimeView } from '../models';
+import { useMobilePicker } from '../internals/hooks/useMobilePicker';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
+import { renderTimeViewClock } from '../timeViewRenderers';
+import { resolveTimeFormat } from '../internals/utils/time-utils';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 /**
- *
  * Demos:
  *
- * - [Time Picker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
  *
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
-export const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
+const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   inProps: MobileTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useTimePickerDefaultizedProps<TDate, MobileTimePickerProps<TDate>>(
-    inProps,
-    'MuiMobileTimePicker',
-  );
+  const localeText = useLocaleText<TDate>();
+  const utils = useUtils<TDate>();
 
-  const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timeValueManager);
+  // Props with the default values common to all time pickers
+  const defaultizedProps = useTimePickerDefaultizedProps<
+    TDate,
+    TimeView,
+    MobileTimePickerProps<TDate>
+  >(inProps, 'MuiMobileTimePicker');
 
-  // Note that we are passing down all the value without spread.
-  // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const { value, onChange, components, componentsProps, localeText, ...other } = props;
+  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
+    hours: renderTimeViewClock,
+    minutes: renderTimeViewClock,
+    seconds: renderTimeViewClock,
+    ...defaultizedProps.viewRenderers,
+  };
+  const ampmInClock = defaultizedProps.ampmInClock ?? false;
 
-  const DateInputProps = {
-    ...inputProps,
-    ...other,
-    components,
-    componentsProps,
-    ref,
-    validationError,
+  // Props with the default values specific to the mobile variant
+  const props = {
+    ...defaultizedProps,
+    ampmInClock,
+    viewRenderers,
+    format: resolveTimeFormat(utils, defaultizedProps),
+    slots: {
+      field: TimeField,
+      ...defaultizedProps.slots,
+    },
+    slotProps: {
+      ...defaultizedProps.slotProps,
+      field: (ownerState: any) => ({
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
+        ...extractValidationProps(defaultizedProps),
+        ref,
+      }),
+      toolbar: {
+        hidden: false,
+        ampmInClock,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
+    },
   };
 
-  return (
-    <MobileWrapper
-      {...other}
-      {...wrapperProps}
-      DateInputProps={DateInputProps}
-      PureDateInputComponent={PureDateInput}
-      components={components}
-      componentsProps={componentsProps}
-      localeText={localeText}
-    >
-      <CalendarOrClockPicker
-        {...pickerProps}
-        autoFocus
-        DateInputProps={DateInputProps}
-        components={components}
-        componentsProps={componentsProps}
-        {...other}
-      />
-    </MobileWrapper>
-  );
+  const { renderPicker } = useMobilePicker<TDate, TimeView, typeof props>({
+    props,
+    valueManager: singleItemValueManager,
+    valueType: 'time',
+    getOpenDialogAriaText:
+      props.localeText?.openTimePickerDialogue ?? localeText.openTimePickerDialogue,
+    validator: validateTime,
+  });
+
+  return renderPicker();
 }) as MobileTimePickerComponent;
 
 MobileTimePicker.propTypes = {
@@ -109,47 +94,43 @@ MobileTimePicker.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Regular expression to detect "accepted" symbols.
-   * @default /\dap/gi
-   */
-  acceptRegex: PropTypes.instanceOf(RegExp),
-  /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
-  children: PropTypes.node,
   /**
-   * className applied to the root component.
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
+  autoFocus: PropTypes.bool,
+  /**
+   * Class name applied to the root element.
    */
   className: PropTypes.string,
   /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
-   * @default {}
+   * The default value.
+   * Used when the component is not controlled.
    */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps: PropTypes.object,
+  defaultValue: PropTypes.any,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -159,57 +140,39 @@ MobileTimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * Disable mask on the keyboard, this should be used rarely. Consider passing proper mask for your format.
-   * @default false
-   */
-  disableMaskedInput: PropTypes.bool,
-  /**
-   * Do not render open picker button (renders only text field with validation).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
-   * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TDate
-   * @param {TDate | null} date The date from which we want to add an aria-text.
-   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
+   * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
    */
-  getOpenDialogAriaText: PropTypes.func,
-  ignoreInvalidInputs: PropTypes.bool,
+  format: PropTypes.string,
   /**
-   * Props to pass to keyboard input adornment.
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
    */
-  InputAdornmentProps: PropTypes.object,
-  /**
-   * Format string.
-   */
-  inputFormat: PropTypes.string,
-  InputProps: PropTypes.object,
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
+  /**
+   * The label content.
+   */
   label: PropTypes.node,
   /**
-   * Locale for components texts
+   * Locale for components texts.
+   * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText: PropTypes.object,
-  /**
-   * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
-   */
-  mask: PropTypes.string,
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
@@ -226,104 +189,162 @@ MobileTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * Callback fired when date is accepted @DateIOType.
-   * @template TValue
+   * Callback fired when the value is accepted.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
-   * Callback fired when the value (the selected date) changes @DateIOType.
-   * @template TValue
+   * Callback fired when the value changes.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {string} keyboardInputValue The current value of the keyboard input.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   /**
    * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
+   * Use in controlled mode (see `open`).
    */
   onClose: PropTypes.func,
   /**
-   * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
-   * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
-   * This can be used to render appropriate form error.
+   * Callback fired when the error associated to the current value changes.
+   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
-   * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
-   * @DateIOType
-   *
-   * @template TError, TValue
-   * @param {TError} reason The reason why the current value is not valid.
-   * @param {TValue} value The invalid value.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @param {TError} error The new error describing why the current value is not valid.
+   * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
   /**
    * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
+   * Use in controlled mode (see `open`).
    */
   onOpen: PropTypes.func,
   /**
+   * Callback fired when the selected sections change.
+   * @param {FieldSelectedSections} newValue The new selected sections.
+   */
+  onSelectedSectionsChange: PropTypes.func,
+  /**
    * Callback fired on view change.
-   * @param {TimeView} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
    * Control the popup or dialog open state.
+   * @default false
    */
   open: PropTypes.bool,
   /**
-   * Props to pass to keyboard adornment button.
-   */
-  OpenPickerButtonProps: PropTypes.object,
-  /**
-   * First view to show.
-   * Must be a valid option from `views` list
-   * @default 'hours'
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  /**
-   * Make picker read only.
-   * @default false
-   */
   readOnly: PropTypes.bool,
   /**
-   * The `renderInput` prop allows you to customize the rendered input.
-   * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
-   * Pay specific attention to the `ref` and `inputProps` keys.
-   * @example ```jsx
-   * renderInput={props => <TextField {...props} />}
-   * ````
-   * @param {MuiTextFieldPropsType} props The props of the input.
-   * @returns {React.ReactNode} The node to render as the input.
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
-  renderInput: PropTypes.func.isRequired,
+  reduceAnimations: PropTypes.bool,
   /**
-   * Custom formatter to be passed into Rifm component.
-   * @param {string} str The un-formatted string.
-   * @returns {string} The formatted string.
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  rifmFormatter: PropTypes.func,
+  referenceDate: PropTypes.any,
+  /**
+   * The currently selected sections.
+   * This prop accept four formats:
+   * 1. If a number is provided, the section at this index will be selected.
+   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 4. If `null` is provided, no section will be selected
+   * If not provided, the selected sections will be handled internally.
+   */
+  selectedSections: PropTypes.oneOfType([
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
+    PropTypes.number,
+    PropTypes.shape({
+      endIndex: PropTypes.number.isRequired,
+      startIndex: PropTypes.number.isRequired,
+    }),
+  ]),
   /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @template TDate
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, show the toolbar even in desktop mode.
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
   /**
-   * The value of the picker.
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
+  /**
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
-   * @default ['hours', 'minutes']
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    seconds: PropTypes.func,
+  }),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;
+
+export { MobileTimePicker };

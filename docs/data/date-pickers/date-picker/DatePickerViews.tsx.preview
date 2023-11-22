@@ -1,0 +1,6 @@
+<DatePicker
+  label={'"year", "month" and "day"'}
+  views={['year', 'month', 'day']}
+/>
+<DatePicker label={'"day"'} views={['day']} />
+<DatePicker label={'"month" and "year"'} views={['month', 'year']} />

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, useTheme } from '@mui/system';
-import { styled, useThemeProps, Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/system';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
@@ -11,11 +11,14 @@ import {
 } from '@mui/utils';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
-import { YearCalendarClasses, getYearCalendarUtilityClass } from './yearCalendarClasses';
-import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
+import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
+import { YearCalendarProps } from './YearCalendar.types';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -32,7 +35,7 @@ function useYearCalendarDefaultizedProps<TDate>(
   name: string,
 ): DefaultizedProps<
   YearCalendarProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'yearsPerRow'
 > {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -45,6 +48,7 @@ function useYearCalendarDefaultizedProps<TDate>(
     disablePast: false,
     disableFuture: false,
     ...themeProps,
+    yearsPerRow: themeProps.yearsPerRow ?? 3,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -61,75 +65,37 @@ const YearCalendarRoot = styled('div', {
   overflowY: 'auto',
   height: '100%',
   padding: '0 4px',
-  width: 320,
-  maxHeight: 304,
+  width: DIALOG_WIDTH,
+  maxHeight: MAX_CALENDAR_HEIGHT,
+  // avoid padding increasing width over defined
+  boxSizing: 'border-box',
+  position: 'relative',
 });
 
-export interface YearCalendarProps<TDate>
-  extends YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
-  autoFocus?: boolean;
-  /**
-   * className applied to the root element.
-   */
-  className?: string;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<YearCalendarClasses>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /** If `true` picker is disabled */
-  disabled?: boolean;
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: TDate | null;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: TDate | null;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
-   */
-  onChange?: (value: TDate) => void;
-  /** If `true` picker is readonly */
-  readOnly?: boolean;
-  /**
-   * If `true`, today's date is rendering without highlighting with circle.
-   * @default false
-   */
-  disableHighlightToday?: boolean;
-  onYearFocus?: (year: number) => void;
-  hasFocus?: boolean;
-  onFocusedViewChange?: (hasFocus: boolean) => void;
-}
-
-type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
+type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.JSX.Element) & {
   propTypes?: any;
 };
 
+/**
+ * Demos:
+ *
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
+ *
+ * API:
+ *
+ * - [YearCalendar API](https://mui.com/x/api/date-pickers/year-calendar/)
+ */
 export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   inProps: YearCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const now = useNow<TDate>();
-  const theme = useTheme();
-  const utils = useUtils<TDate>();
-  const wrapperVariant = React.useContext(WrapperVariantContext);
-
   const props = useYearCalendarDefaultizedProps(inProps, 'MuiYearCalendar');
   const {
     autoFocus,
     className,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     disabled,
     disableFuture,
     disablePast,
@@ -142,37 +108,52 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
+    yearsPerRow,
+    timezone: timezoneProp,
+    gridLabelId,
     ...other
   } = props;
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
-
-  const [value, setValue] = useControlled({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'YearCalendar',
-    state: 'value',
-    controlled: valueProp,
-    default: defaultValue ?? null,
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange: onChange as (value: TDate | null) => void,
+    valueManager: singleItemValueManager,
   });
 
-  const selectedDateOrStartOfYear = React.useMemo(
-    () => value ?? utils.startOfYear(now),
-    [now, utils, value],
+  const now = useNow<TDate>(timezone);
+  const theme = useTheme();
+  const utils = useUtils<TDate>();
+
+  const referenceDate = React.useMemo(
+    () =>
+      singleItemValueManager.getInitialReferenceValue({
+        value,
+        utils,
+        props,
+        timezone,
+        referenceDate: referenceDateProp,
+        granularity: SECTION_TYPE_GRANULARITY.year,
+      }),
+    [], // eslint-disable-line react-hooks/exhaustive-deps
   );
+
+  const ownerState = props;
+  const classes = useUtilityClasses(ownerState);
 
   const todayYear = React.useMemo(() => utils.getYear(now), [utils, now]);
   const selectedYear = React.useMemo(() => {
     if (value != null) {
       return utils.getYear(value);
     }
+    return null;
+  }, [value, utils]);
 
-    if (disableHighlightToday) {
-      return null;
-    }
-
-    return utils.getYear(now);
-  }, [now, value, utils, disableHighlightToday]);
-  const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
+  const [focusedYear, setFocusedYear] = React.useState(
+    () => selectedYear || utils.getYear(referenceDate),
+  );
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'YearCalendar',
@@ -189,37 +170,42 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     }
   });
 
-  const isYearDisabled = useEventCallback((dateToValidate: TDate) => {
-    if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
-      return true;
-    }
-    if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
-      return true;
-    }
-    if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
-      return true;
-    }
-    if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
-      return true;
-    }
-    if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
-      return true;
-    }
-    return false;
-  });
+  const isYearDisabled = React.useCallback(
+    (dateToValidate: TDate) => {
+      if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
+        return true;
+      }
+      if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
+        return true;
+      }
+      if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
+        return true;
+      }
+      if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
+        return true;
+      }
+
+      if (!shouldDisableYear) {
+        return false;
+      }
+
+      const yearToValidate = utils.startOfYear(dateToValidate);
+      return shouldDisableYear(yearToValidate);
+    },
+    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableYear, utils],
+  );
 
   const handleYearSelection = useEventCallback((event: React.MouseEvent, year: number) => {
     if (readOnly) {
       return;
     }
 
-    const newDate = utils.setYear(selectedDateOrStartOfYear, year);
-    setValue(newDate);
-    onChange?.(newDate);
+    const newDate = utils.setYear(value ?? referenceDate, year);
+    handleValueChange(newDate);
   });
 
   const focusYear = useEventCallback((year: number) => {
-    if (!isYearDisabled(utils.setYear(selectedDateOrStartOfYear, year))) {
+    if (!isYearDisabled(utils.setYear(value ?? referenceDate, year))) {
       setFocusedYear(year);
       changeHasFocus(true);
       onYearFocus?.(year);
@@ -233,15 +219,13 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   }, [selectedYear]);
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
-    const yearsInRow = wrapperVariant === 'desktop' ? 4 : 3;
-
     switch (event.key) {
       case 'ArrowUp':
-        focusYear(year - yearsInRow);
+        focusYear(year - yearsPerRow);
         event.preventDefault();
         break;
       case 'ArrowDown':
-        focusYear(year + yearsInRow);
+        focusYear(year + yearsPerRow);
         event.preventDefault();
         break;
       case 'ArrowLeft':
@@ -300,9 +284,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
       ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      role="radiogroup"
+      aria-labelledby={gridLabelId}
       {...other}
     >
-      {utils.getYearRange(minDate, maxDate).map((year) => {
+      {utils.getYearRange([minDate, maxDate]).map((year) => {
         const yearNumber = utils.getYear(year);
         const isSelected = yearNumber === selectedYear;
         const isDisabled = disabled || isYearDisabled(year);
@@ -320,6 +306,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
             onFocus={handleYearFocus}
             onBlur={handleYearBlur}
             aria-current={todayYear === yearNumber ? 'date' : undefined}
+            yearsPerRow={yearsPerRow}
           >
             {utils.format(year, 'year')}
           </PickersYear>
@@ -353,7 +340,7 @@ YearCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -363,10 +350,11 @@ YearCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
+  gridLabelId: PropTypes.string,
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
@@ -379,7 +367,7 @@ YearCalendar.propTypes = {
   /**
    * Callback fired when the value changes.
    * @template TDate
-   * @param {TDate | null} value The new value.
+   * @param {TDate} value The new value.
    */
   onChange: PropTypes.func,
   onFocusedViewChange: PropTypes.func,
@@ -389,10 +377,15 @@ YearCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid year using the validation props, except callbacks such as `shouldDisableYear`.
+   */
+  referenceDate: PropTypes.any,
+  /**
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -404,8 +397,21 @@ YearCalendar.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
+  /**
    * The selected value.
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

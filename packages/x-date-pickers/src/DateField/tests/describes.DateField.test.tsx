@@ -1,24 +1,31 @@
 import * as React from 'react';
-import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { describeConformance, userEvent } from '@mui-internal/test-utils';
+import TextField from '@mui/material/TextField';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   createPickerRenderer,
   wrapPickerMount,
-  adapterToUse,
   expectInputValue,
-  buildFieldInteractions,
-} from 'test/utils/pickers-utils';
+  expectInputPlaceholder,
+  adapterToUse,
+  getTextbox,
+  describeValidation,
+  describeValue,
+} from 'test/utils/pickers';
 
 describe('<DateField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  describeValidation(DateField, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    componentFamily: 'field',
+  }));
 
   describeConformance(<DateField />, () => ({
-    classes: {},
-    inheritComponent: 'div',
+    classes: {} as any,
+    inheritComponent: TextField,
     render,
     muiName: 'MuiDateField',
     wrapMount: wrapPickerMount,
@@ -34,28 +41,26 @@ describe('<DateField /> - Describes', () => {
     ],
   }));
 
-  describeValidation(DateField, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'field',
-  }));
-
   describeValue(DateField, () => ({
     render,
     componentFamily: 'field',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const expectedValueStr =
-        expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, 'MM/DD/YYYY');
+      }
+      expectInputValue(
+        input,
+        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
+      );
     },
-    setNewValue: (value) => {
+    setNewValue: (value, { selectSection }) => {
       const newValue = adapterToUse.addDays(value, 1);
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 10); // Update the day
+      selectSection('day');
+      const input = getTextbox();
       userEvent.keyPress(input, { key: 'ArrowUp' });
       return newValue;
     },

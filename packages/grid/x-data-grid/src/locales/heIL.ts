@@ -6,7 +6,6 @@ const heILGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'אין שורות',
   noResultsOverlayLabel: 'לא נמצאו תוצאות.',
-  errorOverlayDefaultLabel: 'אירעה שגיאה.',
 
   // Density selector toolbar button text
   toolbarDensity: 'צפיפות',
@@ -48,8 +47,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
+  filterPanelRemoveAll: 'מחק הכל',
   filterPanelDeleteIconLabel: 'מחק',
-  filterPanelLinkOperator: 'אופרטור לוגי',
+  filterPanelLogicOperator: 'אופרטור לוגי',
   filterPanelOperator: 'אופרטור',
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
@@ -71,6 +71,33 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
   filterOperatorIsAnyOf: 'הוא אחד מ-',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'מכיל',
+  headerFilterOperatorEquals: 'שווה',
+  headerFilterOperatorStartsWith: 'מתחיל ב-',
+  headerFilterOperatorEndsWith: 'נגמר ב-',
+  headerFilterOperatorIs: 'הינו',
+  headerFilterOperatorNot: 'אינו',
+  headerFilterOperatorAfter: 'אחרי',
+  headerFilterOperatorOnOrAfter: 'ב- או אחרי',
+  headerFilterOperatorBefore: 'לפני',
+  headerFilterOperatorOnOrBefore: 'ב- או לפני',
+  headerFilterOperatorIsEmpty: 'ריק',
+  headerFilterOperatorIsNotEmpty: 'אינו ריק',
+  headerFilterOperatorIsAnyOf: 'הוא אחד מ-',
+  'headerFilterOperator=': 'שווה',
+  'headerFilterOperator!=': 'אינו שווה',
+  'headerFilterOperator>': 'גדול מ-',
+  'headerFilterOperator>=': 'גדול שווה ל-',
+  'headerFilterOperator<': 'קטן מ-',
+  'headerFilterOperator<=': 'קטן שווה ל-',
 
   // Filter values text
   filterValueAny: 'כל ערך',
@@ -80,7 +107,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'תפריט',
   columnMenuShowColumns: 'הצג עמודות',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'נהל עמודות',
   columnMenuFilter: 'סנן',
   columnMenuHideColumn: 'הסתר',
   columnMenuUnsort: 'בטל מיון',
@@ -142,12 +169,12 @@ const heILGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'סידור שורות',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'צבירה',
+  aggregationFunctionLabelSum: 'סכום',
+  aggregationFunctionLabelAvg: 'ממוצע',
+  aggregationFunctionLabelMin: 'מינימום',
+  aggregationFunctionLabelMax: 'מקסימום',
+  aggregationFunctionLabelSize: 'גודל',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

@@ -3,4 +3,4 @@ export type {
   DesktopTimePickerProps,
   DesktopTimePickerSlotsComponent,
   DesktopTimePickerSlotsComponentsProps,
-} from './DesktopTimePicker';
+} from './DesktopTimePicker.types';

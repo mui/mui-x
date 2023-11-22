@@ -6,14 +6,13 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '行がありません。',
   noResultsOverlayLabel: '結果がありません。',
-  errorOverlayDefaultLabel: 'エラーが発生しました。',
 
   // Density selector toolbar button text
   toolbarDensity: '行間隔',
   toolbarDensityLabel: '行間隔',
   toolbarDensityCompact: 'コンパクト',
   toolbarDensityStandard: '標準',
-  toolbarDensityComfortable: 'ひろめ',
+  toolbarDensityComfortable: '広め',
 
   // Columns selector toolbar button text
   toolbarColumns: '列一覧',
@@ -47,9 +46,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
+  filterPanelRemoveAll: 'すべて削除',
   filterPanelDeleteIconLabel: '削除',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperator: 'オペレータ',
+  filterPanelLogicOperator: '論理演算子',
+  filterPanelOperator: '演算子',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: '列',
@@ -70,16 +70,43 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '...空である',
   filterOperatorIsNotEmpty: '...空でない',
   filterOperatorIsAnyOf: '...のいずれか',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: '含む',
+  headerFilterOperatorEquals: '等しい',
+  headerFilterOperatorStartsWith: 'で始まる',
+  headerFilterOperatorEndsWith: 'で終わる',
+  headerFilterOperatorIs: 'である',
+  headerFilterOperatorNot: 'ではない',
+  headerFilterOperatorAfter: '...より後ろ',
+  headerFilterOperatorOnOrAfter: '...以降',
+  headerFilterOperatorBefore: '...より前',
+  headerFilterOperatorOnOrBefore: '...以前',
+  headerFilterOperatorIsEmpty: '空白',
+  headerFilterOperatorIsNotEmpty: '空白ではない',
+  headerFilterOperatorIsAnyOf: 'いずれか',
+  'headerFilterOperator=': '等しい',
+  'headerFilterOperator!=': '等しくない',
+  'headerFilterOperator>': 'より大きい',
+  'headerFilterOperator>=': '以上',
+  'headerFilterOperator<': '未満',
+  'headerFilterOperator<=': '以下',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'いずれか',
+  filterValueTrue: '真',
+  filterValueFalse: '偽',
 
   // Column menu text
   columnMenuLabel: 'メニュー',
   columnMenuShowColumns: '列表示',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: '列管理',
   columnMenuFilter: 'フィルター',
   columnMenuHideColumn: '列非表示',
   columnMenuUnsort: 'ソート解除',
@@ -113,7 +140,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: '偽',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'もっと見る',
 
   // Column pinning text
   pinToLeft: '左側に固定',
@@ -131,7 +158,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `${name}のグループを解除`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: '詳細パネルの切り替え',
   expandDetailPanel: '展開',
   collapseDetailPanel: '折りたたみ',
 
@@ -139,12 +166,12 @@ const jaJPGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: '行並び替え',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: '合計',
+  aggregationFunctionLabelSum: '和',
+  aggregationFunctionLabelAvg: '平均',
+  aggregationFunctionLabelMin: '最小値',
+  aggregationFunctionLabelMax: '最大値',
+  aggregationFunctionLabelSize: 'サイズ',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

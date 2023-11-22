@@ -3,7 +3,7 @@ import {
   DataGridPro,
   GridColDef,
   GridFilterModel,
-  GridLinkOperator,
+  GridLogicOperator,
   GridRowsProp,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
@@ -122,7 +122,7 @@ export default function TreeDataDisableChildrenFiltering() {
   const [disableChildrenFiltering, setDisableChildrenFiltering] =
     React.useState(true);
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
-    linkOperator: GridLinkOperator.Or,
+    logicOperator: GridLogicOperator.Or,
     items: [
       {
         id: 0,

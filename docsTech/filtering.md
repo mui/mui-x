@@ -4,12 +4,12 @@
 
 ### Data
 
-First, let's see how the filtering is saved in the state. Here are the types of the [filter model](https://mui.com/x/api/data-grid/grid-filter-model/). It is made of a `linkOperator`, and a list of [items](https://mui.com/x/api/data-grid/grid-filter-item/). Each item corresponds to a line in the filtering panel.
+First, let's see how the filtering is saved in the state. Here are the types of the [filter model](https://mui.com/x/api/data-grid/grid-filter-model/). It is made of a `logicOperator`, and a list of [items](https://mui.com/x/api/data-grid/grid-filter-item/). Each item corresponds to a line in the filtering panel.
 
 ```ts
 interface GridFilterModel {
   items: GridFilterItem[];
-  linkOperator?: GridLinkOperator;
+  logicOperator?: GridLogicOperator;
 }
 
 interface GridFilterItem {
@@ -19,7 +19,7 @@ interface GridFilterItem {
   operator: string;
 }
 
-enum GridLinkOperator {
+enum GridLogicOperator {
   And = 'and',
   Or = 'or',
 }

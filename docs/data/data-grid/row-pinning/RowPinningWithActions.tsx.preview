@@ -1,6 +1,1 @@
-<DataGridPro
-  columns={columns}
-  pinnedRows={pinnedRows}
-  rows={rows}
-  experimentalFeatures={{ rowPinning: true }}
-/>
+<DataGridPro columns={columns} pinnedRows={pinnedRows} rows={rows} />

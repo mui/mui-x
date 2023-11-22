@@ -1,0 +1,30 @@
+{
+  "props": {
+    "onViewChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+      },
+      "required": true
+    },
+    "className": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "toolbarFormat": { "type": { "name": "string" } },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+  },
+  "slots": [],
+  "name": "DatePickerToolbar",
+  "imports": [
+    "import { DatePickerToolbar } from '@mui/x-date-pickers/DatePicker';",
+    "import { DatePickerToolbar } from '@mui/x-date-pickers';",
+    "import { DatePickerToolbar } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": { "classes": ["root", "title"], "globalClasses": {}, "name": "MuiDatePickerToolbar" },
+  "filename": "/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
+}

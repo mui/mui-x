@@ -5,14 +5,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 export default function CustomDayOfWeekFormat() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateCalendar
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        dayOfWeekFormatter={(day) => `${day}.`}
+        dayOfWeekFormatter={(weekday) => `${weekday.format('dd')}.`}
       />
     </LocalizationProvider>
   );

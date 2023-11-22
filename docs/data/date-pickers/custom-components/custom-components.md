@@ -1,52 +1,111 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Custom components
-components: DateTimePickerTabs
+productId: x-date-pickers
+title: Date and Time Pickers - Custom slots and subcomponents
+components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickersCalendarHeader, PickersShortcuts
 ---
 
-# Custom components
+# Custom slots and subcomponents
 
-<p class="description">The date picker lets you customize sub-components.</p>
+<p class="description">Learn how to override the default DOM structure of the Date and Time Pickers.</p>
 
-## Overriding components
+:::info
+The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
+For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
+:::
 
-You can override the internal elements of the component (known as "slots") using the `components` prop.
+## Overriding slot components
 
-Use the `componentsProps` prop if you need to pass additional props to a component slot.
+You can override the internal elements of the component (known as "slots") using the `slots` prop.
+
+Use the `slotProps` prop if you need to pass additional props to a component slot.
 
 As an example, you could override the `ActionBar` and pass additional props to the custom component as shown below:
 
 ```jsx
 <DatePicker
   {...otherProps}
-  components={{
+  slots={{
     // Override default <ActionBar /> with a custom one
-    ActionBar: CustomActionBar,
+    actionBar: CustomActionBar,
   }}
-  componentsProps={{
+  slotProps={{
     // pass props `actions={['clear']}` to the actionBar slot
     actionBar: { actions: ['clear'] },
   }}
 />
 ```
 
-:::warning
-The `components` prop uses Pascal case (`ActionBar`), while `componentsProps` uses camel case (`actionBar`).
+To modify components position, have a look at the [custom layout](/x/react-date-pickers/custom-layout/) docs page.
+
+### Recommended usage
+
+:::success
+Remember to pass a reference to the component instead of an inline render function and define it outside the main component.
+This ensures that the component is not remounted on every update.
 :::
+
+The first two examples below are buggy because the toolbar will remount after each keystroke, leading to a loss of focus.
+
+```jsx
+// ❌ The `toolbar` slot is re-defined each time the parent component renders,
+// causing the component to remount.
+function MyApp() {
+  return (
+    <DatePicker
+      slots={{
+        toolbar: () => (
+          <input value={name} onChange={(event) => setName(event.target.value)} />
+        ),
+      }}
+    />
+  );
+}
+```
+
+```jsx
+// ❌ The `toolbar` slot is re-defined each time `name` is updated,
+// causing the component to remount.
+function MyApp() {
+  const [name, setName] = React.useState('');
+
+  const CustomToolbar = React.useCallback(
+    () => <input value={name} onChange={(event) => setName(event.target.value)} />,
+    [name],
+  );
+
+  return <DatePicker slots={{ toolbar: CustomToolbar }} />;
+}
+```
+
+```jsx
+// ✅ The `toolbar` slot is defined only once, it will never remount.
+const CustomToolbar = ({ name, setName }) => (
+  <input value={name} onChange={(event) => setName(event.target.value)} />
+);
+
+function MyApp() {
+  const [name, setName] = React.useState('');
+  return (
+    <DatePicker
+      slots={{ toolbar: CustomToolbar }}
+      slotProps={{ toolbar: { name, setName } }}
+    />
+  );
+}
+```
 
 ## Action bar
 
 ### Component props
 
 The action bar is available on all picker components.
-It is located at the bottom of the picker's views.
 By default, it contains no action on desktop, and the actions **Cancel** and **Accept** on mobile.
 
-You can override the action displayed by passing the `actions` prop to the `actionBar` within `componentsProps`, as shown here:
+You can override the actions displayed by passing the `actions` prop to the `actionBar` within `slotProps`, as shown here:
 
 ```jsx
 <DatePicker
-  componentsProps={{
+  slotProps={{
     // The actions will be the same between desktop and mobile
     actionBar: {
       actions: ['clear'],
@@ -68,7 +127,7 @@ In the example below, the action bar contains only one button, which resets the 
 The built-in `ActionBar` component supports four different actions:
 
 | Action   | Behavior                                                               |
-| -------- | ---------------------------------------------------------------------- |
+| :------- | :--------------------------------------------------------------------- |
 | `accept` | Accept the current value and close the picker view                     |
 | `cancel` | Reset to the last accepted date and close the picker view              |
 | `clear`  | Reset to the empty value and close the picker view                     |
@@ -77,33 +136,24 @@ The built-in `ActionBar` component supports four different actions:
 ### Component
 
 If you need to customize the date picker beyond the options described above, you can provide a custom component.
-This can be used in combination with `componentsProps`.
+This can be used in combination with `slotProps`.
 
 In the example below, the actions are the same as in the section above, but they are rendered inside a menu:
 
 {{"demo": "ActionBarComponent.js"}}
 
-## Paper content
-
-The paper content is available on all desktop and static picker components.
-It adds a flexible way to extend what is rendered in the picker paper.
-
-You can provide any custom component to this slot as long as it passes `children` down maintaining original picker behavior.
-In the examples below we provide ways of implementing date range shortcuts using this slot.
-
-{{"demo": "PaperContentComponent.js", "defaultCodeOpen": false, "disableAd": true}}
-
 ## Tabs
 
 The tabs are available on all date time picker components.
+It allows to switch between date and time interfaces.
 
 ### Component props
 
-You can override the icons displayed by passing props to the `tabs` within `componentsProps`, as shown here:
+You can override the icons displayed by passing props to the `tabs` within `slotProps`, as shown here:
 
 ```jsx
 <DateTimePicker
-  componentsProps={{
+  slotProps={{
     tabs: {
       dateIcon: <LightModeIcon />,
       timeIcon: <AcUnitIcon />,
@@ -117,7 +167,7 @@ This behavior can be overridden by setting the `hidden` prop:
 
 ```jsx
 <DateTimePicker
-  componentsProps={{
+  slotProps={{
     tabs: {
       hidden: false,
     },
@@ -128,11 +178,46 @@ This behavior can be overridden by setting the `hidden` prop:
 ### Component
 
 If you need to customize the date time picker beyond the options described above, you can provide a custom component.
-This can be used in combination with `componentsProps`.
+This can be used in combination with `slotProps`.
 
 In the example below, the tabs are using different icons and have an additional component:
 
-{{"demo": "Tabs.js", "disableAd": true}}
+{{"demo": "Tabs.js"}}
+
+## Toolbar
+
+The toolbar is available on all date time picker components.
+It displays the current values and allows to switch between different views.
+
+### Component props
+
+You can customize how the toolbar displays the current value with `toolbarFormat`.
+By default empty values are replaced by `__`.
+This can be modified by using `toolbarPlaceholder` props.
+
+By default, the toolbar is `hidden` on desktop, and `visible` on mobile.
+This behavior can be overridden by setting the `hidden` prop:
+
+```jsx
+<DatePicker
+  slotProps={{
+    toolbar: {
+      // Customize value display
+      toolbarFormat: 'YYYY',
+      // Change what is displayed given an empty value
+      toolbarPlaceholder: '??',
+      // Show the toolbar
+      hidden: false,
+    },
+  }}
+/>
+```
+
+### Component
+
+Each component comes with its own toolbar (`DatePickerToolbar`, `TimePickerToolbar`, and `DateTimePickerToolbar`) that you can reuse and customize.
+
+{{"demo": "ToolbarComponent.js"}}
 
 ## Arrow switcher
 
@@ -143,10 +228,15 @@ to navigate to the "Previous" and "Next" steps of the picker: `PreviousIconButto
 
 You can pass props to the icons and buttons as shown below:
 
-{{"demo": "ArrowSwitcherComponentProps.js", "defaultCodeOpen": false, "disableAd": true}}
+{{"demo": "ArrowSwitcherComponentProps.js", "defaultCodeOpen": false}}
 
 ### Component
 
 You can pass custom components—to replace the icons, for example—as shown below:
 
-{{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false, "disableAd": true}}
+{{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
+
+## Shortcuts
+
+You can add shortcuts to every pickers.
+For more information, check the [dedicated page](/x/react-date-pickers/shortcuts/).

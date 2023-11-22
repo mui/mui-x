@@ -5,12 +5,11 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const csCZGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žádné záznamy',
-  noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
-  errorOverlayDefaultLabel: 'Stala sa nepředvídaná chyba.',
+  noResultsOverlayLabel: 'Nenašly se žadné výsledky.',
 
   // Density selector toolbar button text
-  toolbarDensity: 'Hustota',
-  toolbarDensityLabel: 'Hustota',
+  toolbarDensity: 'Zobrazení',
+  toolbarDensityLabel: 'Zobrazení',
   toolbarDensityCompact: 'Kompaktní',
   toolbarDensityStandard: 'Standartní',
   toolbarDensityComfortable: 'Komfortní',
@@ -35,16 +34,16 @@ const csCZGrid: Partial<GridLocaleText> = {
   },
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Hledat…',
+  toolbarQuickFilterLabel: 'Hledat',
+  toolbarQuickFilterDeleteIconLabel: 'Vymazat',
 
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stáhnout jako CSV',
   toolbarExportPrint: 'Vytisknout',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Stáhnout jako Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Najít sloupec',
@@ -55,8 +54,9 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
+  filterPanelRemoveAll: 'Odstranit vše',
   filterPanelDeleteIconLabel: 'Odstranit',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLogicOperator: 'Logický operátor',
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',
@@ -67,17 +67,44 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Filter operators text
   filterOperatorContains: 'obsahuje',
   filterOperatorEquals: 'rovná se',
-  filterOperatorStartsWith: 'začíná s',
+  filterOperatorStartsWith: 'začíná na',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
   filterOperatorNot: 'není',
   filterOperatorAfter: 'je po',
-  filterOperatorOnOrAfter: 'je na nebo po',
+  filterOperatorOnOrAfter: 'je po včetně',
   filterOperatorBefore: 'je před',
-  filterOperatorOnOrBefore: 'je na nebo dříve',
+  filterOperatorOnOrBefore: 'je před včetně',
   filterOperatorIsEmpty: 'je prázdný',
   filterOperatorIsNotEmpty: 'není prázdný',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'je jeden z',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Obsahuje',
+  headerFilterOperatorEquals: 'Rovná se',
+  headerFilterOperatorStartsWith: 'Začíná na',
+  headerFilterOperatorEndsWith: 'Končí na',
+  headerFilterOperatorIs: 'Je',
+  headerFilterOperatorNot: 'Není',
+  headerFilterOperatorAfter: 'Je po',
+  headerFilterOperatorOnOrAfter: 'Je po včetně',
+  headerFilterOperatorBefore: 'Je před',
+  headerFilterOperatorOnOrBefore: 'Je před včetně',
+  headerFilterOperatorIsEmpty: 'Je prázdný',
+  headerFilterOperatorIsNotEmpty: 'Není prázdný',
+  headerFilterOperatorIsAnyOf: 'Je jeden z',
+  'headerFilterOperator=': 'Rovná se',
+  'headerFilterOperator!=': 'Nerovná se',
+  'headerFilterOperator>': 'Větší než',
+  'headerFilterOperator>=': 'Větší než nebo rovno',
+  'headerFilterOperator<': 'Menší než',
+  'headerFilterOperator<=': 'Menší než nebo rovno',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',
@@ -87,7 +114,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Zobrazit sloupce',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Spravovat sloupce',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Skrýt',
   columnMenuUnsort: 'Zrušit filtry',
@@ -134,10 +161,10 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Výběr řádku',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Označit všechny řádky',
+  checkboxSelectionUnselectAllRows: 'Odznačit všechny řádky',
+  checkboxSelectionSelectRow: 'Označit řádek',
+  checkboxSelectionUnselectRow: 'Odznačit řádek',
 
   // Boolean cell text
   booleanCellTrueLabel: 'ano',
@@ -147,8 +174,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'více',
 
   // Column pinning text
-  pinToLeft: 'Připnout na levo',
-  pinToRight: 'Připnout na pravo',
+  pinToLeft: 'Připnout vlevo',
+  pinToRight: 'Připnout vpravo',
   unpin: 'Odepnout',
 
   // Tree Data
@@ -158,24 +185,24 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Skupina',
-  groupColumn: (name) => `Zoskupit podle ${name}`,
-  unGroupColumn: (name) => `Přestat zoskupovat podle ${name}`,
+  groupColumn: (name) => `Zeskupit podle ${name}`,
+  unGroupColumn: (name) => `Přestat zeskupovat podle ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'Přepnout detail panelu',
+  expandDetailPanel: 'Rozbalit',
+  collapseDetailPanel: 'Sbalit',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Přeuspořádávání řádků',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Seskupování',
+  aggregationFunctionLabelSum: 'součet',
+  aggregationFunctionLabelAvg: 'průměr',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'počet',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);

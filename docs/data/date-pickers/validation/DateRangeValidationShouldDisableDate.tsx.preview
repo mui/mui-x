@@ -1,4 +1,4 @@
-<NextDateRangePicker
+<DateRangePicker
   defaultValue={[lastSunday, nextSunday]}
   shouldDisableDate={(date, position) => {
     if (position === 'end') {

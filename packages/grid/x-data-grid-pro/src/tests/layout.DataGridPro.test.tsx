@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, ptBR, DataGridProProps } from '@mui/x-data-grid-pro';
@@ -43,7 +42,7 @@ describe('<DataGridPro /> - Layout', () => {
         </div>,
       );
       expect(ref.current).to.be.instanceof(window.HTMLDivElement);
-      expect(ref.current).to.equal(container.firstChild.firstChild);
+      expect(ref.current).to.equal(container.firstChild?.firstChild);
     });
 
     function randomStringValue() {
@@ -59,8 +58,8 @@ describe('<DataGridPro /> - Layout', () => {
         </div>,
       );
 
-      expect(container.firstChild.firstChild).to.have.class(className);
-      expect(container.firstChild.firstChild).to.have.class('MuiDataGrid-root');
+      expect(container.firstChild?.firstChild).to.have.class(className);
+      expect(container.firstChild?.firstChild).to.have.class('MuiDataGrid-root');
     });
 
     it('applies the style to the root component', () => {
@@ -177,5 +176,30 @@ describe('<DataGridPro /> - Layout', () => {
     expect(screen.getByRole('grid')).toHaveComputedStyle({
       color: 'rgb(0, 0, 255)',
     });
+  });
+
+  it('should have ownerState in the theme style overrides', () => {
+    expect(() =>
+      render(
+        <ThemeProvider
+          theme={createTheme({
+            components: {
+              MuiDataGrid: {
+                styleOverrides: {
+                  root: ({ ownerState }) => ({
+                    // test that ownerState is not undefined
+                    ...(ownerState.columns && {}),
+                  }),
+                },
+              },
+            },
+          })}
+        >
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro {...baselineProps} />
+          </div>
+        </ThemeProvider>,
+      ),
+    ).not.to.throw();
   });
 });

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   DataGridPro,
   gridClasses,
@@ -7,17 +8,17 @@ import {
   GridApi,
   GridRowsProp,
   DataGridProProps,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
   createRenderer,
-  waitFor,
   fireEvent,
   screen,
   act,
   userEvent,
-  // @ts-expect-error Remove once the test utils are typed
-} from '@mui/monorepo/test/utils';
+  waitFor,
+} from '@mui-internal/test-utils';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -30,17 +31,17 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Row pinning', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   function getRowById(id: number | string) {
     return document.querySelector(`[data-id="${id}"]`);
   }
 
   function getTopPinnedRowsContainer() {
-    return document.querySelector(`.${gridClasses['pinnedRows--top']}`) as HTMLElement;
+    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--top']}`);
   }
   function getBottomPinnedRowsContainer() {
-    return document.querySelector(`.${gridClasses['pinnedRows--bottom']}`) as HTMLElement;
+    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--bottom']}`);
   }
 
   function isRowPinned(row: Element | null, section: 'top' | 'bottom') {
@@ -74,7 +75,6 @@ describe('<DataGridPro /> - Row pinning', () => {
             top: [pinnedRow0],
             bottom: [pinnedRow1],
           }}
-          experimentalFeatures={{ rowPinning: true }}
           {...props}
         />
       </div>
@@ -106,12 +106,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
       return (
         <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            autoHeight
-            pinnedRows={pinnedRows}
-            experimentalFeatures={{ rowPinning: true }}
-          />
+          <DataGridPro {...data} autoHeight pinnedRows={pinnedRows} />
         </div>
       );
     }
@@ -233,13 +228,11 @@ describe('<DataGridPro /> - Row pinning', () => {
     act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
     act(() => apiRef.current.setRows(rows));
 
-    await waitFor(() => {
-      expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 pinned top');
-      expect(isRowPinned(getRowById(1), 'bottom')).to.equal(false, '#1 pinned bottom');
+    expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 pinned top');
+    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(false, '#1 pinned bottom');
 
-      expect(isRowPinned(getRowById(11), 'top')).to.equal(true, '#11 pinned top');
-      expect(isRowPinned(getRowById(3), 'bottom')).to.equal(true, '#3 pinned bottom');
-    });
+    expect(isRowPinned(getRowById(11), 'top')).to.equal(true, '#11 pinned top');
+    expect(isRowPinned(getRowById(3), 'bottom')).to.equal(true, '#3 pinned bottom');
 
     pinnedRows = { top: [data.rows[8]], bottom: [data.rows[5]] };
     rows = data.rows.filter((row) => row.id !== 8 && row.id !== 5);
@@ -248,13 +241,11 @@ describe('<DataGridPro /> - Row pinning', () => {
     act(() => apiRef.current.setRows(rows));
     act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
 
-    await waitFor(() => {
-      expect(isRowPinned(getRowById(11), 'top')).to.equal(false, '#11 pinned top');
-      expect(isRowPinned(getRowById(3), 'bottom')).to.equal(false, '#3 pinned bottom');
+    expect(isRowPinned(getRowById(11), 'top')).to.equal(false, '#11 pinned top');
+    expect(isRowPinned(getRowById(3), 'bottom')).to.equal(false, '#3 pinned bottom');
 
-      expect(isRowPinned(getRowById(8), 'top')).to.equal(true, '#8 pinned top');
-      expect(isRowPinned(getRowById(5), 'bottom')).to.equal(true, '#5 pinned bottom');
-    });
+    expect(isRowPinned(getRowById(8), 'top')).to.equal(true, '#8 pinned top');
+    expect(isRowPinned(getRowById(5), 'bottom')).to.equal(true, '#5 pinned bottom');
   });
 
   it('should work with `getRowId`', () => {
@@ -286,7 +277,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               bottom: [pinnedRow1],
             }}
             getRowId={getRowId}
-            experimentalFeatures={{ rowPinning: true }}
           />
         </div>
       );
@@ -373,7 +363,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               pinnedRows={{
                 top: [pinnedRow1, pinnedRow0],
               }}
-              experimentalFeatures={{ rowPinning: true }}
             />
           </div>
         );
@@ -416,7 +405,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               pinnedRows={{
                 bottom: [pinnedRow0, pinnedRow1],
               }}
-              experimentalFeatures={{ rowPinning: true }}
             />
           </div>
         );
@@ -468,7 +456,6 @@ describe('<DataGridPro /> - Row pinning', () => {
                   right: ['price2M'],
                 },
               }}
-              experimentalFeatures={{ rowPinning: true }}
             />
           </div>
         );
@@ -576,7 +563,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       this.skip();
     }
 
-    const headerHeight = 56;
+    const columnHeaderHeight = 56;
     const rowHeight = 52;
     const rowCount = 10;
 
@@ -585,14 +572,14 @@ describe('<DataGridPro /> - Row pinning', () => {
         rowCount={rowCount}
         colCount={2}
         rowHeight={rowHeight}
-        headerHeight={headerHeight}
+        columnHeaderHeight={columnHeaderHeight}
         hideFooter
         autoHeight
       />,
     );
 
     expect(document.querySelector(`.${gridClasses.main}`)!.clientHeight).to.equal(
-      headerHeight + rowHeight * rowCount,
+      columnHeaderHeight + rowHeight * rowCount,
     );
   });
 
@@ -609,7 +596,7 @@ describe('<DataGridPro /> - Row pinning', () => {
         rowHeight={52}
         pagination
         autoPageSize
-        headerHeight={56}
+        columnHeaderHeight={56}
         hideFooter
       />,
     );
@@ -647,8 +634,8 @@ describe('<DataGridPro /> - Row pinning', () => {
         colCount={5}
         height={500}
         pagination
-        pageSize={5}
-        rowsPerPageOptions={[5]}
+        initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+        pageSizeOptions={[5]}
       />,
     );
 
@@ -675,8 +662,8 @@ describe('<DataGridPro /> - Row pinning', () => {
         colCount={5}
         height={500}
         pagination
-        pageSize={pageSize}
-        rowsPerPageOptions={[pageSize]}
+        initialState={{ pagination: { paginationModel: { pageSize } } }}
+        pageSizeOptions={[pageSize]}
       />,
     );
 
@@ -708,7 +695,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               top: [pinnedRow0],
               bottom: [pinnedRow1],
             }}
-            experimentalFeatures={{ rowPinning: true }}
           />
         </div>
       );
@@ -777,5 +763,125 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     expect(getRowById(0)!).to.have.class(className);
     expect(getRowById(1)!).to.have.class(className);
+  });
+
+  it('should support cell editing', async function test() {
+    if (isJSDOM) {
+      // flaky in JSDOM
+      this.skip();
+    }
+    const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
+    const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
+    render(
+      <div style={{ width: 400, height: 400 }}>
+        <DataGridPro
+          rows={[
+            { id: 1, name: 'Jack' },
+            { id: 2, name: 'Theo' },
+            { id: 4, name: 'Cory' },
+            { id: 5, name: 'Woody' },
+          ]}
+          columns={columns}
+          pinnedRows={{
+            top: [{ id: 3, name: 'Joe' }],
+          }}
+          processRowUpdate={processRowUpdate}
+        />
+      </div>,
+    );
+
+    const cell = getCell(0, 1);
+    fireEvent.doubleClick(cell);
+
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Marcus' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    await waitFor(() => {
+      expect(cell.textContent).to.equal('Marcus');
+    });
+    expect(processRowUpdate.callCount).to.equal(1);
+    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+  });
+
+  it('should support row editing', async function test() {
+    if (isJSDOM) {
+      // flaky in JSDOM
+      this.skip();
+    }
+    const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
+    const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
+    render(
+      <div style={{ width: 400, height: 400 }}>
+        <DataGridPro
+          rows={[
+            { id: 1, name: 'Jack' },
+            { id: 2, name: 'Theo' },
+            { id: 4, name: 'Cory' },
+            { id: 5, name: 'Woody' },
+          ]}
+          columns={columns}
+          pinnedRows={{
+            top: [{ id: 3, name: 'Joe' }],
+          }}
+          editMode="row"
+          processRowUpdate={processRowUpdate}
+        />
+      </div>,
+    );
+
+    const cell = getCell(0, 1);
+    fireEvent.doubleClick(cell);
+
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Marcus' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    await waitFor(() => {
+      expect(cell.textContent).to.equal('Marcus');
+    });
+    expect(processRowUpdate.callCount).to.equal(1);
+    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+  });
+
+  it('should support `updateRows`', async () => {
+    const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
+    let apiRef!: React.MutableRefObject<GridApi>;
+    function TestCase() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 400, height: 400 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={[
+              { id: 1, name: 'Jack' },
+              { id: 2, name: 'Theo' },
+              { id: 5, name: 'Woody' },
+            ]}
+            columns={columns}
+            pinnedRows={{
+              top: [{ id: 3, name: 'Joe' }],
+              bottom: [{ id: 4, name: 'Cory' }],
+            }}
+          />
+        </div>
+      );
+    }
+    render(<TestCase />);
+
+    expect(getCell(0, 1).textContent).to.equal('Joe');
+    expect(getCell(4, 1).textContent).to.equal('Cory');
+
+    act(() =>
+      apiRef.current.updateRows([
+        { id: 3, name: 'Marcus' },
+        { id: 4, name: 'Tom' },
+      ]),
+    );
+
+    await waitFor(() => {
+      expect(getCell(0, 1).textContent).to.equal('Marcus');
+      expect(getCell(4, 1).textContent).to.equal('Tom');
+    });
   });
 });

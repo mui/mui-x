@@ -48,9 +48,6 @@ export const useGridEditing = (
       if (isCellEditableProp) {
         return isCellEditableProp(params);
       }
-      if (params.rowNode.type === 'pinnedRow') {
-        return false;
-      }
       return true;
     },
     [isCellEditableProp],
@@ -76,7 +73,7 @@ export const useGridEditing = (
       clearTimeout(timeout);
     }
 
-    // To run the callback immediatelly without waiting the timeout
+    // To run the callback immediately without waiting the timeout
     const runImmediately = () => {
       const [timeout] = debounceMap.current[id][field];
       clearTimeout(timeout);
@@ -147,7 +144,7 @@ export const useGridEditing = (
   );
 
   const getRowWithUpdatedValues = React.useCallback<
-    GridEditingSharedApi['unstable_getRowWithUpdatedValues']
+    GridEditingSharedApi['getRowWithUpdatedValues']
   >(
     (id, field) => {
       return props.editMode === GridEditModes.Cell
@@ -160,8 +157,7 @@ export const useGridEditing = (
   const getEditCellMeta = React.useCallback<GridEditingSharedApi['unstable_getEditCellMeta']>(
     (id, field) => {
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
-
-      return { changeReason: editingState[id][field].changeReason };
+      return editingState[id]?.[field] ?? null;
     },
     [apiRef],
   );
@@ -169,7 +165,7 @@ export const useGridEditing = (
   const editingSharedApi: GridEditingSharedApi = {
     isCellEditable,
     setEditCellValue,
-    unstable_getRowWithUpdatedValues: getRowWithUpdatedValues,
+    getRowWithUpdatedValues,
     unstable_getEditCellMeta: getEditCellMeta,
   };
 

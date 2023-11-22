@@ -1,0 +1,1 @@
+export { describeJalaliAdapter } from './describeJalaliAdapter';

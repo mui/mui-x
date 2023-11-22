@@ -1,6 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'uren',
+  minutes: 'minuten',
+  seconds: 'seconden',
+  meridiem: 'meridium',
+};
 
 const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,11 +17,10 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'open vorige view',
   openNextView: 'open volgende view',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'jaarweergave is geopend, schakel over naar kalenderweergave'
       : 'kalenderweergave is geopend, switch naar jaarweergave',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',
@@ -27,14 +33,14 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Vandaag',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Selecteer datum',
+  dateTimePickerToolbarTitle: 'Selecteer datum & tijd',
+  timePickerToolbarTitle: 'Selecteer tijd',
+  dateRangePickerToolbarTitle: 'Selecteer datumbereik',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Selecteer ${view}. ${
+    `Selecteer ${timeViews[view]}. ${
       time === null
         ? 'Geen tijd geselecteerd'
         : `Geselecteerde tijd is ${adapter.format(time, 'fullTime')}`
@@ -43,11 +49,14 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} minuten`,
   secondsClockNumberText: (seconds) => `${seconds} seconden`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Selecteer ${timeViews[view]}`,
+
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Weeknummer',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -58,19 +67,21 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Kies tijd, geselecteerde tijd is ${utils.format(value, 'fullTime')}`
       : 'Kies tijd',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'kies tijd',
   dateTableLabel: 'kies datum',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const nlNL = getPickersLocalization(nlNLPickers);

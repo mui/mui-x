@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -75,10 +74,6 @@ function DetailPanelContent({ row: rowProp }) {
   );
 }
 
-DetailPanelContent.propTypes = {
-  row: PropTypes.object.isRequired,
-};
-
 const columns = [
   { field: 'id', headerName: 'Order ID' },
   { field: 'customer', headerName: 'Customer', width: 200 },
@@ -93,7 +88,6 @@ const columns = [
         (acc, product) => product.unitPrice * product.quantity,
         0,
       );
-
       const taxes = subtotal * 0.05;
       return subtotal + taxes;
     },

@@ -1,40 +1,46 @@
 # Data Grid - Layout
 
-<p class="description">The data grid offers multiple layout mode.</p>
+<p class="description">The data grid offers multiple layout modes.</p>
 
 :::error
-By default, the Grid has **no intrinsic dimensions**. It occupies the space its parent leaves.
+By default, the Grid has **no intrinsic dimensions**.
+Instead, it takes up the space given by its parent.
 The Grid will raise an error in the console if its container has no intrinsic dimensions.
 :::
 
 ## Percentage dimensions
 
-When using % (percentage) for your height or width, you need to make sure the container you are putting the grid into also has an intrinsic dimension.
-The browsers fit the element according to a percentage of the parent dimension.
-If the parent has no dimensions, then the % will be zero.
-
-## Flex layout
-
-It's recommended to use a flex container to render the grid. This allows a flexible layout, resizes well, and works on all devices.
-
-{{"demo": "FlexLayoutGrid.js", "bg": "inline"}}
+When using percentages (%) for height or width, make sure that the Data Grid's parent container has intrinsic dimensions.
+Browsers adjust the element based on a percentage of its parent's size.
+If the parent has no size, the percentage will be zero.
 
 ## Predefined dimensions
 
-You can predefine dimensions for the parent of the grid.
+You can predefine dimensions for the parent of the data grid.
 
 {{"demo": "FixedSizeGrid.js", "bg": "inline"}}
 
 ## Auto height
 
-The `autoHeight` prop allows the grid to size according to its content.
-This means that the number of rows will drive the height of the grid and consequently, they will all be rendered and visible to the user at the same time.
+The `autoHeight` prop enables the Data Grid to adjust its size based on its content.
+This means that the Data Grid's height will be determined by the number of rows, ensuring that all rows will be visible to the user simultaneously.
 
 :::warning
 This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
 :::
 
 {{"demo": "AutoHeightGrid.js", "bg": "inline"}}
+
+### Overlay height
+
+When `autoHeight` is enabled but there are no rows, grid overlays (such as
+["Loading"](/x/react-data-grid/components/#loading-overlay) or
+["No rows"](/x/react-data-grid/components/#no-rows-overlay))
+take the height of two rows by default.
+
+To customize the overlay height, use the `--DataGrid-overlayHeight` CSS variable.
+
+{{"demo": "AutoHeightOverlayNoSnap.js", "bg": "inline"}}
 
 ## API
 

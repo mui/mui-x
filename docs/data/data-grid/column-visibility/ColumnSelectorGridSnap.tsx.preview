@@ -1,0 +1,5 @@
+<DataGrid
+  apiRef={apiRef}
+  {...data}
+  slotProps={{ columnsPanel: { autoFocusSearchField: false } }}
+/>

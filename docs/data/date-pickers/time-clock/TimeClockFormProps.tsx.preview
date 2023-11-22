@@ -1,0 +1,6 @@
+<DemoItem label="disabled">
+  <TimeClock defaultValue={dayjs('2022-04-17T15:30')} disabled />
+</DemoItem>
+<DemoItem label="readOnly">
+  <TimeClock defaultValue={dayjs('2022-04-17T15:30')} readOnly />
+</DemoItem>

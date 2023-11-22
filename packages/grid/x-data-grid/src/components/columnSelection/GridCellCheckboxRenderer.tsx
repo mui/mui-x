@@ -4,13 +4,13 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
-import { GridRenderCellParams } from '../../models/params/gridCellParams';
+import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -51,7 +51,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
-    const rippleRef = React.useRef<TouchRippleActions>();
+    const rippleRef = React.useRef<TouchRippleActions>(null);
     const handleRef = useForkRef(checkboxElement, ref);
     const element = apiRef.current.getCellElement(id, field);
 
@@ -76,7 +76,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       }
     }, [hasFocus]);
 
-    const handleKeyDown = React.useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = React.useCallback((event: React.KeyboardEvent) => {
       if (isSpaceKey(event.key)) {
         // We call event.stopPropagation to avoid selecting the row and also scrolling to bottom
         // TODO: Remove and add a check inside useGridKeyboardNavigation
@@ -95,7 +95,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     );
 
     return (
-      <rootProps.components.BaseCheckbox
+      <rootProps.slots.baseCheckbox
         ref={handleRef}
         tabIndex={tabIndex}
         checked={isChecked}
@@ -105,7 +105,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
         touchRippleRef={rippleRef}
-        {...rootProps.componentsProps?.baseCheckbox}
+        {...rootProps.slotProps?.baseCheckbox}
         {...other}
       />
     );

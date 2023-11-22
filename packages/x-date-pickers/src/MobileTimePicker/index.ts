@@ -3,4 +3,4 @@ export type {
   MobileTimePickerProps,
   MobileTimePickerSlotsComponent,
   MobileTimePickerSlotsComponentsProps,
-} from './MobileTimePicker';
+} from './MobileTimePicker.types';

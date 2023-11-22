@@ -1,13 +1,12 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Column Spanning', () => {
+describe('<DataGridPro /> - Column spanning', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
@@ -173,7 +172,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
     expect(getColumnHeaderCell(1).offsetWidth).to.equal(100);
     expect(getCell(0, 0).offsetWidth).to.equal(200);
 
-    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 200, buttons: 1 });
     fireEvent.mouseUp(separator);

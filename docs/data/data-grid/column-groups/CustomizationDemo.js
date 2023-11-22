@@ -1,8 +1,7 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
 
@@ -59,19 +58,6 @@ function HeaderWithIcon(props) {
   );
 }
 
-HeaderWithIcon.propTypes = {
-  /**
-   * A unique string identifying the group.
-   */
-  groupId: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.string])
-    .isRequired,
-  /**
-   * The title of the column rendered in the column header cell.
-   */
-  headerName: PropTypes.string,
-  icon: PropTypes.node,
-};
-
 const columnGroupingModel = [
   {
     groupId: 'internal_data',
@@ -112,7 +98,7 @@ export default function CustomizationDemo() {
         },
       }}
     >
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         experimentalFeatures={{ columnGrouping: true }}

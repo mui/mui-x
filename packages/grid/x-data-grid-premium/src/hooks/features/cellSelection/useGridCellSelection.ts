@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { useEventCallback } from '@mui/material/utils';
+import { ownerDocument, useEventCallback } from '@mui/material/utils';
 import {
   GridPipeProcessor,
   GridStateInitializer,
   isNavigationKey,
+  serializeCellValue,
   useGridRegisterPipeProcessor,
   useGridVisibleRows,
 } from '@mui/x-data-grid-pro/internals';
@@ -19,6 +20,8 @@ import {
   gridRowsDataRowIdToIdLookupSelector,
   GridRowId,
   gridClasses,
+  gridFocusCellSelector,
+  GridCellParams,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import { GridCellSelectionApi } from './gridCellSelectionInterfaces';
@@ -32,6 +35,13 @@ export const cellSelectionStateInitializer: GridStateInitializer<
   cellSelection: { ...(props.unstable_cellSelectionModel ?? props.initialState?.cellSelection) },
 });
 
+function isKeyboardEvent(event: any): event is React.KeyboardEvent {
+  return !!event.key;
+}
+
+const AUTO_SCROLL_SENSITIVITY = 50; // The distance from the edge to start scrolling
+const AUTO_SCROLL_SPEED = 20; // The speed to scroll once the mouse enters the sensitivity area
+
 export const useGridCellSelection = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -41,12 +51,22 @@ export const useGridCellSelection = (
     | 'unstable_onCellSelectionModelChange'
     | 'pagination'
     | 'paginationMode'
+    | 'unstable_ignoreValueFormatterDuringExport'
+    | 'clipboardCopyCellDelimiter'
   >,
 ) => {
   const visibleRows = useGridVisibleRows(apiRef, props);
-  const lastClickedCell = React.useRef<GridCellCoordinates | null>();
+  const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
-  const focusedCellWhenShiftWasPressed = React.useRef<GridCellCoordinates | null>(null);
+  const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
+  const autoScrollRAF = React.useRef<number | null>();
+
+  const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
+  const ignoreValueFormatter =
+    (typeof ignoreValueFormatterProp === 'object'
+      ? ignoreValueFormatterProp?.clipboardExport
+      : ignoreValueFormatterProp) || false;
+  const clipboardCopyCellDelimiter = props.clipboardCopyCellDelimiter;
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
@@ -164,6 +184,36 @@ export const useGridCellSelection = (
 
   useGridApiMethod(apiRef, cellSelectionApi, 'public');
 
+  const hasClickedValidCellForRangeSelection = React.useCallback(
+    (params: GridCellParams) => {
+      if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        return false;
+      }
+
+      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+        return false;
+      }
+
+      const column = apiRef.current.getColumn(params.field);
+      if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+        return false;
+      }
+
+      return params.rowNode.type !== 'pinnedRow';
+    },
+    [apiRef],
+  );
+
+  const handleMouseUp = useEventCallback(() => {
+    lastMouseDownCell.current = null;
+    apiRef.current.rootElementRef?.current?.classList.remove(
+      gridClasses['root--disableUserSelection'],
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    stopAutoScroll();
+  });
+
   const handleCellMouseDown = React.useCallback<GridEventListener<'cellMouseDown'>>(
     (params, event) => {
       // Skip if the click comes from the right-button or, only on macOS, Ctrl is pressed
@@ -173,19 +223,93 @@ export const useGridCellSelection = (
         return;
       }
 
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (hasClickedValidCellForRangeSelection(params) && event.shiftKey && focusedCell) {
+        event.preventDefault();
+      }
+
       lastMouseDownCell.current = { id: params.id, field: params.field };
       apiRef.current.rootElementRef?.current?.classList.add(
         gridClasses['root--disableUserSelection'],
       );
+
+      const document = ownerDocument(apiRef.current.rootElementRef?.current);
+      document.addEventListener('mouseup', handleMouseUp, { once: true });
     },
-    [apiRef],
+    [apiRef, handleMouseUp, hasClickedValidCellForRangeSelection],
   );
 
-  const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseUp'>>(() => {
-    lastMouseDownCell.current = null;
-    apiRef.current.rootElementRef?.current?.classList.remove(
-      gridClasses['root--disableUserSelection'],
-    );
+  const stopAutoScroll = React.useCallback(() => {
+    if (autoScrollRAF.current) {
+      cancelAnimationFrame(autoScrollRAF.current);
+      autoScrollRAF.current = null;
+    }
+  }, []);
+
+  const handleCellFocusIn = React.useCallback<GridEventListener<'cellFocusIn'>>((params) => {
+    cellWithVirtualFocus.current = { id: params.id, field: params.field };
+  }, []);
+
+  const startAutoScroll = React.useCallback(() => {
+    if (autoScrollRAF.current) {
+      return;
+    }
+
+    if (!apiRef.current.virtualScrollerRef?.current) {
+      return;
+    }
+
+    const virtualScrollerRect = apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
+
+    if (!virtualScrollerRect) {
+      return;
+    }
+
+    function autoScroll() {
+      if (!mousePosition.current || !apiRef.current.virtualScrollerRef?.current) {
+        return;
+      }
+
+      const { x: mouseX, y: mouseY } = mousePosition.current;
+      const { height, width } = virtualScrollerRect;
+
+      let deltaX = 0;
+      let deltaY = 0;
+      let factor = 0;
+
+      const dimensions = apiRef.current.getRootDimensions();
+
+      if (mouseY <= AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollY) {
+        // When scrolling up, the multiplier increases going closer to the top edge
+        factor = (AUTO_SCROLL_SENSITIVITY - mouseY) / -AUTO_SCROLL_SENSITIVITY;
+        deltaY = AUTO_SCROLL_SPEED;
+      } else if (mouseY >= height - AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollY) {
+        // When scrolling down, the multiplier increases going closer to the bottom edge
+        factor = (mouseY - (height - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
+        deltaY = AUTO_SCROLL_SPEED;
+      } else if (mouseX <= AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollX) {
+        // When scrolling left, the multiplier increases going closer to the left edge
+        factor = (AUTO_SCROLL_SENSITIVITY - mouseX) / -AUTO_SCROLL_SENSITIVITY;
+        deltaX = AUTO_SCROLL_SPEED;
+      } else if (mouseX >= width - AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollX) {
+        // When scrolling right, the multiplier increases going closer to the right edge
+        factor = (mouseX - (width - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
+        deltaX = AUTO_SCROLL_SPEED;
+      }
+
+      if (deltaX !== 0 || deltaY !== 0) {
+        const { scrollLeft, scrollTop } = apiRef.current.virtualScrollerRef.current;
+
+        apiRef.current.scroll({
+          top: scrollTop + deltaY * factor,
+          left: scrollLeft + deltaX * factor,
+        });
+      }
+
+      autoScrollRAF.current = requestAnimationFrame(autoScroll);
+    }
+
+    autoScroll();
   }, [apiRef]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
@@ -201,8 +325,37 @@ export const useGridCellSelection = (
         { id, field },
         event.ctrlKey || event.metaKey,
       );
+
+      const virtualScrollerRect =
+        apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
+
+      if (!virtualScrollerRect) {
+        return;
+      }
+
+      const { height, width, x, y } = virtualScrollerRect;
+      const mouseX = event.clientX - x;
+      const mouseY = event.clientY - y;
+      mousePosition.current = { x: mouseX, y: mouseY };
+
+      const hasEnteredVerticalSensitivityArea =
+        mouseY <= AUTO_SCROLL_SENSITIVITY || mouseY >= height - AUTO_SCROLL_SENSITIVITY;
+
+      const hasEnteredHorizontalSensitivityArea =
+        mouseX <= AUTO_SCROLL_SENSITIVITY || mouseX >= width - AUTO_SCROLL_SENSITIVITY;
+
+      const hasEnteredSensitivityArea =
+        hasEnteredVerticalSensitivityArea || hasEnteredHorizontalSensitivityArea;
+
+      if (hasEnteredSensitivityArea) {
+        // Mouse has entered the sensitity area for the first time
+        startAutoScroll();
+      } else {
+        // Mouse has left the sensitivity area while auto scroll is on
+        stopAutoScroll();
+      }
     },
-    [apiRef],
+    [apiRef, startAutoScroll, stopAutoScroll],
   );
 
   const handleCellClick = useEventCallback<
@@ -211,30 +364,16 @@ export const useGridCellSelection = (
   >((params, event) => {
     const { id, field } = params;
 
-    if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+    if (!hasClickedValidCellForRangeSelection(params)) {
       return;
     }
 
-    if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+    const focusedCell = gridFocusCellSelector(apiRef);
+    if (event.shiftKey && focusedCell) {
+      apiRef.current.unstable_selectCellRange(focusedCell, { id, field });
+      cellWithVirtualFocus.current = { id, field };
       return;
     }
-
-    const column = apiRef.current.getColumn(params.field);
-    if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
-      return;
-    }
-
-    if (params.rowNode.type === 'pinnedRow') {
-      return;
-    }
-
-    if (event.shiftKey && lastClickedCell.current) {
-      apiRef.current.unstable_selectCellRange(lastClickedCell.current, { id, field });
-      lastClickedCell.current = { id, field };
-      return;
-    }
-
-    lastClickedCell.current = { id, field };
 
     if (event.ctrlKey || event.metaKey) {
       // Add the clicked cell to the selection
@@ -253,19 +392,18 @@ export const useGridCellSelection = (
     [GridEventLookup['cellKeyDown']['params'], GridEventLookup['cellKeyDown']['event']],
     void
   >((params, event) => {
-    const { id, field } = params;
-
-    if (event.key === 'Shift') {
-      focusedCellWhenShiftWasPressed.current = { id, field };
+    if (!isNavigationKey(event.key) || !cellWithVirtualFocus.current) {
       return;
     }
 
-    if (!focusedCellWhenShiftWasPressed.current || !isNavigationKey(event.key) || !event.shiftKey) {
+    if (!event.shiftKey) {
+      apiRef.current.unstable_setCellSelectionModel({});
       return;
     }
 
-    let endRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
-    let endColumnIndex = apiRef.current.getColumnIndex(field);
+    const { current: otherCell } = cellWithVirtualFocus;
+    let endRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(otherCell.id);
+    let endColumnIndex = apiRef.current.getColumnIndex(otherCell.field);
 
     if (event.key === 'ArrowDown') {
       endRowIndex += 1;
@@ -286,26 +424,21 @@ export const useGridCellSelection = (
       return;
     }
 
-    apiRef.current.unstable_selectCellRange(focusedCellWhenShiftWasPressed.current, {
+    cellWithVirtualFocus.current = {
       id: visibleRows.rows[endRowIndex].id,
       field: visibleColumns[endColumnIndex].field,
-    });
-  });
+    };
 
-  const handleCellKeyUp = useEventCallback<
-    [GridEventLookup['cellKeyUp']['params'], GridEventLookup['cellKeyUp']['event']],
-    void
-  >((params, event) => {
-    if (event.key === 'Shift') {
-      focusedCellWhenShiftWasPressed.current = null;
-    }
+    apiRef.current.scrollToIndexes({ rowIndex: endRowIndex, colIndex: endColumnIndex });
+
+    const { id, field } = params;
+    apiRef.current.unstable_selectCellRange({ id, field }, cellWithVirtualFocus.current);
   });
 
   useGridApiEventHandler(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
+  useGridApiEventHandler(apiRef, 'cellFocusIn', runIfCellSelectionIsEnabled(handleCellFocusIn));
   useGridApiEventHandler(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleCellKeyDown));
-  useGridApiEventHandler(apiRef, 'cellKeyUp', runIfCellSelectionIsEnabled(handleCellKeyUp));
   useGridApiEventHandler(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleCellMouseDown));
-  useGridApiEventHandler(apiRef, 'cellMouseUp', runIfCellSelectionIsEnabled(handleCellMouseUp));
   useGridApiEventHandler(apiRef, 'cellMouseOver', runIfCellSelectionIsEnabled(handleCellMouseOver));
 
   React.useEffect(() => {
@@ -313,6 +446,17 @@ export const useGridCellSelection = (
       apiRef.current.unstable_setCellSelectionModel(props.unstable_cellSelectionModel);
     }
   }, [apiRef, props.unstable_cellSelectionModel]);
+
+  React.useEffect(() => {
+    const rootRef = apiRef.current.rootElementRef?.current;
+
+    return () => {
+      stopAutoScroll();
+
+      const document = ownerDocument(rootRef);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [apiRef, handleMouseUp, stopAutoScroll]);
 
   const checkIfCellIsSelected = React.useCallback<GridPipeProcessor<'isCellSelected'>>(
     (isSelected, { id, field }) => {
@@ -342,7 +486,7 @@ export const useGridCellSelection = (
         newClasses.push(gridClasses['cell--rangeTop']);
       }
 
-      if (rowIndex < visibleRows.range.lastRowIndex) {
+      if (rowIndex + visibleRows.range.firstRowIndex < visibleRows.range.lastRowIndex) {
         const { id: nextRowId } = visibleRows.rows[rowIndex + 1];
         if (!apiRef.current.unstable_isCellSelected(nextRowId, field)) {
           newClasses.push(gridClasses['cell--rangeBottom']);
@@ -374,6 +518,56 @@ export const useGridCellSelection = (
     [apiRef, visibleRows.range, visibleRows.rows],
   );
 
+  const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
+    (initialValue, { event, cell }) => {
+      if (!cell || !props.unstable_cellSelection || !event.shiftKey) {
+        return initialValue;
+      }
+
+      if (isKeyboardEvent(event)) {
+        return isNavigationKey(event.key) ? false : initialValue;
+      }
+
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (hasClickedValidCellForRangeSelection(cell) && focusedCell) {
+        return false;
+      }
+
+      return initialValue;
+    },
+    [apiRef, props.unstable_cellSelection, hasClickedValidCellForRangeSelection],
+  );
+
+  const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
+    (value) => {
+      if (apiRef.current.unstable_getSelectedCellsAsArray().length <= 1) {
+        return value;
+      }
+      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
+      const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
+        const fieldsMap = cellSelectionModel[rowId];
+        const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
+          let cellData: string;
+          if (fieldsMap[field]) {
+            const cellParams = apiRef.current.getCellParams(rowId, field);
+            cellData = serializeCellValue(cellParams, {
+              delimiterCharacter: clipboardCopyCellDelimiter,
+              ignoreValueFormatter,
+            });
+          } else {
+            cellData = '';
+          }
+          return acc2 === '' ? cellData : [acc2, cellData].join(clipboardCopyCellDelimiter);
+        }, '');
+        return acc === '' ? rowString : [acc, rowString].join('\r\n');
+      }, '');
+      return copyData;
+    },
+    [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
+  );
+
   useGridRegisterPipeProcessor(apiRef, 'isCellSelected', checkIfCellIsSelected);
   useGridRegisterPipeProcessor(apiRef, 'cellClassName', addClassesToCells);
+  useGridRegisterPipeProcessor(apiRef, 'canUpdateFocus', canUpdateFocus);
+  useGridRegisterPipeProcessor(apiRef, 'clipboardCopy', handleClipboardCopy);
 };

@@ -1,8 +1,12 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
-import { UseDateRangeFieldDefaultizedProps, UseDateRangeFieldProps } from '../internal/models';
+import {
+  FieldsTextFieldProps,
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
+} from '@mui/x-date-pickers/internals';
+import { UseDateRangeFieldDefaultizedProps, UseDateRangeFieldProps } from '../internals/models';
 
 export interface UseSingleInputDateRangeFieldParams<TDate, TChildProps extends {}> {
   props: UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps>;
@@ -14,7 +18,8 @@ export interface UseSingleInputDateRangeFieldProps<TDate> extends UseDateRangeFi
 export type UseSingleInputDateRangeFieldDefaultizedProps<
   TDate,
   AdditionalProps extends {},
-> = UseDateRangeFieldDefaultizedProps<TDate> & AdditionalProps;
+> = UseDateRangeFieldDefaultizedProps<TDate> &
+  Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;
 
 export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
@@ -22,30 +27,34 @@ export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extend
 > &
   UseSingleInputDateRangeFieldProps<TDate>;
 
-export interface SingleInputDateRangeFieldProps<TDate>
-  extends UseSingleInputDateRangeFieldComponentProps<TDate, FieldsTextFieldProps> {
+export type SingleInputDateRangeFieldProps<
+  TDate,
+  TChildProps extends {} = FieldsTextFieldProps,
+> = UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps> & {
   /**
-   * Overrideable components.
+   * Overridable component slots.
    * @default {}
    */
-  components?: SingleInputDateRangeFieldSlotsComponent;
+  slots?: SingleInputDateRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: SingleInputDateRangeFieldSlotsComponentsProps<TDate>;
-}
+  slotProps?: SingleInputDateRangeFieldSlotsComponentsProps<TDate>;
+};
 
 export type SingleInputDateRangeFieldOwnerState<TDate> = SingleInputDateRangeFieldProps<TDate>;
 
-export interface SingleInputDateRangeFieldSlotsComponent {
+export interface SingleInputDateRangeFieldSlotsComponent extends FieldSlotsComponents {
   /**
-   * Input rendered.
-   * @default TextField
+   * Form control with an input to render the value.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType;
+  textField?: React.ElementType;
 }
 
-export interface SingleInputDateRangeFieldSlotsComponentsProps<TDate> {
-  input?: SlotComponentProps<typeof TextField, {}, SingleInputDateRangeFieldOwnerState<TDate>>;
+export interface SingleInputDateRangeFieldSlotsComponentsProps<TDate>
+  extends FieldSlotsComponentsProps {
+  textField?: SlotComponentProps<typeof TextField, {}, SingleInputDateRangeFieldOwnerState<TDate>>;
 }

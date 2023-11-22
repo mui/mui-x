@@ -2,7 +2,7 @@
 title: Data Grid - Master detail
 ---
 
-# Data Grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Expand your rows to display additional information.</p>
 
@@ -50,7 +50,7 @@ const getDetailPanelContent = React.useCallback(() => { ... }, []);
 ```
 
 Depending on the height of the detail panel, you may see a blank space when scrolling.
-This is caused by the grid using a lazy approach to update the rendered rows.
+This is caused by the data grid using a lazy approach to update the rendered rows.
 Set `rowThreshold` to 0 to force new rows to be rendered more often to fill the blank space.
 Note that this may reduce the performance.
 
@@ -78,7 +78,7 @@ The following example demonstrates this option in action:
 To control which rows are expanded, pass a list of row IDs to the `detailPanelExpandedRowIds` prop.
 Passing a callback to the `onDetailPanelExpandedRowIds` prop can be used to detect when a row gets expanded or collapsed.
 
-On the other hand, if you only want to initialize the grid with some rows already expanded, use the `initialState` prop as follows:
+On the other hand, if you only want to initialize the data grid with some rows already expanded, use the `initialState` prop as follows:
 
 ```tsx
 <DataGridPro initialState={{ detailPanel: { expandedRowIds: [1, 2, 3] } }}>
@@ -100,9 +100,9 @@ To change the icon used for the toggle, you can provide a different component fo
 
 ```tsx
 <DataGridPro
-  components={{
-    DetailPanelExpandIcon: CustomExpandIcon,
-    DetailPanelCollapseIcon: CustomCollapseIcon,
+  slots={{
+    detailPanelExpandIcon: CustomExpandIcon,
+    detailPanelCollapseIcon: CustomCollapseIcon,
   }}
 />
 ```
@@ -148,16 +148,24 @@ As any ordinary cell renderer, the `value` prop is also available, and it corres
 
 By default, the detail panel has a width that is the sum of the widths of all columns.
 This means that when a horizontal scrollbar is present, scrolling it will also scroll the panel content.
-To avoid this behavior, set the size of the detail panel to the outer size of the grid.
+To avoid this behavior, set the size of the detail panel to the outer size of the data grid.
 Use `apiRef.current.getRootDimensions()` to get the latest dimension values.
 Finally, to prevent the panel from scrolling, set `position: sticky` and `left: 0`.
 
 The following demo shows how this can be achieved.
-Notice that the toggle column is pinned to make sure that it will always be visible when the grid is scrolled horizontally.
+Notice that the toggle column is pinned to make sure that it will always be visible when the data grid is scrolled horizontally.
 
 {{"demo": "FullWidthDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Recipes
+
+More examples of how to customize the detail panel:
+
+- [One expanded detail panel at a time](/x/react-data-grid/row-recipes/#one-expanded-detail-panel-at-a-time)
+
 ## apiRef
+
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 {{"demo": "DetailPanelApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

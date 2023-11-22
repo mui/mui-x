@@ -3,7 +3,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
 import { GridDensity } from '../gridDensity';
-import { GridEditMode, GridEditRowsModel } from '../gridEditRowModel';
+import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
@@ -12,7 +12,6 @@ import { GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
 import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColumnTypesRecord } from '../colDef';
 import type { GridColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
@@ -31,6 +30,7 @@ import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
+import { GridPaginationModel } from '../gridPaginationProps';
 
 export interface GridExperimentalFeatures {
   /**
@@ -42,6 +42,12 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * Enables accessibility improvements that will be enabled by default in v7.
+   * If you rely on the v6 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
+   * @default false
+   */
+  ariaV7: boolean;
 }
 
 /**
@@ -85,7 +91,7 @@ export type DataGridForcedPropsKey =
  * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
-  components: GridSlotsComponent;
+  slots: GridSlotsComponent;
   localeText: GridLocaleText;
 }
 
@@ -94,9 +100,9 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
  */
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
-   * Overrideable components.
+   * Overridable components.
    */
-  components?: Partial<GridSlotsComponent>;
+  slots?: Partial<GridSlotsComponent>;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
@@ -163,11 +169,6 @@ export interface DataGridPropsWithDefaultValues {
    */
   density: GridDensity;
   /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
-   * @default false
-   */
-  disableExtendRowFullWidth: boolean;
-  /**
    * If `true`, column filters are disabled.
    * @default false
    */
@@ -187,6 +188,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableDensitySelector: boolean;
+  /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: boolean;
   /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
@@ -224,10 +231,15 @@ export interface DataGridPropsWithDefaultValues {
    */
   filterMode: GridFeatureMode;
   /**
-   * Set the height in pixel of the column headers in the grid.
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: number;
+  /**
+   * Sets the height in pixel of the column headers in the grid.
    * @default 56
    */
-  headerHeight: number;
+  columnHeaderHeight: number;
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -249,6 +261,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   hideFooterSelectedRowCount: boolean;
+  /**
+   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * @default false
+   */
+  ignoreDiacritics: boolean;
   /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
@@ -279,7 +297,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   paginationMode: GridFeatureMode;
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: number;
@@ -287,7 +305,7 @@ export interface DataGridPropsWithDefaultValues {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  rowsPerPageOptions: number[];
+  pageSizeOptions: Array<number | { value: number; label: string }>;
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -307,7 +325,7 @@ export interface DataGridPropsWithDefaultValues {
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */
-  sortingOrder: GridSortDirection[];
+  sortingOrder: readonly GridSortDirection[];
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
@@ -337,6 +355,29 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default false
+   */
+  unstable_ignoreValueFormatterDuringExport:
+    | boolean
+    | {
+        csvExport?: boolean;
+        clipboardExport?: boolean;
+      };
+  /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: string;
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: number;
 }
 
 /**
@@ -349,6 +390,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps?: Record<string, unknown>;
+  /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
    * @ignore - do not document.
@@ -358,10 +404,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<GridClasses>;
-  /**
-   * Extend native column types with your new column types.
-   */
-  columnTypes?: GridColumnTypesRecord;
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -406,7 +448,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
   /**
@@ -452,13 +494,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onRowEditStop?: GridEventListener<'rowEditStop'>;
   /**
-   * Callback fired when an exception is thrown in the grid.
-   * @param {any} args The arguments passed to the `showError` call.
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onError?: GridEventListener<'componentError'>;
-  /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -472,13 +507,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellDoubleClick?: GridEventListener<'cellDoubleClick'>;
-  /**
-   * Callback fired when a cell loses focus.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellFocusOut?: GridEventListener<'cellFocusOut'>;
   /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -566,28 +594,15 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onStateChange?: GridEventListener<'stateChange'>;
   /**
-   * The zero-based index of the current page.
-   * @default 0
+   * The pagination model of type [[GridPaginationModel]] which refers to current `page` and `pageSize`.
    */
-  page?: number;
+  paginationModel?: GridPaginationModel;
   /**
-   * Callback fired when the current page has changed.
-   * @param {number} page Index of the page displayed on the Grid.
+   * Callback fired when the pagination model has changed.
+   * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPageChange?: (page: number, details: GridCallbackDetails) => void;
-  /**
-   * Set the number of rows in one page.
-   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
-   * @default 100
-   */
-  pageSize?: number;
-  /**
-   * Callback fired when the page size has changed.
-   * @param {number} pageSize Size of the page displayed on the Grid.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
+  onPaginationModelChange?: (model: GridPaginationModel, details: GridCallbackDetails) => void;
   /**
    * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
@@ -617,22 +632,12 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onMenuClose?: GridEventListener<'menuClose'>;
   /**
-   * Set the edit rows model of the grid.
-   */
-  editRowsModel?: GridEditRowsModel;
-  /**
-   * Callback fired when the `editRowsModel` changes.
-   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onEditRowsModelChange?: (editRowsModel: GridEditRowsModel, details: GridCallbackDetails) => void;
-  /**
    * Controls the modes of the cells.
    */
   cellModesModel?: GridCellModesModel;
   /**
    * Callback fired when the `cellModesModel` prop changes.
-   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCellModesModel} cellModesModel Object containing which cells are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange?: (
@@ -645,7 +650,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   rowModesModel?: GridRowModesModel;
   /**
    * Callback fired when the `rowModesModel` prop changes.
-   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridRowModesModel} rowModesModel Object containing which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowModesModelChange?: (rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void;
@@ -707,11 +712,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Set of columns of type [[GridColDef[]]].
    */
-  columns: GridColDef<R>[];
-  /**
-   * An error that will turn the grid into its error state and display the error component.
-   */
-  error?: any;
+  columns: readonly GridColDef<R>[];
   /**
    * Return the id of a given [[GridRowModel]].
    */
@@ -735,9 +736,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   initialState?: GridInitialStateCommunity;
   /**
-   * Overrideable components props dynamically passed to the component at rendering.
+   * Overridable components props dynamically passed to the component at rendering.
    */
-  componentsProps?: GridSlotsComponentsProps;
+  slotProps?: GridSlotsComponentsProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -761,4 +762,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onProcessRowUpdateError?: (error: any) => void;
   columnGroupingModel?: GridColumnGroupingModel;
+  /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy?: GridEventListener<'clipboardCopy'>;
 }

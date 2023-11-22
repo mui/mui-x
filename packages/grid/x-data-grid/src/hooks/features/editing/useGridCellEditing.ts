@@ -41,7 +41,7 @@ const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
     'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
     'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#server-side-persistence.',
   ],
   'error',
 );
@@ -132,7 +132,7 @@ export const useGridCellEditing = (
     (params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: `event.which` is depricated but this is a temporary workaround
+        // TODO: `event.which` is deprecated but this is a temporary workaround
         if (event.which === 229) {
           return;
         }
@@ -157,8 +157,14 @@ export const useGridCellEditing = (
       } else if (params.isEditable) {
         let reason: GridCellEditStartReasons | undefined;
 
-        if (event.key === ' ' && event.shiftKey) {
-          return; // Shift + Space is used to select the row
+        const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
+          'canStartEditing',
+          true,
+          { event, cellParams: params, editMode: 'cell' },
+        );
+
+        if (!canStartEditing) {
+          return;
         }
 
         if (isPrintableKey(event)) {
@@ -183,7 +189,7 @@ export const useGridCellEditing = (
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params) => {
-      const { id, field, reason, key } = params;
+      const { id, field, reason, key, colDef } = params;
 
       const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
@@ -193,7 +199,8 @@ export const useGridCellEditing = (
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
         } else {
-          startCellEditModeParams.initialValue = key;
+          const initialValue = colDef.valueParser ? colDef.valueParser(key) : key;
+          startCellEditModeParams.initialValue = initialValue;
         }
       } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
         startCellEditModeParams.deleteValue = true;
@@ -325,14 +332,18 @@ export const useGridCellEditing = (
       const { id, field, deleteValue, initialValue } = params;
 
       let newValue = apiRef.current.getCellValue(id, field);
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      let unstable_updateValueOnRender = false;
       if (deleteValue || initialValue) {
         newValue = deleteValue ? '' : initialValue;
+        unstable_updateValueOnRender = true;
       }
 
       const newProps = {
         value: newValue,
         error: false,
         isProcessingProps: false,
+        unstable_updateValueOnRender,
       };
 
       updateOrDeleteFieldState(id, field, newProps);
@@ -479,8 +490,13 @@ export const useGridCellEditing = (
     (id, field) => {
       const column = apiRef.current.getColumn(field);
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      const { value } = editingState[id][field];
       const row = apiRef.current.getRow(id)!;
+
+      if (!editingState[id] || !editingState[id][field]) {
+        return apiRef.current.getRow(id)!;
+      }
+
+      const { value } = editingState[id][field];
       return column.valueSetter ? column.valueSetter({ value, row }) : { ...row, [field]: value };
     },
     [apiRef],

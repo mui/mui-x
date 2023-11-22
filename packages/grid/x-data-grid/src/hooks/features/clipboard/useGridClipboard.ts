@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridClipboardApi } from '../../../models/api';
-import { useGridApiMethod, useGridNativeEventListener } from '../../utils';
+import { useGridApiOptionHandler, useGridNativeEventListener } from '../../utils';
+import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
+import { serializeCellValue } from '../export/serializers/csvSerializer';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -25,16 +27,26 @@ function writeToClipboardPolyfill(data: string) {
   }
 }
 
+function copyToClipboard(data: string) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(data).catch(() => {
+      writeToClipboardPolyfill(data);
+    });
+  } else {
+    writeToClipboardPolyfill(data);
+  }
+}
+
 function hasNativeSelection(element: HTMLInputElement) {
-  if (window.getSelection()?.toString() !== '') {
+  // When getSelection is called on an <iframe> that is not displayed Firefox will return null.
+  if (window.getSelection()?.toString()) {
     return true;
   }
 
-  if (!element) {
-    return false;
-  }
-
-  if ((element.selectionEnd || 0) - (element.selectionStart || 0) > 0) {
+  // window.getSelection() returns an empty string in Firefox for selections inside a form element.
+  // See: https://bugzilla.mozilla.org/show_bug.cgi?id=85686.
+  // Instead, we can use element.selectionStart that is only defined on form elements.
+  if (element && (element.selectionEnd || 0) - (element.selectionStart || 0) > 0) {
     return true;
   }
 
@@ -45,38 +57,24 @@ function hasNativeSelection(element: HTMLInputElement) {
  * @requires useGridCsvExport (method)
  * @requires useGridSelection (method)
  */
-export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>): void => {
-  const copySelectedRowsToClipboard = React.useCallback<
-    GridClipboardApi['unstable_copySelectedRowsToClipboard']
-  >(
-    (includeHeaders = false) => {
-      if (apiRef.current.getSelectedRows().size === 0) {
-        return;
-      }
+export const useGridClipboard = (
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  props: Pick<
+    DataGridProcessedProps,
+    'unstable_ignoreValueFormatterDuringExport' | 'onClipboardCopy' | 'clipboardCopyCellDelimiter'
+  >,
+): void => {
+  const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
+  const ignoreValueFormatter =
+    (typeof ignoreValueFormatterProp === 'object'
+      ? ignoreValueFormatterProp?.clipboardExport
+      : ignoreValueFormatterProp) || false;
 
-      const data = apiRef.current.getDataAsCsv({
-        includeHeaders,
-        delimiter: '\t',
-      });
+  const clipboardCopyCellDelimiter = props.clipboardCopyCellDelimiter;
 
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(data).catch(() => {
-          writeToClipboardPolyfill(data);
-        });
-      } else {
-        writeToClipboardPolyfill(data);
-      }
-    },
-    [apiRef],
-  );
-
-  const handleKeydown = React.useCallback(
+  const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
-      const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
-      // event.key === 'c' is not enough as alt+c can lead to ©, ç, or other characters on macOS.
-      // event.code === 'KeyC' is not enough as event.code assume a QWERTY keyboard layout which would
-      // be wrong with a Dvorak keyboard (as if pressing J).
-      if (String.fromCharCode(event.keyCode) !== 'C' || !isModifierKeyPressed) {
+      if (!((event.ctrlKey || event.metaKey) && event.key === 'c')) {
         return;
       }
 
@@ -85,16 +83,36 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
         return;
       }
 
-      apiRef.current.unstable_copySelectedRowsToClipboard(event.altKey);
+      let textToCopy = '';
+      const selectedRows = apiRef.current.getSelectedRows();
+      if (selectedRows.size > 0) {
+        textToCopy = apiRef.current.getDataAsCsv({
+          includeHeaders: false,
+          // TODO: make it configurable
+          delimiter: clipboardCopyCellDelimiter,
+        });
+      } else {
+        const focusedCell = gridFocusCellSelector(apiRef);
+        if (focusedCell) {
+          const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
+          textToCopy = serializeCellValue(cellParams, {
+            delimiterCharacter: clipboardCopyCellDelimiter,
+            ignoreValueFormatter,
+          });
+        }
+      }
+
+      textToCopy = apiRef.current.unstable_applyPipeProcessors('clipboardCopy', textToCopy);
+
+      if (textToCopy) {
+        copyToClipboard(textToCopy);
+        apiRef.current.publishEvent('clipboardCopy', textToCopy);
+      }
     },
-    [apiRef],
+    [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );
 
-  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleKeydown);
+  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);
 
-  const clipboardApi: GridClipboardApi = {
-    unstable_copySelectedRowsToClipboard: copySelectedRowsToClipboard,
-  };
-
-  useGridApiMethod(apiRef, clipboardApi, 'public');
+  useGridApiOptionHandler(apiRef, 'clipboardCopy', props.onClipboardCopy);
 };

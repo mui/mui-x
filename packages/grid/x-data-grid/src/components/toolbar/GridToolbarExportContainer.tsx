@@ -4,7 +4,7 @@ import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridMenu, GridMenuProps } from '../menu/GridMenu';
+import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../constants/gridClasses';
 
@@ -14,8 +14,8 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
 
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const menuId = useId();
+    const exportButtonId = useId();
+    const exportMenuId = useId();
 
     const [open, setOpen] = React.useState(false);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
@@ -37,48 +37,37 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
       }
     };
 
-    const handleMenuClickAway: GridMenuProps['onClickAway'] = (event) => {
-      if (
-        buttonRef.current === event.target ||
-        // if user clicked on the icon
-        buttonRef.current?.contains(event.target as Element)
-      ) {
-        return;
-      }
-      setOpen(false);
-    };
-
     if (children == null) {
       return null;
     }
 
     return (
       <React.Fragment>
-        <rootProps.components.BaseButton
+        <rootProps.slots.baseButton
           ref={handleRef}
           size="small"
-          startIcon={<rootProps.components.ExportIcon />}
-          aria-expanded={open ? 'true' : undefined}
+          startIcon={<rootProps.slots.exportIcon />}
+          aria-expanded={open}
           aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
-          aria-labelledby={menuId}
-          id={buttonId}
+          aria-controls={open ? exportMenuId : undefined}
+          id={exportButtonId}
           {...other}
           onClick={handleMenuOpen}
-          {...rootProps.componentsProps?.baseButton}
+          {...rootProps.slotProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarExport')}
-        </rootProps.components.BaseButton>
+        </rootProps.slots.baseButton>
         <GridMenu
           open={open}
           target={buttonRef.current}
-          onClickAway={handleMenuClickAway}
+          onClose={handleMenuClose}
           position="bottom-start"
         >
           <MenuList
-            id={menuId}
+            id={exportMenuId}
             className={gridClasses.menuList}
-            aria-labelledby={buttonId}
+            aria-labelledby={exportButtonId}
             onKeyDown={handleListKeyDown}
             autoFocusItem={open}
           >

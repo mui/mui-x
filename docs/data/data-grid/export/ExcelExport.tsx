@@ -131,8 +131,8 @@ export default function ExcelExport() {
       <DataGridPremium
         rows={rows}
         columns={columns}
-        components={{
-          Toolbar: CustomToolbar,
+        slots={{
+          toolbar: CustomToolbar,
         }}
       />
     </div>

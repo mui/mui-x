@@ -9,17 +9,27 @@
  * List of demos to ignore when transpiling
  * Example: "app-bar/BottomAppBar.tsx"
  */
-const ignoreList = ['/pages.ts'];
+const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx'];
 
+const fs = require('fs');
 const fse = require('fs-extra');
 const path = require('path');
 const babel = require('@babel/core');
 const prettier = require('prettier');
-const typescriptToProptypes = require('typescript-to-proptypes');
 const yargs = require('yargs');
+const ts = require('typescript');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
-const tsConfig = typescriptToProptypes.loadConfig(path.resolve(__dirname, '../tsconfig.json'));
+const tsConfigPath = path.resolve(__dirname, '../tsconfig.json');
+const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
+  fs.readFileSync(filePath).toString(),
+);
+
+const tsConfigFileContent = ts.parseJsonConfigFileContent(
+  tsConfigFile.config,
+  ts.sys,
+  path.dirname(tsConfigPath),
+);
 
 const babelConfig = {
   presets: ['@babel/preset-typescript'],
@@ -94,36 +104,13 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     }
     const { code } = await babel.transformAsync(source, transformOptions);
 
-    if (/import \w* from 'prop-types'/.test(code)) {
-      throw new Error('TypeScript demo contains prop-types, please remove them');
-    }
-
-    const propTypesAST = typescriptToProptypes.parseFromProgram(tsxPath, program, {
-      shouldResolveObject: ({ name }) => {
-        const propsToNotResolve = [
-          'classes',
-          'state',
-          'currentColumn',
-          'colDef',
-          'row',
-          'selectedDay',
-          'day',
-        ];
-        if (propsToNotResolve.includes(name)) {
-          return false;
-        }
-        return undefined;
-      },
-    });
-    const codeWithPropTypes = typescriptToProptypes.inject(propTypesAST, code);
-
     const prettierConfig = prettier.resolveConfig.sync(jsPath, {
       config: path.join(workspaceRoot, 'prettier.config.js'),
     });
     const prettierFormat = (jsSource) =>
       prettier.format(jsSource, { ...prettierConfig, filepath: jsPath });
 
-    const prettified = prettierFormat(codeWithPropTypes);
+    const prettified = prettierFormat(code);
     const formatted = fixBabelGeneratorIssues(prettified);
     const correctedLineEndings = fixLineEndings(source, formatted);
 
@@ -144,7 +131,10 @@ async function main(argv) {
     ...(await getFiles(path.join(workspaceRoot, 'docs/data'))), // new structure
   ];
 
-  const program = typescriptToProptypes.createProgram(tsxFiles, tsConfig);
+  const program = ts.createProgram({
+    rootNames: tsxFiles,
+    options: tsConfigFileContent.options,
+  });
 
   let successful = 0;
   let failed = 0;

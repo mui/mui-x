@@ -24,24 +24,22 @@ import {
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent } from './gridProSlotsComponent';
+import type { GridProSlotProps } from './gridProSlotProps';
+import { GridAutosizeOptions } from '../hooks';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
    * Enables the data grid to lazy load rows while scrolling.
    */
   lazyLoading: boolean;
-  /**
-   * Enables the ability for rows to be pinned in data grid.
-   */
-  rowPinning: boolean;
 }
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
   /**
-   * Overrideable components.
+   * Overridable components.
    */
-  components?: Partial<GridProSlotsComponent>;
+  slots?: Partial<GridProSlotsComponent>;
 }
 
 /**
@@ -56,8 +54,8 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
   > {}
 
 interface DataGridProPropsWithComplexDefaultValueAfterProcessing
-  extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'components'> {
-  components: GridProSlotsComponent;
+  extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'slots'> {
+  slots: GridProSlotsComponent;
 }
 
 /**
@@ -66,7 +64,7 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue,
     DataGridProPropsWithComplexDefaultValueAfterProcessing,
-    DataGridProPropsWithoutDefaultValue<R> {}
+    Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
 export type DataGridProForcedPropsKey = 'signature';
 
@@ -99,6 +97,16 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
   isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
+  /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: boolean;
+  /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: boolean;
   /**
    * If `true`, the column pinning is disabled.
    * @default false
@@ -139,14 +147,26 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  unstable_headerFilters: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends Omit<DataGridPropsWithoutDefaultValue<R>, 'initialState'> {
+  extends Omit<
+    DataGridPropsWithoutDefaultValue<R>,
+    'initialState' | 'componentsProps' | 'slotProps'
+  > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiPro>;
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions?: GridAutosizeOptions;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -219,7 +239,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
   /**
@@ -240,4 +260,8 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * Rows data to pin on top or bottom.
    */
   pinnedRows?: GridPinnedRowsProp<R>;
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps?: GridProSlotProps;
 }

@@ -7,6 +7,7 @@ export default function RowPinningWithPagination() {
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 20,
+    editable: true,
   });
 
   const rowsData = React.useMemo(() => {
@@ -33,12 +34,11 @@ export default function RowPinningWithPagination() {
           ...data.initialState,
           pagination: {
             ...data.initialState?.pagination,
-            pageSize: 25,
+            paginationModel: { pageSize: 25 },
           },
         }}
         pagination
-        rowsPerPageOptions={[5, 10, 25, 50, 100]}
-        experimentalFeatures={{ rowPinning: true }}
+        pageSizeOptions={[5, 10, 25, 50, 100]}
       />
     </div>
   );

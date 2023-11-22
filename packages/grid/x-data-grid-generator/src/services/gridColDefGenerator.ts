@@ -1,4 +1,4 @@
-import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
+import { GridColDef } from '@mui/x-data-grid-pro';
 
 export interface GridDataGeneratorContext {
   /**
@@ -10,7 +10,7 @@ export interface GridDataGeneratorContext {
   values?: Record<string, number>;
 }
 
-export interface GridColDefGenerator extends GridBaseColDef {
+export type GridColDefGenerator = GridColDef & {
   generateData?: (row: any, context: GridDataGeneratorContext) => any;
 
   /**
@@ -23,4 +23,4 @@ export interface GridColDefGenerator extends GridBaseColDef {
    * If `true`, the column will be marked as hidden in the `columnVisibilityModel`.
    */
   hide?: boolean;
-}
+};

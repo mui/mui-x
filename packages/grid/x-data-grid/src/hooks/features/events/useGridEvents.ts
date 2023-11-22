@@ -17,16 +17,13 @@ export function useGridEvents(
     | 'onColumnHeaderOut'
     | 'onColumnHeaderEnter'
     | 'onColumnHeaderLeave'
-    | 'onColumnOrderChange'
     | 'onCellClick'
     | 'onCellDoubleClick'
     | 'onCellKeyDown'
-    | 'onCellFocusOut'
     | 'onPreferencePanelClose'
     | 'onPreferencePanelOpen'
     | 'onRowDoubleClick'
     | 'onRowClick'
-    | 'onError'
     | 'onStateChange'
     | 'onMenuOpen'
     | 'onMenuClose'
@@ -38,12 +35,10 @@ export function useGridEvents(
   useGridApiOptionHandler(apiRef, 'columnHeaderOut', props.onColumnHeaderOut);
   useGridApiOptionHandler(apiRef, 'columnHeaderEnter', props.onColumnHeaderEnter);
   useGridApiOptionHandler(apiRef, 'columnHeaderLeave', props.onColumnHeaderLeave);
-  useGridApiOptionHandler(apiRef, 'columnOrderChange', props.onColumnOrderChange);
 
   useGridApiOptionHandler(apiRef, 'cellClick', props.onCellClick);
   useGridApiOptionHandler(apiRef, 'cellDoubleClick', props.onCellDoubleClick);
   useGridApiOptionHandler(apiRef, 'cellKeyDown', props.onCellKeyDown);
-  useGridApiOptionHandler(apiRef, 'cellFocusOut', props.onCellFocusOut);
 
   useGridApiOptionHandler(apiRef, 'preferencePanelClose', props.onPreferencePanelClose);
   useGridApiOptionHandler(apiRef, 'preferencePanelOpen', props.onPreferencePanelOpen);
@@ -54,6 +49,5 @@ export function useGridEvents(
   useGridApiOptionHandler(apiRef, 'rowDoubleClick', props.onRowDoubleClick);
   useGridApiOptionHandler(apiRef, 'rowClick', props.onRowClick);
 
-  useGridApiOptionHandler(apiRef, 'componentError', props.onError);
   useGridApiOptionHandler(apiRef, 'stateChange', props.onStateChange);
 }

@@ -1,7 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "components": "Overrideable components.",
+    "components": "Overridable components.",
     "componentsProps": "The props used for each component slot.",
     "orientation": "Force rendering in particular orientation."
   },

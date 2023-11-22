@@ -11,7 +11,18 @@ export default function MultipleRowSelectionGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} pagination pageSize={10} />
+      <DataGridPro
+        {...data}
+        pagination
+        initialState={{
+          ...data.initialState,
+          pagination: {
+            paginationModel: {
+              pageSize: 10,
+            },
+          },
+        }}
+      />
     </div>
   );
 }

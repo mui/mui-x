@@ -27,7 +27,7 @@ function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
   return (
     <MenuItem onClick={showFilter}>
       <ListItemIcon>
-        <rootProps.components.ColumnMenuFilterIcon fontSize="small" />
+        <rootProps.slots.columnMenuFilterIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>{apiRef.current.getLocaleText('columnMenuFilter')}</ListItemText>
     </MenuItem>

@@ -1,11 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: '시간을',
   minutes: '분을',
   seconds: '초를',
+  meridiem: '메리디엠',
 };
 
 const koKRPickers: Partial<PickersLocaleText<any>> = {
@@ -16,14 +17,10 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '이전 화면 보기',
   openNextView: '다음 화면 보기',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? '연도 선택 화면에서 달력 화면으로 전환하기'
       : '달력 화면에서 연도 선택 화면으로 전환하기',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `텍스트 입력 화면에서 ${viewType} 화면으로 전환하기`
-      : `${viewType} 화면에서 텍스트 입력 화면으로 전환하기`,
 
   // DateRange placeholders
   start: '시작',
@@ -52,6 +49,9 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes}분`,
   secondsClockNumberText: (seconds) => `${seconds}초`,
 
+  // Digital clock labels
+  selectViewText: (view) => `${views[view]} 선택하기`,
+
   // Calendar labels
   calendarWeekNumberHeaderLabel: '주 번호',
   calendarWeekNumberHeaderText: '#',
@@ -67,6 +67,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(value, 'fullTime')}입니다.`
       : '시간을 선택하세요',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: '선택한 시간',
@@ -76,6 +77,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',

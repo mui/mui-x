@@ -7,13 +7,13 @@ import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
-import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const locales = ['en-us', 'en-gb', 'zh-cn', 'de'];
 
-type LocaleKey = typeof locales[number];
+type LocaleKey = (typeof locales)[number];
 
 export default function LocalizationMoment() {
   const [locale, setLocale] = React.useState<LocaleKey>('en-us');
@@ -29,7 +29,11 @@ export default function LocalizationMoment() {
           value={locale}
           exclusive
           fullWidth
-          onChange={(event, newLocale) => setLocale(newLocale)}
+          onChange={(event, newLocale) => {
+            if (newLocale != null) {
+              setLocale(newLocale);
+            }
+          }}
         >
           {locales.map((localeItem) => (
             <ToggleButton key={localeItem} value={localeItem}>
@@ -37,8 +41,8 @@ export default function LocalizationMoment() {
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
-        <DateField label="Date" defaultValue={moment('2022-04-07')} />
-        <TimeField label="Time" defaultValue={moment('2022-04-07T18:30')} />
+        <DateField label="Date" defaultValue={moment('2022-04-17')} />
+        <TimeField label="Time" defaultValue={moment('2022-04-17T18:30')} />
       </Stack>
     </LocalizationProvider>
   );

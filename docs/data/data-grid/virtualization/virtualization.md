@@ -2,21 +2,21 @@
 
 <p class="description">The grid is high performing thanks to its rows and columns virtualization engine.</p>
 
-DOM virtualization is the feature that allows the grid to handle an unlimited\* number of rows and columns.
+DOM virtualization is the feature that allows the data grid to handle an unlimited\* number of rows and columns.
 This is a built-in feature of the rendering engine and greatly improves rendering performance.
 
 _\*unlimited: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
-## Row virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Row virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-Row virtualization is the insertion and removal of rows as the grid scrolls vertically.
+Row virtualization is the insertion and removal of rows as the data grid scrolls vertically.
 
 The grid renders twice as many rows as are visible. It isn't configurable yet.
 Row virtualization is limited to 100 rows in the `DataGrid` component.
 
 ## Column virtualization
 
-Column virtualization is the insertion and removal of columns as the grid scrolls horizontally.
+Column virtualization is the insertion and removal of columns as the data grid scrolls horizontally.
 
 - Overscanning by at least one column allows the arrow key to focus on the next (not yet visible) item.
 - Overscanning slightly can reduce or prevent a flash of empty space when a user first starts scrolling.
@@ -32,7 +32,7 @@ You can disable column virtualization by setting the column buffer to a higher n
 ## Disable virtualization
 
 The virtualization can be disabled completely using the `disableVirtualization` prop.
-You may want to turn it off to be able to test the grid with a headless browser, like jsdom.
+You may want to turn it off to be able to test the data grid with a headless browser, like jsdom.
 
 ```tsx
 <DataGrid {...data} disableVirtualization />

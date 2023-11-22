@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 export default function FormPropsDateTimePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <NextDateTimePicker label="disabled" disabled />
-        <NextDateTimePicker label="readOnly" readOnly />
+      <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
+        <DateTimePicker label="disabled" disabled />
+        <DateTimePicker label="readOnly" readOnly />
       </DemoContainer>
     </LocalizationProvider>
   );

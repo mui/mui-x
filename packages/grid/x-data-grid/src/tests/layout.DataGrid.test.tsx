@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui-internal/test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -13,9 +12,9 @@ import {
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getCell, getRow, sleep } from 'test/utils/helperFn';
 
-describe('<DataGrid /> - Layout & Warnings', () => {
+describe('<DataGrid /> - Layout & warnings', () => {
   const { clock, render } = createRenderer();
 
   const baselineProps = {
@@ -94,13 +93,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
       const { container, setProps } = render(<TestCase width={300} />);
       let rect;
-      rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
+      rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
       expect(rect.width).to.equal(300 - 2);
 
       setProps({ width: 400 });
 
       await waitFor(() => {
-        rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
+        rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
         expect(rect.width).to.equal(400 - 2);
       });
     });
@@ -115,7 +114,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
         expect(ref.current).to.be.instanceof(window.HTMLDivElement);
-        expect(ref.current).to.equal(container.firstChild.firstChild);
+        expect(ref.current).to.equal(container.firstChild?.firstChild);
       });
 
       describe('`classes` prop', () => {
@@ -130,7 +129,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             </div>,
           );
 
-          expect(container.firstChild.firstChild).to.have.class(classes.root);
+          expect(container.firstChild?.firstChild).to.have.class(classes.root);
         });
 
         it('should support class names with underscores', () => {
@@ -156,7 +155,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
+        expect(document.querySelector(`.${className}`)).to.equal(container.firstChild?.firstChild);
       });
 
       it('should support columns.valueGetter using direct row access', () => {
@@ -605,7 +604,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         }
 
         const { setProps } = render(<Test />);
-        setProps();
+        setProps({});
 
         const firstColumn = getColumnHeaderCell(0);
         expect(firstColumn).toHaveInlineStyle({
@@ -651,20 +650,46 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
     describe('autoHeight', () => {
       it('should have the correct intrinsic height', () => {
-        const headerHeight = 40;
+        const columnHeaderHeight = 40;
         const rowHeight = 30;
         render(
           <div style={{ width: 300 }}>
             <DataGrid
               {...baselineProps}
-              headerHeight={headerHeight}
+              columnHeaderHeight={columnHeaderHeight}
               rowHeight={rowHeight}
               autoHeight
             />
           </div>,
         );
+        const rowsHeight = rowHeight * baselineProps.rows.length;
         expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-          headerHeight + rowHeight * baselineProps.rows.length,
+          columnHeaderHeight + rowsHeight,
+        );
+        expect(document.querySelector('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
+          rowsHeight,
+        );
+      });
+
+      it('should have the correct intrinsic height inside of a flex container', () => {
+        const columnHeaderHeight = 40;
+        const rowHeight = 30;
+        render(
+          <div style={{ display: 'flex' }}>
+            <DataGrid
+              {...baselineProps}
+              columnHeaderHeight={columnHeaderHeight}
+              rowHeight={rowHeight}
+              autoHeight
+            />
+          </div>,
+        );
+        const rowsHeight = rowHeight * baselineProps.rows.length;
+        expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+          columnHeaderHeight + rowsHeight,
+        );
+        expect(document.querySelector('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
+          rowsHeight,
         );
       });
 
@@ -673,13 +698,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         if (/macintosh/i.test(window.navigator.userAgent)) {
           this.skip();
         }
-        const headerHeight = 40;
+        const columnHeaderHeight = 40;
         const rowHeight = 30;
         render(
           <div style={{ width: 150 }}>
             <DataGrid
               {...baselineProps}
-              headerHeight={headerHeight}
+              columnHeaderHeight={columnHeaderHeight}
               rowHeight={rowHeight}
               columns={[{ field: 'brand' }, { field: 'year' }]}
               autoHeight
@@ -690,7 +715,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
         expect(scrollBarSize).not.to.equal(0);
         expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-          scrollBarSize + headerHeight + rowHeight * baselineProps.rows.length,
+          scrollBarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
         );
       });
 
@@ -706,6 +731,22 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       });
 
+      it('should allow to override the noRows overlay height', () => {
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              rows={[]}
+              autoHeight
+              sx={{ '--DataGrid-overlayHeight': '300px' }}
+            />
+          </div>,
+        );
+        expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
+          300,
+        );
+      });
+
       it('should render loading overlay the same height as the content', () => {
         const rowHeight = 30;
         render(
@@ -716,26 +757,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
           rowHeight * baselineProps.rows.length,
         );
-      });
-
-      it('should expand content height to one row height when there is an error', () => {
-        const error = { message: 'ERROR' };
-        const rowHeight = 50;
-
-        render(
-          <div style={{ width: 150 }}>
-            <DataGrid
-              columns={[{ field: 'brand' }]}
-              rows={[]}
-              autoHeight
-              error={error}
-              rowHeight={rowHeight}
-            />
-          </div>,
-        );
-        const errorOverlayElement = document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!;
-        expect(errorOverlayElement.textContent).to.equal(error.message);
-        expect(errorOverlayElement.offsetHeight).to.equal(2 * rowHeight);
       });
 
       it('should apply the autoHeight class to the root element', () => {
@@ -779,7 +800,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     it('should not place the overlay on top of the horizontal scrollbar when rows=[]', () => {
-      const headerHeight = 40;
+      const columnHeaderHeight = 40;
       const height = 300;
       const border = 1;
       render(
@@ -787,7 +808,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           <DataGrid
             rows={[]}
             columns={[{ field: 'brand' }, { field: 'price' }]}
-            headerHeight={headerHeight}
+            columnHeaderHeight={columnHeaderHeight}
             hideFooter
           />
         </div>,
@@ -795,7 +816,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
       const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
       const overlayWrapper = screen.getByText('No rows').parentElement;
-      const expectedHeight = height - headerHeight - scrollBarSize;
+      const expectedHeight = height - columnHeaderHeight - scrollBarSize;
       expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
     });
 
@@ -811,49 +832,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         '.MuiDataGrid-virtualScrollerContent',
       ) as Element;
       expect(virtualScrollerContent.clientHeight).to.equal(virtualScroller.clientHeight);
-    });
-
-    // See https://github.com/mui/mui-x/issues/4113
-    it('should preserve default width constraints when extending default column type', () => {
-      const rows = [{ id: 1, value: 1 }];
-      const columns = [{ field: 'id', type: 'number' }];
-
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            columnTypes={{
-              number: {},
-            }}
-          />
-        </div>,
-      );
-
-      // default `width` should be used
-      expect(getCell(0, 0).offsetWidth).to.equal(100);
-    });
-
-    it('should allow to override default width constraints when extending default column type', () => {
-      const rows = [{ id: 1, value: 1 }];
-      const columns = [{ field: 'id', type: 'number' }];
-
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            columnTypes={{
-              number: {
-                width: 10,
-                minWidth: 200,
-              },
-            }}
-          />
-        </div>,
-      );
-
-      expect(getCell(0, 0).offsetWidth).to.equal(200);
     });
   });
 
@@ -883,7 +861,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         },
       ];
 
-      const errorRef = React.createRef();
+      const errorRef = React.createRef<any>();
       expect(() => {
         render(
           <ErrorBoundary ref={errorRef}>
@@ -908,8 +886,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
             localeText={{ toolbarDensity: 'Size' }}
           />
@@ -929,19 +907,44 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
       expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
     });
+
+    it('should allow to change localeText on the fly', () => {
+      function TestCase(props: Partial<DataGridProps>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              slots={{
+                toolbar: GridToolbar,
+              }}
+              {...props}
+            />
+          </div>
+        );
+      }
+      const { setProps, getByText } = render(
+        <TestCase localeText={{ toolbarDensity: 'Density' }} />,
+      );
+      expect(getByText('Density')).not.to.equal(null);
+      setProps({ localeText: { toolbarDensity: 'Densidade' } });
+      expect(getByText('Densidade')).not.to.equal(null);
+    });
   });
 
-  describe('Error', () => {
-    it('should display error message when error prop set', () => {
-      const message = 'Error can also be set in props!';
-      render(
-        <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} error={{ message }} />
+  describe('non-strict mode', () => {
+    const renderer = createRenderer({ strict: false });
+
+    it('should render in JSDOM', function test() {
+      if (!/jsdom/.test(window.navigator.userAgent)) {
+        this.skip(); // Only run in JSDOM
+      }
+      renderer.render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} />
         </div>,
       );
-      expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.textContent).to.equal(
-        message,
-      );
+
+      expect(getCell(0, 0).textContent).to.equal('Nike');
     });
   });
 
@@ -1015,12 +1018,37 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
   });
 
+  it('should have ownerState in the theme style overrides', () => {
+    expect(() =>
+      render(
+        <ThemeProvider
+          theme={createTheme({
+            components: {
+              MuiDataGrid: {
+                styleOverrides: {
+                  root: ({ ownerState }) => ({
+                    // test that ownerState is not undefined
+                    ...(ownerState.columns && {}),
+                  }),
+                },
+              },
+            },
+          })}
+        >
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} />
+          </div>
+        </ThemeProvider>,
+      ),
+    ).not.to.throw();
+  });
+
   it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
     const NoRowsOverlay = spy(() => null);
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+          <DataGrid {...baselineProps} slots={{ noRowsOverlay: NoRowsOverlay }} {...props} />
         </div>
       );
     }
@@ -1035,7 +1063,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+          <DataGrid {...baselineProps} slots={{ noRowsOverlay: NoRowsOverlay }} {...props} />
         </div>
       );
     }
@@ -1044,5 +1072,158 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(NoRowsOverlay.callCount).to.equal(0);
     setProps({ loading: false });
     expect(NoRowsOverlay.callCount).not.to.equal(0);
+  });
+
+  describe('should not overflow parent', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        this.skip(); // Doesn't work with mocked window.getComputedStyle
+      }
+    });
+
+    const rows = [{ id: 1, username: '@MUI', age: 20 }];
+    const columns = [
+      { field: 'id', width: 300 },
+      { field: 'username', width: 300 },
+    ];
+
+    it('grid container', async () => {
+      render(
+        <div style={{ maxWidth: 400 }}>
+          <div style={{ display: 'grid' }}>
+            <DataGrid autoHeight columns={columns} rows={rows} />
+          </div>
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('grid')).toHaveComputedStyle({ width: '400px' });
+      });
+    });
+
+    it('flex container', async () => {
+      render(
+        <div style={{ maxWidth: 400 }}>
+          <div style={{ display: 'flex' }}>
+            <DataGrid autoHeight columns={columns} rows={rows} />
+          </div>
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('grid')).toHaveComputedStyle({ width: '400px' });
+      });
+    });
+  });
+
+  // See https://github.com/mui/mui-x/issues/8737
+  it('should not add horizontal scrollbar when .MuiDataGrid-main has border', async function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: 300, width: 400, display: 'flex' }}>
+        <DataGrid
+          rows={[{ id: 1 }]}
+          columns={[{ field: 'id', flex: 1 }]}
+          sx={{ '.MuiDataGrid-main': { border: '2px solid red' } }}
+        />
+      </div>,
+    );
+
+    const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+    const initialVirtualScrollerWidth = virtualScroller.clientWidth;
+
+    // It should not have a horizontal scrollbar
+    expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
+
+    await sleep(200);
+    // The width should not increase infinitely
+    expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
+  });
+
+  // See https://github.com/mui/mui-x/issues/8689#issuecomment-1582616570
+  it('should not add scrollbars when the parent container has fractional size', async function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: 300.5, width: 400 }}>
+        <DataGrid rows={[]} columns={[{ field: 'id', flex: 1 }]} />
+      </div>,
+    );
+
+    const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+    // It should not have a horizontal scrollbar
+    expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
+    // It should not have a vertical scrollbar
+    expect(virtualScroller.scrollHeight - virtualScroller.clientHeight).to.equal(0);
+  });
+
+  // See https://github.com/mui/mui-x/issues/9510
+  it('should not exceed maximum call stack size when the parent container has fractional width', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: '100%', width: 400.6 }}>
+        <DataGrid rows={[{ id: 1 }]} columns={[{ field: 'id', flex: 1 }]} />
+      </div>,
+    );
+  });
+
+  // See https://github.com/mui/mui-x/issues/9550
+  it('should not exceed maximum call stack size with duplicated flex fields', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    expect(() => {
+      render(
+        <div style={{ height: 200, width: 400 }}>
+          <DataGrid
+            rows={[{ id: 1 }]}
+            columns={[
+              { field: 'id', flex: 1 },
+              { field: 'id', flex: 1 },
+            ]}
+          />
+        </div>,
+      );
+    }).toErrorDev([
+      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
+      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
+    ]);
+  });
+
+  // See https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+  it('should not exceed maximum call stack size caused by floating point precision error', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: 'auto', width: 1584 }}>
+        <DataGrid
+          rows={[{ id: 1 }]}
+          columns={[
+            { field: '1', flex: 1 },
+            { field: '2', flex: 1 },
+            { field: '3', flex: 1 },
+            { field: '4', flex: 1 },
+            { field: '5', flex: 1 },
+            { field: '6', flex: 1 },
+          ]}
+        />
+      </div>,
+    );
   });
 });

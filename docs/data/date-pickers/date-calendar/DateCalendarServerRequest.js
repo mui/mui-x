@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import Badge from '@mui/material/Badge';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -32,13 +31,13 @@ function fakeFetch(date, { signal }) {
   });
 }
 
-const initialValue = dayjs('2022-04-07');
+const initialValue = dayjs('2022-04-17');
 
 function ServerDay(props) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
   const isSelected =
-    !props.outsideCurrentMonth && highlightedDays.indexOf(props.day.date()) > 0;
+    !props.outsideCurrentMonth && highlightedDays.indexOf(props.day.date()) >= 0;
 
   return (
     <Badge
@@ -50,18 +49,6 @@ function ServerDay(props) {
     </Badge>
   );
 }
-
-ServerDay.propTypes = {
-  /**
-   * The date to show.
-   */
-  day: PropTypes.object.isRequired,
-  highlightedDays: PropTypes.arrayOf(PropTypes.number),
-  /**
-   * If `true`, day is outside of month and will be hidden.
-   */
-  outsideCurrentMonth: PropTypes.bool.isRequired,
-};
 
 export default function DateCalendarServerRequest() {
   const requestAbortController = React.useRef(null);
@@ -112,10 +99,10 @@ export default function DateCalendarServerRequest() {
         loading={isLoading}
         onMonthChange={handleMonthChange}
         renderLoading={() => <DayCalendarSkeleton />}
-        components={{
-          Day: ServerDay,
+        slots={{
+          day: ServerDay,
         }}
-        componentsProps={{
+        slotProps={{
           day: {
             highlightedDays,
           },

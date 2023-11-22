@@ -1,0 +1,16 @@
+<Stack direction="row" spacing={2}>
+  <Button variant="outlined" onClick={() => setSelectedSectionType('month')}>
+    Month
+  </Button>
+  <Button variant="outlined" onClick={() => setSelectedSectionType('day')}>
+    Day
+  </Button>
+  <Button variant="outlined" onClick={() => setSelectedSectionType('year')}>
+    Year
+  </Button>
+</Stack>
+<DateField
+  inputRef={inputRef}
+  selectedSections={selectedSections}
+  onSelectedSectionsChange={setSelectedSections}
+/>

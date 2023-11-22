@@ -6,16 +6,21 @@ import { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
 
 export interface ExportedPickersArrowSwitcherProps {
   /**
-   * Overrideable components.
+   * Overridable component slots.
    * @default {}
    */
-  components?: PickersArrowSwitcherSlotsComponent;
+  slots?: PickersArrowSwitcherSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: PickersArrowSwitcherSlotsComponentsProps;
+  slotProps?: PickersArrowSwitcherSlotsComponentsProps;
   classes?: Partial<PickersArrowSwitcherClasses>;
+  /**
+   * Format used to display the date.
+   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   */
+  format?: string;
 }
 
 export interface PickersArrowSwitcherProps
@@ -41,22 +46,22 @@ export interface PickersArrowSwitcherSlotsComponent {
    * Button allowing to switch to the left view.
    * @default IconButton
    */
-  PreviousIconButton?: React.ElementType;
+  previousIconButton?: React.ElementType;
   /**
    * Button allowing to switch to the right view.
    * @default IconButton
    */
-  NextIconButton?: React.ElementType;
+  nextIconButton?: React.ElementType;
   /**
    * Icon displayed in the left view switch button.
    * @default ArrowLeft
    */
-  LeftArrowIcon?: React.ElementType;
+  leftArrowIcon?: React.ElementType;
   /**
    * Icon displayed in the right view switch button.
    * @default ArrowRight
    */
-  RightArrowIcon?: React.ElementType;
+  rightArrowIcon?: React.ElementType;
 }
 
 export interface PickersArrowSwitcherButtonSlotOwnerState extends PickersArrowSwitcherOwnerState {

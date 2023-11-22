@@ -1,161 +1,123 @@
 ---
-product: date-pickers
-title: Date and Time Picker React components
+productId: x-date-pickers
+title: Date and Time Picker - Getting started
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
-waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
-# Date / Time Pickers
+# Date and Time Pickers - Getting Started
 
-<p class="description">Date pickers and Time pickers allow selecting a single value from a pre-determined set.</p>
-
-{{"component": "modules/components/ComponentLinkHeader.js"}}
-
-- On mobile, pickers are best suited for display in a confirmation dialog.
-- For inline display, such as on a form, consider using compact controls such as segmented dropdown buttons.
-
-## React components
-
-{{"demo": "MaterialUIPickers.js"}}
+<p class="description">Get started with the Date and Time Pickers. Install the package, configure your application and start using the components.</p>
 
 ## Installation
 
-You need to install two different types of packages to make the pickers work:
+Using your favorite package manager, install:
 
-1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
-2. **The date library** ([Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), ...) manages the date manipulation.
+- `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
+- The date library to manipulate the date.
+
+:::warning
+The `next` tag is used to download the latest v7 **pre-release** version.
+:::
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
-### Why do you need a date library?
-
-Like most picker components available, the MUI Date and Time Pickers require a third-party library to format, parse, and mutate dates.
-
-MUI's components let you choose which library you prefer for this purpose.
-This gives you the flexibility to implement any date library you may already be using in your application, without adding an extra one to your bundle.
-
-To achieve this, both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` export a set of **adapters** that expose the date manipulation libraries under a unified API.
-
-### Choosing a date library
-
-#### Available libraries
-
-The Date and Time Pickers currently support the following date libraries:
-
-- [Day.js](https://day.js.org/)
-- [date-fns](https://date-fns.org/)
-- [Luxon](https://moment.github.io/luxon/#/)
-- [Moment.js](https://momentjs.com/)
-
 :::info
-If you are using a non-Gregorian calendar (such as Jalali or Hijri), please refer to the [Support for other calendar systems](/x/react-date-pickers/calendar-systems/) page.
+If you need more information about the date library supported by the Date and Time Pickers,
+take a look at the [dedicated section](/x/react-date-pickers/#date-library)
 :::
 
-#### Recommended library
+The Date and Time Pickers package has a peer dependency on `@mui/material`.
+If you are not already using it in your project, you can install it with:
 
-If you are already using one of the libraries listed above in your application, then you can keep using it with the Date and Time Pickers as well.
-This will avoid bundling two libraries.
+<codeblock storageKey="package-manager">
+```bash npm
+npm install @mui/material @emotion/react @emotion/styled
+```
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+```bash pnpm
+pnpm add @mui/material @emotion/react @emotion/styled
+```
+</codeblock>
 
-If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`, then we recommend using `dayjs` because it will have the smallest impact on your application's bundle size.
+<!-- #react-peer-version -->
 
-Here is the weight added to your gzipped bundle size by each of these libraries when used inside the Date and Time Pickers:
+Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
 
-| **Library**       | **Gzipped size** |
-| ----------------- | ---------------- |
-| `dayjs@1.11.5`    | 6.77kb           |
-| `date-fns@2.29.3` | 19.39kb          |
-| `luxon@3.0.4`     | 23.26kb          |
-| `moment@2.29.4`   | 20.78kb          |
+```json
+"peerDependencies": {
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
+},
+```
 
-:::info
-The results above were obtained in October 2022 with the latest version of each library.
-The bundling strategy was taken care of by a Create React App, and no locale was loaded for any of the libraries.
+### Style engine
 
-The results may vary in your application depending on the version of each library, the locale, and the bundling strategy used.
-:::
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
-## Code setup
+<codeblock storageKey="package-manager">
+```bash npm
+npm install @mui/styled-engine-sc styled-components
+```
 
-After installation, you have to pass your chosen date library's adapter to `LocalizationProvider`.
-The supported adapters—as well as `LocalizationProvider`—are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
+```
 
-All the pickers rendered inside this provider will have access to the adapter through a React context.
-For this reason, we recommend that you wrap your entire application with a `LocalizationProvider` so you can use the Date and Time Pickers everywhere.
+```bash pnpm
+pnpm add @mui/styled-engine-sc styled-components
+```
+
+</codeblock>
+
+Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+
+## Setup your date library adapter
+
+Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
+This component receives your chosen [date library's adapter](https://mui.com/x/react-date-pickers/#date-library) (the doc uses `AdapterDayjs` which is based on [dayjs](https://day.js.org/)) and makes it accessible to all the Date and Time Pickers component using React context.
+
+Each demonstration in the documentation has its own `LocalizationProvider` wrapper.
+This is **not** a pattern to reproduce.
+The reason is to keep examples atomic and functional—especially when running in a CodeSandbox.
+
+The general recommendation is to declare the `LocalizationProvider` once, wrapping your entire application.
+Then, you don't need to repeat the boilerplate code for every Date and Time Picker in your application.
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
+
+:::success
+
+- All the adapters are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
+
+  ```tsx
+  import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+  import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+  ```
+
+- `LocalizationProvider` is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
+
+  ```tsx
+  import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+  import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
+  ```
+
+:::
 
 :::info
 If you need to use the Date and Time Pickers with a custom locale, have a look at the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
 :::
 
-## TypeScript
+## Render your first component
 
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#global-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
-Internally, it uses module augmentation to extend the default theme structure.
+To make sure that everything is set up correctly, try rendering a simple `DatePicker` component:
 
-```tsx
-// When using TypeScript 4.x and above
-import type {} from '@mui/x-date-pickers/themeAugmentation';
-import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
-// When using TypeScript 3.x and below
-import '@mui/x-date-pickers/themeAugmentation';
-import '@mui/x-date-pickers-pro/themeAugmentation';
+{{"demo": "FirstComponent.js"}}
 
-const theme = createTheme({
-  components: {
-    MuiDatePicker: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-        },
-      },
-    },
-  },
-});
-```
+## What's next?
 
-:::info
-You don't have to import the theme augmentation from both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` when using `@mui/x-date-pickers-pro`.
-Importing it from `@mui/x-date-pickers-pro` is enough.
-:::
-
-## Native pickers
-
-:::warning
-Browser support for native input controls is somewhat limited, according to [Can I use...](https://caniuse.com/#feat=input-datetime).
-:::
-
-Native date (`type="date"`), time (`type="time"`) and date&time (`type="datetime-local"`) pickers.
-
-{{"demo": "NativePickers.js"}}
-
-## Testing caveats
-
-### Responsive components
-
-:::info
-Some test environments (i.e. `jsdom`) do not support media query. In such cases, components will be rendered in desktop mode. To modify this behavior you can fake the `window.matchMedia`.
-:::
-
-Be aware that running tests in headless browsers might not pass the default mediaQuery (`pointer: fine`).
-In such case you can [force pointer precision](https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311) via browser flags or preferences.
-
-### Field components
-
-:::info
-To support RTL and some keyboard interactions, field components add some Unicode character that are invisible, but appears in the input value.
-:::
-
-To add tests about a field value without having to care about those characters, you can remove the specific character before testing the equality.
-Here is an example about how to do it.
-
-```js
-// Helper removing specific characters
-const cleanText = (string) =>
-  string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
-
-// Example of a test using the helper
-expect(cleanText(input.value)).to.equal('10-11-2021');
-```
+Continue to the [next page](/x/react-date-pickers/base-concepts/) and discover the components available and how to use them.

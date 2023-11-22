@@ -8,7 +8,11 @@ export const LICENSING_MODELS = [
    * On development, a license is outdated if the expiry date has been reached
    * On production, a license is outdated if the current version of the software was released after the expiry date of the license (see "perpetual")
    */
+  'annual',
+  /**
+   * TODO 2025 remove, legacy name of annual.
+   */
   'subscription',
 ] as const;
 
-export type LicensingModel = typeof LICENSING_MODELS[number];
+export type LicensingModel = (typeof LICENSING_MODELS)[number];

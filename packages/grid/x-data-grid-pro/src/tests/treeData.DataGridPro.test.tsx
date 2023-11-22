@@ -1,5 +1,4 @@
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
 import {
   getCell,
   getColumnHeaderCell,
@@ -15,9 +14,10 @@ import {
   GRID_TREE_DATA_GROUPING_FIELD,
   GridApi,
   GridGroupNode,
-  GridLinkOperator,
+  GridLogicOperator,
   GridRowsProp,
   useGridApiRef,
+  GridPaginationModel,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -56,7 +56,7 @@ const baselineProps: DataGridProProps = {
   getRowId: (row) => row.name,
 };
 
-describe('<DataGridPro /> - Tree Data', () => {
+describe('<DataGridPro /> - Tree data', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -336,6 +336,27 @@ describe('<DataGridPro /> - Tree Data', () => {
       );
       expect(getColumnValues(0)).to.deep.equal(['A', 'A', 'B', 'B', 'A', 'B', 'A', 'A', 'C']);
     });
+
+    // https://github.com/mui/mui-x/issues/9344
+    it('should support valueFormatter', () => {
+      render(
+        <Test
+          groupingColDef={{ valueFormatter: ({ value }) => `> ${value}` }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal([
+        '> A (2)',
+        '> A',
+        '> B',
+        '> B (4)',
+        '> A',
+        '> B (2)',
+        '> A (1)',
+        '> A',
+        '> C',
+      ]);
+    });
   });
 
   describe('row grouping column', () => {
@@ -350,7 +371,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         <Test
           rows={[{ name: 'A' }, { name: 'A.C' }, { name: 'B' }, { name: 'B.A' }]}
           filterModel={{
-            linkOperator: GridLinkOperator.Or,
+            logicOperator: GridLogicOperator.Or,
             items: [
               { field: 'name', operator: 'endsWith', value: 'A', id: 0 },
               { field: 'name', operator: 'endsWith', value: 'B', id: 1 },
@@ -368,9 +389,9 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should toggle expansion when clicking on grouping column icon', () => {
       render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
     });
 
@@ -410,27 +431,38 @@ describe('<DataGridPro /> - Tree Data', () => {
   });
 
   describe('pagination', () => {
+    function PaginatedTest({ initialModel }: { initialModel: GridPaginationModel }) {
+      const [paginationModel, setPaginationModel] = React.useState(initialModel);
+      return (
+        <Test
+          pagination
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[paginationModel.pageSize]}
+        />
+      );
+    }
     it('should respect the pageSize for the top level rows when toggling children expansion', () => {
-      render(<Test pagination pageSize={2} rowsPerPageOptions={[2]} />);
+      render(<PaginatedTest initialModel={{ pageSize: 2, page: 0 }} />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(1)).to.deep.equal(['C']);
     });
 
     it('should keep the row expansion when switching page', () => {
-      render(<Test pagination pageSize={1} rowsPerPageOptions={[1]} />);
+      render(<PaginatedTest initialModel={{ pageSize: 1, page: 0 }} />);
       expect(getColumnValues(1)).to.deep.equal(['A']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(1)).to.deep.equal(['B']);
-      fireEvent.click(getCell(3, 0).querySelector('button'));
+      fireEvent.click(getCell(3, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
@@ -689,6 +721,20 @@ describe('<DataGridPro /> - Tree Data', () => {
         'A.B',
         'A.A',
       ]);
+    });
+  });
+
+  describe('regressions', () => {
+    // See https://github.com/mui/mui-x/issues/9402
+    it('should not fail with checkboxSelection', () => {
+      const initialRows = rowsWithoutGap;
+      const { setProps } = render(<Test checkboxSelection rows={initialRows} />);
+
+      const newRows = [...initialRows];
+      newRows.splice(7, 1);
+      setProps({
+        rows: newRows,
+      });
     });
   });
 });

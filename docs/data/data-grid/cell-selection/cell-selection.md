@@ -2,7 +2,7 @@
 title: Data Grid - Cell selection
 ---
 
-# Data Grid - Cell selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+# Data Grid - Cell selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Cell selection allows the user to select individual cells or a range of cells.</p>
 
@@ -76,10 +76,10 @@ If a single cell is selected, all classes above are applied to the same element.
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`.
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the Grid.
 :::
 
 {{"demo": "CellSelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

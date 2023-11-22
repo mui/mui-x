@@ -9,3 +9,7 @@ export {
   getDateRangeCalendarUtilityClass,
   dateRangeCalendarClasses,
 } from './dateRangeCalendarClasses';
+export type {
+  DateRangeCalendarClassKey,
+  DateRangeCalendarClasses,
+} from './dateRangeCalendarClasses';

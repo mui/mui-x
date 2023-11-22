@@ -1,6 +1,5 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import TextField from '@mui/material/TextField';
+import dayjs from 'dayjs';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -13,7 +12,7 @@ import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { useLocaleText } from '@mui/x-date-pickers/internals';
 
 function CustomActionBar(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday, actions } = props;
+  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
   const localeText = useLocaleText();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
@@ -81,7 +80,7 @@ function CustomActionBar(props: PickersActionBarProps) {
   });
 
   return (
-    <DialogActions>
+    <DialogActions className={className}>
       <Button
         id={`picker-actions-${id}`}
         aria-controls={open ? 'basic-menu' : undefined}
@@ -107,20 +106,14 @@ function CustomActionBar(props: PickersActionBarProps) {
 }
 
 export default function ActionBarComponent() {
-  const [value, setValue] = React.useState<Dayjs | null>(() =>
-    dayjs('2022-02-01T00:00'),
-  );
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
-        onChange={(newValue) => setValue(newValue)}
-        value={value}
-        renderInput={(params) => <TextField {...params} />}
-        components={{
-          ActionBar: CustomActionBar,
+        defaultValue={dayjs('2022-04-17')}
+        slots={{
+          actionBar: CustomActionBar,
         }}
-        componentsProps={{
+        slotProps={{
           actionBar: {
             actions: ['today'],
           },

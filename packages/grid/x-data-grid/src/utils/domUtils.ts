@@ -34,19 +34,34 @@ export function getGridColumnHeaderElement(root: Element, field: string) {
     `[role="columnheader"][data-field="${escapeOperandAttributeSelector(field)}"]`,
   );
 }
+function getGridRowElementSelector(id: GridRowId): string {
+  return `.${gridClasses.row}[data-id="${escapeOperandAttributeSelector(String(id))}"]`;
+}
 
 export function getGridRowElement(root: Element, id: GridRowId) {
-  return root.querySelector<HTMLDivElement>(
-    `.${gridClasses.row}[data-id="${escapeOperandAttributeSelector(String(id))}"]`,
-  );
+  return root.querySelector<HTMLDivElement>(getGridRowElementSelector(id));
 }
 
 export function getGridCellElement(root: Element, { id, field }: { id: GridRowId; field: string }) {
-  const row = getGridRowElement(root, id);
-  if (!row) {
+  const rowSelector = getGridRowElementSelector(id);
+  const cellSelector = `.${gridClasses.cell}[data-field="${escapeOperandAttributeSelector(
+    field,
+  )}"]`;
+  const selector = `${rowSelector} ${cellSelector}`;
+  return root.querySelector<HTMLDivElement>(selector);
+}
+
+// https://www.abeautifulsite.net/posts/finding-the-active-element-in-a-shadow-root/
+export const getActiveElement = (root: Document | ShadowRoot = document): Element | null => {
+  const activeEl = root.activeElement;
+
+  if (!activeEl) {
     return null;
   }
-  return row.querySelector<HTMLDivElement>(
-    `.${gridClasses.cell}[data-field="${escapeOperandAttributeSelector(field)}"]`,
-  );
-}
+
+  if (activeEl.shadowRoot) {
+    return getActiveElement(activeEl.shadowRoot);
+  }
+
+  return activeEl;
+};

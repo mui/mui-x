@@ -1,11 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'las horas',
   minutes: 'los minutos',
   seconds: 'los segundos',
+  meridiem: 'meridiano',
 };
 
 const esESPickers: Partial<PickersLocaleText<any>> = {
@@ -16,11 +17,10 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'abrir la última vista',
   openNextView: 'abrir la siguiente vista',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'la vista del año está abierta, cambie a la vista de calendario'
       : 'la vista de calendario está abierta, cambie a la vista del año',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Empezar',
@@ -28,55 +28,60 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
-  clearButtonLabel: 'Limpia',
+  clearButtonLabel: 'Limpiar',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hoy',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Seleccionar fecha',
+  dateTimePickerToolbarTitle: 'Seleccionar fecha y hora',
+  timePickerToolbarTitle: 'Seleccionar hora',
+  dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
     `Seleccione ${views[view]}. ${
       time === null
-        ? 'Sin tiempo seleccionado'
-        : `El tiempo seleccionado es ${adapter.format(time, 'fullTime')}`
+        ? 'No hay hora seleccionada'
+        : `La hora seleccionada es ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Seleccionar ${views[view]}`,
+
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Número de semana',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Semana ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Elige la fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
-      : 'Elige la fecha',
+      ? `Elige fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
+      : 'Elige fecha',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Elige la hora, la hora elegido es ${utils.format(value, 'fullTime')}`
-      : 'Elige la hora',
+      ? `Elige hora, la hora elegida es ${utils.format(value, 'fullTime')}`
+      : 'Elige hora',
+  fieldClearLabel: 'Limpiar valor',
 
   // Table labels
-  timeTableLabel: 'elige la fecha',
-  dateTableLabel: 'elige la hora',
+  timeTableLabel: 'elige hora',
+  dateTableLabel: 'elige fecha',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const esES = getPickersLocalization(esESPickers);

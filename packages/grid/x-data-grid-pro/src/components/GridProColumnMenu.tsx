@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import {
   GridGenericColumnMenu,
   GridColumnMenuProps,
-  GRID_COLUMN_MENU_COMPONENTS,
-  GRID_COLUMN_MENU_COMPONENTS_PROPS,
+  GRID_COLUMN_MENU_SLOTS,
+  GRID_COLUMN_MENU_SLOT_PROPS,
 } from '@mui/x-data-grid';
 import { GridColumnMenuPinningItem } from './GridColumnMenuPinningItem';
 
-export const GRID_COLUMN_MENU_COMPONENTS_PRO = {
-  ...GRID_COLUMN_MENU_COMPONENTS,
-  ColumnMenuPinningItem: GridColumnMenuPinningItem,
+export const GRID_COLUMN_MENU_SLOTS_PRO = {
+  ...GRID_COLUMN_MENU_SLOTS,
+  columnMenuPinningItem: GridColumnMenuPinningItem,
 };
 
-export const GRID_COLUMN_MENU_COMPONENTS_PROPS_PRO = {
-  ...GRID_COLUMN_MENU_COMPONENTS_PROPS,
+export const GRID_COLUMN_MENU_SLOT_PROPS_PRO = {
+  ...GRID_COLUMN_MENU_SLOT_PROPS,
   columnMenuPinningItem: {
     displayOrder: 15,
   },
@@ -26,8 +26,8 @@ const GridProColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps
       <GridGenericColumnMenu
         ref={ref}
         {...props}
-        defaultComponents={GRID_COLUMN_MENU_COMPONENTS_PRO}
-        defaultComponentsProps={GRID_COLUMN_MENU_COMPONENTS_PROPS_PRO}
+        defaultSlots={GRID_COLUMN_MENU_SLOTS_PRO}
+        defaultSlotProps={GRID_COLUMN_MENU_SLOT_PROPS_PRO}
       />
     );
   },

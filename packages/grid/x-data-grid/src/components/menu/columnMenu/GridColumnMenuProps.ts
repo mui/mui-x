@@ -15,4 +15,4 @@ export interface GridGenericColumnMenuProps
     GridColumnMenuContainerProps {}
 
 export interface GridColumnMenuProps
-  extends Omit<GridGenericColumnMenuProps, 'defaultComponents' | 'defaultComponentsProps'> {}
+  extends Omit<GridGenericColumnMenuProps, 'defaultSlots' | 'defaultSlotProps'> {}

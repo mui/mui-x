@@ -1,15 +1,16 @@
 <DemoItem label={'"year", "month" and "day"'}>
   <DateCalendar
-    defaultValue={dayjs('2022-04-07')}
+    defaultValue={dayjs('2022-04-17')}
     views={['year', 'month', 'day']}
   />
 </DemoItem>
 <DemoItem label={'"day"'}>
-  <DateCalendar defaultValue={dayjs('2022-04-07')} views={['day']} />
+  <DateCalendar views={['day']} />
 </DemoItem>
 <DemoItem label={'"month" and "year"'}>
   <DateCalendar
-    defaultValue={dayjs('2022-04-07')}
+    defaultValue={dayjs('2022-04-17')}
     views={['month', 'year']}
+    openTo="month"
   />
 </DemoItem>

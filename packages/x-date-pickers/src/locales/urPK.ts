@@ -1,6 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'گھنٹے',
+  minutes: 'منٹ',
+  seconds: 'سیکنڈ',
+  meridiem: 'میریڈیم',
+};
 
 const urPKPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,14 +17,10 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'پچھلا ویو کھولیں',
   openNextView: 'اگلا ویو کھولیں',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'سال والا ویو کھلا ہے۔ کیلنڈر والا ویو کھولیں'
       : 'کیلنڈر والا ویو کھلا ہے۔ سال والا ویو کھولیں',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `،ٹیکسٹ ویو کھلا ہے ${viewType} ویو کھولیں`
-      : `${viewType} ویو کھلا ہے، ٹیکسٹ ویو کھولیں`,
 
   // DateRange placeholders
   start: 'شروع',
@@ -37,12 +40,15 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${view} منتخب کریں ${
+    `${timeViews[view]} منتخب کریں ${
       time === null ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} گھنٹے`,
   minutesClockNumberText: (minutes) => `${minutes} منٹ`,
   secondsClockNumberText: (seconds) => `${seconds} سیکنڈ`,
+
+  // Digital clock labels
+  selectViewText: (view) => `${timeViews[view]} منتخب کریں`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'ہفتہ نمبر',
@@ -59,6 +65,7 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${utils.format(value, 'fullTime')}`
       : 'وقت منتخب کریں',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'وقت منتخب کریں',
@@ -68,6 +75,7 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',

@@ -12,17 +12,19 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "PickersActionBar",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPickersActionBar" },
+  "imports": [
+    "import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';",
+    "import { PickersActionBar } from '@mui/x-date-pickers';",
+    "import { PickersActionBar } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": { "classes": ["root", "spacing"], "globalClasses": {}, "name": "MuiPickersActionBar" },
   "filename": "/packages/x-date-pickers/src/PickersActionBar/PickersActionBar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersActionBar" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersActionBar" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>"
 }

@@ -1,40 +1,10 @@
 # Date and Time Pickers - API Reference
 
-<p class="description">This page contains an index to the most important APIs of the date pickers.</p>
+<p class="description">This page contains an index to the most important APIs of the Date and Time Pickers.</p>
 
 ## Components
 
 ### Pickers
-
-#### Date Pickers
-
-- [NextDatePicker](/x/api/date-pickers/next-date-picker/)
-- [DesktopNextDatePicker](/x/api/date-pickers/desktop-next-date-picker/)
-- [MobileNextDatePicker](/x/api/date-pickers/mobile-next-date-picker/)
-- [StaticNextDatePicker](/x/api/date-pickers/static-next-date-picker/)
-
-#### Time Pickers
-
-- [NextTimePicker](/x/api/date-pickers/next-time-picker/)
-- [DesktopNextTimePicker](/x/api/date-pickers/desktop-next-time-picker/)
-- [MobileNextTimePicker](/x/api/date-pickers/mobile-next-time-picker/)
-- [StaticNextTimePicker](/x/api/date-pickers/static-next-time-picker/)
-
-#### Date Time Pickers
-
-- [NextDateTimePicker](/x/api/date-pickers/next-date-time-picker/)
-- [DesktopNextDateTimePicker](/x/api/date-pickers/desktop-next-date-time-picker/)
-- [MobileNextDateTimePicker](/x/api/date-pickers/mobile-next-date-time-picker/)
-- [StaticNextDateTimePicker](/x/api/date-pickers/static-next-date-time-picker/)
-
-#### Date Range Pickers
-
-- [NextDateRangePicker](/x/api/date-pickers/next-date-range-picker/)
-- [DesktopNextDateRangePicker](/x/api/date-pickers/desktop-next-date-range-picker/)
-- [MobileNextDateRangePicker](/x/api/date-pickers/mobile-next-date-range-picker/)
-- [StaticNextDateRangePicker](/x/api/date-pickers/static-next-date-range-picker/)
-
-### Pickers (legacy)
 
 #### Date Pickers
 
@@ -56,7 +26,6 @@
 - [DesktopDateTimePicker](/x/api/date-pickers/desktop-date-time-picker/)
 - [MobileDateTimePicker](/x/api/date-pickers/mobile-date-time-picker/)
 - [StaticDateTimePicker](/x/api/date-pickers/static-date-time-picker/)
-- [DateTimePickerTabs](/x/api/date-pickers/date-time-picker-tabs/)
 
 #### Date Range Pickers
 
@@ -73,7 +42,9 @@
 - [MultiInputDateRangeField](/x/api/date-pickers/multi-input-date-range-field/)
 - [SingleInputDateRangeField](/x/api/date-pickers/single-input-date-range-field/)
 - [MultiInputTimeRangeField](/x/api/date-pickers/multi-input-time-range-field/)
+- [SingleInputTimeRangeField](/x/api/date-pickers/single-input-time-range-field/)
 - [MultiInputDateTimeRangeField](/x/api/date-pickers/multi-input-date-time-range-field/)
+- [SingleInputDateTimeRangeField](/x/api/date-pickers/single-input-date-time-range-field/)
 
 ### Calendars
 
@@ -85,10 +56,21 @@
 ### Clocks
 
 - [TimeClock](/x/api/date-pickers/time-clock/)
+- [DigitalClock](/x/api/date-pickers/digital-clock/)
+- [MultiSectionDigitalClock](/x/api/date-pickers/multi-section-digital-clock/)
+
+### Toolbars
+
+- [DatePickerToolbar](/x/api/date-pickers/date-picker-toolbar/)
+- [TimePickerToolbar](/x/api/date-pickers/time-picker-toolbar/)
+- [DateTimePickerToolbar](/x/api/date-pickers/date-time-picker-toolbar/)
+- [DateRangePickerToolbar](/x/api/date-pickers/date-range-picker-toolbar/)
 
 ### Others
 
 - [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/)
+- [DateTimePickerTabs](/x/api/date-pickers/date-time-picker-tabs/)
 - [DayCalendarSkeleton](/x/api/date-pickers/day-calendar-skeleton/)
 - [LocalizationProvider](/x/api/date-pickers/localization-provider/)
+- [PickersCalendarHeader](/x/api/date-pickers/pickers-calendar-header/)
 - [PickersDay](/x/api/date-pickers/pickers-day/)

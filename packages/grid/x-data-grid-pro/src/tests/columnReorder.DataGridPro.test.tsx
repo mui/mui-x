@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, createEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, createEvent, act } from '@mui-internal/test-utils';
 import {
   getColumnHeadersTextContent,
   getColumnHeaderCell,
@@ -176,8 +175,8 @@ describe('<DataGridPro /> - Columns reorder', () => {
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     const columnHeader = getColumnHeaderCell(0);
-    const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
-    fireEvent.dragStart(columnHeaderDraggableContainer.firstChild);
+    const columnHeaderDraggableContainer = columnHeader.firstChild!;
+    fireEvent.dragStart(columnHeaderDraggableContainer.firstChild!);
     expect(columnHeaderDraggableContainer).not.to.have.class(gridClasses['columnHeader--dragging']);
   });
 
@@ -260,7 +259,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
+      const dragCol = getColumnHeaderCell(1).firstChild!;
       const targetCol = getColumnHeaderCell(0).firstChild!;
 
       fireEvent.dragStart(dragCol);

@@ -3,8 +3,7 @@ import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { DataGrid, DataGridProps, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, fireEvent } from '@mui-internal/test-utils';
 
 describe('<DataGrid /> - Export', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -38,11 +37,11 @@ describe('<DataGrid /> - Export', () => {
 
   describe('component: GridToolbar', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase components={{ Toolbar: GridToolbar }} />);
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      render(<TestCase slots={{ toolbar: GridToolbar }} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      fireEvent.click(screen.queryByRole('menuitem', { name: 'Download as CSV' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
       const csv = await spyCreateObjectURL.lastCall.firstArg.text();
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
@@ -51,14 +50,14 @@ describe('<DataGrid /> - Export', () => {
     it('should apply custom csvOptions', async () => {
       render(
         <TestCase
-          components={{ Toolbar: GridToolbar }}
-          componentsProps={{ toolbar: { csvOptions: { delimiter: ';' } } }}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{ toolbar: { csvOptions: { delimiter: ';' } } }}
         />,
       );
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      fireEvent.click(screen.queryByRole('menuitem', { name: 'Download as CSV' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
       const csv = await spyCreateObjectURL.lastCall.firstArg.text();
       expect(csv).to.equal(['id;Currency Pair', '0;USDGBP', '1;USDEUR', '2;GBPEUR'].join('\r\n'));
@@ -67,11 +66,11 @@ describe('<DataGrid /> - Export', () => {
     it('should disable csv export when passing `csvOptions.disableToolbarButton`', () => {
       render(
         <TestCase
-          components={{ Toolbar: GridToolbar }}
-          componentsProps={{ toolbar: { csvOptions: { disableToolbarButton: true } } }}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{ toolbar: { csvOptions: { disableToolbarButton: true } } }}
         />,
       );
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
@@ -80,11 +79,11 @@ describe('<DataGrid /> - Export', () => {
 
   describe('component: GridToolbarExport', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase components={{ Toolbar: () => <GridToolbarExport /> }} />);
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      render(<TestCase slots={{ toolbar: () => <GridToolbarExport /> }} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      fireEvent.click(screen.queryByRole('menuitem', { name: 'Download as CSV' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
       const csv = await spyCreateObjectURL.lastCall.firstArg.text();
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
@@ -93,13 +92,13 @@ describe('<DataGrid /> - Export', () => {
     it('should apply custom csvOptions', async () => {
       render(
         <TestCase
-          components={{ Toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}
+          slots={{ toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}
         />,
       );
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      fireEvent.click(screen.queryByRole('menuitem', { name: 'Download as CSV' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
       const csv = await spyCreateObjectURL.lastCall.firstArg.text();
       expect(csv).to.equal(['id;Currency Pair', '0;USDGBP', '1;USDEUR', '2;GBPEUR'].join('\r\n'));
@@ -108,12 +107,12 @@ describe('<DataGrid /> - Export', () => {
     it('should disable csv export when passing `csvOptions.disableToolbarButton`', async () => {
       render(
         <TestCase
-          components={{
-            Toolbar: () => <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />,
+          slots={{
+            toolbar: () => <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />,
           }}
         />,
       );
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);

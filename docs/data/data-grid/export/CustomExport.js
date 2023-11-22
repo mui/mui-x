@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import {
   DataGrid,
@@ -68,10 +67,6 @@ function JsonExportMenuItem(props) {
   );
 }
 
-JsonExportMenuItem.propTypes = {
-  hideMenu: PropTypes.func,
-};
-
 const csvOptions = { delimiter: ';' };
 
 function CustomExportButton(props) {
@@ -100,11 +95,7 @@ export default function CustomExport() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid
-        {...data}
-        loading={loading}
-        components={{ Toolbar: CustomToolbar }}
-      />
+      <DataGrid {...data} loading={loading} slots={{ toolbar: CustomToolbar }} />
     </div>
   );
 }

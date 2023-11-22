@@ -1,7 +1,7 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Time Picker component
-components: NextDateTimePicker, DesktopNextDateTimePicker, MobileNextDateTimePicker, StaticNextDateTimePicker
+components: DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DigitalClock, MultiSectionDigitalClock, TimeClock
 githubLabel: 'component: DateTimePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -9,64 +9,111 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Time Picker
 
-<p class="description">This component combines the date & time pickers.</p>
-
-:::warning
-The new Date Time Pickers are unstable, and their props are subject to breaking changes before they get a stable release.
-
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy Pickers—`NextDateTimePicker` will become `DateTimePicker`, and so on.
-:::
-
-It allows the user to select both date and time with the same control.
-
-Note that this component is the [NextDatePicker](/x/react-date-pickers/date-picker/) and [NextTimePicker](/x/react-date-pickers/time-picker/)
-component combined, so any of these components' props can be passed to the DateTimePicker.
+<p class="description">The Date Time Picker component lets users select a date and time.</p>
 
 ## Basic usage
 
-Allows choosing date then time. There are 4 steps available (year, date, hour, and minute), so tabs are required to visually distinguish date/time steps.
-
 {{"demo": "BasicDateTimePicker.js"}}
 
-## Uncontrolled vs. Controlled
+## Component composition
 
-The component can be uncontrolled or controlled
+The component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile time view editing.
+All the documented props of those four components can also be passed to the Date Time Picker component.
+
+Check-out their documentation page for more information:
+
+- [Date Field](/x/react-date-pickers/date-field/)
+- [Date Calendar](/x/react-date-pickers/date-calendar/)
+- [Digital Clock](/x/react-date-pickers/digital-clock/)
+- [Time Clock](/x/react-date-pickers/time-clock/)
+
+## Uncontrolled vs. controlled value
+
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateTimePickerValue.js"}}
 
-## Responsiveness
+:::info
 
-The `NextDateTimePicker` component is designed and optimized for the device it runs on.
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
 
-- The `MobileNextDateTimePicker` component works best for touch devices and small screens.
-- The `DesktopNextDateTimePicker` component works best for mouse devices and large screens.
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
 
-By default, the `NextDateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
-This can be customized with the `desktopModeMediaQuery` prop.
+## Available components
 
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+The component is available in four variants:
+
+- The `DesktopDateTimePicker` component which works best for mouse devices and large screens.
+  It renders the views inside a popover and allows editing values directly inside the field.
+
+- The `MobileDateTimePicker` component which works best for touch devices and small screens.
+  It renders the view inside a modal and does not allow editing values directly inside the field.
+
+- The `DateTimePicker` component which renders `DesktopDateTimePicker` or `MobileDateTimePicker` depending on the device it runs on.
+
+- The `StaticDateTimePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDateTimePickers.js"}}
 
-## Static mode
+By default, the `DateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+This can be customized with the `desktopModeMediaQuery` prop.
 
-It is also possible to render any date time picker without the modal/popover and text field.
-This will enable building custom popover/modal containers.
-
-{{"demo": "StaticDateTimePickerDemo.js", "bg": true}}
+:::warning
+Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
+Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
+:::
 
 ## Form props
 
-The date time picker component can be disabled or read-only.
+The component can be disabled or read-only.
 
 {{"demo": "FormPropsDateTimePickers.js"}}
 
+## Views
+
+The component supports six views: `day`, `month`, `year`, `hours`, `minutes` and `seconds`.
+
+By default, the `year`, `day`, `hours`, and `minutes` views are enabled.
+Use the `views` prop to change this behavior:
+
+{{"demo": "DateTimePickerViews.js"}}
+
+By default, the component renders the `day` view on mount.
+Use the `openTo` prop to change this behavior:
+
+{{"demo": "DateTimePickerOpenTo.js"}}
+
+:::success
+The views will appear in the order defined by the `views` array.
+If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow
+(e.g. view the default behaviors, the `year` is only accessible when clicking on the toolbar).
+:::
+
+## Landscape orientation
+
+By default, the Date Time Picker component automatically sets the orientation based on the `window.orientation` value.
+
+You can force a specific orientation using the `orientation` prop.
+
+{{"demo": "StaticDateTimePickerLandscape.js", "bg": true}}
+
+:::info
+You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
+:::
+
+## Choose time view renderer
+
+You can use the `viewRenderers` prop to change the view that is used for rendering a view.
+You might be interested in using the [Time Clock](/x/react-date-pickers/time-clock/) instead of the [Digital Clock](/x/react-date-pickers/digital-clock/) or removing the time view rendering altogether in favor of only using the field to input the time.
+
+{{"demo": "DateTimePickerViewRenderers.js"}}
+
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
 
-## Customization
+## Localization
 
-Here are some examples of heavily customized date & time pickers:
-
-{{"demo": "CustomDateTimePicker.js"}}
+You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).

@@ -8,7 +8,7 @@
 
     return null;
   }}
-  components={{
-    Toolbar: CustomToolbar,
+  slots={{
+    toolbar: CustomToolbar,
   }}
 />

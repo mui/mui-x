@@ -66,7 +66,7 @@ In addition to the required `groupId` and `children`, you can use the following 
 
 {{"demo": "CustomizationDemo.js", "bg": "inline"}}
 
-## Column reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Column reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 By default, the columns that are part of a group cannot be dragged to outside their group.
 You can customize this behavior on specific groups by setting `freeReordering: true` in a column group object.
@@ -77,19 +77,27 @@ In the example below, the `Full name` column group can be divided, but not other
 
 ## Manage group visibility 🚧
 
-:::warning
-This feature isn't implemented yet. It's coming.
-:::
-
-The column group should allow to switch between an extended/collapsed view which hide/show some columns
-
-## Reordering groups 🚧[<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+The column group should allow to switch between an extended/collapsed view which hide/show some columns.
 
 :::warning
 This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #6651](https://github.com/mui/mui-x/issues/6651) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
 :::
 
-Users could drag and drop group header to move all the group children at once
+## Column group ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
+
+Users could drag and drop group header to move all the group children at once, [like they can already do it with normal columns](/x/react-data-grid/column-ordering/).
+
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #9448](https://github.com/mui/mui-x/issues/9448) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+:::
 
 ## API
 

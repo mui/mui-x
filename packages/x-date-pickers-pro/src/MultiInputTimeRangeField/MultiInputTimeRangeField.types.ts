@@ -3,22 +3,26 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import {
   UseTimeRangeFieldDefaultizedProps,
   UseTimeRangeFieldProps,
-} from '../internal/models/timeRange';
-import { RangePosition } from '../internal/models/range';
+} from '../internals/models/timeRange';
+import { RangePosition } from '../internals/models/range';
+import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
+import { RangeFieldSection } from '../internals/models/fields';
+import { MultiInputRangeFieldClasses } from '../models';
 
-export interface UseMultiInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: Omit<TChildProps, keyof UseMultiInputTimeRangeFieldProps<TDate>> &
-    UseMultiInputTimeRangeFieldProps<TDate>;
-  startInputProps: TChildProps;
-  endInputProps: TChildProps;
-  startInputRef?: React.Ref<HTMLInputElement>;
-  endInputRef?: React.Ref<HTMLInputElement>;
+export type UseMultiInputTimeRangeFieldParams<
+  TDate,
+  TTextFieldSlotProps extends {},
+> = UseMultiInputRangeFieldParams<UseMultiInputTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
+
+export interface UseMultiInputTimeRangeFieldProps<TDate>
+  extends Omit<UseTimeRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'> {
+  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
-
-export interface UseMultiInputTimeRangeFieldProps<TDate> extends UseTimeRangeFieldProps<TDate> {}
 
 export type UseMultiInputTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
@@ -28,16 +32,21 @@ export type UseMultiInputTimeRangeFieldComponentProps<TDate, TChildProps extends
 
 export interface MultiInputTimeRangeFieldProps<TDate>
   extends UseMultiInputTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
+  autoFocus?: boolean;
   /**
-   * Overrideable components.
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<MultiInputRangeFieldClasses>;
+  /**
+   * Overridable slots.
    * @default {}
    */
-  components?: MultiInputTimeRangeFieldSlotsComponent;
+  slots?: MultiInputTimeRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: MultiInputTimeRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: MultiInputTimeRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type MultiInputTimeRangeFieldOwnerState<TDate> = MultiInputTimeRangeFieldProps<TDate>;
@@ -47,22 +56,24 @@ export interface MultiInputTimeRangeFieldSlotsComponent {
    * Element rendered at the root.
    * @default MultiInputTimeRangeFieldRoot
    */
-  Root?: React.ElementType;
+  root?: React.ElementType;
   /**
-   * Input rendered for the start or end date.
-   * @default TextField
+   * Form control with an input to render a time.
+   * It is rendered twice: once for the start time and once for the end time.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType;
+  textField?: React.ElementType;
   /**
    * Element rendered between the two inputs.
    * @default MultiInputTimeRangeFieldSeparator
    */
-  Separator?: React.ElementType;
+  separator?: React.ElementType;
 }
 
 export interface MultiInputTimeRangeFieldSlotsComponentsProps<TDate> {
   root?: SlotComponentProps<typeof Stack, {}, MultiInputTimeRangeFieldOwnerState<TDate>>;
-  input?: SlotComponentProps<
+  textField?: SlotComponentProps<
     typeof TextField,
     {},
     MultiInputTimeRangeFieldOwnerState<TDate> & { position: RangePosition }
@@ -73,4 +84,5 @@ export interface MultiInputTimeRangeFieldSlotsComponentsProps<TDate> {
 export type UseMultiInputTimeRangeFieldDefaultizedProps<
   TDate,
   AdditionalProps extends {},
-> = UseTimeRangeFieldDefaultizedProps<TDate> & AdditionalProps;
+> = UseTimeRangeFieldDefaultizedProps<TDate> &
+  Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;

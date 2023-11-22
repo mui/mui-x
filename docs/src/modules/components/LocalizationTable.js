@@ -9,29 +9,53 @@ import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 const Root = styled('div')(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
-  width: 'fit-content',
-  paddingLeft: theme.spacing(1),
-  paddingRight: theme.spacing(1),
+  minWidth: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  padding: theme.spacing(0, 1),
   borderRadius: 5,
+  fontWeight: 600,
+  color: (theme.vars || theme).palette.text.secondary,
   '&.low': {
-    color: (theme.vars || theme).palette.error.contrastText,
-    backgroundColor: (theme.vars || theme).palette.error.light,
+    color:
+      theme.palette.mode === 'dark'
+        ? (theme.vars || theme).palette.text.primary
+        : (theme.vars || theme).palette.error.dark,
     '& .progress-bar': {
-      backgroundColor: (theme.vars || theme).palette.error.dark,
+      backgroundColor: (theme.vars || theme).palette.error.main,
+      opacity: 0.3,
+    },
+    '& .progress-background': {
+      border: `1px solid`,
+      borderColor: (theme.vars || theme).palette.error.light,
     },
   },
   '&.medium': {
-    color: (theme.vars || theme).palette.warning.contrastText,
-    backgroundColor: (theme.vars || theme).palette.warning.light,
+    color:
+      theme.palette.mode === 'dark'
+        ? (theme.vars || theme).palette.text.primary
+        : (theme.vars || theme).palette.warning.dark,
     '& .progress-bar': {
-      backgroundColor: (theme.vars || theme).palette.warning.dark,
+      backgroundColor: (theme.vars || theme).palette.warning.main,
+      opacity: theme.palette.mode === 'dark' ? 0.4 : 0.25,
+    },
+    '& .progress-background': {
+      border: `1px solid`,
+      borderColor: (theme.vars || theme).palette.warning.light,
     },
   },
   '&.high': {
-    color: (theme.vars || theme).palette.success.contrastText,
-    backgroundColor: (theme.vars || theme).palette.success.light,
+    color:
+      theme.palette.mode === 'dark'
+        ? (theme.vars || theme).palette.text.primary
+        : (theme.vars || theme).palette.success.dark,
     '& .progress-bar': {
-      backgroundColor: (theme.vars || theme).palette.success.dark,
+      backgroundColor: (theme.vars || theme).palette.success.main,
+      opacity: 0.3,
+    },
+    '& .progress-background': {
+      border: `1px solid`,
+      borderColor: (theme.vars || theme).palette.success.light,
     },
   },
 }));
@@ -48,10 +72,19 @@ const Bar = styled('div')({
   left: 0,
   bottom: 0,
 });
+const Background = styled('div')({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  borderRadius: 5,
+});
 
-const ProgressBar = React.memo(function ProgressBar(props) {
+function ProgressBar(props) {
   const { numerator, denumerator } = props;
-  const valueInPercent = Math.floor((numerator / denumerator) * 100);
+  const valueInPercent =
+    numerator === denumerator ? 100 : Math.floor((numerator / denumerator) * 95);
 
   return (
     <Root
@@ -61,23 +94,25 @@ const ProgressBar = React.memo(function ProgressBar(props) {
         high: valueInPercent > 80,
       })}
     >
+      <Background className="progress-background" />
       <Bar className="progress-bar" style={{ right: `${100 - valueInPercent}%` }} />
-      <Value>{`${numerator}/${denumerator}`}</Value>
+      <Value>{numerator === denumerator ? 'Done 🎉' : `${numerator}/${denumerator}`}</Value>
     </Root>
   );
-});
+}
 
 ProgressBar.propTypes = {
   denumerator: PropTypes.number.isRequired,
   numerator: PropTypes.number.isRequired,
 };
 
-function LocalisationTable(props) {
+export default function LocalisationTable(props) {
   const { data } = props;
   return (
     <MarkdownElement
       sx={{
         width: '100%',
+        px: [2, 0],
       }}
     >
       <table>
@@ -87,7 +122,7 @@ function LocalisationTable(props) {
             <th align="left">BCP 47 language tag</th>
             <th align="left">Import name</th>
             <th align="left">Completion</th>
-            <th align="left">Related file</th>
+            <th align="left">Source file</th>
           </tr>
         </thead>
         <tbody>
@@ -129,5 +164,3 @@ function LocalisationTable(props) {
 LocalisationTable.propTypes = {
   data: PropTypes.array.isRequired,
 };
-
-export default LocalisationTable;

@@ -8,6 +8,9 @@ import {
   DataGridProProps,
   gridClasses,
   GridPinnedPosition,
+  GridColumnGroupingModel,
+  GridColDef,
+  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import {
@@ -17,8 +20,7 @@ import {
   createEvent,
   act,
   userEvent,
-  // @ts-ignore Remove once the test utils are typed
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 // TODO Move to utils
@@ -63,6 +65,9 @@ describe('<DataGridPro /> - Column pinning', () => {
         });
       },
       disconnect: () => {
+        clearTimeout(timeout);
+      },
+      unobserve: () => {
         clearTimeout(timeout);
       },
     };
@@ -143,6 +148,34 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(renderZone!.querySelector('[data-rowindex="0"]')).not.to.have.class('Mui-hovered');
   });
 
+  // https://github.com/mui/mui-x/issues/10176
+  it('should keep .Mui-hovered on the entire row when row is selected and deselected', () => {
+    render(
+      <TestCase
+        initialState={{
+          pinnedColumns: { left: [GRID_CHECKBOX_SELECTION_FIELD], right: ['price16M'] },
+        }}
+        checkboxSelection
+      />,
+    );
+    const leftColumns = document.querySelector(`.${gridClasses['pinnedColumns--left']}`);
+    const rightColumns = document.querySelector(`.${gridClasses['pinnedColumns--right']}`);
+    const renderZone = document.querySelector(`.${gridClasses.virtualScrollerRenderZone}`);
+    const cell = getCell(0, 0);
+
+    fireEvent.mouseEnter(cell);
+    expect(leftColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
+    expect(rightColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
+    expect(renderZone!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
+
+    const checkbox = cell.querySelector('input[type="checkbox"]')!;
+    fireEvent.click(checkbox);
+    fireEvent.click(checkbox);
+    expect(leftColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
+    expect(rightColumns!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
+    expect(renderZone!.querySelector('[data-rowindex="0"]')).to.have.class('Mui-hovered');
+  });
+
   it('should update the render zone offset after resize', function test() {
     if (isJSDOM) {
       // Need layouting
@@ -154,7 +187,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     )!;
     expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
     const columnHeader = getColumnHeaderCell(0);
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
@@ -173,11 +206,26 @@ describe('<DataGridPro /> - Column pinning', () => {
     )!;
     expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
     const columnHeader = getColumnHeaderCell(0);
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
     expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
+  });
+
+  it('should update the render zone offset after pinning the column', function test() {
+    render(<TestCase />);
+    const renderZone = document.querySelector<HTMLDivElement>(
+      `.${gridClasses.virtualScrollerRenderZone}`,
+    )!;
+    expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(0px, 0px, 0px)' });
+
+    const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+    fireEvent.click(menuIconButton);
+
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
+    expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
   });
 
   it('should increase the width of right pinned columns by resizing to the left', function test() {
@@ -189,7 +237,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const columnHeader = getColumnHeaderCell(2);
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
     fireEvent.mouseDown(separator, { clientX: 200 });
     fireEvent.mouseMove(separator, { clientX: 190, buttons: 1 });
     fireEvent.mouseUp(separator);
@@ -207,7 +255,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const columnHeader = getColumnHeaderCell(2);
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
     fireEvent.mouseDown(separator, { clientX: 200 });
     fireEvent.mouseMove(separator, { clientX: 210, buttons: 1 });
     fireEvent.mouseUp(separator);
@@ -373,7 +421,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     );
 
     const computedStyle = window.getComputedStyle(
-      document.querySelector('.MuiDataGrid-pinnedColumns--right') as HTMLElement,
+      document.querySelector<HTMLElement>('.MuiDataGrid-pinnedColumns--right')!,
     );
     const borderLeftColor = computedStyle.getPropertyValue('border-left-color');
     const borderLeftWidth = computedStyle.getPropertyValue('border-left-width');
@@ -458,7 +506,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should not add any button to the column menu', () => {
       render(<TestCase disableColumnPinning />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Pin to right' })).to.equal(null);
@@ -600,13 +648,24 @@ describe('<DataGridPro /> - Column pinning', () => {
         expect(apiRef.current.isColumnPinned('currencyPair')).to.equal(false);
       });
     });
+
+    // See https://github.com/mui/mui-x/issues/7819
+    describe('`getCellElement` method should return cell element', () => {
+      it('should return the correct value', () => {
+        render(
+          <TestCase initialState={{ pinnedColumns: { left: ['id'], right: ['price16M'] } }} />,
+        );
+        const cellElement = apiRef.current.getCellElement(0, 'currencyPair');
+        expect(cellElement).not.to.equal(null);
+      });
+    });
   });
 
   describe('column menu', () => {
     it('should pin the column to the left when clicking the "Pin to left" pinning button', () => {
       render(<TestCase />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect(
@@ -617,7 +676,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should pin the column to the right when clicking the "Pin to right" pinning button', () => {
       render(<TestCase />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect(
@@ -628,7 +687,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect(
@@ -642,7 +701,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should allow to invert the side when clicking on "Pin to left" pinning button on a right pinned column', () => {
       render(<TestCase initialState={{ pinnedColumns: { right: ['id'] } }} />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect(
@@ -656,7 +715,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should allow to unpin a pinned left column when clicking "Unpin" pinning button', () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Unpin' }));
       expect(
@@ -676,7 +735,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       );
 
       const brandHeader = document.querySelector('[role="columnheader"][data-field="brand"]')!;
-      fireEvent.click(brandHeader.querySelector('button[aria-label="Menu"]'));
+      fireEvent.click(brandHeader.querySelector('button[aria-label="Menu"]')!);
       expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).not.to.equal(null);
       fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
 
@@ -685,7 +744,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
 
       const yearHeader = document.querySelector('[role="columnheader"][data-field="year"]')!;
-      fireEvent.click(yearHeader.querySelector('button[aria-label="Menu"]'));
+      fireEvent.click(yearHeader.querySelector('button[aria-label="Menu"]')!);
       expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
     });
   });
@@ -794,6 +853,79 @@ describe('<DataGridPro /> - Column pinning', () => {
         columns: [{ field: 'id' }, { field: 'price1M' }],
       });
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M']);
+    });
+  });
+
+  describe('Column grouping', () => {
+    const columns: GridColDef[] = [
+      { field: 'id', headerName: 'ID', width: 90 },
+      {
+        field: 'firstName',
+        headerName: 'First name',
+        width: 150,
+      },
+      {
+        field: 'lastName',
+        headerName: 'Last name',
+        width: 150,
+      },
+      {
+        field: 'age',
+        headerName: 'Age',
+        type: 'number',
+        width: 110,
+      },
+    ];
+
+    const rows = [
+      { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+      { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+      { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+      { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+      { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+      { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+      { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+      { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+      { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+    ];
+
+    const columnGroupingModel: GridColumnGroupingModel = [
+      {
+        groupId: 'Internal',
+        description: '',
+        children: [{ field: 'id' }],
+      },
+      {
+        groupId: 'Basic info',
+        children: [
+          {
+            groupId: 'Full name',
+            children: [{ field: 'lastName' }, { field: 'firstName' }],
+          },
+          { field: 'age' },
+        ],
+      },
+    ];
+
+    it('should create separate column groups for pinned and non-pinned columns having same column group', () => {
+      render(
+        <TestCase
+          columns={columns}
+          rows={rows}
+          columnGroupingModel={columnGroupingModel}
+          experimentalFeatures={{ columnGrouping: true }}
+          initialState={{ pinnedColumns: { right: ['age'] } }}
+        />,
+      );
+
+      const firstNameLastNameColumnGroupHeader = document.querySelector(
+        '[role="columnheader"][data-fields="|-firstName-|-lastName-|"]',
+      )!;
+      expect(firstNameLastNameColumnGroupHeader.textContent).to.equal('Basic info');
+      const ageCellColumnGroupHeader = document.querySelector(
+        '[role="columnheader"][data-fields="|-age-|"]',
+      )!;
+      expect(ageCellColumnGroupHeader.textContent).to.equal('Basic info');
     });
   });
 });

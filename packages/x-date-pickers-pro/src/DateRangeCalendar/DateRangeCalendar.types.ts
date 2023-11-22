@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/base';
+import { SlotComponentProps } from '@mui/base/utils';
 import { Theme } from '@mui/material/styles';
+import { TimezoneProps } from '@mui/x-date-pickers/models';
+import {
+  PickersCalendarHeader,
+  PickersCalendarHeaderProps,
+  PickersCalendarHeaderSlotsComponent,
+  PickersCalendarHeaderSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   BaseDateValidationProps,
   DefaultizedProps,
@@ -11,33 +18,43 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
   PickerSelectionState,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
   DayCalendarProps,
   ExportedUseViewsOptions,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePositionProps, DayRangeValidationProps } from '../internal/models';
+import { DateRange, DayRangeValidationProps } from '../internals/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
+import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 
 export type DateRangePosition = 'start' | 'end';
 
 export interface DateRangeCalendarSlotsComponent<TDate>
   extends PickersArrowSwitcherSlotsComponent,
-    Omit<DayCalendarSlotsComponent<TDate>, 'Day'>,
+    Omit<DayCalendarSlotsComponent<TDate>, 'day'>,
     PickersCalendarHeaderSlotsComponent {
+  /**
+   * Custom component for calendar header.
+   * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
+   * @default PickersCalendarHeader
+   */
+  calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
   /**
    * Custom component for day in range pickers.
    * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
    * @default DateRangePickersDay
    */
-  Day?: React.ElementType<DateRangePickerDayProps<TDate>>;
+  day?: React.ElementType<DateRangePickerDayProps<TDate>>;
 }
 
 export interface DateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
     Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'>,
     PickersCalendarHeaderSlotsComponentsProps<TDate> {
+  calendarHeader?: SlotComponentProps<
+    typeof PickersCalendarHeader,
+    {},
+    DateRangeCalendarProps<TDate>
+  >;
   day?: SlotComponentProps<
     typeof DateRangePickerDay,
     {},
@@ -49,6 +66,7 @@ export interface ExportedDateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
+    TimezoneProps,
     // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
     Pick<ExportedUseViewsOptions<'day'>, 'autoFocus'> {
   /**
@@ -71,22 +89,26 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   readOnly?: boolean;
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations?: boolean;
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
-  onMonthChange?: (month: TDate) => void | Promise<void>;
+  onMonthChange?: (month: TDate) => void;
   /**
    * The number of calendars to render.
    * @default 2
    */
   calendars?: 1 | 2 | 3;
+  /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition?: 1 | 2 | 3;
   /**
    * If `true`, editing dates by dragging is disabled.
    * @default false
@@ -96,7 +118,7 @@ export interface ExportedDateRangeCalendarProps<TDate>
 
 export interface DateRangeCalendarProps<TDate>
   extends ExportedDateRangeCalendarProps<TDate>,
-    Partial<RangePositionProps> {
+    UseRangePositionProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -107,6 +129,11 @@ export interface DateRangeCalendarProps<TDate>
    * Used when the component is not controlled.
    */
   defaultValue?: DateRange<TDate>;
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate?: TDate;
   /**
    * Callback fired when the value changes.
    * @template TDate
@@ -121,15 +148,15 @@ export interface DateRangeCalendarProps<TDate>
    */
   sx?: SxProps<Theme>;
   /**
-   * Overrideable components.
+   * Overridable component slots.
    * @default {}
    */
-  components?: DateRangeCalendarSlotsComponent<TDate>;
+  slots?: DateRangeCalendarSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+  slotProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
 }
 
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {

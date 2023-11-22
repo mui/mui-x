@@ -16,7 +16,6 @@ import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridE
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
-import type { GridEditRowsModel } from '../gridEditRowModel';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
@@ -25,6 +24,7 @@ import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
+import { GridPaginationModel } from '../gridPaginationProps';
 
 export interface GridRowEventLookup {
   /**
@@ -44,6 +44,14 @@ export interface GridRowEventLookup {
    * Fired when the mouse leaves the row. Called with a [[GridRowParams]] object.
    */
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
+   * @ignore - do not document.
+   */
+  rowMouseOut: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
+   * @ignore - do not document.
+   */
+  rowMouseOver: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   /**
    * Fired when the user starts dragging a row. It's mapped to the `dragstart` DOM event.
    * @ignore - do not document.
@@ -176,12 +184,62 @@ export interface GridColumnHeaderEventLookup {
     event: React.DragEvent<HTMLElement>;
   };
   /**
+   * Fired when a `dblclick` DOM event happens in the column header separator.
+   * @ignore - do not document.
+   */
+  columnSeparatorDoubleClick: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
    * Fired when a `mousedown` DOM event happens in the column header separator.
    * @ignore - do not document.
    */
   columnSeparatorMouseDown: {
     params: GridColumnHeaderParams;
     event: React.MouseEvent<HTMLElement>;
+  };
+  /**
+   * Fired when the index of a column changes.
+   * @ignore - do not document.
+   */
+  columnIndexChange: {
+    params: GridColumnOrderChangeParams;
+  };
+}
+
+export interface GridHeaderFilterEventLookup {
+  /**
+   * Fired when a column header filter is clicked
+   * @ignore - do not document.
+   */
+  headerFilterClick: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a key is pressed in a column header filter. It's mapped to the `keydown` DOM event.
+   * @ignore - do not document.
+   */
+  headerFilterKeyDown: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a mouse is pressed in a column header filter. It's mapped to the `mousedown` DOM event.
+   * @ignore - do not document.
+   */
+  headerFilterMouseDown: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column header filter is blurred.
+   * @ignore - do not document.
+   */
+  headerFilterBlur: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
   };
 }
 
@@ -215,49 +273,49 @@ export interface GridCellEventLookup {
    * Fired when a cell is clicked.
    */
   cellClick: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a cell is double-clicked.
    */
   cellDoubleClick: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mousedown` event happens in a cell.
    */
   cellMouseDown: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mouseup` event happens in a cell.
    */
   cellMouseUp: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mouseover` event happens in a cell.
    */
   cellMouseOver: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `keydown` event happens in a cell.
    */
   cellKeyDown: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
    * Fired when a `keyup` event happens in a cell.
    */
   cellKeyUp: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
@@ -265,7 +323,7 @@ export interface GridCellEventLookup {
    * @ignore - do not document.
    */
   cellDragEnter: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.DragEvent<HTMLElement>;
   };
   /**
@@ -274,20 +332,16 @@ export interface GridCellEventLookup {
    * @ignore - do not document.
    */
   cellDragOver: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.DragEvent<HTMLElement>;
   };
 }
 
 export interface GridControlledStateEventLookup {
   /**
-   * Fired when the page size changes.
+   * Fired when the pagination model changes.
    */
-  pageSizeChange: { params: number };
-  /**
-   * Fired when the page changes.
-   */
-  pageChange: { params: number };
+  paginationModelChange: { params: GridPaginationModel };
   /**
    * Fired when the filter model changes.
    */
@@ -296,10 +350,6 @@ export interface GridControlledStateEventLookup {
    * Fired when the sort model changes.
    */
   sortModelChange: { params: GridSortModel };
-  /**
-   * Fired when the row editing model changes.
-   */
-  editRowsModelChange: { params: GridEditRowsModel };
   /**
    * Fired when the selection state of one or multiple rows changes.
    */
@@ -317,11 +367,13 @@ export interface GridControlledStateReasonLookup {
     | 'deleteFilterItem'
     | 'changeLogicOperator'
     | 'restoreState';
+  pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
 }
 
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,
+    GridHeaderFilterEventLookup,
     GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
@@ -329,10 +381,6 @@ export interface GridEventLookup
    * Fired when the grid is unmounted.
    */
   unmount: {};
-  /**
-   * Fired when an exception is thrown in the grid.
-   */
-  componentError: { params: any };
   /**
    * Fired when the state of the grid is updated.
    */
@@ -409,7 +457,6 @@ export interface GridEventLookup
   sortedRowsSet: {};
   /**
    * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
-   * @ignore - do not document.
    */
   rowExpansionChange: { params: GridGroupNode };
   /**
@@ -422,7 +469,7 @@ export interface GridEventLookup
    * Fired when the mode of a cell changes.
    * @ignore - do not document
    */
-  cellModeChange: { params: GridCellParams };
+  cellModeChange: { params: GridCellParams<any> };
   /**
    * Fired when the model that controls the cell modes changes.
    */
@@ -467,12 +514,14 @@ export interface GridEventLookup
   // Focus
   /**
    * Fired when a cell gains focus.
+   * @ignore - do not document.
    */
-  cellFocusIn: { params: GridCellParams };
+  cellFocusIn: { params: GridCellParams<any> };
   /**
    * Fired when a cell loses focus.
+   * @ignore - do not document.
    */
-  cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
+  cellFocusOut: { params: GridCellParams<any>; event: MuiBaseEvent };
 
   // Scroll
   /**
@@ -499,16 +548,22 @@ export interface GridEventLookup
 
   // Selection
   /**
-   * Fired when the value of the selection checkbox of the header is changed
+   * Fired when the value of the selection checkbox of the header is changed.
    */
   headerSelectionCheckboxChange: { params: GridHeaderSelectionCheckboxParams };
   /**
-   * Fired when the value of the selection checkbox of a row is changed
+   * Fired when the value of the selection checkbox of a row is changed.
    */
   rowSelectionCheckboxChange: {
     params: GridRowSelectionCheckboxParams;
     event: React.ChangeEvent<HTMLElement>;
   };
+
+  // Clipboard
+  /**
+   * Fired when the data is copied to the clipboard.
+   */
+  clipboardCopy: { params: string };
 
   // PreferencePanel
   /**

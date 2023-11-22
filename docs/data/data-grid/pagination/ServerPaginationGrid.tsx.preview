@@ -3,11 +3,8 @@
   {...data}
   rowCount={rowCountState}
   loading={isLoading}
-  rowsPerPageOptions={[5]}
-  pagination
-  page={page}
-  pageSize={pageSize}
+  pageSizeOptions={[5]}
+  paginationModel={paginationModel}
   paginationMode="server"
-  onPageChange={(newPage) => setPage(newPage)}
-  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+  onPaginationModelChange={setPaginationModel}
 />

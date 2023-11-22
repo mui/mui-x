@@ -18,7 +18,6 @@ interface GridColumnGroupHeaderProps {
   fields: string[];
   colIndex: number; // TODO: use this prop to get accessible column group
   isLastColumn: boolean;
-  extendRowFullWidth: boolean;
   depth: number;
   maxDepth: number;
   height: number;
@@ -28,7 +27,6 @@ interface GridColumnGroupHeaderProps {
 
 type OwnerState = {
   groupId: GridColumnGroupHeaderProps['groupId'];
-  showRightBorder: boolean;
   showColumnBorder: boolean;
   isDragging: boolean;
   headerAlign?: GridAlignment;
@@ -36,8 +34,7 @@ type OwnerState = {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, headerAlign, isDragging, showRightBorder, showColumnBorder, groupId } =
-    ownerState;
+  const { classes, headerAlign, isDragging, showColumnBorder, groupId } = ownerState;
 
   const slots = {
     root: [
@@ -46,8 +43,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       headerAlign === 'center' && 'columnHeader--alignCenter',
       headerAlign === 'right' && 'columnHeader--alignRight',
       isDragging && 'columnHeader--moving',
-      showRightBorder && 'columnHeader--withRightBorder',
       showColumnBorder && 'columnHeader--showColumnBorder',
+      showColumnBorder && 'columnHeader--withRightBorder',
       'withBorderColor',
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
     ],
@@ -71,7 +68,6 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     hasFocus,
     tabIndex,
     isLastColumn,
-    extendRowFullWidth,
   } = props;
 
   const rootProps = useGridRootProps();
@@ -79,10 +75,6 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
   const columnGroupsLookup = useGridSelector(apiRef, gridColumnGroupsLookupSelector);
-  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
-    hasScrollX: false,
-    hasScrollY: false,
-  };
 
   const group: Partial<GridColumnGroup> = groupId ? columnGroupsLookup[groupId] : {};
 
@@ -108,17 +100,11 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     headerComponent = render(renderParams);
   }
 
-  const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
-  const showRightBorder = !isLastColumn
-    ? rootProps.showColumnVerticalBorder
-    : !removeLastBorderRight && !extendRowFullWidth;
-
   const showColumnBorder = rootProps.showColumnVerticalBorder;
 
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showRightBorder,
     showColumnBorder,
     headerAlign,
     depth,

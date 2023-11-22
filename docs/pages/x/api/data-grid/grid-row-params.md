@@ -2,6 +2,15 @@
 
 <p class="description">Object passed as parameter in the row callbacks.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Master detail](/x/react-data-grid/master-detail/)
+
+:::
+
 ## Import
 
 ```js

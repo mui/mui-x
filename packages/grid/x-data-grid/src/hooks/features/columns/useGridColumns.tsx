@@ -2,7 +2,6 @@ import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
-import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -30,21 +29,23 @@ import {
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   hydrateColumnsWidth,
-  computeColumnTypes,
   createColumnsState,
   mergeColumnsState,
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
 import { GridPreferencePanelsValue } from '../preferencesPanel';
+import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
+import { getGridDefaultColumnTypes } from '../../../colDef';
+import type { GridStateColDef } from '../../../models/colDef/gridColDef';
+
+const defaultColumnTypes = getGridDefaultColumnTypes();
 
 export const columnsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columnTypes' | 'columns'>
+  Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
 > = (state, props, apiRef) => {
-  const columnsTypes = computeColumnTypes(props.columnTypes);
-
   const columnsState = createColumnsState({
     apiRef,
-    columnTypes: columnsTypes,
+    columnTypes: defaultColumnTypes,
     columnsToUpsert: props.columns,
     initialState: props.initialState?.columns,
     columnVisibilityModel:
@@ -71,19 +72,15 @@ export function useGridColumns(
     | 'columns'
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
-    | 'columnTypes'
-    | 'components'
-    | 'componentsProps'
+    | 'slots'
+    | 'slotProps'
     | 'disableColumnSelector'
     | 'signature'
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
 
-  const columnTypes = React.useMemo(
-    () => computeColumnTypes(props.columnTypes),
-    [props.columnTypes],
-  );
+  const columnTypes = defaultColumnTypes;
 
   const previousColumnsProp = React.useRef(props.columns);
   const previousColumnTypesProp = React.useRef(columnTypes);
@@ -194,10 +191,20 @@ export function useGridColumns(
     [apiRef],
   );
 
+  const getColumnIndexRelativeToVisibleColumns = React.useCallback<
+    GridColumnApi['getColumnIndexRelativeToVisibleColumns']
+  >(
+    (field) => {
+      const allColumns = gridColumnFieldsSelector(apiRef);
+      return allColumns.findIndex((col) => col === field);
+    },
+    [apiRef],
+  );
+
   const setColumnIndex = React.useCallback<GridColumnReorderApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
       const allColumns = gridColumnFieldsSelector(apiRef);
-      const oldIndexPosition = allColumns.findIndex((col) => col === field);
+      const oldIndexPosition = getColumnIndexRelativeToVisibleColumns(field);
       if (oldIndexPosition === targetIndexPosition) {
         return;
       }
@@ -213,24 +220,35 @@ export function useGridColumns(
       });
 
       const params: GridColumnOrderChangeParams = {
-        field,
-        element: apiRef.current.getColumnHeaderElement(field),
-        colDef: apiRef.current.getColumn(field),
-        targetIndex: targetIndexPosition,
+        column: apiRef.current.getColumn(field),
+        targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(field),
         oldIndex: oldIndexPosition,
       };
-      apiRef.current.publishEvent('columnOrderChange', params);
+      apiRef.current.publishEvent('columnIndexChange', params);
     },
-    [apiRef, logger, setGridColumnsState],
+    [apiRef, logger, setGridColumnsState, getColumnIndexRelativeToVisibleColumns],
   );
 
   const setColumnWidth = React.useCallback<GridColumnApi['setColumnWidth']>(
     (field, width) => {
       logger.debug(`Updating column ${field} width to ${width}`);
 
-      const column = apiRef.current.getColumn(field);
-      const newColumn = { ...column, width };
-      apiRef.current.updateColumns([newColumn]);
+      const columnsState = gridColumnsStateSelector(apiRef.current.state);
+      const column = columnsState.lookup[field];
+      const newColumn: GridStateColDef = { ...column, width, hasBeenResized: true };
+
+      setGridColumnsState(
+        hydrateColumnsWidth(
+          {
+            ...columnsState,
+            lookup: {
+              ...columnsState.lookup,
+              [field]: newColumn,
+            },
+          },
+          apiRef.current.getRootDimensions()?.viewportInnerSize.width ?? 0,
+        ),
+      );
 
       apiRef.current.publishEvent('columnWidthChange', {
         element: apiRef.current.getColumnHeaderElement(field),
@@ -238,7 +256,7 @@ export function useGridColumns(
         width,
       });
     },
-    [apiRef, logger],
+    [apiRef, logger, setGridColumnsState],
   );
 
   const columnApi: GridColumnApi = {
@@ -247,6 +265,7 @@ export function useGridColumns(
     getColumnIndex,
     getColumnPosition,
     getVisibleColumns,
+    getColumnIndexRelativeToVisibleColumns,
     updateColumns,
     setColumnVisibilityModel,
     setColumnVisibility,
@@ -271,7 +290,7 @@ export function useGridColumns(
 
       const columnVisibilityModelToExport = gridColumnVisibilityModelSelector(apiRef);
       const shouldExportColumnVisibilityModel =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
         props.columnVisibilityModel != null ||
@@ -346,13 +365,13 @@ export function useGridColumns(
   const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
       if (value === GridPreferencePanelsValue.columns) {
-        const ColumnsPanel = props.components.ColumnsPanel;
-        return <ColumnsPanel {...props.componentsProps?.columnsPanel} />;
+        const ColumnsPanel = props.slots.columnsPanel;
+        return <ColumnsPanel {...props.slotProps?.columnsPanel} />;
       }
 
       return initialValue;
     },
-    [props.components.ColumnsPanel, props.componentsProps?.columnsPanel],
+    [props.slots.columnsPanel, props.slotProps?.columnsPanel],
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
@@ -361,7 +380,7 @@ export function useGridColumns(
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuColumnsItem'];
+      return [...columnMenuItems, 'columnMenuColumnsItem'];
     },
     [props.disableColumnSelector],
   );

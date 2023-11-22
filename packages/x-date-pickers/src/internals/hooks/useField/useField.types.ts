@@ -1,31 +1,43 @@
 import * as React from 'react';
-import { MuiDateSectionName, MuiPickersAdapter } from '../../models';
-import { PickerStateValueManager } from '../usePickerState';
-import { InferError, Validator } from '../validation/useValidation';
-import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
+import { SlotComponentProps } from '@mui/base/utils';
+import IconButton from '@mui/material/IconButton';
+import { ClearIcon } from '../../../icons';
+import {
+  FieldSectionType,
+  FieldSection,
+  FieldSelectedSections,
+  MuiPickersAdapter,
+  TimezoneProps,
+  FieldSectionContentType,
+  FieldValueType,
+  PickersTimezone,
+} from '../../../models';
+import type { PickerValueManager } from '../usePicker';
+import { InferError, Validator } from '../useValidation';
 
 export interface UseFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 > {
   inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
-  valueManager: PickerStateValueManager<TValue, TDate, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
+  valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
+  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
   validator: Validator<
     TValue,
     TDate,
     InferError<TInternalProps>,
     UseFieldValidationProps<TValue, TInternalProps>
   >;
-  supportedDateSections: MuiDateSectionName[];
+  valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TError> {
+export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError>
+  extends TimezoneProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -36,15 +48,23 @@ export interface UseFieldInternalProps<TValue, TError> {
    */
   defaultValue?: TValue;
   /**
+   * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
+   * For example, on time fields it will be used to determine the date to set.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
+   */
+  referenceDate?: TDate;
+  /**
    * Callback fired when the value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange?: FieldChangeHandler<TValue, TError>;
   /**
    * Callback fired when the error associated to the current value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} error The new error.
    * @param {TValue} value The value associated to the error.
    */
@@ -53,6 +73,27 @@ export interface UseFieldInternalProps<TValue, TError> {
    * Format of the date when rendered in the input(s).
    */
   format: string;
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity?: 'dense' | 'spacious';
+  /**
+   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   *
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+   *
+   * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
+   * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.
+   *
+   * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
+   * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
+   *
+   * @default `false`
+   */
+  shouldRespectLeadingZeros?: boolean;
   /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
@@ -64,7 +105,7 @@ export interface UseFieldInternalProps<TValue, TError> {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -74,14 +115,56 @@ export interface UseFieldInternalProps<TValue, TError> {
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange?: (newValue: FieldSelectedSections) => void;
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
+  unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  /**
+   * Callback fired when the clear button is clicked.
+   */
+  onClear?: React.MouseEventHandler;
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable?: boolean;
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
+}
+
+export interface FieldRef<TSection extends FieldSection> {
+  /**
+   * Returns the sections of the current value.
+   * @returns {TSection[]} The sections of the current value.
+   */
+  getSections: () => TSection[];
+  /**
+   * Returns the index of the active section (the first focused section).
+   * If no section is active, returns `null`.
+   * @returns {number | null} The index of the active section.
+   */
+  getActiveSectionIndex: () => number | null;
+  /**
+   * Updates the selected sections.
+   * @param {FieldSelectedSections} selectedSections The sections to select.
+   */
+  setSelectedSections: (selectedSections: FieldSelectedSections) => void;
 }
 
 export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
-  onClick?: () => void;
+  onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
+  onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onBlur?: () => void;
+  error?: boolean;
+  onClear?: React.MouseEventHandler;
+  clearable?: boolean;
+  disabled?: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -89,58 +172,32 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
   keyof UseFieldForwardedProps
 > &
   Required<UseFieldForwardedProps> &
-  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode'> & {
+  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
     ref: React.Ref<HTMLInputElement>;
     value: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
     readOnly: boolean;
+    autoComplete: 'off';
   };
 
-export interface FieldSection {
-  /**
-   * Start index of the section in the format
-   */
-  start: number;
-  /**
-   * End index of the section in the format
-   */
-  end: number;
-  /**
-   * Start index of the section value in the input.
-   * Takes into account invisible unicode characters such as \u2069 but does not include them
-   */
-  startInInput: number;
-  /**
-   * End index of the section value in the input.
-   * Takes into account invisible unicode characters such as \u2069 but does not include them
-   */
-  endInInput: number;
-  value: string;
-  placeholder: string;
-  /**
-   * Separator displayed before the value of the section in the input.
-   * If it contains escaped characters, then it must not have the escaping characters.
-   * For example, on Day.js, the `year` section of the format `YYYY [year]` has an end separator equal to `year` not `[year]`
-   */
-  startSeparator: string;
-  /**
-   * Separator displayed after the value of the section in the input.
-   * If it contains escaped characters, then it must not have the escaping characters.
-   * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
-   */
-  endSeparator: string;
-  dateSectionName: MuiDateSectionName;
-  contentType: 'digit' | 'letter';
-  formatValue: string;
-  edited: boolean;
-  hasTrailingZeroes: boolean;
-}
-
-export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
-  MuiDateSectionName,
-  (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
+export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSection> = Omit<
+  TSection,
+  'start' | 'end' | 'startInInput' | 'endInInput'
 >;
+
+export type FieldSectionValueBoundaries<TDate, SectionType extends FieldSectionType> = {
+  minimum: number;
+  maximum: number;
+} & (SectionType extends 'day' ? { longestMonth: TDate } : {});
+
+export type FieldSectionsValueBoundaries<TDate> = {
+  [SectionType in FieldSectionType]: (params: {
+    currentDate: TDate | null;
+    format: string;
+    contentType: FieldSectionContentType;
+  }) => FieldSectionValueBoundaries<TDate, SectionType>;
+};
 
 export type FieldChangeHandler<TValue, TError> = (
   value: TValue,
@@ -152,25 +209,32 @@ export interface FieldChangeHandlerContext<TError> {
 }
 
 /**
- * Object used to access and update the active value.
+ * Object used to access and update the active date (i.e: the date containing the active section).
  * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
  */
-interface FieldActiveDateManager<TValue, TDate> {
+interface FieldActiveDateManager<TValue, TDate, TSection extends FieldSection> {
   /**
-   * Date containing the current active section.
+   * Active date from `state.value`.
    */
-  activeDate: TDate | null;
+  date: TDate | null;
   /**
-   * Reference date containing the current active section.
+   * Active date from the `state.referenceValue`.
    */
-  referenceActiveDate: TDate;
+  referenceDate: TDate;
+  /**
+   * @template TSection
+   * @param  {TSection[]} sections The sections of the full value.
+   * @returns {TSection[]} The sections of the active date.
+   * Get the sections of the active date.
+   */
+  getSections: (sections: TSection[]) => TSection[];
   /**
    * Creates the new value and reference value based on the new active date and the current state.
    * @template TValue, TDate
    * @param {TDate | null} newActiveDate The new value of the date containing the active section.
    * @returns {Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
    */
-  getNewValueFromNewActiveDate: (
+  getNewValuesFromNewActiveDate: (
     newActiveDate: TDate | null,
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
 }
@@ -185,62 +249,46 @@ export type FieldSelectedSectionsIndexes = {
   shouldSelectBoundarySelectors?: boolean;
 };
 
-export type FieldSelectedSections =
-  | number
-  | MuiDateSectionName
-  | null
-  | 'all'
-  | { startIndex: number; endIndex: number };
-
-export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
+export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
    * @template TValue, TDate, TSection
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @param {PickersLocaleText<TDate>} localeText The localization object to generate the placeholders.
-   * @param {TSection[] | null} prevSections The last section list stored in state.
    * @param {TValue} value The current value to generate sections from.
-   * @param {string} format The date format.
+   * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
+   * @param {boolean} isRTL `true` if the direction is "right to left".
+   * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
    */
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
-    localeText: PickersLocaleText<TDate>,
-    prevSections: TSection[] | null,
     value: TValue,
-    format: string,
+    fallbackSections: TSection[] | null,
+    isRTL: boolean,
+    getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
   ) => TSection[];
   /**
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
+   * @param {boolean} isRTL `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (sections: TSection[]) => string;
-  /**
-   * Filter the section list to only keep the sections in the same date as the active section.
-   * On a single date field does nothing.
-   * On a range date range, returns the sections of the start date if editing the start date and the end date otherwise.
-   * @template TSection
-   * @param {TSection[]} sections The full section list.
-   * @param {TSection} activeSection The active section.
-   * @returns {TSection[]} The sections in the same date as the active section.
-   */
-  getActiveDateSections: (sections: TSection[], activeSection: TSection) => TSection[];
+  getValueStrFromSections: (sections: TSection[], isRTL: boolean) => string;
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {UseFieldState<TValue, TSection>} state The current state of the field.
    * @param {TSection} activeSection The active section.
-   * @returns {FieldActiveDateManager<TValue, TDate>} The manager of the active date.
+   * @returns {FieldActiveDateManager<TValue, TDate, TSection>} The manager of the active date.
    */
   getActiveDateManager: (
     utils: MuiPickersAdapter<TDate>,
     state: UseFieldState<TValue, TSection>,
     activeSection: TSection,
-  ) => FieldActiveDateManager<TValue, TDate>;
+  ) => FieldActiveDateManager<TValue, TDate, TSection>;
   /**
    * Parses a string version (most of the time coming from the input).
    * This method should only be used when the change does not come from a single section.
@@ -269,28 +317,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     value: TValue,
     prevReferenceValue: TValue,
   ) => TValue;
-  /**
-   * Checks if the current error is empty or not.
-   * @template TError
-   * @param {TError} error The current error.
-   * @returns {boolean} `true` if the current error is not empty.
-   */
-  hasError: (error: TError) => boolean;
-  /**
-   * Return a description of sections display order. This description is usefull in RTL mode.
-   * @template TDate
-   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @param {PickersLocaleText<TDate>} localeText The translation object.
-   * @param {string} format The format from which sections are computed.
-   * @param {boolean} isRTL Is the field in right-to-left orientation.
-   * @returns {SectionOrdering} The description of sections order from left to right.
-   */
-  getSectionOrder: (
-    utils: MuiPickersAdapter<TDate>,
-    localeText: PickersLocaleText<TDate>,
-    format: string,
-    isRTL: boolean,
-  ) => SectionOrdering;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {
@@ -324,8 +350,11 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
 
 export type UseFieldValidationProps<
   TValue,
-  TInternalProps extends { value?: TValue; defaultValue?: TValue },
-> = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TValue };
+  TInternalProps extends { value?: TValue; defaultValue?: TValue; timezone?: PickersTimezone },
+> = Omit<TInternalProps, 'value' | 'defaultValue' | 'timezone'> & {
+  value: TValue;
+  timezone: PickersTimezone;
+};
 
 export type AvailableAdjustKeyCode =
   | 'ArrowUp'
@@ -362,3 +391,21 @@ export type SectionOrdering = {
    */
   endIndex: number;
 };
+
+export interface FieldSlotsComponents {
+  /**
+   * Icon to display inside the clear button.
+   * @default ClearIcon
+   */
+  clearIcon?: React.ElementType;
+  /**
+   * Button to clear the value.
+   * @default IconButton
+   */
+  clearButton?: React.ElementType;
+}
+
+export interface FieldSlotsComponentsProps {
+  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
+  clearButton?: SlotComponentProps<typeof IconButton, {}, {}>;
+}

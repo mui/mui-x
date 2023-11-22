@@ -1,24 +1,32 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Calendar component
 components: DateCalendar, MonthCalendar, YearCalendar, PickersDay, DayCalendarSkeleton
-githubLabel: 'component: pickers'
+githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 ---
 
 # Date Calendar
 
-<p class="description">The date calendar lets the user select a date without any input or popper / modal.</p>
+<p class="description">The Date Calendar component lets users select a date without any input or popper / modal.</p>
 
 ## Basic usage
 
 {{"demo": "BasicDateCalendar.js"}}
 
-## Uncontrolled vs. Controlled
+## Uncontrolled vs. controlled value
 
-The component can be uncontrolled or controlled
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateCalendarValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
 
 ## Form props
 
@@ -35,6 +43,19 @@ You can customize the enabled views using the `views` prop.
 Views will appear in the order they're included in the `views` array.
 
 {{"demo": "DateCalendarViews.js"}}
+
+## Choose the initial year / month
+
+If `value` or `defaultValue` contains a valid date, this date will be used to choose which month to render in the `day` view and which year to render in the `month` view.
+If both `value` and `defaultValue` contain no valid date, the component will try to find a month and year that satisfies the validation rules.
+
+You can override this date using the `referenceDate`, in the example below the calendar renders April 2022 even though no date is visually selected:
+
+{{"demo": "DateCalendarReferenceDate.js"}}
+
+:::success
+Learn more about the `referenceDate` in the [dedicated doc section](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined).
+:::
 
 ## Month and Year Calendar
 
@@ -61,12 +82,11 @@ You can also customize what's rendered as a calendar week number, using a callba
 
 {{"demo": "AddWeekNumber.js"}}
 
-### Custom day rendering
+### Week picker
 
-The displayed days are customizable with the `Day` component slot.
-You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
+You can select the whole week using the `day` component slot:
 
-{{"demo": "CustomDay.js"}}
+{{"demo": "WeekPicker.js"}}
 
 ## Dynamic data
 
@@ -81,4 +101,4 @@ You can find the documentation in the [Validation page](/x/react-date-pickers/va
 
 ## Localization
 
-You can find the documentation about localization in the [Date localization](/x/react-date-pickers/adapters-locale/) and [Component localization](/x/react-date-pickers/localization/).
+You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).

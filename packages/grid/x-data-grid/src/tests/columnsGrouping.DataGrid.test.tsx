@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, ErrorBoundary, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, ErrorBoundary, screen } from '@mui-internal/test-utils';
 import { DataGrid, DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -286,6 +285,47 @@ describe('<DataGrid /> - Column grouping', () => {
         },
       });
     });
+
+    // See https://github.com/mui/mui-x/issues/8602
+    it('should not throw when both `columns` and `columnGroupingModel` are updated', () => {
+      const defaultProps = getDefaultProps(2);
+      const { setProps } = render(
+        <TestDataGrid
+          nbColumns={0}
+          {...defaultProps}
+          columnGroupingModel={[
+            {
+              groupId: 'testGroup',
+              children: [{ field: 'col1' }, { field: 'col2' }],
+            },
+          ]}
+        />,
+      );
+
+      setProps({
+        columns: [...defaultProps.columns, { field: 'newColumn' }],
+        columnGroupingModel: [
+          {
+            groupId: 'testGroup',
+            children: [{ field: 'col1' }, { field: 'col2' }, { field: 'newColumn' }],
+          },
+        ],
+      });
+
+      const row1Headers = document.querySelectorAll<HTMLElement>(
+        '[aria-rowindex="1"] [role="columnheader"]',
+      );
+      const row2Headers = document.querySelectorAll<HTMLElement>(
+        '[aria-rowindex="2"] [role="columnheader"]',
+      );
+
+      expect(
+        Array.from(row1Headers).map((header) => header.getAttribute('aria-colindex')),
+      ).to.deep.equal(['1']);
+      expect(
+        Array.from(row2Headers).map((header) => header.getAttribute('aria-colindex')),
+      ).to.deep.equal(['1', '2', '3']);
+    });
   });
 
   // TODO: remove the skip. I failed to test if an error is thrown
@@ -293,7 +333,7 @@ describe('<DataGrid /> - Column grouping', () => {
   describe.skip('error messages', () => {
     function TestWithError(props: TestDataGridProps) {
       return (
-        <ErrorBoundary logger={console}>
+        <ErrorBoundary>
           <TestDataGrid {...props} />
         </ErrorBoundary>
       );

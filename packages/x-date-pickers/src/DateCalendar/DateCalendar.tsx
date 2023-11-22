@@ -1,146 +1,34 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, Theme, useThemeProps } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
+import { useSlotProps } from '@mui/base/utils';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useId as useId,
   unstable_useEventCallback as useEventCallback,
-  unstable_useControlled as useControlled,
 } from '@mui/utils';
+import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import {
-  DayCalendar,
-  DayCalendarSlotsComponent,
-  DayCalendarSlotsComponentsProps,
-  ExportedDayCalendarProps,
-} from './DayCalendar';
+import { DayCalendar } from './DayCalendar';
 import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
-import { ExportedUseViewsOptions, useViews } from '../internals/hooks/useViews';
+import { useViews } from '../internals/hooks/useViews';
+import { PickersCalendarHeader, PickersCalendarHeaderProps } from '../PickersCalendarHeader';
 import {
-  PickersCalendarHeader,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
-} from './PickersCalendarHeader';
-import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/date-utils';
-import { DateView } from '../internals/models';
+  findClosestEnabledDate,
+  applyDefaultDate,
+  mergeDateAndTime,
+} from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
-import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
-import {
-  BaseDateValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-} from '../internals/hooks/validation/models';
-import { DefaultizedProps } from '../internals/models/helpers';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
-
-export interface DateCalendarSlotsComponent<TDate>
-  extends PickersCalendarHeaderSlotsComponent,
-    DayCalendarSlotsComponent<TDate> {}
-
-export interface DateCalendarSlotsComponentsProps<TDate>
-  extends PickersCalendarHeaderSlotsComponentsProps<TDate>,
-    DayCalendarSlotsComponentsProps<TDate> {}
-
-export interface ExportedDateCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    DayValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    MonthValidationProps<TDate> {
-  /**
-   * Default calendar month displayed when `value={null}`.
-   */
-  defaultCalendarMonth?: TDate;
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
-  /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
-   */
-  reduceAnimations?: boolean;
-  /**
-   * Component displaying when passed `loading` true.
-   * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
-   */
-  renderLoading?: () => React.ReactNode;
-  /**
-   * Callback firing on year change @DateIOType.
-   * @template TDate
-   * @param {TDate} year The new year.
-   */
-  onYearChange?: (year: TDate) => void;
-  /**
-   * Callback firing on month change @DateIOType.
-   * @template TDate
-   * @param {TDate} month The new month.
-   * @returns {void|Promise} -
-   */
-  onMonthChange?: (month: TDate) => void | Promise<void>;
-}
-
-export interface DateCalendarProps<TDate>
-  extends ExportedDateCalendarProps<TDate>,
-    ExportedUseViewsOptions<DateView> {
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: TDate | null;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: TDate | null;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
-   */
-  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
-  className?: string;
-  classes?: Partial<DateCalendarClasses>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: DateCalendarSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: DateCalendarSlotsComponentsProps<TDate>;
-}
-
-export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<
-  DateCalendarProps<TDate>,
-  | 'views'
-  | 'openTo'
-  | 'loading'
-  | 'reduceAnimations'
-  | 'renderLoading'
-  | keyof BaseDateValidationProps<TDate>
->;
+import { useDefaultReduceAnimations } from '../internals/hooks/useDefaultReduceAnimations';
+import { getDateCalendarUtilityClass } from './dateCalendarClasses';
+import { BaseDateValidationProps } from '../internals/models/validation';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -158,20 +46,22 @@ function useDateCalendarDefaultizedProps<TDate>(
 ): DateCalendarDefaultizedProps<TDate> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
+  const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
     name,
   });
 
   return {
-    loading: false,
-    disablePast: false,
-    disableFuture: false,
-    openTo: 'day',
-    views: ['year', 'day'],
-    reduceAnimations: defaultReduceAnimations,
-    renderLoading: () => <span data-mui-test="loading-progress">...</span>,
     ...themeProps,
+    loading: themeProps.loading ?? false,
+    disablePast: themeProps.disablePast ?? false,
+    disableFuture: themeProps.disableFuture ?? false,
+    openTo: themeProps.openTo ?? 'day',
+    views: themeProps.views ?? ['year', 'day'],
+    reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
+    renderLoading:
+      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -184,6 +74,7 @@ const DateCalendarRoot = styled(PickerViewRoot, {
 })<{ ownerState: DateCalendarProps<any> }>({
   display: 'flex',
   flexDirection: 'column',
+  height: VIEW_HEIGHT,
 });
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
@@ -194,13 +85,14 @@ const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
 
 type DateCalendarComponent = (<TDate>(
   props: DateCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 /**
- *
  * Demos:
  *
- * - [Date Picker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
  *
  * API:
  *
@@ -219,6 +111,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     onViewChange,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     disableFuture,
     disablePast,
     defaultCalendarMonth,
@@ -243,27 +136,25 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     showDaysOutsideCurrentMonth,
     fixedWeekNumber,
     dayOfWeekFormatter,
-    components,
-    componentsProps,
+    slots,
+    slotProps,
     loading,
     renderLoading,
     displayWeekNumber,
-    sx,
+    yearsPerRow,
+    monthsPerRow,
+    timezone: timezoneProp,
+    ...other
   } = props;
 
-  const [value, setValue] = useControlled({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'DateCalendar',
-    state: 'value',
-    controlled: valueProp,
-    default: defaultValue ?? null,
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager: singleItemValueManager,
   });
-
-  const handleValueChange = useEventCallback(
-    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
-      setValue(newValue);
-      onChange?.(newValue, selectionState);
-    },
-  );
 
   const { view, setView, focusedView, setFocusedView, goToNextView, setValueAndGoToNextView } =
     useViews({
@@ -278,6 +169,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     });
 
   const {
+    referenceDate,
     calendarState,
     changeFocusedDay,
     changeMonth,
@@ -287,6 +179,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   } = useCalendarState({
     value,
     defaultCalendarMonth,
+    referenceDate: referenceDateProp,
     reduceAnimations,
     onMonthChange,
     minDate,
@@ -294,6 +187,38 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     shouldDisableDate,
     disablePast,
     disableFuture,
+    timezone,
+  });
+
+  // When disabled, limit the view to the selected date
+  const minDateWithDisabled = (disabled && value) || minDate;
+  const maxDateWithDisabled = (disabled && value) || maxDate;
+
+  const gridLabelId = `${id}-grid-label`;
+  const hasFocus = focusedView !== null;
+
+  const CalendarHeader = slots?.calendarHeader ?? PickersCalendarHeader;
+  const calendarHeaderProps: PickersCalendarHeaderProps<TDate> = useSlotProps({
+    elementType: CalendarHeader,
+    externalSlotProps: slotProps?.calendarHeader,
+    additionalProps: {
+      views,
+      view,
+      currentMonth: calendarState.currentMonth,
+      onViewChange: setView,
+      onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
+      minDate: minDateWithDisabled,
+      maxDate: maxDateWithDisabled,
+      disabled,
+      disablePast,
+      disableFuture,
+      reduceAnimations,
+      timezone,
+      labelId: gridLabelId,
+      slots,
+      slotProps,
+    },
+    ownerState: props,
   });
 
   const handleDateMonthChange = useEventCallback((newDate: TDate) => {
@@ -309,6 +234,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
           disablePast,
           disableFuture,
           isDateDisabled,
+          timezone,
         })
       : newDate;
 
@@ -336,6 +262,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
           disablePast,
           disableFuture,
           isDateDisabled,
+          timezone,
         })
       : newDate;
 
@@ -351,12 +278,12 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   });
 
   const handleSelectedDayChange = useEventCallback((day: TDate | null) => {
-    if (value && day) {
+    if (day) {
       // If there is a date already selected, then we want to keep its time
-      return setValueAndGoToNextView(utils.mergeDateAndTime(day, value), 'finish');
+      return handleValueChange(mergeDateAndTime(utils, day, value ?? referenceDate), 'finish');
     }
 
-    return setValueAndGoToNextView(day, 'finish');
+    return handleValueChange(day, 'finish');
   });
 
   React.useEffect(() => {
@@ -375,18 +302,13 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     minDate,
   };
 
-  // When disabled, limit the view to the selected date
-  const minDateWithDisabled = (disabled && value) || minDate;
-  const maxDateWithDisabled = (disabled && value) || maxDate;
-
   const commonViewProps = {
     disableHighlightToday,
     readOnly,
     disabled,
+    timezone,
+    gridLabelId,
   };
-
-  const gridLabelId = `${id}-grid-label`;
-  const hasFocus = focusedView !== null;
 
   const prevOpenViewRef = React.useRef(view);
   React.useEffect(() => {
@@ -409,24 +331,9 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      sx={sx}
+      {...other}
     >
-      <PickersCalendarHeader
-        views={views}
-        view={view}
-        currentMonth={calendarState.currentMonth}
-        onViewChange={setView}
-        onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
-        minDate={minDateWithDisabled}
-        maxDate={maxDateWithDisabled}
-        disabled={disabled}
-        disablePast={disablePast}
-        disableFuture={disableFuture}
-        reduceAnimations={reduceAnimations}
-        labelId={gridLabelId}
-        components={components}
-        componentsProps={componentsProps}
-      />
+      <CalendarHeader {...calendarHeaderProps} />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
         className={classes.viewTransitionContainer}
@@ -443,6 +350,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
+              yearsPerRow={yearsPerRow}
+              referenceDate={referenceDate}
             />
           )}
 
@@ -456,6 +365,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
+              monthsPerRow={monthsPerRow}
+              referenceDate={referenceDate}
             />
           )}
 
@@ -474,13 +385,12 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
-              gridLabelId={gridLabelId}
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
-              components={components}
-              componentsProps={componentsProps}
+              slots={slots}
+              slotProps={slotProps}
               loading={loading}
               renderLoading={renderLoading}
             />
@@ -506,24 +416,14 @@ DateCalendar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Overrideable components.
-   * @default {}
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps: PropTypes.object,
-  /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (day) => day.charAt(0).toUpperCase()
+   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -537,7 +437,7 @@ DateCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -547,7 +447,7 @@ DateCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -566,7 +466,7 @@ DateCalendar.propTypes = {
    */
   focusedView: PropTypes.oneOf(['day', 'month', 'year']),
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -579,6 +479,11 @@ DateCalendar.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
    * @template TDate
@@ -594,10 +499,9 @@ DateCalendar.propTypes = {
    */
   onFocusedViewChange: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -607,7 +511,7 @@ DateCalendar.propTypes = {
    */
   onViewChange: PropTypes.func,
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */
@@ -624,10 +528,15 @@ DateCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -636,6 +545,9 @@ DateCalendar.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.
@@ -645,21 +557,37 @@ DateCalendar.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -668,6 +596,14 @@ DateCalendar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -683,4 +619,9 @@ DateCalendar.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

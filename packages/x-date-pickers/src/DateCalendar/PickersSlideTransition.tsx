@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import composeClasses from '@mui/utils/composeClasses';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
@@ -38,8 +38,6 @@ const useUtilityClasses = (ownerState: SlideTransitionProps) => {
   return composeClasses(slots, getPickersSlideTransitionUtilityClass, classes);
 };
 
-export const slideAnimationDuration = 350;
-
 const PickersSlideTransitionRoot = styled(TransitionGroup, {
   name: 'MuiPickersSlideTransition',
   slot: 'Root',
@@ -60,7 +58,7 @@ const PickersSlideTransitionRoot = styled(TransitionGroup, {
   ],
 })<TransitionGroupProps>(({ theme }) => {
   const slideTransition = theme.transitions.create('transform', {
-    duration: slideAnimationDuration,
+    duration: theme.transitions.duration.complex,
     easing: 'cubic-bezier(0.35, 0.8, 0.4, 1)',
   });
   return {
@@ -121,6 +119,7 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
     ...other
   } = props;
   const classes = useUtilityClasses(props);
+  const theme = useTheme();
   if (reduceAnimations) {
     return <div className={clsx(classes.root, className)}>{children}</div>;
   }
@@ -146,7 +145,7 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
         mountOnEnter
         unmountOnExit
         key={transKey}
-        timeout={slideAnimationDuration}
+        timeout={theme.transitions.duration.complex}
         classNames={transitionClasses}
         {...other}
       >

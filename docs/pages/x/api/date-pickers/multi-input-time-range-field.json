@@ -1,8 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "direction": {
       "type": {
@@ -17,20 +16,56 @@
     "disablePast": { "type": { "name": "bool" } },
     "divider": { "type": { "name": "node" } },
     "format": { "type": { "name": "string" } },
+    "formatDensity": {
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
+    },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "onChange": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
-    "onSelectedSectionsChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
+    },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      }
+    },
+    "onSelectedSectionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newValue: FieldSelectedSections) => void",
+        "describedArgs": ["newValue"]
+      }
+    },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
+    },
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      }
+    },
+    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "spacing": {
       "type": {
         "name": "union",
@@ -42,26 +77,46 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
     },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+    },
+    "useFlexGap": { "type": { "name": "bool" } },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
-  "slots": {
-    "Input": { "default": "TextField", "type": { "name": "elementType" } },
-    "Root": { "default": "MultiInputTimeRangeFieldRoot", "type": { "name": "elementType" } },
-    "Separator": {
-      "default": "MultiInputTimeRangeFieldSeparator",
-      "type": { "name": "elementType" }
-    }
-  },
-  "name": "MultiInputTimeRangeField",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputTimeRangeField" },
-  "filename": "/packages/x-date-pickers-pro/src/MultiInputTimeRangeField/MultiInputTimeRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field </a></li></ul>",
-  "packages": [
+  "slots": [
     {
-      "packageName": "@mui/x-date-pickers-pro",
-      "componentName": "Unstable_MultiInputTimeRangeField"
+      "class": null,
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "MultiInputTimeRangeFieldRoot"
+    },
+    {
+      "class": null,
+      "name": "separator",
+      "description": "Element rendered between the two inputs.",
+      "default": "MultiInputTimeRangeFieldSeparator"
+    },
+    {
+      "class": null,
+      "name": "textField",
+      "description": "Form control with an input to render a time. It is rendered twice: once for the start time and once for the end time. Receives the same props as <code>@mui/material/TextField</code>.",
+      "default": "TextField from '@mui/material'"
     }
-  ]
+  ],
+  "name": "MultiInputTimeRangeField",
+  "imports": [
+    "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';",
+    "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": {
+    "classes": ["root", "separator"],
+    "globalClasses": {},
+    "name": "MuiMultiInputTimeRangeField"
+  },
+  "filename": "/packages/x-date-pickers-pro/src/MultiInputTimeRangeField/MultiInputTimeRangeField.tsx",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field <span class=\"plan-pro\"></span></a></li></ul>"
 }

@@ -1,7 +1,6 @@
 import { GridFilterInputDate } from '../components/panel/filterPanel/GridFilterInputDate';
 import { GridFilterItem } from '../models/gridFilterItem';
-import { GridFilterOperator } from '../models/gridFilterOperator';
-import { GridCellParams } from '../models/params/gridCellParams';
+import { GridFilterOperator, GetApplyFilterFn } from '../models/gridFilterOperator';
 
 const dateRegex = /(\d+)-(\d+)-(\d+)/;
 const dateTimeRegex = /(\d+)-(\d+)-(\d+)T(\d+):(\d+)/;
@@ -11,7 +10,7 @@ function buildApplyFilterFn(
   compareFn: (value1: number, value2: number) => boolean,
   showTime?: boolean,
   keepHours?: boolean,
-) {
+): ReturnType<GetApplyFilterFn> {
   if (!filterItem.value) {
     return null;
   }
@@ -23,21 +22,20 @@ function buildApplyFilterFn(
 
   const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
 
-  return ({ value }: GridCellParams<string | number | Date, any, any>): boolean => {
+  return (value): boolean => {
     if (!value) {
       return false;
     }
 
-    const valueAsDate = value instanceof Date ? value : new Date(value.toString());
     if (keepHours) {
-      return compareFn(valueAsDate.getTime(), time);
+      return compareFn(value.getTime(), time);
     }
 
     // Make a copy of the date to not reset the hours in the original object
-    const dateCopy = value instanceof Date ? new Date(valueAsDate) : valueAsDate;
+    const dateCopy = new Date(value);
     const timeToCompare = dateCopy.setHours(
-      showTime ? valueAsDate.getHours() : 0,
-      showTime ? valueAsDate.getMinutes() : 0,
+      showTime ? value.getHours() : 0,
+      showTime ? value.getMinutes() : 0,
       0,
       0,
     );
@@ -45,9 +43,7 @@ function buildApplyFilterFn(
   };
 }
 
-export const getGridDateOperators = (
-  showTime?: boolean,
-): GridFilterOperator<any, string | Date, any>[] => [
+export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any, Date, any>[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {
@@ -104,7 +100,7 @@ export const getGridDateOperators = (
   {
     value: 'isEmpty',
     getApplyFilterFn: () => {
-      return ({ value }): boolean => {
+      return (value): boolean => {
         return value == null;
       };
     },
@@ -113,7 +109,7 @@ export const getGridDateOperators = (
   {
     value: 'isNotEmpty',
     getApplyFilterFn: () => {
-      return ({ value }): boolean => {
+      return (value): boolean => {
         return value != null;
       };
     },

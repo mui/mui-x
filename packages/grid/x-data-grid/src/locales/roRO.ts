@@ -6,7 +6,6 @@ const roROGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Lipsă date',
   noResultsOverlayLabel: 'Nu au fost găsite rezultate.',
-  errorOverlayDefaultLabel: 'A apărut o eroare neașteptată.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Înălțime rând',
@@ -48,8 +47,9 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Adăugare filtru',
+  filterPanelRemoveAll: 'Șterge tot',
   filterPanelDeleteIconLabel: 'Ștergere',
-  filterPanelLinkOperator: 'Operatori logici',
+  filterPanelLogicOperator: 'Operatori logici',
   filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'Și',
   filterPanelOperatorOr: 'Sau',
@@ -71,6 +71,33 @@ const roROGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'este gol',
   filterOperatorIsNotEmpty: 'nu este gol',
   filterOperatorIsAnyOf: 'este una din valori',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Conține',
+  headerFilterOperatorEquals: 'Egal cu',
+  headerFilterOperatorStartsWith: 'Începe cu',
+  headerFilterOperatorEndsWith: 'Se termină cu',
+  headerFilterOperatorIs: 'Este',
+  headerFilterOperatorNot: 'Nu este',
+  headerFilterOperatorAfter: 'Este după',
+  headerFilterOperatorOnOrAfter: 'Este la sau după',
+  headerFilterOperatorBefore: 'Este înainte de',
+  headerFilterOperatorOnOrBefore: 'este la sau înainte de',
+  headerFilterOperatorIsEmpty: 'Este gol',
+  headerFilterOperatorIsNotEmpty: 'Nu este gol',
+  headerFilterOperatorIsAnyOf: 'Este una din valori',
+  'headerFilterOperator=': 'Egal cu',
+  'headerFilterOperator!=': 'Nu este egal cu',
+  'headerFilterOperator>': 'Mai mare decât',
+  'headerFilterOperator>=': 'Mai mare sau egal cu',
+  'headerFilterOperator<': 'Mai mic decât',
+  'headerFilterOperator<=': 'Mai mic sau egal cu',
 
   // Filter values text
   filterValueAny: 'Aleatoriu',
@@ -80,7 +107,7 @@ const roROGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meniu',
   columnMenuShowColumns: 'Afișează toate coloanele',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Gestionează coloane',
   columnMenuFilter: 'Filtru',
   columnMenuHideColumn: 'Ascunde',
   columnMenuUnsort: 'Dezactivare sortare',
@@ -144,12 +171,12 @@ const roROGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Reordonare rânduri',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agregare',
+  aggregationFunctionLabelSum: 'Sumă',
+  aggregationFunctionLabelAvg: 'Medie',
+  aggregationFunctionLabelMin: 'Minim',
+  aggregationFunctionLabelMax: 'Maxim',
+  aggregationFunctionLabelSize: 'Numărul elementelor',
 };
 
 export const roRO: Localization = getGridLocalization(roROGrid, roROCore);

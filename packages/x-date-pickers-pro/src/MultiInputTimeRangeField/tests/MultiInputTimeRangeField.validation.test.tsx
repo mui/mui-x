@@ -1,6 +1,7 @@
-import { Unstable_MultiInputTimeRangeField as MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
-import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { screen } from '@mui-internal/test-utils';
+import { fireEvent } from '@mui-internal/test-utils/createRenderer';
+import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
+import { createPickerRenderer, adapterToUse, describeRangeValidation } from 'test/utils/pickers';
 
 describe('<MultiInputTimeRangeField />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -10,5 +11,13 @@ describe('<MultiInputTimeRangeField />', () => {
     clock,
     componentFamily: 'field',
     views: ['hours', 'minutes'],
+    inputValue: (value, { setEndDate } = {}) => {
+      const inputs = screen.getAllByRole('textbox');
+      const input = inputs[setEndDate ? 1 : 0];
+      input.focus();
+      fireEvent.change(input, {
+        target: { value: adapterToUse.format(value, 'fullTime') },
+      });
+    },
   }));
 });

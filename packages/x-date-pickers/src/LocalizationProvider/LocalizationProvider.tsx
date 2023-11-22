@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DateIOFormats } from '@date-io/core/IUtils';
 import { useThemeProps } from '@mui/material/styles';
-import { MuiPickersAdapter } from '../internals/models';
+import { AdapterFormats, MuiPickersAdapter } from '../models';
 import { PickersInputLocaleText } from '../locales';
 
 export interface MuiPickersAdapterContextValue<TDate> {
@@ -26,12 +25,15 @@ if (process.env.NODE_ENV !== 'production') {
   MuiPickersAdapterContext.displayName = 'MuiPickersAdapterContext';
 }
 
-export interface LocalizationProviderProps<TDate> {
+export interface LocalizationProviderProps<TDate, TLocale> {
   children?: React.ReactNode;
-  /** DateIO adapter class function */
-  dateAdapter?: new (...args: any) => MuiPickersAdapter<TDate>;
+  /**
+   * Date library adapter class function.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter date adapter setup section} for more details.
+   */
+  dateAdapter?: new (...args: any) => MuiPickersAdapter<TDate, TLocale>;
   /** Formats that are used for any child pickers */
-  dateFormats?: Partial<DateIOFormats>;
+  dateFormats?: Partial<AdapterFormats>;
   /**
    * Date library instance you are using, if it has some global overrides
    * ```jsx
@@ -39,26 +41,42 @@ export interface LocalizationProviderProps<TDate> {
    * ```
    */
   dateLibInstance?: any;
-  /** Locale for the date library you are using
+  /**
+   * Locale for the date library you are using
    */
-  adapterLocale?: string | object;
+  adapterLocale?: TLocale;
   /**
    * Locale for components texts
    */
   localeText?: PickersInputLocaleText<TDate>;
 }
 
+type LocalizationProviderComponent = (<TDate, TLocale>(
+  props: LocalizationProviderProps<TDate, TLocale>,
+) => React.JSX.Element) & { propTypes?: any };
+
 /**
- * @ignore - do not document.
+ * Demos:
+ *
+ * - [Date format and localization](https://mui.com/x/react-date-pickers/adapters-locale/)
+ * - [Calendar systems](https://mui.com/x/react-date-pickers/calendar-systems/)
+ * - [Translated components](https://mui.com/x/react-date-pickers/localization/)
+ * - [UTC and timezones](https://mui.com/x/react-date-pickers/timezone/)
+ *
+ * API:
+ *
+ * - [LocalizationProvider API](https://mui.com/x/api/date-pickers/localization-provider/)
  */
-export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<TDate>) {
+export const LocalizationProvider = function LocalizationProvider<TDate, TLocale>(
+  inProps: LocalizationProviderProps<TDate, TLocale>,
+) {
   const { localeText: inLocaleText, ...otherInProps } = inProps;
 
   const { utils: parentUtils, localeText: parentLocaleText } = React.useContext(
     MuiPickersAdapterContext,
   ) ?? { utils: undefined, localeText: undefined };
 
-  const props: LocalizationProviderProps<TDate> = useThemeProps({
+  const props: LocalizationProviderProps<TDate, TLocale> = useThemeProps({
     // We don't want to pass the `localeText` prop to the theme, that way it will always return the theme value,
     // We will then merge this theme value with our value manually
     props: otherInProps,
@@ -99,7 +117,7 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
         [
           'MUI: The date adapter should be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, not from `@date-io`',
           "For example, `import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'` instead of `import AdapterDayjs from '@date-io/dayjs'`",
-          'More information on the installation documentation: https://next.mui.com/x/react-date-pickers/getting-started/#installation',
+          'More information on the installation documentation: https://mui.com/x/react-date-pickers/getting-started/#installation',
         ].join(`\n`),
       );
     }
@@ -132,7 +150,7 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
       {children}
     </MuiPickersAdapterContext.Provider>
   );
-}
+} as LocalizationProviderComponent;
 
 LocalizationProvider.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -142,10 +160,11 @@ LocalizationProvider.propTypes = {
   /**
    * Locale for the date library you are using
    */
-  adapterLocale: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  adapterLocale: PropTypes.any,
   children: PropTypes.node,
   /**
-   * DateIO adapter class function
+   * Date library adapter class function.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter date adapter setup section} for more details.
    */
   dateAdapter: PropTypes.func,
   /**
@@ -154,10 +173,6 @@ LocalizationProvider.propTypes = {
   dateFormats: PropTypes.shape({
     dayOfMonth: PropTypes.string,
     fullDate: PropTypes.string,
-    fullDateTime: PropTypes.string,
-    fullDateTime12h: PropTypes.string,
-    fullDateTime24h: PropTypes.string,
-    fullDateWithWeekday: PropTypes.string,
     fullTime: PropTypes.string,
     fullTime12h: PropTypes.string,
     fullTime24h: PropTypes.string,
@@ -167,10 +182,9 @@ LocalizationProvider.propTypes = {
     keyboardDateTime: PropTypes.string,
     keyboardDateTime12h: PropTypes.string,
     keyboardDateTime24h: PropTypes.string,
+    meridiem: PropTypes.string,
     minutes: PropTypes.string,
     month: PropTypes.string,
-    monthAndDate: PropTypes.string,
-    monthAndYear: PropTypes.string,
     monthShort: PropTypes.string,
     normalDate: PropTypes.string,
     normalDateWithWeekday: PropTypes.string,

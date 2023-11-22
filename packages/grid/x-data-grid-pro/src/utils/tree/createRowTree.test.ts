@@ -26,6 +26,7 @@ describe('createRowTree', () => {
           },
         ],
         defaultGroupingExpansionDepth: 0,
+        previousTree: null,
       });
 
       expect(getGroupExpansion(response.tree)).to.deep.equal([
@@ -57,6 +58,7 @@ describe('createRowTree', () => {
           },
         ],
         defaultGroupingExpansionDepth: 1,
+        previousTree: null,
       });
 
       expect(getGroupExpansion(response.tree)).to.deep.equal([
@@ -81,6 +83,7 @@ describe('createRowTree', () => {
           },
         ],
         defaultGroupingExpansionDepth: 1,
+        previousTree: null,
       });
 
       expect(getGroupExpansion(response.tree)).to.deep.equal([
@@ -113,6 +116,7 @@ describe('createRowTree', () => {
           },
         ],
         defaultGroupingExpansionDepth: -1,
+        previousTree: null,
       });
 
       expect(getGroupExpansion(response.tree)).to.deep.equal([
@@ -139,6 +143,7 @@ describe('createRowTree', () => {
           },
         ],
         defaultGroupingExpansionDepth: 0,
+        previousTree: null,
       });
 
       expect((response.tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children).includes(0);
@@ -162,6 +167,7 @@ describe('createRowTree', () => {
           },
         ],
         defaultGroupingExpansionDepth: 0,
+        previousTree: null,
       });
 
       expect((response.tree[0] as GridGroupNode).children).to.includes(
@@ -192,6 +198,7 @@ describe('createRowTree', () => {
           },
         ],
         defaultGroupingExpansionDepth: 0,
+        previousTree: null,
       });
 
       expect(response.tree[0].parent).to.equal('auto-generated-row-null/A');
@@ -221,6 +228,7 @@ describe('createRowTree', () => {
           },
         ],
         defaultGroupingExpansionDepth: -1,
+        previousTree: null,
       });
 
       // The tree created looks like this:
@@ -252,6 +260,7 @@ describe('createRowTree', () => {
           { id: 0, path: [{ key: 'A', field: null }] },
         ],
         defaultGroupingExpansionDepth: 0,
+        previousTree: null,
       });
 
       expect((response.tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children).includes(0);
@@ -292,6 +301,7 @@ describe('createRowTree', () => {
           },
         ],
         defaultGroupingExpansionDepth: 0,
+        previousTree: null,
       });
 
       expect(response.treeDepths).to.deep.equal({ 0: 1, 1: 1, 2: 2 });

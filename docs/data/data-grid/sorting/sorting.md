@@ -2,7 +2,7 @@
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 
-Sorting is enabled by default to the grid users and works out of the box without any explicit configuration.
+Sorting is enabled by default to the data grid users and works out of the box without any explicit configuration.
 Users can set a sorting rule simply by clicking on a column header.
 Following clicks change the column's sorting direction. You can see the applied direction on the header's arrow indicator.
 
@@ -11,12 +11,12 @@ Following clicks change the column's sorting direction. You can see the applied 
 ## Single and multi-sorting
 
 :::warning
-The Data Grid can only sort the rows according to one criterion at a time.
+The Grid can only sort the rows according to one criterion at a time.
 
 To use multi-sorting, you need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
 
-## Multi-sorting [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Multi-sorting [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The following demo lets you sort the rows according to several criteria at the same time.
 
@@ -24,7 +24,7 @@ Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Pass sorting rules to the grid
+## Pass sorting rules to the data grid
 
 ### Structure of the model
 

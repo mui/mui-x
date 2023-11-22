@@ -15,11 +15,13 @@ export const isDeleteKeys = (key: string) => key === 'Delete' || key === 'Backsp
 
 // Non printable keys have a name, e.g. "ArrowRight", see the whole list:
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
-// We need to ignore shortcuts, for example: select all:
+// So event.key.length === 1 is often enough.
+//
+// However, we also need to ignore shortcuts, for example: select all:
 // - Windows: Ctrl+A, event.ctrlKey is true
 // - macOS: ⌘ Command+A, event.metaKey is true
 export function isPrintableKey(event: React.KeyboardEvent<HTMLElement>): boolean {
-  return event.key.length === 1 && event.ctrlKey === false && event.metaKey === false;
+  return event.key.length === 1 && !event.ctrlKey && !event.metaKey;
 }
 
 export const GRID_MULTIPLE_SELECTION_KEYS = ['Meta', 'Control', 'Shift'];

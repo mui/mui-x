@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act } from '@mui-internal/test-utils';
 import {
   DataGridPro,
   DataGridProProps,
@@ -22,7 +21,7 @@ const rows: GridRowsProp = [{ id: 1 }];
 
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
-describe('<DataGridPro /> - Columns Visibility', () => {
+describe('<DataGridPro /> - Columns visibility', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -133,10 +132,10 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
     fireEvent.click(getByText('Hide all'));
     expect(getColumnHeadersTextContent()).to.deep.equal([]);
-    fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
+    fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]')!);
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
-    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);

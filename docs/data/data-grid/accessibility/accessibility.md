@@ -6,14 +6,33 @@
 
 The most commonly encountered conformance guidelines for accessibility are:
 
-- [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/) - Globally accepted standard
-- [ADA](https://www.ada.gov/) - US Department of Justice
-- [Section 508](https://www.section508.gov/) - US federal agencies
+- Globally accepted standard: [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/)
+- US:
+  - [ADA](https://www.ada.gov/) - US Department of Justice
+  - [Section 508](https://www.section508.gov/) - US federal agencies
+- Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
 
-WCAG 2.0 has three levels of conformance: A, AA, and AAA.
-Level AA matches the ADA and Section 508 guidelines, so this is the most common target for organizations to aim for.
+WCAG 2.1 has three levels of conformance: A, AA, and AAA.
+Level AA meet the most commonly encountered conformance guidelines.
+This is the most common target for organizations so what MUI aims to support very well.
 
-The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a grid.
+The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
+
+## Accessibility changes in v7
+
+The Data Grid v7 will improve the accessibility and will be more aligned with the WAI-ARIA authoring practices.
+
+You can start using the new accessibility features by enabling `ariaV7` experimental feature flag:
+
+```tsx
+<DataGrid experimentalFeatures={{ ariaV7: true }} />
+```
+
+:::warning
+The value of `ariaV7` should be constant and not change during the lifetime of the Data Grid.
+:::
+
+{{"demo": "GridAriaV7.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Density
 
@@ -21,7 +40,7 @@ You can change the density of the rows and the column header.
 
 ### Density selector
 
-To enable the density selector, create a toolbar containing the `GridToolbarDensitySelector` component and apply it using the `Toolbar` property in the Data Grid's `components` prop.
+To enable the density selector, create a toolbar containing the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
 The user can then change the density of the Data Grid by using the density selector from the toolbar, as the following demo illustrates:
 
 {{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
@@ -31,7 +50,7 @@ To hide the density selector, add the `disableDensitySelector` prop to the Data 
 ### Density prop
 
 Set the vertical density of the Data Grid using the `density` prop.
-This prop applies the values determined by the `rowHeight` and `headerHeight` props, if supplied.
+This prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
 The following demo shows a Data Grid with the default density set to `compact`:
@@ -59,11 +78,11 @@ Use the `tabIndex` prop passed to the `renderCell` params to determine if the re
 
 ```jsx
 renderCell: (params) => (
-  <Box>
+  <div>
     <Link tabIndex={params.tabIndex} href="/#">
       more info
     </Link>
-  </Box>
+  </div>
 );
 ```
 
@@ -100,7 +119,6 @@ On macOS:
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows                                     |
-|               <kbd><kbd class="key">Alt</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows, including headers                  |
 |                                   <kbd class="key">Ctrl</kbd>+ Click on cell | Enable multi-selection                                               |
 |                         <kbd class="key">Ctrl</kbd>+ Click on a selected row | Deselect the row                                                     |
 

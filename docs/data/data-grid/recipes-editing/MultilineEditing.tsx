@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGrid,
   GridColDef,
   GridRowModel,
   GridRenderEditCellParams,
   useGridApiContext,
   GridColTypeDef,
-} from '@mui/x-data-grid-pro';
+  GridCellEditStopReasons,
+} from '@mui/x-data-grid';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
@@ -32,11 +33,22 @@ const lines = [
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
 
-function EditTextarea(props: GridRenderEditCellParams<string>) {
-  const { id, field, value, colDef } = props;
+function isKeyboardEvent(event: any): event is React.KeyboardEvent {
+  return !!event.key;
+}
+
+function EditTextarea(props: GridRenderEditCellParams<any, string>) {
+  const { id, field, value, colDef, hasFocus } = props;
   const [valueState, setValueState] = React.useState(value);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>();
+  const [inputRef, setInputRef] = React.useState<HTMLInputElement | null>(null);
   const apiRef = useGridApiContext();
+
+  React.useLayoutEffect(() => {
+    if (hasFocus && inputRef) {
+      inputRef.focus();
+    }
+  }, [hasFocus, inputRef]);
 
   const handleRef = React.useCallback((el: HTMLElement | null) => {
     setAnchorEl(el);
@@ -52,21 +64,6 @@ function EditTextarea(props: GridRenderEditCellParams<string>) {
       );
     },
     [apiRef, field, id],
-  );
-
-  const handleKeyDown = React.useCallback<NonNullable<InputBaseProps['onKeyDown']>>(
-    (event) => {
-      if (
-        event.key === 'Escape' ||
-        (event.key === 'Enter' &&
-          !event.shiftKey &&
-          (event.ctrlKey || event.metaKey))
-      ) {
-        const params = apiRef.current.getCellParams(id, field);
-        apiRef.current.publishEvent('cellKeyDown', params, event);
-      }
-    },
-    [apiRef, id, field],
   );
 
   return (
@@ -90,8 +87,7 @@ function EditTextarea(props: GridRenderEditCellParams<string>) {
               value={valueState}
               sx={{ textarea: { resize: 'both' }, width: '100%' }}
               onChange={handleChange}
-              autoFocus
-              onKeyDown={handleKeyDown}
+              inputRef={(ref) => setInputRef(ref)}
             />
           </Paper>
         </Popper>
@@ -138,7 +134,18 @@ for (let i = 0; i < 50; i += 1) {
 export default function MultilineEditing() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGridPro rows={rows} columns={columns} />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        onCellEditStop={(params, event) => {
+          if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+            return;
+          }
+          if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
+            event.defaultMuiPrevented = true;
+          }
+        }}
+      />
     </div>
   );
 }

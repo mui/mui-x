@@ -1,0 +1,8 @@
+<StaticDatePicker
+  slotProps={{
+    shortcuts: {
+      items: shortcutsItems,
+    },
+  }}
+  minDate={middleDate}
+/>

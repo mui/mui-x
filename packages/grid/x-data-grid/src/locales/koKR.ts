@@ -6,7 +6,6 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '행이 없습니다.',
   noResultsOverlayLabel: '결과값이 없습니다.',
-  errorOverlayDefaultLabel: '오류가 발생했습니다.',
 
   // Density selector toolbar button text
   toolbarDensity: '행 간격',
@@ -47,8 +46,9 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: '필터 추가',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: '삭제',
-  filterPanelLinkOperator: '논리 연산자',
+  filterPanelLogicOperator: '논리 연산자',
   filterPanelOperator: '연산자',
   filterPanelOperatorAnd: '그리고',
   filterPanelOperatorOr: '또는',
@@ -70,6 +70,33 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '값이 없는',
   filterOperatorIsNotEmpty: '값이 있는',
   filterOperatorIsAnyOf: '값 중 하나인',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: '아무값',

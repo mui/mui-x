@@ -19,8 +19,12 @@
       "matchPackagePatterns": "@babel/*"
     },
     {
-      "groupName": "date-io",
-      "matchPackagePatterns": "@date-io/*"
+      "groupName": "D3",
+      "matchPackagePatterns": ["d3-*", "@types/d3-*"]
+    },
+    {
+      "groupName": "react-spring",
+      "matchPackagePatterns": "@react-spring/*"
     },
     {
       "groupName": "Emotion",
@@ -37,22 +41,28 @@
       "allowedVersions": "< 2.0.0"
     },
     {
-      "groupName": "react-spring",
-      "matchPackageNames": ["react-spring"],
-      "allowedVersions": "< 9.0.0"
-    },
-    {
       "groupName": "React",
-      "matchPackageNames": ["react", "react-dom", "react-is", "react-test-renderer"]
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "react-is",
+        "react-test-renderer",
+        "@types/react",
+        "@types/react-dom"
+      ]
     },
     {
-      "groupName": "tslint",
-      "matchPackageNames": ["tslint"],
-      "allowedVersions": "<= 5.14.0"
+      "groupName": "React router",
+      "matchPackageNames": ["react-router", "react-router-dom"]
     },
     {
       "groupName": "typescript-eslint",
       "matchPackagePatterns": "@typescript-eslint/*"
+    },
+    {
+      "groupName": "@types/node",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "< 19.0.0"
     },
     {
       "groupName": "bundling fixtures",
@@ -70,10 +80,6 @@
       }
     },
     {
-      "groupName": "AG Grid",
-      "matchPackagePatterns": "ag-grid-*"
-    },
-    {
       "groupName": "node",
       "matchPackageNames": ["node", "cimg/node"],
       "enabled": false
@@ -81,10 +87,12 @@
     {
       "groupName": "MUI Core",
       "matchPackageNames": [
-        "@mui/material",
-        "@mui/joy",
-        "@mui/icons-material",
         "@mui/base",
+        "@mui/icons-material",
+        "@mui/joy",
+        "@mui/lab",
+        "@mui/material",
+        "@mui/styles",
         "@mui/system",
         "@mui/utils"
       ]
@@ -107,5 +115,9 @@
   "prHourlyLimit": 0,
   "rangeStrategy": "bump",
   "schedule": "on sunday before 6:00am",
-  "timezone": "UTC"
+  "timezone": "UTC",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": "before 6:00am on the first day of the month"
+  }
 }

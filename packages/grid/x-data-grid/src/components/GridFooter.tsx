@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridTopLevelRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
-import { gridVisibleTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
+import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -18,7 +17,7 @@ const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(fu
   const rootProps = useGridRootProps();
   const totalTopLevelRowCount = useGridSelector(apiRef, gridTopLevelRowCountSelector);
   const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
-  const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
+  const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
   const selectedRowCountElement =
     !rootProps.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
@@ -29,13 +28,17 @@ const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(fu
 
   const rowCountElement =
     !rootProps.hideFooterRowCount && !rootProps.pagination ? (
-      <GridRowCount rowCount={totalTopLevelRowCount} visibleRowCount={visibleTopLevelRowCount} />
+      <rootProps.slots.footerRowCount
+        {...rootProps.slotProps?.footerRowCount}
+        rowCount={totalTopLevelRowCount}
+        visibleRowCount={visibleTopLevelRowCount}
+      />
     ) : null;
 
   const paginationElement = rootProps.pagination &&
     !rootProps.hideFooterPagination &&
-    rootProps.components.Pagination && (
-      <rootProps.components.Pagination {...rootProps.componentsProps?.pagination} />
+    rootProps.slots.pagination && (
+      <rootProps.slots.pagination {...rootProps.slotProps?.pagination} />
     );
 
   return (

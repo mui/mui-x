@@ -1,29 +1,36 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Time Range Field components
-components: MultiInputDateTimeRangeField
+components: MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Date Time Range Field [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Date Time Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The Date Time Range Field let the user select a date and time range with the keyboard.</p>
-
-:::warning
-This component is unstable, and its props are subject to breaking changes before it gets a stable release.
-:::
+<p class="description">The Date Time Range Field let the user select a range of dates with an explicit starting and ending time with the keyboard.</p>
 
 ## Basic usage
 
 :::info
-A single input version of the Date Time Range Field will soon be available just like for the Date Range Field.
+All the topics covered below are applicable to both `SingleInputDateTimeRangeField` and `MultiInputDateTimeRangeField` unless explicitly mentioned.
 :::
+
+You can render your Date Time Range Field with either one input using `SingleInputDateTimeRangeField`
+or two inputs using `MultiInputDateTimeRangeField` as show below.
 
 {{"demo": "BasicDateTimeRangeField.js"}}
 
-## Uncontrolled vs. Controlled
+## Uncontrolled vs. controlled value
 
-The component can be uncontrolled or controlled
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateTimeRangeFieldValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::

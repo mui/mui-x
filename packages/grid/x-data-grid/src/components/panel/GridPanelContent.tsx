@@ -1,13 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -23,7 +23,7 @@ const GridPanelContentRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelContent',
   overridesResolver: (props, styles) => styles.panelContent,
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
@@ -34,10 +34,15 @@ const GridPanelContentRoot = styled('div', {
 function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
-  return <GridPanelContentRoot className={clsx(className, classes.root)} {...other} />;
+  return (
+    <GridPanelContentRoot
+      className={clsx(className, classes.root)}
+      ownerState={rootProps}
+      {...other}
+    />
+  );
 }
 
 GridPanelContent.propTypes = {

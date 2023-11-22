@@ -1,12 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import { IconButtonProps } from '@mui/material/IconButton';
 import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type GridActionsCellItemProps = {
   label: string;
   icon?: React.ReactElement;
+  /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
+  component?: React.ElementType;
 } & (
   | ({ showInMenu?: false; icon: React.ReactElement } & IconButtonProps)
   | ({ showInMenu: true } & MenuItemProps)
@@ -16,6 +19,8 @@ const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellI
   (props, ref) => {
     const { label, icon, showInMenu, onClick, ...other } = props;
 
+    const rootProps = useGridRootProps();
+
     const handleClick = (event: any) => {
       if (onClick) {
         onClick(event);
@@ -24,16 +29,17 @@ const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellI
 
     if (!showInMenu) {
       return (
-        <IconButton
+        <rootProps.slots.baseIconButton
           ref={ref}
           size="small"
           role="menuitem"
           aria-label={label}
           {...(other as any)}
           onClick={handleClick}
+          {...rootProps.slotProps?.baseIconButton}
         >
           {React.cloneElement(icon!, { fontSize: 'small' })}
-        </IconButton>
+        </rootProps.slots.baseIconButton>
       );
     }
 

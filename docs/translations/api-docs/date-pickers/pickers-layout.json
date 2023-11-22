@@ -1,9 +1,21 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "components": "Overrideable components.",
-    "componentsProps": "The props used for each component slot.",
-    "orientation": "Force rendering in particular orientation."
+    "orientation": {
+      "description": "Force rendering in particular orientation.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },
@@ -17,12 +29,17 @@
     },
     "toolbar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the toolbar" },
     "actionBar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the action bar" },
-    "tabs": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tabs" }
+    "tabs": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tabs" },
+    "shortcuts": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the shortcuts container"
+    }
   },
   "slotDescriptions": {
-    "Tabs": "Tabs enabling toggling between views.",
-    "Toolbar": "Custom component for the toolbar.\nIt is placed above the picker views.",
-    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar."
+    "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
+    "shortcuts": "Custom component for the shortcuts.",
+    "tabs": "Tabs enabling toggling between views.",
+    "toolbar": "Custom component for the toolbar. It is placed above the picker views."
   }
 }

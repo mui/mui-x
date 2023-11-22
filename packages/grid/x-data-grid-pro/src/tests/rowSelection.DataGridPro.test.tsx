@@ -2,8 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
 import {
   GridApi,
   useGridApiRef,
@@ -24,7 +23,7 @@ function getSelectedRowIds() {
     );
 }
 
-describe('<DataGridPro /> - Row Selection', () => {
+describe('<DataGridPro /> - Row selection', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -50,12 +49,12 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
-      const selectAllCheckbox = screen.getByRole('checkbox', {
+      const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
@@ -67,15 +66,15 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      const selectAllCheckbox = screen.getByRole('checkbox', {
+      const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
@@ -94,7 +93,7 @@ describe('<DataGridPro /> - Row Selection', () => {
         />,
       );
 
-      const selectAllCheckbox = screen.getByRole('checkbox', {
+      const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
@@ -107,9 +106,9 @@ describe('<DataGridPro /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly={false}
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
 
@@ -117,8 +116,8 @@ describe('<DataGridPro /> - Row Selection', () => {
         name: /select all rows/i,
       });
 
-      fireEvent.click(getCell(0, 0).querySelector('input'));
-      fireEvent.click(getCell(1, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'true');
     });
@@ -140,15 +139,16 @@ describe('<DataGridPro /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      const selectAllCheckbox = screen.getByRole('checkbox', {
+      const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
@@ -160,18 +160,19 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          checkboxSelectionVisibleOnly
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          checkboxSelectionVisibleOnly
+          pageSizeOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      fireEvent.click(getCell(2, 0).querySelector('input'));
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
-      const selectAllCheckbox = screen.getByRole('checkbox', {
+      const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
@@ -183,10 +184,9 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          checkboxSelectionVisibleOnly
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
 
@@ -257,7 +257,7 @@ describe('<DataGridPro /> - Row Selection', () => {
       const handleRowSelectionModelChange = spy();
       render(
         <TestDataGridSelection
-          isRowSelectable={(params) => params.id > 0}
+          isRowSelectable={(params) => Number(params.id) > 0}
           onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );
@@ -291,7 +291,7 @@ describe('<DataGridPro /> - Row Selection', () => {
       const handleRowSelectionModelChange = spy();
       render(
         <TestDataGridSelection
-          isRowSelectable={(params) => params.id > 0}
+          isRowSelectable={(params) => Number(params.id) > 0}
           onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );

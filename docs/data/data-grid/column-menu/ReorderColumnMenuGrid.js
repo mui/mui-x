@@ -6,7 +6,7 @@ function CustomColumnMenu(props) {
   return (
     <GridColumnMenu
       {...props}
-      componentsProps={{
+      slotProps={{
         // Swap positions of filter and sort items
         columnMenuFilterItem: {
           displayOrder: 0, // Previously `10`
@@ -28,7 +28,7 @@ export default function ReorderColumnMenuGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} components={{ ColumnMenu: CustomColumnMenu }} />
+      <DataGrid {...data} slots={{ columnMenu: CustomColumnMenu }} />
     </div>
   );
 }

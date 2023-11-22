@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui-internal/test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -283,6 +282,31 @@ describe('<DataGridPro /> - Rows', () => {
       setProps({ loading: false });
       expect(getColumnValues(0)).to.deep.equal(['Nike 2', 'Adidas', 'Puma']);
     });
+
+    it('should not trigger unnecessary cells rerenders', () => {
+      const renderCellSpy = spy((params: any) => {
+        return params.value;
+      });
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              rows={[{ id: 1, name: 'John' }]}
+              columns={[{ field: 'name', renderCell: renderCellSpy }]}
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      }
+
+      render(<Test />);
+      const initialRendersCount = 2;
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount);
+
+      act(() => apiRef.current.updateRows([{ id: 1, name: 'John' }]));
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount + 2);
+    });
   });
 
   describe('apiRef: setRows', () => {
@@ -399,7 +423,7 @@ describe('<DataGridPro /> - Rows', () => {
       });
       await act(() => Promise.resolve());
       clock.runToLast();
-      expect(getRows()).to.have.length(4);
+      expect(getRows()).to.have.length(3);
     });
 
     it('should render last row when scrolling to the bottom', () => {
@@ -410,7 +434,7 @@ describe('<DataGridPro /> - Rows', () => {
       render(
         <TestCaseVirtualization
           nbRows={nbRows}
-          headerHeight={0}
+          columnHeaderHeight={0}
           rowHeight={rowHeight}
           rowBuffer={rowBuffer}
           hideFooter
@@ -439,12 +463,12 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should have all the rows rendered of the page in the DOM when autoPageSize: true', () => {
       render(<TestCaseVirtualization autoPageSize pagination />);
-      expect(getRows()).to.have.length(apiRef.current.state.pagination.pageSize);
+      expect(getRows()).to.have.length(apiRef.current.state.pagination.paginationModel.pageSize);
     });
 
     it('should have all the rows rendered in the DOM when autoPageSize: true', () => {
       render(<TestCaseVirtualization autoHeight />);
-      expect(getRows()).to.have.length(apiRef.current.state.pagination.pageSize);
+      expect(getRows()).to.have.length(apiRef.current.state.pagination.paginationModel.pageSize);
     });
 
     it('should render extra columns when the columnBuffer prop is present', () => {
@@ -505,8 +529,8 @@ describe('<DataGridPro /> - Rows', () => {
           <TestCaseVirtualization
             pagination
             rowHeight={50}
-            pageSize={nbRows}
-            rowsPerPageOptions={[nbRows]}
+            initialState={{ pagination: { paginationModel: { pageSize: nbRows } } }}
+            pageSizeOptions={[nbRows]}
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
@@ -524,9 +548,8 @@ describe('<DataGridPro /> - Rows', () => {
         render(
           <TestCaseVirtualization
             pagination
-            pageSize={32}
-            rowsPerPageOptions={[32]}
-            page={3}
+            initialState={{ pagination: { paginationModel: { pageSize: 32, page: 3 } } }}
+            pageSizeOptions={[32]}
             height={500}
           />,
         );
@@ -568,15 +591,15 @@ describe('<DataGridPro /> - Rows', () => {
 
     describe('scrollToIndexes', () => {
       it('should scroll correctly when the given rowIndex is partially visible at the bottom', () => {
-        const headerHeight = 40;
+        const columnHeaderHeight = 40;
         const rowHeight = 50;
         const offset = 10;
         const border = 1;
         render(
           <TestCaseVirtualization
             hideFooter
-            headerHeight={headerHeight}
-            height={headerHeight + 4 * rowHeight + offset + border * 2}
+            columnHeaderHeight={columnHeaderHeight}
+            height={columnHeaderHeight + 4 * rowHeight + offset + border * 2}
             nbCols={2}
             rowHeight={rowHeight}
           />,
@@ -587,15 +610,15 @@ describe('<DataGridPro /> - Rows', () => {
       });
 
       it('should scroll correctly when the given index is partially visible at the top', () => {
-        const headerHeight = 40;
+        const columnHeaderHeight = 40;
         const rowHeight = 50;
         const offset = 10;
         const border = 1;
         render(
           <TestCaseVirtualization
             hideFooter
-            headerHeight={headerHeight}
-            height={headerHeight + 4 * rowHeight + border + border * 2}
+            columnHeaderHeight={columnHeaderHeight}
+            height={columnHeaderHeight + 4 * rowHeight + border + border * 2}
             nbCols={2}
             rowHeight={rowHeight}
           />,
@@ -678,7 +701,13 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should render the correct rows when changing pages', () => {
-      render(<TestCase pageSize={6} rowsPerPageOptions={[6]} pagination />);
+      render(
+        <TestCase
+          initialState={{ pagination: { paginationModel: { pageSize: 6 } } }}
+          pageSizeOptions={[6]}
+          pagination
+        />,
+      );
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
       act(() => apiRef.current.setPage(1));
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);
@@ -786,7 +815,7 @@ describe('<DataGridPro /> - Rows', () => {
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
-      fireEvent.click(document.body);
+      userEvent.mousePress(document.body);
       expect(gridFocusCellSelector(apiRef)).to.deep.equal(null);
     });
 
@@ -796,7 +825,7 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.subscribeEvent('cellFocusOut', handleCellFocusOut);
       userEvent.mousePress(getCell(1, 0));
       expect(handleCellFocusOut.callCount).to.equal(0);
-      fireEvent.click(document.body);
+      userEvent.mousePress(document.body);
       expect(handleCellFocusOut.callCount).to.equal(1);
       expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
       expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);

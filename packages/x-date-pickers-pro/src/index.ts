@@ -1,29 +1,34 @@
 export { LicenseInfo } from '@mui/x-license-pro';
 export * from '@mui/x-date-pickers';
 
-export * from './DateRangePicker';
 export * from './DateRangePickerDay';
-export * from './DesktopDateRangePicker';
-export * from './MobileDateRangePicker';
-export * from './StaticDateRangePicker';
 
 // Fields
 export * from './MultiInputDateRangeField';
 export * from './MultiInputTimeRangeField';
 export * from './MultiInputDateTimeRangeField';
 export * from './SingleInputDateRangeField';
-export type { RangeFieldSection } from './internal/models/fields';
+export * from './SingleInputTimeRangeField';
+export * from './SingleInputDateTimeRangeField';
+export type {
+  RangeFieldSection,
+  BaseMultiInputFieldProps,
+  MultiInputFieldSlotTextFieldProps,
+} from './internals/models/fields';
 
 // Calendars
 export * from './DateRangeCalendar';
 
 // New pickers
-export * from './NextDateRangePicker';
-export * from './DesktopNextDateRangePicker';
-export * from './MobileNextDateRangePicker';
-export * from './StaticNextDateRangePicker';
+export * from './DateRangePicker';
+export * from './DesktopDateRangePicker';
+export * from './MobileDateRangePicker';
+export * from './StaticDateRangePicker';
 
 // View renderers
 export * from './dateRangeViewRenderers';
 
-export type { DateRangeValidationError } from './internal/hooks/validation/useDateRangeValidation';
+export type { DateRange, RangePosition } from './internals/models/range';
+export type { UseDateRangeFieldProps } from './internals/models/dateRange';
+
+export * from './models';

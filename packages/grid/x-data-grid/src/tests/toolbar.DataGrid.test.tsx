@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -53,8 +52,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
             rowHeight={rowHeight}
           />
@@ -80,8 +79,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
             rowHeight={rowHeight}
           />
@@ -157,8 +156,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
           />
         </div>,
@@ -167,7 +166,7 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
-      fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
+      fireEvent.click(screen.getByRole('tooltip').querySelector('[name="id"]')!);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
@@ -177,8 +176,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
           />
         </div>,
@@ -207,8 +206,8 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
             initialState={{
               columns: {
@@ -230,8 +229,8 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
           />
         </div>,
@@ -241,8 +240,8 @@ describe('<DataGrid /> - Toolbar', () => {
       act(() => button.focus());
       fireEvent.click(button);
 
-      const column: HTMLElement | null = document.querySelector('[role="tooltip"] [name="id"]');
-      act(() => column!.focus());
+      const column: HTMLElement = screen.getByRole('tooltip').querySelector('[name="id"]')!;
+      act(() => column.focus());
       fireEvent.click(column);
 
       expect(column).toHaveFocus();
@@ -274,10 +273,10 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
-            componentsProps={{
+            slotProps={{
               columnsPanel: {
                 searchPredicate: columnSearchPredicate,
               },

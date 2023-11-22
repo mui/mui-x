@@ -6,10 +6,10 @@ import {
   DataGridProps,
   GridFilterInputValue,
   GridFilterInputValueProps,
+  GridFilterOperator,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
@@ -103,13 +103,13 @@ describe('<DataGrid /> - Filter panel', () => {
                 sensitivity: 'base',
                 usage: 'search',
               });
-              return ({ value }): boolean => {
+              return (value) => {
                 return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
               };
             },
             InputComponent: GridFilterInputValue,
           },
-        ],
+        ] as GridFilterOperator<any, string>[],
       },
       { field: 'isPublished', type: 'boolean' },
       {
@@ -149,7 +149,7 @@ describe('<DataGrid /> - Filter panel', () => {
         filterModel={{ items: [{ field: 'brand', operator: 'contains' }] }}
       />,
     );
-    expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('');
   });
 
   it('should keep filter operator and value if available', () => {
@@ -174,15 +174,19 @@ describe('<DataGrid /> - Filter panel', () => {
         }}
       />,
     );
-    expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
-    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('equals');
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Puma');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'equals',
+    );
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     setColumnValue('slogan');
 
     expect(getColumnValues(0)).to.deep.equal([]);
-    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('equals');
-    expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'equals',
+    );
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Puma');
   });
 
   it('should reset value if operator is not available for the new column', () => {
@@ -207,15 +211,19 @@ describe('<DataGrid /> - Filter panel', () => {
         }}
       />,
     );
-    expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
-    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('contains');
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Pu');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'contains',
+    );
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     setColumnValue('slogan');
 
     expect(getColumnValues(0)).to.deep.equal([]);
-    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('from');
-    expect(screen.getByTestId('customInput').value).to.equal('');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'from',
+    );
+    expect(screen.getByTestId<HTMLInputElement>('customInput').value).to.equal('');
   });
 
   it('should reset value if the new operator has no input component', () => {
@@ -243,8 +251,10 @@ describe('<DataGrid /> - Filter panel', () => {
         onFilterModelChange={onFilterModelChange}
       />,
     );
-    expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
-    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('contains');
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Pu');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'contains',
+    );
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     expect(onFilterModelChange.callCount).to.equal(0);
@@ -254,7 +264,9 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
 
-    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('isEmpty');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'isEmpty',
+    );
   });
 
   it('should reset filter value if not available in the new valueOptions', () => {
@@ -491,12 +503,45 @@ describe('<DataGrid /> - Filter panel', () => {
 
     // open filter panel
     const columnCell = getColumnHeaderCell(0);
-    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
     fireEvent.click(menuIconButton);
-    fireEvent.click(screen.queryByRole('menuitem', { name: 'Filter' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
     // check that the filter is still in the model
-    expect(screen.getByRole('combobox', { name: 'Columns' }).value).to.equal('brand');
-    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('isEmpty');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Columns' }).value).to.equal(
+      'brand',
+    );
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'isEmpty',
+    );
+  });
+
+  // See https://github.com/mui/mui-x/issues/7901#issuecomment-1427058922
+  it('should remove `isAnyOf` filter from the model when filter panel is opened through column menu', () => {
+    render(
+      <TestCase
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [{ field: 'country', operator: 'isAnyOf', value: [] }],
+            },
+          },
+        }}
+      />,
+    );
+
+    // open filter panel
+    const columnCell = getColumnHeaderCell(3);
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+    fireEvent.click(menuIconButton);
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
+
+    // check that the filter is changed to default one (`is`)
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Columns' }).value).to.equal(
+      'country',
+    );
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'is',
+    );
   });
 });

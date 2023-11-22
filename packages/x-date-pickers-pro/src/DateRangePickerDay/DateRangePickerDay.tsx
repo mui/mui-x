@@ -11,7 +11,7 @@ import {
   getDateRangePickerDayUtilityClass,
   dateRangePickerDayClasses,
 } from './dateRangePickerDayClasses';
-import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
@@ -34,11 +34,11 @@ export interface DateRangePickerDayProps<TDate>
    */
   isPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the start of a previewing date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isEndOfPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the end of a previewing date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isStartOfPreviewing: boolean;
   /**
@@ -51,7 +51,13 @@ export interface DateRangePickerDayProps<TDate>
   isVisuallySelected?: boolean;
 }
 
-type OwnerState = DateRangePickerDayProps<any> & { isEndOfMonth: boolean; isStartOfMonth: boolean };
+type OwnerState = DateRangePickerDayProps<any> & {
+  isEndOfMonth: boolean;
+  isStartOfMonth: boolean;
+  isFirstVisibleCell: boolean;
+  isLastVisibleCell: boolean;
+  isHiddenDayFiller: boolean;
+};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const {
@@ -64,6 +70,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     isPreviewing,
     isStartOfPreviewing,
     isEndOfPreviewing,
+    isFirstVisibleCell,
+    isLastVisibleCell,
+    isHiddenDayFiller,
     selected,
     classes,
   } = ownerState;
@@ -71,13 +80,19 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'root',
-      isHighlighting && !outsideCurrentMonth && 'rangeIntervalDayHighlight',
-      (isStartOfHighlighting || isStartOfMonth) && 'rangeIntervalDayHighlightStart',
-      (isEndOfHighlighting || isEndOfMonth) && 'rangeIntervalDayHighlightEnd',
+      isHighlighting && 'rangeIntervalDayHighlight',
+      isStartOfHighlighting && 'rangeIntervalDayHighlightStart',
+      isEndOfHighlighting && 'rangeIntervalDayHighlightEnd',
+      outsideCurrentMonth && 'outsideCurrentMonth',
+      isStartOfMonth && 'startOfMonth',
+      isEndOfMonth && 'endOfMonth',
+      isFirstVisibleCell && 'firstVisibleCell',
+      isLastVisibleCell && 'lastVisibleCell',
+      isHiddenDayFiller && 'hiddenDayFiller',
     ],
     rangeIntervalPreview: [
       'rangeIntervalPreview',
-      isPreviewing && !outsideCurrentMonth && 'rangeIntervalDayPreview',
+      isPreviewing && 'rangeIntervalDayPreview',
       (isStartOfPreviewing || isStartOfMonth) && 'rangeIntervalDayPreviewStart',
       (isEndOfPreviewing || isEndOfMonth) && 'rangeIntervalDayPreviewEnd',
     ],
@@ -118,36 +133,57 @@ const DateRangePickerDayRoot = styled('div', {
       [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]:
         styles.rangeIntervalDayHighlightEnd,
     },
+    {
+      [`&.${dateRangePickerDayClasses.firstVisibleCell}`]: styles.firstVisibleCell,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.lastVisibleCell}`]: styles.lastVisibleCell,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.startOfMonth}`]: styles.startOfMonth,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.endOfMonth}`]: styles.endOfMonth,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.outsideCurrentMonth}`]: styles.outsideCurrentMonth,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.hiddenDayFiller}`]: styles.hiddenDayFiller,
+    },
     styles.root,
   ],
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
-  [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-    ...startBorderStyle,
-    borderLeftColor: (theme.vars || theme).palette.divider,
-  },
-  [`&:last-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-    ...endBorderStyle,
-    borderRightColor: (theme.vars || theme).palette.divider,
-  },
-  ...(ownerState.isHighlighting &&
-    !ownerState.outsideCurrentMonth && {
-      borderRadius: 0,
-      color: (theme.vars || theme).palette.primary.contrastText,
-      backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.6)`
-        : alpha(theme.palette.primary.light, 0.6),
-      '&:first-of-type': startBorderStyle,
-      '&:last-of-type': endBorderStyle,
-    }),
-  ...((ownerState.isStartOfHighlighting || ownerState.isStartOfMonth) && {
-    ...startBorderStyle,
-    paddingLeft: 0,
-  }),
-  ...((ownerState.isEndOfHighlighting || ownerState.isEndOfMonth) && {
-    ...endBorderStyle,
-    paddingRight: 0,
-  }),
-}));
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) =>
+  ownerState.isHiddenDayFiller
+    ? {}
+    : {
+        [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
+          ...startBorderStyle,
+          borderLeftColor: (theme.vars || theme).palette.divider,
+        },
+        [`&:last-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
+          ...endBorderStyle,
+          borderRightColor: (theme.vars || theme).palette.divider,
+        },
+        ...(ownerState.isHighlighting && {
+          borderRadius: 0,
+          color: (theme.vars || theme).palette.primary.contrastText,
+          backgroundColor: theme.vars
+            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
+            : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+          '&:first-of-type': startBorderStyle,
+          '&:last-of-type': endBorderStyle,
+        }),
+        ...((ownerState.isStartOfHighlighting || ownerState.isFirstVisibleCell) && {
+          ...startBorderStyle,
+          paddingLeft: 0,
+        }),
+        ...((ownerState.isEndOfHighlighting || ownerState.isLastVisibleCell) && {
+          ...endBorderStyle,
+          paddingRight: 0,
+        }),
+      },
+);
 
 DateRangePickerDayRoot.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -176,16 +212,16 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
   // replace default day component margin with transparent border to avoid jumping on preview
   border: '2px solid transparent',
   ...(ownerState.isPreviewing &&
-    !ownerState.outsideCurrentMonth && {
+    !ownerState.isHiddenDayFiller && {
       borderRadius: 0,
       border: `2px dashed ${(theme.vars || theme).palette.divider}`,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
-      ...((ownerState.isStartOfPreviewing || ownerState.isStartOfMonth) && {
+      ...((ownerState.isStartOfPreviewing || ownerState.isFirstVisibleCell) && {
         borderLeftColor: (theme.vars || theme).palette.divider,
         ...startBorderStyle,
       }),
-      ...((ownerState.isEndOfPreviewing || ownerState.isEndOfMonth) && {
+      ...((ownerState.isEndOfPreviewing || ownerState.isLastVisibleCell) && {
         borderRightColor: (theme.vars || theme).palette.divider,
         ...endBorderStyle,
       }),
@@ -211,19 +247,12 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ],
 })<{
   ownerState: OwnerState;
-}>(({ theme, ownerState }) => ({
+}>(({ ownerState }) => ({
   // Required to overlap preview border
   transform: 'scale(1.1)',
   '& > *': {
     transform: 'scale(0.9)',
   },
-  ...(!ownerState.selected && {
-    backgroundColor: 'transparent',
-  }),
-  ...(!ownerState.selected &&
-    ownerState.isHighlighting && {
-      color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
-    }),
   ...(ownerState.draggable && {
     cursor: 'grab',
   }),
@@ -232,11 +261,11 @@ const DateRangePickerDayDay = styled(PickersDay, {
   }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
-) => JSX.Element;
+) => React.JSX.Element;
 
 type DateRangePickerDayComponent = <TDate>(
   props: DateRangePickerDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
-) => JSX.Element;
+) => React.JSX.Element;
 
 const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate>(
   inProps: DateRangePickerDayProps<TDate>,
@@ -257,6 +286,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isVisuallySelected,
     sx,
     draggable,
+    isFirstVisibleCell,
+    isLastVisibleCell,
     ...other
   } = props;
 
@@ -275,6 +306,9 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isStartOfMonth,
     isEndOfMonth,
     draggable,
+    isFirstVisibleCell,
+    isLastVisibleCell,
+    isHiddenDayFiller: outsideCurrentMonth && !other.showDaysOutsideCurrentMonth,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -302,6 +336,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
           className={classes.day}
           ownerState={ownerState}
           draggable={draggable}
+          isFirstVisibleCell={isFirstVisibleCell}
+          isLastVisibleCell={isLastVisibleCell}
         />
       </DateRangePickerDayRangeIntervalPreview>
     </DateRangePickerDayRoot>
@@ -336,6 +372,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * The date to show.
    */
@@ -388,13 +425,23 @@ DateRangePickerDayRaw.propTypes = {
    */
   isEndOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the start of a previewing date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isEndOfPreviewing: PropTypes.bool.isRequired,
+  /**
+   * If `true`, day is the first visible cell of the month.
+   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isFirstVisibleCell: PropTypes.bool.isRequired,
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
   isHighlighting: PropTypes.bool.isRequired,
+  /**
+   * If `true`, day is the last visible cell of the month.
+   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isLastVisibleCell: PropTypes.bool.isRequired,
   /**
    * Set to `true` if the `day` is in a preview date range.
    */
@@ -404,7 +451,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   isStartOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the end of a previewing date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
   /**
@@ -428,7 +475,13 @@ DateRangePickerDayRaw.propTypes = {
    */
   selected: PropTypes.bool,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
@@ -470,10 +523,9 @@ DateRangePickerDayRaw.propTypes = {
 } as any;
 
 /**
- *
  * Demos:
  *
- * - [Date Range Picker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
  *
  * API:
  *

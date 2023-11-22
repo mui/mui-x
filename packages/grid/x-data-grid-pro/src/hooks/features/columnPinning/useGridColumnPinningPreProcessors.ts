@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
@@ -11,7 +12,7 @@ export const useGridColumnPinningPreProcessors = (
   props: DataGridProProcessedProps,
 ) => {
   const { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState } = props;
-
+  const theme = useTheme();
   let pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
   if (pinnedColumns == null) {
     // Since the state is not ready yet lets use the initializer to get which
@@ -24,7 +25,7 @@ export const useGridColumnPinningPreProcessors = (
     pinnedColumns = gridPinnedColumnsSelector(initializedState);
   }
 
-  const prevAllPinnedColumns = React.useRef<string[]>();
+  const prevAllPinnedColumns = React.useRef<string[]>([]);
 
   const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
@@ -35,6 +36,7 @@ export const useGridColumnPinningPreProcessors = (
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         columnsState.orderedFields,
+        theme.direction === 'rtl',
       );
 
       let newOrderedFields: string[];
@@ -51,7 +53,7 @@ export const useGridColumnPinningPreProcessors = (
 
         // First, we check if the column was unpinned since the last processing.
         // If yes and it still exists, we move it back to the same position it was before pinning
-        prevAllPinnedColumns.current!.forEach((field) => {
+        prevAllPinnedColumns.current.forEach((field) => {
           if (!allPinnedColumns.includes(field) && columnsState.lookup[field]) {
             // Get the position before pinning
             const index = orderedFieldsBeforePinningColumns.indexOf(field);
@@ -119,7 +121,7 @@ export const useGridColumnPinningPreProcessors = (
         orderedFields: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       };
     },
-    [apiRef, disableColumnPinning, pinnedColumns],
+    [apiRef, disableColumnPinning, pinnedColumns, theme.direction],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);

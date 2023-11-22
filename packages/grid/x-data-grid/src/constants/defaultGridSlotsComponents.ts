@@ -1,23 +1,7 @@
-import MUICheckbox from '@mui/material/Checkbox';
-import MUITextField from '@mui/material/TextField';
-import MUIFormControl from '@mui/material/FormControl';
-import MUISelect from '@mui/material/Select';
-import MUISwitch from '@mui/material/Switch';
-import MUIButton from '@mui/material/Button';
-import MUITooltip from '@mui/material/Tooltip';
-import MUIPopper from '@mui/material/Popper';
-import { GridIconSlotsComponent, GridSlotsComponent } from '../models';
+import { GridSlotsComponent } from '../models';
 import {
-  GridArrowDownwardIcon,
-  GridArrowUpwardIcon,
-  GridCell,
   GridSkeletonCell,
-  GridCheckIcon,
-  GridCloseIcon,
-  GridColumnIcon,
   GridColumnsPanel,
-  GridFilterAltIcon,
-  GridFilterListIcon,
   GridFilterPanel,
   GridFooter,
   GridLoadingOverlay,
@@ -26,87 +10,34 @@ import {
   GridPanel,
   GridPreferencesPanel,
   GridRow,
-  GridSaveAltIcon,
-  GridSeparatorIcon,
-  GridTableRowsIcon,
-  GridTripleDotsVerticalIcon,
-  GridViewHeadlineIcon,
-  GridViewStreamIcon,
-  GridMoreVertIcon,
-  GridExpandMoreIcon,
-  GridKeyboardArrowRight,
-  GridAddIcon,
-  GridRemoveIcon,
-  GridDragIcon,
   GridColumnHeaderFilterIconButton,
-  GridSearchIcon,
-  GridVisibilityOffIcon,
-  GridViewColumnIcon,
-  GridClearIcon,
+  GridRowCount,
 } from '../components';
+import { GridCellV7 } from '../components/cell/GridCell';
+import { GridColumnHeaders } from '../components/GridColumnHeaders';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
-import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
-import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
+import materialSlots from '../material';
 
-const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
-  BooleanCellTrueIcon: GridCheckIcon,
-  BooleanCellFalseIcon: GridCloseIcon,
-  ColumnMenuIcon: GridTripleDotsVerticalIcon,
-  OpenFilterButtonIcon: GridFilterListIcon,
-  FilterPanelDeleteIcon: GridCloseIcon,
-  ColumnFilteredIcon: GridFilterAltIcon,
-  ColumnSelectorIcon: GridColumnIcon,
-  ColumnUnsortedIcon: GridColumnUnsortedIcon,
-  ColumnSortedAscendingIcon: GridArrowUpwardIcon,
-  ColumnSortedDescendingIcon: GridArrowDownwardIcon,
-  ColumnResizeIcon: GridSeparatorIcon,
-  DensityCompactIcon: GridViewHeadlineIcon,
-  DensityStandardIcon: GridTableRowsIcon,
-  DensityComfortableIcon: GridViewStreamIcon,
-  ExportIcon: GridSaveAltIcon,
-  MoreActionsIcon: GridMoreVertIcon,
-  TreeDataCollapseIcon: GridExpandMoreIcon,
-  TreeDataExpandIcon: GridKeyboardArrowRight,
-  GroupingCriteriaCollapseIcon: GridExpandMoreIcon,
-  GroupingCriteriaExpandIcon: GridKeyboardArrowRight,
-  DetailPanelExpandIcon: GridAddIcon,
-  DetailPanelCollapseIcon: GridRemoveIcon,
-  RowReorderIcon: GridDragIcon,
-  QuickFilterIcon: GridSearchIcon,
-  QuickFilterClearIcon: GridCloseIcon,
-  ColumnMenuHideIcon: GridVisibilityOffIcon,
-  ColumnMenuSortAscendingIcon: GridArrowUpwardIcon,
-  ColumnMenuSortDescendingIcon: GridArrowDownwardIcon,
-  ColumnMenuFilterIcon: GridFilterAltIcon,
-  ColumnMenuManageColumnsIcon: GridViewColumnIcon,
-  ColumnMenuClearIcon: GridClearIcon,
-};
-
+// TODO: camelCase these key. It's a private helper now.
+// Remove then need to call `uncapitalizeObjectKeys`.
 export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
-  ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
-  BaseCheckbox: MUICheckbox,
-  BaseTextField: MUITextField,
-  BaseFormControl: MUIFormControl,
-  BaseSelect: MUISelect,
-  BaseSwitch: MUISwitch,
-  BaseButton: MUIButton,
-  BaseTooltip: MUITooltip,
-  BasePopper: MUIPopper,
-  Cell: GridCell,
-  SkeletonCell: GridSkeletonCell,
-  ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
-  ColumnMenu: GridColumnMenu,
-  ErrorOverlay: GridErrorOverlay,
-  Footer: GridFooter,
-  Toolbar: null,
-  PreferencesPanel: GridPreferencesPanel,
-  LoadingOverlay: GridLoadingOverlay,
-  NoResultsOverlay: GridNoResultsOverlay,
-  NoRowsOverlay: GridNoRowsOverlay,
-  Pagination: GridPagination,
-  FilterPanel: GridFilterPanel,
-  ColumnsPanel: GridColumnsPanel,
-  Panel: GridPanel,
-  Row: GridRow,
+  ...materialSlots,
+  cell: GridCellV7,
+  skeletonCell: GridSkeletonCell,
+  columnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
+  columnMenu: GridColumnMenu,
+  columnHeaders: GridColumnHeaders,
+  footer: GridFooter,
+  footerRowCount: GridRowCount,
+  toolbar: null,
+  preferencesPanel: GridPreferencesPanel,
+  loadingOverlay: GridLoadingOverlay,
+  noResultsOverlay: GridNoResultsOverlay,
+  noRowsOverlay: GridNoRowsOverlay,
+  pagination: GridPagination,
+  filterPanel: GridFilterPanel,
+  columnsPanel: GridColumnsPanel,
+  panel: GridPanel,
+  row: GridRow,
 };

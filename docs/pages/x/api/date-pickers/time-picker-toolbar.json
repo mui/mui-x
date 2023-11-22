@@ -1,0 +1,43 @@
+{
+  "props": {
+    "onViewChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      },
+      "required": true
+    },
+    "className": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "toolbarFormat": { "type": { "name": "string" } },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+  },
+  "slots": [],
+  "name": "TimePickerToolbar",
+  "imports": [
+    "import { TimePickerToolbar } from '@mui/x-date-pickers/TimePicker';",
+    "import { TimePickerToolbar } from '@mui/x-date-pickers';",
+    "import { TimePickerToolbar } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": {
+    "classes": [
+      "root",
+      "separator",
+      "hourMinuteLabel",
+      "hourMinuteLabelLandscape",
+      "hourMinuteLabelReverse",
+      "ampmSelection",
+      "ampmLandscape",
+      "ampmLabel"
+    ],
+    "globalClasses": {},
+    "name": "MuiTimePickerToolbar"
+  },
+  "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
+}

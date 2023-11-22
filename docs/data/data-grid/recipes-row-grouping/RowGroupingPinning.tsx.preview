@@ -1,0 +1,1 @@
+<DataGridPremium {...data} apiRef={apiRef} initialState={initialState} />

@@ -71,7 +71,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   return (
     <MenuItem disableRipple>
       <ListItemIcon>
-        <rootProps.components.ColumnMenuAggregationIcon fontSize="small" />
+        <rootProps.slots.columnMenuAggregationIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>
         <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>

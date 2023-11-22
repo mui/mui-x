@@ -1,0 +1,8 @@
+<StaticDateRangePicker
+  shouldDisableDate={shouldDisableDate}
+  slotProps={{
+    shortcuts: {
+      items: shortcutsItems,
+    },
+  }}
+/>

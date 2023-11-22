@@ -14,20 +14,20 @@ type UnwrappedGroupingModel = { [key: GridColDef['field']]: GridColumnGroup['gro
 const recurrentUnwrapGroupingColumnModel = (
   columnGroupNode: GridColumnNode,
   parents: GridColumnGroup['groupId'][],
-  unwrappedGroupingModelToComplet: UnwrappedGroupingModel,
+  unwrappedGroupingModelToComplete: UnwrappedGroupingModel,
 ): void => {
   if (isLeaf(columnGroupNode)) {
-    if (unwrappedGroupingModelToComplet[columnGroupNode.field] !== undefined) {
+    if (unwrappedGroupingModelToComplete[columnGroupNode.field] !== undefined) {
       throw new Error(
         [
           `MUI: columnGroupingModel contains duplicated field`,
-          `column field ${columnGroupNode.field} occurrs two times in the grouping model:`,
-          `- ${unwrappedGroupingModelToComplet[columnGroupNode.field].join(' > ')}`,
+          `column field ${columnGroupNode.field} occurs two times in the grouping model:`,
+          `- ${unwrappedGroupingModelToComplete[columnGroupNode.field].join(' > ')}`,
           `- ${parents.join(' > ')}`,
         ].join('\n'),
       );
     }
-    unwrappedGroupingModelToComplet[columnGroupNode.field] = parents;
+    unwrappedGroupingModelToComplete[columnGroupNode.field] = parents;
     return;
   }
 
@@ -36,7 +36,7 @@ const recurrentUnwrapGroupingColumnModel = (
     recurrentUnwrapGroupingColumnModel(
       child,
       [...parents, groupId],
-      unwrappedGroupingModelToComplet,
+      unwrappedGroupingModelToComplete,
     );
   });
 };
@@ -65,6 +65,7 @@ export const unwrapGroupingColumnModel = (
 export const getColumnGroupsHeaderStructure = (
   orderedColumns: string[],
   unwrappedGroupingModel: UnwrappedGroupingModel,
+  pinnedFields: { right?: string[]; left?: string[] },
 ) => {
   const getParents = (field: string) => unwrappedGroupingModel[field] ?? [];
 
@@ -73,6 +74,24 @@ export const getColumnGroupsHeaderStructure = (
 
   const haveSameParents = (field1: string, field2: string, depth: number) =>
     isDeepEqual(getParents(field1).slice(0, depth + 1), getParents(field2).slice(0, depth + 1));
+
+  const haveDifferentContainers = (field1: string, field2: string) => {
+    if (
+      pinnedFields?.left &&
+      pinnedFields.left.includes(field1) &&
+      !pinnedFields.left.includes(field2)
+    ) {
+      return true;
+    }
+    if (
+      pinnedFields?.right &&
+      !pinnedFields.right.includes(field1) &&
+      pinnedFields.right.includes(field2)
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   for (let depth = 0; depth < maxDepth; depth += 1) {
     const depthStructure = orderedColumns.reduce((structure, newField) => {
@@ -90,7 +109,12 @@ export const getColumnGroupsHeaderStructure = (
       const prevField = lastGroup.columnFields[lastGroup.columnFields.length - 1];
       const prevGroupId = lastGroup.groupId;
 
-      if (prevGroupId !== groupId || !haveSameParents(prevField, newField, depth)) {
+      if (
+        prevGroupId !== groupId ||
+        !haveSameParents(prevField, newField, depth) ||
+        // Fix for https://github.com/mui/mui-x/issues/7041
+        haveDifferentContainers(prevField, newField)
+      ) {
         // It's a new group
         return [
           ...structure,

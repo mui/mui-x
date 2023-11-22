@@ -32,16 +32,21 @@ export default function UseGridSelector() {
     maxColumns: 10,
   });
 
+  const [paginationModel, setPaginationModel] = React.useState({
+    pageSize: 10,
+    page: 0,
+  });
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
         loading={loading}
-        pagination
-        pageSize={10}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
         hideFooter
-        components={{
-          Toolbar,
+        slots={{
+          toolbar: Toolbar,
         }}
       />
     </div>

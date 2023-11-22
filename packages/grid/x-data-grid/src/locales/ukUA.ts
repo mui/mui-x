@@ -25,7 +25,6 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Немає рядків',
   noResultsOverlayLabel: 'Дані не знайдено.',
-  errorOverlayDefaultLabel: 'Виявлено помилку.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Висота рядка',
@@ -71,8 +70,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
+  filterPanelRemoveAll: 'Видалити всі',
   filterPanelDeleteIconLabel: 'Видалити',
-  filterPanelLinkOperator: 'Логічна функція',
+  filterPanelLogicOperator: 'Логічна функція',
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',
@@ -94,6 +94,33 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'порожній',
   filterOperatorIsNotEmpty: 'не порожній',
   filterOperatorIsAnyOf: 'будь-що із',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Містить',
+  headerFilterOperatorEquals: 'Дорівнює',
+  headerFilterOperatorStartsWith: 'Починається з',
+  headerFilterOperatorEndsWith: 'Закінчується на',
+  headerFilterOperatorIs: 'Дорівнює',
+  headerFilterOperatorNot: 'Не дорівнює',
+  headerFilterOperatorAfter: 'Після',
+  headerFilterOperatorOnOrAfter: 'Після (включаючи)',
+  headerFilterOperatorBefore: 'Раніше',
+  headerFilterOperatorOnOrBefore: 'Раніше (включаючи)',
+  headerFilterOperatorIsEmpty: 'Порожнє',
+  headerFilterOperatorIsNotEmpty: 'Не порожнє',
+  headerFilterOperatorIsAnyOf: 'Будь-що із',
+  'headerFilterOperator=': 'Дорівнює',
+  'headerFilterOperator!=': 'Не дорівнює',
+  'headerFilterOperator>': 'Більше ніж',
+  'headerFilterOperator>=': 'Більше або дорівнює',
+  'headerFilterOperator<': 'Менше ніж',
+  'headerFilterOperator<=': 'Менше або дорівнює',
 
   // Filter values text
   filterValueAny: 'будь-який',
@@ -103,7 +130,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показати стовпці',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Керування стовпцями',
   columnMenuFilter: 'Фільтр',
   columnMenuHideColumn: 'Приховати',
   columnMenuUnsort: 'Скасувати сортування',
@@ -174,11 +201,11 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Агрегація',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationFunctionLabelSum: 'сума',
+  aggregationFunctionLabelAvg: 'сер',
+  aggregationFunctionLabelMin: 'мін',
+  aggregationFunctionLabelMax: 'макс',
+  aggregationFunctionLabelSize: 'кількість',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

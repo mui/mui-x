@@ -6,18 +6,17 @@ import {
   fireEvent,
   getByRole,
   describeConformance,
-  createEvent,
   fireTouchChangedEvent,
   userEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import {
   adapterToUse,
-  createPickerRenderer,
-  DragEventTypes,
+  buildPickerDragInteractions,
   MockedDataTransfer,
   rangeCalendarDayTouches,
+  createPickerRenderer,
   wrapPickerMount,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,
@@ -26,7 +25,7 @@ import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { DateRangePosition } from './DateRangeCalendar.types';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 const dynamicShouldDisableDate = (date, position: DateRangePosition) => {
   if (position === 'end') {
@@ -58,7 +57,7 @@ describe('<DateRangeCalendar />', () => {
       render(
         <DateRangeCalendar
           onChange={onChange}
-          defaultValue={[adapterToUse.date(new Date(2019, 0, 1)), null]}
+          defaultValue={[adapterToUse.date('2019-01-01'), null]}
         />,
       );
 
@@ -90,7 +89,7 @@ describe('<DateRangeCalendar />', () => {
       render(
         <DateRangeCalendar
           onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date(new Date(2019, 0, 1))}
+          defaultCalendarMonth={adapterToUse.date('2019-01-01')}
         />,
       );
 
@@ -110,10 +109,7 @@ describe('<DateRangeCalendar />', () => {
     it('should highlight the selected range of dates', () => {
       render(
         <DateRangeCalendar
-          defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 0, 31)),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
         />,
       );
 
@@ -123,10 +119,7 @@ describe('<DateRangeCalendar />', () => {
     it('prop: disableDragEditing - should not allow dragging range', () => {
       render(
         <DateRangeCalendar
-          defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 0, 31)),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
           disableDragEditing
         />,
       );
@@ -142,55 +135,28 @@ describe('<DateRangeCalendar />', () => {
     describe('dragging behavior', () => {
       let dataTransfer: DataTransfer | null;
 
-      const createDragEvent = (type: DragEventTypes, target: ChildNode) => {
-        const createdEvent = createEvent[type](target);
-        Object.defineProperty(createdEvent, 'dataTransfer', {
-          value: dataTransfer,
-        });
-        return createdEvent;
-      };
-
-      const executeDateDragWithoutDrop = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
-        const endDate = otherDates[otherDates.length - 1];
-        fireEvent(startDate, createDragEvent('dragStart', startDate));
-        fireEvent(startDate, createDragEvent('dragLeave', startDate));
-        otherDates.slice(0, otherDates.length - 1).forEach((date) => {
-          fireEvent(date, createDragEvent('dragEnter', date));
-          fireEvent(date, createDragEvent('dragOver', date));
-          fireEvent(date, createDragEvent('dragLeave', date));
-        });
-        fireEvent(endDate, createDragEvent('dragEnter', endDate));
-        fireEvent(endDate, createDragEvent('dragOver', endDate));
-      };
-
-      const executeDateDrag = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
-        executeDateDragWithoutDrop(startDate, ...otherDates);
-        const endDate = otherDates[otherDates.length - 1];
-        fireEvent(endDate, createDragEvent('drop', endDate));
-        fireEvent(endDate, createDragEvent('dragEnd', endDate));
-      };
+      const { executeDateDragWithoutDrop, executeDateDrag } = buildPickerDragInteractions(
+        () => dataTransfer,
+      );
 
       type TouchTarget = Pick<Touch, 'clientX' | 'clientY'>;
 
       const fireTouchEvent = (
         type: 'touchstart' | 'touchmove' | 'touchend',
-        target: ChildNode,
+        target: Element,
         touch: TouchTarget,
       ) => {
         fireTouchChangedEvent(target, type, { changedTouches: [touch] });
       };
 
-      const executeDateTouchDragWithoutEnd = (
-        target: ChildNode,
-        ...touchTargets: TouchTarget[]
-      ) => {
+      const executeDateTouchDragWithoutEnd = (target: Element, ...touchTargets: TouchTarget[]) => {
         fireTouchEvent('touchstart', target, touchTargets[0]);
         touchTargets.slice(0, touchTargets.length - 1).forEach((touch) => {
           fireTouchEvent('touchmove', target, touch);
         });
       };
 
-      const executeDateTouchDrag = (target: ChildNode, ...touchTargets: TouchTarget[]) => {
+      const executeDateTouchDrag = (target: Element, ...touchTargets: TouchTarget[]) => {
         const endTouchTarget = touchTargets[touchTargets.length - 1];
         executeDateTouchDragWithoutEnd(target, ...touchTargets);
         fireTouchEvent('touchend', target, endTouchTarget);
@@ -209,10 +175,7 @@ describe('<DateRangeCalendar />', () => {
         render(
           <DateRangeCalendar
             onChange={onChange}
-            defaultValue={[
-              adapterToUse.date(new Date(2018, 0, 1)),
-              adapterToUse.date(new Date(2018, 0, 31)),
-            ]}
+            defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
           />,
         );
 
@@ -233,10 +196,7 @@ describe('<DateRangeCalendar />', () => {
         render(
           <DateRangeCalendar
             onChange={onChange}
-            defaultValue={[
-              adapterToUse.date(new Date(2018, 0, 1)),
-              adapterToUse.date(new Date(2018, 0, 10)),
-            ]}
+            defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-10')]}
           />,
         );
 
@@ -256,8 +216,8 @@ describe('<DateRangeCalendar />', () => {
       it('should emit "onChange" when dragging end date', () => {
         const onChange = spy();
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 10)),
-          adapterToUse.date(new Date(2018, 0, 31)),
+          adapterToUse.date('2018-01-10'),
+          adapterToUse.date('2018-01-31'),
         ];
         render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
@@ -302,8 +262,8 @@ describe('<DateRangeCalendar />', () => {
         }
         const onChange = spy();
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 2)),
-          adapterToUse.date(new Date(2018, 0, 11)),
+          adapterToUse.date('2018-01-02'),
+          adapterToUse.date('2018-01-11'),
         ];
         render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
@@ -344,8 +304,8 @@ describe('<DateRangeCalendar />', () => {
       it('should emit "onChange" when dragging start date', () => {
         const onChange = spy();
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 20)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-20'),
         ];
         render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
@@ -380,8 +340,8 @@ describe('<DateRangeCalendar />', () => {
         }
         const onChange = spy();
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 10)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-10'),
         ];
         render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
@@ -421,8 +381,8 @@ describe('<DateRangeCalendar />', () => {
 
       it('should dynamically update "shouldDisableDate" when flip dragging', () => {
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 7)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-07'),
         ];
         render(
           <DateRangeCalendar
@@ -433,7 +393,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(6);
+        expect(
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+        ).to.have.lengthOf(6);
         // flip date range
         executeDateDragWithoutDrop(
           screen.getByRole('gridcell', { name: '1' }),
@@ -442,7 +404,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
+        expect(
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+        ).to.have.lengthOf(10);
       });
 
       it('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
@@ -450,8 +414,8 @@ describe('<DateRangeCalendar />', () => {
           this.skip();
         }
         const initialValue: [any, any] = [
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 7)),
+          adapterToUse.date('2018-01-01'),
+          adapterToUse.date('2018-01-07'),
         ];
         render(
           <DateRangeCalendar
@@ -462,7 +426,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(6);
+        expect(
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+        ).to.have.lengthOf(6);
         // flip date range
         executeDateTouchDragWithoutEnd(
           screen.getByRole('gridcell', { name: '1' }),
@@ -472,17 +438,19 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
+        expect(
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+        ).to.have.lengthOf(10);
       });
     });
   });
 
-  describe('Component slots: Day', () => {
+  describe('Component slot: Day', () => {
     it('should render custom day component', () => {
       render(
         <DateRangeCalendar
-          components={{
-            Day: (day) => <div key={String(day)} data-testid="slot used" />,
+          slots={{
+            day: (day) => <div key={String(day)} data-testid="slot used" />,
           }}
         />,
       );
@@ -495,10 +463,7 @@ describe('<DateRangeCalendar />', () => {
     it('should go to the month of the end date when changing the start date', () => {
       render(
         <DateRangeCalendar
-          defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 6, 1)),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
         />,
       );
 
@@ -510,10 +475,7 @@ describe('<DateRangeCalendar />', () => {
     it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', () => {
       render(
         <DateRangeCalendar
-          defaultValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 6, 1)),
-          ]}
+          defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
           disableAutoMonthSwitching
         />,
       );
@@ -526,12 +488,12 @@ describe('<DateRangeCalendar />', () => {
     it('should go to the month of the start date when changing both date from the outside', () => {
       const { setProps } = render(
         <DateRangeCalendar
-          value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 6, 1))]}
+          value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
         />,
       );
 
       setProps({
-        value: [adapterToUse.date(new Date(2018, 3, 1)), adapterToUse.date(new Date(2018, 3, 1))],
+        value: [adapterToUse.date('2018-04-01'), adapterToUse.date('2018-04-01')],
       });
       clock.runToLast();
       expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
@@ -543,10 +505,7 @@ describe('<DateRangeCalendar />', () => {
       const handleChange = spy();
       render(
         <DateRangeCalendar
-          value={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 0, 10)),
-          ]}
+          value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-10')]}
           onChange={handleChange}
           {...{ [prop]: true }}
         />,
@@ -579,8 +538,8 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );
@@ -595,8 +554,8 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );

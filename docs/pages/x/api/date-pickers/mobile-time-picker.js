@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ApiPage from 'docsx/src/modules/components/ApiPage';
+import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import jsonPageContent from './mobile-time-picker.json';
 
@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/date-pickers',
     false,
-    /\/mobile-time-picker(-[a-z]{2})?\.json$/,
+    /\.\/mobile-time-picker(-[a-z]{2})?\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

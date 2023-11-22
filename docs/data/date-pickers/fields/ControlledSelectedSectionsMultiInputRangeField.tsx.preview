@@ -1,0 +1,15 @@
+<Stack spacing={2} justifyContent="space-between">
+  {renderDateHeader('start')}
+  {renderDateHeader('end')}
+</Stack>
+<MultiInputDateRangeField
+  sx={{ minWidth: 300 }}
+  slotProps={{
+    textField: (ownerState) => ({
+      inputRef:
+        ownerState.position === 'start' ? startInputRef : endInputRef,
+    }),
+  }}
+  selectedSections={selectedSections}
+  onSelectedSectionsChange={setSelectedSections}
+/>

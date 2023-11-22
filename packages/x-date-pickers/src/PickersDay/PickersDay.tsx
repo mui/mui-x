@@ -19,11 +19,31 @@ import {
   pickersDayClasses,
 } from './pickersDayClasses';
 
+export interface ExportedPickersDayProps {
+  /**
+   * If `true`, today's date is rendering without highlighting with circle.
+   * @default false
+   */
+  disableHighlightToday?: boolean;
+  /**
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
+   * @default false
+   */
+  showDaysOutsideCurrentMonth?: boolean;
+}
+
 export interface PickersDayProps<TDate>
-  extends Omit<
-    ExtendMui<ButtonBaseProps>,
-    'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent'
-  > {
+  extends ExportedPickersDayProps,
+    Omit<
+      ExtendMui<ButtonBaseProps>,
+      'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent'
+    > {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -37,11 +57,7 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   disabled?: boolean;
-  /**
-   * If `true`, today's date is rendering without highlighting with circle.
-   * @default false
-   */
-  disableHighlightToday?: boolean;
+
   /**
    * If `true`, days are rendering without margin. Useful for displaying linked range of days.
    * @default false
@@ -58,15 +74,20 @@ export interface PickersDayProps<TDate>
    */
   outsideCurrentMonth: boolean;
   /**
+   * If `true`, day is the first visible cell of the month.
+   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isFirstVisibleCell: boolean;
+  /**
+   * If `true`, day is the last visible cell of the month.
+   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isLastVisibleCell: boolean;
+  /**
    * If `true`, renders as selected.
    * @default false
    */
   selected?: boolean;
-  /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
-   * @default false
-   */
-  showDaysOutsideCurrentMonth?: boolean;
   /**
    * If `true`, renders as today date.
    * @default false
@@ -88,15 +109,16 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
     classes,
   } = ownerState;
 
+  const isHiddenDaySpacingFiller = outsideCurrentMonth && !showDaysOutsideCurrentMonth;
   const slots = {
     root: [
       'root',
-      selected && 'selected',
+      selected && !isHiddenDaySpacingFiller && 'selected',
       disabled && 'disabled',
       !disableMargin && 'dayWithMargin',
       !disableHighlightToday && today && 'today',
       outsideCurrentMonth && showDaysOutsideCurrentMonth && 'dayOutsideMonth',
-      outsideCurrentMonth && !showDaysOutsideCurrentMonth && 'hiddenDaySpacingFiller',
+      isHiddenDaySpacingFiller && 'hiddenDaySpacingFiller',
     ],
     hiddenDaySpacingFiller: ['hiddenDaySpacingFiller'],
   };
@@ -110,20 +132,23 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   height: DAY_SIZE,
   borderRadius: '50%',
   padding: 0,
-  // background required here to prevent collides with the other days when animating with transition group
-  backgroundColor: (theme.vars || theme).palette.background.paper,
+  // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
+  backgroundColor: 'transparent',
+  transition: theme.transitions.create('background-color', {
+    duration: theme.transitions.duration.short,
+  }),
   color: (theme.vars || theme).palette.text.primary,
   '@media (pointer: fine)': {
     '&:hover': {
       backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-        : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+        ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
+        : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
     },
   },
   '&:focus': {
     backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
+      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
     [`&.${pickersDayClasses.selected}`]: {
       willChange: 'background-color',
       backgroundColor: (theme.vars || theme).palette.primary.dark,
@@ -133,16 +158,16 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
-    transition: theme.transitions.create('background-color', {
-      duration: theme.transitions.duration.short,
-    }),
     '&:hover': {
       willChange: 'background-color',
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
-  [`&.${pickersDayClasses.disabled}`]: {
+  [`&.${pickersDayClasses.disabled}:not(.${pickersDayClasses.selected})`]: {
     color: (theme.vars || theme).palette.text.disabled,
+  },
+  [`&.${pickersDayClasses.disabled}&.${pickersDayClasses.selected}`]: {
+    opacity: 0.6,
   },
   ...(!ownerState.disableMargin && {
     margin: `0 ${DAY_MARGIN}px`,
@@ -198,7 +223,7 @@ const noop = () => {};
 
 type PickersDayComponent = (<TDate>(
   props: PickersDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   inProps: PickersDayProps<TDate>,
@@ -230,8 +255,11 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     showDaysOutsideCurrentMonth = false,
     children,
     today: isToday = false,
+    isFirstVisibleCell,
+    isLastVisibleCell,
     ...other
   } = props;
+
   const ownerState = {
     ...props,
     autoFocus,
@@ -341,6 +369,7 @@ PickersDayRaw.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * The date to show.
    */
@@ -388,6 +417,16 @@ PickersDayRaw.propTypes = {
    */
   focusVisibleClassName: PropTypes.string,
   isAnimating: PropTypes.bool,
+  /**
+   * If `true`, day is the first visible cell of the month.
+   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isFirstVisibleCell: PropTypes.bool.isRequired,
+  /**
+   * If `true`, day is the last visible cell of the month.
+   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isLastVisibleCell: PropTypes.bool.isRequired,
   onBlur: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   onFocus: PropTypes.func,
@@ -408,7 +447,13 @@ PickersDayRaw.propTypes = {
    */
   selected: PropTypes.bool,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
@@ -450,11 +495,9 @@ PickersDayRaw.propTypes = {
 } as any;
 
 /**
- *
  * Demos:
  *
- * - [Date Picker](https://mui.com/x/react-date-pickers/date-picker/)
- *
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
  * API:
  *
  * - [PickersDay API](https://mui.com/x/api/date-pickers/pickers-day/)

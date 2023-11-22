@@ -45,7 +45,7 @@ function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   return (
     <MenuItem onClick={toggleColumn} disabled={disabled}>
       <ListItemIcon>
-        <rootProps.components.ColumnMenuHideIcon fontSize="small" />
+        <rootProps.slots.columnMenuHideIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>{apiRef.current.getLocaleText('columnMenuHideColumn')}</ListItemText>
     </MenuItem>

@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { DateOrTimeView } from '../views';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
+import { DateOrTimeViewWithMeridiem } from '../common';
 
-export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
+export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedBaseToolbarProps {
   isLandscape: boolean;
   onChange: (newValue: TValue) => void;
@@ -16,13 +18,10 @@ export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
    * @param {TView} view The view to open
    */
   onViewChange: (view: TView) => void;
-  views: readonly DateOrTimeView[];
+  views: readonly TView[];
   disabled?: boolean;
   readOnly?: boolean;
-  // TODO v6: Drop with the legacy pickers
-  isMobileKeyboardViewOpen?: boolean;
-  // TODO v6: Drop with the legacy pickers
-  toggleMobileKeyboardView?: () => void;
+  titleId?: string;
 }
 
 export interface ExportedBaseToolbarProps {
@@ -39,4 +38,11 @@ export interface ExportedBaseToolbarProps {
    * className applied to the root component.
    */
   className?: string;
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden?: boolean;
+
+  sx?: SxProps<Theme>;
 }

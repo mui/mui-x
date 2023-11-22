@@ -1,7 +1,5 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import {
   randomInt,
@@ -29,7 +27,7 @@ function ExpandableCell({ value }) {
   const [expanded, setExpanded] = React.useState(false);
 
   return (
-    <Box>
+    <div>
       {expanded ? value : value.slice(0, 200)}&nbsp;
       {value.length > 200 && (
         // eslint-disable-next-line jsx-a11y/anchor-is-valid
@@ -42,17 +40,9 @@ function ExpandableCell({ value }) {
           {expanded ? 'view less' : 'view more'}
         </Link>
       )}
-    </Box>
+    </div>
   );
 }
-
-ExpandableCell.propTypes = {
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.any,
-};
 
 const columns = [
   { field: 'id' },
@@ -84,13 +74,13 @@ for (let i = 0; i < 10; i += 1) {
 
 export default function ExpandableCells() {
   return (
-    <div style={{ height: 400, width: 800 }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
         getEstimatedRowHeight={() => 100}
         getRowHeight={() => 'auto'}
-        components={{ Toolbar: GridToolbar }}
+        slots={{ toolbar: GridToolbar }}
         sx={{
           '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
             py: 1,

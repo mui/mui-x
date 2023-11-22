@@ -13,8 +13,8 @@ export default function ToolbarGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
-          Toolbar: GridToolbar,
+        slots={{
+          toolbar: GridToolbar,
         }}
       />
     </div>

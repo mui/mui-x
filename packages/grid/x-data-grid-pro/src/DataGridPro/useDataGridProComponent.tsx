@@ -40,6 +40,10 @@ import {
   rowSelectionStateInitializer,
   useGridColumnGrouping,
   columnGroupsStateInitializer,
+  headerFilteringStateInitializer,
+  useGridHeaderFiltering,
+  virtualizationStateInitializer,
+  useGridVirtualization,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -98,6 +102,7 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
@@ -116,7 +121,9 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
+  useGridInitializeState(virtualizationStateInitializer, apiRef, props);
 
+  useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
@@ -124,7 +131,7 @@ export const useDataGridProComponent = (
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
-  useGridParamsApi(apiRef);
+  useGridParamsApi(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
@@ -143,12 +150,13 @@ export const useDataGridProComponent = (
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
   useGridColumnMenu(apiRef);
-  useGridCsvExport(apiRef);
+  useGridCsvExport(apiRef, props);
   useGridPrintExport(apiRef, props);
-  useGridClipboard(apiRef);
+  useGridClipboard(apiRef, props);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
+  useGridVirtualization(apiRef, props);
 
   return apiRef;
 };

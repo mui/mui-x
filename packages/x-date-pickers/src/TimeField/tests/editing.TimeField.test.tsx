@@ -1,463 +1,456 @@
-import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { Unstable_TimeField as TimeField, TimeFieldProps } from '@mui/x-date-pickers/TimeField';
-import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, adapterToUse, expectInputValue } from 'test/utils/pickers-utils';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
+import { userEvent, fireEvent } from '@mui-internal/test-utils';
+import { expectInputValue, getCleanedSelectedContent, describeAdapters } from 'test/utils/pickers';
 
 describe('<TimeField /> - Editing', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2022, 5, 15, 14, 25, 32),
-  });
-
-  const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
-    act(() => {
-      input.focus();
-      input.setSelectionRange(cursorPosition, cursorPosition);
-      clock.runToLast();
-    });
-  };
-
-  const testKeyPress = <TDate extends unknown>({
-    key,
-    expectedValue,
-    cursorPosition = 1,
-    valueToSelect,
-    ...props
-  }: TimeFieldProps<TDate> & {
-    key: string;
-    expectedValue: string;
-    cursorPosition?: number;
-    valueToSelect?: string;
-  }) => {
-    render(<TimeField {...props} />);
-    const input = screen.getByRole('textbox');
-    const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
-    if (clickPosition === -1) {
-      throw new Error(
-        `Failed to find value to select "${valueToSelect}" in input value: ${input.value}`,
-      );
-    }
-    clickOnInput(input, clickPosition);
-    userEvent.keyPress(input, { key });
-    expectInputValue(input, expectedValue);
-  };
-
-  const testChange = <TDate extends unknown>({
-    inputValue,
-    expectedValue,
-    cursorPosition = 1,
-    ...props
-  }: TimeFieldProps<TDate> & {
-    inputValue: string;
-    expectedValue: string;
-    cursorPosition?: number;
-  }) => {
-    render(<TimeField {...props} />);
-    const input = screen.getByRole('textbox');
-    clickOnInput(input, cursorPosition);
-    fireEvent.change(input, { target: { value: inputValue } });
-    expectInputValue(input, expectedValue);
-  };
-
-  describe('key: ArrowDown', () => {
-    describe('24 hours format', () => {
+  describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
+    describe('24 hours format (ArrowDown)', () => {
       it('should set the hour to 23 when no value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.hours24h,
+        testFieldKeyPress({
+          format: adapter.formats.hours24h,
           key: 'ArrowDown',
           expectedValue: '23',
         });
       });
 
       it('should decrement the hour when a value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.hours24h,
-          defaultValue: adapterToUse.date(),
+        testFieldKeyPress({
+          format: adapter.formats.hours24h,
+          defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowDown',
           expectedValue: '13',
         });
       });
 
       it('should go to the last hour of the previous day when a value in the first hour is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime24h,
-          defaultValue: adapterToUse.date(new Date(2022, 5, 15, 0, 12, 25)),
+        testFieldKeyPress({
+          format: adapter.formats.fullTime24h,
+          defaultValue: adapter.date('2022-06-15T00:12:25'),
           key: 'ArrowDown',
           expectedValue: '23:12',
         });
       });
 
       it('should set the minutes to 59 when no value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.minutes,
+        testFieldKeyPress({
+          format: adapter.formats.minutes,
           key: 'ArrowDown',
           expectedValue: '59',
         });
       });
 
       it('should decrement the minutes when a value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.minutes,
-          defaultValue: adapterToUse.date(),
-          key: 'ArrowDown',
-          expectedValue: '24',
-        });
-      });
-
-      it('should go to the last minute of the previous hour when a value with 0 minutes is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime24h,
-          defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 0, 32)),
-          key: 'ArrowDown',
-          expectedValue: '13:59',
-          valueToSelect: '00',
-        });
-      });
-    });
-
-    describe('12 hours format', () => {
-      it('should set the hour to 11 when no value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.hours12h,
+        testFieldKeyPress({
+          format: adapter.formats.minutes,
+          defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowDown',
           expectedValue: '11',
         });
       });
 
-      it('should go to the last hour of the previous day when a value in the first hour is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
-          defaultValue: adapterToUse.date(new Date(2022, 5, 15, 0, 12, 25)),
+      it('should go to the last minute of the current hour when a value with 0 minutes is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.fullTime24h,
+          defaultValue: adapter.date('2022-06-15T14:00:25'),
           key: 'ArrowDown',
-          expectedValue: '11:12 pm',
+          expectedValue: '14:59',
+          selectedSection: 'minutes',
+        });
+      });
+    });
+
+    describe('12 hours format (ArrowDown)', () => {
+      it('should set the hour to 11 when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.hours12h,
+          key: 'ArrowDown',
+          expectedValue: '12',
+        });
+      });
+
+      it('should go to the last hour of the current morning when a value in the first hour is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.fullTime12h,
+          defaultValue: adapter.date('2022-06-15T00:12:25'),
+          key: 'ArrowDown',
+          expectedValue: '11:12 AM',
         });
       });
 
       it('should set the meridiem to PM when no value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
+        testFieldKeyPress({
+          format: adapter.formats.fullTime12h,
           key: 'ArrowDown',
-          expectedValue: 'hh:mm pm',
-          valueToSelect: 'aa',
+          expectedValue: 'hh:mm PM',
+          selectedSection: 'meridiem',
         });
       });
 
       it('should set the meridiem to PM when a value in AM is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
-          defaultValue: new Date(2022, 5, 15, 2, 25, 32),
+        testFieldKeyPress({
+          format: adapter.formats.fullTime12h,
+          defaultValue: adapter.date('2022-06-15T02:12:25'),
           key: 'ArrowDown',
-          expectedValue: '02:25 pm',
-          valueToSelect: 'am',
+          expectedValue: '02:12 PM',
+          selectedSection: 'meridiem',
         });
       });
 
       it('should set the meridiem to AM when a value in PM is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
-          defaultValue: new Date(2022, 5, 15, 14, 25, 32),
+        testFieldKeyPress({
+          format: adapter.formats.fullTime12h,
+          defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowDown',
-          expectedValue: '02:25 am',
-          valueToSelect: 'pm',
-        });
-      });
-
-      it('should go from AM to PM when the current value is 00:00 AM', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
-          defaultValue: adapterToUse.date(new Date(2022, 5, 15, 0, 0, 32)),
-          key: 'ArrowDown',
-          expectedValue: '11:59 pm',
-          valueToSelect: '00',
-        });
-      });
-
-      it('should go from PM to AM when the current value is 00:00 PM', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
-          defaultValue: adapterToUse.date(new Date(2022, 5, 15, 12, 0, 32)),
-          key: 'ArrowDown',
-          expectedValue: '11:59 am',
-          valueToSelect: '00',
+          expectedValue: '02:12 AM',
+          selectedSection: 'meridiem',
         });
       });
     });
   });
 
-  describe('key: ArrowUp', () => {
-    describe('24 hours format', () => {
+  describeAdapters('key: ArrowUp', TimeField, ({ adapter, testFieldKeyPress }) => {
+    describe('24 hours format (ArrowUp)', () => {
       it('should set the hour to 0 when no value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.hours24h,
+        testFieldKeyPress({
+          format: adapter.formats.hours24h,
           key: 'ArrowUp',
           expectedValue: '00',
         });
       });
 
       it('should increment the hour when a value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.hours24h,
-          defaultValue: adapterToUse.date(),
+        testFieldKeyPress({
+          format: adapter.formats.hours24h,
+          defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowUp',
           expectedValue: '15',
         });
       });
 
-      it('should go to the first hour of the next day when a value in the last hour is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime24h,
-          defaultValue: adapterToUse.date(new Date(2022, 5, 15, 23, 12, 25)),
+      it('should go to the first hour of the current day when a value in the last hour is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.fullTime24h,
+          defaultValue: adapter.date('2022-06-15T23:12:25'),
           key: 'ArrowUp',
           expectedValue: '00:12',
         });
       });
 
       it('should set the minutes to 00 when no value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.minutes,
+        testFieldKeyPress({
+          format: adapter.formats.minutes,
           key: 'ArrowUp',
           expectedValue: '00',
         });
       });
 
       it('should increment the minutes when a value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.minutes,
-          defaultValue: adapterToUse.date(),
+        testFieldKeyPress({
+          format: adapter.formats.minutes,
+          defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowUp',
-          expectedValue: '26',
+          expectedValue: '13',
         });
       });
 
-      it('should go to the first minute of the next hour when a value with 59 minutes is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime24h,
-          defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 59, 32)),
+      it('should go to the first minute of the current hour when a value with 59 minutes is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.fullTime24h,
+          defaultValue: adapter.date('2022-06-15T14:59:25'),
           key: 'ArrowUp',
-          expectedValue: '15:00',
-          valueToSelect: '59',
+          expectedValue: '14:00',
+          selectedSection: 'minutes',
         });
       });
     });
 
-    describe('12 hours format', () => {
+    describe('12 hours format (ArrowUp)', () => {
       it('should set the meridiem to AM when no value is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
+        testFieldKeyPress({
+          format: adapter.formats.fullTime12h,
           key: 'ArrowUp',
-          expectedValue: 'hh:mm am',
-          cursorPosition: 14,
+          expectedValue: 'hh:mm AM',
+          selectedSection: 'meridiem',
         });
       });
 
       it('should set the meridiem to PM when a value in AM is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
-          defaultValue: new Date(2022, 5, 15, 2, 25, 32),
+        testFieldKeyPress({
+          format: adapter.formats.fullTime12h,
+          defaultValue: adapter.date('2022-06-15T02:12:25'),
           key: 'ArrowUp',
-          expectedValue: '02:25 pm',
-          cursorPosition: 14,
+          expectedValue: '02:12 PM',
+          selectedSection: 'meridiem',
         });
       });
 
       it('should set the meridiem to AM when a value in PM is provided', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
-          defaultValue: new Date(2022, 5, 15, 14, 25, 32),
+        testFieldKeyPress({
+          format: adapter.formats.fullTime12h,
+          defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowUp',
-          expectedValue: '02:25 am',
-          cursorPosition: 14,
-        });
-      });
-
-      it('should go from AM to PM when the current value is 11:59 AM', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
-          defaultValue: adapterToUse.date(new Date(2022, 5, 15, 11, 59, 32)),
-          key: 'ArrowUp',
-          expectedValue: '12:00 pm',
-          valueToSelect: '59',
-        });
-      });
-
-      it('should go from PM to AM when the current value is 11:59 PM', () => {
-        testKeyPress({
-          format: adapterToUse.formats.fullTime12h,
-          defaultValue: adapterToUse.date(new Date(2022, 5, 15, 23, 59, 32)),
-          key: 'ArrowUp',
-          expectedValue: '12:00 am',
-          valueToSelect: '59',
+          expectedValue: '02:12 AM',
+          selectedSection: 'meridiem',
         });
       });
     });
   });
 
-  describe('Digit editing', () => {
-    it('should set the day to the digit pressed when no digit no value is provided', () => {
-      testChange({
-        format: adapterToUse.formats.minutes,
-        inputValue: '1',
-        expectedValue: '01',
+  describeAdapters('Digit editing', TimeField, ({ adapter, renderWithProps, testFieldChange }) => {
+    it('should set the minute to the digit pressed when no digit no value is provided', () => {
+      testFieldChange({
+        format: adapter.formats.minutes,
+        keyStrokes: [{ value: '1', expected: '01' }],
       });
     });
 
     it('should concatenate the digit pressed to the current section value if the output is valid', () => {
-      testChange({
-        format: adapterToUse.formats.minutes,
-        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 3, 32)),
-        inputValue: '1',
-        expectedValue: '31',
+      testFieldChange({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:12:25'),
+        keyStrokes: [
+          { value: '1', expected: '01' },
+          { value: '2', expected: '12' },
+        ],
       });
     });
 
-    it('should set the day to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
-      testChange({
-        format: adapterToUse.formats.minutes,
-        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 8, 32)),
-        inputValue: '1',
-        expectedValue: '01',
+    it('should set the minute to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
+      testFieldChange({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:12:25'),
+        keyStrokes: [
+          { value: '7', expected: '07' },
+          { value: '2', expected: '02' },
+        ],
       });
     });
 
-    it('should not edit when props.readOnly = true and no value is provided', () => {
-      testChange({
-        format: adapterToUse.formats.minutes,
+    it('should not edit when props.readOnly = true and no value is provided (digit)', () => {
+      testFieldChange({
+        format: adapter.formats.minutes,
         readOnly: true,
-        inputValue: '1',
-        expectedValue: 'mm',
+        keyStrokes: [{ value: '1', expected: 'mm' }],
       });
     });
 
-    it('should not edit value when props.readOnly = true and a value is provided', () => {
-      testChange({
-        format: adapterToUse.formats.minutes,
-        defaultValue: adapterToUse.date(),
+    it('should not edit value when props.readOnly = true and a value is provided (digit)', () => {
+      testFieldChange({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:12:25'),
         readOnly: true,
-        inputValue: '1',
-        expectedValue: '25',
+        keyStrokes: [{ value: '1', expected: '12' }],
       });
+    });
+
+    it('should go to the next section when pressing `2` in a 12-hours format', () => {
+      const { input, selectSection } = renderWithProps({ format: adapter.formats.fullTime12h });
+
+      selectSection('hours');
+
+      // Press "2"
+      fireEvent.change(input, { target: { value: '2:mm aa' } });
+      expectInputValue(input, '02:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('mm');
+    });
+
+    it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
+      const { input, selectSection } = renderWithProps({ format: adapter.formats.fullTime12h });
+
+      selectSection('hours');
+
+      // Press "1"
+      fireEvent.change(input, { target: { value: '1:mm aa' } });
+      expectInputValue(input, '01:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('01');
+
+      // Press "3"
+      fireEvent.change(input, { target: { value: '3:mm aa' } });
+      expectInputValue(input, '03:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('mm');
     });
   });
 
-  describe('Letter editing', () => {
-    it('should not edit when props.readOnly = true and no value is provided', () => {
-      testChange({
-        format: adapterToUse.formats.fullTime12h,
+  describeAdapters('Letter editing', TimeField, ({ adapter, testFieldChange }) => {
+    it('should not edit when props.readOnly = true and no value is provided (letter)', () => {
+      testFieldChange({
+        format: adapter.formats.fullTime12h,
         readOnly: true,
-        inputValue: 'hh:mm a', // Press "a"
-        expectedValue: 'hh:mm aa',
+        // Press "a"
+        keyStrokes: [{ value: 'hh:mm a', expected: 'hh:mm aa' }],
       });
     });
 
-    it('should not edit value when props.readOnly = true and a value is provided', () => {
-      testChange({
-        format: adapterToUse.formats.fullTime12h,
-        defaultValue: adapterToUse.date(),
+    it('should not edit value when props.readOnly = true and a value is provided (letter)', () => {
+      testFieldChange({
+        format: adapter.formats.fullTime12h,
+        defaultValue: adapter.date('2022-06-15T14:12:25'),
         readOnly: true,
-        inputValue: '02:25 a',
-        expectedValue: '02:25 pm',
+        // Press "a"
+        keyStrokes: [{ value: '02:12 a', expected: '02:12 PM' }],
       });
     });
 
     it('should set meridiem to AM when pressing "a" and no value is provided', () => {
-      testChange({
-        format: adapterToUse.formats.fullTime12h,
-        cursorPosition: 17,
-        inputValue: 'hh:mm a', // Press "a"
-        expectedValue: 'hh:mm am',
+      testFieldChange({
+        format: adapter.formats.fullTime12h,
+        selectedSection: 'meridiem',
+        // Press "a"
+        keyStrokes: [{ value: 'hh:mm a', expected: 'hh:mm AM' }],
       });
     });
 
     it('should set meridiem to PM when pressing "p" and no value is provided', () => {
-      testChange({
-        format: adapterToUse.formats.fullTime12h,
-        cursorPosition: 17,
-        inputValue: 'hh:mm p', // Press "p"
-        expectedValue: 'hh:mm pm',
+      testFieldChange({
+        format: adapter.formats.fullTime12h,
+        selectedSection: 'meridiem',
+        // Press "p"
+        keyStrokes: [{ value: 'hh:mm p', expected: 'hh:mm PM' }],
       });
     });
 
     it('should set meridiem to AM when pressing "a" and a value is provided', () => {
-      testChange({
-        format: adapterToUse.formats.fullTime12h,
-        defaultValue: adapterToUse.date(),
-        cursorPosition: 17,
-        inputValue: '02:25 a', // Press "a"
-        expectedValue: '02:25 am',
+      testFieldChange({
+        format: adapter.formats.fullTime12h,
+        defaultValue: adapter.date('2022-06-15T14:12:25'),
+        selectedSection: 'meridiem',
+        // Press "a"
+        keyStrokes: [{ value: '02:12 a', expected: '02:12 AM' }],
       });
     });
 
     it('should set meridiem to PM when pressing "p" and a value is provided', () => {
-      testChange({
-        format: adapterToUse.formats.fullTime12h,
-        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 2, 25, 32)),
-        cursorPosition: 17,
-        inputValue: '02:25 p', // Press "p"
-        expectedValue: '02:25 pm',
+      testFieldChange({
+        format: adapter.formats.fullTime12h,
+        defaultValue: adapter.date('2022-06-15T14:12:25'),
+        selectedSection: 'meridiem',
+        // Press "p"
+        keyStrokes: [{ value: '02:12 p', expected: '02:12 PM' }],
       });
     });
   });
 
-  describe('Do not loose missing section values ', () => {
-    it('should not loose date information when a value is provided', () => {
-      const onChange = spy();
+  describeAdapters(
+    'Do not loose missing section values ',
+    TimeField,
+    ({ adapter, renderWithProps }) => {
+      it('should not loose date information when a value is provided', () => {
+        const onChange = spy();
 
-      render(
-        <TimeField
-          defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
-          onChange={onChange}
-        />,
-      );
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-      userEvent.keyPress(input, { key: 'ArrowDown' });
+        const { input, selectSection } = renderWithProps({
+          defaultValue: adapter.date('2010-04-03T03:03:03'),
+          onChange,
+        });
 
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+        selectSection('hours');
+        userEvent.keyPress(input, { key: 'ArrowDown' });
+
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+      });
+
+      it('should not loose date information when cleaning the date then filling it again', () => {
+        if (adapter.lib !== 'dayjs') {
+          return;
+        }
+
+        const onChange = spy();
+
+        const { input, selectSection } = renderWithProps({
+          defaultValue: adapter.date('2010-04-03T03:03:03'),
+          onChange,
+          format: adapter.formats.fullTime24h,
+        });
+
+        selectSection('hours');
+        userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+        fireEvent.change(input, { target: { value: '' } });
+        userEvent.keyPress(input, { key: 'ArrowLeft' });
+
+        fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"
+        expectInputValue(input, '03:mm');
+
+        userEvent.keyPress(input, { key: 'ArrowRight' });
+        fireEvent.change(input, { target: { value: '03:4' } }); // Press "3"
+        expectInputValue(input, '03:04');
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
+      });
+
+      it('should not loose time information when using the hour format and value is provided', () => {
+        const onChange = spy();
+
+        const { input, selectSection } = renderWithProps({
+          defaultValue: adapter.date('2010-04-03T03:03:03'),
+          onChange,
+          format: adapter.formats.hours24h,
+        });
+
+        selectSection('hours');
+        userEvent.keyPress(input, { key: 'ArrowDown' });
+
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+      });
+    },
+  );
+
+  describeAdapters('props: minutesStep', TimeField, ({ adapter, testFieldKeyPress }) => {
+    it('should use `minitesStep` to set initial minutes with ArrowUp', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        key: 'ArrowUp',
+        minutesStep: 5,
+        expectedValue: '00',
+      });
     });
 
-    it('should not loose time information when cleaning the date then filling it again', () => {
-      const onChange = spy();
-
-      render(
-        <TimeField
-          defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
-          format={adapterToUse.formats.fullTime24h}
-          onChange={onChange}
-        />,
-      );
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      userEvent.keyPress(input, { key: 'Backspace' });
-
-      fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"
-      expectInputValue(input, '03:mm');
-
-      userEvent.keyPress(input, { key: 'ArrowRight' });
-      fireEvent.change(input, { target: { value: '03:4' } }); // Press "3"
-      expectInputValue(input, '03:04');
-
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
+    it('should use `minitesStep` to set initial minutes with ArrowDown', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        key: 'ArrowDown',
+        minutesStep: 5,
+        expectedValue: '00',
+      });
     });
 
-    it('should not loose time information when using the hour format and value is provided', () => {
-      const onChange = spy();
+    it('should use `minitesStep` to increase minutes', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:00:25'),
+        key: 'ArrowUp',
+        minutesStep: 5,
+        expectedValue: '05',
+      });
+    });
 
-      render(
-        <TimeField
-          format={adapterToUse.formats.hours24h}
-          defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
-          onChange={onChange}
-        />,
-      );
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-      userEvent.keyPress(input, { key: 'ArrowDown' });
+    it('should use `minitesStep` to decrease minutes', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:00:25'),
+        key: 'ArrowDown',
+        minutesStep: 5,
+        expectedValue: '55',
+      });
+    });
 
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+    it('should go to the closest valid values according to `minutesStep` when pressing ArrowDown', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:02:25'),
+        key: 'ArrowDown',
+        minutesStep: 5,
+        expectedValue: '00',
+      });
+    });
+
+    it('should go to the closest valid values according to `minutesStep` when pressing ArrowUp', () => {
+      testFieldKeyPress({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:02:25'),
+        key: 'ArrowUp',
+        minutesStep: 5,
+        expectedValue: '05',
+      });
     });
   });
 });

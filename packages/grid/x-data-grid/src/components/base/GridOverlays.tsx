@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import PropTypes from 'prop-types';
+import { styled } from '@mui/system';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridExpandedRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
   gridRowCountSelector,
   gridRowsLoadingSelector,
@@ -20,19 +21,24 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapper',
+  shouldForwardProp: (prop) => prop !== 'overlayType',
   overridesResolver: (props, styles) => styles.overlayWrapper,
-})({
+})<{ overlayType: 'loadingOverlay' | string }>(({ overlayType }) => ({
   position: 'sticky', // To stay in place while scrolling
   top: 0,
   left: 0,
   width: 0, // To stay above the content instead of shifting it down
   height: 0, // To stay above the content instead of shifting it down
-  zIndex: 4, // Should be above pinned columns, pinned rows and detail panel
-});
+  zIndex:
+    overlayType === 'loadingOverlay'
+      ? 5 // Should be above pinned columns, pinned rows, and detail panel
+      : 4, // Should be above pinned columns and detail panel
+}));
 
 const GridOverlayWrapperInner = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapperInner',
+  shouldForwardProp: (prop) => prop !== 'overlayType',
   overridesResolver: (props, styles) => styles.overlayWrapperInner,
 })({});
 
@@ -49,7 +55,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
+function GridOverlayWrapper(props: React.PropsWithChildren<{ overlayType: string }>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
@@ -77,7 +83,7 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   }
 
   return (
-    <GridOverlayWrapperRoot className={clsx(classes.root)}>
+    <GridOverlayWrapperRoot className={clsx(classes.root)} overlayType={props.overlayType}>
       <GridOverlayWrapperInner
         className={clsx(classes.inner)}
         style={{
@@ -90,38 +96,46 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   );
 }
 
+GridOverlayWrapper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  overlayType: PropTypes.string.isRequired,
+} as any;
+
 export function GridOverlays() {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const visibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
 
   const showNoRowsOverlay = !loading && totalRowCount === 0;
   const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
 
-  let overlay: JSX.Element | null = null;
+  let overlay: React.JSX.Element | null = null;
+  let overlayType = '';
 
   if (showNoRowsOverlay) {
-    overlay = <rootProps.components.NoRowsOverlay {...rootProps.componentsProps?.noRowsOverlay} />;
+    overlay = <rootProps.slots.noRowsOverlay {...rootProps.slotProps?.noRowsOverlay} />;
+    overlayType = 'noRowsOverlay';
   }
 
   if (showNoResultsOverlay) {
-    overlay = (
-      <rootProps.components.NoResultsOverlay {...rootProps.componentsProps?.noResultsOverlay} />
-    );
+    overlay = <rootProps.slots.noResultsOverlay {...rootProps.slotProps?.noResultsOverlay} />;
+    overlayType = 'noResultsOverlay';
   }
 
   if (loading) {
-    overlay = (
-      <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />
-    );
+    overlay = <rootProps.slots.loadingOverlay {...rootProps.slotProps?.loadingOverlay} />;
+    overlayType = 'loadingOverlay';
   }
 
   if (overlay === null) {
     return null;
   }
 
-  return <GridOverlayWrapper>{overlay}</GridOverlayWrapper>;
+  return <GridOverlayWrapper overlayType={overlayType}>{overlay}</GridOverlayWrapper>;
 }

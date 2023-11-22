@@ -2,11 +2,11 @@
 title: Data Grid - Column pinning
 ---
 
-# Data Grid - Column pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Column pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Pin columns to keep them visible at all time.</p>
 
-Pinned (or frozen, locked, or sticky) columns are columns that are visible at all time while the user scrolls the grid horizontally.
+Pinned (or frozen, locked, or sticky) columns are columns that are visible at all time while the user scrolls the data grid horizontally.
 They can be pinned either to the left or right side and cannot be reordered.
 
 To pin a column, there are a few ways:
@@ -27,7 +27,7 @@ interface GridPinnedColumns {
 
 The following demos illustrates how this approach works:
 
-{{"demo": "BasicColumnPinning.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "BasicColumnPinning.js", "bg": "inline"}}
 
 :::info
 The column pinning feature can be completely disabled with `disableColumnPinning`.
@@ -49,7 +49,7 @@ While the `initialState` prop only works for setting pinned columns during the i
 The value passed to it follows the same shape from the previous approach.
 Use it together with `onPinnedColumnsChange` to know when a column is pinned or unpinned.
 
-{{"demo": "ControlPinnedColumns.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "ControlPinnedColumns.js", "bg": "inline"}}
 
 ## Blocking column unpinning
 
@@ -65,7 +65,7 @@ This can be done in two ways:
 
 2. By providing a custom menu, as demonstrated below:
 
-{{"demo": "DisableColumnPinningButtons.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "DisableColumnPinningButtons.js", "bg": "inline"}}
 
 :::warning
 Using the `disableColumnMenu` prop also works, but this approach completely disables the column menu.
@@ -75,7 +75,7 @@ Using the `disableColumnMenu` prop also works, but this approach completely disa
 
 To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECKBOX_SELECTION_COL_DEF.field` to the list of pinned columns.
 
-{{"demo": "ColumnPinningWithCheckboxSelection.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "ColumnPinningWithCheckboxSelection.js", "bg": "inline"}}
 
 ## Usage with dynamic row height
 
@@ -85,9 +85,11 @@ You can do this by calling `apiRef.current.resetRowHeights()` every time that th
 
 The demo below contains an example of both features enabled:
 
-{{"demo": "ColumnPinningDynamicRowHeight.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "ColumnPinningDynamicRowHeight.js", "bg": "inline"}}
 
 ## apiRef
+
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 {{"demo": "ColumnPinningApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

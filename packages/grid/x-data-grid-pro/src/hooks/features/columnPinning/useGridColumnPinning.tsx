@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
   gridVisibleColumnFieldsSelector,
-  gridClasses,
   useGridApiMethod,
   useGridApiEventHandler,
   GridEventListener,
@@ -64,70 +64,12 @@ export const useGridColumnPinning = (
     | 'initialState'
     | 'pinnedColumns'
     | 'onPinnedColumnsChange'
-    | 'componentsProps'
-    | 'components'
+    | 'slotProps'
+    | 'slots'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-
-  // Each visible row (not to be confused with a filter result) is composed of a central .MuiDataGrid-row element
-  // and up to two additional .MuiDataGrid-row's, one for the columns pinned to the left and another
-  // for those on the right side. When hovering any of these elements, the :hover styles are applied only to
-  // the row element that was actually hovered, not its additional siblings. To make it look like a contiguous row,
-  // this method adds/removes the .Mui-hovered class to all of the row elements inside one visible row.
-  const updateHoveredClassOnSiblingRows = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
-      if (props.disableColumnPinning) {
-        return;
-      }
-
-      if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
-        return;
-      }
-
-      const nbLeftPinnedColumns = pinnedColumns.left?.length ?? 0;
-      const nbRightPinnedColumns = pinnedColumns.right?.length ?? 0;
-      if (nbLeftPinnedColumns + nbRightPinnedColumns === 0) {
-        return;
-      }
-
-      const index = event.currentTarget.dataset.rowindex;
-      const rowElements = apiRef.current.virtualScrollerRef!.current!.querySelectorAll(
-        `.${gridClasses.row}[data-rowindex="${index}"]`,
-      );
-      rowElements.forEach((row) => {
-        // Ignore rows from other grid inside the hovered row
-        if (
-          row.closest(`.${gridClasses.virtualScroller}`) ===
-          apiRef.current.virtualScrollerRef!.current!
-        ) {
-          if (event.type === 'mouseenter') {
-            row.classList.add('Mui-hovered');
-          } else {
-            row.classList.remove('Mui-hovered');
-          }
-        }
-      });
-    },
-    [apiRef, pinnedColumns.left, pinnedColumns.right, props.disableColumnPinning],
-  );
-
-  const handleMouseEnter = React.useCallback<GridEventListener<'rowMouseEnter'>>(
-    (params, event) => {
-      updateHoveredClassOnSiblingRows(event);
-    },
-    [updateHoveredClassOnSiblingRows],
-  );
-
-  const handleMouseLeave = React.useCallback<GridEventListener<'rowMouseLeave'>>(
-    (params, event) => {
-      updateHoveredClassOnSiblingRows(event);
-    },
-    [updateHoveredClassOnSiblingRows],
-  );
-
-  useGridApiEventHandler(apiRef, 'rowMouseEnter', handleMouseEnter);
-  useGridApiEventHandler(apiRef, 'rowMouseLeave', handleMouseLeave);
+  const theme = useTheme();
 
   /**
    * PRE-PROCESSING
@@ -142,6 +84,7 @@ export const useGridColumnPinning = (
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,
+        theme.direction === 'rtl',
       );
 
       if (!params.colIndex || (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0)) {
@@ -152,7 +95,9 @@ export const useGridColumnPinning = (
       const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
       const columnPositions = gridColumnPositionsSelector(apiRef);
       const clientWidth = apiRef.current.virtualScrollerRef!.current!.clientWidth;
-      const scrollLeft = apiRef.current.virtualScrollerRef!.current!.scrollLeft;
+
+      // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
+      const scrollLeft = Math.abs(apiRef.current.virtualScrollerRef!.current!.scrollLeft);
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
       const offsetLeft = columnPositions[params.colIndex];
 
@@ -171,7 +116,7 @@ export const useGridColumnPinning = (
       }
       return initialValue;
     },
-    [apiRef, pinnedColumns, props.disableColumnPinning],
+    [apiRef, pinnedColumns, props.disableColumnPinning, theme.direction],
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
@@ -184,7 +129,7 @@ export const useGridColumnPinning = (
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuPinningItem'];
+      return [...columnMenuItems, 'columnMenuPinningItem'];
     },
     [props.disableColumnPinning],
   );
@@ -195,6 +140,7 @@ export const useGridColumnPinning = (
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,
+        theme.direction === 'rtl',
       );
 
       if (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0) {
@@ -213,7 +159,7 @@ export const useGridColumnPinning = (
 
       return initialValue;
     },
-    [apiRef, pinnedColumns],
+    [apiRef, pinnedColumns, theme.direction],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
@@ -221,7 +167,7 @@ export const useGridColumnPinning = (
       const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
 
       const shouldExportPinnedColumns =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
         props.pinnedColumns != null ||
@@ -358,7 +304,7 @@ export const useGridColumnPinning = (
         return;
       }
 
-      const { field, targetIndex, oldIndex } = params;
+      const { column, targetIndex, oldIndex } = params;
       const delta = targetIndex > oldIndex ? 1 : -1;
 
       const latestColumnFields = gridColumnFieldsSelector(apiRef);
@@ -387,14 +333,16 @@ export const useGridColumnPinning = (
       ];
 
       // The index to start swapping fields
-      let i = newOrderedFieldsBeforePinningColumns.findIndex((column) => column === field);
+      let i = newOrderedFieldsBeforePinningColumns.findIndex(
+        (currentColumn) => currentColumn === column.field,
+      );
       // The index of the field to swap with
       let j = i + delta;
 
       // When to stop swapping fields.
       // We stop one field before because the swap is done with i + 1 (if delta=1)
       const stop = newOrderedFieldsBeforePinningColumns.findIndex(
-        (column) => column === siblingField,
+        (currentColumn) => currentColumn === siblingField,
       );
 
       while (delta > 0 ? i < stop : i > stop) {

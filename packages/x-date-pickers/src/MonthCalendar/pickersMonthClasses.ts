@@ -6,10 +6,6 @@ import {
 export interface PickersMonthClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element in mobile mode. */
-  modeMobile: string;
-  /** Styles applied to the root element in desktop mode. */
-  modeDesktop: string;
   /** Styles applied to the month button element. */
   monthButton: string;
   /** Styles applied to a disabled month button element. */
@@ -26,8 +22,6 @@ export function getPickersMonthUtilityClass(slot: string) {
 
 export const pickersMonthClasses = generateUtilityClasses<PickersMonthClassKey>('MuiPickersMonth', [
   'root',
-  'modeMobile',
-  'modeDesktop',
   'monthButton',
   'disabled',
   'selected',

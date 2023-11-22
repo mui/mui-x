@@ -1,0 +1,5 @@
+<DataGridPremium
+  {...data}
+  experimentalFeatures={{ clipboardPaste: true }}
+  disableClipboardPaste
+/>

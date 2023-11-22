@@ -1,14 +1,18 @@
-import { DateOrTimeView, DateView } from '../models/views';
+import { DateOrTimeView } from '../../models';
+import { DateOrTimeViewWithMeridiem } from '../models';
 
-export const isYearOnlyView = (views: readonly DateView[]): views is ReadonlyArray<'year'> =>
-  views.length === 1 && views[0] === 'year';
+export const areViewsEqual = <TView extends DateOrTimeView>(
+  views: ReadonlyArray<DateOrTimeView>,
+  expectedViews: TView[],
+): views is ReadonlyArray<TView> => {
+  if (views.length !== expectedViews.length) {
+    return false;
+  }
 
-export const isYearAndMonthViews = (
-  views: readonly DateView[],
-): views is ReadonlyArray<'month' | 'year'> =>
-  views.length === 2 && views.indexOf('month') !== -1 && views.indexOf('year') !== -1;
+  return expectedViews.every((expectedView) => views.includes(expectedView));
+};
 
-export const applyDefaultViewProps = <TView extends DateOrTimeView>({
+export const applyDefaultViewProps = <TView extends DateOrTimeViewWithMeridiem>({
   openTo,
   defaultOpenTo,
   views,

@@ -7,7 +7,7 @@ import {
   GridGroupingColDefOverride,
   GridGroupNode,
 } from '@mui/x-data-grid-pro';
-import { GridColumnRawLookup } from '@mui/x-data-grid-pro/internals';
+import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
@@ -66,20 +66,8 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   headerName: leafColDef.headerName ?? leafColDef.field,
   sortable: leafColDef.sortable,
   filterable: leafColDef.filterable,
-  valueOptions: leafColDef.valueOptions,
-  filterOperators: leafColDef.filterOperators?.map((operator) => ({
-    ...operator,
-    getApplyFilterFn: (filterItem, column) => {
-      const originalFn = operator.getApplyFilterFn(filterItem, column);
-      if (!originalFn) {
-        return null;
-      }
-
-      return (params) => {
-        return originalFn(params);
-      };
-    },
-  })),
+  valueOptions: isSingleSelectColDef(leafColDef) ? leafColDef.valueOptions : undefined,
+  filterOperators: leafColDef.filterOperators,
   sortComparator: (v1, v2, cellParams1, cellParams2) => {
     // We only want to sort the leaves
     if (cellParams1.rowNode.type === 'leaf' && cellParams2.rowNode.type === 'leaf') {
@@ -94,7 +82,7 @@ const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderN
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
-    valueOptions: groupedByColDef.valueOptions,
+    valueOptions: isSingleSelectColDef(groupedByColDef) ? groupedByColDef.valueOptions : undefined,
     sortComparator: (v1, v2, cellParams1, cellParams2) => {
       // We only want to sort the groups of the current grouping criteria
       if (
@@ -108,19 +96,7 @@ const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderN
 
       return groupingFieldIndexComparator(v1, v2, cellParams1, cellParams2);
     },
-    filterOperators: groupedByColDef.filterOperators?.map((operator) => ({
-      ...operator,
-      getApplyFilterFn: (filterItem, column) => {
-        const originalFn = operator.getApplyFilterFn(filterItem, column);
-        if (!originalFn) {
-          return null;
-        }
-
-        return (params) => {
-          return originalFn(params);
-        };
-      },
-    })),
+    filterOperators: groupedByColDef.filterOperators,
   };
 
   if (applyHeaderName) {
@@ -178,6 +154,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
           const leafParams: GridRenderCellParams = {
             ...params.api.getCellParams(params.id, leafField!),
             api: params.api,
+            hasFocus: params.hasFocus,
           };
           if (leafColDef.renderCell) {
             return leafColDef.renderCell(leafParams);
@@ -308,6 +285,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
           const leafParams: GridRenderCellParams = {
             ...params.api.getCellParams(params.id, leafField!),
             api: params.api,
+            hasFocus: params.hasFocus,
           };
           if (leafColDef.renderCell) {
             return leafColDef.renderCell(leafParams);

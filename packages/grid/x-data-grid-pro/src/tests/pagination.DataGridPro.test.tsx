@@ -1,10 +1,10 @@
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, act, GridApiPro } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui-internal/test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { GridApiPro } from '../models/gridApiPro';
 
 describe('<DataGridPro /> - Pagination', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -23,8 +23,8 @@ describe('<DataGridPro /> - Pagination', () => {
               {...basicData}
               apiRef={apiRef}
               pagination
-              pageSize={1}
-              rowsPerPageOptions={[1]}
+              initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+              pageSizeOptions={[1]}
             />
           </div>
         );
@@ -52,8 +52,8 @@ describe('<DataGridPro /> - Pagination', () => {
               {...basicData}
               apiRef={apiRef}
               pagination
-              pageSize={1}
-              rowsPerPageOptions={[1]}
+              initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+              pageSizeOptions={[1]}
             />
           </div>
         );
@@ -74,7 +74,6 @@ describe('<DataGridPro /> - Pagination', () => {
     it('should apply value', () => {
       let apiRef: React.MutableRefObject<GridApiPro>;
       function GridTest() {
-        const [pageSize, setPageSize] = React.useState(5);
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
@@ -83,9 +82,8 @@ describe('<DataGridPro /> - Pagination', () => {
             <DataGridPro
               {...basicData}
               apiRef={apiRef}
-              pageSize={pageSize}
-              rowsPerPageOptions={[pageSize]}
-              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+              pageSizeOptions={[2, 5]}
               pagination
               disableVirtualization
             />

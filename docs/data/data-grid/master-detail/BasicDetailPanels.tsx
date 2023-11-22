@@ -163,7 +163,7 @@ const rows = [
   },
 ];
 
-type Customer = typeof rows[number];
+type Customer = (typeof rows)[number];
 
 export default function BasicDetailPanels() {
   const getDetailPanelContent = React.useCallback<

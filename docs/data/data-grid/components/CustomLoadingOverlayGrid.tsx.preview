@@ -1,6 +1,6 @@
 <DataGrid
-  components={{
-    LoadingOverlay: LinearProgress,
+  slots={{
+    loadingOverlay: LinearProgress,
   }}
   loading
   {...data}

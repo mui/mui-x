@@ -4,7 +4,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   noRowsLabel: 'No rows',
   noResultsOverlayLabel: 'No results found.',
-  errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Density',
@@ -46,8 +45,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Filter panel text
   filterPanelAddFilter: 'Add filter',
+  filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Delete',
-  filterPanelLinkOperator: 'Logic operator',
+  filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
@@ -69,6 +69,33 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterOperatorIsEmpty: 'is empty',
   filterOperatorIsNotEmpty: 'is not empty',
   filterOperatorIsAnyOf: 'is any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Contains',
+  headerFilterOperatorEquals: 'Equals',
+  headerFilterOperatorStartsWith: 'Starts with',
+  headerFilterOperatorEndsWith: 'Ends with',
+  headerFilterOperatorIs: 'Is',
+  headerFilterOperatorNot: 'Is not',
+  headerFilterOperatorAfter: 'Is after',
+  headerFilterOperatorOnOrAfter: 'Is on or after',
+  headerFilterOperatorBefore: 'Is before',
+  headerFilterOperatorOnOrBefore: 'Is on or before',
+  headerFilterOperatorIsEmpty: 'Is empty',
+  headerFilterOperatorIsNotEmpty: 'Is not empty',
+  headerFilterOperatorIsAnyOf: 'Is any of',
+  'headerFilterOperator=': 'Equals',
+  'headerFilterOperator!=': 'Not equals',
+  'headerFilterOperator>': 'Greater than',
+  'headerFilterOperator>=': 'Greater than or equal to',
+  'headerFilterOperator<': 'Less than',
+  'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'any',

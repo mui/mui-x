@@ -11,18 +11,17 @@ import {
 } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridDragIcon } from '../icons';
 import { GridPanelContent } from './GridPanelContent';
 import { GridPanelFooter } from './GridPanelFooter';
 import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -39,15 +38,15 @@ const GridColumnsPanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanel',
   overridesResolver: (props, styles) => styles.columnsPanel,
-})(() => ({
+})<{ ownerState: OwnerState }>({
   padding: '8px 0px 8px 8px',
-}));
+});
 
 const GridColumnsPanelRowRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanelRow',
   overridesResolver: (props, styles) => styles.columnsPanelRow,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   padding: '1px 8px 1px 7px',
@@ -67,23 +66,31 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    */
   sort?: 'asc' | 'desc';
   searchPredicate?: (column: GridColDef, searchValue: string) => boolean;
-  /*
+  /**
    * If `true`, the column search field will be focused automatically.
    * If `false`, the first column switch input will be focused automatically.
    * This helps to avoid input keyboard panel to popup automatically on touch devices.
    * @default true
    */
   autoFocusSearchField?: boolean;
-  /*
+  /**
    * If `true`, the `Hide all` button will not be displayed.
    * @default false
    */
   disableHideAllButton?: boolean;
-  /*
+  /**
    * If `true`, the `Show all` button will be disabled
    * @default false
    */
   disableShowAllButton?: boolean;
+  /**
+   * Returns the list of togglable columns.
+   * If used, only those columns will be displayed in the panel
+   * which are passed as the return value of the function.
+   * @param {GridColDef[]} columns The `ColDef` list of all columns.
+   * @returns {GridColDef['field'][]} The list of togglable columns' field names.
+   */
+  getTogglableColumns?: (columns: GridColDef[]) => GridColDef['field'][];
 }
 
 const collator = new Intl.Collator();
@@ -102,8 +109,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
   const {
     sort,
@@ -111,6 +117,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     autoFocusSearchField = true,
     disableHideAllButton = false,
     disableShowAllButton = false,
+    getTogglableColumns,
     ...other
   } = props;
 
@@ -138,17 +145,24 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
 
   const toggleAllColumns = React.useCallback(
     (isVisible: boolean) => {
-      if (isVisible) {
-        return apiRef.current.setColumnVisibilityModel({});
-      }
+      const currentModel = gridColumnVisibilityModelSelector(apiRef);
+      const newModel = { ...currentModel };
+      const togglableColumns = getTogglableColumns ? getTogglableColumns(columns) : null;
 
-      return apiRef.current.setColumnVisibilityModel(
-        Object.fromEntries(
-          columns.filter((col) => col.hideable !== false).map((col) => [col.field, false]),
-        ),
-      );
+      columns.forEach((col) => {
+        if (col.hideable && (togglableColumns == null || togglableColumns.includes(col.field))) {
+          if (isVisible) {
+            // delete the key from the model instead of setting it to `true`
+            delete newModel[col.field];
+          } else {
+            newModel[col.field] = false;
+          }
+        }
+      });
+
+      return apiRef.current.setColumnVisibilityModel(newModel);
     },
-    [apiRef, columns],
+    [apiRef, columns, getTogglableColumns],
   );
 
   const handleSearchValueChange = React.useCallback(
@@ -159,12 +173,20 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   );
 
   const currentColumns = React.useMemo(() => {
+    const togglableColumns = getTogglableColumns ? getTogglableColumns(sortedColumns) : null;
+
+    const togglableSortedColumns = togglableColumns
+      ? sortedColumns.filter(({ field }) => togglableColumns.includes(field))
+      : sortedColumns;
+
     if (!searchValue) {
-      return sortedColumns;
+      return togglableSortedColumns;
     }
-    const searchValueToCheck = searchValue.toLowerCase();
-    return sortedColumns.filter((column) => searchPredicate(column, searchValueToCheck));
-  }, [sortedColumns, searchValue, searchPredicate]);
+
+    return togglableSortedColumns.filter((column) =>
+      searchPredicate(column, searchValue.toLowerCase()),
+    );
+  }, [sortedColumns, searchValue, searchPredicate, getTogglableColumns]);
 
   const firstSwitchRef = React.useRef<HTMLInputElement>(null);
 
@@ -188,7 +210,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   return (
     <GridPanelWrapper {...other}>
       <GridPanelHeader>
-        <rootProps.components.BaseTextField
+        <rootProps.slots.baseTextField
           label={apiRef.current.getLocaleText('columnsPanelTextFieldLabel')}
           placeholder={apiRef.current.getLocaleText('columnsPanelTextFieldPlaceholder')}
           inputRef={searchInputRef}
@@ -196,23 +218,27 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
           onChange={handleSearchValueChange}
           variant="standard"
           fullWidth
-          {...rootProps.componentsProps?.baseTextField}
+          {...rootProps.slotProps?.baseTextField}
         />
       </GridPanelHeader>
       <GridPanelContent>
-        <GridColumnsPanelRoot className={classes.root}>
+        <GridColumnsPanelRoot className={classes.root} ownerState={rootProps}>
           {currentColumns.map((column) => (
-            <GridColumnsPanelRowRoot className={classes.columnsPanelRow} key={column.field}>
+            <GridColumnsPanelRowRoot
+              className={classes.columnsPanelRow}
+              ownerState={rootProps}
+              key={column.field}
+            >
               <FormControlLabel
                 control={
-                  <rootProps.components.BaseSwitch
+                  <rootProps.slots.baseSwitch
                     disabled={column.hideable === false}
                     checked={columnVisibilityModel[column.field] !== false}
                     onClick={toggleColumn}
                     name={column.field}
                     size="small"
                     inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
-                    {...rootProps.componentsProps?.baseSwitch}
+                    {...rootProps.slotProps?.baseSwitch}
                   />
                 }
                 label={column.headerName || column.field}
@@ -225,7 +251,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
                   size="small"
                   disabled
                 >
-                  <GridDragIcon />
+                  <rootProps.slots.columnReorderIcon />
                 </GridIconButtonRoot>
               )}
             </GridColumnsPanelRowRoot>
@@ -235,25 +261,25 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       {disableShowAllButton && disableHideAllButton ? null : (
         <GridPanelFooter>
           {!disableHideAllButton ? (
-            <rootProps.components.BaseButton
+            <rootProps.slots.baseButton
               onClick={() => toggleAllColumns(false)}
-              {...rootProps.componentsProps?.baseButton}
+              {...rootProps.slotProps?.baseButton}
               disabled={disableHideAllButton}
             >
               {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
-            </rootProps.components.BaseButton>
+            </rootProps.slots.baseButton>
           ) : (
             <span />
           )}
 
           {!disableShowAllButton ? (
-            <rootProps.components.BaseButton
+            <rootProps.slots.baseButton
               onClick={() => toggleAllColumns(true)}
-              {...rootProps.componentsProps?.baseButton}
+              {...rootProps.slotProps?.baseButton}
               disabled={disableShowAllButton}
             >
               {apiRef.current.getLocaleText('columnsPanelShowAllButton')}
-            </rootProps.components.BaseButton>
+            </rootProps.slots.baseButton>
           ) : null}
         </GridPanelFooter>
       )}
@@ -266,10 +292,33 @@ GridColumnsPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the column search field will be focused automatically.
+   * If `false`, the first column switch input will be focused automatically.
+   * This helps to avoid input keyboard panel to popup automatically on touch devices.
+   * @default true
+   */
   autoFocusSearchField: PropTypes.bool,
+  /**
+   * If `true`, the `Hide all` button will not be displayed.
+   * @default false
+   */
   disableHideAllButton: PropTypes.bool,
+  /**
+   * If `true`, the `Show all` button will be disabled
+   * @default false
+   */
   disableShowAllButton: PropTypes.bool,
+  /**
+   * Returns the list of togglable columns.
+   * If used, only those columns will be displayed in the panel
+   * which are passed as the return value of the function.
+   * @param {GridColDef[]} columns The `ColDef` list of all columns.
+   * @returns {GridColDef['field'][]} The list of togglable columns' field names.
+   */
+  getTogglableColumns: PropTypes.func,
   searchPredicate: PropTypes.func,
+  slotProps: PropTypes.object,
   sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;
 

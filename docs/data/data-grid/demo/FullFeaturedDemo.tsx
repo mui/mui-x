@@ -333,10 +333,10 @@ export default function FullFeaturedDemo() {
       />
       <DataGridComponent
         {...data}
-        components={{
-          Toolbar: GridToolbar,
+        slots={{
+          toolbar: GridToolbar,
         }}
-        componentsProps={{
+        slotProps={{
           toolbar: { showQuickFilter: true },
         }}
         loading={loading}

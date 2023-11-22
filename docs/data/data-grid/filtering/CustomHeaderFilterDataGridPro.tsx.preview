@@ -1,0 +1,16 @@
+<DataGridPro
+  {...data}
+  initialState={{
+    ...data.initialState,
+    columns: {
+      columnVisibilityModel: {
+        avatar: false,
+        id: false,
+      },
+    },
+  }}
+  slots={{
+    headerFilterCell: CustomHeaderFilter,
+  }}
+  unstable_headerFilters
+/>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 const lastSunday = dayjs().startOf('week').subtract(1, 'day');
 const nextSunday = dayjs().endOf('week').startOf('day');
@@ -16,7 +16,7 @@ const isWeekend = (date) => {
 export default function DateRangeValidationShouldDisableDate() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <NextDateRangePicker
+      <DateRangePicker
         defaultValue={[lastSunday, nextSunday]}
         shouldDisableDate={(date, position) => {
           if (position === 'end') {

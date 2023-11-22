@@ -6,7 +6,6 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Brak danych',
   noResultsOverlayLabel: 'Nie znaleziono wyników.',
-  errorOverlayDefaultLabel: 'Wystąpił błąd.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Wysokość rzędu',
@@ -47,8 +46,9 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
+  filterPanelRemoveAll: 'Usuń wszystkie',
   filterPanelDeleteIconLabel: 'Usuń',
-  filterPanelLinkOperator: 'Operator logiczny',
+  filterPanelLogicOperator: 'Operator logiczny',
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',
@@ -70,6 +70,33 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'jest pusty',
   filterOperatorIsNotEmpty: 'nie jest pusty',
   filterOperatorIsAnyOf: 'jest jednym z',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Zawiera',
+  headerFilterOperatorEquals: 'Równa się',
+  headerFilterOperatorStartsWith: 'Zaczyna się od',
+  headerFilterOperatorEndsWith: 'Kończy się na',
+  // headerFilterOperatorIs: 'Is',
+  headerFilterOperatorNot: 'Niepuste',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'dowolny',
@@ -79,7 +106,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Zarządzaj kolumnami',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Ukryj',
   columnMenuUnsort: 'Anuluj sortowanie',

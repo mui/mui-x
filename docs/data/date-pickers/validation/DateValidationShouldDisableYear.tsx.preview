@@ -1,9 +1,6 @@
 <DemoItem label="DatePicker">
-  <NextDatePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
+  <DatePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
 </DemoItem>
 <DemoItem label="DateTimePicker">
-  <NextDateTimePicker
-    defaultValue={today}
-    shouldDisableYear={isInCurrentYear}
-  />
+  <DateTimePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
 </DemoItem>

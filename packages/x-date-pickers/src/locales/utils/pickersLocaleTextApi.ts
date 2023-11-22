@@ -1,4 +1,5 @@
-import { DateView, TimeView, MuiPickersAdapter } from '../../internals/models';
+import { TimeViewWithMeridiem } from '../../internals/models';
+import { DateView, TimeView, MuiPickersAdapter, FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
   /**
@@ -38,11 +39,6 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   openPreviousView: string;
   openNextView: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: DateView) => string;
-  // TODO v6: Drop with the legacy pickers
-  inputModeToggleButtonAriaLabel: (
-    isKeyboardInputOpen: boolean,
-    viewType: 'date' | 'time',
-  ) => string;
 
   // DateRange placeholders
   start: string;
@@ -60,9 +56,15 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;
 
+  // Digital clock labels
+  selectViewText: (view: TimeViewWithMeridiem) => string;
+
   // Open picker labels
   openDatePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
   openTimePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+
+  // Clear button label
+  fieldClearLabel: string;
 
   // Table labels
   timeTableLabel: string;
@@ -70,8 +72,9 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
 
   // Field section placeholders
   fieldYearPlaceholder: (params: { digitAmount: number }) => string;
-  fieldMonthPlaceholder: (params: { contentType: 'letter' | 'digit' }) => string;
+  fieldMonthPlaceholder: (params: { contentType: FieldSectionContentType }) => string;
   fieldDayPlaceholder: () => string;
+  fieldWeekDayPlaceholder: (params: { contentType: FieldSectionContentType }) => string;
   fieldHoursPlaceholder: () => string;
   fieldMinutesPlaceholder: () => string;
   fieldSecondsPlaceholder: () => string;

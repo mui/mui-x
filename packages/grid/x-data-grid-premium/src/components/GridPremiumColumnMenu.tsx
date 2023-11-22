@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import {
   GridGenericColumnMenu,
   GridColumnMenuProps,
-  GRID_COLUMN_MENU_COMPONENTS,
-  GRID_COLUMN_MENU_COMPONENTS_PROPS,
+  GRID_COLUMN_MENU_SLOTS,
+  GRID_COLUMN_MENU_SLOT_PROPS,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
 import { GridColumnMenuAggregationItem } from './GridColumnMenuAggregationItem';
@@ -23,14 +23,14 @@ export function GridColumnMenuGroupingItem(props: GridColumnMenuItemProps) {
   return null;
 }
 
-export const GRID_COLUMN_MENU_COMPONENTS_PREMIUM = {
-  ...GRID_COLUMN_MENU_COMPONENTS,
-  ColumnMenuAggregationItem: GridColumnMenuAggregationItem,
-  ColumnMenuGroupingItem: GridColumnMenuGroupingItem,
+export const GRID_COLUMN_MENU_SLOTS_PREMIUM = {
+  ...GRID_COLUMN_MENU_SLOTS,
+  columnMenuAggregationItem: GridColumnMenuAggregationItem,
+  columnMenuGroupingItem: GridColumnMenuGroupingItem,
 };
 
-export const GRID_COLUMN_MENU_COMPONENTS_PROPS_PREMIUM = {
-  ...GRID_COLUMN_MENU_COMPONENTS_PROPS,
+export const GRID_COLUMN_MENU_SLOT_PROPS_PREMIUM = {
+  ...GRID_COLUMN_MENU_SLOT_PROPS,
   columnMenuAggregationItem: { displayOrder: 23 },
   columnMenuGroupingItem: { displayOrder: 27 },
 };
@@ -41,8 +41,8 @@ const GridPremiumColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuP
       <GridGenericColumnMenu
         ref={ref}
         {...props}
-        defaultComponents={GRID_COLUMN_MENU_COMPONENTS_PREMIUM}
-        defaultComponentsProps={GRID_COLUMN_MENU_COMPONENTS_PROPS_PREMIUM}
+        defaultSlots={GRID_COLUMN_MENU_SLOTS_PREMIUM}
+        defaultSlotProps={GRID_COLUMN_MENU_SLOT_PROPS_PREMIUM}
       />
     );
   },

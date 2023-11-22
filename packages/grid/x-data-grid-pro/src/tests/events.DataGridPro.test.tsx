@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -21,7 +20,7 @@ import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Events Params', () => {
+describe('<DataGridPro /> - Events params', () => {
   const { render, clock } = createRenderer();
 
   const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {
@@ -134,7 +133,7 @@ describe('<DataGridPro /> - Events Params', () => {
       render(<TestEvents onCellClick={handleClick} />);
       const header = screen
         .getByRole('columnheader', { name: 'first' })
-        .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
+        .querySelector('.MuiDataGrid-columnHeaderTitleContainer')!;
       fireEvent.click(header);
 
       const cell01 = getCell(0, 1);
@@ -276,7 +275,7 @@ describe('<DataGridPro /> - Events Params', () => {
 
     it('should not be called when clicking the checkbox added by checkboxSelection', () => {
       render(<TestEvents onRowClick={push('rowClick')} checkboxSelection />);
-      const cell11 = getCell(1, 0).querySelector('input');
+      const cell11 = getCell(1, 0).querySelector('input')!;
       fireEvent.click(cell11);
       expect(eventStack).to.deep.equal([]);
     });
@@ -325,7 +324,7 @@ describe('<DataGridPro /> - Events Params', () => {
       render(<TestEvents onRowClick={push('rowClick')} />);
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
-      fireEvent.click(cell.querySelector('input'));
+      fireEvent.click(cell.querySelector('input')!);
       expect(eventStack).to.deep.equal([]);
     });
   });
@@ -380,7 +379,7 @@ describe('<DataGridPro /> - Events Params', () => {
       );
     }
     const { container, setProps } = render(<TestCase rows={baseRows} />);
-    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller');
+    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
     // arbitrary number to make sure that the bottom of the grid window is reached.
     virtualScroller.scrollTop = 12345;
     virtualScroller.dispatchEvent(new Event('scroll'));

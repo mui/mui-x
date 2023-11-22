@@ -1,14 +1,18 @@
 {
   "props": {
-    "onViewChange": { "type": { "name": "func" }, "required": true },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
     "view": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
       },
       "required": true
     },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "dateIcon": { "type": { "name": "node" }, "default": "DateRange" },
     "hidden": {
       "type": { "name": "bool" },
@@ -16,13 +20,14 @@
     },
     "timeIcon": { "type": { "name": "node" }, "default": "Time" }
   },
-  "slots": {},
+  "slots": [],
   "name": "DateTimePickerTabs",
+  "imports": [
+    "import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';",
+    "import { DateTimePickerTabs } from '@mui/x-date-pickers';",
+    "import { DateTimePickerTabs } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom components</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerTabs" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DateTimePickerTabs" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
 }

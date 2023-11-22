@@ -1,12 +1,12 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Localized dates
+productId: x-date-pickers
+title: Date and Time Pickers - Date format and localization
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Localized dates
+# Date format and localization
 
 <p class="description">Date and Time Pickers support formats from different locales.</p>
 
@@ -105,7 +105,7 @@ function App({ children }) {
 
 :::
 
-## 12h/24h format
+## Meridiem — 12h/24h format
 
 All the time and datetime components will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
 You can override the default setting with the `ampm` prop:
@@ -134,6 +134,70 @@ This prop is available on all fields and pickers.
 
 {{"demo": "CustomFieldFormat.js"}}
 
+:::info
+You can control the field format spacing using the [formatDensity](/x/react-date-pickers/custom-field/#change-the-format-density) prop.
+:::
+
+### Field-supported formats
+
+Some formats might not yet be supported by the fields.
+For example, they don't support day of the year or quarter.
+
+Here is the list of the currently supported formats:
+
+- The year
+  - ✅ 2-digits values (e.g: `23`)
+  - ✅ 4-digits values (e.g: `2023`)
+  - ❌ Values with ordinal (e.g: `2023th`)
+- The month
+
+  - ✅ 1-based digit (e.g: `08`)
+  - ✅ Multi-letter values (e.g. `Aug`, `August`)
+  - ❌ 1-letter values (e.g: `A`) because several months are represented with the same letter
+
+- The day of the month
+
+  - ✅ 1-based digit values (e.g: `24`)
+  - ✅ 1-based digit values with ordinal (e.g: `24th`)
+
+- The day of the week
+
+  - ✅ 0-based digit values (e.g: `03`)
+  - ✅ 1-based digit values (e.g: `04`)
+  - ✅ Multi-letter values (e.g: `Tue`, `Tuesday`)
+  - ❌ 1-letter values (e.g: `T`) because several days of the week are represented with the same letter
+
+- The hours
+
+  - ✅ 0-based 12-hours values (e.g: `03`)
+  - ✅ 0-based 24-hours values (e.g: `15`)
+  - ❌ 1-based values (e.g: `24` instead of `00`)
+
+- The minutes
+
+- The seconds
+
+- The meridiem
+
+If you need to use some format that is not yet supported, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) describing what is your exact use case.
+Some new formats might be supported in the future, depending on the complexity of the implementation.
+
+### Respect leading zeros in fields
+
+By default, the value rendered in the field always contains digit zeros, even if your format says otherwise.
+You can force the field to respect your format information by setting the `shouldRespectLeadingZeros` prop to `true`.
+
+:::warning
+When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
+If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.
+:::
+
+:::warning
+Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+:::
+
+{{"demo": "RespectLeadingZerosFieldFormat.js"}}
+
 ### Custom field placeholder
 
 When a section is empty, the fields displays its placeholder instead of an empty value.
@@ -152,7 +216,7 @@ Some locales might keep using English placeholders, because that format is commo
 
 ### Custom toolbar format
 
-To customize the format used in the toolbar, use the `toolbarFormat` prop of the toolbar slot.
+To customize the format used in the toolbar, use the `toolbarFormat` prop of the `toolbar` slot.
 
 :::info
 This prop is available on all pickers.
@@ -163,13 +227,27 @@ This prop is available on all pickers.
 ### Custom day of week format
 
 Use `dayOfWeekFormatter` to customize day names in the calendar header.
-This prop takes the short name of the day provided by the date library as an input, and returns it's formatted version.
-The default formatter only keeps the first letter and capitalises it.
+This prop takes two parameters, `day` (a string with the name of the day) and `date` ( the day in the format of your date library) and returns the formatted string to display.
+The default formatter only keeps the first letter of the name and capitalises it.
+
+:::warning
+The first parameter `day` will be removed in v7 in favor of the second parameter `date` for more flexibility.
+:::
 
 :::info
 This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
 :::
 
-The example bellow adds a dot at the end of each day in the calendar header:
+The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
+
+### Custom calendar header format
+
+To customize the format used on the calendar header, use the `format` prop of the `calendarHeader` slot.
+
+:::info
+This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
+:::
+
+{{"demo": "CustomCalendarHeaderFormat.js"}}

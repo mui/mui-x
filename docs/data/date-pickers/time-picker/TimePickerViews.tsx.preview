@@ -1,0 +1,9 @@
+<DemoItem label={'"hours", "minutes" and "seconds"'}>
+  <TimePicker views={['hours', 'minutes', 'seconds']} />
+</DemoItem>
+<DemoItem label={'"hours"'}>
+  <TimePicker views={['hours']} />
+</DemoItem>
+<DemoItem label={'"minutes" and "seconds"'}>
+  <TimePicker views={['minutes', 'seconds']} format="mm:ss" />
+</DemoItem>

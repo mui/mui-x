@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import IconButton from '@mui/material/IconButton';
 import MenuList from '@mui/material/MenuList';
+import { useTheme } from '@mui/material/styles';
 import { unstable_useId as useId } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
@@ -17,15 +17,14 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-interface GridActionsCellProps
-  extends Omit<GridRenderCellParams, 'value' | 'formattedValue' | 'api'> {
-  value?: GridRenderCellParams['value'];
-  formattedValue?: GridRenderCellParams['formattedValue'];
+interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
+  api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
 }
 
 function GridActionsCell(props: GridActionsCellProps) {
   const {
+    api,
     colDef,
     id,
     hasFocus,
@@ -48,9 +47,19 @@ function GridActionsCell(props: GridActionsCellProps) {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const ignoreCallToFocus = React.useRef(false);
   const touchRippleRefs = React.useRef<Record<string, TouchRippleActions | null>>({});
+  const theme = useTheme();
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
+
+  if (!hasActions(colDef)) {
+    throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
+  }
+
+  const options = colDef.getActions(apiRef.current.getRowParams(id));
+  const iconButtons = options.filter((option) => !option.props.showInMenu);
+  const menuButtons = options.filter((option) => option.props.showInMenu);
+  const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
 
   React.useLayoutEffect(() => {
     if (!hasFocus) {
@@ -88,21 +97,14 @@ function GridActionsCell(props: GridActionsCellProps) {
       focus() {
         // If ignoreCallToFocus is true, then one of the buttons was clicked and the focus is already set
         if (!ignoreCallToFocus.current) {
-          setFocusedButtonIndex(0);
+          // find the first focusable button and pass the index to the state
+          const focusableButtonIndex = options.findIndex((o) => !o.props.disabled);
+          setFocusedButtonIndex(focusableButtonIndex);
         }
       },
     }),
-    [],
+    [options],
   );
-
-  if (!hasActions(colDef)) {
-    throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
-  }
-
-  const options = colDef.getActions(apiRef.current.getRowParams(id));
-  const iconButtons = options.filter((option) => !option.props.showInMenu);
-  const menuButtons = options.filter((option) => option.props.showInMenu);
-  const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
 
   React.useEffect(() => {
     if (focusedButtonIndex >= numberOfButtons) {
@@ -141,11 +143,26 @@ function GridActionsCell(props: GridActionsCellProps) {
       return;
     }
 
+    const getNewIndex = (index: number, direction: 'left' | 'right'): number => {
+      if (index < 0 || index > options.length) {
+        return index;
+      }
+
+      // for rtl mode we need to reverse the direction
+      const rtlMod = theme.direction === 'rtl' ? -1 : 1;
+      const indexMod = (direction === 'left' ? -1 : 1) * rtlMod;
+
+      // if the button that should receive focus is disabled go one more step
+      return options[index + indexMod]?.props.disabled
+        ? getNewIndex(index + indexMod, direction)
+        : index + indexMod;
+    };
+
     let newIndex: number = focusedButtonIndex;
     if (event.key === 'ArrowRight') {
-      newIndex += 1;
+      newIndex = getNewIndex(focusedButtonIndex, 'right');
     } else if (event.key === 'ArrowLeft') {
-      newIndex -= 1;
+      newIndex = getNewIndex(focusedButtonIndex, 'left');
     }
 
     if (newIndex < 0 || newIndex >= numberOfButtons) {
@@ -187,30 +204,31 @@ function GridActionsCell(props: GridActionsCellProps) {
       )}
 
       {menuButtons.length > 0 && buttonId && (
-        <IconButton
+        <rootProps.slots.baseIconButton
           ref={buttonRef}
           id={buttonId}
           aria-label={apiRef.current.getLocaleText('actionsCellMore')}
-          aria-controls={menuId}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-controls={open ? menuId : undefined}
           role="menuitem"
           size="small"
           onClick={showMenu}
           touchRippleRef={handleTouchRippleRef(buttonId)}
           tabIndex={focusedButtonIndex === iconButtons.length ? tabIndex : -1}
+          {...rootProps.slotProps?.baseIconButton}
         >
-          <rootProps.components.MoreActionsIcon fontSize="small" />
-        </IconButton>
+          <rootProps.slots.moreActionsIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
       )}
 
       {menuButtons.length > 0 && (
         <GridMenu
-          onClickAway={hideMenu}
-          onClick={hideMenu}
           open={open}
           target={buttonRef.current}
           position={position}
+          onClose={hideMenu}
+          onClick={hideMenu}
         >
           <MenuList
             id={menuId}
@@ -233,6 +251,7 @@ GridActionsCell.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  api: PropTypes.object,
   /**
    * The mode of the cell.
    */
@@ -258,6 +277,9 @@ GridActionsCell.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
   formattedValue: PropTypes.any,
   /**
    * If true, the cell is the active element.
@@ -297,6 +319,10 @@ GridActionsCell.propTypes = {
    * the tabIndex value.
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
   value: PropTypes.any,
 } as any;
 

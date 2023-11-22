@@ -6,7 +6,6 @@ const itITGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nessun record',
   noResultsOverlayLabel: 'Nessun record trovato.',
-  errorOverlayDefaultLabel: 'Si è verificato un errore.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densità',
@@ -48,8 +47,9 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
+  filterPanelRemoveAll: 'Rimuovi filtri',
   filterPanelDeleteIconLabel: 'Rimuovi',
-  filterPanelLinkOperator: 'Operatore logico',
+  filterPanelLogicOperator: 'Operatore logico',
   filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'E (and)',
   filterPanelOperatorOr: 'O (or)',
@@ -71,6 +71,33 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'è vuoto',
   filterOperatorIsNotEmpty: 'non è vuoto',
   filterOperatorIsAnyOf: 'è uno tra',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Contiene',
+  headerFilterOperatorEquals: 'uguale a',
+  headerFilterOperatorStartsWith: 'comincia per',
+  headerFilterOperatorEndsWith: 'termina per',
+  headerFilterOperatorIs: 'uguale a',
+  headerFilterOperatorNot: 'diversa da',
+  headerFilterOperatorAfter: 'dopo il',
+  headerFilterOperatorOnOrAfter: 'a partire dal',
+  headerFilterOperatorBefore: 'prima del',
+  headerFilterOperatorOnOrBefore: 'fino al',
+  headerFilterOperatorIsEmpty: 'è vuoto',
+  headerFilterOperatorIsNotEmpty: 'non è vuoto',
+  headerFilterOperatorIsAnyOf: 'è uno tra',
+  'headerFilterOperator=': 'uguale a',
+  'headerFilterOperator!=': 'diverso da',
+  'headerFilterOperator>': 'maggiore di',
+  'headerFilterOperator>=': 'maggiore o uguale a',
+  'headerFilterOperator<': 'minore di',
+  'headerFilterOperator<=': 'minore o uguale a',
 
   // Filter values text
   filterValueAny: 'qualunque',
@@ -80,7 +107,7 @@ const itITGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Mostra le colonne',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Gestisci colonne',
   columnMenuFilter: 'Filtra',
   columnMenuHideColumn: 'Nascondi',
   columnMenuUnsort: "Annulla l'ordinamento",
@@ -144,12 +171,12 @@ const itITGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Riordinamento righe',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'aggregazione',
+  aggregationFunctionLabelSum: 'somma',
+  aggregationFunctionLabelAvg: 'media',
+  aggregationFunctionLabelMin: 'minimo',
+  aggregationFunctionLabelMax: 'massimo',
+  aggregationFunctionLabelSize: 'numero di elementi',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

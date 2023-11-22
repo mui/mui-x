@@ -25,24 +25,30 @@ This identifier is used internally to identify the row in the various models—f
 
 By default, the data grid looks for a property named `id` in the data set to get that identifier.
 
-If the row's identifier is not called `id`, then you need to use the `getRowId` prop to tell the grid where it's located.
+If the row's identifier is not called `id`, then you need to use the `getRowId` prop to tell the data grid where it's located.
 
 The following demo shows how to use `getRowId` to grab the unique identifier from a property named `internalId`:
 
 ```tsx
-<DataGrid getRowId={(row) => row.internalId} />
+function getRowId(row) {
+  return row.internalId;
+}
+
+<DataGrid getRowId={getRowId} />;
 ```
 
 {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If no such unique identifier exists in the data set, then you must create it by some other means, but this scenario should be avoided because it leads to issues with other features of the grid.
+If no such unique identifier exists in the data set, then you must create it by some other means, but this scenario should be avoided because it leads to issues with other features of the data grid.
 
 Note that it is not necessary to create a column to display the unique identifier data.
 The data grid pulls this information directly from the data set itself, not from anything that is displayed on the screen.
 
 :::warning
-Just like the `rows` prop, the `getRowId` prop should keep the same reference between two renders.
+Just like the `rows` prop, the `getRowId` function should keep the same JavaScript reference between two renders.
 Otherwise, the Grid will re-apply heavy work like sorting and filtering.
+
+It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
 ## Styling rows

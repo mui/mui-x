@@ -1,13 +1,13 @@
-# Data Grid - Components
+# Data Grid - Custom subcomponents
 
-<p class="description">The grid is highly customizable. Override components using the <code>components</code> prop.</p>
+<p class="description">The grid is highly customizable. Override components using the <code>slots</code> prop.</p>
 
 ## Overriding components
 
-As part of the customization API, the grid allows you to override internal components with the `components` prop.
+As part of the customization API, the Data Grid allows you to override internal components with the `slots` prop.
 The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
 
-If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop.
+If you wish to pass additional props in a component slot, you can do it using the `slotProps` prop.
 This prop is of type `GridSlotsComponentsProps`.
 
 As an example, you could override the column menu and pass additional props as below.
@@ -16,22 +16,18 @@ As an example, you could override the column menu and pass additional props as b
 <DataGrid
   rows={rows}
   columns={columns}
-  components={{
-    ColumnMenu: MyCustomColumnMenu,
+  slots={{
+    columnMenu: MyCustomColumnMenu,
   }}
-  componentsProps={{
+  slotProps={{
     columnMenu: { background: 'red', counter: rows.length },
   }}
 />
 ```
 
-:::warning
-The casing is different between the `components` (ColumnMenu) and `componentsProps` (columnMenu) props.
-:::
+### Interacting with the data grid
 
-### Interacting with the grid
-
-The grid exposes two hooks to help you to access the grid data while overriding component slots.
+The grid exposes two hooks to help you to access the data grid data while overriding component slots.
 
 They can be used as below:
 
@@ -41,22 +37,22 @@ They can be used as below:
 ```tsx
 function CustomPagination() {
   const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
+  const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
   return (
     <Pagination
       count={pageCount}
-      page={page + 1}
+      page={paginationModel.page + 1}
       onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
 }
 ```
 
-## Components
+## Component slots
 
-The full list of overridable components can be found on the [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots) API page.
+The full list of overridable components slots can be found on the [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots) API page.
 
 ### Column menu
 
@@ -64,28 +60,9 @@ As mentioned above, the column menu is a component slot that can be recomposed e
 
 {{"demo": "CustomColumnMenu.js", "bg": "inline"}}
 
-Below is the default `GridColumnMenu`.
-
-```tsx
-export const GridColumnMenu = React.forwardRef<
-  HTMLUListElement,
-  GridColumnMenuProps
->(function GridColumnMenu(props: GridColumnMenuProps, ref) {
-  const { hideMenu, colDef } = props;
-
-  return (
-    <GridColumnMenuContainer ref={ref} {...props}>
-      <GridColumnMenuSortItem onClick={hideMenu} column={colDef!} />
-      <GridColumnMenuFilterItem onClick={hideMenu} column={colDef!} />
-      <GridColumnMenuColumnsItem onClick={hideMenu} column={colDef!} />
-    </GridColumnMenuContainer>
-  );
-});
-```
-
 ### Toolbar
 
-To enable the toolbar you need to add the `Toolbar: GridToolbar` to the grid `components` prop.
+To enable the toolbar you need to add the `toolbar: GridToolbar` to the Data Grid `slots` prop.
 This demo showcases how this can be achieved.
 
 {{"demo": "ToolbarGrid.js", "bg": "inline"}}
@@ -147,7 +124,7 @@ As with the no-rows overlay, the Grid also lets you override the no-results over
 
 ### Row
 
-The `componentsProps.row` prop can be used to pass additional props to the row component.
+The `slotProps.row` prop can be used to pass additional props to the row component.
 One common use case might be to listen for events not exposed by [default](/x/react-data-grid/events/#catalog-of-events).
 The demo below shows a context menu when a row is right-clicked.
 
@@ -155,16 +132,125 @@ The demo below shows a context menu when a row is right-clicked.
 
 ### Cell
 
-The following demo uses the `componentsProps.cell` prop to listen for specific events emitted by the cells.
+The following demo uses the `slotProps.cell` prop to listen for specific events emitted by the cells.
 Try it by hovering a cell with the mouse and it should display the number of characters each cell has.
 
 {{"demo": "CellWithPopover.js", "bg": "inline"}}
 
 ### Icons
 
-As any component slot, every icon can be customized. However, it is not yet possible to use the `componentsProps` with icons.
+As any component slot, every icon can be customized. However, it is not yet possible to use the `slotProps` with icons.
 
 {{"demo": "CustomSortIcons.js", "bg": "inline"}}
+
+## Slot props
+
+To override default props or pass custom props to slot components, use the `slotProps` prop.
+
+```tsx
+<DataGrid
+  slotProps={{
+    toolbar: {
+      // override default props
+      disableDensitySelector: true,
+    }
+  }}
+>
+```
+
+### Custom slot props with TypeScript
+
+If the custom component requires additional props to work properly, TypeScript may throw type errors. To prevent, use [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to enhance the props interface.
+
+The naming of overridable interfaces uses a pattern like this:
+
+```js
+`${slotNameInPascalCase}PropsOverrides`;
+```
+
+For example, for `columnMenu` slot, the interface name would be `ColumnMenuPropsOverrides`.
+
+This [file](https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
+
+<codeblock storageKey="pricing-plan">
+
+```tsx Community
+// augment the props for the toolbar slot
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    someCustomString: string;
+    someCustomNumber: number;
+  }
+}
+
+<DataGrid
+  slots={{
+    // custom component passed to the toolbar slot
+    toolbar: CustomGridToolbar,
+  }}
+  slotProps={{
+    toolbar: {
+      // props required by CustomGridToolbar
+      someCustomString: 'Hello',
+      someCustomNumber: 42,
+    },
+  }}
+>
+```
+
+```tsx Pro
+// augment the props for the toolbar slot
+declare module '@mui/x-data-grid-pro' {
+  interface ToolbarPropsOverrides {
+    someCustomString: string;
+    someCustomNumber: number;
+  }
+}
+
+<DataGridPro
+  slots={{
+    // custom component passed to the toolbar slot
+    toolbar: CustomGridToolbar,
+  }}
+  slotProps={{
+    toolbar: {
+      // props required by CustomGridToolbar
+      someCustomString: 'Hello',
+      someCustomNumber: 42,
+    },
+  }}
+>
+```
+
+```tsx Premium
+// augment the props for the toolbar slot
+declare module '@mui/x-data-grid-premium' {
+  interface ToolbarPropsOverrides {
+    someCustomString: string;
+    someCustomNumber: number;
+  }
+}
+
+<DataGridPremium
+  slots={{
+    // custom component passed to the toolbar slot
+    toolbar: CustomGridToolbar,
+  }}
+  slotProps={{
+    toolbar: {
+      // props required by CustomGridToolbar
+      someCustomString: 'Hello',
+      someCustomNumber: 42,
+    },
+  }}
+>
+```
+
+</codeblock>
+
+This demo below shows how to use the `slotProps` prop and module augmentation to pass a new prop `status` to the `footer` slot.
+
+{{"demo": "CustomFooter.js", "bg": "inline"}}
 
 ## API
 

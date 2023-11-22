@@ -18,6 +18,12 @@ In the following demo, the "username" column cannot be hidden.
 
 To initialize the visible columns without controlling them, provide the model to the `initialState` prop.
 
+:::info
+
+Passing the visible columns to the `initialState` prop will only have an impact when the data grid is rendered for the first time. In order to update the visible columns after the first render, you need to use the [`columnVisibilityModel`](#controlled-visible-columns) prop.
+
+:::
+
 ```tsx
 <DataGrid
   initialState={{
@@ -53,23 +59,62 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 
 ## Column visibility panel
 
-The column visibility panel can be opened through the grid toolbar.
-To enable it, you need to add `Toolbar: GridToolbar` to the grid `components` prop.
+The column visibility panel can be opened through the Data Grid toolbar.
+To enable it, you need to add `toolbar: GridToolbar` to the Data Grid `slots` prop.
 
 The user can then choose which columns are visible using the _Columns_ button.
 
 {{"demo": "ColumnSelectorGrid.js", "bg": "inline"}}
 
+### Disable the column visibility panel
+
+Sometimes, the intention is to disable the columns panel or control the visible columns programmatically based on the application state.
+To disable the column visibility panel, set the prop `disableColumnSelector={true}` and use the [`columnVisibilityModel`](#controlled-visible-columns) prop to control the visible columns.
+
+```tsx
+<DataGrid disableColumnSelector columnVisibilityModel={columnVisibilityModel} />
+```
+
+In the following demo, the columns panel is disabled, and access to columns `id`, `quantity`, and `filledQuantity` is only allowed for the `Admin` type user.
+
+{{"demo": "ColumnSelectorDisabledGrid.js", "bg": "inline"}}
+
+### Customize the list of columns in panel
+
+To show or hide specific columns in the column visibility panel, use the `slotProps.columnsPanel.getTogglableColumns` prop. It should return an array of column field names.
+
+```tsx
+const getTogglableColumns = (columns: GridColDef[]) => {
+  // hide the column with field `id` from list of togglable columns
+  return columns
+    .filter((column) => column.field !== 'id')
+    .map((column) => column.field);
+};
+
+<DataGrid
+  slots={{
+    toolbar: GridToolbar,
+  }}
+  slotProps={{
+    columnsPanel: {
+      getTogglableColumns,
+    },
+  }}
+/>;
+```
+
+{{"demo": "ColumnSelectorGridCustomizeColumns.js", "bg": "inline"}}
+
 ### Disable action buttons
 
-To disable `Hide all` or `Show all` buttons in the column visibility panel, pass `disableHideAllButton` or `disableShowAllButton` to `componentsProps.columnsPanel`.
+To disable `Hide all` or `Show all` buttons in the column visibility panel, pass `disableHideAllButton` or `disableShowAllButton` to `slotProps.columnsPanel`.
 
 ```tsx
 <DataGrid
-  components={{
-    Toolbar: GridToolbar,
+  slots={{
+    toolbar: GridToolbar,
   }}
-  componentsProps={{
+  slotProps={{
     columnsPanel: {
       disableHideAllButton: true,
       disableShowAllButton: true,
@@ -77,10 +122,6 @@ To disable `Hide all` or `Show all` buttons in the column visibility panel, pass
   }}
 />
 ```
-
-:::info
-To hide the column visibility panel from the toolbar, set the prop `disableColumnSelector={true}`.
-:::
 
 ## API
 
