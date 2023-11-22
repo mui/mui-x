@@ -32,7 +32,6 @@ export const TIME_VALIDATION_PROP_NAMES: (
   'disableFuture',
   'minTime',
   'maxTime',
-  'shouldDisableClock',
   'shouldDisableTime',
   'minutesStep',
   'ampm',

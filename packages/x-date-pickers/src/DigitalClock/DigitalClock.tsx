@@ -124,7 +124,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     disableFuture,
     disablePast,
     minutesStep = 1,
-    shouldDisableClock,
     shouldDisableTime,
     onChange,
     view: inView,
@@ -247,10 +246,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           return false;
         }
 
-        if (shouldDisableClock?.(utils.toJsDate(valueToCheck).getTime(), 'hours')) {
-          return false;
-        }
-
         if (shouldDisableTime) {
           return !shouldDisableTime(valueToCheck, 'hours');
         }
@@ -269,7 +264,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       now,
       disablePast,
       minutesStep,
-      shouldDisableClock,
       shouldDisableTime,
     ],
   );
@@ -435,14 +429,6 @@ DigitalClock.propTypes = {
    * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
    */
   referenceDate: PropTypes.any,
-  /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
    * @template TDate

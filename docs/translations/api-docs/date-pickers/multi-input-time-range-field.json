@@ -107,15 +107,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "shouldDisableClock": {
-      "description": "Disable specific clock time.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "clockValue": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
-      }
-    },
     "shouldDisableTime": {
       "description": "Disable specific time.",
       "deprecated": "",

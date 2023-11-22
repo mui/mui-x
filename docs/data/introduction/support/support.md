@@ -33,3 +33,19 @@ Including your Order ID (or Support key) in the issue helps us prioritize the is
 1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
 2. MUI X Premium: The same as MUI X Pro, but with higher priority.
 3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
+
+### Long-term support (LTS)
+
+Bug fixes, performance enhancements, and other improvements are delivered in new releases. However, MUI remains committed to providing security updates and addressing regressions for the immediate predecessor of the current major version.
+
+This includes issues introduced by external sources, like browser upgrades or changes to upstream dependencies.
+
+### Supported versions
+
+- MUI X v7: ✅ Pre-release (Continuous support - Stable release: March 2024)
+- MUI X v6: ✅ Stable major (Continuous support)
+- MUI X v5: ⚠️ Long term support (Guaranteed Support for security issues and regressions).
+- MUI X v4: 🅧 No longer supported.
+- MUI X v3: 🅧 Never existed.
+- MUI X v2: 🅧 Never existed.
+- MUI X v1: 🅧 Never existed.
