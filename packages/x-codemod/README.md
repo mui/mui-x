@@ -86,8 +86,28 @@ npx @mui/x-codemod v7.0.0/pickers/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`rename-components-to-slots-pickers`](#rename-components-to-slots-pickers)
 - [`rename-default-calendar-month-to-reference-date`](#rename-default-calendar-month-to-reference-date)
 - [`rename-day-picker-classes`](/rename-day-picker-classes)
+
+#### `rename-components-to-slots-pickers`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects pickers components.
+
+```diff
+ <DatePicker
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
+```
 
 #### `rename-default-calendar-month-to-reference-date`
 
@@ -119,7 +139,26 @@ npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path|folder>
 
 The list includes these transformers
 
-NO CODEMOD ADDED YET
+- [`rename-components-to-slots-data-grid`](#rename-components-to-slots-data-grid)
+
+#### `rename-components-to-slots-data-grid`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects data grid components.
+
+```diff
+ <DataGrid
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
+```
 
 ## v6.0.0
 
