@@ -38,7 +38,7 @@
     "@mui/x-data-grid-premium": "7.0.0-alpha.1",
     "chance": "^1.1.11",
     "clsx": "^2.0.0",
-    "lru-cache": "^7.18.3"
+    "lru-cache": "^10.1.0"
   },
   "devDependencies": {
     "@types/chance": "^1.1.6",
