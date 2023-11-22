@@ -130,7 +130,7 @@ The deprecated `defaultCalendarMonth` prop has been removed in favor of the more
 The new `referenceDate` prop is not limited to the default month.
 It will also impact year, day, and time.
 
-Learn more on this prop on [the `DateCalendar` doc](/x/react-date-pickers/date-calendar/#choose-the-initial-year-month) or [the `referenceDate` doc](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined).
+Learn more on this prop on [the `DateCalendar` documentation](/x/react-date-pickers/date-calendar/#choose-the-initial-year-month) or [the `referenceDate` documentation](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined) pages.
 :::
 
 ```diff
