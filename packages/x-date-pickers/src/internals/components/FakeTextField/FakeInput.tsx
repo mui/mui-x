@@ -1,5 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import Box from '@mui/material/Box';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
@@ -12,7 +13,7 @@ import { fakeInputClasses, getFakeInputUtilityClass } from './fakeTextFieldClass
 import Outline from './Outline';
 import { FakeInputElement, FakeInputProps } from './FakeInput.types';
 
-const SectionsWrapper = styled('div', {
+const SectionsWrapper = styled(Box, {
   name: 'MuiFakeInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
