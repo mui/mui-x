@@ -136,7 +136,7 @@ You can read more about the deprecation of this prop in [v6 migration guide](/x/
  />
 ```
 
-### Replace `defaultCalendarMonth` with `referenceDate`
+### ✅ Replace `defaultCalendarMonth` with `referenceDate`
 
 The deprecated `defaultCalendarMonth` prop has been removed in favor of the more flexible `referenceDate` prop.
 

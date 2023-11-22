@@ -76,17 +76,27 @@ The corresponding sub-sections are listed below
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers v6.0.0
+#### `preset-safe` for pickers v7.0.0
 
 The `preset-safe` codemods for pickers.
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/preset-safe <path|folder>
+npx @mui/x-codemod v7.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
 
+- [`rename-default-calendar-month-to-reference-date`](#rename-default-calendar-month-to-reference-date)
 - [`rename-day-picker-classes`](/rename-day-picker-classes)
+
+#### `rename-default-calendar-month-to-reference-date`
+
+Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
+
+```diff
+- <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
++ <DateCalendar referenceDate{dayjs('2022-04-01')} />
+```
 
 #### `rename-day-picker-classes`
 
@@ -104,7 +114,7 @@ Rename the `dayPickerClasses` variable `dayCalendarClasses`.
 The `preset-safe` codemods for data grid.
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
+npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path|folder>
 ```
 
 The list includes these transformers
