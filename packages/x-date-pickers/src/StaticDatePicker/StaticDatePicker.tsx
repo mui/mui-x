@@ -105,6 +105,7 @@ StaticDatePicker.propTypes = {
   dayOfWeekFormatter: PropTypes.func,
   /**
    * Default calendar month displayed when `value` and `defaultValue` are empty.
+   * @deprecated Consider using `referenceDate` instead.
    */
   defaultCalendarMonth: PropTypes.any,
   /**

@@ -92,6 +92,7 @@ DateRangePicker.propTypes = {
   dayOfWeekFormatter: PropTypes.func,
   /**
    * Default calendar month displayed when `value={[null, null]}`.
+   * @deprecated Consider using `referenceDate` instead.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
