@@ -218,7 +218,7 @@ It was used in the header of the calendar views, you can replace it with the new
 
 ## Renamed variables
 
-### ✅ Rename the `dayPickerClasses` variable `dayCalendarClasses`
+### ✅ Rename the `dayPickerClasses` variable to `dayCalendarClasses`
 
 The `dayPickerClasses` variable has been renamed `dayCalendarClasses` to be consistent with the new name of the `DayCalendar` component introduced in v6.0.0.
 
