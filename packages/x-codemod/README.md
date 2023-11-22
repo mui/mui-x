@@ -86,7 +86,20 @@ npx @mui/x-codemod v6.0.0/pickers/preset-safe <path|folder>
 
 The list includes these transformers
 
-NO CODEMOD ADDED YET
+- [`rename-default-calendar-month-reference-date`](#rename-default-calendar-month-reference-date)
+
+#### `rename-default-calendar-month-reference-date`
+
+Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
+
+```diff
+  <DatePicker
+    value={value}
+    onChange={setValue}
+-   defaultCalendarMonth={dayjs('2022-04-01')}
++   referenceDate={dayjs('2022-04-01')}
+/>
+```
 
 ### Data grid codemods
 
