@@ -154,23 +154,6 @@ describe('<DateCalendar />', () => {
       ).to.have.text('1');
     });
 
-    // TODO v7: Remove
-    it('should use `defaultCalendarMonth` for the month and year when no value defined', () => {
-      const onChange = spy();
-
-      render(
-        <DateCalendar
-          onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date('2018-01-01T12:30:00')}
-          view="day"
-        />,
-      );
-
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 2));
-    });
-
     it('should use `referenceDate` when no value defined', () => {
       const onChange = spy();
 
@@ -231,7 +214,6 @@ describe('<DateCalendar />', () => {
         <DateCalendar
           value={adapterToUse.date('2018-01-03T11:11:11.111')}
           onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date('2018-01-01')}
           view="day"
         />,
       );
@@ -245,7 +227,6 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date('2018-01-03T11:11:11:111')}
-          defaultCalendarMonth={adapterToUse.date('2018-01-01')}
           view="day"
           showDaysOutsideCurrentMonth
         />,
@@ -257,7 +238,6 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date('2018-01-03T11:11:11:111')}
-          defaultCalendarMonth={adapterToUse.date('2018-01-01')}
           view="day"
           showDaysOutsideCurrentMonth
           fixedWeekNumber={6}

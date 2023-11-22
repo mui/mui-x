@@ -24,11 +24,6 @@
         "string": "The name to display."
       }
     },
-    "defaultCalendarMonth": {
-      "description": "Default calendar month displayed when <code>value={[null, null]}</code>.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "defaultRangePosition": {
       "description": "The initial position in the edited date range. Used when the component is not controlled.",
       "deprecated": "",

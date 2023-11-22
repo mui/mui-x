@@ -136,6 +136,22 @@ You can read more about the deprecation of this prop in [v6 migration guide](/x/
  />
 ```
 
+### Replace `defaultCalendarMonth` with `referenceDate`
+
+The deprecated `defaultCalendarMonth` prop has been removed in favor of the more flexible `referenceDate` prop.
+
+:::info
+The new `referenceDate` prop is not limited to the default month.
+It will also impact year, day, and time.
+
+Learn more on this prop on [the `DateCalendar` documentation](/x/react-date-pickers/date-calendar/#choose-the-initial-year-month) or [the `referenceDate` documentation](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined) pages.
+:::
+
+```diff
+- <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
++ <DateCalendar referenceDate{dayjs('2022-04-01')} />
+```
+
 ## Modified props
 
 ### Remove the string argument of the `dayOfWeekFormatter` prop
