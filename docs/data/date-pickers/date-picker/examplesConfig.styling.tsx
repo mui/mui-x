@@ -141,7 +141,7 @@ function TextFieldMoreInfo() {
   return (
     <Typography>
       Check{' '}
-      <Link href="https://mui.com/material-ui/react-text-field/#customization">
+      <Link href="/material-ui/react-text-field/#customization">
         TextField component docs
       </Link>{' '}
       for customization examples.
