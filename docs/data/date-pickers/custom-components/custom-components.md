@@ -238,5 +238,5 @@ You can pass custom components—to replace the icons, for example—as shown be
 
 ## Shortcuts
 
-You can add shortcuts to every picker.
+You can add shortcuts to every Picker component.
 For more information, check the [dedicated page](/x/react-date-pickers/shortcuts/).

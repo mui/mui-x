@@ -56,7 +56,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ### Skip missing points
 
-Line series can have fewer data than the axis.
+Line series can have fewer data points than the axis.
 You can handle lines with partial data or data starting at different points by providing `null` values.
 
 By default, the tooltip does not show series if they have no value.
