@@ -100,7 +100,7 @@ Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
 
 #### `rename-day-picker-classes`
 
-Rename the `dayPickerClasses` variable `dayCalendarClasses`.
+Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
 
 ```diff
 - import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
