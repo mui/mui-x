@@ -2,9 +2,13 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-import { describeConformance, screen } from '@mui/monorepo/test/utils';
-import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
-import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
+import { describeConformance, screen } from '@mui-internal/test-utils';
+import {
+  wrapPickerMount,
+  createPickerRenderer,
+  adapterToUse,
+  describeRangeValidation,
+} from 'test/utils/pickers';
 
 describe('<StaticDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -43,12 +47,9 @@ describe('<StaticDateRangePicker />', () => {
   it('allows disabling dates', () => {
     render(
       <StaticDateRangePicker
-        minDate={adapterToUse.date(new Date(2005, 0, 1))}
+        minDate={adapterToUse.date('2005-01-01')}
         shouldDisableDate={isWeekend}
-        defaultValue={[
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 31)),
-        ]}
+        defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
       />,
     );
 
@@ -62,10 +63,7 @@ describe('<StaticDateRangePicker />', () => {
   it('should render the correct a11y tree structure', () => {
     render(
       <StaticDateRangePicker
-        defaultValue={[
-          adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 31)),
-        ]}
+        defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
       />,
     );
 

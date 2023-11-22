@@ -1,19 +1,19 @@
 ---
 productId: x-date-pickers
-title: Date and Time Pickers - Custom subcomponents
-components: DateTimePickerTabs
+title: Date and Time Pickers - Custom slots and subcomponents
+components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickersCalendarHeader, PickersShortcuts
 ---
 
-# Custom subcomponents
+# Custom slots and subcomponents
 
-<p class="description">The date picker lets you customize subcomponents.</p>
+<p class="description">Learn how to override the default DOM structure of the Date and Time Pickers.</p>
 
 :::info
 The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
 For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
 :::
 
-## Overriding components
+## Overriding slot components
 
 You can override the internal elements of the component (known as "slots") using the `slots` prop.
 
@@ -40,50 +40,55 @@ To modify components position, have a look at the [custom layout](/x/react-date-
 ### Recommended usage
 
 :::success
-Remember to pass a reference to the component instead of an inline render function and define it outside of the main component.
-This ensures that the component is not re-rendered on every update.
+Remember to pass a reference to the component instead of an inline render function and define it outside the main component.
+This ensures that the component is not remounted on every update.
 :::
 
-This code is buggy because it will render a new input after each keystroke, leading to a loss of focus.
+The first two examples below are buggy because the toolbar will remount after each keystroke, leading to a loss of focus.
 
 ```jsx
+// ❌ The `toolbar` slot is re-defined each time the parent component renders,
+// causing the component to remount.
 function MyApp() {
-  const [name, setName] = React.useState('');
-
-  // This component gets redefined each time `name` is updated ❌
-  const CustomActionBar = () => (
-    <input value={name} onChange={(event) => setName(event.target.value)} />
-  );
   return (
     <DatePicker
       slots={{
-        actionBar: CustomActionBar,
-        // This component gets re-rendered each time the parent component updates ❌
-        toolbar: () => <input />,
+        toolbar: () => (
+          <input value={name} onChange={(event) => setName(event.target.value)} />
+        ),
       }}
     />
   );
 }
 ```
 
-This one is correct since it's always the same input with different props.
+```jsx
+// ❌ The `toolbar` slot is re-defined each time `name` is updated,
+// causing the component to remount.
+function MyApp() {
+  const [name, setName] = React.useState('');
+
+  const CustomToolbar = React.useCallback(
+    () => <input value={name} onChange={(event) => setName(event.target.value)} />,
+    [name],
+  );
+
+  return <DatePicker slots={{ toolbar: CustomToolbar }} />;
+}
+```
 
 ```jsx
-// These components are defined only once ✅
-const CustomActionBar = ({ name, setName }) => (
+// ✅ The `toolbar` slot is defined only once, it will never remount.
+const CustomToolbar = ({ name, setName }) => (
   <input value={name} onChange={(event) => setName(event.target.value)} />
 );
-const CustomToolbar = () => <input />;
 
 function MyApp() {
   const [name, setName] = React.useState('');
   return (
     <DatePicker
-      slots={{
-        actionBar: CustomActionBar,
-        toolbar: CustomToolbar,
-      }}
-      slotProps={{ actionBar: { name, setName } }}
+      slots={{ toolbar: CustomToolbar }}
+      slotProps={{ toolbar: { name, setName } }}
     />
   );
 }
@@ -140,7 +145,7 @@ In the example below, the actions are the same as in the section above, but they
 ## Tabs
 
 The tabs are available on all date time picker components.
-It allows to switch between date and time interfaces.
+It allows switching between date and time interfaces.
 
 ### Component props
 
@@ -187,7 +192,7 @@ It displays the current values and allows to switch between different views.
 ### Component props
 
 You can customize how the toolbar displays the current value with `toolbarFormat`.
-By default empty values are replaced by `__`.
+By default, empty values are replaced by `__`.
 This can be modified by using `toolbarPlaceholder` props.
 
 By default, the toolbar is `hidden` on desktop, and `visible` on mobile.
@@ -233,5 +238,5 @@ You can pass custom components—to replace the icons, for example—as shown be
 
 ## Shortcuts
 
-You can add shortcuts to every pickers.
-For more information, check the [dedicated page](/x/react-date-pickers/shortcuts/)
+You can add shortcuts to every Picker component.
+For more information, check the [dedicated page](/x/react-date-pickers/shortcuts/).

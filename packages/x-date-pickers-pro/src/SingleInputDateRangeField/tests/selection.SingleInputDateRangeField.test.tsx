@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { act, userEvent } from '@mui/monorepo/test/utils';
+import { act, userEvent } from '@mui-internal/test-utils';
 import {
   adapterToUse,
   buildFieldInteractions,
-  createPickerRenderer,
-  expectInputValue,
   getCleanedSelectedContent,
   getTextbox,
-} from 'test/utils/pickers-utils';
+  createPickerRenderer,
+  expectInputValue,
+} from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -46,7 +46,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   describe('Click', () => {
     it('should select the clicked selection when the input is already focused', () => {
       const { input, selectSection } = renderWithProps({
-        value: [null, adapterToUse.date(new Date(2022, 1, 24))],
+        value: [null, adapterToUse.date('2022-02-24')],
       });
 
       // Start date
@@ -66,7 +66,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
     it('should not change the selection when clicking on the only already selected section', () => {
       const { input, selectSection } = renderWithProps({
-        value: [null, adapterToUse.date(new Date(2022, 1, 24))],
+        value: [null, adapterToUse.date('2022-02-24')],
       });
 
       // Start date

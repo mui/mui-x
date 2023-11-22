@@ -39,7 +39,7 @@ npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers-v600) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
@@ -189,11 +189,14 @@ Either rename the prop to the newly added, but deprecated `shouldDisableClock` o
 The codemod will take care of renaming the prop to keep the existing functionality but feel free to update to the new `shouldDisableTime` prop on your own.
 
 ```diff
+ // ℹ️ Rename and keep using the deprecated prop
+ // This is the change that the codemod will apply
  <DateTimePicker
 -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
 +  shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
  />
 
+ // ✅ Update your code to use the provided date value parameter instead of a number
  <DateTimePicker
 -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
 +  shouldDisableTime={(value, view) => view === 'hours' && value.hour() < 12}

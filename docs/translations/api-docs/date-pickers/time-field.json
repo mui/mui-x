@@ -11,18 +11,13 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "clearable": {
+      "description": "If <code>true</code>, a clear button will be shown in the field allowing value clearing.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "color": {
-      "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#adding-new-colors\">palette customization guide</a>.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
+      "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -145,6 +140,11 @@
         "context": "The context containing the validation result of the current value."
       }
     },
+    "onClear": {
+      "description": "Callback fired when the clear button is clicked.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "onError": {
       "description": "Callback fired when the error associated to the current value changes.",
       "deprecated": "",
@@ -177,15 +177,6 @@
       "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally.",
       "deprecated": "",
       "typeDescriptions": {}
-    },
-    "shouldDisableClock": {
-      "description": "Disable specific clock time.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "clockValue": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
-      }
     },
     "shouldDisableTime": {
       "description": "Disable specific time.",
@@ -222,7 +213,7 @@
       "typeDescriptions": {}
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documentation</a> for more details.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -240,6 +231,8 @@
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
-    "textField": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "clearButton": "Button to clear the value.",
+    "clearIcon": "Icon to display inside the clear button.",
+    "textField": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>."
   }
 }

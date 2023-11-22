@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({
@@ -33,7 +33,7 @@ describe('<DesktopDateTimePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          defaultValue={adapterToUse.date(new Date(2018, 0, 1, 11, 55))}
+          defaultValue={adapterToUse.date('2018-01-01T11:55:00')}
           openTo="year"
         />,
       );
@@ -41,7 +41,7 @@ describe('<DesktopDateTimePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Select year
-      userEvent.mousePress(screen.getByRole('button', { name: '2025' }));
+      userEvent.mousePress(screen.getByRole('radio', { name: '2025' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1, 11, 55));
       expect(onAccept.callCount).to.equal(0);
@@ -61,6 +61,49 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
+    });
+  });
+
+  describe('prop: timeSteps', () => {
+    it('should use "DigitalClock" view renderer, when "timeSteps.minutes" = 60', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      render(
+        <DesktopDateTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          timeSteps={{ minutes: 60 }}
+        />,
+      );
+
+      userEvent.mousePress(screen.getByLabelText(/Choose date/));
+
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      userEvent.mousePress(screen.getByRole('option', { name: '03:00 AM' }));
+
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2, 3, 0, 0));
+      expect(onAccept.callCount).to.equal(1);
+    });
+
+    it('should accept value and close picker when selecting time on "DigitalClock" view renderer', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      render(
+        <DesktopDateTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          timeSteps={{ minutes: 60 }}
+        />,
+      );
+
+      userEvent.mousePress(screen.getByLabelText(/Choose date/));
+
+      userEvent.mousePress(screen.getByRole('option', { name: '03:00 AM' }));
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 3, 0, 0));
+      expect(onAccept.callCount).to.equal(1);
     });
   });
 });

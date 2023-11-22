@@ -1,6 +1,6 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
@@ -31,7 +31,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -43,16 +43,17 @@
       "default": "3"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "YearCalendar",
+  "imports": [
+    "import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';",
+    "import { YearCalendar } from '@mui/x-date-pickers';",
+    "import { YearCalendar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearCalendar" },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "YearCalendar" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "YearCalendar" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
 }

@@ -1,6 +1,6 @@
 ---
 productId: x-date-pickers
-components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateCalendar
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
@@ -108,6 +108,10 @@ If you know that all days of some months are disabled—you can provide the [`sh
 Same with the [`shouldDisableYear`](#disable-specific-years) prop for the `year` view.
 :::
 
+:::success
+Please note that `shouldDisableDate` will execute on every date rendered in the `day` view. Expensive computations in this validation function can impact performance.
+:::
+
 #### Disable specific dates in range components [<span class="pro-premium"></span>](/x/introduction/licensing/#pro-plan)
 
 For components supporting date range edition (`DateRangePicker`, `DateTimeRangePicker` 🚧)—the `shouldDisableDate` prop receives a second argument to differentiate the start and the end date.
@@ -197,7 +201,7 @@ The `maxDateTime` prop prevents the selection of all values after `props.maxDate
 :::warning
 If you want to put time boundaries independent of the date—use the [`time boundaries`](#set-time-boundaries) instead.
 
-For now, you can not use `maxDateTime` and `maxTime` together.
+For now, you cannot use `maxDateTime` and `maxTime` together.
 `maxDateTime` will override the `maxTime` behavior—Same for `minDateTime`/`minTime`
 
 ```tsx

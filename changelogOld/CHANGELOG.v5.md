@@ -33,7 +33,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7897) @Vivek-Prajapatii
+- [DataGrid] Allow to pass props to the `FocusTrap` inside the panel wrapper (#7897) @Vivek-Prajapatii
 - [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7945) @cherniavskii
 - [DataGridPro] Change cursor when dragging a column (#7878) @sai6855
 - [DataGridPremium] Fix `leafField` to have correct focus value (#7959) @MBilalShafi
@@ -427,7 +427,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### Changes
 
-- [DateRangePicker] Fix input focused style and mobile behaviour (#6645) (#6714) @LukasTy
+- [DateRangePicker] Fix input focused style and mobile behavior (#6645) (#6714) @LukasTy
 - [pickers] Add Ukrainian (uk-UA) locale on the date picker (#6661) @Dufran
 
 ### Docs

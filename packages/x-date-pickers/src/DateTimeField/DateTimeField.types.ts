@@ -14,7 +14,7 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../internals';
 
 export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseDateTimeFieldComponentProps<TDate, TChildProps>;
@@ -54,22 +54,10 @@ export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit
 export interface DateTimeFieldProps<TDate>
   extends UseDateTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DateTimeFieldSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DateTimeFieldSlotsComponent>;
+  slots?: DateTimeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
@@ -79,15 +67,15 @@ export interface DateTimeFieldProps<TDate>
 
 export type DateTimeFieldOwnerState<TDate> = DateTimeFieldProps<TDate>;
 
-export interface DateTimeFieldSlotsComponent {
+export interface DateTimeFieldSlotsComponent extends FieldSlotsComponents {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
-  TextField?: React.ElementType;
+  textField?: React.ElementType;
 }
 
-export interface DateTimeFieldSlotsComponentsProps<TDate> {
+export interface DateTimeFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
   textField?: SlotComponentProps<typeof TextField, {}, DateTimeFieldOwnerState<TDate>>;
 }

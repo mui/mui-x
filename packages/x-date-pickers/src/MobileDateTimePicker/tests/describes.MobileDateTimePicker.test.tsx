@@ -1,17 +1,17 @@
-import { screen, userEvent, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { screen, userEvent, fireTouchChangedEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
+  expectInputPlaceholder,
   openPicker,
   getClockTouchEvent,
-  expectInputPlaceholder,
   getTextbox,
-} from 'test/utils/pickers-utils';
+  describeValidation,
+  describeValue,
+  describePicker,
+} from 'test/utils/pickers';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -35,10 +35,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     type: 'date-time',
     variant: 'mobile',
     clock,
-    values: [
-      adapterToUse.date(new Date(2018, 0, 1, 11, 30)),
-      adapterToUse.date(new Date(2018, 0, 2, 12, 35)),
-    ],
+    values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-02T12:35:00')],
     emptyValue: null,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();

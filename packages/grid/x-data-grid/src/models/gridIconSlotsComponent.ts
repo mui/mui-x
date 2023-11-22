@@ -2,182 +2,181 @@ import * as React from 'react';
 
 /**
  * Set of icons used in the grid component UI.
- * TODO: Differentiate community and pro interface
  */
 export interface GridIconSlotsComponent {
   /**
    * Icon displayed on the boolean cell to represent the true value.
    * @default GridCheckIcon
    */
-  BooleanCellTrueIcon: React.JSXElementConstructor<any>;
+  booleanCellTrueIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the boolean cell to represent the false value.
    * @default GridCloseIcon
    */
-  BooleanCellFalseIcon: React.JSXElementConstructor<any>;
+  booleanCellFalseIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the side of the column header title to display the filter input component.
    * @default GridTripleDotsVerticalIcon
    */
-  ColumnMenuIcon: React.JSXElementConstructor<any>;
+  columnMenuIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the open filter button present in the toolbar by default.
    * @default GridFilterListIcon
    */
-  OpenFilterButtonIcon: React.JSXElementConstructor<any>;
+  openFilterButtonIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the column header menu to show that a filter has been applied to the column.
    * @default GridFilterAltIcon
    */
-  ColumnFilteredIcon: React.JSXElementConstructor<any>;
+  columnFilteredIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the column menu selector tab.
    * @default GridColumnIcon
    */
-  ColumnSelectorIcon: React.JSXElementConstructor<any>;
+  columnSelectorIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the side of the column header title when unsorted.
    * @default GridColumnUnsortedIcon
    */
-  ColumnUnsortedIcon: React.JSXElementConstructor<any> | null;
+  columnUnsortedIcon: React.JSXElementConstructor<any> | null;
   /**
    * Icon displayed on the side of the column header title when sorted in ascending order.
    * @default GridArrowUpwardIcon
    */
-  ColumnSortedAscendingIcon: React.JSXElementConstructor<any> | null;
+  columnSortedAscendingIcon: React.JSXElementConstructor<any> | null;
   /**
    * Icon displayed on the side of the column header title when sorted in descending order.
    * @default GridArrowDownwardIcon
    */
-  ColumnSortedDescendingIcon: React.JSXElementConstructor<any> | null;
+  columnSortedDescendingIcon: React.JSXElementConstructor<any> | null;
   /**
    * Icon displayed in between two column headers that allows to resize the column header.
    * @default GridSeparatorIcon
    */
-  ColumnResizeIcon: React.JSXElementConstructor<any>;
+  columnResizeIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the compact density option in the toolbar.
    * @default GridViewHeadlineIcon
    */
-  DensityCompactIcon: React.JSXElementConstructor<any>;
+  densityCompactIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the standard density option in the toolbar.
    * @default GridTableRowsIcon
    */
-  DensityStandardIcon: React.JSXElementConstructor<any>;
+  densityStandardIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the "comfortable" density option in the toolbar.
    * @default GridViewStreamIcon
    */
-  DensityComfortableIcon: React.JSXElementConstructor<any>;
+  densityComfortableIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the open export button present in the toolbar by default.
    * @default GridSaveAltIcon
    */
-  ExportIcon: React.JSXElementConstructor<any>;
+  exportIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the `actions` column type to open the menu.
    * @default GridMoreVertIcon
    */
-  MoreActionsIcon: React.JSXElementConstructor<any>;
+  moreActionsIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the tree data toggling column when the children are collapsed
    * @default GridKeyboardArrowRight
    */
-  TreeDataExpandIcon: React.JSXElementConstructor<any>;
+  treeDataExpandIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the tree data toggling column when the children are expanded
    * @default GridExpandMoreIcon
    */
-  TreeDataCollapseIcon: React.JSXElementConstructor<any>;
+  treeDataCollapseIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the grouping column when the children are collapsed
    * @default GridKeyboardArrowRight
    */
-  GroupingCriteriaExpandIcon: React.JSXElementConstructor<any>;
+  groupingCriteriaExpandIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the grouping column when the children are expanded
    * @default GridExpandMoreIcon
    */
-  GroupingCriteriaCollapseIcon: React.JSXElementConstructor<any>;
+  groupingCriteriaCollapseIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the detail panel toggle column when collapsed.
    * @default GridAddIcon
    */
-  DetailPanelExpandIcon: React.JSXElementConstructor<any>;
+  detailPanelExpandIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the detail panel toggle column when expanded.
    * @default GridRemoveIcon
    */
-  DetailPanelCollapseIcon: React.JSXElementConstructor<any>;
+  detailPanelCollapseIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed for deleting the filter from filter panel.
    * @default GridAddIcon
    */
-  FilterPanelAddIcon: React.JSXElementConstructor<any>;
+  filterPanelAddIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed for deleting the filter from filter panel.
    * @default GridDeleteIcon
    */
-  FilterPanelDeleteIcon: React.JSXElementConstructor<any>;
+  filterPanelDeleteIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed for deleting all the active filters from filter panel.
    * @default GridDeleteForeverIcon
    */
-  FilterPanelRemoveAllIcon: React.JSXElementConstructor<any>;
+  filterPanelRemoveAllIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the `reorder` column type to reorder a row.
    * @default GridDragIcon
    */
-  RowReorderIcon: React.JSXElementConstructor<any>;
+  rowReorderIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the quick filter input.
    * @default GridSearchIcon
    */
-  QuickFilterIcon: React.JSXElementConstructor<any>;
+  quickFilterIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the quick filter reset input.
    * @default GridCloseIcon
    */
-  QuickFilterClearIcon: React.JSXElementConstructor<any>;
+  quickFilterClearIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed in column menu for hiding column
    * @default GridVisibilityOffIcon
    */
-  ColumnMenuHideIcon: React.JSXElementConstructor<any>;
+  columnMenuHideIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed in column menu for ascending sort
    * @default GridArrowUpwardIcon
    */
-  ColumnMenuSortAscendingIcon: React.JSXElementConstructor<any>;
+  columnMenuSortAscendingIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed in column menu for descending sort
    * @default GridArrowDownwardIcon
    */
-  ColumnMenuSortDescendingIcon: React.JSXElementConstructor<any>;
+  columnMenuSortDescendingIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed in column menu for filter
    * @default GridFilterAltIcon
    */
-  ColumnMenuFilterIcon: React.JSXElementConstructor<any>;
+  columnMenuFilterIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed in column menu for showing all columns
    * @default GridViewColumnIcon
    */
-  ColumnMenuManageColumnsIcon: React.JSXElementConstructor<any>;
+  columnMenuManageColumnsIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed in column menu for clearing values
    * @default GridClearIcon
    */
-  ColumnMenuClearIcon: React.JSXElementConstructor<any>;
+  columnMenuClearIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the input while processing.
    * @default GridLoadIcon
    */
-  LoadIcon: React.JSXElementConstructor<any>;
+  loadIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the column reorder button.
    * @default GridDragIcon
    */
-  ColumnReorderIcon: React.JSXElementConstructor<any>;
+  columnReorderIcon: React.JSXElementConstructor<any>;
 }

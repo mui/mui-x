@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -19,6 +18,7 @@ import {
   GridRowId,
   GridCellMode,
   GridEditCellProps,
+  GridActionsColDef,
 } from '../../models';
 import {
   GridRenderEditCellParams,
@@ -102,11 +102,12 @@ const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder'> & {
   isEditable?: boolean;
   isSelected?: boolean;
+  isSelectionMode?: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { align, showRightBorder, isEditable, isSelected, classes } = ownerState;
+  const { align, showRightBorder, isEditable, isSelected, isSelectionMode, classes } = ownerState;
 
   const slots = {
     root: [
@@ -115,6 +116,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEditable && 'cell--editable',
       isSelected && 'selected',
       showRightBorder && 'cell--withRightBorder',
+      isSelectionMode && !isEditable && 'cell--selectionMode',
       'withBorderColor',
     ],
     content: ['cellContent'],
@@ -338,6 +340,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         padding: 0,
         opacity: 0,
         width: 0,
+        border: 0,
       };
     }
     const cellStyle = {
@@ -407,7 +410,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     const valueString = valueToRender?.toString();
 
     children = (
-      <div className={classes.content} title={valueString}>
+      <div className={classes.content} title={valueString} role="presentation">
         {valueString}
       </div>
     );
@@ -424,11 +427,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         onDragOver: publish('cellDragOver', onDragOver),
       };
 
+  const ariaV7 = rootProps.experimentalFeatures?.ariaV7;
+
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       ref={handleRef}
       className={clsx(className, classes.root)}
-      role="cell"
+      role={ariaV7 ? 'gridcell' : 'cell'}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
@@ -580,9 +586,13 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
 
   const { cellMode, hasFocus, isEditable, value, formattedValue } = cellParamsWithAPI;
 
-  const managesOwnFocus = column.type === 'actions';
+  const canManageOwnFocus =
+    column.type === 'actions' &&
+    (column as GridActionsColDef)
+      .getActions?.(apiRef.current.getRowParams(rowId))
+      .some((action) => !action.props.disabled);
   const tabIndex =
-    (cellMode === 'view' || !isEditable) && !managesOwnFocus ? cellParamsWithAPI.tabIndex : -1;
+    (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParamsWithAPI.tabIndex : -1;
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
@@ -607,7 +617,16 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected };
+  // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
+  const isSelectionMode = rootProps.unstable_cellSelection ?? false;
+  const ownerState = {
+    align,
+    showRightBorder,
+    isEditable,
+    classes: rootProps.classes,
+    isSelected,
+    isSelectionMode,
+  };
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
@@ -658,6 +677,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
         padding: 0,
         opacity: 0,
         width: 0,
+        border: 0,
       };
     }
     const cellStyle = {
@@ -751,13 +771,13 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   if (children === undefined) {
     const valueString = valueToRender?.toString();
     children = (
-      <div className={classes.content} title={valueString}>
+      <div className={classes.content} title={valueString} role="presentation">
         {valueString}
       </div>
     );
   }
 
-  if (React.isValidElement(children) && managesOwnFocus) {
+  if (React.isValidElement(children) && canManageOwnFocus) {
     children = React.cloneElement<any>(children, { focusElementRef });
   }
 
@@ -768,11 +788,14 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
         onDragOver: publish('cellDragOver', onDragOver),
       };
 
+  const ariaV7 = rootProps.experimentalFeatures?.ariaV7;
+
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       ref={handleRef}
       className={clsx(className, classNames, classes.root)}
-      role="cell"
+      role={ariaV7 ? 'gridcell' : 'cell'}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}

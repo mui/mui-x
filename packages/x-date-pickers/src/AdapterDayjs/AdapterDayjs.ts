@@ -8,9 +8,9 @@ import {
   FieldFormatTokenMap,
   MuiPickersAdapter,
   AdapterFormats,
-  AdapterUnits,
   AdapterOptions,
   PickersTimezone,
+  DateBuilderReturnType,
 } from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
@@ -74,7 +74,7 @@ const defaultFormats: AdapterFormats = {
   monthShort: 'MMM',
   dayOfMonth: 'D',
   weekday: 'dddd',
-  weekdayShort: 'ddd',
+  weekdayShort: 'dd',
   hours24h: 'HH',
   hours12h: 'hh',
   meridiem: 'A',
@@ -82,21 +82,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'll',
-  fullDateWithWeekday: 'dddd, LL',
   keyboardDate: 'L',
   shortDate: 'MMM D',
   normalDate: 'D MMMM',
   normalDateWithWeekday: 'ddd, MMM D',
-  monthAndYear: 'MMMM YYYY',
-  monthAndDate: 'MMMM D',
 
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'lll',
-  fullDateTime12h: 'll hh:mm A',
-  fullDateTime24h: 'll HH:mm',
   keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
@@ -149,8 +143,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public lib = 'dayjs';
 
-  public rawDayJsInstance?: typeof defaultDayjs;
-
   public dayjs: Constructor;
 
   public locale?: string;
@@ -161,9 +153,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultDayjs> = {}) {
-    this.rawDayJsInstance = instance;
-    this.dayjs = withLocale(this.rawDayJsInstance ?? defaultDayjs, locale);
+  constructor({ locale, formats }: AdapterOptions<string, never> = {}) {
+    this.dayjs = withLocale(defaultDayjs, locale);
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
 
@@ -190,17 +181,23 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   /**
-   * Replace "default" by undefined before passing it to `dayjs
+   * Replaces "default" by undefined and "system" by the system timezone before passing it to `dayjs`.
    */
-  private cleanTimezone = (timezone: string) => (timezone === 'default' ? undefined : timezone);
+  private cleanTimezone = (timezone: string) => {
+    switch (timezone) {
+      case 'default': {
+        return undefined;
+      }
+      case 'system': {
+        return defaultDayjs.tz.guess();
+      }
+      default: {
+        return timezone;
+      }
+    }
+  };
 
   private createSystemDate = (value: string | undefined): Dayjs => {
-    // TODO v7: Stop using `this.rawDayJsInstance` (drop the `instance` param on the adapters)
-    /* istanbul ignore next */
-    if (this.rawDayJsInstance) {
-      return this.rawDayJsInstance(value);
-    }
-
     if (this.hasUTCPlugin() && this.hasTimezonePlugin()) {
       const timezone = defaultDayjs.tz.guess();
 
@@ -254,20 +251,38 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return localeObject.formats;
   };
 
-  public date = (value?: any) => {
-    if (value === null) {
-      return null;
+  /**
+   * If the new day does not have the same offset as the old one (when switching to summer day time for example),
+   * Then dayjs will not automatically adjust the offset (moment does).
+   * We have to parse again the value to make sure the `fixOffset` method is applied.
+   * See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
+   */
+  private adjustOffset = (value: Dayjs) => {
+    if (!this.hasTimezonePlugin()) {
+      return value;
     }
 
-    return this.dayjs(value);
+    const timezone = this.getTimezone(value);
+    if (timezone !== 'UTC') {
+      const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+      // @ts-ignore
+      if ((fixedValue.$offset ?? 0) === (value.$offset ?? 0)) {
+        return value;
+      }
+
+      return fixedValue;
+    }
+
+    return value;
   };
 
-  public dateWithTimezone = (
-    value: string | null | undefined,
-    timezone: PickersTimezone,
-  ): Dayjs | null => {
+  public date = <T extends string | null | undefined>(
+    value?: T,
+    timezone: PickersTimezone = 'default',
+  ): DateBuilderReturnType<T, Dayjs> => {
+    type R = DateBuilderReturnType<T, Dayjs>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
     let parsedValue: Dayjs;
@@ -280,22 +295,26 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     }
 
     if (this.locale === undefined) {
-      return parsedValue;
+      return <R>parsedValue;
     }
 
-    return parsedValue.locale(this.locale);
+    return <R>parsedValue.locale(this.locale);
   };
 
-  public getTimezone = (value: Dayjs): string => {
-    if (this.hasUTCPlugin() && value.isUTC()) {
-      return 'UTC';
-    }
+  public getInvalidDate = () => defaultDayjs(new Date('Invalid date'));
 
+  public getTimezone = (value: Dayjs): string => {
     if (this.hasTimezonePlugin()) {
       // @ts-ignore
       const zone = value.$x?.$timezone;
 
-      return zone ?? 'system';
+      if (zone) {
+        return zone;
+      }
+    }
+
+    if (this.hasUTCPlugin() && value.isUTC()) {
+      return 'UTC';
     }
 
     return 'system';
@@ -338,14 +357,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.toDate();
   };
 
-  public parseISO = (isoString: string) => {
-    return this.dayjs(isoString);
-  };
-
-  public toISO = (value: Dayjs) => {
-    return value.toISOString();
-  };
-
   public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
@@ -386,16 +397,12 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     );
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
-  };
+  public isValid = (value: Dayjs | null) => {
+    if (value == null) {
+      return false;
+    }
 
-  public isNull = (value: Dayjs | null) => {
-    return value === null;
-  };
-
-  public isValid = (value: any) => {
-    return this.dayjs(value).isValid();
+    return value.isValid();
   };
 
   public format = (value: Dayjs, formatKey: keyof AdapterFormats) => {
@@ -410,16 +417,16 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return numberToFormat;
   };
 
-  public getDiff = (value: Dayjs, comparing: Dayjs | string, unit?: AdapterUnits) => {
-    return value.diff(comparing, unit as AdapterUnits);
-  };
-
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: Dayjs | null, comparing: Dayjs | null) => {
     if (value === null && comparing === null) {
       return true;
     }
 
-    return this.dayjs(value).toDate().getTime() === this.dayjs(comparing).toDate().getTime();
+    if (value === null || comparing === null) {
+      return false;
+    }
+
+    return value.toDate().getTime() === comparing.toDate().getTime();
   };
 
   public isSameYear = (value: Dayjs, comparing: Dayjs) => {
@@ -483,63 +490,77 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public startOfYear = (value: Dayjs) => {
-    return value.startOf('year');
+    return this.adjustOffset(value.startOf('year'));
   };
 
   public startOfMonth = (value: Dayjs) => {
-    return value.startOf('month');
+    return this.adjustOffset(value.startOf('month'));
   };
 
   public startOfWeek = (value: Dayjs) => {
-    return value.startOf('week');
+    return this.adjustOffset(value.startOf('week'));
   };
 
   public startOfDay = (value: Dayjs) => {
-    return value.startOf('day');
+    return this.adjustOffset(value.startOf('day'));
   };
 
   public endOfYear = (value: Dayjs) => {
-    return value.endOf('year');
+    return this.adjustOffset(value.endOf('year'));
   };
 
   public endOfMonth = (value: Dayjs) => {
-    return value.endOf('month');
+    return this.adjustOffset(value.endOf('month'));
   };
 
   public endOfWeek = (value: Dayjs) => {
-    return value.endOf('week');
+    return this.adjustOffset(value.endOf('week'));
   };
 
   public endOfDay = (value: Dayjs) => {
-    return value.endOf('day');
+    return this.adjustOffset(value.endOf('day'));
   };
 
   public addYears = (value: Dayjs, amount: number) => {
-    return amount < 0 ? value.subtract(Math.abs(amount), 'year') : value.add(amount, 'year');
+    return this.adjustOffset(
+      amount < 0 ? value.subtract(Math.abs(amount), 'year') : value.add(amount, 'year'),
+    );
   };
 
   public addMonths = (value: Dayjs, amount: number) => {
-    return amount < 0 ? value.subtract(Math.abs(amount), 'month') : value.add(amount, 'month');
+    return this.adjustOffset(
+      amount < 0 ? value.subtract(Math.abs(amount), 'month') : value.add(amount, 'month'),
+    );
   };
 
   public addWeeks = (value: Dayjs, amount: number) => {
-    return amount < 0 ? value.subtract(Math.abs(amount), 'week') : value.add(amount, 'week');
+    return this.adjustOffset(
+      amount < 0 ? value.subtract(Math.abs(amount), 'week') : value.add(amount, 'week'),
+    );
   };
 
   public addDays = (value: Dayjs, amount: number) => {
-    return amount < 0 ? value.subtract(Math.abs(amount), 'day') : value.add(amount, 'day');
+    return this.adjustOffset(
+      amount < 0 ? value.subtract(Math.abs(amount), 'day') : value.add(amount, 'day'),
+    );
   };
 
   public addHours = (value: Dayjs, amount: number) => {
-    return amount < 0 ? value.subtract(Math.abs(amount), 'hour') : value.add(amount, 'hour');
+    return this.adjustOffset(
+      amount < 0 ? value.subtract(Math.abs(amount), 'hour') : value.add(amount, 'hour'),
+    );
   };
 
   public addMinutes = (value: Dayjs, amount: number) => {
-    return amount < 0 ? value.subtract(Math.abs(amount), 'minute') : value.add(amount, 'minute');
+    return this.adjustOffset(
+      amount < 0 ? value.subtract(Math.abs(amount), 'minute') : value.add(amount, 'minute'),
+    );
   };
 
   public addSeconds = (value: Dayjs, amount: number) => {
-    return amount < 0 ? value.subtract(Math.abs(amount), 'second') : value.add(amount, 'second');
+    return this.adjustOffset(
+      amount < 0 ? value.subtract(Math.abs(amount), 'second') : value.add(amount, 'second'),
+    );
   };
 
   public getYear = (value: Dayjs) => {
@@ -571,69 +592,38 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public setYear = (value: Dayjs, year: number) => {
-    return value.set('year', year);
+    return this.adjustOffset(value.set('year', year));
   };
 
   public setMonth = (value: Dayjs, month: number) => {
-    return value.set('month', month);
+    return this.adjustOffset(value.set('month', month));
   };
 
   public setDate = (value: Dayjs, date: number) => {
-    return value.set('date', date);
+    return this.adjustOffset(value.set('date', date));
   };
 
   public setHours = (value: Dayjs, hours: number) => {
-    return value.set('hour', hours);
+    return this.adjustOffset(value.set('hour', hours));
   };
 
   public setMinutes = (value: Dayjs, minutes: number) => {
-    return value.set('minute', minutes);
+    return this.adjustOffset(value.set('minute', minutes));
   };
 
   public setSeconds = (value: Dayjs, seconds: number) => {
-    return value.set('second', seconds);
+    return this.adjustOffset(value.set('second', seconds));
   };
 
   public setMilliseconds = (value: Dayjs, milliseconds: number) => {
-    return value.set('millisecond', milliseconds);
+    return this.adjustOffset(value.set('millisecond', milliseconds));
   };
 
   public getDaysInMonth = (value: Dayjs) => {
     return value.daysInMonth();
   };
 
-  public getNextMonth = (value: Dayjs) => {
-    return value.add(1, 'month');
-  };
-
-  public getPreviousMonth = (value: Dayjs) => {
-    return value.subtract(1, 'month');
-  };
-
-  public getMonthArray = (value: Dayjs) => {
-    const firstMonth = value.startOf('year');
-    const monthArray = [firstMonth];
-
-    while (monthArray.length < 12) {
-      const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.addMonths(prevMonth, 1));
-    }
-
-    return monthArray;
-  };
-
-  public mergeDateAndTime = (dateParam: Dayjs, timeParam: Dayjs) => {
-    return dateParam.hour(timeParam.hour()).minute(timeParam.minute()).second(timeParam.second());
-  };
-
-  public getWeekdays = () => {
-    const start = this.dayjs().startOf('week');
-    return [0, 1, 2, 3, 4, 5, 6].map((diff) => this.formatByString(start.add(diff, 'day'), 'dd'));
-  };
-
   public getWeekArray = (value: Dayjs) => {
-    const timezone = this.getTimezone(value);
-
     const cleanValue = this.setLocaleToValue(value);
     const start = cleanValue.startOf('month').startOf('week');
     const end = cleanValue.endOf('month').endOf('week');
@@ -647,15 +637,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
       nestedWeeks[weekNumber].push(current);
 
-      current = current.add(1, 'day');
-
-      // If the new day does not have the same offset as the old one (when switching to summer day time for example),
-      // Then dayjs will not automatically adjust the offset (moment does)
-      // We have to parse again the value to make sure the `fixOffset` method is applied
-      // See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
-      if (this.hasTimezonePlugin() && timezone !== 'UTC' && timezone !== 'system') {
-        current = current.tz(this.cleanTimezone(timezone), true);
-      }
+      current = this.addDays(current, 1);
 
       count += 1;
     }
@@ -667,7 +649,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.week();
   };
 
-  public getYearRange = (start: Dayjs, end: Dayjs) => {
+  public getYearRange = ([start, end]: [Dayjs, Dayjs]) => {
     const startDate = start.startOf('year');
     const endDate = end.endOf('year');
     const years: Dayjs[] = [];
@@ -675,13 +657,9 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     let current = startDate;
     while (current < endDate) {
       years.push(current);
-      current = current.add(1, 'year');
+      current = this.addYears(current, 1);
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am' ? 'AM' : 'PM';
   };
 }

@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: React Time Picker component
-components: TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker
+components: TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DigitalClock, MultiSectionDigitalClock, TimeClock
 githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/time-pickers
@@ -97,6 +97,10 @@ You can force a specific orientation using the `orientation` prop.
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}
 
+:::info
+You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
+:::
+
 ## Choose time view renderer
 
 You can use the `viewRenderers` prop to change the view that is used for rendering a view.
@@ -106,4 +110,4 @@ You might be interested in using the [Time Clock](/x/react-date-pickers/time-clo
 
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).

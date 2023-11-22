@@ -71,16 +71,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "Overridable components props dynamically passed to the component at rendering.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "density": {
       "description": "Set the density of the grid.",
       "deprecated": "",
@@ -126,6 +116,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "filterDebounceMs": {
+      "description": "The milliseconds delay to wait after a keystroke before triggering filtering.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "filterMode": {
       "description": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side.",
       "deprecated": "",
@@ -149,7 +144,7 @@
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
-        "JSX.Element": "The row detail element."
+        "React.JSX.Element": "The row detail element."
       }
     },
     "getEstimatedRowHeight": {
@@ -201,6 +196,11 @@
     },
     "hideFooterSelectedRowCount": {
       "description": "If <code>true</code>, the selected row count in the footer is hidden.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "ignoreDiacritics": {
+      "description": "If <code>true</code>, the diacritics (accents) are ignored when filtering or quick filtering. E.g. when filter value is <code>cafe</code>, the rows with <code>café</code> will be visible.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -558,6 +558,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "rowPositionsDebounceMs": {
+      "description": "The milliseconds delay to wait after measuring the row height before recalculating row positions. Setting it to a lower value could be useful when using dynamic row height, but might reduce performance when displaying a large number of rows.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "rows": {
       "description": "Set of rows of type GridRowsProp.",
       "deprecated": "",
@@ -665,6 +670,10 @@
       "nodeName": "the root element",
       "conditions": "<code>autoHeight={true}</code>"
     },
+    "autosizing": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element while it is being autosized"
+    },
     "booleanCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the icon of the boolean cell"
@@ -718,6 +727,11 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "it is at the right edge of a cell selection range"
+    },
+    "cell--selectionMode": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is in a cell selection range"
     },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "cellContent": {
@@ -1221,6 +1235,7 @@
     "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter panel.",
     "filterPanelRemoveAllIcon": "Icon displayed for deleting all the active filters from filter panel.",
     "footer": "Footer component rendered at the bottom of the grid viewport.",
+    "footerRowCount": "Row count component rendered in the footer",
     "groupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "loadIcon": "Icon displayed on the input while processing.",

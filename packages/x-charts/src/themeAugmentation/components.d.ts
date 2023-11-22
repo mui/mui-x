@@ -7,19 +7,16 @@ export interface ChartsComponents {
   };
   MuiChartsXAxis?: {
     defaultProps?: ComponentsProps['MuiChartsXAxis'];
-    styleOverrides?: ComponentsOverrides['MuiChartsXAxis'];
   };
   MuiChartsYAxis?: {
     defaultProps?: ComponentsProps['MuiChartsYAxis'];
-    styleOverrides?: ComponentsOverrides['MuiChartsYAxis'];
   };
   MuiChartsAxisHighlight?: {
     defaultProps?: ComponentsProps['MuiChartsAxisHighlight'];
-    styleOverrides?: never; // ComponentsOverrides['MuiChartsAxisHighlight'];
+    styleOverrides?: ComponentsOverrides['MuiChartsAxisHighlight'];
   };
   MuiChartsClipPath?: {
     defaultProps?: ComponentsProps['MuiChartsClipPath'];
-    styleOverrides?: never; // ComponentsOverrides['MuiChartsClipPath'];
   };
   MuiChartsLegend?: {
     defaultProps?: ComponentsProps['MuiChartsLegend'];
@@ -27,15 +24,12 @@ export interface ChartsComponents {
   };
   MuiChartsTooltip?: {
     defaultProps?: ComponentsProps['MuiChartsTooltip'];
-    styleOverrides?: never; // ComponentsOverrides['MuiChartsTooltip'];
   };
   MuiChartsSurface?: {
     defaultProps?: ComponentsProps['MuiChartsSurface'];
-    styleOverrides?: never; // ComponentsOverrides['MuiChartsSurface'];
   };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
-    styleOverrides?: never; // ComponentsOverrides['MuiBarChart'];
   };
   MuiBarElement?: {
     defaultProps?: ComponentsProps['MuiBarElement'];
@@ -43,7 +37,6 @@ export interface ChartsComponents {
   };
   MuiLineChart?: {
     defaultProps?: ComponentsProps['MuiLineChart'];
-    styleOverrides?: never; // ComponentsOverrides['MuiLineChart'];
   };
   MuiAreaElement?: {
     defaultProps?: ComponentsProps['MuiAreaElement'];
@@ -59,11 +52,9 @@ export interface ChartsComponents {
   };
   MuiScatterChart?: {
     defaultProps?: ComponentsProps['MuiScatterChart'];
-    styleOverrides?: never; // ComponentsOverrides['MuiScatterChart'];
   };
   MuiScatter?: {
     defaultProps?: ComponentsProps['MuiScatter'];
-    styleOverrides?: never; // ComponentsOverrides['MuiScatter'];
   };
 }
 

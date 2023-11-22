@@ -6,7 +6,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { styled } from '@mui/system';
-import { getTotalHeaderHeight } from '@mui/x-data-grid/internals';
+import { getTotalHeaderHeight, useTimeout } from '@mui/x-data-grid/internals';
 import {
   GridEventListener,
   GridScrollParams,
@@ -66,7 +66,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const { scrollDirection } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
-  const timeout = React.useRef<any>();
+  const timeout = useTimeout();
   const [dragging, setDragging] = React.useState<boolean>(false);
   const [canScrollMore, setCanScrollMore] = React.useState<boolean>(true);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
@@ -124,23 +124,16 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
 
       offset = (offset - CLIFF) * SLOP + CLIFF;
 
-      clearTimeout(timeout.current);
       // Avoid freeze and inertia.
-      timeout.current = setTimeout(() => {
+      timeout.start(0, () => {
         apiRef.current.scroll({
           left: scrollPosition.current.left + offset,
           top: scrollPosition.current.top,
         });
       });
     },
-    [scrollDirection, apiRef],
+    [scrollDirection, apiRef, timeout],
   );
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(timeout.current);
-    };
-  }, []);
 
   const handleColumnHeaderDragStart = useEventCallback(() => {
     setDragging(true);

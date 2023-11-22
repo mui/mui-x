@@ -1,0 +1,15 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [{ "class": null, "name": "lineHighlight", "description": "" }],
+  "name": "LineHighlightPlot",
+  "imports": [
+    "import { LineHighlightPlot } from '@mui/x-charts/LineChart';",
+    "import { LineHighlightPlot } from '@mui/x-charts';"
+  ],
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiLineHighlightPlot" },
+  "filename": "/packages/x-charts/src/LineChart/LineHighlightPlot.tsx",
+  "demos": "<ul></ul>"
+}

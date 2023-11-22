@@ -58,6 +58,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
+      '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       'date-fns': 'latest',
       dayjs: 'latest',
       exceljs: 'latest',
@@ -212,7 +213,11 @@ function AppWrapper(props) {
       metadata: '',
       name: 'MUI X',
       versions: [
-        { text: `v${process.env.LIB_VERSION}`, current: true },
+        {
+          text: `v${process.env.LIB_VERSION}`,
+          current: true,
+        },
+        { text: 'v6', href: `https://mui.com${languagePrefix}/x/introduction/` },
         { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
@@ -223,8 +228,12 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          { text: `v${process.env.DATA_GRID_VERSION}`, current: true },
-          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/components/data-grid/` },
+          {
+            text: `v${process.env.DATA_GRID_VERSION}`,
+            current: true,
+          },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-data-grid/` },
+          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -233,10 +242,44 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          { text: `v${process.env.DATE_PICKERS_VERSION}`, current: true },
+          {
+            text: `v${process.env.DATE_PICKERS_VERSION}`,
+            current: true,
+          },
+          {
+            text: 'v6',
+            href: `https://mui.com${languagePrefix}/x/react-date-pickers/`,
+          },
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
+          },
+        ],
+      };
+    } else if (productId === 'x-charts') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Charts',
+        versions: [
+          {
+            text: `v${process.env.CHARTS_VERSION}`,
+            current: true,
+          },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/` },
+        ],
+      };
+    } else if (productId === 'x-tree-view') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Tree View',
+        versions: [
+          {
+            text: `v${process.env.TREE_VIEW_VERSION}`,
+            current: true,
+          },
+          {
+            text: 'v6',
+            href: `https://mui.com${languagePrefix}/x/react-tree-view/getting-started`,
           },
         ],
       };
@@ -248,8 +291,9 @@ function AppWrapper(props) {
       pages,
       productIdentifier,
       productId,
+      productCategoryId,
     };
-  }, [productId, pageProps.userLanguage, router.pathname]);
+  }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
@@ -322,16 +366,16 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 // Track fraction of actual events to prevent exceeding event quota.
 // Filter sessions instead of individual events so that we can track multiple metrics per device.
 const disableWebVitalsReporting = Math.random() > 0.0001;
-export function reportWebVitals({ id, name, label, value }) {
+export function reportWebVitals({ id, name, label, delta, value }) {
   if (disableWebVitalsReporting) {
     return;
   }
 
-  window.ga('send', 'event', {
-    eventCategory: label === 'web-vital' ? 'Web Vitals' : 'Next.js custom metric',
-    eventAction: name,
-    eventValue: Math.round(name === 'CLS' ? value * 1000 : value), // values must be integers
-    eventLabel: id, // id unique to current page load
-    nonInteraction: true, // avoids affecting bounce rate.
+  window.gtag('event', name, {
+    value: delta,
+    metric_label: label === 'web-vital' ? 'Web Vitals' : 'Next.js custom metric',
+    metric_value: value,
+    metric_delta: delta,
+    metric_id: id, // id unique to current page load
   });
 }

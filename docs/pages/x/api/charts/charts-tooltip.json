@@ -1,8 +1,18 @@
 {
   "props": {
-    "axisContent": { "type": { "name": "elementType" } },
-    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
-    "itemContent": { "type": { "name": "elementType" } },
+    "axisContent": {
+      "type": { "name": "elementType" },
+      "deprecated": true,
+      "deprecationInfo": "Use slots.axisContent instead"
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "itemContent": {
+      "type": { "name": "elementType" },
+      "deprecated": true,
+      "deprecationInfo": "Use slots.itemContent instead"
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "trigger": {
       "type": {
         "name": "enum",
@@ -11,14 +21,21 @@
       "default": "'item'"
     }
   },
-  "slots": {},
+  "slots": [
+    { "class": null, "name": "axisContent", "description": "" },
+    { "class": null, "name": "itemContent", "description": "" },
+    { "class": null, "name": "popper", "description": "" }
+  ],
   "name": "ChartsTooltip",
+  "imports": [
+    "import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';",
+    "import { ChartsTooltip } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": ["root", "markCell", "labelCell", "valueCell"],
     "globalClasses": {},
     "name": "MuiChartsTooltip"
   },
   "filename": "/packages/x-charts/src/ChartsTooltip/ChartsTooltip.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsTooltip" }]
+  "demos": "<ul></ul>"
 }

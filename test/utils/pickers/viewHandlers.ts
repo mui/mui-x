@@ -1,6 +1,7 @@
-import { fireTouchChangedEvent, userEvent, screen } from '@mui/monorepo/test/utils';
-import { getClockTouchEvent } from 'test/utils/pickers-utils';
+import { fireTouchChangedEvent, userEvent, screen } from '@mui-internal/test-utils';
+import { getClockTouchEvent, formatFullTimeValue } from 'test/utils/pickers';
 import { MuiPickersAdapter, TimeView } from '@mui/x-date-pickers/models';
+import { formatMeridiem } from '@mui/x-date-pickers/internals/utils/date-utils';
 
 type TDate = any;
 
@@ -34,9 +35,7 @@ export const timeClockHandler: ViewHandler<TimeView> = {
 
 export const digitalClockHandler: ViewHandler<TimeView> = {
   setViewValue: (adapter, value) => {
-    const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
-    const formattedLabel = adapter.format(value, hasMeridiem ? 'fullTime12h' : 'fullTime24h');
-    userEvent.mousePress(screen.getByRole('option', { name: formattedLabel }));
+    userEvent.mousePress(screen.getByRole('option', { name: formatFullTimeValue(adapter, value) }));
   },
 };
 
@@ -50,7 +49,7 @@ export const multiSectionDigitalClockHandler: ViewHandler<TimeView> = {
     if (hasMeridiem) {
       userEvent.mousePress(
         screen.getByRole('option', {
-          name: adapter.getMeridiemText(adapter.getHours(value) >= 12 ? 'pm' : 'am'),
+          name: formatMeridiem(adapter, adapter.getHours(value) >= 12 ? 'pm' : 'am'),
         }),
       );
     }

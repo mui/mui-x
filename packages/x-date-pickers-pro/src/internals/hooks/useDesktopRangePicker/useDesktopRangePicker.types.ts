@@ -5,7 +5,6 @@ import {
   PickersPopperSlotsComponentsProps,
   ExportedBaseToolbarProps,
   UsePickerViewsProps,
-  UncapitalizeObjectKeys,
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
@@ -54,7 +53,7 @@ export interface UseDesktopRangePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends DesktopRangeOnlyPickerProps<TDate>,
     BasePickerProps<
       DateRange<TDate>,
@@ -68,7 +67,7 @@ export interface UseDesktopRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UncapitalizeObjectKeys<UseDesktopRangePickerSlotsComponent<TDate, TView>>;
+  slots: UseDesktopRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

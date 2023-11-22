@@ -1,19 +1,19 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
+import { screen } from '@mui-internal/test-utils/createRenderer';
 import {
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
-} from 'test/utils/pickers-utils';
+  describeJalaliAdapter,
+} from 'test/utils/pickers';
 import enUS from 'date-fns/locale/en-US';
 import faIR from 'date-fns-jalali/locale/fa-IR';
 import faJalaliIR from 'date-fns-jalali/locale/fa-jalali-IR';
-import { describeJalaliAdapter } from '@mui/x-date-pickers/tests/describeJalaliAdapter';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterFormats } from '@mui/x-date-pickers';
-import { expect } from 'chai';
 
 describe('<AdapterDateFnsJalali />', () => {
   describeJalaliAdapter(AdapterDateFnsJalali, {});
@@ -29,10 +29,6 @@ describe('<AdapterDateFnsJalali />', () => {
       };
 
       expectDate('fullDate', '۱۳۹۸، Bahman ۱م');
-      expectDate('fullDateWithWeekday', 'شنبه ۱م Bahman ۱۳۹۸');
-      expectDate('fullDateTime', '۱۳۹۸، Bahman ۱م، ۱۱:۴۴ بعد از ظهر');
-      expectDate('fullDateTime12h', '۱۲ Bahman ۱۱:۴۴ بعد از ظهر');
-      expectDate('fullDateTime24h', '۱۲ Bahman ۲۳:۴۴');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
       expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ بعد از ظهر');
@@ -41,7 +37,7 @@ describe('<AdapterDateFnsJalali />', () => {
   });
 
   describe('Picker localization', () => {
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       enUS: {
         placeholder: 'MM/DD/YYYY hh:mm aa',

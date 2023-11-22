@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { fireEvent, userEvent } from '@mui/monorepo/test/utils';
+import { fireEvent } from '@mui-internal/test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
+  buildFieldInteractions,
   getTextbox,
+  expectInputValue,
   expectInputPlaceholder,
   adapterToUse,
-  expectInputValue,
-  buildFieldInteractions,
-} from 'test/utils/pickers-utils';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
+  describeAdapters,
+} from 'test/utils/pickers';
 
 describe('<DesktopDatePicker /> - Field', () => {
   describe('Basic behaviors', () => {
@@ -24,7 +24,11 @@ describe('<DesktopDatePicker /> - Field', () => {
     });
 
     it('should be able to reset a single section', () => {
-      render(<DesktopDatePicker format={adapterToUse.formats.monthAndDate} />);
+      render(
+        <DesktopDatePicker
+          format={`${adapterToUse.formats.month} ${adapterToUse.formats.dayOfMonth}`}
+        />,
+      );
 
       const input = getTextbox();
       expectInputPlaceholder(input, 'MMMM DD');
@@ -36,7 +40,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       fireEvent.change(input, { target: { value: 'November 4' } }); // Press "1"
       expectInputValue(input, 'November 04');
 
-      userEvent.keyPress(input, { key: 'Backspace' });
+      fireEvent.change(input, { target: { value: 'November ' } });
       expectInputValue(input, 'November DD');
     });
 
@@ -66,7 +70,7 @@ describe('<DesktopDatePicker /> - Field', () => {
           <DesktopDatePicker
             value={value}
             onChange={setValue}
-            format={adapter.formats.monthAndYear}
+            format={`${adapter.formats.month} ${adapter.formats.year}`}
             timezone="America/Chicago"
           />
         );
@@ -77,7 +81,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       expectInputValue(input, 'June 2022');
       clickOnInput(input, 0);
 
-      userEvent.keyPress(input, { key: 'Backspace' });
+      fireEvent.change(input, { target: { value: ' 2022' } });
       expectInputValue(input, 'MMMM 2022');
     });
   });

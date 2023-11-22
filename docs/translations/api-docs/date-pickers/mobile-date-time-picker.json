@@ -26,28 +26,13 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "dayOfWeekFormatter": {
       "description": "Formats the day of week displayed in the calendar header.",
       "deprecated": "",
       "typeDescriptions": {
-        "day": "The day of week provided by the adapter&#39;s method <code>getWeekdays</code>.",
+        "date": "The date of the day of week provided by the adapter.",
         "string": "The name to display."
       }
-    },
-    "defaultCalendarMonth": {
-      "description": "Default calendar month displayed when <code>value</code> and <code>defaultValue</code> are empty.",
-      "deprecated": "",
-      "typeDescriptions": {}
     },
     "defaultValue": {
       "description": "The default value. Used when the component is not controlled.",
@@ -227,7 +212,12 @@
       "typeDescriptions": {}
     },
     "reduceAnimations": {
-      "description": "Disable heavy animations.",
+      "description": "If <code>true</code>, disable heavy animations.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "referenceDate": {
+      "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -241,17 +231,8 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "shouldDisableClock": {
-      "description": "Disable specific clock time.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "clockValue": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
-      }
-    },
     "shouldDisableDate": {
-      "description": "Disable specific date.",
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The date to test.",
@@ -304,7 +285,7 @@
       "typeDescriptions": {}
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documentation</a> for more details.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -333,10 +314,11 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
-    "day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+    "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "field": "Component used to enter the date with the keyboard.",
-    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "mobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
     "mobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
@@ -347,7 +329,7 @@
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
     "tabs": "Tabs enabling toggling between date and time pickers.",
-    "textField": "Form control with an input to render the value inside the default field.\nReceives the same props as <code>@mui/material/TextField</code>.",
+    "textField": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

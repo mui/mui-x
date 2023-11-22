@@ -6,7 +6,7 @@ import {
   act,
   userEvent,
   waitFor,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import {
   microtasks,
   getColumnHeaderCell,
@@ -69,7 +69,7 @@ const baselineProps: DataGridPremiumProps = {
   ],
 };
 
-describe('<DataGridPremium /> - Row Grouping', () => {
+describe('<DataGridPremium /> - Row grouping', () => {
   const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;

@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "axisId": {
-      "description": "Id of the axis to render.",
+      "description": "The id of the axis to render. If undefined, it will be the first defined axis.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -32,8 +32,23 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "labelStyle": {
+      "description": "The style applied to the axis label.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "position": {
       "description": "Position of the axis.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -44,6 +59,36 @@
     },
     "tickFontSize": {
       "description": "The font size of the axis ticks text.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickInterval": {
+      "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has a data property. - an array containing the values where ticks should be displayed.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickLabelInterval": {
+      "description": "Defines which ticks get its label displayed. Its value can be: - &#39;auto&#39; In such case, labels are displayed if they do not overlap with the previous one. - a filtering function of the form (value, index) =&gt; boolean. Warning: the index is tick index, not data ones.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickLabelStyle": {
+      "description": "The style applied to ticks text.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickMaxStep": {
+      "description": "Maximal step between two ticks. When using time data, the value is assumed to be in ms. Not supported by categorical axis (band, points).",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickMinStep": {
+      "description": "Maximal step between two ticks. When using time data, the value is assumed to be in ms. Not supported by categorical axis (band, points).",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickNumber": {
+      "description": "The number of ticks. This number is not guaranted. Not supported by categorical axis (band, points).",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -65,13 +110,16 @@
     },
     "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
     "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
-    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the axis label" },
-    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x axes" },
-    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y axes" },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group containing the axis label"
+    },
+    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
+    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" },
     "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
     "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },
     "right": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the right axis" }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": { "axisLabel": "", "axisLine": "", "axisTick": "", "axisTickLabel": "" }
 }

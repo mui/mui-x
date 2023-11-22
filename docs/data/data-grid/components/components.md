@@ -5,7 +5,7 @@
 ## Overriding components
 
 As part of the customization API, the Data Grid allows you to override internal components with the `slots` prop.
-The prop accepts an object of type [`UncapitalizedGridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
+The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
 
 If you wish to pass additional props in a component slot, you can do it using the `slotProps` prop.
 This prop is of type `GridSlotsComponentsProps`.
@@ -24,18 +24,6 @@ As an example, you could override the column menu and pass additional props as b
   }}
 />
 ```
-
-:::warning
-The `components/componentsProps` API is deprecated and `slots/slotProps` API is preferred.
-
-Note that the `components` prop used _PascalCase_ for the slot names, while the `slots` prop uses _camelCase_.
-
-```tsx
-<DataGrid components={{ ColumnMenu: GridColumnMenu }} /> // Deprecated
-<DataGrid slots={{ columnMenu: GridColumnMenu }} />
-```
-
-:::
 
 ### Interacting with the data grid
 

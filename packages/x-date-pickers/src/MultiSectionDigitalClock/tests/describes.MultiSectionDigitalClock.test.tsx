@@ -1,11 +1,16 @@
 import * as React from 'react';
-import { screen, describeConformance } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
-import { createPickerRenderer, adapterToUse, wrapPickerMount } from 'test/utils/pickers-utils';
-import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { expect } from 'chai';
-import { multiSectionDigitalClockHandler } from 'test/utils/pickers/viewHandlers';
+import { screen, describeConformance } from '@mui-internal/test-utils';
+import {
+  createPickerRenderer,
+  wrapPickerMount,
+  adapterToUse,
+  multiSectionDigitalClockHandler,
+  describeValidation,
+  describeValue,
+} from 'test/utils/pickers';
+import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { formatMeridiem } from '@mui/x-date-pickers/internals/utils/date-utils';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -42,10 +47,7 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     componentFamily: 'multi-section-digital-clock',
     type: 'time',
     variant: 'desktop',
-    values: [
-      adapterToUse.date(new Date(2018, 0, 1, 11, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 12, 35)),
-    ],
+    values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-01T12:35:00')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
@@ -63,7 +65,7 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
         expect(selectedItems[1]).to.have.text(minutesLabel);
         if (hasMeridiem) {
           expect(selectedItems[2]).to.have.text(
-            adapterToUse.getMeridiemText(adapterToUse.getHours(expectedValue) >= 12 ? 'pm' : 'am'),
+            formatMeridiem(adapterToUse, adapterToUse.getHours(expectedValue) >= 12 ? 'pm' : 'am'),
           );
         }
       }

@@ -25,7 +25,7 @@ export interface MarkElementClasses {
 
 export type MarkElementClassKey = keyof MarkElementClasses;
 
-export interface MarkElementOwnerState {
+interface MarkElementOwnerState {
   id: string;
   color: string;
   isFaded: boolean;
@@ -64,9 +64,6 @@ const MarkElementPath = styled('path', {
   fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
-  '&.MuiMarkElement-highlighted': {
-    fill: ownerState.color,
-  },
 }));
 
 MarkElementPath.propTypes = {
@@ -104,6 +101,16 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
     highlightScope?: Partial<HighlightScope>;
   };
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [MarkElement API](https://mui.com/x/api/charts/mark-element/)
+ */
 function MarkElement(props: MarkElementProps) {
   const {
     x,

@@ -62,22 +62,22 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
   quickFilterFormatter?: (values: NonNullable<GridFilterModel['quickFilterValues']>) => string;
   /**
    * The debounce time in milliseconds.
-   * @default 500
+   * @default 150
    */
   debounceMs?: number;
 };
 
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
-  const {
-    quickFilterParser = defaultSearchValueParser,
-    quickFilterFormatter = defaultSearchValueFormatter,
-    debounceMs = 500,
-    ...other
-  } = props;
-
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
+
+  const {
+    quickFilterParser = defaultSearchValueParser,
+    quickFilterFormatter = defaultSearchValueFormatter,
+    debounceMs = rootProps.filterDebounceMs,
+    ...other
+  } = props;
 
   const [searchValue, setSearchValue] = React.useState(() =>
     quickFilterFormatter(quickFilterValues ?? []),
@@ -165,7 +165,7 @@ GridToolbarQuickFilter.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The debounce time in milliseconds.
-   * @default 500
+   * @default 150
    */
   debounceMs: PropTypes.number,
   /**
@@ -182,4 +182,12 @@ GridToolbarQuickFilter.propTypes = {
   quickFilterParser: PropTypes.func,
 } as any;
 
+/**
+ * Demos:
+ * - [Filtering - overview](https://mui.com/x/react-data-grid/filtering/)
+ * - [Filtering - quick filter](https://mui.com/x/react-data-grid/filtering/quick-filter/)
+ *
+ * API:
+ * - [GridToolbarQuickFilter API](https://mui.com/x/api/data-grid/grid-toolbar-quick-filter/)
+ */
 export { GridToolbarQuickFilter };

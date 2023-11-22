@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -20,7 +20,7 @@ import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Events Params', () => {
+describe('<DataGridPro /> - Events params', () => {
   const { render, clock } = createRenderer();
 
   const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {

@@ -1,8 +1,8 @@
 ---
-title: Charts - Gantt
+title: React Gantt chart
 ---
 
-# Charts - Gantt 🚧
+# Charts - Gantt 🚧[<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Gantt charts can illustrate a product schedule and the relationships between its various activities.</p>
 

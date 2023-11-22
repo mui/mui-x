@@ -4,7 +4,6 @@ import {
   ExportedPickersLayoutSlotsComponentsProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { BasePickerProps } from '../../models/props/basePickerProps';
-import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { FieldSection } from '../../../models';
@@ -40,26 +39,14 @@ export interface UseStaticPickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TDate | null, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TDate | null, TDate, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     StaticOnlyPickerProps {
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: UseStaticPickerSlotsComponent<TDate, TView>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<UseStaticPickerSlotsComponent<TDate | null, TView>>;
+  slots?: UseStaticPickerSlotsComponent<TDate | null, TView>;
   /**
    * The props used for each component slot.
    * @default {}

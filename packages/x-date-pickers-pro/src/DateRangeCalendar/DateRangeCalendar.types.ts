@@ -1,8 +1,14 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/base';
+import { SlotComponentProps } from '@mui/base/utils';
 import { Theme } from '@mui/material/styles';
 import { TimezoneProps } from '@mui/x-date-pickers/models';
+import {
+  PickersCalendarHeader,
+  PickersCalendarHeaderProps,
+  PickersCalendarHeaderSlotsComponent,
+  PickersCalendarHeaderSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   BaseDateValidationProps,
   DefaultizedProps,
@@ -12,11 +18,8 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
   PickerSelectionState,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
   DayCalendarProps,
   ExportedUseViewsOptions,
-  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, DayRangeValidationProps } from '../internals/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
@@ -27,20 +30,31 @@ export type DateRangePosition = 'start' | 'end';
 
 export interface DateRangeCalendarSlotsComponent<TDate>
   extends PickersArrowSwitcherSlotsComponent,
-    Omit<DayCalendarSlotsComponent<TDate>, 'Day'>,
+    Omit<DayCalendarSlotsComponent<TDate>, 'day'>,
     PickersCalendarHeaderSlotsComponent {
+  /**
+   * Custom component for calendar header.
+   * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
+   * @default PickersCalendarHeader
+   */
+  calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
   /**
    * Custom component for day in range pickers.
    * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
    * @default DateRangePickersDay
    */
-  Day?: React.ElementType<DateRangePickerDayProps<TDate>>;
+  day?: React.ElementType<DateRangePickerDayProps<TDate>>;
 }
 
 export interface DateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
     Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'>,
     PickersCalendarHeaderSlotsComponentsProps<TDate> {
+  calendarHeader?: SlotComponentProps<
+    typeof PickersCalendarHeader,
+    {},
+    DateRangeCalendarProps<TDate>
+  >;
   day?: SlotComponentProps<
     typeof DateRangePickerDay,
     {},
@@ -49,7 +63,7 @@ export interface DateRangeCalendarSlotsComponentsProps<TDate>
 }
 
 export interface ExportedDateRangeCalendarProps<TDate>
-  extends ExportedDayCalendarProps,
+  extends ExportedDayCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
     TimezoneProps,
@@ -61,10 +75,6 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   disableAutoMonthSwitching?: boolean;
   /**
-   * Default calendar month displayed when `value={[null, null]}`.
-   */
-  defaultCalendarMonth?: TDate;
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -75,8 +85,8 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   readOnly?: boolean;
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations?: boolean;
   /**
@@ -116,6 +126,11 @@ export interface DateRangeCalendarProps<TDate>
    */
   defaultValue?: DateRange<TDate>;
   /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate?: TDate;
+  /**
    * Callback fired when the value changes.
    * @template TDate
    * @param {DateRange<TDate>} value The new value.
@@ -129,22 +144,10 @@ export interface DateRangeCalendarProps<TDate>
    */
   sx?: SxProps<Theme>;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DateRangeCalendarSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DateRangeCalendarSlotsComponent<TDate>>;
+  slots?: DateRangeCalendarSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

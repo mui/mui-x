@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createPickerRenderer, getTextbox, expectInputPlaceholder } from 'test/utils/pickers-utils';
+import { createPickerRenderer, getTextbox, expectInputPlaceholder } from 'test/utils/pickers';
 import { DesktopTimePicker, DesktopTimePickerProps } from '@mui/x-date-pickers/DesktopTimePicker';
 
 describe('<DesktopTimePicker /> - Field', () => {

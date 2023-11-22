@@ -9,7 +9,7 @@
     },
     {
       "name": "getRowIdFromRowIndex",
-      "description": "Gets the <code>GridRowId</code> of a row at a specific index.\nThe index is based on the sorted but unfiltered row list.",
+      "description": "Gets the <code>GridRowId</code> of a row at a specific index. The index is based on the sorted but unfiltered row list.",
       "type": "(index: number) => GridRowId"
     },
     {

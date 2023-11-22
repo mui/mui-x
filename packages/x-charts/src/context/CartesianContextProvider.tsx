@@ -21,19 +21,33 @@ import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
   CartesianChartSeriesType,
   ChartSeries,
+  DatasetType,
   ExtremumGetter,
   ExtremumGetterResult,
 } from '../models/seriesType/config';
 import { MakeOptional } from '../models/helpers';
-import { getTicksNumber } from '../hooks/useTicks';
+import { getTickNumber } from '../hooks/useTicks';
 
 export type CartesianContextProviderProps = {
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
+   */
   xAxis?: MakeOptional<AxisConfig, 'id'>[];
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
+   */
   yAxis?: MakeOptional<AxisConfig, 'id'>[];
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
+  dataset?: DatasetType;
   children: React.ReactNode;
 };
 
-const DEFAULT_CATEGORY_GAP_RATIO = 0.1;
+const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
+const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 // TODO: those might be better placed in a distinct file
 const xExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
@@ -54,22 +68,77 @@ type DefaultizedAxisConfig = {
 
 export const CartesianContext = React.createContext<{
   /**
-   * Mapping from axis key to scaling function
+   * Mapping from x-axis key to scaling configuration.
    */
   xAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
   } & DefaultizedAxisConfig;
+  /**
+   * Mapping from y-axis key to scaling configuration.
+   */
   yAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
   } & DefaultizedAxisConfig;
+  /**
+   * The x-axes IDs sorted by order they got provided.
+   */
   xAxisIds: string[];
+  /**
+   * The y-axes IDs sorted by order they got provided.
+   */
   yAxisIds: string[];
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
-function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextProviderProps) {
+/**
+ * API:
+ *
+ * - [CartesianContextProvider API](https://mui.com/x/api/charts/cartesian-context-provider/)
+ */
+function CartesianContextProvider({
+  xAxis: inXAxis,
+  yAxis: inYAxis,
+  dataset,
+  children,
+}: CartesianContextProviderProps) {
   const formattedSeries = React.useContext(SeriesContext);
   const drawingArea = React.useContext(DrawingContext);
+
+  const xAxis = React.useMemo(
+    () =>
+      inXAxis?.map((axisConfig) => {
+        const dataKey = axisConfig.dataKey;
+        if (dataKey === undefined || axisConfig.data !== undefined) {
+          return axisConfig;
+        }
+        if (dataset === undefined) {
+          throw Error('MUI: x-axis uses `dataKey` but no `dataset` is provided.');
+        }
+        return {
+          ...axisConfig,
+          data: dataset.map((d) => d[dataKey]),
+        };
+      }),
+    [inXAxis, dataset],
+  );
+
+  const yAxis = React.useMemo(
+    () =>
+      inYAxis?.map((axisConfig) => {
+        const dataKey = axisConfig.dataKey;
+        if (dataKey === undefined || axisConfig.data !== undefined) {
+          return axisConfig;
+        }
+        if (dataset === undefined) {
+          throw Error('MUI: y-axis uses `dataKey` but no `dataset` is provided.');
+        }
+        return {
+          ...axisConfig,
+          data: dataset.map((d) => d[dataKey]),
+        };
+      }),
+    [inYAxis, dataset],
+  );
 
   const value = React.useMemo(() => {
     const axisExtremumCallback = <T extends keyof typeof xExtremumGetters>(
@@ -131,21 +200,22 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+        const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
         completedXAxis[axis.id] = {
           categoryGapRatio,
-          barGapRatio: 0,
+          barGapRatio,
           ...axis,
           scale: scaleBand(axis.data!, range)
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
-          ticksNumber: axis.data!.length,
+          tickNumber: axis.data!.length,
         };
       }
       if (isPointScaleConfig(axis)) {
         completedXAxis[axis.id] = {
           ...axis,
           scale: scalePoint(axis.data!, range),
-          ticksNumber: axis.data!.length,
+          tickNumber: axis.data!.length,
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
@@ -156,9 +226,9 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range });
+      const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-      const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
+      const niceScale = getScale(scaleType, extremums, range).nice(tickNumber);
       const niceDomain = niceScale.domain();
       const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
 
@@ -166,7 +236,7 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
         ...axis,
         scaleType,
         scale: niceScale.domain(domain),
-        ticksNumber,
+        tickNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
 
@@ -185,22 +255,21 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-
-        completedXAxis[axis.id] = {
+        completedYAxis[axis.id] = {
           categoryGapRatio,
           barGapRatio: 0,
           ...axis,
-          scale: scaleBand(axis.data!, range)
+          scale: scaleBand(axis.data!, [range[1], range[0]])
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
-          ticksNumber: axis.data!.length,
+          tickNumber: axis.data!.length,
         };
       }
       if (isPointScaleConfig(axis)) {
-        completedXAxis[axis.id] = {
+        completedYAxis[axis.id] = {
           ...axis,
-          scale: scalePoint(axis.data!, range),
-          ticksNumber: axis.data!.length,
+          scale: scalePoint(axis.data!, [range[1], range[0]]),
+          tickNumber: axis.data!.length,
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
@@ -211,9 +280,9 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range });
+      const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-      const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
+      const niceScale = getScale(scaleType, extremums, range).nice(tickNumber);
       const niceDomain = niceScale.domain();
       const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
 
@@ -221,7 +290,7 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
         ...axis,
         scaleType,
         scale: niceScale.domain(domain),
-        ticksNumber,
+        tickNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
 
@@ -251,51 +320,87 @@ CartesianContextProvider.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
+  dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
+   */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hideTooltip: PropTypes.bool,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
-      maxTicks: PropTypes.number,
-      min: PropTypes.number,
-      minTicks: PropTypes.number,
+      labelStyle: PropTypes.object,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
+   */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hideTooltip: PropTypes.bool,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
-      maxTicks: PropTypes.number,
-      min: PropTypes.number,
-      minTicks: PropTypes.number,
+      labelStyle: PropTypes.object,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),

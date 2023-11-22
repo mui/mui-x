@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Column Headers', () => {
+describe('<DataGridPro /> - Column headers', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {

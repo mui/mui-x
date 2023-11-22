@@ -12,14 +12,19 @@
       },
       "required": true
     },
-    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": {},
+  "slots": [],
   "name": "DateTimePickerToolbar",
+  "imports": [
+    "import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePicker';",
+    "import { DateTimePickerToolbar } from '@mui/x-date-pickers';",
+    "import { DateTimePickerToolbar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": [
       "root",
@@ -36,9 +41,5 @@
     "name": "MuiDateTimePickerToolbar"
   },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerToolbar.tsx",
-  "demos": "<ul></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerToolbar" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DateTimePickerToolbar" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
 }

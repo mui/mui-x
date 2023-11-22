@@ -7,7 +7,7 @@ import {
   userEvent,
   ErrorBoundary,
   waitFor,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -206,7 +206,7 @@ describe('<DataGrid /> - Rows', () => {
     function TestCase({
       getActions,
       ...other
-    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) {
+    }: { getActions?: () => React.JSX.Element[] } & Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -1111,5 +1111,49 @@ describe('<DataGrid /> - Rows', () => {
       act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
+  });
+
+  // https://github.com/mui/mui-x/issues/10373
+  it('should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport', async function test() {
+    if (isJSDOM) {
+      // needs virtualization
+      this.skip();
+    }
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          columns={[{ field: 'id' }]}
+          rows={[
+            { id: 0 },
+            { id: 1 },
+            { id: 2 },
+            { id: 3 },
+            { id: 4 },
+            { id: 5 },
+            { id: 6 },
+            { id: 7 },
+            { id: 8 },
+            { id: 9 },
+          ]}
+        />
+      </div>,
+    );
+
+    const cell = getCell(0, 0);
+    userEvent.mousePress(cell);
+
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+    virtualScroller.scrollTop = 1000;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+
+    const focusedRow = getRow(0);
+    expect(focusedRow.getAttribute('data-id')).to.equal('0');
+    expect(focusedRow.getAttribute('data-rowindex')).to.equal('0');
+    expect(focusedRow.getAttribute('aria-rowindex')).to.equal('2'); // 1-based, 1 is the header
+
+    const lastRow = getRow(9);
+    expect(lastRow.getAttribute('data-id')).to.equal('9');
+    expect(lastRow.getAttribute('data-rowindex')).to.equal('9');
+    expect(lastRow.getAttribute('aria-rowindex')).to.equal('11'); // 1-based, 1 is the header
   });
 });

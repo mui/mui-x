@@ -2,9 +2,9 @@ import { createTheme } from '@mui/material/styles';
 import {
   dateCalendarClasses,
   dayPickerClasses,
-  pickersCalendarHeaderClasses,
   pickersSlideTransitionClasses,
 } from '../DateCalendar';
+import { pickersCalendarHeaderClasses } from '../PickersCalendarHeader';
 import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
   clockClasses,
@@ -43,6 +43,13 @@ createTheme({
         content: {
           backgroundColor: 'blue',
         },
+      },
+    },
+    MuiDateField: {
+      defaultProps: {
+        className: 'class',
+        // @ts-expect-error invalid MuiDateField prop
+        someRandomProp: true,
       },
     },
     MuiDayCalendarSkeleton: {
@@ -176,6 +183,13 @@ createTheme({
         content: {
           backgroundColor: 'blue',
         },
+      },
+    },
+    MuiDateTimeField: {
+      defaultProps: {
+        className: 'class',
+        // @ts-expect-error invalid MuiDateTimeField prop
+        someRandomProp: true,
       },
     },
     MuiDatePickerToolbar: {
@@ -497,6 +511,13 @@ createTheme({
         content: {
           backgroundColor: 'blue',
         },
+      },
+    },
+    MuiTimeField: {
+      defaultProps: {
+        className: 'class',
+        // @ts-expect-error invalid MuiTimeField prop
+        someRandomProp: true,
       },
     },
     MuiTimePickerToolbar: {

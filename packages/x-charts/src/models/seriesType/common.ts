@@ -1,4 +1,4 @@
-import type { HighlightScope } from '@mui/x-charts/context/HighlightProvider';
+import type { HighlightScope } from '../../context/HighlightProvider';
 import type { StackOffset, StackOrder } from '../../internals/stackSeries';
 
 export type CommonSeriesType<TValue> = {
@@ -13,16 +13,32 @@ export type CommonSeriesType<TValue> = {
   highlightScope?: Partial<HighlightScope>;
 };
 
-export type CommonDefaultizedProps = 'id' | 'valueFormatter';
+export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
 
 export type CartesianSeriesType = {
+  /**
+   * The id of the x-axis used to render the series.
+   */
   xAxisKey?: string;
+  /**
+   * The id of the y-axis used to render the series.
+   */
   yAxisKey?: string;
 };
 
 export type StackableSeriesType = {
+  /**
+   * The key that identifies the stacking group.
+   * Series with the same `stack` property will be stacked together.
+   */
   stack?: string;
+  /**
+   * Defines how stacked series handle negative values.
+   */
   stackOffset?: StackOffsetType;
+  /**
+   * The order in which series' of the same group are stacked together.
+   */
   stackOrder?: StackOrderType;
 };
 

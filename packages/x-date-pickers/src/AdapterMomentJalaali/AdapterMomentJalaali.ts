@@ -1,7 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import defaultJMoment, { Moment } from 'moment-jalaali';
 import { AdapterMoment } from '../AdapterMoment';
-import { AdapterFormats, AdapterOptions, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  DateBuilderReturnType,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -52,21 +58,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'jYYYY, jMMMM Do',
-  fullDateWithWeekday: 'dddd Do jMMMM jYYYY',
   keyboardDate: 'jYYYY/jMM/jDD',
   shortDate: 'jD jMMM',
   normalDate: 'dddd, jD jMMM',
   normalDateWithWeekday: 'DD MMMM',
-  monthAndYear: 'jMMMM jYYYY',
-  monthAndDate: 'jD jMMMM',
 
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'jYYYY, jMMMM Do, hh:mm A',
-  fullDateTime12h: 'jD jMMMM hh:mm A',
-  fullDateTime24h: 'jD jMMMM HH:mm',
   keyboardDateTime: 'jYYYY/jMM/jDD LT',
   keyboardDateTime12h: 'jYYYY/jMM/jDD hh:mm A',
   keyboardDateTime24h: 'jYYYY/jMM/jDD HH:mm',
@@ -130,16 +130,15 @@ export class AdapterMomentJalaali
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = (value?: any) => {
+  public date = <T extends string | null | undefined>(
+    value?: T,
+  ): DateBuilderReturnType<T, Moment> => {
+    type R = DateBuilderReturnType<T, Moment>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
-    return this.moment(value).locale('fa');
-  };
-
-  public dateWithTimezone = (value: string | null | undefined): Moment | null => {
-    return this.date(value);
+    return <R>this.moment(value).locale('fa');
   };
 
   public getTimezone = (): string => {
@@ -150,10 +149,6 @@ export class AdapterMomentJalaali
     return value;
   };
 
-  public parseISO = (isoString: string) => {
-    return this.moment(isoString).locale('fa');
-  };
-
   public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
@@ -162,36 +157,10 @@ export class AdapterMomentJalaali
     return this.moment(value, format, true).locale('fa');
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format)
-      .replace(/a/gi, '(a|p)m')
-      .replace('jY', 'Y')
-      .replace('jM', 'M')
-      .replace('jD', 'D')
-      .toLocaleLowerCase();
-  };
-
-  public isValid = (value: any) => {
-    // We can't to `this.moment(value)` because moment-jalaali looses the invalidity information when creating a new moment object from an existing one
-    if (!this.moment.isMoment(value)) {
-      return false;
-    }
-
-    return value.isValid();
-  };
-
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat
       .replace(/\d/g, (match) => NUMBER_SYMBOL_MAP[match as keyof typeof NUMBER_SYMBOL_MAP])
       .replace(/,/g, '،');
-  };
-
-  public isEqual = (value: any, comparing: any) => {
-    if (value === null && comparing === null) {
-      return true;
-    }
-
-    return this.moment(value).isSame(comparing);
   };
 
   public isSameYear = (value: Moment, comparing: Moment) => {
@@ -266,20 +235,6 @@ export class AdapterMomentJalaali
     return value.clone().jDate(date);
   };
 
-  public getNextMonth = (value: Moment) => {
-    return value.clone().add(1, 'jMonth');
-  };
-
-  public getPreviousMonth = (value: Moment) => {
-    return value.clone().subtract(1, 'jMonth');
-  };
-
-  public getWeekdays = () => {
-    return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-      return this.date()!.weekday(dayOfWeek).format('dd');
-    });
-  };
-
   public getWeekArray = (value: Moment) => {
     const start = value.clone().startOf('jMonth').startOf('week');
     const end = value.clone().endOf('jMonth').endOf('week');
@@ -304,7 +259,7 @@ export class AdapterMomentJalaali
     return value.jWeek();
   };
 
-  public getYearRange = (start: Moment, end: Moment) => {
+  public getYearRange = ([start, end]: [Moment, Moment]) => {
     const startDate = this.moment(start).startOf('jYear');
     const endDate = this.moment(end).endOf('jYear');
     const years: Moment[] = [];
@@ -316,9 +271,5 @@ export class AdapterMomentJalaali
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am' ? this.date()!.hours(2).format('A') : this.date()!.hours(14).format('A');
   };
 }

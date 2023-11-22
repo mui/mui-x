@@ -50,15 +50,16 @@
     "showMultiFilterOperators": { "type": { "name": "bool" } },
     "valueInputProps": { "type": { "name": "any" }, "default": "{}" }
   },
-  "slots": {},
+  "slots": [],
   "name": "GridFilterForm",
+  "imports": [
+    "import { GridFilterForm } from '@mui/x-data-grid/components';",
+    "import { GridFilterForm } from '@mui/x-data-grid';",
+    "import { GridFilterForm } from '@mui/x-data-grid-pro';",
+    "import { GridFilterForm } from '@mui/x-data-grid-premium';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterForm.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-data-grid-premium", "componentName": "GridFilterForm" },
-    { "packageName": "@mui/x-data-grid-pro", "componentName": "GridFilterForm" },
-    { "packageName": "@mui/x-data-grid", "componentName": "GridFilterForm" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>"
 }

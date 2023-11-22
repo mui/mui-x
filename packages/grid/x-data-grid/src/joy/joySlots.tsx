@@ -16,7 +16,6 @@ import JoyCircularProgress from '@mui/joy/CircularProgress';
 import JoyTooltip from '@mui/joy/Tooltip';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
-import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -185,7 +184,7 @@ const Switch = React.forwardRef<
         input: {
           ...inputProps,
           name,
-          onClick: onClick as JSX.IntrinsicElements['input']['onClick'],
+          onClick: onClick as React.JSX.IntrinsicElements['input']['onClick'],
           ref: inputRef,
         },
         thumb: {
@@ -229,7 +228,7 @@ const Select = React.forwardRef<
     },
     ref,
   ) => {
-    const handleChange: JoySelectProps<any>['onChange'] = (event, newValue) => {
+    const handleChange: JoySelectProps<any, any>['onChange'] = (event, newValue) => {
       if (event && onChange) {
         // Same as in https://github.com/mui/material-ui/blob/e5558282a8f36856aef1299f3a36f3235e92e770/packages/mui-material/src/Select/SelectInput.js#L288-L300
 
@@ -251,7 +250,7 @@ const Select = React.forwardRef<
 
     return (
       <JoySelect
-        {...(props as JoySelectProps<any>)}
+        {...(props as JoySelectProps<any, any>)}
         listboxOpen={open}
         onListboxOpenChange={(isOpen) => {
           if (isOpen) {
@@ -360,7 +359,7 @@ const Pagination = React.forwardRef<
 
   const pageSizeOptions = isPageSizeIncludedInPageSizeOptions() ? rootProps.pageSizeOptions : [];
 
-  const handleChangeRowsPerPage: JoySelectProps<number>['onChange'] = (event, newValue) => {
+  const handleChangeRowsPerPage: JoySelectProps<number, false>['onChange'] = (event, newValue) => {
     const newPageSize = Number(newValue);
     apiRef.current.setPageSize(newPageSize);
   };
@@ -434,7 +433,7 @@ const LoadingOverlay = React.forwardRef<
   );
 });
 
-const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
+const joySlots: Partial<GridSlotsComponent> = {
   ...joyIconSlots,
   baseCheckbox: Checkbox,
   baseTextField: TextField,

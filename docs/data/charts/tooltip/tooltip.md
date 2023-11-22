@@ -7,7 +7,7 @@ title: Charts - Tooltip
 <p class="description">Tooltip provides extra data on charts item.</p>
 
 In all charts components, you can pass props to the tooltip by using `tooltip={{...}}`.
-If you are using composition, you can add the `<Tooltip />` component and pass props directly.
+If you are using composition, you can add the `<ChartTooltip />` component and pass props directly.
 
 ## Interactions
 
@@ -55,6 +55,8 @@ This kind of interaction is controlled by series properties `highlightScope` whi
 
 ## Customization
 
+### Formatting
+
 The format of data rendered in the tooltip can be modified thanks to the series `valueFormatter` property.
 The same can be applied to x values when a tooltip is triggered by the `'axis'`.
 
@@ -65,10 +67,24 @@ Here is a demo with:
 
 {{"demo": "Formatting.js"}}
 
+### Hiding values
+
+You can hide the axis value with `hideTooltip` in the `xAxis` props.
+It will remove the header showing the x-axis value from the tooltip.
+
+```jsx
+<LineChart
+  // ...
+  xAxis={[{ data: [ ... ], hideTooltip: true }]}
+/>
+```
+
 ## Composition
 
-If you're using composition, by default the axis will be listening for mouse events to get its current x/y values.
-If you don't need it, because you don't use highlights, and the tooltip is triggered by an item, you can disable those listeners with the `disableAxisListener` prop.
+If you're using composition, by default, the axis will be listening for mouse events to get its current x/y values.
+If you don't need it, you can disable those listeners with the `disableAxisListener` prop.
+
+You need those listeners if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#interactions).
 
 ```jsx
 <ChartContainer {...} disableAxisListener>
