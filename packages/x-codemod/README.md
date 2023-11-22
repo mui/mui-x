@@ -90,7 +90,7 @@ The list includes these transformers
 
 #### `rename-day-picker-classes`
 
-Rename the variable `dayPickerClasses` into `dayCalendarClasses`
+Rename the `dayPickerClasses` variable `dayCalendarClasses`.
 
 ```diff
 - import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
