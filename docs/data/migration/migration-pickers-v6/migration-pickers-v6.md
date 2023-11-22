@@ -124,7 +124,7 @@ The imports related to the `calendarHeader` slot have been moved from `@mui/x-da
 
 ### Replace `defaultCalendarMonth` with `referenceDate`
 
-The `defaultCalendarMonth` has been removed in favor of the more flexible `referenceDate` prop.
+The deprecated `defaultCalendarMonth` prop has been removed in favor of the more flexible `referenceDate` prop.
 
 :::warning
 The new `referenceDate` prop is not limited to the default month.
