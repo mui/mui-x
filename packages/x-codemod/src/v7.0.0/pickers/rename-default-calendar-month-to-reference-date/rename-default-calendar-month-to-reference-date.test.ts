@@ -9,7 +9,7 @@ function read(fileName) {
 }
 
 describe('v7.0.0/pickers', () => {
-  describe('rename-default-calendar-month-reference-date', () => {
+  describe('rename-default-calendar-month-to-reference-date', () => {
     it('transforms props as needed', () => {
       const actual = transform({ source: read('./actual.spec.js') }, { jscodeshift }, {});
 
