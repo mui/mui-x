@@ -93,12 +93,8 @@ The list includes these transformers
 Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
 
 ```diff
-  <DatePicker
-    value={value}
-    onChange={setValue}
--   defaultCalendarMonth={dayjs('2022-04-01')}
-+   referenceDate={dayjs('2022-04-01')}
-/>
+- <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
++ <DateCalendar referenceDate{dayjs('2022-04-01')} />
 ```
 
 ### Data grid codemods
