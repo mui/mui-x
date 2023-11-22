@@ -100,16 +100,6 @@
         "returned": "React.ReactNode"
       }
     },
-    "shouldDisableClock": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
-      "signature": {
-        "type": "function(clockValue: number, view: TimeView) => boolean",
-        "describedArgs": ["clockValue", "view"],
-        "returned": "boolean"
-      }
-    },
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {

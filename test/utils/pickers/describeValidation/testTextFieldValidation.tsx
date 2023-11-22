@@ -101,49 +101,6 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
     });
 
-    it('should apply shouldDisableClock', function test() {
-      if (!withTime) {
-        return;
-      }
-
-      const onErrorMock = spy();
-      const { setProps } = render(
-        <ElementToTest
-          onError={onErrorMock}
-          shouldDisableClock={(value: number) => value === 10}
-          value={adapterToUse.date('2018-03-12T10:05:00')}
-        />,
-      );
-
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-hours');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
-
-      setProps({ value: adapterToUse.date('2019-03-12T09:05:00') });
-
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
-
-      setProps({ value: adapterToUse.date('2018-03-12T09:10:00') });
-
-      expect(onErrorMock.callCount).to.equal(3);
-      expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-minutes');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
-
-      setProps({ value: adapterToUse.date('2018-03-12T09:09:00') });
-
-      expect(onErrorMock.callCount).to.equal(4);
-      expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
-
-      setProps({ value: adapterToUse.date('2018-03-12T09:09:10') });
-
-      expect(onErrorMock.callCount).to.equal(5);
-      expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-seconds');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
-    });
-
     it('should apply shouldDisableTime', function test() {
       if (!withTime) {
         return;
