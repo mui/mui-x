@@ -23,4 +23,9 @@ export interface FakeInputProps extends FieldsTextFieldProps {
   label?: string;
   endAdornment?: React.ReactNode;
   startAdornment?: React.ReactNode;
+  onBlur?: React.FocusEventHandler;
+  onChange?: React.FormEventHandler;
+  onFocus?: React.FocusEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  onKeyUp?: React.KeyboardEventHandler;
 }

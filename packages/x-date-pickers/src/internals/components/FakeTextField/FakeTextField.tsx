@@ -110,7 +110,6 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
         ownerState,
         fullWidth,
         required,
-        ...other,
       }}
     >
       <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
