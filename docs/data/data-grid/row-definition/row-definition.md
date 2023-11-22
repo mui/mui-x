@@ -48,7 +48,7 @@ The data grid pulls this information directly from the data set itself, not from
 Just like the `rows` prop, the `getRowId` function should keep the same JavaScript reference between two renders.
 Otherwise, the data grid will re-apply heavy work like sorting and filtering.
 
-It could be achieved by either defining the prop outside of the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
+It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
 ## Styling rows

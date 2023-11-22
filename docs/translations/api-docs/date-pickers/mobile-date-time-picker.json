@@ -290,7 +290,7 @@
       "typeDescriptions": {}
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documentation</a> for more details.",
       "deprecated": "",
       "typeDescriptions": {}
     },

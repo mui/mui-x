@@ -145,13 +145,13 @@ describe('<MobileDatePicker />', () => {
     it('should call `onAccept` even if controlled', () => {
       const onAccept = spy();
 
-      function ControledMobileDatePicker(props) {
+      function ControlledMobileDatePicker(props) {
         const [value, setValue] = React.useState(null);
 
         return <MobileDatePicker {...props} value={value} onChange={setValue} />;
       }
 
-      render(<ControledMobileDatePicker onAccept={onAccept} />);
+      render(<ControlledMobileDatePicker onAccept={onAccept} />);
 
       userEvent.mousePress(screen.getByRole('textbox'));
 
