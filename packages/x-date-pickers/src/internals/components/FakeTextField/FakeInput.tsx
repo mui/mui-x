@@ -69,13 +69,13 @@ const SectionsContainer = styled('div', {
   name: 'MuiFakeInput',
   slot: 'Input',
   overridesResolver: (props, styles) => styles.input,
-})(({ theme, valueType }) => {
+})(({ theme, ownerState }) => {
   return {
     fontFamily: theme.typography.fontFamily,
     fontSize: 'inherit',
     lineHeight: '1.4375em', // 23px
     flexGrow: 1,
-    visibility: valueType === 'placeholder' ? 'hidden' : 'visible',
+    visibility: ownerState.adornedStart || ownerState.focused ? 'visible' : 'hidden',
   };
 });
 const SectionContainer = styled('span', {
@@ -135,7 +135,6 @@ function InputContent({
   ownerState: OwnerStateType;
 }) {
   if (contentEditable) {
-    console.log(elements);
     return elements
       .map(({ content, before, after }) => `${before.children}${content.children}${after.children}`)
       .join('');
@@ -225,7 +224,7 @@ const FakeInput = React.forwardRef(function FakeInput(
   const {
     elements,
     defaultValue,
-    label = 'test',
+    label,
     onFocus,
     onWrapperClick,
     onBlur,
@@ -289,7 +288,7 @@ const FakeInput = React.forwardRef(function FakeInput(
       aria-invalid={fcs.error}
     >
       {startAdornment}
-      <SectionsContainer valueType={valueType} className={classes.input}>
+      <SectionsContainer ownerState={ownerState} className={classes.input}>
         <InputContent {...{ elements, contentEditable: other.contentEditable, ownerState }} />
         <FakeHiddenInput
           value={valueStr}
@@ -301,8 +300,8 @@ const FakeInput = React.forwardRef(function FakeInput(
       </SectionsContainer>
       {endAdornment}
       <NotchedOutlineRoot
-        shrink={fcs.adornedStart || fcs.focused || valueStr === 'placeholder'}
-        notched={fcs.adornedStart || fcs.focused || valueStr === 'placeholder'}
+        shrink={fcs.adornedStart || fcs.focused}
+        notched={fcs.adornedStart || fcs.focused}
         className={classes.notchedOutline}
         label={
           label != null && label !== '' && fcs.required ? (

@@ -85,7 +85,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
       const container = rootRef.current;
 
       // Find the first input element within the container
-      const firstInput = container?.querySelector('.content');
+      const firstInput = container?.querySelector('.content') as HTMLElement;
 
       // Check if the input element exists before focusing it
       if (firstInput) {
@@ -115,7 +115,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
       </InputLabel>
       <FakeInput
         ref={InputProps?.ref}
-        {...{ elements, valueStr, valueType, onWrapperClick, inputProps }}
+        {...{ elements, valueStr, valueType, onWrapperClick, inputProps, label }}
         {...other}
         {...InputProps}
       />
