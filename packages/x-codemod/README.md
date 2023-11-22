@@ -86,7 +86,16 @@ npx @mui/x-codemod v6.0.0/pickers/preset-safe <path|folder>
 
 The list includes these transformers
 
-NO CODEMOD ADDED YET
+- [`rename-day-picker-classes`](/rename-day-picker-classes)
+
+#### `rename-day-picker-classes`
+
+Rename the variable `dayPickerClasses` into `dayCalendarClasses`
+
+```diff
+- import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
++ import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+```
 
 ### Data grid codemods
 
