@@ -14,12 +14,6 @@ packageName: '@mui/x-date-pickers'
 
 {{"demo": "BasicDateField.js"}}
 
-## FakeTextField
-
-putting this demo here for easy testing, will remove before merging
-
-{{"demo": "FakeTextFieldWrapper.js"}}
-
 ## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
