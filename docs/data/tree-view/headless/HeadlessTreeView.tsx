@@ -3,7 +3,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeViewItem } from '@mui/x-tree-view/models';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewPropsBase } from '@mui/x-tree-view/TreeView';
@@ -77,25 +77,25 @@ const TreeViewRoot = styled('ul', {
   name: 'MuiTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeViewProps<any> }>({
+})<{ ownerState: TreeViewProps<any, any> }>({
   padding: 0,
   margin: 0,
   listStyle: 'none',
   outline: 0,
 });
 
-export interface TreeViewProps<Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<Multiple>,
+export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
+  extends DefaultTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
     TreeViewPropsBase {}
 
 const plugins = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded] as const;
 
-function TreeView<Multiple extends boolean | undefined>(
-  inProps: TreeViewProps<Multiple>,
+function TreeView<R extends {}, Multiple extends boolean | undefined>(
+  inProps: TreeViewProps<R, Multiple>,
 ) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
-  const ownerState = themeProps as TreeViewProps<any>;
+  const ownerState = themeProps as TreeViewProps<any, any>;
 
   const {
     // Headless implementation
@@ -120,7 +120,7 @@ function TreeView<Multiple extends boolean | undefined>(
     // Component implementation
     children,
     ...other
-  } = themeProps as TreeViewProps<any>;
+  } = themeProps as TreeViewProps<any, any>;
 
   const { getRootProps, contextValue } = useTreeView({
     disabledItemsFocusable,
@@ -159,7 +159,7 @@ function TreeView<Multiple extends boolean | undefined>(
   );
 }
 
-const ITEMS: TreeViewItem[] = [
+const ITEMS: TreeViewBaseItem[] = [
   {
     nodeId: '1',
     label: 'Application',

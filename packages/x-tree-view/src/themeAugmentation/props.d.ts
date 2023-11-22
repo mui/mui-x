@@ -4,7 +4,7 @@ import { TreeViewProps } from '../TreeView';
 
 export interface TreeViewComponentsPropsList {
   MuiTreeItem: TreeItemProps;
-  MuiTreeView: TreeViewProps<any>;
+  MuiTreeView: TreeViewProps<any, any>;
   MuiSimpleTreeView: SimpleTreeViewProps<any>;
 }
 

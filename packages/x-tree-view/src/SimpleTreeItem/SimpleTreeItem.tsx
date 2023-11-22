@@ -10,7 +10,7 @@ import {
 } from '../internals/TreeViewProvider/DescendantProvider';
 import { SimpleTreeItemProps } from './SimpleTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../internals/plugins';
+import { SimpleTreeViewPlugins } from '../SimpleTreeView/SimpleTreeView.plugins';
 import { TreeItem } from '../internals/components/TreeItem';
 
 /**
@@ -29,14 +29,15 @@ export const SimpleTreeItem = React.forwardRef(function SimpleTreeItem(
 ) {
   const {
     children,
-    disabled: disabledProp,
+    disabled = false,
     label,
     nodeId,
     id: idProp,
     ContentProps: inContentProps,
+    ...other
   } = props;
 
-  const { treeId, instance } = useTreeViewContext<DefaultTreeViewPlugins>();
+  const { treeId, instance } = useTreeViewContext<SimpleTreeViewPlugins>();
 
   let id: string | undefined;
   if (idProp != null) {
@@ -64,20 +65,20 @@ export const SimpleTreeItem = React.forwardRef(function SimpleTreeItem(
   React.useEffect(() => {
     // On the first render a node's index will be -1. We want to wait for the real index.
     if (instance && index !== -1) {
-      instance.insertNode({
+      instance.insertJSXNode({
         id: nodeId,
         idAttribute: id,
         index,
         parentId,
         expandable,
-        disabled: disabledProp,
+        disabled,
       });
 
-      return () => instance.removeNode(nodeId);
+      return () => instance.removeJSXNode(nodeId);
     }
 
     return undefined;
-  }, [instance, parentId, index, nodeId, expandable, disabledProp, id]);
+  }, [instance, parentId, index, nodeId, expandable, disabled, id]);
 
   React.useEffect(() => {
     if (instance && label) {
@@ -96,7 +97,16 @@ export const SimpleTreeItem = React.forwardRef(function SimpleTreeItem(
 
   return (
     <DescendantProvider id={nodeId}>
-      <TreeItem {...props} ref={handleRef} ContentProps={ContentProps} />
+      <TreeItem
+        {...other}
+        ref={handleRef}
+        ContentProps={ContentProps}
+        label={label}
+        nodeId={nodeId}
+        id={id}
+      >
+        {children}
+      </TreeItem>
     </DescendantProvider>
   );
 });

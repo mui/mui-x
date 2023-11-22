@@ -11,7 +11,7 @@ import {
   populateInstance,
 } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewKeyboardNavigationSignature } from './useTreeViewKeyboardNavigation.types';
-import { TreeViewItem } from '../../../models';
+import { TreeViewBaseItem } from '../../../models';
 
 function isPrintableCharacter(string: string) {
   return string && string.length === 1 && string.match(/\S/);
@@ -52,9 +52,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     const newFirstCharMap: { [nodeId: string]: string } = {};
 
-    const processItem = (item: TreeViewItem) => {
+    const processItem = (item: TreeViewBaseItem) => {
       newFirstCharMap[item.nodeId] = item.label.substring(0, 1).toLowerCase();
-
       item.children?.forEach(processItem);
     };
 

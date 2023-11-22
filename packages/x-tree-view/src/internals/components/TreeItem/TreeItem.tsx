@@ -152,7 +152,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ContentProps,
     endIcon,
     expandIcon,
-    disabled: disabledProp,
     icon,
     id: idProp,
     label,

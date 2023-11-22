@@ -1,0 +1,6 @@
+<TreeView
+  items={MUI_X_PRODUCTS}
+  defaultCollapseIcon={<ExpandMoreIcon />}
+  defaultExpandIcon={<ChevronRightIcon />}
+  sx={{ height: 264, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+/>

@@ -19,6 +19,6 @@ export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement
   sx?: SxProps<Theme>;
 }
 
-export interface TreeViewProps<Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<Multiple>,
+export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
+  extends DefaultTreeViewPluginParameters<R, Multiple>,
     TreeViewPropsBase {}

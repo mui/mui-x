@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
-import { DefaultTreeViewPluginParameters } from '../internals/plugins/defaultPlugins';
+import { SimpleTreeViewPluginParameters } from './SimpleTreeView.plugins';
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
-  extends Omit<DefaultTreeViewPluginParameters<Multiple>, 'items'>,
+  extends SimpleTreeViewPluginParameters<Multiple>,
     React.HTMLAttributes<HTMLUListElement> {
   /**
    * The content of the component.

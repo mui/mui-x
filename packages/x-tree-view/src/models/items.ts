@@ -1,10 +1,13 @@
 // TODO: Add support for number
 export type TreeViewItemId = string;
 
-export interface TreeViewItem {
+interface TreeViewBaseItemProperties {
   nodeId: TreeViewItemId;
   id?: string;
   label: string;
-  disabled?: boolean;
-  children?: TreeViewItem[];
 }
+
+export type TreeViewBaseItem<R extends {} = {}> = TreeViewBaseItemProperties &
+  R & {
+    children?: TreeViewBaseItem<R>[];
+  };
