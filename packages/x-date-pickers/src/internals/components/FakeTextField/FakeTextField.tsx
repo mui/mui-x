@@ -14,7 +14,7 @@ const FakeTextFieldRoot = styled(FormControl, {
   name: 'MuiFakeTextField',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})({});
+})<{ ownerState: OwnerStateType }>({});
 
 const useUtilityClasses = (ownerState: FakeTextFieldProps) => {
   const { focused, disabled, classes, required } = ownerState;
@@ -30,6 +30,8 @@ const useUtilityClasses = (ownerState: FakeTextFieldProps) => {
 
   return composeClasses(slots, getFakeTextFieldUtilityClass, classes);
 };
+
+type OwnerStateType = Partial<FakeTextFieldProps>;
 
 export const FakeTextField = React.forwardRef(function FakeTextField(
   props: FakeTextFieldProps,
@@ -94,6 +96,8 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
       if (firstInput) {
         firstInput.focus();
       }
+
+      inputRef.current?.focus();
     }
   };
 
@@ -101,16 +105,14 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
     <FakeTextFieldRoot
       className={clsx(classes.root, className)}
       ref={handleRootRef}
-      {...{
-        focused,
-        disabled,
-        variant,
-        error,
-        color,
-        ownerState,
-        fullWidth,
-        required,
-      }}
+      focused={focused}
+      disabled={disabled}
+      variant={variant}
+      error={error}
+      color={color}
+      fullWidth={fullWidth}
+      required={required}
+      ownerState={ownerState}
     >
       <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
         {label}

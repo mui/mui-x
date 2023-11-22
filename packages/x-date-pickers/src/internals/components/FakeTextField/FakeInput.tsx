@@ -290,7 +290,11 @@ const FakeInput = React.forwardRef(function FakeInput(
     >
       {startAdornment}
       <SectionsContainer ownerState={ownerState} className={classes.input}>
-        <InputContent {...{ elements, contentEditable: other.contentEditable, ownerState }} />
+        <InputContent
+          elements={elements}
+          contentEditable={other.contentEditable}
+          ownerState={ownerState}
+        />
         <FakeHiddenInput
           value={valueStr}
           onChange={onValueStrChange}
