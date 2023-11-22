@@ -216,6 +216,17 @@ It was used in the header of the calendar views, you can replace it with the new
   <LocalizationProvider />
 ```
 
+## Renamed variables
+
+### ✅ Rename the `dayPickerClasses` variable to `dayCalendarClasses`
+
+The `dayPickerClasses` variable has been renamed `dayCalendarClasses` to be consistent with the new name of the `DayCalendar` component introduced in v6.0.0.
+
+```diff
+- import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
++ import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+```
+
 ## Use UTC with the Day.js adapter
 
 The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.

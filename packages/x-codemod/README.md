@@ -87,6 +87,7 @@ npx @mui/x-codemod v7.0.0/pickers/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-default-calendar-month-to-reference-date`](#rename-default-calendar-month-to-reference-date)
+- [`rename-day-picker-classes`](/rename-day-picker-classes)
 
 #### `rename-default-calendar-month-to-reference-date`
 
@@ -95,6 +96,15 @@ Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
 ```diff
 - <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
 + <DateCalendar referenceDate{dayjs('2022-04-01')} />
+```
+
+#### `rename-day-picker-classes`
+
+Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
+
+```diff
+- import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
++ import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 ```
 
 ### Data grid codemods
