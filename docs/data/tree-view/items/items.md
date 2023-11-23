@@ -10,11 +10,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Pass data to your Tree View.</p>
 
-:::info
-If you are looking for a basic Tree View with JSX children, you can go to the [JSX children](/x/react-tree-view/jsx-children/) to learn how to use the `SimpleTreeView` component.
-:::
-
-## Basic usage
+## Usage with `TreeView`
 
 The items can be defined with the `items` prop, which expects an array of objects.
 
@@ -25,11 +21,15 @@ Otherwise, the Tree View will re-generate its entire structure.
 
 {{"demo": "BasicTreeView.js"}}
 
+## Usage with `SimpleTreeView`
+
+{{"demo": "BasicJSXTreeView.js"}}
+
 ## Disabled items
 
-### Set disabled items
+### Disable items on `TreeView`
 
-You can disable some of the items using the `isItemDisabled` prop:
+You can disable some of the items using the `isItemDisabled` prop on the `TreeView` component:
 
 ```tsx
 function isItemDisabled(row) {
@@ -47,6 +47,18 @@ Otherwise, the Tree View will re-generate its entire structure.
 
 It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
+
+### Disable items on `SimpleTreeView`
+
+You can disable some of the items using the `disabled` prop on the `SimpleTreeItem` component:
+
+```tsx
+<SimpleTreeView>
+  <SimpleTreeItem nodeId="@mui/x-scheduler" label="Scheduler" disabled />
+</SimpleTreeView>
+```
+
+{{"demo": "DisabledJSXItem.js", "defaultCodeOpen": false}}
 
 ### Interact with disabled items
 

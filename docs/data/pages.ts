@@ -453,7 +453,6 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-tree-view/getting-started' },
       { pathname: '/x/react-tree-view', title: 'Overview' },
-      { pathname: '/x/react-tree-view/jsx-children', title: 'JSX children' },
       { pathname: '/x/react-tree-view/items' },
       { pathname: '/x/react-tree-view/selection' },
       { pathname: '/x/react-tree-view/expansion' },

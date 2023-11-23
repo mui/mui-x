@@ -23,21 +23,11 @@ const MUI_X_PRODUCTS = [
       { nodeId: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
-  {
-    nodeId: 'charts',
-    label: 'Charts',
-    children: [{ nodeId: 'charts-community', label: '@mui/x-charts' }],
-  },
-  {
-    nodeId: 'tree-view',
-    label: 'Tree View',
-    children: [{ nodeId: 'tree-view-community', label: '@mui/x-tree-view' }],
-  },
 ];
 
 export default function BasicTreeView() {
   return (
-    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ height: 168, flexGrow: 1, maxWidth: 400 }}>
       <TreeView
         items={MUI_X_PRODUCTS}
         defaultCollapseIcon={<ExpandMoreIcon />}

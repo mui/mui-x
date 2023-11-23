@@ -5,7 +5,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { SimpleTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
 
-export default function BasicJSXTreeView() {
+export default function DisabledJSXItem() {
   return (
     <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
       <SimpleTreeView
@@ -26,6 +26,14 @@ export default function BasicJSXTreeView() {
         </SimpleTreeItem>
         <SimpleTreeItem nodeId="tree-view" label="Tree View">
           <SimpleTreeItem nodeId="tree-view-community" label="@mui/x-tree-view" />
+          <SimpleTreeItem
+            nodeId="tree-view-pro"
+            label="@mui/x-tree-view-pro"
+            disabled
+          />
+        </SimpleTreeItem>
+        <SimpleTreeItem nodeId="scheduler" label="Scheduler" disabled>
+          <SimpleTreeItem nodeId="scheduler-community" label="@mui/x-scheduler" />
         </SimpleTreeItem>
       </SimpleTreeView>
     </Box>
