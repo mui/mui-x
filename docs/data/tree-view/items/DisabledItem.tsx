@@ -54,7 +54,7 @@ export default function DisabledItem() {
       isItemDisabled={isItemDisabled}
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ height: 264, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+      sx={{ height: 312, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
     />
   );
 }

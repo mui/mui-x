@@ -10,6 +10,14 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Pass data to your Tree View using JSX.</p>
 
-TODO
+If your Tree View has fixed data that do not come from a database, you can use the `SimpleTreeView` component that takes JSX children instead of a `items` prop.
+
+However, if `SimpleTreeView` is too limited for your usage, have a look at the `TreeView` component and the other pages of this documentation.
+
+## Basic usage
 
 {{"demo": "BasicJSXTreeView.js"}}
+
+## Disabled items
+
+{{"demo": "BasicDisabledJSXItems.js"}}

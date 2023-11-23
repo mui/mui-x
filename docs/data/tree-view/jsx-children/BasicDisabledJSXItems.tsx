@@ -4,7 +4,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { SimpleTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
 
-export default function BasicJSXTreeView() {
+export default function BasicDisabledJSXItems() {
   return (
     <SimpleTreeView
       aria-label="file system navigator"
@@ -26,6 +26,14 @@ export default function BasicJSXTreeView() {
       </SimpleTreeItem>
       <SimpleTreeItem nodeId="tree-view" label="Tree View">
         <SimpleTreeItem nodeId="tree-view-community" label="@mui/x-tree-view" />
+        <SimpleTreeItem
+          nodeId="tree-view-pro"
+          label="@mui/x-tree-view-pro"
+          disabled
+        />
+      </SimpleTreeItem>
+      <SimpleTreeItem nodeId="scheduler" label="Sheduler" disabled>
+        <SimpleTreeItem nodeId="scheduler-community" label="@mui/x-scheduler" />
       </SimpleTreeItem>
     </SimpleTreeView>
   );
