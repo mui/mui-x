@@ -153,7 +153,7 @@ The list includes these transformers
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
-This change only affects Grid components.
+This change only affects Data Grid components.
 
 ```diff
  <DataGrid
