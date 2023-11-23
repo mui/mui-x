@@ -21,7 +21,7 @@ type Blog = {
 
 const blogs: Blog[] = [
   {
-    title: 'MUI X v6.18.0',
+    title: 'MUI X v6.18.x',
     description:
       'New stable components, polished features, better performance and more.',
     announcementDate: 'Monday, Nov 13, 2023',

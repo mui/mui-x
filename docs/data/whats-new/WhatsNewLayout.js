@@ -13,7 +13,7 @@ import { alpha } from '@mui/material/styles';
 
 const blogs = [
   {
-    title: 'MUI X v6.18.0',
+    title: 'MUI X v6.18.x',
     description:
       'New stable components, polished features, better performance and more.',
     announcementDate: 'Monday, Nov 13, 2023',
@@ -36,7 +36,7 @@ const blogs = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#customization-playgrounds',
       },
       {
-        title: 'DataGrid Column Autosizing',
+        title: 'DataGrid column autosizing',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
       },
       {
