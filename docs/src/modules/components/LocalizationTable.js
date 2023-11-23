@@ -147,7 +147,9 @@ export default function LocalisationTable(props) {
                   <ProgressBar
                     numerator={totalKeysCount - missingKeysCount}
                     denumerator={totalKeysCount}
-                    aria-label={`${totalKeysCount - missingKeysCount} of ${totalKeysCount} complete`}
+                    aria-label={`${
+                      totalKeysCount - missingKeysCount
+                    } of ${totalKeysCount} complete`}
                   />
                 </td>
                 <td align="left">
