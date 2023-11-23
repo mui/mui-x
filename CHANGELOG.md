@@ -61,7 +61,14 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.2`.
   ```diff
   - import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
   + import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
-```
+  ```
+
+- The deprecated `defaultCalendarMonth` prop has been removed in favor of the more flexible `referenceDate` prop.
+
+  ```diff
+  - <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
+  + <DateCalendar referenceDate{dayjs('2022-04-01')} />
+  ```
 
 - The `adapter.date` method now has the v6 `adapter.dateWithTimezone` method behavior.
   It no longer accepts `any` as a value but only `string | null | undefined`.
@@ -78,13 +85,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.2`.
 
   - adapter.date(new Date('Invalid Date'));
   + adapter.getInvalidDate();
-  ```
-
-- The deprecated `defaultCalendarMonth` prop has been removed in favor of the more flexible `referenceDate` prop.
-
-  ```diff
-  - <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
-  + <DateCalendar referenceDate{dayjs('2022-04-01')} />
   ```
 
 #### `@mui/x-date-pickers@7.0.0-alpha.2`
