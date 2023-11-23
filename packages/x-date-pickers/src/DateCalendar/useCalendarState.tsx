@@ -98,7 +98,6 @@ interface UseCalendarStateParams<TDate>
     DateCalendarDefaultizedProps<TDate>,
     | 'value'
     | 'referenceDate'
-    | 'defaultCalendarMonth'
     | 'disableFuture'
     | 'disablePast'
     | 'minDate'
@@ -115,7 +114,6 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
   const {
     value,
     referenceDate: referenceDateProp,
-    defaultCalendarMonth,
     disableFuture,
     disablePast,
     disableSwitchToMonthOnDayFocus = false,
@@ -139,20 +137,12 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
 
   const referenceDate = React.useMemo(
     () => {
-      let externalReferenceDate: TDate | null = null;
-      if (referenceDateProp) {
-        externalReferenceDate = referenceDateProp;
-      } else if (defaultCalendarMonth) {
-        // For `defaultCalendarMonth`, we just want to keep the month and the year to avoid a behavior change.
-        externalReferenceDate = utils.startOfMonth(defaultCalendarMonth);
-      }
-
       return singleItemValueManager.getInitialReferenceValue({
         value,
         utils,
         timezone,
         props: params,
-        referenceDate: externalReferenceDate,
+        referenceDate: referenceDateProp,
         granularity: SECTION_TYPE_GRANULARITY.day,
       });
     },

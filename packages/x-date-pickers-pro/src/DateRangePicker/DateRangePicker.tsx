@@ -78,10 +78,6 @@ DateRangePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={[null, null]}`.
-   */
-  defaultCalendarMonth: PropTypes.any,
-  /**
    * The initial position in the edited date range.
    * Used when the component is not controlled.
    * @default 'start'

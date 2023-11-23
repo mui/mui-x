@@ -114,7 +114,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     referenceDate: referenceDateProp,
     disableFuture,
     disablePast,
-    defaultCalendarMonth,
     onChange,
     onYearChange,
     onMonthChange,
@@ -178,7 +177,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     onMonthSwitchingAnimationEnd,
   } = useCalendarState({
     value,
-    defaultCalendarMonth,
     referenceDate: referenceDateProp,
     reduceAnimations,
     onMonthChange,
@@ -422,10 +420,6 @@ DateCalendar.propTypes = {
    * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
-  /**
-   * Default calendar month displayed when `value` and `defaultValue` are empty.
-   */
-  defaultCalendarMonth: PropTypes.any,
   /**
    * The default selected value.
    * Used when the component is not controlled.

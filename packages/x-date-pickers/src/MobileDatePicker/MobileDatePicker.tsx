@@ -111,10 +111,6 @@ MobileDatePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value` and `defaultValue` are empty.
-   */
-  defaultCalendarMonth: PropTypes.any,
-  /**
    * The default value.
    * Used when the component is not controlled.
    */

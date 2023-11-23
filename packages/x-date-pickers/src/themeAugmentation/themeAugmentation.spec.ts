@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import {
   dateCalendarClasses,
-  dayPickerClasses,
+  dayCalendarClasses,
   pickersSlideTransitionClasses,
 } from '../DateCalendar';
 import { pickersCalendarHeaderClasses } from '../PickersCalendarHeader';
@@ -255,7 +255,7 @@ createTheme({
       styleOverrides: {
         header: {
           backgroundColor: 'red',
-          [`.${dayPickerClasses.weekContainer}`]: {
+          [`.${dayCalendarClasses.weekContainer}`]: {
             backgroundColor: 'green',
           },
         },

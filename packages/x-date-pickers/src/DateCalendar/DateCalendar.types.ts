@@ -54,10 +54,6 @@ export interface ExportedDateCalendarProps<TDate>
     MonthValidationProps<TDate>,
     TimezoneProps {
   /**
-   * Default calendar month displayed when `value` and `defaultValue` are empty.
-   */
-  defaultCalendarMonth?: TDate;
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
