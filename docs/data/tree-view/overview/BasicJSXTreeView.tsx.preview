@@ -1,6 +1,6 @@
 <SimpleTreeView
-    defaultCollapseIcon={<ExpandMoreIcon />}
-    defaultExpandIcon={<ChevronRightIcon />}
+  defaultCollapseIcon={<ExpandMoreIcon />}
+  defaultExpandIcon={<ChevronRightIcon />}
 >
   <SimpleTreeItem nodeId="grid" label="Data Grid">
     <SimpleTreeItem nodeId="grid-community" label="@mui/x-data-grid" />

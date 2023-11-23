@@ -7,7 +7,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 export default function BasicJSXTreeView() {
   return (
-    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ height: 168, flexGrow: 1, maxWidth: 400 }}>
       <SimpleTreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
