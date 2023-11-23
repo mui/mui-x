@@ -797,7 +797,7 @@ npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
-This change only affects Grid components.
+This change only affects Data Grid components.
 
 ```diff
  <DataGrid
