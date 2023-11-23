@@ -56,6 +56,13 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.2`.
   + adapter.date(undefined, 'system');
   ```
 
+- The `dayPickerClasses` variable has been renamed to `dayCalendarClasses` to be consistent with the new name of the `DayCalendar` component introduced in v6.0.0.
+
+  ```diff
+  - import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
+  + import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+```
+
 - The `adapter.date` method now has the v6 `adapter.dateWithTimezone` method behavior.
   It no longer accepts `any` as a value but only `string | null | undefined`.
 
@@ -116,7 +123,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.2`.
 - [core] Bump monorepo (#11160) @LukasTy
 - [core] Fix comment in doc generation (#11098) @flaviendelangle
 - [core] Rename OpenCollective @oliviertassinari
-- [core] Upgrade babel-plugin-module-resolver to 5.0.0 (#11065) @flaviendelangle
+- [core] Upgrade `babel-plugin-module-resolver` to 5.0.0 (#11065) @flaviendelangle
 - [changelog] Improve git diff format @oliviertassinari
 - [renovate] Monthly schedule for lockfile maintenance (#10336) @Janpot
 - [test] Skip flaky e2e test in webkit (#11110) @cherniavskii
