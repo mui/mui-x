@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.18.2
+
+_Nov 23, 2023_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Arabic (ar-SD), Czech (cs-CZ), and Hebrew (he-IL) locales on Data Grid
+- 🌍 Add Basque (eu) and Macedonian (mk) locales on Pickers
+- 🌍 Improve German (de-DE) and Spanish (es-ES) locales on Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.2`
+
+- [l10n] Improve Arabic (ar-SD) locale (#11096) @OmarWebDev
+- [l10n] Improve Czech (cs-CZ) locale (#10968) @luborepka
+- [l10n] Improve Hebrew (he-IL) locale (#11056) @LironKiloma
+
+#### `@mui/x-data-grid-pro@6.18.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.2`.
+
+#### `@mui/x-data-grid-premium@6.18.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.2`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.2`
+
+- [l10n] Add Basque (eu) locale and improve Spanish (es-ES) locale (#10985) @lajtomekadimon
+- [l10n] Add Macedonian (mk) locale (#11155) @brsnik
+- [l10n] Improve German (de-DE) locale (#11104) @jho-vema
+- [pickers] Deprecate `defaultCalendarMonth` prop (#11138) @flaviendelangle
+- [pickers] Fix `DateCalendar` crashing when given an invalid value (#11101) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@6.18.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.2`.
+
+### Charts / `@mui/x-charts@6.18.2`
+
+- [charts] Fix `ChartsTooltip` component setup (#11157) @LukasTy
+- [charts] Remove outdated prop-types (#10998) @alexfauquette
+
+### Docs
+
+- [docs] Fix Pickers CustomComponents Incorrect naming of a component in example (#11003) @lhilgert9
+- [test] Skip flaky e2e test in webkit (#11115) @cherniavskii
+- [test] Wait for images to load (#11109) @cherniavskii
+
 ## 6.18.1
 
 _Nov 9, 2023_
