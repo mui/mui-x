@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useSlotProps } from '@mui/base/utils';
@@ -75,15 +76,19 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
             }
             return (
               <ChartsTooltipRow key={id} className={classes.row}>
-                <ChartsTooltipCell className={classes.markCell}>
-                  <ChartsTooltipMark ownerState={{ color }} boxShadow={1} />
+                <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+                  <ChartsTooltipMark
+                    ownerState={{ color }}
+                    boxShadow={1}
+                    className={classes.mark}
+                  />
                 </ChartsTooltipCell>
 
-                <ChartsTooltipCell className={classes.labelCell}>
+                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
                   {label ? <Typography>{label}</Typography> : null}
                 </ChartsTooltipCell>
 
-                <ChartsTooltipCell className={classes.valueCell}>
+                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
                   <Typography>{formattedValue}</Typography>
                 </ChartsTooltipCell>
               </ChartsTooltipRow>

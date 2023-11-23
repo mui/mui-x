@@ -10,6 +10,10 @@ export interface ChartsTooltipClasses {
   table: string;
   /** Styles applied to the row element. */
   row: string;
+  /** Styles applied to the cell element. */
+  cell: string;
+  /** Styles applied to the mark element. */
+  mark: string;
   /** Styles applied to the markCell element. */
   markCell: string;
   /** Styles applied to the labelCell element. */
@@ -18,7 +22,10 @@ export interface ChartsTooltipClasses {
   valueCell: string;
 }
 
-export type ChartsTooltipClassKey = keyof ChartsTooltipClasses;
+export type ChartsTooltipClassKey = keyof Omit<
+  ChartsTooltipClasses,
+  'markCell' | 'labelCell' | 'valueCell'
+>;
 
 export function getTooltipUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsTooltip', slot);
@@ -27,6 +34,8 @@ export const tooltipClasses: ChartsTooltipClasses = generateUtilityClasses('MuiC
   'root',
   'table',
   'row',
+  'cell',
+  'mark',
   'markCell',
   'labelCell',
   'valueCell',

@@ -75,6 +75,8 @@ const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] 
     root: ['root'],
     table: ['table'],
     row: ['row'],
+    cell: ['cell'],
+    mark: ['mark'],
     markCell: ['markCell'],
     labelCell: ['labelCell'],
     valueCell: ['valueCell'],
