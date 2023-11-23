@@ -12,7 +12,7 @@ import {
   ChartsTooltipPaper,
   ChartsTooltipRow,
 } from './ChartsTooltipTable';
-import { ChartsTooltipClasses } from './tooltipClasses';
+import { ChartsTooltipClasses } from './chartsTooltipClasses';
 
 export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
   /**

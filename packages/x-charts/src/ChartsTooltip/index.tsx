@@ -1,2 +1,2 @@
 export * from './ChartsTooltip';
-export * from './tooltipClasses';
+export * from './chartsTooltipClasses';

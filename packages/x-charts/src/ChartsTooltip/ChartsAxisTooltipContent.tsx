@@ -19,7 +19,7 @@ import {
   ChartsTooltipMark,
   ChartsTooltipRow,
 } from './ChartsTooltipTable';
-import { ChartsTooltipClasses } from './tooltipClasses';
+import { ChartsTooltipClasses } from './chartsTooltipClasses';
 
 export type ChartsAxisContentProps = {
   /**

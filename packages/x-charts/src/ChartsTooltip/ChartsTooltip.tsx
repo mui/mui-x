@@ -19,7 +19,7 @@ import {
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
-import { ChartsTooltipClasses, getTooltipUtilityClass } from './tooltipClasses';
+import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
 
 export interface ChartsTooltipSlots {
   popper?: React.ElementType<PopperProps>;
@@ -82,7 +82,7 @@ const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] 
     valueCell: ['valueCell'],
   };
 
-  return composeClasses(slots, getTooltipUtilityClass, classes);
+  return composeClasses(slots, getChartsTooltipUtilityClass, classes);
 };
 
 const ChartsTooltipRoot = styled(Popper, {

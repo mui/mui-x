@@ -24,19 +24,14 @@ export interface ChartsTooltipClasses {
 
 export type ChartsTooltipClassKey = keyof Omit<
   ChartsTooltipClasses,
+  // these classes are not used for styled components
   'markCell' | 'labelCell' | 'valueCell'
 >;
 
-export function getTooltipUtilityClass(slot: string) {
+export function getChartsTooltipUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsTooltip', slot);
 }
-export const tooltipClasses: ChartsTooltipClasses = generateUtilityClasses('MuiChartsTooltip', [
-  'root',
-  'table',
-  'row',
-  'cell',
-  'mark',
-  'markCell',
-  'labelCell',
-  'valueCell',
-]);
+export const chartsTooltipClasses: ChartsTooltipClasses = generateUtilityClasses(
+  'MuiChartsTooltip',
+  ['root', 'table', 'row', 'cell', 'mark', 'markCell', 'labelCell', 'valueCell'],
+);
