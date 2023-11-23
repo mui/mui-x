@@ -438,15 +438,18 @@ export const useGridVirtualScroller = () => {
   const getRows = (
     params: {
       rows?: GridRowEntry[];
-      rowIndexOffset?: number;
       position?: GridPinnedRowsPosition;
     } = {},
   ) => {
-    const { rowIndexOffset = 0 } = params;
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
       (hasBottomPinnedRows && params.position === 'bottom');
     const isPinnedSection = params.position !== undefined;
+
+    const rowIndexOffset = 
+      isPinnedSection && params.position === 'top' ? 0 :
+      isPinnedSection && params.position === 'bottom' ? pinnedRows.top.length + currentPage.rows.length :
+        pinnedRows.top.length;
 
     if (innerSize.width === 0) {
       return [];
@@ -593,20 +596,20 @@ export const useGridVirtualScroller = () => {
           key={id}
           row={model}
           rowId={id}
-          focusedCellColumnIndexNotInRange={focusedCellColumnIndexNotInRange}
-          isNotVisible={isRowNotVisible}
+          index={index}
           rowHeight={baseRowHeight}
           focusedCell={focusedCell}
           tabbableCell={tabbableCell}
+          focusedCellColumnIndexNotInRange={focusedCellColumnIndexNotInRange}
           renderedColumns={renderedColumnsWithFocusedCell}
           visibleColumns={visibleColumns}
           pinnedColumns={pinnedColumns}
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={index}
           dimensions={dimensions}
           isLastVisible={isLastVisible}
+          isNotVisible={isRowNotVisible}
           {...rowProps}
         />,
       );

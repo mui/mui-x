@@ -19,14 +19,10 @@ export function GridPinnedRows({ position, virtualScroller, ...other }: GridPinn
   const classes = useUtilityClasses();
   const apiRef = useGridPrivateApiContext();
 
-  const mainRowsLength =
-    virtualScroller.renderContext.lastRowIndex - virtualScroller.renderContext.firstRowIndex;
-
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedRows = virtualScroller.getRows({
     position,
     rows: pinnedRowsData[position],
-    rowIndexOffset: position === 'top' ? 0 : pinnedRowsData.top.length + mainRowsLength,
   });
 
   return (
