@@ -6,6 +6,10 @@ import {
 export interface ChartsTooltipClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the table element. */
+  table: string;
+  /** Styles applied to the row element. */
+  row: string;
   /** Styles applied to the markCell element. */
   markCell: string;
   /** Styles applied to the labelCell element. */
@@ -21,6 +25,8 @@ export function getTooltipUtilityClass(slot: string) {
 }
 export const tooltipClasses: ChartsTooltipClasses = generateUtilityClasses('MuiChartsTooltip', [
   'root',
+  'table',
+  'row',
   'markCell',
   'labelCell',
   'valueCell',

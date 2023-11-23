@@ -53,9 +53,9 @@ export function DefaultChartsItemContent<T extends ChartSeriesType = ChartSeries
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
-      <ChartsTooltipTable>
+      <ChartsTooltipTable className={classes.table}>
         <tbody>
-          <ChartsTooltipRow>
+          <ChartsTooltipRow className={classes.row}>
             <ChartsTooltipCell className={classes.markCell}>
               <ChartsTooltipMark ownerState={{ color }} />
             </ChartsTooltipCell>

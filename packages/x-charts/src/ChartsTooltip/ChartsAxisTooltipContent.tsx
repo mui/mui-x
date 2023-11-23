@@ -57,7 +57,7 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
   const axisFormatter = axis.valueFormatter ?? ((v) => v.toLocaleString());
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
-      <ChartsTooltipTable>
+      <ChartsTooltipTable className={classes.table}>
         {axisValue != null && !axis.hideTooltip && (
           <thead>
             <ChartsTooltipRow>
@@ -74,7 +74,7 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
               return null;
             }
             return (
-              <ChartsTooltipRow key={id}>
+              <ChartsTooltipRow key={id} className={classes.row}>
                 <ChartsTooltipCell className={classes.markCell}>
                   <ChartsTooltipMark ownerState={{ color }} boxShadow={1} />
                 </ChartsTooltipCell>

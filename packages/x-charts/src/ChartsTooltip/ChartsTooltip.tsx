@@ -73,6 +73,8 @@ const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] 
 
   const slots = {
     root: ['root'],
+    table: ['table'],
+    row: ['row'],
     markCell: ['markCell'],
     labelCell: ['labelCell'],
     valueCell: ['valueCell'],
