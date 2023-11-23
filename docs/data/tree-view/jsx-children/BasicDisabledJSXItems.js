@@ -26,7 +26,11 @@ export default function BasicDisabledJSXItems() {
       </SimpleTreeItem>
       <SimpleTreeItem nodeId="tree-view" label="Tree View">
         <SimpleTreeItem nodeId="tree-view-community" label="@mui/x-tree-view" />
-        <SimpleTreeItem nodeId="tree-view-pro" label="@mui/x-tree-view-pro" />
+        <SimpleTreeItem
+          nodeId="tree-view-pro"
+          label="@mui/x-tree-view-pro"
+          disabled
+        />
       </SimpleTreeItem>
       <SimpleTreeItem nodeId="scheduler" label="Sheduler" disabled>
         <SimpleTreeItem nodeId="scheduler-community" label="@mui/x-scheduler" />
