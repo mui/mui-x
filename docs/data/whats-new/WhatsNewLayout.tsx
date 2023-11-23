@@ -44,7 +44,7 @@ const blogs: Blog[] = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#customization-playgrounds',
       },
       {
-        title: 'DataGrid Column Autosizing',
+        title: 'DataGrid column autosizing',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
       },
       {
