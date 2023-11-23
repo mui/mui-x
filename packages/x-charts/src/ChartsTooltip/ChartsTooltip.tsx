@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { Popper, PopperProps } from '@mui/base/Popper';
 import { NoSsr } from '@mui/base/NoSsr';
 import { useSlotProps } from '@mui/base/utils';
@@ -10,7 +10,12 @@ import {
   InteractionContext,
   ItemInteractionData,
 } from '../context/InteractionProvider';
-import { generateVirtualElement, useMouseTracker, getTootipHasData, TriggerOptions } from './utils';
+import {
+  generateVirtualElement,
+  useMouseTracker,
+  getTooltipHasData,
+  TriggerOptions,
+} from './utils';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
@@ -95,7 +100,11 @@ const ChartsTooltipRoot = styled(Popper, {
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
 function ChartsTooltip(props: ChartsTooltipProps) {
-  const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = props;
+  const themeProps = useThemeProps({
+    props,
+    name: 'MuiChartsTooltip',
+  });
+  const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = themeProps;
 
   const mousePosition = useMouseTracker();
 
@@ -103,10 +112,10 @@ function ChartsTooltip(props: ChartsTooltipProps) {
 
   const displayedData = trigger === 'item' ? item : axis;
 
-  const tooltipHasData = getTootipHasData(trigger, displayedData);
+  const tooltipHasData = getTooltipHasData(trigger, displayedData);
   const popperOpen = mousePosition !== null && tooltipHasData;
 
-  const classes = useUtilityClasses({ classes: props.classes });
+  const classes = useUtilityClasses({ classes: themeProps.classes });
 
   const PopperComponent = slots?.popper ?? ChartsTooltipRoot;
   const popperProps = useSlotProps({
