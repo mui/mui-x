@@ -2266,7 +2266,9 @@ describe('<SimpleTreeItem />', () => {
         <div ref={ref}>MOCK CONTENT COMPONENT</div>
       ));
       const { container } = render(
-        <SimpleTreeItem nodeId="one" ContentComponent={mockContent as any} />,
+        <SimpleTreeView>
+          <SimpleTreeItem nodeId="one" ContentComponent={mockContent as any} />
+        </SimpleTreeView>,
       );
       expect(container.textContent).to.equal('MOCK CONTENT COMPONENT');
     });
@@ -2276,11 +2278,13 @@ describe('<SimpleTreeItem />', () => {
         <div ref={ref}>{props.customProp}</div>
       ));
       const { container } = render(
-        <SimpleTreeItem
-          nodeId="one"
-          ContentComponent={mockContent as any}
-          ContentProps={{ customProp: 'ABCDEF' } as any}
-        />,
+        <SimpleTreeView>
+          <SimpleTreeItem
+            nodeId="one"
+            ContentComponent={mockContent as any}
+            ContentProps={{ customProp: 'ABCDEF' } as any}
+          />
+        </SimpleTreeView>,
       );
       expect(container.textContent).to.equal('ABCDEF');
     });

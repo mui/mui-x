@@ -39,6 +39,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
   const updateFirstCharMap = useEventCallback(
     (callback: (firstCharMap: TreeViewFirstCharMap) => TreeViewFirstCharMap) => {
+      hasFirstCharMapBeenUpdatedImperatively.current = true;
       firstCharMap.current = callback(firstCharMap.current);
     },
   );

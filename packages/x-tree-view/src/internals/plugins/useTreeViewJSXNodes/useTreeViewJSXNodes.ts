@@ -2,6 +2,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewNode, TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewJSXNodesSignature } from './useTreeViewJSXNodes.types';
+import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 
 export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> = ({
   instance,
@@ -20,6 +21,7 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
         nodeMap: newMap,
       };
     });
+    publishTreeViewEvent(instance, 'removeNode', { id: nodeId });
   });
 
   const mapFirstCharFromJSX = useEventCallback((nodeId: string, firstChar: string) => {
