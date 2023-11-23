@@ -1,0 +1,14 @@
+<SimpleTreeView
+    defaultCollapseIcon={<ExpandMoreIcon />}
+    defaultExpandIcon={<ChevronRightIcon />}
+>
+  <SimpleTreeItem nodeId="grid" label="Data Grid">
+    <SimpleTreeItem nodeId="grid-community" label="@mui/x-data-grid" />
+    <SimpleTreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
+    <SimpleTreeItem nodeId="grid-premium" label="@mui/x-data-grid-premium" />
+  </SimpleTreeItem>
+  <SimpleTreeItem nodeId="pickers" label="Date and Time Pickers">
+    <SimpleTreeItem nodeId="pickers-community" label="@mui/x-date-pickers" />
+    <SimpleTreeItem nodeId="pickers-pro" label="@mui/x-date-pickers-pro" />
+  </SimpleTreeItem>
+</SimpleTreeView>

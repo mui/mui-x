@@ -15,31 +15,17 @@ Tree views can be used to represent a file system navigator displaying folders a
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
-## Basic tree view
+## Available components
 
-{{"demo": "FileSystemNavigator.js"}}
+The Tree View exists in two versions:
 
-## ContentComponent prop
+1. A `SimpleTreeView` component which takes JSX children
 
-You can use the `ContentComponent` prop and the `useTreeItem` hook to further customize the behavior of the TreeItem.
+{{"demo": "BasicJSXTreeView.js"}}
 
-Such as limiting expansion to clicking the expand icon:
+2. A `TreeView` component which takes a `items` prop
 
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
-
-Or increasing the width of the item state indicator to be full-width:
-
-{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
-
-## Customization
-
-### Custom icons, border and animation
-
-{{"demo": "CustomizedTreeView.js"}}
-
-### Gmail clone
-
-{{"demo": "GmailTreeView.js"}}
+{{"demo": "BasicTreeView.js"}}
 
 ## Accessibility
 

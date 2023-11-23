@@ -457,6 +457,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-tree-view/items' },
       { pathname: '/x/react-tree-view/selection' },
       { pathname: '/x/react-tree-view/expansion' },
+      { pathname: '/x/react-tree-view/customization' },
       {
         pathname: '/x/api/tree-view-group',
         title: 'API Reference',
