@@ -4,7 +4,7 @@ title: Charts - Styling
 
 # Charts - Styling
 
-<p class="description">This page groups topics about charts customistion.</p>
+<p class="description">This page groups topics about charts customization.</p>
 
 ## Colors
 

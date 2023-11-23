@@ -8,13 +8,13 @@ packageName: '@mui/x-date-pickers'
 
 # Digital Clock
 
-<p class="description">The Digital Clock components let the user select a time without any input or popper / modal.</p>
+<p class="description">The Digital Clock lets the user select a time without any input or popper / modal.</p>
 
 ## Description
 
 There are two component versions for different cases. The `DigitalClock` handles selection of a single time instance in one step, just like a `select` component. The `MultiSectionDigitalClock` allows selecting time using separate sections for separate views.
 
-The `DigitalClock` is more appropriate when there is a limited amount of time options needed, while the `MultiSectionDigitalClock` is suited for cases when a more granular time selection is needed.
+The `DigitalClock` is more appropriate when there is a limited number of time options needed, while the `MultiSectionDigitalClock` is suited for cases when a more granular time selection is needed.
 
 ## Basic usage
 
