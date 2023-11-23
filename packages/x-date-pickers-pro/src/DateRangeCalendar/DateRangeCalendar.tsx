@@ -188,7 +188,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     shouldDisableDate,
     reduceAnimations,
     onMonthChange,
-    defaultCalendarMonth,
     rangePosition: rangePositionProp,
     defaultRangePosition: inDefaultRangePosition,
     onRangePositionChange: inOnRangePositionChange,
@@ -324,7 +323,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   } = useCalendarState<TDate>({
     value: value[0] || value[1],
     referenceDate,
-    defaultCalendarMonth,
     disableFuture,
     disablePast,
     disableSwitchToMonthOnDayFocus: true,
@@ -643,10 +641,6 @@ DateRangeCalendar.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={[null, null]}`.
-   */
-  defaultCalendarMonth: PropTypes.any,
-  /**
    * The initial position in the edited date range.
    * Used when the component is not controlled.
    * @default 'start'
@@ -799,7 +793,7 @@ DateRangeCalendar.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
