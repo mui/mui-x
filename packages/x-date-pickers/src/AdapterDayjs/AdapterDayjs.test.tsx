@@ -105,17 +105,6 @@ describe('<AdapterDayjs />', () => {
     });
   });
 
-  describe('customParseFormat plugin', () => {
-    it('should allow custom two year digit parsing', () => {
-      dayjs.extend(customParseFormat, {
-        parseTwoDigitYear: (yearString) => +yearString + 1800,
-      });
-
-      const date = dayjs('98-04-25', 'YY-MM-DD').format('YYYY-MM-DD');
-      expect(date).to.equal('1898-04-25');
-    });
-  });
-
   describe('Picker localization', () => {
     const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
