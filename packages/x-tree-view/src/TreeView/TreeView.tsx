@@ -193,15 +193,8 @@ TreeView.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      children: PropTypes.arrayOf(PropTypes.object),
-      disabled: PropTypes.bool,
-      id: PropTypes.string,
-      label: PropTypes.string.isRequired,
-      nodeId: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  isItemDisabled: PropTypes.func,
+  items: PropTypes.array.isRequired,
   /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false

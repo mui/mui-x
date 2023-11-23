@@ -12,6 +12,28 @@ import {
 } from '@mui-internal/test-utils';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { SimpleTreeItem, treeItemClasses as classes } from '@mui/x-tree-view/SimpleTreeItem';
+import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
+import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
+
+const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<any> = {
+  instance: {
+    isNodeExpandable: () => false,
+    isNodeExpanded: () => false,
+    isNodeFocused: () => false,
+    isNodeSelected: () => false,
+    isNodeDisabled: () => false,
+    getTreeItemId: () => '',
+    mapFirstCharFromJSX: () => {},
+  } as any,
+  multiSelect: false,
+  disabledItemsFocusable: false,
+  icons: {
+    defaultCollapseIcon: null,
+    defaultExpandIcon: null,
+    defaultParentIcon: null,
+    defaultEndIcon: null,
+  },
+};
 
 describe('<SimpleTreeItem />', () => {
   const { render } = createRenderer();
@@ -19,10 +41,24 @@ describe('<SimpleTreeItem />', () => {
   describeConformance(<SimpleTreeItem nodeId="one" label="one" />, () => ({
     classes,
     inheritComponent: 'li',
-    render,
+    wrapMount: (mount) => (node: React.ReactNode) => {
+      const wrapper = mount(
+        <TreeViewContext.Provider value={TEST_TREE_VIEW_CONTEXT_VALUE}>
+          {node}
+        </TreeViewContext.Provider>,
+      );
+      return wrapper.childAt(0);
+    },
+    render: (node) => {
+      return render(
+        <TreeViewContext.Provider value={TEST_TREE_VIEW_CONTEXT_VALUE}>
+          {node}
+        </TreeViewContext.Provider>,
+      );
+    },
     muiName: 'MuiTreeItem',
     refInstanceof: window.HTMLLIElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['reactTestRenderer', 'componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describe('warnings', () => {
