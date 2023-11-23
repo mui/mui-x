@@ -145,8 +145,8 @@ MobileDatePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The calendar will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fix number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
