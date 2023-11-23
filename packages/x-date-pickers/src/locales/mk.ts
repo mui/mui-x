@@ -3,7 +3,7 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
-const mkMKPickers: PickersLocaleText<any> = {
+const mkPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Предходен месец',
   nextMonth: 'Следен месец',
@@ -76,4 +76,4 @@ const mkMKPickers: PickersLocaleText<any> = {
   fieldMeridiemPlaceholder: () => 'aa',
 };
 
-export const mkMK = getPickersLocalization(mkMKPickers);
+export const mk = getPickersLocalization(mkPickers);
