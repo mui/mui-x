@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 23, 2023_
 
-We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Arabic (ar-SD), Czech (cs-CZ), and Hebrew (he-IL) locales on Data Grid
 - 🌍 Add Basque (eu) and Macedonian (mk) locales on Pickers
@@ -52,7 +52,7 @@ Same changes as in `@mui/x-date-pickers@6.18.2`.
 
 ### Docs
 
-- [docs] Fix Pickers CustomComponents Incorrect naming of a component in example (#11003) @lhilgert9
+- [docs] Fix incoherent naming of a component in `Custom slots and subcomponents` page (#11003) @lhilgert9
 - [test] Skip flaky e2e test in webkit (#11115) @cherniavskii
 - [test] Wait for images to load (#11109) @cherniavskii
 
