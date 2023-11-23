@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import defaultDayjs, { Dayjs } from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import {
@@ -14,7 +14,6 @@ import {
 } from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
-defaultDayjs.extend(customParseFormatPlugin);
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(isBetweenPlugin);
 
@@ -159,6 +158,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     this.formats = { ...defaultFormats, ...formats };
 
     defaultDayjs.extend(weekOfYear);
+    defaultDayjs.extend(customParseFormat);
   }
 
   private setLocaleToValue = (value: Dayjs) => {
