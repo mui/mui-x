@@ -1,5 +1,6 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
@@ -17,7 +18,6 @@ import 'dayjs/locale/de';
 // We import the plugins here just to have the typing
 import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 describe('<AdapterDayjs />', () => {
   const commonParams = {
