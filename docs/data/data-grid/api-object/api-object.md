@@ -33,10 +33,10 @@ You don't need to initialize the API object using `useGridApiRef` to be able to 
 
 {{"demo": "UseGridApiContext.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Outside the Grid
+### Outside the Data Grid
 
-When using the API object outside the Grid components, you need to initialize it using the `useGridApiRef` hook.
-You can then pass it to the Grid's `apiRef` prop:
+When using the API object outside the Data Grid components, you need to initialize it using the `useGridApiRef` hook.
+You can then pass it to the Data Grid's `apiRef` prop:
 
 ```tsx
 function CustomDataGrid(props) {

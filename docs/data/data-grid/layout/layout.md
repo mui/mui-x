@@ -3,9 +3,9 @@
 <p class="description">The data grid offers multiple layout modes.</p>
 
 :::error
-By default, the Grid has **no intrinsic dimensions**.
+By default, the Data Grid has **no intrinsic dimensions**.
 Instead, it takes up the space given by its parent.
-The Grid will raise an error in the console if its container has no intrinsic dimensions.
+The Data Grid will raise an error in the console if its container has no intrinsic dimensions.
 :::
 
 ## Percentage dimensions

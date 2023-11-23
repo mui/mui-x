@@ -27,7 +27,7 @@ You should either provide an array of:
 Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
 
 :::warning
-You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Grid according to the `pageSize`.
+You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.
 :::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
@@ -129,10 +129,10 @@ You can customize the rendering of the pagination in the footer following [the c
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the Grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}

@@ -40,7 +40,7 @@ The column pinning feature can be completely disabled with `disableColumnPinning
 
 :::warning
 You may encounter issues if the sum of the widths of the pinned columns is larger than the width of the Grid.
-Make sure that the Grid can properly accommodate these columns at a minimum.
+Make sure that the Data Grid can properly accommodate these columns at a minimum.
 :::
 
 ## Controlling the pinned columns
