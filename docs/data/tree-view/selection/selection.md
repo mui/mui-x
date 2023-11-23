@@ -8,7 +8,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Tree View - Selection
 
-<p class="description">Select items.</p>
+<p class="description">Handle how the users can select items.</p>
 
 ## Multi selection
 

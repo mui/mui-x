@@ -27,7 +27,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 
 export default function BasicTreeView() {
   return (
-    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ height: 168, flexGrow: 1, maxWidth: 400 }}>
       <TreeView
         items={MUI_X_PRODUCTS}
         defaultCollapseIcon={<ExpandMoreIcon />}

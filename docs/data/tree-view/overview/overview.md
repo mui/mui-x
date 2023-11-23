@@ -9,7 +9,7 @@ packageName: '@mui/x-tree-view'
 
 # Tree View
 
-<p class="description">A tree view widget presents a hierarchical list.</p>
+<p class="description">A Tree View widget presents a hierarchical list.</p>
 
 Tree views can be used to represent a file system navigator displaying folders and files, an item representing a folder can be expanded to reveal the contents of the folder, which may be files, folders, or both.
 
@@ -19,11 +19,24 @@ Tree views can be used to represent a file system navigator displaying folders a
 
 The Tree View exists in two versions:
 
-1. A `SimpleTreeView` component which takes JSX children
+### SimpleTreeView
+
+The `SimpleTreeView` component accepts its items as JSX children.
+It is designed for simple use-cases where the items are hardcoded.
 
 {{"demo": "BasicJSXTreeView.js"}}
 
-2. A `TreeView` component which takes a `items` prop
+:::warning
+Most new advanced features won't be available on this component.
+If you are waiting for features like editing or virtualization, you should probably use `TreeView` instead.
+
+Throughout the documentation, all the features not available for this component are marked as such at the beginning of the doc pages.
+:::
+
+### TreeView
+
+The `TreeView` component accepts its items takes with the `items` prop.
+It is designed for more advanced use-cases where the items are dynamically loaded from a datasource.
 
 {{"demo": "BasicTreeView.js"}}
 

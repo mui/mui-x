@@ -8,7 +8,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Tree View - Expansion
 
-<p class="description">Expand items.</p>
+<p class="description">Handle how the users can expand items.</p>
 
 ## Controlled expansion
 

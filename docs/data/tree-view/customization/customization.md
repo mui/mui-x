@@ -8,7 +8,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Tree View - Customization
 
-<p class="description">TODO.</p>
+<p class="description">Customize the rendering of your Tree View.</p>
 
 ## Custom icons, border and animation
 
