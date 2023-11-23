@@ -1,7 +1,9 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
+import Switch from '@mui/material/Switch';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Box from '@mui/material/Box';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 
@@ -48,15 +50,35 @@ const MUI_X_PRODUCTS: MuiProduct[] = [
 
 const isItemDisabled = (item: MuiProduct) => !!item.disabled;
 
-export default function DisabledItem() {
+export default function DisabledItemsFocusable() {
+  const [disabledItemsFocusable, setDisabledItemsFocusable] = React.useState(false);
+  const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDisabledItemsFocusable(event.target.checked);
+  };
+
   return (
-    <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
-      <TreeView
-        items={MUI_X_PRODUCTS}
-        isItemDisabled={isItemDisabled}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      />
+    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
+      <Box sx={{ mb: 1 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={disabledItemsFocusable}
+              onChange={handleToggle}
+              name="disabledItemsFocusable"
+            />
+          }
+          label="Allow focusing on disabled items"
+        />
+      </Box>
+      <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
+        <TreeView
+          items={MUI_X_PRODUCTS}
+          isItemDisabled={isItemDisabled}
+          disabledItemsFocusable={disabledItemsFocusable}
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+        />
+      </Box>
     </Box>
   );
 }

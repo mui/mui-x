@@ -19,48 +19,6 @@ Tree views can be used to represent a file system navigator displaying folders a
 
 {{"demo": "FileSystemNavigator.js"}}
 
-## Multi-selection
-
-Tree views also support multi-selection.
-
-{{"demo": "MultiSelectTreeView.js"}}
-
-## Controlled tree view
-
-The tree view also offers a controlled API.
-
-:::info
-
-- A component is **controlled** when it's managed by its parent using props.
-- A component is **uncontrolled** when it's managed by its own local state.
-
-Learn more about controlled and uncontrolled components in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
-:::
-
-{{"demo": "ControlledTreeView.js"}}
-
-## Rich object
-
-While the `TreeView`/`TreeItem` component API maximizes flexibility, an extra step is needed to handle a rich object.
-
-Let's consider a data variable with the following shape, recursion can be used to handle it.
-
-```js
-const data = {
-  id: 'root',
-  name: 'Parent',
-  children: [
-    {
-      id: '1',
-      name: 'Child - 1',
-    },
-    // …
-  ],
-};
-```
-
-{{"demo": "RichObjectTreeView.js"}}
-
 ## ContentComponent prop
 
 You can use the `ContentComponent` prop and the `useTreeItem` hook to further customize the behavior of the TreeItem.
@@ -82,30 +40,6 @@ Or increasing the width of the item state indicator to be full-width:
 ### Gmail clone
 
 {{"demo": "GmailTreeView.js"}}
-
-## Disabled tree items
-
-{{"demo": "DisabledTreeItems.js"}}
-
-The behavior of disabled tree items depends on the `disabledItemsFocusable` prop.
-
-If it is false:
-
-- Arrow keys will not focus disabled items and, the next non-disabled item will be focused.
-- Typing the first character of a disabled item's label will not focus the item.
-- Mouse or keyboard interaction will not expand/collapse disabled items.
-- Mouse or keyboard interaction will not select disabled items.
-- Shift + arrow keys will skip disabled items and, the next non-disabled item will be selected.
-- Programmatic focus will not focus disabled items.
-
-If it is true:
-
-- Arrow keys will focus disabled items.
-- Typing the first character of a disabled item's label will focus the item.
-- Mouse or keyboard interaction will not expand/collapse disabled items.
-- Mouse or keyboard interaction will not select disabled items.
-- Shift + arrow keys will not skip disabled items but, the disabled item will not be selected.
-- Programmatic focus will focus disabled items.
 
 ## Accessibility
 

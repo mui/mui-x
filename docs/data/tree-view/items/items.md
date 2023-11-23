@@ -27,6 +27,8 @@ Otherwise, the Tree View will re-generate its entire structure.
 
 ## Disabled items
 
+### Set disabled items
+
 You can disable some of the items using the `isItemDisabled` prop:
 
 ```tsx
@@ -45,3 +47,27 @@ Otherwise, the Tree View will re-generate its entire structure.
 
 It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
+
+### Interact with disabled items
+
+The behavior of disabled tree items depends on the `disabledItemsFocusable` prop.
+
+If it is false:
+
+- Arrow keys will not focus disabled items and, the next non-disabled item will be focused.
+- Typing the first character of a disabled item's label will not focus the item.
+- Mouse or keyboard interaction will not expand/collapse disabled items.
+- Mouse or keyboard interaction will not select disabled items.
+- Shift + arrow keys will skip disabled items and, the next non-disabled item will be selected.
+- Programmatic focus will not focus disabled items.
+
+If it is true:
+
+- Arrow keys will focus disabled items.
+- Typing the first character of a disabled item's label will focus the item.
+- Mouse or keyboard interaction will not expand/collapse disabled items.
+- Mouse or keyboard interaction will not select disabled items.
+- Shift + arrow keys will not skip disabled items but, the disabled item will not be selected.
+- Programmatic focus will focus disabled items.
+
+{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}

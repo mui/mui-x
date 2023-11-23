@@ -1,13 +1,10 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Box from '@mui/material/Box';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { TreeView, TreeViewBaseItem } from '@mui/x-tree-view';
 
-type MuiProduct = TreeViewBaseItem<{ disabled?: boolean }>;
-
-const MUI_X_PRODUCTS: MuiProduct[] = [
+const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
     nodeId: 'grid',
     label: 'Data Grid',
@@ -33,27 +30,16 @@ const MUI_X_PRODUCTS: MuiProduct[] = [
   {
     nodeId: 'tree-view',
     label: 'Tree View',
-    children: [
-      { nodeId: 'tree-view-community', label: '@mui/x-tree-view' },
-      { nodeId: 'tree-view-pro', label: '@mui/x-tree-view-pro', disabled: true },
-    ],
-  },
-  {
-    nodeId: 'scheduler',
-    label: 'Scheduler',
-    disabled: true,
-    children: [{ nodeId: 'scheduler-community', label: '@mui/x-scheduler' }],
+    children: [{ nodeId: 'tree-view-community', label: '@mui/x-tree-view' }],
   },
 ];
 
-const isItemDisabled = (item: MuiProduct) => !!item.disabled;
-
-export default function DisabledItem() {
+export default function MultiSelectTreeView() {
   return (
-    <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
       <TreeView
+        multiSelect
         items={MUI_X_PRODUCTS}
-        isItemDisabled={isItemDisabled}
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
       />

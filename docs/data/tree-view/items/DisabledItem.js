@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Box from '@mui/material/Box';
 
 import { TreeView } from '@mui/x-tree-view/TreeView';
 
@@ -47,12 +48,13 @@ const isItemDisabled = (item) => !!item.disabled;
 
 export default function DisabledItem() {
   return (
-    <TreeView
-      items={MUI_X_PRODUCTS}
-      isItemDisabled={isItemDisabled}
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ height: 312, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-    />
+    <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
+      <TreeView
+        items={MUI_X_PRODUCTS}
+        isItemDisabled={isItemDisabled}
+        defaultCollapseIcon={<ExpandMoreIcon />}
+        defaultExpandIcon={<ChevronRightIcon />}
+      />
+    </Box>
   );
 }
