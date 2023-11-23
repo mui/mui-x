@@ -107,7 +107,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'القائمة',
   columnMenuShowColumns: 'إظهار الأعمدة',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'إدارة الأعمدة',
   columnMenuFilter: 'المرشِح',
   columnMenuHideColumn: 'إخفاء',
   columnMenuUnsort: 'الغاء الفرز',
