@@ -35,15 +35,14 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     name: 'MuiTimeField',
   });
 
-  const { slots, slotProps, components, componentsProps, InputProps, inputProps, ...other } =
-    themeProps;
+  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? MuiTextField;
   const { inputRef: externalInputRef, ...textFieldProps }: TimeFieldProps<TDate> = useSlotProps({
     elementType: TextField,
-    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
@@ -78,8 +77,6 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     InputProps: fieldProps.InputProps,
     slots,
     slotProps,
-    components,
-    componentsProps,
   });
 
   return (
@@ -121,18 +118,6 @@ TimeField.propTypes = {
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   component: PropTypes.elementType,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -316,14 +301,6 @@ TimeField.propTypes = {
     }),
   ]),
   /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
-  /**
    * Disable specific time.
    * @template TDate
    * @param {TDate} value The value to check.
@@ -373,7 +350,7 @@ TimeField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

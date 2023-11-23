@@ -23,7 +23,7 @@ export function useNextMonthDisabled<TDate>(
 ) {
   const utils = useUtils<TDate>();
   return React.useMemo(() => {
-    const now = utils.dateWithTimezone(undefined, timezone);
+    const now = utils.date(undefined, timezone);
     const lastEnabledMonth = utils.startOfMonth(
       disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
     );
@@ -42,7 +42,7 @@ export function usePreviousMonthDisabled<TDate>(
   const utils = useUtils<TDate>();
 
   return React.useMemo(() => {
-    const now = utils.dateWithTimezone(undefined, timezone);
+    const now = utils.date(undefined, timezone);
     const firstEnabledMonth = utils.startOfMonth(
       disablePast && utils.isAfter(now, minDate) ? now : minDate,
     );

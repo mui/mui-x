@@ -18,6 +18,7 @@ import {
   GridRowId,
   GridCellMode,
   GridEditCellProps,
+  GridActionsColDef,
 } from '../../models';
 import {
   GridRenderEditCellParams,
@@ -585,9 +586,13 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
 
   const { cellMode, hasFocus, isEditable, value, formattedValue } = cellParamsWithAPI;
 
-  const managesOwnFocus = column.type === 'actions';
+  const canManageOwnFocus =
+    column.type === 'actions' &&
+    (column as GridActionsColDef)
+      .getActions?.(apiRef.current.getRowParams(rowId))
+      .some((action) => !action.props.disabled);
   const tabIndex =
-    (cellMode === 'view' || !isEditable) && !managesOwnFocus ? cellParamsWithAPI.tabIndex : -1;
+    (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParamsWithAPI.tabIndex : -1;
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
@@ -772,7 +777,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
     );
   }
 
-  if (React.isValidElement(children) && managesOwnFocus) {
+  if (React.isValidElement(children) && canManageOwnFocus) {
     children = React.cloneElement<any>(children, { focusElementRef });
   }
 

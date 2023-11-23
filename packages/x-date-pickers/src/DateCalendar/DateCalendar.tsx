@@ -114,7 +114,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     referenceDate: referenceDateProp,
     disableFuture,
     disablePast,
-    defaultCalendarMonth,
     onChange,
     onYearChange,
     onMonthChange,
@@ -136,8 +135,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     showDaysOutsideCurrentMonth,
     fixedWeekNumber,
     dayOfWeekFormatter,
-    components,
-    componentsProps,
     slots,
     slotProps,
     loading,
@@ -180,7 +177,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     onMonthSwitchingAnimationEnd,
   } = useCalendarState({
     value,
-    defaultCalendarMonth,
     referenceDate: referenceDateProp,
     reduceAnimations,
     onMonthChange,
@@ -199,11 +195,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   const gridLabelId = `${id}-grid-label`;
   const hasFocus = focusedView !== null;
 
-  const CalendarHeader =
-    slots?.calendarHeader ?? components?.CalendarHeader ?? PickersCalendarHeader;
+  const CalendarHeader = slots?.calendarHeader ?? PickersCalendarHeader;
   const calendarHeaderProps: PickersCalendarHeaderProps<TDate> = useSlotProps({
     elementType: CalendarHeader,
-    externalSlotProps: slotProps?.calendarHeader ?? componentsProps?.calendarHeader,
+    externalSlotProps: slotProps?.calendarHeader,
     additionalProps: {
       views,
       view,
@@ -392,8 +387,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
-              components={components}
-              componentsProps={componentsProps}
               slots={slots}
               slotProps={slotProps}
               loading={loading}
@@ -421,29 +414,12 @@ DateCalendar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter.  Deprecated, will be removed in v7: Use `date` instead.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
    * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
-  /**
-   * Default calendar month displayed when `value` and `defaultValue` are empty.
-   */
-  defaultCalendarMonth: PropTypes.any,
   /**
    * The default selected value.
    * Used when the component is not controlled.
@@ -618,7 +594,7 @@ DateCalendar.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

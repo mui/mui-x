@@ -1,0 +1,9 @@
+<DateCalendar
+  defaultValue={dayjs('2022-04-17')}
+  slotProps={{ calendarHeader: { format: 'MM/YYYY' } }}
+/>
+<DateRangeCalendar
+  defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
+  calendars={2}
+  slotProps={{ calendarHeader: { format: 'MM/YYYY' } }}
+/>

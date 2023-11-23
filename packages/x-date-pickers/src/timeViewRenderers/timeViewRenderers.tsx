@@ -37,12 +37,9 @@ export const renderTimeViewClock = <TDate extends unknown>({
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
   ampmInClock,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -70,12 +67,9 @@ export const renderTimeViewClock = <TDate extends unknown>({
     minTime={minTime}
     maxTime={maxTime}
     shouldDisableTime={shouldDisableTime}
-    shouldDisableClock={shouldDisableClock}
     minutesStep={minutesStep}
     ampm={ampm}
     ampmInClock={ampmInClock}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     readOnly={readOnly}
@@ -105,11 +99,8 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -141,11 +132,8 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
     minTime={minTime}
     maxTime={maxTime}
     shouldDisableTime={shouldDisableTime}
-    shouldDisableClock={shouldDisableClock}
     minutesStep={minutesStep}
     ampm={ampm}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     readOnly={readOnly}
@@ -176,11 +164,8 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -209,11 +194,8 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
     minTime={minTime}
     maxTime={maxTime}
     shouldDisableTime={shouldDisableTime}
-    shouldDisableClock={shouldDisableClock}
     minutesStep={minutesStep}
     ampm={ampm}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     readOnly={readOnly}

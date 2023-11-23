@@ -5,6 +5,7 @@ export * from './deDE';
 export * from './elGR';
 export * from './enUS';
 export * from './esES';
+export * from './eu';
 export * from './faIR';
 export * from './fiFI';
 export * from './frFR';

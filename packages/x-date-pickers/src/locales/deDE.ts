@@ -68,7 +68,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${utils.format(value, 'fullTime')}`
       : 'Uhrzeit auswählen',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Wert leeren',
 
   // Table labels
   timeTableLabel: 'Uhrzeit auswählen',
@@ -78,7 +78,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'J'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'TT',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',

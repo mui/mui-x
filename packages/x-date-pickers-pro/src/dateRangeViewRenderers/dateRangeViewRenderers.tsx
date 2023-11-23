@@ -27,14 +27,11 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   shouldDisableDate,
   reduceAnimations,
   onMonthChange,
-  defaultCalendarMonth,
   rangePosition,
   defaultRangePosition,
   onRangePositionChange,
   calendars,
   currentMonthCalendarPosition,
-  components,
-  componentsProps,
   slots,
   slotProps,
   loading,
@@ -66,14 +63,11 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     shouldDisableDate={shouldDisableDate}
     reduceAnimations={reduceAnimations}
     onMonthChange={onMonthChange}
-    defaultCalendarMonth={defaultCalendarMonth}
     rangePosition={rangePosition}
     defaultRangePosition={defaultRangePosition}
     onRangePositionChange={onRangePositionChange}
     calendars={calendars}
     currentMonthCalendarPosition={currentMonthCalendarPosition}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     loading={loading}

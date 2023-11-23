@@ -1,6 +1,6 @@
 {
   "props": {
-    "axisId": { "type": { "name": "string" }, "required": true },
+    "axisId": { "type": { "name": "string" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disableLine": { "type": { "name": "bool" } },
     "disableTicks": { "type": { "name": "bool" } },

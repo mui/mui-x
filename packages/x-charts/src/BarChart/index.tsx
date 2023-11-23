@@ -1,2 +1,2 @@
-export { BarPlot } from './BarPlot';
-export { BarChart } from './BarChart';
+export * from './BarPlot';
+export * from './BarChart';

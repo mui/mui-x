@@ -101,30 +101,6 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
-        const pathsToNotWaitForFlagCDN = [
-          '/docs-data-grid-filtering/HeaderFilteringDataGridPro', // No flag column
-          '/docs-data-grid-filtering/CustomHeaderFilterDataGridPro', // No flag column
-          '/docs-data-grid-filtering/CustomHeaderFilterSingleDataGridPro', // No flag column
-          '/docs-data-grid-filtering/SimpleHeaderFilteringDataGridPro', // No flag column
-          '/docs-data-grid-filtering/ServerFilterGrid', // No content rendered
-          '/docs-data-grid-filtering/CustomMultiValueOperator', // No content rendered
-          '/docs-data-grid-filtering/QuickFilteringInitialize', // No content rendered
-          '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
-          '/docs-data-grid-sorting/ServerSortingGrid', // No flag column
-          '/docs-data-grid-filtering/QuickFilteringExcludeHiddenColumns', // No flag column
-          '/docs-data-grid-filtering/QuickFilteringDiacritics', // No flag column
-        ];
-
-        if (
-          /^\/docs-data-grid-(filtering|sorting)/.test(pathURL) &&
-          !pathsToNotWaitForFlagCDN.includes(pathURL)
-        ) {
-          // Wait for the flags to load
-          await page.waitForResponse((response) =>
-            response.url().startsWith('https://flagcdn.com'),
-          );
-        }
-
         if (/^\docs-charts-.*/.test(pathURL)) {
           // Run one tick of the clock to get the final animation state
           await sleep(10);
@@ -135,6 +111,22 @@ async function main() {
 
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
+        );
+
+        // Wait for the flags to load
+        await page.waitForFunction(
+          () => {
+            const images = Array.from(document.querySelectorAll('img'));
+            return images.every((img) => {
+              if (!img.complete && img.loading === 'lazy') {
+                // Force lazy-loaded images to load
+                img.setAttribute('loading', 'eager');
+              }
+              return img.complete;
+            });
+          },
+          undefined,
+          { timeout: 1000 },
         );
 
         await testcase.screenshot({ path: screenshotPath, type: 'png' });

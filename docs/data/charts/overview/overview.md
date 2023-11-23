@@ -25,19 +25,23 @@ To modify the styling of charts you can rely on all the MUI styling tools, such 
 
 ## Getting started
 
+:::warning
+The `next` tag is used to download the latest v7 **pre-release** version.
+:::
+
 To install this library, run
 
 <codeblock storageKey="package-manager">
 ```bash npm
-npm install @mui/x-charts
+npm install @mui/x-charts@next
 ```
 
 ```bash yarn
-yarn add @mui/x-charts
+yarn add @mui/x-charts@next
 ```
 
 ```bash pnpm
-pnpm add @mui/x-charts
+pnpm add @mui/x-charts@next
 ```
 
 </codeblock>

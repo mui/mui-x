@@ -12,7 +12,7 @@ title: Charts - Custom components
 
 Charts dimensions are defined by a few props:
 
-- `height` and `width` for the `<svg />` size. If not provided those values are derived from the container.
+- `height` and `width` for the `<svg />` size. If not provided, those values are derived from the container.
 - `margin` for adding space between the `<svg />` border and the **drawing area**.
 
 The term **drawing area** refers to the space available to plot data (scatter points, lines, or pie arcs).
