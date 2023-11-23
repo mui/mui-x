@@ -17,6 +17,7 @@ import 'dayjs/locale/de';
 // We import the plugins here just to have the typing
 import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 describe('<AdapterDayjs />', () => {
   const commonParams = {
@@ -101,6 +102,17 @@ describe('<AdapterDayjs />', () => {
       expect(() => adapter.is12HourCycleInCurrentLocale()).toWarnDev(
         'Your locale has not been found.',
       );
+    });
+  });
+
+  describe('customParseFormat plugin', () => {
+    it('should allow custom two year digit parsing', () => {
+      dayjs.extend(customParseFormat, {
+        parseTwoDigitYear: (yearString) => +yearString + 1800,
+      });
+
+      const date = dayjs('98-04-25', 'YY-MM-DD').format('YYYY-MM-DD');
+      expect(date).to.equal('1898-04-25');
     });
   });
 
