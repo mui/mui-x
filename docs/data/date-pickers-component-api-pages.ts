@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+import type { MuiPage } from 'docs/src/MuiPage';
 
 export default [
   { pathname: '/x/api/date-pickers/date-calendar', title: 'DateCalendar' },

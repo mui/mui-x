@@ -1,7 +1,6 @@
 import * as React from 'react';
 // @ts-ignore
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
-// @ts-ignore
 import BrandingProvider from 'docs/src/BrandingProvider';
 import { styled, Theme, alpha, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -272,6 +271,8 @@ const CustomizationPlayground = function CustomizationPlayground({
   examples,
   componentName,
 }: UseCustomizationPlaygroundProps) {
+  const theme = useTheme();
+
   const {
     selectedDemo,
     customizationOptions,
@@ -300,7 +301,7 @@ const CustomizationPlayground = function CustomizationPlayground({
   return (
     <Box sx={{ flexGrow: 1 }}>
       {selectedDemo && customizationOptions && selectedCustomizationOption && (
-        <BrandingProvider>
+        <BrandingProvider mode={theme.palette.mode}>
           <TabsWrapper>
             <StylingApproachTabs
               onChange={(_e, newValue) => {
@@ -333,7 +334,7 @@ const CustomizationPlayground = function CustomizationPlayground({
           </StyledChild>
         </PlaygroundDemoArea>
         {shouldBeInteractive && (
-          <BrandingProvider>
+          <BrandingProvider mode={theme.palette.mode}>
             <PlaygroundConfigArea>
               <ConfigSectionWrapper>
                 <ConfigLabel gutterBottom>Components</ConfigLabel>

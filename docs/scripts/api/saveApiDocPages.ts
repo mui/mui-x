@@ -59,7 +59,7 @@ export default async function saveApiDocPages(
 
     writePrettifiedFile(
       path.resolve(dataFolder, `${folderName}-${identifier}-pages.ts`),
-      `import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+      `import type { MuiPage } from 'docs/src/MuiPage';
   
   export default ${JSON.stringify(pagesPerFolder[folderName])} as MuiPage[]`,
       project,
