@@ -201,7 +201,7 @@ The `maxDateTime` prop prevents the selection of all values after `props.maxDate
 :::warning
 If you want to put time boundaries independent of the date—use the [`time boundaries`](#set-time-boundaries) instead.
 
-For now, you can not use `maxDateTime` and `maxTime` together.
+For now, you cannot use `maxDateTime` and `maxTime` together.
 `maxDateTime` will override the `maxTime` behavior—Same for `minDateTime`/`minTime`
 
 ```tsx

@@ -91,7 +91,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     disableFuture,
     disablePast,
     minutesStep = 1,
-    shouldDisableClock,
     shouldDisableTime,
     showViewSwitcher,
     onChange,
@@ -175,10 +174,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           return false;
         }
 
-        if (shouldDisableClock?.(timeValue, viewType)) {
-          return false;
-        }
-
         if (shouldDisableTime) {
           switch (viewType) {
             case 'hours':
@@ -241,7 +236,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       meridiemMode,
       minTime,
       minutesStep,
-      shouldDisableClock,
       shouldDisableTime,
       utils,
       disableFuture,
@@ -492,14 +486,6 @@ TimeClock.propTypes = {
    */
   referenceDate: PropTypes.any,
   /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
-  /**
    * Disable specific time.
    * @template TDate
    * @param {TDate} value The value to check.
@@ -530,7 +516,7 @@ TimeClock.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

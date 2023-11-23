@@ -87,10 +87,7 @@ describe('<DateRangeCalendar />', () => {
       const onChange = spy();
 
       render(
-        <DateRangeCalendar
-          onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date('2019-01-01')}
-        />,
+        <DateRangeCalendar onChange={onChange} referenceDate={adapterToUse.date('2019-01-01')} />,
       );
 
       fireEvent.click(getPickerDay('30', 'January 2019'));

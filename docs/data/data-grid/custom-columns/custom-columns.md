@@ -40,7 +40,7 @@ The example below uses `@mui/x-date-pickers` for both `date` and `dateTime` colu
 {{"demo": "EditingWithDatePickers.js", "bg": "inline", "defaultCodeOpen": false }}
 
 :::warning
-You can change date format by importing different locale (`en-US` locale is used in the example above).
+You can change the date format by importing different locale (`en-US` locale is used in the example above).
 See [Localization](/x/react-date-pickers/localization/) for more information.
 :::
 
