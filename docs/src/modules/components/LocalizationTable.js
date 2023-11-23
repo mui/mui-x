@@ -93,6 +93,7 @@ function ProgressBar(props) {
         medium: valueInPercent >= 50 && valueInPercent <= 80,
         high: valueInPercent > 80,
       })}
+      aria-label={props['aria-label']}
     >
       <Background className="progress-background" />
       <Bar className="progress-bar" style={{ right: `${100 - valueInPercent}%` }} />
@@ -102,6 +103,7 @@ function ProgressBar(props) {
 }
 
 ProgressBar.propTypes = {
+  'aria-label': PropTypes.string.isRequired,
   denumerator: PropTypes.number.isRequired,
   numerator: PropTypes.number.isRequired,
 };
@@ -145,6 +147,9 @@ export default function LocalisationTable(props) {
                   <ProgressBar
                     numerator={totalKeysCount - missingKeysCount}
                     denumerator={totalKeysCount}
+                    aria-label={`${
+                      totalKeysCount - missingKeysCount
+                    } of ${totalKeysCount} complete`}
                   />
                 </td>
                 <td align="left">
