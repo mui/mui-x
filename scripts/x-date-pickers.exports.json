@@ -134,6 +134,7 @@
   { "name": "LocalizationProvider", "kind": "Variable" },
   { "name": "LocalizationProviderProps", "kind": "Interface" },
   { "name": "LocalizedComponent", "kind": "TypeAlias" },
+  { "name": "mk", "kind": "Variable" },
   { "name": "MobileDatePicker", "kind": "Variable" },
   { "name": "MobileDatePickerProps", "kind": "Interface" },
   { "name": "MobileDatePickerSlotsComponent", "kind": "Interface" },
