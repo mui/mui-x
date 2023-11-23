@@ -10,7 +10,10 @@ import {
   getPreviousNode,
   populateInstance,
 } from '../../useTreeView/useTreeView.utils';
-import { UseTreeViewKeyboardNavigationSignature } from './useTreeViewKeyboardNavigation.types';
+import {
+  TreeViewFirstCharMap,
+  UseTreeViewKeyboardNavigationSignature,
+} from './useTreeViewKeyboardNavigation.types';
 import { TreeViewBaseItem } from '../../../models';
 
 function isPrintableCharacter(string: string) {
@@ -31,22 +34,17 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 > = ({ instance, params, state }) => {
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';
-  const firstCharMap = React.useRef<{ [nodeId: string]: string }>({});
-  const hasUsedJSXToMapFirstChar = React.useRef(false);
+  const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
+  const hasFirstCharMapBeenUpdatedImperatively = React.useRef(false);
 
-  const mapFirstCharFromJSX = useEventCallback((nodeId: string, firstChar: string) => {
-    hasUsedJSXToMapFirstChar.current = true;
-    firstCharMap.current[nodeId] = firstChar;
-
-    return () => {
-      const newMap = { ...firstCharMap.current };
-      delete newMap[nodeId];
-      firstCharMap.current = newMap;
-    };
-  });
+  const updateFirstCharMap = useEventCallback(
+    (callback: (firstCharMap: TreeViewFirstCharMap) => TreeViewFirstCharMap) => {
+      firstCharMap.current = callback(firstCharMap.current);
+    },
+  );
 
   React.useEffect(() => {
-    if (hasUsedJSXToMapFirstChar.current) {
+    if (hasFirstCharMapBeenUpdatedImperatively.current) {
       return;
     }
 
@@ -62,7 +60,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   }, [params.items]);
 
   populateInstance<UseTreeViewKeyboardNavigationSignature>(instance, {
-    mapFirstCharFromJSX,
+    updateFirstCharMap,
   });
 
   const handleNextArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {

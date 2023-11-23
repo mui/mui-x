@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
-import ownerDocument from '@mui/utils/ownerDocument';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
@@ -143,6 +142,13 @@ export const TreeItem = React.forwardRef(function TreeItem(
   inProps: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
+  const {
+    icons: contextIcons,
+    multiSelect,
+    disabledItemsFocusable,
+    instance,
+  } = useTreeViewContext<DefaultTreeViewPlugins>();
+
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
   const {
     children,
@@ -153,9 +159,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
     endIcon,
     expandIcon,
     icon,
-    id: idProp,
-    label,
     nodeId,
+    id,
+    label,
     onClick,
     onMouseDown,
     TransitionComponent = Collapse,
@@ -163,26 +169,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
-  const {
-    icons: contextIcons,
-    multiSelect,
-    disabledItemsFocusable,
-    treeId,
-    instance,
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
-
-  let id: string | undefined;
-  if (idProp != null) {
-    id = idProp;
-  } else if (treeId && nodeId) {
-    id = `${treeId}-${nodeId}`;
-  }
-
   const expandable = Boolean(Array.isArray(children) ? children.length : children);
-  const expanded = instance ? instance.isNodeExpanded(nodeId) : false;
-  const focused = instance ? instance.isNodeFocused(nodeId) : false;
-  const selected = instance ? instance.isNodeSelected(nodeId) : false;
-  const disabled = instance ? instance.isNodeDisabled(nodeId) : false;
+  const expanded = instance.isNodeExpanded(nodeId);
+  const focused = instance.isNodeFocused(nodeId);
+  const selected = instance.isNodeSelected(nodeId);
+  const disabled = instance.isNodeDisabled(nodeId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -227,22 +218,16 @@ export const TreeItem = React.forwardRef(function TreeItem(
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
     // DOM focus stays on the tree which manages focus with aria-activedescendant
     if (event.target === event.currentTarget) {
-      let rootElement: any;
-
-      if (typeof event.target.getRootNode === 'function') {
-        rootElement = event.target.getRootNode();
-      } else {
-        rootElement = ownerDocument(event.target);
-      }
-
-      rootElement.getElementById(treeId).focus({ preventScroll: true });
+      instance.focusRoot();
     }
 
-    const unfocusable = !disabledItemsFocusable && disabled;
-    if (instance && !focused && event.currentTarget === event.target && !unfocusable) {
+    const canBeFocused = !disabledItemsFocusable && disabled;
+    if (instance && !focused && event.currentTarget === event.target && !canBeFocused) {
       instance.focusNode(event, nodeId);
     }
   }
+
+  const idAttribute = instance.getTreeItemId(nodeId, id);
 
   return (
     <TreeItemRoot
@@ -251,7 +236,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
       aria-expanded={expandable ? expanded : undefined}
       aria-selected={ariaSelected}
       aria-disabled={disabled || undefined}
-      id={id}
+      id={idAttribute}
       tabIndex={-1}
       {...other}
       ownerState={ownerState}

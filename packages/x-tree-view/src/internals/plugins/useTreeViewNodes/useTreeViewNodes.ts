@@ -39,7 +39,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   state,
   setState,
 }) => {
-  const getNode = useEventCallback((nodeId: string) => state.nodeMap[nodeId]);
+  const getNode = React.useCallback((nodeId: string) => state.nodeMap[nodeId], [state.nodeMap]);
 
   const isNodeDisabled = React.useCallback(
     (nodeId: string | null): nodeId is string => {

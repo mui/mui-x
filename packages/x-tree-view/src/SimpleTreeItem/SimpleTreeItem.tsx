@@ -32,19 +32,12 @@ export const SimpleTreeItem = React.forwardRef(function SimpleTreeItem(
     disabled = false,
     label,
     nodeId,
-    id: idProp,
+    id,
     ContentProps: inContentProps,
     ...other
   } = props;
 
-  const { treeId, instance } = useTreeViewContext<SimpleTreeViewPlugins>();
-
-  let id: string | undefined;
-  if (idProp != null) {
-    id = idProp;
-  } else if (treeId && nodeId) {
-    id = `${treeId}-${nodeId}`;
-  }
+  const { instance } = useTreeViewContext<SimpleTreeViewPlugins>();
 
   const expandable = Boolean(Array.isArray(children) ? children.length : children);
 

@@ -2,8 +2,7 @@ import * as React from 'react';
 import { TreeViewAnyPluginSignature, TreeViewInstance } from '../models';
 
 export interface TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
-  treeId: string | undefined;
-  instance: TreeViewInstance<TPlugins> | null;
+  instance: TreeViewInstance<TPlugins>;
   multiSelect: boolean;
   disabledItemsFocusable: boolean;
   icons: {

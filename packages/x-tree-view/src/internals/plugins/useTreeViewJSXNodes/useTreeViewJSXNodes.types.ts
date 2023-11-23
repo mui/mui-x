@@ -1,9 +1,11 @@
 import { TreeViewNode, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewKeyboardNavigationSignature } from '../useTreeViewKeyboardNavigation';
 
 export interface UseTreeViewNodesInstance {
   insertJSXNode: (node: TreeViewNode) => void;
   removeJSXNode: (nodeId: string) => void;
+  mapFirstCharFromJSX: (nodeId: string, firstChar: string) => () => void;
 }
 
 export interface UseTreeViewNodesParameters {}
@@ -17,5 +19,5 @@ export type UseTreeViewJSXNodesSignature = TreeViewPluginSignature<
   {},
   {},
   never,
-  [UseTreeViewNodesSignature]
+  [UseTreeViewNodesSignature, UseTreeViewKeyboardNavigationSignature]
 >;
