@@ -72,7 +72,7 @@ export interface ExportedDayCalendarProps<TDate> extends ExportedPickersDayProps
   displayWeekNumber?: boolean;
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
-   * Put it to 6 to have a fix number of weeks in Gregorian calendars
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber?: number;
