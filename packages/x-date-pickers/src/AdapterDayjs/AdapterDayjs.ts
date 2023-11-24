@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import defaultDayjs, { Dayjs } from 'dayjs';
-import weekOfYear from 'dayjs/plugin/weekOfYear';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import weekOfYearPlugin from 'dayjs/plugin/weekOfYear';
+import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import {
@@ -13,9 +13,6 @@ import {
   DateBuilderReturnType,
 } from '../models';
 import { buildWarning } from '../internals/utils/warning';
-
-defaultDayjs.extend(localizedFormatPlugin);
-defaultDayjs.extend(isBetweenPlugin);
 
 type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
@@ -157,8 +154,12 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
 
-    defaultDayjs.extend(weekOfYear);
-    defaultDayjs.extend(customParseFormat);
+    // Moved plugins to the constructor to allow for users to use options on the library
+    // for reference: https://github.com/mui/mui-x/pull/11151
+    defaultDayjs.extend(weekOfYearPlugin);
+    defaultDayjs.extend(localizedFormatPlugin);
+    defaultDayjs.extend(isBetweenPlugin);
+    defaultDayjs.extend(customParseFormatPlugin);
   }
 
   private setLocaleToValue = (value: Dayjs) => {
