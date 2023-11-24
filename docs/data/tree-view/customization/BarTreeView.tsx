@@ -6,9 +6,8 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
   SimpleTreeItem,
   SimpleTreeItemProps,
-  useTreeItem,
-  TreeItemContentProps,
 } from '@mui/x-tree-view/SimpleTreeItem';
+import { useTreeItem, TreeItemContentProps } from '@mui/x-tree-view/TreeItem';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';

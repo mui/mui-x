@@ -9,8 +9,8 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
   SimpleTreeItem,
   SimpleTreeItemProps,
-  treeItemClasses,
 } from '@mui/x-tree-view/SimpleTreeItem';
+import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
 function MinusSquare(props: SvgIconProps) {
   return (

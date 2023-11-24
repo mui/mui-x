@@ -8,9 +8,8 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
   SimpleTreeItem,
   SimpleTreeItemProps,
-  useTreeItem,
-  TreeItemContentProps,
 } from '@mui/x-tree-view/SimpleTreeItem';
+import { useTreeItem, TreeItemContentProps } from '@mui/x-tree-view/TreeItem';
 
 const CustomContent = React.forwardRef(function CustomContent(
   props: TreeItemContentProps,
