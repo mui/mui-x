@@ -1,5 +1,5 @@
-import { TreeItemClassKey } from '../internals/components/TreeItem';
 import { TreeViewClassKey } from '../TreeView';
+import { TreeItemClassKey } from '../TreeItem';
 import { SimpleTreeViewClassKey } from '../SimpleTreeView';
 
 // prettier-ignore

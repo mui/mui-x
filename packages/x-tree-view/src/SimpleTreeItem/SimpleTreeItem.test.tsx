@@ -11,7 +11,8 @@ import {
   screen,
 } from '@mui-internal/test-utils';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { SimpleTreeItem, treeItemClasses as classes } from '@mui/x-tree-view/SimpleTreeItem';
+import { SimpleTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
+import { treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
 

@@ -4,7 +4,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { SxProps } from '@mui/system';
 import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
-import { TreeViewItemId } from '../../../models';
+import { TreeViewItemId } from '../models';
 
 export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   /**
