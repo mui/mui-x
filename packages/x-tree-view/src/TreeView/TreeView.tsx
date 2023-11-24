@@ -8,7 +8,7 @@ import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
-import { TreeItem } from '../internals/components/TreeItem';
+import { TreeItem } from '../TreeItem';
 import { TreeViewBaseItem } from '../models';
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
@@ -37,6 +37,30 @@ const TreeViewRoot = styled('ul', {
 type TreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: TreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
+
+function WrappedTreeItem<R extends {}>({
+  slots,
+  slotProps,
+  item,
+  children,
+}: Pick<TreeViewProps<R, any>, 'slots' | 'slotProps'> & {
+  item: TreeViewBaseItem<R>;
+  children: React.ReactNode;
+}) {
+  const Item = slots?.item ?? TreeItem;
+  const itemProps = useSlotProps({
+    elementType: Item,
+    externalSlotProps: slotProps?.item,
+    additionalProps: {
+      nodeId: item.nodeId,
+      id: item.id,
+      label: item.label,
+    },
+    ownerState: { item },
+  });
+
+  return <Item {...itemProps}>{children}</Item>;
+}
 
 /**
  *
@@ -75,6 +99,8 @@ const TreeView = React.forwardRef(function TreeView<
     items,
     isItemDisabled,
     // Component implementation
+    slots,
+    slotProps,
     ...other
   } = themeProps as TreeViewProps<any, any>;
 
@@ -112,11 +138,10 @@ const TreeView = React.forwardRef(function TreeView<
   });
 
   const renderItem = (item: TreeViewBaseItem<R>) => {
-    const { children: itemChildren, ...itemProperties } = item;
     return (
-      <TreeItem {...itemProperties} key={item.nodeId}>
-        {itemChildren?.map(renderItem)}
-      </TreeItem>
+      <WrappedTreeItem item={item} slots={slots} slotProps={slotProps} key={item.nodeId}>
+        {item.children?.map(renderItem)}
+      </WrappedTreeItem>
     );
   };
 
@@ -225,6 +250,16 @@ TreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
   selected: PropTypes.any,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

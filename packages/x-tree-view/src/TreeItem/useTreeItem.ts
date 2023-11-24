@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../../plugins';
+import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { DefaultTreeViewPlugins } from '../internals/plugins';
 
 export function useTreeItem(nodeId: string) {
   const { instance, multiSelect } = useTreeViewContext<DefaultTreeViewPlugins>();

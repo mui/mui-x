@@ -9,8 +9,8 @@ import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
-import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../../plugins';
+import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { DefaultTreeViewPlugins } from '../internals/plugins';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -335,7 +335,7 @@ TreeItem.propTypes = {
   /**
    * The id of the node.
    */
-  nodeId: PropTypes.string.isRequired,
+  nodeId: PropTypes.any.isRequired,
   /**
    * This prop isn't supported.
    * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.

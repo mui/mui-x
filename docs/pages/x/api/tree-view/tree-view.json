@@ -41,6 +41,8 @@
       }
     },
     "selected": { "type": { "name": "any" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -49,7 +51,14 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [],
+  "slots": [
+    {
+      "class": null,
+      "name": "item",
+      "description": "Custom component for the item.",
+      "default": "TreeItem."
+    }
+  ],
   "name": "TreeView",
   "imports": [
     "import { TreeView } from '@mui/x-tree-view/TreeView';",

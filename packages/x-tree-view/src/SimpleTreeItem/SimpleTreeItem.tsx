@@ -158,7 +158,7 @@ SimpleTreeItem.propTypes = {
   /**
    * The id of the node.
    */
-  nodeId: PropTypes.string.isRequired,
+  nodeId: PropTypes.any.isRequired,
   /**
    * This prop isn't supported.
    * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.

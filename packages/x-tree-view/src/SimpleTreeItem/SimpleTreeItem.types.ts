@@ -1,3 +1,3 @@
-import { TreeItemProps } from '../internals/components/TreeItem/TreeItem.types';
+import { TreeItemProps } from '../TreeItem';
 
 export interface SimpleTreeItemProps extends TreeItemProps {}
