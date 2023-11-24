@@ -1,4 +1,4 @@
-import { TreeItemProps } from '../internals/components/TreeItem/TreeItem.types';
+import { TreeItemProps } from '../TreeItem';
 import { SimpleTreeViewProps } from '../SimpleTreeView';
 import { TreeViewProps } from '../TreeView';
 
