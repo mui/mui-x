@@ -6,17 +6,17 @@ import { unstable_composeClasses as composeClasses, unstable_useId as useId } fr
 import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
-import { getFakeTextFieldUtilityClass } from './fakeTextFieldClasses';
-import FakeInput from './FakeInput';
-import { FakeTextFieldProps } from './FakeTextField.types';
+import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
+import PickersInput from './PickersInput';
+import { PickersTextFieldProps } from './PickersTextField.types';
 
-const FakeTextFieldRoot = styled(FormControl, {
-  name: 'MuiFakeTextField',
+const PickersTextFieldRoot = styled(FormControl, {
+  name: 'MuiPickersTextField',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: OwnerStateType }>({});
 
-const useUtilityClasses = (ownerState: FakeTextFieldProps) => {
+const useUtilityClasses = (ownerState: PickersTextFieldProps) => {
   const { focused, disabled, classes, required } = ownerState;
 
   const slots = {
@@ -28,13 +28,13 @@ const useUtilityClasses = (ownerState: FakeTextFieldProps) => {
     ],
   };
 
-  return composeClasses(slots, getFakeTextFieldUtilityClass, classes);
+  return composeClasses(slots, getPickersTextFieldUtilityClass, classes);
 };
 
-type OwnerStateType = Partial<FakeTextFieldProps>;
+type OwnerStateType = Partial<PickersTextFieldProps>;
 
-export const FakeTextField = React.forwardRef(function FakeTextField(
-  props: FakeTextFieldProps,
+export const PickersTextField = React.forwardRef(function PickersTextField(
+  props: PickersTextFieldProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
@@ -102,7 +102,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
   };
 
   return (
-    <FakeTextFieldRoot
+    <PickersTextFieldRoot
       className={clsx(classes.root, className)}
       ref={handleRootRef}
       focused={focused}
@@ -117,7 +117,7 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
       <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
         {label}
       </InputLabel>
-      <FakeInput
+      <PickersInput
         {...{ elements, valueStr, valueType, onWrapperClick, inputProps, label }}
         {...other}
         {...InputProps}
@@ -128,6 +128,6 @@ export const FakeTextField = React.forwardRef(function FakeTextField(
           {helperText}
         </FormHelperText>
       )}
-    </FakeTextFieldRoot>
+    </PickersTextFieldRoot>
   );
 });

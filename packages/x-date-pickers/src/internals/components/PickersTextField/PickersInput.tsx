@@ -9,12 +9,12 @@ import {
   unstable_capitalize as capitalize,
   visuallyHidden,
 } from '@mui/utils';
-import { fakeInputClasses, getFakeInputUtilityClass } from './fakeTextFieldClasses';
+import { pickersInputClasses, getPickersInputUtilityClass } from './pickersTextFieldClasses';
 import Outline from './Outline';
-import { FakeInputElement, FakeInputProps } from './FakeInput.types';
+import { PickersInputElement, PickersInputProps } from './PickersInput.types';
 
 const SectionsWrapper = styled(Box, {
-  name: 'MuiFakeInput',
+  name: 'MuiPickersInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
@@ -29,25 +29,25 @@ const SectionsWrapper = styled(Box, {
     width: ownerState.fullWidth ? '100%' : '25ch',
     position: 'relative',
     borderRadius: (theme.vars || theme).shape.borderRadius,
-    [`&:hover .${fakeInputClasses.notchedOutline}`]: {
+    [`&:hover .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
     },
 
     // Reset on touch devices, it doesn't add specificity
     '@media (hover: none)': {
-      [`&:hover .${fakeInputClasses.notchedOutline}`]: {
+      [`&:hover .${pickersInputClasses.notchedOutline}`]: {
         borderColor: theme.vars
           ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`
           : borderColor,
       },
     },
-    [`&.${fakeInputClasses.focused} .${fakeInputClasses.notchedOutline}`]: {
+    [`&.${pickersInputClasses.focused} .${pickersInputClasses.notchedOutline}`]: {
       borderStyle: 'solid',
       borderColor: (theme.vars || theme).palette[ownerState.color].main,
       borderWidth: 2,
     },
-    [`&.${fakeInputClasses.disabled}`]: {
-      [`& .${fakeInputClasses.notchedOutline}`]: {
+    [`&.${pickersInputClasses.disabled}`]: {
+      [`& .${pickersInputClasses.notchedOutline}`]: {
         borderColor: (theme.vars || theme).palette.action.disabled,
       },
 
@@ -56,7 +56,7 @@ const SectionsWrapper = styled(Box, {
       },
     },
 
-    [`&.${fakeInputClasses.error} .${fakeInputClasses.notchedOutline}`]: {
+    [`&.${pickersInputClasses.error} .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.error.main,
     },
 
@@ -67,7 +67,7 @@ const SectionsWrapper = styled(Box, {
 });
 
 const SectionsContainer = styled('div', {
-  name: 'MuiFakeInput',
+  name: 'MuiPickersInput',
   slot: 'Input',
   overridesResolver: (props, styles) => styles.input,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
@@ -79,7 +79,7 @@ const SectionsContainer = styled('div', {
 }));
 
 const SectionContainer = styled('span', {
-  name: 'MuiFakeInput',
+  name: 'MuiPickersInput',
   slot: 'Section',
   overridesResolver: (props, styles) => styles.section,
 })(({ theme }) => ({
@@ -90,7 +90,7 @@ const SectionContainer = styled('span', {
 }));
 
 const SectionInput = styled('span', {
-  name: 'MuiFakeInput',
+  name: 'MuiPickersInput',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
 })(({ theme }) => ({
@@ -101,7 +101,7 @@ const SectionInput = styled('span', {
 }));
 
 const SectionSeparator = styled('span', {
-  name: 'MuiFakeInput',
+  name: 'MuiPickersInput',
   slot: 'Separator',
   overridesResolver: (props, styles) => styles.separator,
 })(() => ({
@@ -109,7 +109,7 @@ const SectionSeparator = styled('span', {
 }));
 
 const FakeHiddenInput = styled('input', {
-  name: 'MuiFakeInput',
+  name: 'MuiPickersInput',
   slot: 'HiddenInput',
   overridesResolver: (props, styles) => styles.hiddenInput,
 })({
@@ -117,7 +117,7 @@ const FakeHiddenInput = styled('input', {
 });
 
 const NotchedOutlineRoot = styled(Outline, {
-  name: 'MuiFakeInput',
+  name: 'MuiPickersInput',
   slot: 'NotchedOutline',
   overridesResolver: (props, styles) => styles.notchedOutline,
 })(({ theme }) => {
@@ -135,7 +135,7 @@ function InputContent({
   contentEditable,
   ownerState,
 }: {
-  elements: FakeInputElement[];
+  elements: PickersInputElement[];
   contentEditable?: string | boolean;
   ownerState: OwnerStateType;
 }) {
@@ -151,14 +151,17 @@ function InputContent({
         <SectionContainer key={elementIndex} {...container}>
           <SectionSeparator
             {...before}
-            className={clsx(fakeInputClasses.before, before?.className)}
+            className={clsx(pickersInputClasses.before, before?.className)}
           />
           <SectionInput
             {...content}
-            className={clsx(fakeInputClasses.content, content?.className)}
+            className={clsx(pickersInputClasses.content, content?.className)}
             {...{ ownerState }}
           />
-          <SectionSeparator {...after} className={clsx(fakeInputClasses.after, after?.className)} />
+          <SectionSeparator
+            {...after}
+            className={clsx(pickersInputClasses.after, after?.className)}
+          />
         </SectionContainer>
       ))}
     </React.Fragment>
@@ -197,7 +200,7 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
     input: ['input'],
   };
 
-  return composeClasses(slots, getFakeInputUtilityClass, classes);
+  return composeClasses(slots, getPickersInputUtilityClass, classes);
 };
 
 // TODO: move to utils
@@ -216,7 +219,7 @@ function formControlState({ props, states, muiFormControl }) {
   }, {});
 }
 
-interface OwnerStateType extends FakeInputProps {
+interface OwnerStateType extends PickersInputProps {
   color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
   disabled?: boolean;
   error?: boolean;
@@ -226,8 +229,8 @@ interface OwnerStateType extends FakeInputProps {
   adornedStart?: boolean;
 }
 
-const FakeInput = React.forwardRef(function FakeInput(
-  props: FakeInputProps,
+const PickersInput = React.forwardRef(function PickersInput(
+  props: PickersInputProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
@@ -331,4 +334,4 @@ const FakeInput = React.forwardRef(function FakeInput(
   );
 });
 
-export default FakeInput;
+export default PickersInput;

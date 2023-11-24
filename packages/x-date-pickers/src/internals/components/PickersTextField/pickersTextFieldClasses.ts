@@ -3,7 +3,7 @@ import {
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
 
-export interface FakeTextFieldClasses {
+export interface PickersTextFieldClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element if focused. */
@@ -15,17 +15,17 @@ export interface FakeTextFieldClasses {
   /** State class applied to the root element id `required=true` */
   required: string;
 }
-export type FakeTextFieldClassKey = keyof FakeTextFieldClasses;
+export type PickersTextFieldClassKey = keyof PickersTextFieldClasses;
 
-export function getFakeTextFieldUtilityClass(slot: string) {
-  return generateUtilityClass('MuiFakeTextField', slot);
+export function getPickersTextFieldUtilityClass(slot: string) {
+  return generateUtilityClass('MuiPickersTextField', slot);
 }
 
-export const fakeTextFieldClasses = generateUtilityClasses<FakeTextFieldClassKey>(
-  'MuiFakeTextField',
+export const pickersTextFieldClasses = generateUtilityClasses<PickersTextFieldClassKey>(
+  'MuiPickersTextField',
   ['root', 'focused', 'disabled', 'error', 'required'],
 );
-export interface FakeInputClasses {
+export interface PickersInputClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element if focused. */
@@ -50,13 +50,13 @@ export interface FakeInputClasses {
   adornedEnd: string;
 }
 
-export type FakeInputClassKey = keyof FakeInputClasses;
+export type PickersInputClassKey = keyof PickersInputClasses;
 
-export function getFakeInputUtilityClass(slot: string) {
-  return generateUtilityClass('MuiFakeInput', slot);
+export function getPickersInputUtilityClass(slot: string) {
+  return generateUtilityClass('MuiPickersInput', slot);
 }
 
-export const fakeInputClasses = generateUtilityClasses<FakeInputClassKey>('MuiFakeInput', [
+export const pickersInputClasses = generateUtilityClasses<PickersInputClassKey>('MuiPickersInput', [
   'root',
   'focused',
   'disabled',

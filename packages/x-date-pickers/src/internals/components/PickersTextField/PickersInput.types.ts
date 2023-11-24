@@ -1,15 +1,15 @@
 import { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import { FieldsTextFieldProps } from '../../models';
 
-export interface FakeInputElement {
+export interface PickersInputElement {
   container: React.HTMLAttributes<HTMLSpanElement>;
   content: React.HTMLAttributes<HTMLSpanElement>;
   before: React.HTMLAttributes<HTMLSpanElement>;
   after: React.HTMLAttributes<HTMLSpanElement>;
 }
 
-export interface FakeInputProps extends FieldsTextFieldProps {
-  elements: FakeInputElement[];
+export interface PickersInputProps extends FieldsTextFieldProps {
+  elements: PickersInputElement[];
   areAllSectionsEmpty?: boolean;
   valueStr: string;
   onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;

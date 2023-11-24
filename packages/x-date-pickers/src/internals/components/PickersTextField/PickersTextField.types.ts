@@ -1,7 +1,7 @@
 import { TextFieldClasses } from '@mui/material/TextField';
-import { FakeInputProps } from './FakeInput.types';
+import { PickersInputProps } from './PickersInput.types';
 
-export interface FakeTextFieldProps extends FakeInputProps {
+export interface PickersTextFieldProps extends PickersInputProps {
   classes?: Partial<TextFieldClasses>;
   className?: string;
   color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
