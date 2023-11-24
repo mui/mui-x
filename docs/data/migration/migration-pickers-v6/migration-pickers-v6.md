@@ -267,6 +267,7 @@ dayjs.extend(isBetweenPlugin);
 ```
 
 Plugins that were moved to the constructor are:
+
 - customParseFormat ('dayjs/plugin/customParseFormat')
 - isBetween ('dayjs/plugin/isBetween')
 - localizedFormat ('dayjs/plugin/localizedFormat')
@@ -584,7 +585,7 @@ The method has been simplified and now only accepts an already-parsed date or `n
 ```
 
 ### Restrict the input format of the `isValid` method
- 
+
 The `isValid` method used to accept any type of value and tried to parse them before checking their validity.
 The method has been simplified and now only accepts an already-parsed date or `null`.
 Which is the same type as the one accepted by the components `value` prop.
