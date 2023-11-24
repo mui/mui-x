@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
+import {
+  unstable_useEventCallback as useEventCallback,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -257,7 +260,6 @@ export const useGridRowEditing = (
           const newParams: GridRowEditStartParams = {
             ...rowParams,
             field: params.field,
-            key: event.key,
             reason,
           };
           apiRef.current.publishEvent('rowEditStart', newParams, event);
@@ -269,20 +271,14 @@ export const useGridRowEditing = (
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
     (params) => {
-      const { id, field, reason, key, columns } = params;
+      const { id, field, reason } = params;
 
       const startRowEditModeParams: GridStartRowEditModeParams = { id, fieldToFocus: field };
 
-      if (reason === GridRowEditStartReasons.printableKeyDown) {
-        if (React.version.startsWith('17')) {
-          // In React 17, cleaning the input is enough.
-          // The sequence of events makes the key pressed by the end-users update the textbox directly.
-          startRowEditModeParams.deleteValue = !!field;
-        } else {
-          const colDef = columns.find((col) => col.field === field)!;
-          startRowEditModeParams.initialValue = colDef.valueParser ? colDef.valueParser(key) : key;
-        }
-      } else if (reason === GridRowEditStartReasons.deleteKeyDown) {
+      if (
+        reason === GridRowEditStartReasons.printableKeyDown ||
+        reason === GridRowEditStartReasons.deleteKeyDown
+      ) {
         startRowEditModeParams.deleteValue = !!field;
       }
 
@@ -430,18 +426,14 @@ export const useGridRowEditing = (
         }
 
         let newValue = apiRef.current.getCellValue(id, field);
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        let unstable_updateValueOnRender = false;
         if (fieldToFocus === field && (deleteValue || initialValue)) {
           newValue = deleteValue ? '' : initialValue;
-          unstable_updateValueOnRender = true;
         }
 
         acc[field] = {
           value: newValue,
           error: false,
           isProcessingProps: false,
-          unstable_updateValueOnRender,
         };
 
         return acc;
@@ -710,7 +702,8 @@ export const useGridRowEditing = (
     }
   }, [rowModesModelProp, updateRowModesModel]);
 
-  React.useEffect(() => {
+  // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
+  useEnhancedEffect(() => {
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopRowEditMode may change it later

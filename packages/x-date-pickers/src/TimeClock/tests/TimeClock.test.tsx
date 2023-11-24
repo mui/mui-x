@@ -145,29 +145,6 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('should call `shouldDisableClock` with the hours with meridiem', () => {
-    const shouldDisableClock = spy(() => false);
-
-    render(
-      <TimeClock
-        autoFocus
-        value={adapterToUse.date('2019-01-01T18:20:00')}
-        onChange={() => {}}
-        shouldDisableClock={shouldDisableClock}
-        ampm
-      />,
-    );
-
-    const hours = shouldDisableClock
-      .getCalls()
-      .filter((el) => el.lastArg === 'hours')
-      .map((el) => el.firstArg);
-
-    // Should be called with every hour post meridiem (from 12 to 23) since current date hour is 6PM
-    expect(Math.min(...hours)).to.equal(12);
-    expect(Math.max(...hours)).to.equal(23);
-  });
-
   it('should display options, but not update value when readOnly prop is passed', function test() {
     // Only run in supported browsers
     if (typeof Touch === 'undefined') {

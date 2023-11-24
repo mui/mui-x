@@ -16,6 +16,7 @@ export * from './itIT';
 export * from './jaJP';
 export * from './koKR';
 export * from './kzKZ';
+export * from './mk';
 export * from './nbNO';
 export * from './nlNL';
 export * from './plPL';

@@ -162,7 +162,7 @@ export interface UsePickerValueState<TValue> {
    * Then we might want to apply some custom logic.
    *
    * For example, when the component is not controlled and `defaultValue` is defined.
-   * Then clicking on "Accept", "Today" or "Clear" should fire `onAccept` with `defaultValue`, but clicking on "Cancel" or dimissing the picker should not.
+   * Then clicking on "Accept", "Today" or "Clear" should fire `onAccept` with `defaultValue`, but clicking on "Cancel" or dismissing the picker should not.
    */
   hasBeenModifiedSinceMount: boolean;
 }

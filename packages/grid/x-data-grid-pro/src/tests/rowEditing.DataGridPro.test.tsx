@@ -233,7 +233,6 @@ describe('<DataGridPro /> - Row editing', () => {
           error: false,
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
-          unstable_updateValueOnRender: false,
         });
 
         const args2 = column2Props.preProcessEditCellProps.lastCall.args[0];
@@ -244,7 +243,6 @@ describe('<DataGridPro /> - Row editing', () => {
           value: 1,
           error: false,
           isProcessingProps: true,
-          unstable_updateValueOnRender: false,
         });
       });
 
@@ -911,7 +909,7 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(spiedStartRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           fieldToFocus: 'currencyPair',
-          initialValue: 'a',
+          deleteValue: true,
         });
       });
 

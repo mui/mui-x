@@ -27,7 +27,6 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   shouldDisableDate,
   reduceAnimations,
   onMonthChange,
-  defaultCalendarMonth,
   rangePosition,
   defaultRangePosition,
   onRangePositionChange,
@@ -64,7 +63,6 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     shouldDisableDate={shouldDisableDate}
     reduceAnimations={reduceAnimations}
     onMonthChange={onMonthChange}
-    defaultCalendarMonth={defaultCalendarMonth}
     rangePosition={rangePosition}
     defaultRangePosition={defaultRangePosition}
     onRangePositionChange={onRangePositionChange}

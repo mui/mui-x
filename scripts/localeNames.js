@@ -33,7 +33,7 @@ module.exports = {
   'kh-KH': 'Khmer',
   'kz-KZ': 'Kazakh',
   'ko-KR': 'Korean',
-  'mk-MK': 'Macedonian',
+  mk: 'Macedonian',
   'nb-NO': 'Norwegian (Bokmål)',
   'fa-IR': 'Persian',
   'pl-PL': 'Polish',

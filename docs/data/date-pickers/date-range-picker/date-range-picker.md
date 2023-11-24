@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The Date Range Picker let the user select a range of dates.</p>
+<p class="description">The Date Range Picker lets the user select a range of dates.</p>
 
 ## Basic usage
 

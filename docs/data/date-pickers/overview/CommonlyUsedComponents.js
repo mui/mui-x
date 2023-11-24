@@ -33,7 +33,10 @@ function Label({ componentName, valueType, isProOnly }) {
     return (
       <Stack direction="row" spacing={0.5} component="span">
         <Tooltip title="Included on Pro package">
-          <a href="https://mui.com/x/introduction/licensing/#pro-plan">
+          <a
+            href="https://mui.com/x/introduction/licensing/#pro-plan"
+            aria-label="Included on Pro package"
+          >
             <ProSpan />
           </a>
         </Tooltip>
