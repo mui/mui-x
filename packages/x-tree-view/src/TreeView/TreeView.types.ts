@@ -13,13 +13,19 @@ interface TreeViewItemSlotOwnerState<R extends {}> {
 
 export interface TreeViewSlotsComponent {
   /**
+   * Element rendered at the root.
+   * @default TreeViewRoot
+   */
+  root?: React.ElementType;
+  /**
    * Custom component for the item.
    * @default TreeItem.
    */
   item?: React.JSXElementConstructor<TreeItemProps>;
 }
 
-export interface TreeViewSlotsComponentsProps<R extends {}> {
+export interface TreeViewSlotsComponentsProps<R extends {}, Multiple extends boolean | undefined> {
+  root?: SlotComponentProps<'ul', {}, TreeViewProps<R, Multiple>>;
   item?: SlotComponentProps<typeof TreeItem, {}, TreeViewItemSlotOwnerState<R>>;
 }
 
@@ -50,5 +56,5 @@ export interface TreeViewProps<R extends {}, Multiple extends boolean | undefine
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TreeViewSlotsComponentsProps<R>;
+  slotProps?: TreeViewSlotsComponentsProps<R, Multiple>;
 }

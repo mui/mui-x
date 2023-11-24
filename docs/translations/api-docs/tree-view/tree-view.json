@@ -113,5 +113,8 @@
     }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
-  "slotDescriptions": { "item": "Custom component for the item." }
+  "slotDescriptions": {
+    "item": "Custom component for the item.",
+    "root": "Element rendered at the root."
+  }
 }

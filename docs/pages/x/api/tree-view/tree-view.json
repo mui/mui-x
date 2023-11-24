@@ -57,6 +57,12 @@
       "name": "item",
       "description": "Custom component for the item.",
       "default": "TreeItem."
+    },
+    {
+      "class": null,
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "TreeViewRoot"
     }
   ],
   "name": "TreeView",

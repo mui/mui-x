@@ -11,7 +11,7 @@ import {
 import { SimpleTreeItemProps } from './SimpleTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { SimpleTreeViewPlugins } from '../SimpleTreeView/SimpleTreeView.plugins';
-import { TreeItem } from '../internals/components/TreeItem';
+import { TreeItem } from '../TreeItem';
 
 /**
  *

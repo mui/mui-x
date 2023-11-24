@@ -77,7 +77,6 @@ const TreeView = React.forwardRef(function TreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: TreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
-  const ownerState = themeProps as TreeViewProps<any, any>;
 
   const {
     // Headless implementation
@@ -128,13 +127,14 @@ const TreeView = React.forwardRef(function TreeView<
 
   const classes = useUtilityClasses(themeProps);
 
+  const Root = slots?.root ?? TreeViewRoot;
   const rootProps = useSlotProps({
-    elementType: TreeViewRoot,
-    externalSlotProps: {},
+    elementType: Root,
+    externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
     className: classes.root,
     getSlotProps: getRootProps,
-    ownerState,
+    ownerState: themeProps as TreeViewProps<any, any>,
   });
 
   const renderItem = (item: TreeViewBaseItem<R>) => {
@@ -147,7 +147,7 @@ const TreeView = React.forwardRef(function TreeView<
 
   return (
     <TreeViewProvider value={contextValue}>
-      <TreeViewRoot {...rootProps}>{items.map(renderItem)}</TreeViewRoot>
+      <Root {...rootProps}>{items.map(renderItem)}</Root>
     </TreeViewProvider>
   );
 }) as TreeViewComponent;
