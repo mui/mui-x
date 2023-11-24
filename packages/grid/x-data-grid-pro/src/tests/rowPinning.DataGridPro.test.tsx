@@ -525,15 +525,15 @@ describe('<DataGridPro /> - Row pinning', () => {
             return undefined;
           }}
         />
-      )
+      );
     }
 
-    render(
-      <TestCase />
-    );
+    render(<TestCase />);
 
     expect(getRowById(0)?.clientHeight).to.equal(100);
-    expect(getRowById(1)?.clientHeight).to.equal(20 + apiRef.current.state.dimensions.scrollbarSize);
+    expect(getRowById(1)?.clientHeight).to.equal(
+      20 + apiRef.current.state.dimensions.scrollbarSize,
+    );
   });
 
   it('should always update on `rowHeight` change', async function test() {
@@ -554,12 +554,10 @@ describe('<DataGridPro /> - Row pinning', () => {
           colCount={5}
           rowHeight={rowHeight ?? defaultRowHeight}
         />
-      )
+      );
     }
 
-    const { setProps } = render(
-      <TestCase />
-    );
+    const { setProps } = render(<TestCase />);
     await microtasks();
     const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
 
