@@ -283,9 +283,10 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const isEditingRows = Object.keys(editRowsState).length > 0;
 
     const canReorderColumn = disableColumnReorder && column.disableReorder;
-    const canReorderRow = rowReordering && !sortModel.length && treeDepth === 0 && !isEditingRows;
+    const canReorderRow =
+      isReorderCell && rowReordering && !sortModel.length && treeDepth === 0 && !isEditingRows;
 
-    const disableDragEvents = !(isReorderCell && canReorderRow) && !canReorderColumn;
+    const disableDragEvents = !canReorderRow || !canReorderColumn;
 
     const editCellState = editRowsState[rowId]?.[column.field] ?? null;
     let cellIsNotVisible = false;
