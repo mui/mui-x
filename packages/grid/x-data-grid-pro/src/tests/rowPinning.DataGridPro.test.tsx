@@ -506,24 +506,32 @@ describe('<DataGridPro /> - Row pinning', () => {
       this.skip();
     }
 
+    let apiRef!: React.MutableRefObject<GridApi>;
+    function TestCase() {
+      apiRef = useGridApiRef();
+      return (
+        <BaselineTestCase
+          rowCount={20}
+          colCount={5}
+          getRowHeight={(row) => {
+            if (row.id === 0) {
+              return 100;
+            }
+            if (row.id === 1) {
+              return 20;
+            }
+            return undefined;
+          }}
+        />
+      )
+    }
+
     render(
-      <BaselineTestCase
-        rowCount={20}
-        colCount={5}
-        getRowHeight={(row) => {
-          if (row.id === 0) {
-            return 100;
-          }
-          if (row.id === 1) {
-            return 20;
-          }
-          return undefined;
-        }}
-      />,
+      <TestCase />
     );
 
     expect(getRowById(0)?.clientHeight).to.equal(100);
-    expect(getRowById(1)?.clientHeight).to.equal(20);
+    expect(getRowById(1)?.clientHeight).to.equal(20 + apiRef.current.state.dimensions.scrollbarSize);
   });
 
   it('should always update on `rowHeight` change', function test() {
