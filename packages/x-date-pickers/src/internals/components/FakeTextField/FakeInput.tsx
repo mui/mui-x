@@ -65,43 +65,40 @@ const SectionsWrapper = styled(Box, {
     }),
   };
 });
+
 const SectionsContainer = styled('div', {
   name: 'MuiFakeInput',
   slot: 'Input',
   overridesResolver: (props, styles) => styles.input,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
-  return {
-    fontFamily: theme.typography.fontFamily,
-    fontSize: 'inherit',
-    lineHeight: '1.4375em', // 23px
-    flexGrow: 1,
-    visibility: ownerState.adornedStart || ownerState.focused ? 'visible' : 'hidden',
-  };
-});
+})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+  fontFamily: theme.typography.fontFamily,
+  fontSize: 'inherit',
+  lineHeight: '1.4375em', // 23px
+  flexGrow: 1,
+  visibility: ownerState.adornedStart || ownerState.focused ? 'visible' : 'hidden',
+}));
+
 const SectionContainer = styled('span', {
   name: 'MuiFakeInput',
   slot: 'Section',
   overridesResolver: (props, styles) => styles.section,
-})(({ theme }) => {
-  return {
-    fontFamily: theme.typography.fontFamily,
-    fontSize: 'inherit',
-    lineHeight: '1.4375em', // 23px
-    flexGrow: 1,
-  };
-});
+})(({ theme }) => ({
+  fontFamily: theme.typography.fontFamily,
+  fontSize: 'inherit',
+  lineHeight: '1.4375em', // 23px
+  flexGrow: 1,
+}));
+
 const SectionInput = styled('span', {
   name: 'MuiFakeInput',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
-})(({ theme }) => {
-  return {
-    fontFamily: theme.typography.fontFamily,
-    lineHeight: '1.4375em', // 23px
-    letterSpacing: 'inherit',
-    width: 'fit-content',
-  };
-});
+})(({ theme }) => ({
+  fontFamily: theme.typography.fontFamily,
+  lineHeight: '1.4375em', // 23px
+  letterSpacing: 'inherit',
+  width: 'fit-content',
+}));
 
 const FakeHiddenInput = styled('input', {
   name: 'MuiFakeInput',
@@ -235,7 +232,6 @@ const FakeInput = React.forwardRef(function FakeInput(
     InputProps,
     inputProps,
     autoFocus,
-    valueType,
     ownerState: ownerStateProp,
     endAdornment,
     startAdornment,
@@ -318,7 +314,7 @@ const FakeInput = React.forwardRef(function FakeInput(
             label
           )
         }
-        {...{ ownerState }}
+        ownerState={ownerState}
       />
     </SectionsWrapper>
   );

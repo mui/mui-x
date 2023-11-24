@@ -1,3 +1,4 @@
+import { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import { FieldsTextFieldProps } from '../../models';
 
 export interface FakeInputElement {
@@ -13,11 +14,10 @@ export interface FakeInputProps extends FieldsTextFieldProps {
   valueStr: string;
   onValueStrChange: React.ChangeEventHandler<HTMLInputElement>;
   id?: string;
-  InputProps: any;
+  InputProps?: Partial<OutlinedInputProps>;
   inputProps: any;
   autoFocus?: boolean;
   ownerState?: any;
-  valueType: 'value' | 'placeholder';
   onWrapperClick: () => void;
   defaultValue: string;
   label?: string;
