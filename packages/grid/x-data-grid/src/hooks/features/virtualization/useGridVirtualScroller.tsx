@@ -446,10 +446,12 @@ export const useGridVirtualScroller = () => {
       (hasBottomPinnedRows && params.position === 'bottom');
     const isPinnedSection = params.position !== undefined;
 
-    const rowIndexOffset = 
-      isPinnedSection && params.position === 'top' ? 0 :
-      isPinnedSection && params.position === 'bottom' ? pinnedRows.top.length + currentPage.rows.length :
-        pinnedRows.top.length;
+    const rowIndexOffset =
+      isPinnedSection && params.position === 'top'
+        ? 0
+        : isPinnedSection && params.position === 'bottom'
+        ? pinnedRows.top.length + currentPage.rows.length
+        : pinnedRows.top.length;
 
     if (innerSize.width === 0) {
       return [];

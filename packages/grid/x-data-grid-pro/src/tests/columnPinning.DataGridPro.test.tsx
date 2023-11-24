@@ -370,16 +370,16 @@ describe('<DataGridPro /> - Column pinning', () => {
         expect($(renderZone, '[data-field="currencyPair"]')!.className).not.to.include('pinned');
 
         act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
-        expect($(renderZone, `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(
-          null,
-        );
+        expect(
+          $(renderZone, `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`),
+        ).not.to.equal(null);
         expect($(renderZone, '[data-field="currencyPair"]')!.className).to.include('pinned');
 
         act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.right));
         expect($$(renderZone, `.${gridClasses['cell--pinnedLeft']}`).length).to.equal(0);
-        expect($(renderZone, `.${gridClasses['cell--pinnedRight']}[data-field="currencyPair"]`)).not.to.equal(
-          null,
-        );
+        expect(
+          $(renderZone, `.${gridClasses['cell--pinnedRight']}[data-field="currencyPair"]`),
+        ).not.to.equal(null);
       });
 
       it('should not change the columns when called on a pinned column with the same side ', () => {

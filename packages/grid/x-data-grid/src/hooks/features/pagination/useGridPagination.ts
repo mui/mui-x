@@ -248,11 +248,9 @@ export const useGridPagination = (
     }
 
     const dimensions = apiRef.current.getRootDimensions();
-    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      (dimensions.viewportInnerSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom) /
-        rowHeight,
+      dimensions.viewportInnerSize.height / rowHeight,
     );
 
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import cx from 'clsx'
+import cx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -45,7 +45,12 @@ export const GridVirtualScrollerContainer = React.forwardRef<
   const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
 
   return (
-    <Element ref={ref} className={cx(classes.root, gridClasses.main)} ownerState={rootProps} {...ariaAttributes}>
+    <Element
+      ref={ref}
+      className={cx(classes.root, gridClasses.main)}
+      ownerState={rootProps}
+      {...ariaAttributes}
+    >
       {props.children}
     </Element>
   );
