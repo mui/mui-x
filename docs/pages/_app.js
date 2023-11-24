@@ -227,10 +227,10 @@ function AppWrapper(props) {
         versions: [
           {
             text: 'v7 (next)',
-            href: `https://next.mui.com${languagePrefix}/components/data-grid/`,
+            href: `https://next.mui.com${languagePrefix}/x/react-data-grid/`,
           },
           { text: `v${process.env.DATA_GRID_VERSION}`, current: true },
-          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/components/data-grid/` },
+          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
