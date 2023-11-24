@@ -561,7 +561,7 @@ The method has been simplified and now only accepts an already-parsed date or `n
 ```
 
 ### Restrict the input format of the `isValid` method
-
+ 
 The `isValid` method used to accept any type of value and tried to parse them before checking their validity.
 The method has been simplified and now only accepts an already-parsed date or `null`.
 Which is the same type as the one accepted by the components `value` prop.
@@ -601,3 +601,24 @@ Which is the same type as the one accepted by the components `value` prop.
 -const isValid = adapterDateFns.isValid('2022-04-17');
 +const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
 ```
+
+### Extend `dayjs` in `AdapterDayjs` constructor
+
+The calls to `dayjs.extend()` to apply the plugins got moved from the file level to the `AdapterDayjs` constructor.
+In case `dayjs` (with its extensions) is needed before the Adapter gets initialized the dayjs instance needs to be
+extended manually with the required plugins first.
+
+```tsx
+import dayjs from 'dayjs';
+import isBetweenPlugin from 'dayjs/plugin/isBetween';
+
+dayjs.extend(isBetweenPlugin);
+```
+
+Plugins that were moved to the constructor are:
+- customParseFormat ('dayjs/plugin/customParseFormat')
+- isBetween ('dayjs/plugin/isBetween')
+- localizedFormat ('dayjs/plugin/localizedFormat')
+
+In the case of plugins that accept options (e.g. the `customParseFormat` plugin) it allows the user to pass custom
+options to the plugins where needed.
