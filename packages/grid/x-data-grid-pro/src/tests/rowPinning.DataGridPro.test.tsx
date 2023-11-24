@@ -511,6 +511,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       apiRef = useGridApiRef();
       return (
         <BaselineTestCase
+          apiRef={apiRef}
           rowCount={20}
           colCount={5}
           getRowHeight={(row) => {
