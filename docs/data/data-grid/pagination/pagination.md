@@ -91,7 +91,7 @@ This means you have to give the rows of all pages to the data grid.
 If your dataset is too big, and you only want to fetch the current page, you can use server-side pagination.
 
 :::info
-Check out [Selection—Usage with server-side pagination](/x/react-data-grid/selection/#usage-with-server-side-pagination) for more details.
+Check out [Selection—Usage with server-side pagination](/x/react-data-grid/row-selection/#usage-with-server-side-pagination) for more details.
 :::
 
 ### Basic implementation
