@@ -41,7 +41,7 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 
 :::warning
 Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
-The grid depends on the referential value of these props to cache their values and optimize the rendering.
+The Data Grid depends on the referential value of these props to cache their values and optimize the rendering.
 
 ```tsx
 const getDetailPanelContent = React.useCallback(() => { ... }, []);

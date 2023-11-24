@@ -39,8 +39,8 @@ The column pinning feature can be completely disabled with `disableColumnPinning
 :::
 
 :::warning
-You may encounter issues if the sum of the widths of the pinned columns is larger than the width of the data grid.
-Make sure that the data grid can accommodate properly, at least, these columns.
+You may encounter issues if the sum of the widths of the pinned columns is larger than the width of the Grid.
+Make sure that the Data Grid can properly accommodate these columns at a minimum.
 :::
 
 ## Controlling the pinned columns
@@ -67,8 +67,8 @@ This can be done in two ways:
 
 {{"demo": "DisableColumnPinningButtons.js", "bg": "inline"}}
 
-:::info
-Using the `disableColumnMenu` prop also works, however, you disable completely the column menu with this approach.
+:::warning
+Using the `disableColumnMenu` prop also works, but this approach completely disables the column menu.
 :::
 
 ## Pinning the checkbox selection column

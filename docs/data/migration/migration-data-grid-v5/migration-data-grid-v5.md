@@ -73,7 +73,7 @@ These changes were done for consistency, improve stability and make room for new
 Below are described the steps you need to make to migrate from v5 to v6.
 
 :::warning
-The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/en/blog/release/v12.22.12).
+The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x reached end-of-life status](https://nodejs.org/en/blog/release/v12.22.12) in 2022.
 :::
 
 ### ✅ Renamed props

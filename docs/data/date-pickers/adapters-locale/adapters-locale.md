@@ -114,7 +114,6 @@ You can override the default setting with the `ampm` prop:
 
 ## Custom formats
 
-:::warning
 The format received by the props described below depends on the date library you are using.
 Please refer to each library's documentation for the full format table:
 
@@ -122,8 +121,6 @@ Please refer to each library's documentation for the full format table:
 - [date-fns](https://date-fns.org/docs/format)
 - [Luxon](https://moment.github.io/luxon/#/formatting?id=table-of-tokens)
 - [Moment.js](https://momentjs.com/docs/#/displaying/format/)
-
-:::
 
 ### Custom field format
 
