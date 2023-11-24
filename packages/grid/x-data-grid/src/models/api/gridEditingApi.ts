@@ -19,10 +19,6 @@ export type GridRowModesModel = Record<GridRowId, GridRowModesModelProps>;
 
 export interface GridEditCellMeta {
   changeReason?: 'debouncedSetEditCellValue' | 'setEditCellValue';
-  /**
-   * Determines if `setEditCellValue` should be called on the first render to sync the value.
-   */
-  unstable_updateValueOnRender?: boolean;
 }
 
 export interface GridEditingSharedApi {
@@ -88,6 +84,7 @@ export interface GridStartCellEditModeParams {
   /**
    * The initial value for the field.
    * If `deleteValue` is also true, this value is not used.
+   * @deprecated No longer needed.
    */
   initialValue?: any;
 }
@@ -135,6 +132,7 @@ export interface GridStartRowEditModeParams {
   /**
    * The initial value for the given `fieldToFocus`.
    * If `deleteValue` is also true, this value is not used.
+   * @deprecated No longer needed.
    */
   initialValue?: string;
 }
