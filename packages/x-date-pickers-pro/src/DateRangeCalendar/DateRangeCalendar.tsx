@@ -686,7 +686,7 @@ DateRangeCalendar.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * The calendar will show as many weeks as needed after the end of the current month to match this value.
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fix number of weeks in Gregorian calendars
    * @default undefined
    */
