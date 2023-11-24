@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-import { treeItemClasses } from '../SimpleTreeItem';
+import { treeItemClasses } from '../TreeItem';
 import { treeViewClasses } from '../TreeView';
 
 createTheme({
