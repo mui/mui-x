@@ -128,7 +128,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
           {...slotProps?.axisLine}
         />
       )}
-
       {yTicks.map(({ formattedValue, offset, labelOffset }, index) => {
         const xTickLabel = positionSign * (tickSize + 2);
         const yTickLabel = labelOffset;
@@ -141,7 +140,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
                 {...slotProps?.axisTick}
               />
             )}
-
             {formattedValue !== undefined && (
               <TickLabel
                 x={xTickLabel}
@@ -153,7 +151,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
           </g>
         );
       })}
-
       {label && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
