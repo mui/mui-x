@@ -1,7 +1,7 @@
 name: 'Premium plan: question ❔'
 description: I'm a Premium plan user, I can't find a solution to my problem with MUI X.
 title: '[question] '
-labels: ['status: waiting for maintainer', 'Premium plan', 'support: commercial']
+labels: ['status: waiting for maintainer', 'support: commercial']
 body:
   - type: markdown
     attributes:
