@@ -100,6 +100,14 @@ const SectionInput = styled('span', {
   width: 'fit-content',
 }));
 
+const SectionSeparator = styled('span', {
+  name: 'MuiFakeInput',
+  slot: 'Separator',
+  overridesResolver: (props, styles) => styles.separator,
+})(() => ({
+  whiteSpace: 'pre',
+}));
+
 const FakeHiddenInput = styled('input', {
   name: 'MuiFakeInput',
   slot: 'HiddenInput',
@@ -141,13 +149,16 @@ function InputContent({
     <React.Fragment>
       {elements.map(({ container, content, before, after }, elementIndex) => (
         <SectionContainer key={elementIndex} {...container}>
-          <span {...before} className={clsx(fakeInputClasses.before, before?.className)} />
+          <SectionSeparator
+            {...before}
+            className={clsx(fakeInputClasses.before, before?.className)}
+          />
           <SectionInput
             {...content}
             className={clsx(fakeInputClasses.content, content?.className)}
             {...{ ownerState }}
           />
-          <span {...after} className={clsx(fakeInputClasses.after, after?.className)} />
+          <SectionSeparator {...after} className={clsx(fakeInputClasses.after, after?.className)} />
         </SectionContainer>
       ))}
     </React.Fragment>
