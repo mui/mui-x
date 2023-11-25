@@ -60,6 +60,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickFontSize,
     label,
     labelFontSize,
+    labelStyle,
     tickSize: tickSizeProp,
     valueFormatter,
     slots,
@@ -110,6 +111,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         angle: positionSign * 90,
         textAnchor: 'middle',
         dominantBaseline: 'auto',
+        ...labelStyle
       } as Partial<ChartsTextProps>['style'],
     } as Partial<ChartsTextProps>,
     ownerState: {},
