@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { GridColDef, GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
-import { GridBaseColDef, tagInternalFilter } from '@mui/x-data-grid-pro/internals';
+import {
+  GridBaseColDef,
+  isInternalFilter,
+  tagInternalFilter,
+} from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -132,35 +136,43 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
     const baseGetApplyFilterFn = operator.getApplyFilterFn;
     const baseGetApplyFilterFnV7 = operator.getApplyFilterFnV7;
 
-    const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
-      tagInternalFilter((filterItem, colDef) => {
-        const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+    let getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] = (
+      filterItem,
+      colDef,
+    ) => {
+      const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+      if (!filterFn) {
+        return null;
+      }
+      return (params) => {
+        if (getCellAggregationResult(params.id, params.field) != null) {
+          return true;
+        }
+        return filterFn(params);
+      };
+    };
+    if (isInternalFilter(baseGetApplyFilterFn)) {
+      getApplyFilterFn = tagInternalFilter(getApplyFilterFn);
+    }
+
+    let getApplyFilterFnV7: GridFilterOperator<any, any, any>['getApplyFilterFnV7'];
+    if (baseGetApplyFilterFnV7 !== undefined) {
+      getApplyFilterFnV7 = tagInternalFilter((filterItem, colDef) => {
+        const filterFn = baseGetApplyFilterFnV7(filterItem, colDef);
         if (!filterFn) {
           return null;
         }
-        return (params) => {
-          if (getCellAggregationResult(params.id, params.field) != null) {
+        return (value, row, column, api) => {
+          if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
             return true;
           }
-          return filterFn(params);
+          return filterFn(value, row, column, api);
         };
       });
-
-    const getApplyFilterFnV7: GridFilterOperator<any, any, any>['getApplyFilterFnV7'] =
-      baseGetApplyFilterFnV7 === undefined
-        ? undefined
-        : tagInternalFilter((filterItem, colDef) => {
-            const filterFn = baseGetApplyFilterFnV7(filterItem, colDef);
-            if (!filterFn) {
-              return null;
-            }
-            return (value, row, column, api) => {
-              if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
-                return true;
-              }
-              return filterFn(value, row, column, api);
-            };
-          });
+      if (isInternalFilter(baseGetApplyFilterFnV7)) {
+        getApplyFilterFnV7 = tagInternalFilter(getApplyFilterFnV7);
+      }
+    }
 
     return {
       ...operator,
