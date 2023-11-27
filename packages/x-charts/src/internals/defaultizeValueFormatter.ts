@@ -21,7 +21,7 @@ function defaultizeValueFormatter<
   Object.keys(series).forEach((seriesId) => {
     defaultizedSeries[seriesId] = {
       ...series[seriesId],
-      valueFormatter: isFunction(series[seriesId]) ? series[seriesId] : defaultValueFormatter,
+      valueFormatter: series[seriesId].valueFormatter ?? defaultValueFormatter,
     };
   });
   return defaultizedSeries;
