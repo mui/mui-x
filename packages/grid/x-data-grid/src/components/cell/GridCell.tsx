@@ -154,6 +154,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     height,
     width,
     className,
+    style: styleProp,
     extendRowFullWidth,
     row,
     colSpan,
@@ -323,6 +324,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     const cellStyle = {
       '--width': `${width}px`,
       '--height': typeof height === 'number' ? `${height}px` : height,
+      ...styleProp,
     } as React.CSSProperties;
 
     if (pinnedPosition === PinnedPosition.LEFT) {
@@ -334,7 +336,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
 
     return cellStyle;
-  }, [width, height, isNotVisible]);
+  }, [width, height, isNotVisible, styleProp]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
