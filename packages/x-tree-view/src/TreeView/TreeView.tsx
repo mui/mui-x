@@ -8,7 +8,7 @@ import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { TREE_VIEW_PLUGINS } from './TreeView.plugins';
-import { buildWarning } from '@mui/x-tree-view/internals/utils/warning';
+import { buildWarning } from '../internals/utils/warning';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
