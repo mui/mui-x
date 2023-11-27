@@ -153,7 +153,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
           </g>
         );
       })}
-
       {label && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />

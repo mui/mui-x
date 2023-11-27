@@ -54,7 +54,7 @@ export interface ExportedDayCalendarProps<TDate> extends ExportedPickersDayProps
    */
   loading?: boolean;
   /**
-   * Component displaying when passed `loading` true.
+   * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => "..."
    */
@@ -71,8 +71,8 @@ export interface ExportedDayCalendarProps<TDate> extends ExportedPickersDayProps
    */
   displayWeekNumber?: boolean;
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber?: number;

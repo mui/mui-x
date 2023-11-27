@@ -49,8 +49,8 @@ function PlanIcon({ plan }) {
     }
   }
   return (
-    <a href={href}>
-      <span className={`plan-${plan}`} title={title} />
+    <a href={href} title={title} aria-label={title}>
+      <span className={`plan-${plan}`} />
     </a>
   );
 }

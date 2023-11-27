@@ -86,8 +86,28 @@ npx @mui/x-codemod v7.0.0/pickers/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`rename-components-to-slots-pickers`](#rename-components-to-slots-pickers)
 - [`rename-default-calendar-month-to-reference-date`](#rename-default-calendar-month-to-reference-date)
 - [`rename-day-picker-classes`](/rename-day-picker-classes)
+
+#### `rename-components-to-slots-pickers`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects Date and Time Picker components.
+
+```diff
+ <DatePicker
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-components-to-slots <path>
+```
 
 #### `rename-default-calendar-month-to-reference-date`
 
@@ -98,6 +118,10 @@ Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
 + <DateCalendar referenceDate{dayjs('2022-04-01')} />
 ```
 
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-default-calendar-month-to-reference-date <path>
+```
+
 #### `rename-day-picker-classes`
 
 Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
@@ -105,6 +129,10 @@ Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
 ```diff
 - import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
 + import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-day-picker-classes <path>
 ```
 
 ### Data grid codemods
@@ -119,7 +147,26 @@ npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path|folder>
 
 The list includes these transformers
 
-NO CODEMOD ADDED YET
+- [`rename-components-to-slots-data-grid`](#rename-components-to-slots-data-grid)
+
+#### `rename-components-to-slots-data-grid`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects Data Grid components.
+
+```diff
+ <DataGrid
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ toolbar: { showQuickFilter: true }}}
++  slotProps={{ toolbar: { showQuickFilter: true }}}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/data-grid/rename-components-to-slots <path>
+```
 
 ## v6.0.0
 
@@ -451,7 +498,7 @@ npx @mui/x-codemod v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
-This change only affects pickers components.
+This change only affects Date and Time Pickers components.
 
 ```diff
  <DatePicker
@@ -750,7 +797,7 @@ npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
-This change only affects data grid components.
+This change only affects Data Grid components.
 
 ```diff
  <DataGrid
