@@ -37,7 +37,7 @@ The Data Grid Pro comes with multi-filtering, multi-sorting, column resizing, an
 You also gain access to the Date and Time Range Picker components.
 
 The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
-Exclusive features are marked with the <span class="plan-pro"></span> icon throughout the documentation.
+Exclusive features are marked with the <span class="plan-pro" aria-label="MUI X Pro plan icon"></span> icon throughout the documentation.
 
 These are the Pro npm packages:
 
@@ -49,7 +49,7 @@ These are the Pro npm packages:
 MUI X Premium unlocks the most advanced features of the Data Grid, including row grouping and Excel exporting, on top of everything else offered in the Pro plan.
 
 The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
-Exclusive features are marked with the <span class="plan-premium"></span> icon throughout the documentation.
+Exclusive features are marked with the <span class="plan-premium" aria-label="MUI X Premium plan icon"></span> icon throughout the documentation.
 
 These are the Premium npm packages:
 
