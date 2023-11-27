@@ -1,26 +1,26 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import InfoCard from 'docs/src/components/action/InfoCard';
-import TableChartRounded from '@mui/icons-material/TableChartRounded';
-import DateRangeRounded from '@mui/icons-material/DateRangeRounded';
 import AccountTreeRounded from '@mui/icons-material/AccountTreeRounded';
-import ShowChartRounded from '@mui/icons-material/ShowChartRounded';
+import PivotTableChartRoundedIcon from '@mui/icons-material/PivotTableChartRounded';
+import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
+import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 
 const content = [
   {
     title: 'Data Grid',
     link: '/x/react-data-grid/getting-started/#installation',
-    icon: <TableChartRounded fontSize="small" color="primary" />,
+    icon: <PivotTableChartRoundedIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Date and Time Pickers',
     link: '/x/react-date-pickers/getting-started/#installation',
-    icon: <DateRangeRounded fontSize="small" color="primary" />,
+    icon: <CalendarMonthRoundedIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Charts',
     link: '/x/react-charts/#getting-started',
-    icon: <ShowChartRounded fontSize="small" color="primary" />,
+    icon: <BarChartRoundedIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Tree View',
