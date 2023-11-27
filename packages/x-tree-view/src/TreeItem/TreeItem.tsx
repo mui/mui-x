@@ -136,7 +136,14 @@ const TreeItemGroup = styled(Collapse, {
 });
 
 /**
- * @ignore - do not document.
+ *
+ * Demos:
+ *
+ * - [Tree View](https://mui.com/x/react-tree-view/)
+ *
+ * API:
+ *
+ * - [TreeItem API](https://mui.com/x/api/tree-view/tree-item/)
  */
 export const TreeItem = React.forwardRef(function TreeItem(
   inProps: TreeItemProps,
