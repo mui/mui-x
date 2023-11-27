@@ -15,7 +15,7 @@ const blogs = [
   {
     title: 'MUI X v6.18.x',
     description:
-      'New stable components, polished features, better performance and more.',
+      'New stable components, polished features, better performance, and more.',
     announcementDate: 'Monday, Nov 13, 2023',
     url: 'https://mui.com/blog/mui-x-end-v6-features/',
     highlightList: [
@@ -28,7 +28,7 @@ const blogs = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#tree-view',
       },
       {
-        title: 'Date and time clearable fields',
+        title: 'Clearable date and time fields',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#clearable-field',
       },
       {
@@ -36,7 +36,7 @@ const blogs = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#customization-playgrounds',
       },
       {
-        title: 'DataGrid column autosizing',
+        title: 'Data Grid column autosizing',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
       },
       {
