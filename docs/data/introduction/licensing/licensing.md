@@ -55,40 +55,42 @@ These are the Premium npm packages:
 
 ## Upgrading
 
-The npm packages of any given plan are a **superset** of the packages on the plan below.
-So to upgrade, replace the [npm packages](#plans) and the components' imports with the ones from the target plan.
+The [npm packages](#plans) of any given plan are a **superset** of the packages on the plan below.
+So to upgrade, replace them and the respective components' imports with the ones from the target plan.
 
-For example, when you want to upgrade the Data Grid:
+Below are upgrading scenarios using the Data Grid as an example:
 
-- **Upgrading from Community to Pro.**
+### From Community to Pro
 
-  `@mui/x-data-grid-pro` is a superset of `@mui/x-data-grid`, so you can upgrade from the Community to the Pro plan like this:
+`@mui/x-data-grid-pro` is a superset of `@mui/x-data-grid`.
+Upgrade it by updating the imports:
 
-  ```diff
-  -import { DataGrid } from '@mui/x-data-grid';
-  +import { DataGridPro } from '@mui/x-data-grid-pro';
-  ```
+```diff
+-import { DataGrid } from '@mui/x-data-grid';
++import { DataGridPro } from '@mui/x-data-grid-pro';
+```
 
-  :::warning
-  There is an exception to the superset rule: the default value of the `pagination` prop changes.
-  See the [Pagination](/x/react-data-grid/pagination/) doc for details.
-  :::
+:::warning
+There is an exception to the superset rule: the default value of the `pagination` prop changes.
+See the [Pagination](/x/react-data-grid/pagination/) doc for details.
+:::
 
-- **Upgrading from Pro to Premium.**
+### From Pro to Premium
 
-  `@mui/x-data-grid-premium` is a superset of `@mui/x-data-grid-pro`, so you can upgrade from Pro to Premium like this:
+`@mui/x-data-grid-premium` is a superset of `@mui/x-data-grid-pro`.
+Upgrade it by updating the imports:
 
-  ```diff
-  -import { DataGridPro } from '@mui/x-data-grid-pro';
-  +import { DataGridPremium } from '@mui/x-data-grid-premium';
-  ```
+```diff
+-import { DataGridPro } from '@mui/x-data-grid-pro';
++import { DataGridPremium } from '@mui/x-data-grid-premium';
+```
 
-  :::info
-  If you are looking for upgrading from Pro to Premium, please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium).
-  We'll provide you with a discount based on the remaining time of your current license term.
-  :::
+:::success
+If you are looking for upgrading from Pro to Premium, please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium).
+We'll provide you with a discount based on the remaining time of your current license term.
+:::
 
-For more details on how to install the packages, please check out our [package installation guide](/x/introduction/installation/).
+For more details on how to install each package, visit the [package installation guide](/x/introduction/installation/).
 
 ## Evaluation (trial) licenses
 
@@ -119,10 +121,9 @@ The number of seats purchased on your license must correspond to the number of c
 
 This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#required-quantity-of-licenses)
 
-## License key installation
+## License key
 
-When you purchase a commercial license, you'll receive a license key by email.
-This key removes all watermarks and console warnings.
+By purchasing a commercial license, you should get a license key by email that removes all watermarks and console warnings.
 
 :::warning
 Orders placed after **May 13, 2022** come with a license key by default that is only compatible with MUI X from `v5.11.0` and upwards.
@@ -132,15 +133,10 @@ Please update your npm package if you're using an earlier version.
 If this isn't possible, please contact sales@mui.com to request a compatible license key.
 :::
 
-## How to install the key
+### How to install the key
 
-First, make sure you have [any](#plans) of the commercial packages installed.
-They include a dependency called `@mui/x-license-pro`, used to validate the license.
-
-If you're upgrading from community, you may want to check the [upgrading](#upgrading-from-community) section.
-
-With a commercial packaged installed, use `LicenseInfo` to set your licence key as in the code snippet below.
-Calling `setLicenseKey()` "install" the key.
+The license key depends on a package called `@mui/x-license-{plan}` that validates if it is active.
+With that in hand, import the `LicenseInfo` method from that package to call the `setLicenseKey()` function that will properly "install" it.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -148,13 +144,19 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-You only need to install the key once in your application.
+You'll only need to do this once in your app.
 
-## Where to install the key
+:::info
 
-You need to call `setLicenseKey()` before React renders the first component.
+If you're upgrading to a commercial plan from the Community version, you may want to check [the Upgrading section](#upgrading) first.
 
-The bundle size of `setLicenseKey()` is relatively small, it should be small enough for you to be able to call it in all your bundles, regardless of whether a commercial MUI X component is rendered or not.
+:::
+
+### Where to install the key
+
+Ensure you call the `setLicenseKey()` function before React renders the first component of your app.
+
+Its bundle size is relatively small, so it should be fine to call it in all your bundles, regardless of whether a commercial MUI X component is rendered.
 
 ## Next.js integration
 
