@@ -24,7 +24,7 @@ The Tree View exists in two versions:
 The `TreeView` component accepts its items as JSX children.
 It is designed for simple use-cases where the items are hardcoded.
 
-{{"demo": "BasicJSXTreeView.js"}}
+{{"demo": "BasicTreeView.js"}}
 
 :::warning
 Most new advanced features won't be available on this component.
@@ -38,7 +38,7 @@ Throughout the documentation, all the features not available for this component 
 The `RichTreeView` component accepts its items takes with the `items` prop.
 It is designed for more advanced use-cases where the items are dynamically loaded from a datasource.
 
-{{"demo": "BasicTreeView.js"}}
+{{"demo": "BasicRichTreeView.js"}}
 
 ## Accessibility
 

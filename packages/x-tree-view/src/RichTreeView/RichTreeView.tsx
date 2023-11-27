@@ -10,6 +10,7 @@ import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
 import { TreeItem } from '../TreeItem';
 import { TreeViewBaseItem } from '../models';
+import { buildWarning } from '../internals/utils/warning';
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   ownerState: RichTreeViewProps<R, Multiple>,
@@ -62,6 +63,12 @@ function WrappedTreeItem<R extends {}>({
   return <Item {...itemProps}>{children}</Item>;
 }
 
+const childrenWarning = buildWarning([
+  'The `RichTreeView` component does not support JSX children.',
+  'If you want to add items, you need to use the `items` prop',
+  'Check you the documentation for more details: https://mui.com/x/react-tree-view/items/#usage-with-richtreeview',
+]);
+
 /**
  *
  * Demos:
@@ -76,7 +83,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   R extends {},
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
-  const themeProps = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
+  const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
 
   const {
     // Headless implementation
@@ -101,7 +108,13 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     slots,
     slotProps,
     ...other
-  } = themeProps as RichTreeViewProps<any, any>;
+  } = props as RichTreeViewProps<any, any>;
+
+  if (process.env.NODE_ENV !== 'production') {
+    if ((props as any).children != null) {
+      childrenWarning();
+    }
+  }
 
   const { getRootProps, contextValue } = useTreeView({
     disabledItemsFocusable,
@@ -125,7 +138,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
   });
 
-  const classes = useUtilityClasses(themeProps);
+  const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewRoot;
   const rootProps = useSlotProps({
@@ -134,7 +147,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     externalForwardedProps: other,
     className: classes.root,
     getSlotProps: getRootProps,
-    ownerState: themeProps as RichTreeViewProps<any, any>,
+    ownerState: props as RichTreeViewProps<any, any>,
   });
 
   const renderItem = (item: TreeViewBaseItem<R>) => {

@@ -10,6 +10,10 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Pass data to your Tree View.</p>
 
+## Usage with `TreeView`
+
+{{"demo": "BasicTreeView.js"}}
+
 ## Usage with `RichTreeView`
 
 The items can be defined with the `items` prop, which expects an array of objects.
@@ -19,13 +23,21 @@ The `items` prop should keep the same reference between two renders except if yo
 Otherwise, the Tree View will re-generate its entire structure.
 :::
 
-{{"demo": "BasicTreeView.js"}}
-
-## Usage with `TreeView`
-
-{{"demo": "BasicJSXTreeView.js"}}
+{{"demo": "BasicRichTreeView.js"}}
 
 ## Disabled items
+
+### Disable items on `TreeView`
+
+You can disable some of the items using the `disabled` prop on the `TreeItem` component:
+
+```tsx
+<TreeView>
+  <TreeItem nodeId="@mui/x-scheduler" label="Scheduler" disabled />
+</TreeView>
+```
+
+{{"demo": "DisabledJSXItem.js", "defaultCodeOpen": false}}
 
 ### Disable items on `RichTreeView`
 
@@ -39,7 +51,7 @@ function isItemDisabled(row) {
 <TreeView isItemDisabled={isItemDisabled} />;
 ```
 
-{{"demo": "DisabledItem.js", "defaultCodeOpen": false}}
+{{"demo": "DisabledPropItem.js", "defaultCodeOpen": false}}
 
 :::warning
 Just like the `items` prop, the `isItemDisabled` function should keep the same JavaScript reference between two renders.
@@ -47,18 +59,6 @@ Otherwise, the Tree View will re-generate its entire structure.
 
 It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
-
-### Disable items on `TreeView`
-
-You can disable some of the items using the `disabled` prop on the `TreeItem` component:
-
-```tsx
-<TreeView>
-  <TreeItem nodeId="@mui/x-scheduler" label="Scheduler" disabled />
-</TreeView>
-```
-
-{{"demo": "DisabledJSXItem.js", "defaultCodeOpen": false}}
 
 ### Interact with disabled items
 

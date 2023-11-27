@@ -8,6 +8,7 @@ import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { TREE_VIEW_PLUGINS } from './TreeView.plugins';
+import { buildWarning } from '@mui/x-tree-view/internals/utils/warning';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
@@ -38,6 +39,12 @@ type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
 
 const EMPTY_ITEMS: any[] = [];
 
+const itemsPropWarning = buildWarning([
+  'The `TreeView` component does not support the `items` prop.',
+  'If you want to add items, you need to pass them as JSX children',
+  'Check you the documentation for more details: https://mui.com/x/react-tree-view/items/#usage-with-treeview',
+]);
+
 /**
  *
  * Demos:
@@ -51,8 +58,8 @@ const EMPTY_ITEMS: any[] = [];
 const TreeView = React.forwardRef(function TreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: TreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
-  const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
-  const ownerState = themeProps as TreeViewProps<any>;
+  const props = useThemeProps({ props: inProps, name: 'MuiTreeView' });
+  const ownerState = props as TreeViewProps<any>;
 
   const {
     // Headless implementation
@@ -74,7 +81,13 @@ const TreeView = React.forwardRef(function TreeView<
     // Component implementation
     children,
     ...other
-  } = themeProps as TreeViewProps<any>;
+  } = props as TreeViewProps<any>;
+
+  if (process.env.NODE_ENV !== 'production') {
+    if ((props as any).items != null) {
+      itemsPropWarning();
+    }
+  }
 
   const { getRootProps, contextValue } = useTreeView({
     disabledItemsFocusable,
@@ -97,7 +110,7 @@ const TreeView = React.forwardRef(function TreeView<
     rootRef: ref,
   });
 
-  const classes = useUtilityClasses(themeProps);
+  const classes = useUtilityClasses(props);
 
   const rootProps = useSlotProps({
     elementType: TreeViewRoot,
