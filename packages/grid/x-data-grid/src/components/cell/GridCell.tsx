@@ -156,7 +156,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     className,
     style: styleProp,
     extendRowFullWidth,
-    row,
     colSpan,
     disableDragEvents,
     isNotVisible,
