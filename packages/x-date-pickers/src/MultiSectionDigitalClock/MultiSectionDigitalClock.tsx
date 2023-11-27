@@ -72,8 +72,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     ampm = utils.is12HourCycleInCurrentLocale(),
     timeSteps: inTimeSteps,
     autoFocus,
-    components,
-    componentsProps,
     slots,
     slotProps,
     value: valueProp,
@@ -85,7 +83,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     disableFuture,
     disablePast,
     minutesStep = 1,
-    shouldDisableClock,
     shouldDisableTime,
     onChange,
     view: inView,
@@ -203,10 +200,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           return false;
         }
 
-        if (shouldDisableClock?.(timeValue, viewType)) {
-          return false;
-        }
-
         if (shouldDisableTime) {
           switch (viewType) {
             case 'hours':
@@ -269,7 +262,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       meridiemMode,
       minTime,
       minutesStep,
-      shouldDisableClock,
       shouldDisableTime,
       utils,
       disableFuture,
@@ -304,6 +296,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               isDisabled: (hours) => disabled || isTimeDisabled(hours, 'hours'),
               timeStep: timeSteps.hours,
               resolveAriaLabel: localeText.hoursClockNumberText,
+              valueOrReferenceDate,
             }),
           };
         }
@@ -350,12 +343,14 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
                 value: 'am',
                 label: amLabel,
                 isSelected: () => !!value && meridiemMode === 'am',
+                isFocused: () => !!valueOrReferenceDate && meridiemMode === 'am',
                 ariaLabel: amLabel,
               },
               {
                 value: 'pm',
                 label: pmLabel,
                 isSelected: () => !!value && meridiemMode === 'pm',
+                isFocused: () => !!valueOrReferenceDate && meridiemMode === 'pm',
                 ariaLabel: pmLabel,
               },
             ],
@@ -412,8 +407,8 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           autoFocus={autoFocus ?? focusedView === timeView}
           disabled={disabled}
           readOnly={readOnly}
-          slots={slots ?? components}
-          slotProps={slotProps ?? componentsProps}
+          slots={slots}
+          slotProps={slotProps}
           skipDisabled={skipDisabled}
           aria-label={localeText.selectViewText(timeView as TimeViewWithMeridiem)}
         />
@@ -444,18 +439,6 @@ MultiSectionDigitalClock.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overrideable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default selected value.
    * Used when the component is not controlled.
@@ -538,14 +521,6 @@ MultiSectionDigitalClock.propTypes = {
    */
   referenceDate: PropTypes.any,
   /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
-  /**
    * Disable specific time.
    * @template TDate
    * @param {TDate} value The value to check.
@@ -590,7 +565,7 @@ MultiSectionDigitalClock.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

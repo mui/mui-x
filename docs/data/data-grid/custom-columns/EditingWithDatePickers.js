@@ -29,7 +29,7 @@ function buildApplyDateFilterFn(filterItem, compareFn, showTime = false) {
 
   const filterValueMs = filterValueCopy.getTime();
 
-  return ({ value }) => {
+  return (value) => {
     if (!value) {
       return false;
     }
@@ -125,7 +125,7 @@ function getDateFilterOperators(showTime = false) {
     {
       value: 'isEmpty',
       getApplyFilterFn: () => {
-        return ({ value }) => {
+        return (value) => {
           return value == null;
         };
       },
@@ -134,7 +134,7 @@ function getDateFilterOperators(showTime = false) {
     {
       value: 'isNotEmpty',
       getApplyFilterFn: () => {
-        return ({ value }) => {
+        return (value) => {
           return value != null;
         };
       },

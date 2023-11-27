@@ -19,7 +19,7 @@ The component leverages the power of React and TypeScript, to provide the best U
 Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
 :::
 
-The `DataGrid` presents information in a structured format of rows and columns. The data is displayed in a user-friendly, quick-to-scan and interactive way, enabling users to efficiently identify patterns, edit data, and gather insights.
+The Data Grid presents information in a structured format of rows and columns. The data is displayed in a user-friendly, quick-to-scan and interactive way, enabling users to efficiently identify patterns, edit data, and gather insights.
 
 The component comes in three different versions. One available under MIT license and two available under commercial license.
 

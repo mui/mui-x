@@ -35,16 +35,15 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     name: 'MuiSingleInputDateRangeField',
   });
 
-  const { slots, slotProps, components, componentsProps, InputProps, inputProps, ...other } =
-    themeProps;
+  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? MuiTextField;
   const { inputRef: externalInputRef, ...textFieldProps }: SingleInputDateRangeFieldProps<TDate> =
     useSlotProps({
       elementType: TextField,
-      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+      externalSlotProps: slotProps?.textField,
       externalForwardedProps: other,
       ownerState,
     });
@@ -79,8 +78,6 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     InputProps: fieldProps.InputProps,
     slots,
     slotProps,
-    components,
-    componentsProps,
   });
 
   return (
@@ -119,18 +116,6 @@ SingleInputDateRangeField.propTypes = {
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   component: PropTypes.elementType,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -354,7 +339,7 @@ SingleInputDateRangeField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

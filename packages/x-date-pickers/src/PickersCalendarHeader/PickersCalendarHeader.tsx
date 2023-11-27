@@ -132,8 +132,6 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
   const {
     slots,
     slotProps,
-    components,
-    componentsProps,
     currentMonth: month,
     disabled,
     disableFuture,
@@ -148,6 +146,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     labelId,
     className,
     timezone,
+    format = `${utils.formats.month} ${utils.formats.year}`,
     ...other
   } = props;
 
@@ -155,10 +154,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
 
   const classes = useUtilityClasses(props);
 
-  const SwitchViewButton =
-    slots?.switchViewButton ??
-    components?.SwitchViewButton ??
-    PickersCalendarHeaderSwitchViewButton;
+  const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
     externalSlotProps: slotProps?.switchViewButton,
@@ -170,8 +166,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     className: classes.switchViewButton,
   });
 
-  const SwitchViewIcon =
-    slots?.switchViewIcon ?? components?.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
+  const SwitchViewIcon = slots?.switchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
@@ -213,6 +208,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     return null;
   }
 
+  const label = utils.formatByString(month, format);
+
   return (
     <PickersCalendarHeaderRoot
       {...other}
@@ -228,17 +225,14 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
         aria-live="polite"
         className={classes.labelContainer}
       >
-        <PickersFadeTransitionGroup
-          reduceAnimations={reduceAnimations}
-          transKey={utils.format(month, 'monthAndYear')}
-        >
+        <PickersFadeTransitionGroup reduceAnimations={reduceAnimations} transKey={label}>
           <PickersCalendarHeaderLabel
             id={labelId}
             data-mui-test="calendar-month-and-year-text"
             ownerState={ownerState}
             className={classes.label}
           >
-            {utils.format(month, 'monthAndYear')}
+            {label}
           </PickersCalendarHeaderLabel>
         </PickersFadeTransitionGroup>
         {views.length > 1 && !disabled && (
@@ -276,22 +270,15 @@ PickersCalendarHeader.propTypes = {
    * className applied to the root element.
    */
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   currentMonth: PropTypes.any.isRequired,
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,
   disablePast: PropTypes.bool,
+  /**
+   * Format used to display the date.
+   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   */
+  format: PropTypes.string,
   labelId: PropTypes.string,
   maxDate: PropTypes.any.isRequired,
   minDate: PropTypes.any.isRequired,

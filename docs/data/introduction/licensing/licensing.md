@@ -76,7 +76,8 @@ For example, when you want to upgrade the Data Grid:
   ```
 
   :::warning
-  However, there is an exception to the superset rule. The default value of the `pagination` prop changes, [see the docs of the pagination](/x/react-data-grid/pagination/).
+  There is an exception to the superset rule: the default value of the `pagination` prop changes.
+  See the [Pagination](/x/react-data-grid/pagination/) doc for details.
   :::
 
 - **Upgrading from Pro to Premium.**
@@ -130,7 +131,7 @@ When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
 
 :::warning
-The orders placed after **May 13, 2022** come with a license key by default that is only compatible with MUI X from `v5.11.0` and upwards.
+Orders placed after **May 13, 2022** come with a license key by default that is only compatible with MUI X from `v5.11.0` and upwards.
 
 Please update your npm package if you're using an earlier version.
 
@@ -304,7 +305,7 @@ Or if you didn\'t intend to use Premium features, you can replace the import of 
 This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
 
-To solve the issue, you need to double check that `setLicenseKey()` is called with the right argument.
+To solve the issue, you need to double-check that `setLicenseKey()` is called with the right argument.
 Please check the [license key installation](#license-key-installation).
 
 ### 6. Invalid license key (`TypeError: extracting license expiry timestamp`)

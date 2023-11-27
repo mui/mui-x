@@ -12,7 +12,6 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
-import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 
 export interface UseDateFieldParams<TDate, TChildProps extends {}> {
   props: UseDateFieldComponentProps<TDate, TChildProps>;
@@ -41,8 +40,18 @@ export type UseDateFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   UseDateFieldProps<TDate>;
 
 export interface DateFieldProps<TDate>
-  extends UseDateFieldComponentProps<TDate, FieldsTextFieldProps>,
-    SlotsAndSlotProps<DateFieldSlotsComponent, DateFieldSlotsComponentsProps<TDate>> {}
+  extends UseDateFieldComponentProps<TDate, FieldsTextFieldProps> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: DateFieldSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DateFieldSlotsComponentsProps<TDate>;
+}
 
 export type DateFieldOwnerState<TDate> = DateFieldProps<TDate>;
 
@@ -52,7 +61,7 @@ export interface DateFieldSlotsComponent extends FieldSlotsComponents {
    * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
-  TextField?: React.ElementType;
+  textField?: React.ElementType;
 }
 
 export interface DateFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {

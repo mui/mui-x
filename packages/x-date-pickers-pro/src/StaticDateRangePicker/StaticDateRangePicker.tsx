@@ -89,34 +89,17 @@ StaticDateRangePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * Position the current month is rendered in.
    * @default 1
    */
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter.  Deprecated, will be removed in v7: Use `date` instead.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
    * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
-  /**
-   * Default calendar month displayed when `value={[null, null]}`.
-   */
-  defaultCalendarMonth: PropTypes.any,
   /**
    * The initial position in the edited date range.
    * Used when the component is not controlled.
@@ -168,8 +151,8 @@ StaticDateRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
@@ -250,7 +233,7 @@ StaticDateRangePicker.propTypes = {
    */
   referenceDate: PropTypes.any,
   /**
-   * Component displaying when passed `loading` true.
+   * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => "..."
    */
@@ -299,7 +282,7 @@ StaticDateRangePicker.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

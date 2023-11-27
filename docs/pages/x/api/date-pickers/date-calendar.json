@@ -1,28 +1,15 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(day: string, date: TDate) => string",
-        "describedArgs": ["day", "date"],
+        "type": "function(date: TDate) => string",
+        "describedArgs": ["date"],
         "returned": "string"
       }
     },
-    "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },

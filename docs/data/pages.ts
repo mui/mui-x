@@ -246,7 +246,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/date-field',
                 title: 'Date Field',
-                newFeature: true,
               },
               { pathname: '/x/react-date-pickers/date-calendar', title: 'Date Calendar' },
             ],
@@ -259,13 +258,11 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/time-field',
                 title: 'Time Field',
-                newFeature: true,
               },
               { pathname: '/x/react-date-pickers/time-clock', title: 'Time Clock' },
               {
                 pathname: '/x/react-date-pickers/digital-clock',
                 title: 'Digital Clock',
-                newFeature: true,
               },
             ],
           },
@@ -277,7 +274,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/date-time-field',
                 title: 'Date Time Field',
-                newFeature: true,
               },
             ],
           },
@@ -290,12 +286,10 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/date-range-field',
                 title: 'Date Range Field',
-                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/date-range-calendar',
                 title: 'Date Range Calendar',
-                newFeature: true,
               },
             ],
           },
@@ -311,7 +305,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/time-range-field',
                 title: 'Time Range Field',
-                newFeature: true,
               },
             ],
           },
@@ -327,11 +320,10 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/date-time-range-field',
                 title: 'Date Time Range Field',
-                newFeature: true,
               },
             ],
           },
-          { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
+          { pathname: '/x/react-date-pickers/fields', title: 'Field components' },
         ],
       },
       {

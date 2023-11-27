@@ -10,12 +10,22 @@
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
     },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "disableAxisListener": { "type": { "name": "bool" } },
+    "height": { "type": { "name": "number" }, "default": "undefined" },
     "leftAxis": {
       "type": {
         "name": "union",
         "description": "{ axisId?: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, labelStyle?: object, position?: 'left'<br>&#124;&nbsp;'right', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
       },
       "default": "yAxisIds[0] The id of the first provided axis"
+    },
+    "margin": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "object Depends on the charts type."
     },
     "rightAxis": {
       "type": {
@@ -32,6 +42,19 @@
         "description": "{ axisId?: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, labelStyle?: object, position?: 'bottom'<br>&#124;&nbsp;'top', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
       },
       "default": "null"
+    },
+    "width": { "type": { "name": "number" }, "default": "undefined" },
+    "xAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId?: string, classes?: object, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, fill?: string, hideTooltip?: bool, id?: string, label?: string, labelFontSize?: number, labelStyle?: object, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'point'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number, valueFormatter?: func }&gt;"
+      }
+    },
+    "yAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId?: string, classes?: object, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, fill?: string, hideTooltip?: bool, id?: string, label?: string, labelFontSize?: number, labelStyle?: object, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'point'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number, valueFormatter?: func }&gt;"
+      }
     }
   },
   "slots": [

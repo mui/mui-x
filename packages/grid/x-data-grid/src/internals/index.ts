@@ -145,7 +145,11 @@ export {
   createSelectorMemoized,
   unstable_resetCreateSelectorCache,
 } from '../utils/createSelector';
-export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
+export {
+  findParentElementFromClassName,
+  getActiveElement,
+  isEventTargetInPortal,
+} from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
@@ -160,5 +164,4 @@ export type { GridApiCaches } from '../models/gridApiCaches';
 
 export { serializeCellValue } from '../hooks/features/export/serializers/csvSerializer';
 
-export * from '../colDef/utils';
 export * from './utils';

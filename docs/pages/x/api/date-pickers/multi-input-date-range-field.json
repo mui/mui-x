@@ -1,18 +1,6 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "direction": {
       "type": {

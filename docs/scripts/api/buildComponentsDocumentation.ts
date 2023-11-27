@@ -18,7 +18,6 @@ import generatePropTypeDescription, {
 } from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
 import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
-import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse } from 'react-docgen';
@@ -76,20 +75,15 @@ function extractSlots(options: {
   project: XTypeScriptProject;
 }) {
   const { filename, name: componentName, displayName, project } = options;
-  const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
   const components = getPropTypesFromFile({
     filePath: filename,
     project,
     checkDeclarations: true,
-    shouldResolveObject: ({ name }) => {
-      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
-      return name === 'slots' || name === 'components';
-    },
+    shouldResolveObject: ({ name }) => name === 'slots',
     shouldInclude: ({ name, depth }) => {
-      // The keys allowed in the `components` prop have depth=2
-      // TODO v7: Remove the `components` fallback once `slots` is used everywhere
-      return name === 'slots' || name === 'components' || depth === 2;
+      // The keys allowed in the `slots` prop have depth=2
+      return name === 'slots' || depth === 2;
     },
   });
 
@@ -98,21 +92,19 @@ function extractSlots(options: {
     throw new Error(`No proptypes found for \`${displayName}\``);
   }
 
-  const componentsProps = props.types.find(
-    // TODO v7: Remove the `components` fallback once `slots` is used everywhere
-    (type) => type.name === 'slots' || type.name === 'components',
-  )!;
-  if (!componentsProps) {
-    return slots;
+  const rawSlots = props.types.find((type) => type.name === 'slots')!;
+  if (!rawSlots) {
+    return {};
   }
 
-  const propType = componentsProps.propType as UnionType;
+  const propType = rawSlots.propType as UnionType;
   const propInterface = propType.types.find((type) => type.type === 'InterfaceNode');
   if (!propInterface) {
-    throw new Error(`The \`components\` prop in \`${componentName}\` is not an interface.`);
+    throw new Error(`The \`slots\` prop in \`${componentName}\` is not an interface.`);
   }
 
   const types = [...(propInterface as InterfaceType).types].sort((a, b) => (a[0] > b[0] ? 1 : -1));
+  const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
@@ -134,12 +126,7 @@ function extractSlots(options: {
       return;
     }
 
-    // Workaround to generate correct (camelCase) keys for slots in `API Reference` documentation
-    // TODO v7: Remove camelCase from pickers once the `components` prop is removed
-    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedSlotsComponent`
-    const slotName = project.name.includes('grid') ? name : camelCase(name);
-
-    slots[slotName] = {
+    slots[name] = {
       type,
       description,
       default: defaultValue,
@@ -486,8 +473,7 @@ const buildComponentDocumentation = async (options: {
   /**
    * Slot descriptions.
    */
-  // TODO v7: Remove the `components` fallback once `slots` is used everywhere
-  if (componentApi.propDescriptions.slots || componentApi.propDescriptions.components) {
+  if (componentApi.propDescriptions.slots) {
     const slots = extractSlots({
       filename,
       name: reactApi.name, // e.g. DataGrid

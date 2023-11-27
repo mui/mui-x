@@ -41,11 +41,11 @@ function getBandSize({
   };
 }
 
-export interface BarPlotSlotsComponent {
+export interface BarPlotSlots {
   bar?: React.JSXElementConstructor<BarElementProps>;
 }
 
-export interface BarPlotSlotComponentProps {
+export interface BarPlotSlotProps {
   bar?: Partial<BarElementProps>;
 }
 

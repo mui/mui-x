@@ -44,7 +44,7 @@ Apart from the removed methods and exports that require manual intervention, aro
 :::
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -107,9 +107,47 @@ Below are described the steps you need to make to migrate from v6 to v7.
   If there are no selected rows, it will print all rows. This makes the print export consistent with the other exports.
   You can [customize the rows to export by using the `getRowsToExport` function](/x/react-data-grid/export/#customizing-the-rows-to-export).
 
-<!-- ### Filtering
+### Filtering
 
-- -->
+- The `getApplyFilterFnV7` in `GridFilterOperator` was renamed to `getApplyFilterFn`.
+  If you use `getApplyFilterFnV7` directly - rename it to `getApplyFilterFn`.
+
+- The signature of the function returned by `getApplyFilterFn` has changed for performance reasons:
+
+```diff
+ const getApplyFilterFn: GetApplyFilterFn<any, unknown> = (filterItem) => {
+   if (!filterItem.value) {
+     return null;
+   }
+
+   const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
+-  return (cellParams) => {
+-    const { value } = cellParams;
++  return (value, row, colDef, apiRef) => {
+     return value != null ? filterRegex.test(String(value)) : false;
+   };
+ }
+```
+
+- The `getApplyQuickFilterFnV7` in `GridColDef` was renamed to `getApplyQuickFilterFn`.
+  If you use `getApplyQuickFilterFnV7` directly - rename it to `getApplyQuickFilterFn`.
+
+- The signature of the function returned by `getApplyQuickFilterFn` has changed for performance reasons:
+
+```diff
+ const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
+   if (!value) {
+     return null;
+   }
+   const filterRegex = new RegExp(escapeRegExp(value), 'i');
+-  return (cellParams) => {
+-    const { formattedValue } = cellParams;
++  return (value, row, column, apiRef) => {
++    let formattedValue = apiRef.current.getRowFormattedValue(row, column);
+     return formattedValue != null ? filterRegex.test(formattedValue.toString()) : false;
+   };
+ };
+```
 
 <!-- ### Editing
 

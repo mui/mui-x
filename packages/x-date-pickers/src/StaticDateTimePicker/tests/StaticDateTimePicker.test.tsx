@@ -12,10 +12,7 @@ describe('<StaticDateTimePicker />', () => {
   it('should allow to select the same day and move to the next view', () => {
     const onChange = spy();
     render(
-      <StaticDateTimePicker
-        onChange={onChange}
-        defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
+      <StaticDateTimePicker onChange={onChange} defaultValue={adapterToUse.date('2018-01-01')} />,
     );
 
     fireEvent.click(screen.getByRole('gridcell', { name: '1' }));

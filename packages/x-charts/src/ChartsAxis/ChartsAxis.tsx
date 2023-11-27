@@ -1,12 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import {
-  ChartsAxisSlotComponentProps,
-  ChartsAxisSlotsComponent,
+  ChartsAxisSlotProps,
+  ChartsAxisSlots,
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
@@ -40,12 +39,12 @@ export interface ChartsAxisProps {
    * Overridable component slots.
    * @default {}
    */
-  slots?: ChartsAxisSlotsComponent;
+  slots?: ChartsAxisSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ChartsAxisSlotComponentProps;
+  slotProps?: ChartsAxisSlotProps;
 }
 
 const getAxisId = (
@@ -62,8 +61,8 @@ const getAxisId = (
 
 const mergeProps = (
   axisConfig: undefined | null | string | ChartsXAxisProps | ChartsYAxisProps,
-  slots?: Partial<ChartsAxisSlotsComponent>,
-  slotProps?: Partial<ChartsAxisSlotComponentProps>,
+  slots?: Partial<ChartsAxisSlots>,
+  slotProps?: Partial<ChartsAxisSlotProps>,
 ) => {
   return typeof axisConfig === 'object'
     ? {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridColDef, GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
-import { GridBaseColDef, tagInternalFilter } from '@mui/x-data-grid-pro/internals';
+import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -23,7 +23,11 @@ const AGGREGATION_WRAPPABLE_PROPERTIES = [
 type WrappableColumnProperty = (typeof AGGREGATION_WRAPPABLE_PROPERTIES)[number];
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
-  aggregationWrappedColumn: GridBaseColDef;
+  aggregationWrappedProperties: {
+    name: WrappableColumnProperty;
+    originalValue: GridBaseColDef[WrappableColumnProperty];
+    wrappedValue: GridBaseColDef[WrappableColumnProperty];
+  }[];
 }
 
 type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
@@ -130,42 +134,26 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
 }) =>
   filterOperators!.map((operator) => {
     const baseGetApplyFilterFn = operator.getApplyFilterFn;
-    const baseGetApplyFilterFnV7 = operator.getApplyFilterFnV7;
 
-    const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
-      tagInternalFilter((filterItem, colDef) => {
-        const filterFn = baseGetApplyFilterFn(filterItem, colDef);
-        if (!filterFn) {
-          return null;
+    const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] = (
+      filterItem,
+      colDef,
+    ) => {
+      const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+      if (!filterFn) {
+        return null;
+      }
+      return (value, row, column, api) => {
+        if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
+          return true;
         }
-        return (params) => {
-          if (getCellAggregationResult(params.id, params.field) != null) {
-            return true;
-          }
-          return filterFn(params);
-        };
-      });
-
-    const getApplyFilterFnV7: GridFilterOperator<any, any, any>['getApplyFilterFnV7'] =
-      baseGetApplyFilterFnV7 === undefined
-        ? undefined
-        : tagInternalFilter((filterItem, colDef) => {
-            const filterFn = baseGetApplyFilterFnV7(filterItem, colDef);
-            if (!filterFn) {
-              return null;
-            }
-            return (value, row, column, api) => {
-              if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
-                return true;
-              }
-              return filterFn(value, row, column, api);
-            };
-          });
+        return filterFn(value, row, column, api);
+      };
+    };
 
     return {
       ...operator,
       getApplyFilterFn,
-      getApplyFilterFnV7,
     } as GridFilterOperator;
   });
 
@@ -177,11 +165,13 @@ const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
   aggregationRule,
 }) => {
   const wrappedRenderHeader: GridBaseColDef['renderHeader'] = (params) => {
-    const aggregation = { aggregationRule };
-    if (renderHeader) {
-      return renderHeader({ ...params, aggregation });
-    }
-    return <GridAggregationHeader {...params} aggregation={aggregation} />;
+    return (
+      <GridAggregationHeader
+        {...params}
+        aggregation={{ aggregationRule }}
+        renderHeader={renderHeader}
+      />
+    );
   };
 
   return wrappedRenderHeader;
@@ -230,7 +220,7 @@ export const wrapColumnWithAggregationValue = ({
   let didWrapSomeProperty = false;
   const wrappedColumn: GridColDefWithAggregationWrappers = {
     ...column,
-    aggregationWrappedColumn: column,
+    aggregationWrappedProperties: [],
   };
 
   const wrapColumnProperty = <P extends WrappableColumnProperty>(
@@ -249,6 +239,11 @@ export const wrapColumnWithAggregationValue = ({
     if (wrappedProperty !== originalValue) {
       didWrapSomeProperty = true;
       wrappedColumn[property] = wrappedProperty as any;
+      wrappedColumn.aggregationWrappedProperties.push({
+        name: property,
+        originalValue,
+        wrappedValue: wrappedProperty,
+      });
     }
   };
 
@@ -273,5 +268,19 @@ export const unwrapColumnFromAggregation = ({
 }: {
   column: GridColDef | GridColDefWithAggregationWrappers;
 }) => {
-  return (column as GridColDefWithAggregationWrappers).aggregationWrappedColumn ?? column;
+  if (!(column as GridColDefWithAggregationWrappers).aggregationWrappedProperties) {
+    return column as GridColDef;
+  }
+  const { aggregationWrappedProperties, ...unwrappedColumn } =
+    column as GridColDefWithAggregationWrappers;
+
+  aggregationWrappedProperties.forEach(({ name, originalValue, wrappedValue }) => {
+    // The value changed since we wrapped it
+    if (wrappedValue !== unwrappedColumn[name]) {
+      return;
+    }
+    unwrappedColumn[name] = originalValue as any;
+  });
+
+  return unwrappedColumn;
 };
