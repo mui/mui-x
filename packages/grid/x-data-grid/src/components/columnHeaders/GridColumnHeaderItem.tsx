@@ -13,6 +13,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
+import { isEventTargetInPortal } from '../../utils/domUtils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -111,7 +112,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) => {
       // Ignore portal
       // See https://github.com/mui/mui-x/issues/1721
-      if (!event.currentTarget.contains(event.target as Element)) {
+      if (isEventTargetInPortal(event)) {
         return;
       }
       apiRef.current.publishEvent(
