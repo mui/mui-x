@@ -9,21 +9,25 @@ import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 const content = [
   {
     title: 'Data Grid',
+    description: 'Feature-rich and fast table extension.',
     link: '/x/react-data-grid/getting-started/#installation',
     icon: <PivotTableChartRoundedIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Date and Time Pickers',
+    description: 'Let users pick a date and time, or both together.',
     link: '/x/react-date-pickers/getting-started/#installation',
     icon: <CalendarMonthRoundedIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Charts',
     link: '/x/react-charts/#getting-started',
+    description: 'Features bar, lines, pie, scatter, and more types of graphs.',
     icon: <BarChartRoundedIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Tree View',
+    description: 'Display hierarchical data, such as a file system navigator.',
     link: '/x/react-tree-view/getting-started/#installation',
     icon: <AccountTreeRounded fontSize="small" color="primary" />,
   },
@@ -32,9 +36,15 @@ const content = [
 export default function InstallationGrid() {
   return (
     <Grid container spacing={2}>
-      {content.map(({ icon, title, link }) => (
+      {content.map(({ icon, title, description, link }) => (
         <Grid key={title} xs={12} sm={6}>
-          <InfoCard classNameTitle="algolia-lvl3" link={link} title={title} icon={icon} />
+          <InfoCard
+            classNameTitle="algolia-lvl3"
+            link={link}
+            title={title}
+            description={description}
+            icon={icon}
+          />
         </Grid>
       ))}
     </Grid>
