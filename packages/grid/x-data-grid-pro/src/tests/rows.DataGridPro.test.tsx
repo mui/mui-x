@@ -442,6 +442,7 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
 
+      const root = document.querySelector('.MuiDataGrid-root')!;
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       const renderingZone = document.querySelector<HTMLElement>(
         '.MuiDataGrid-virtualScrollerRenderZone',
@@ -454,11 +455,13 @@ describe('<DataGridPro /> - Rows', () => {
       expect(renderingZone.children.length).to.equal(
         Math.floor((height - 1) / rowHeight) + rowBuffer,
       ); // Subtracting 1 is needed because of the column header borders
+      const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
-      expect(renderingZone.style.transform).to.equal(
-        `translate3d(0px, ${distanceToFirstRow}px, 0px)`,
-      );
-      expect(virtualScroller.scrollHeight).to.equal(nbRows * rowHeight);
+      const styles = getComputedStyle(root);
+      const offsetTop = parseInt(styles.getPropertyValue('--DataGrid-offsetTop'));
+      expect(offsetTop).to.equal(distanceToFirstRow);
+      // Subtracting 1 is needed because of the column header borders
+      expect(virtualScroller.scrollHeight - 1 - scrollbarSize).to.equal(nbRows * rowHeight);
     });
 
     it('should have all the rows rendered of the page in the DOM when autoPageSize: true', () => {
