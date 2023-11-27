@@ -267,7 +267,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     className,
     showRightBorder,
     extendRowFullWidth,
-    row,
     colSpan,
     disableDragEvents,
     isNotVisible,
