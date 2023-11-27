@@ -103,7 +103,7 @@
     "@types/react-test-renderer": "^18.0.6",
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^10.0.20",
-    "@types/yargs": "^17.0.31",
+    "@types/yargs": "^17.0.32",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
     "axe-core": "4.8.2",
