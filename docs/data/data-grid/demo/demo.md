@@ -3,7 +3,7 @@
 <p class="description">Use the demo below to explore the most significant features and their respective plans.</p>
 
 :::info
-We're using the Data Grid to display the following features' table.
+This demo uses the Data Grid to display a table of features.
 
 Filtering, sorting, and grouping (by plan) are at your disposal to help you explore the list.
 :::

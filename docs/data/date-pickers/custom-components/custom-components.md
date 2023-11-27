@@ -145,7 +145,7 @@ In the example below, the actions are the same as in the section above, but they
 ## Tabs
 
 The tabs are available on all date time picker components.
-It allows to switch between date and time interfaces.
+It allows switching between date and time interfaces.
 
 ### Component props
 
@@ -192,7 +192,7 @@ It displays the current values and allows to switch between different views.
 ### Component props
 
 You can customize how the toolbar displays the current value with `toolbarFormat`.
-By default empty values are replaced by `__`.
+By default, empty values are replaced by `__`.
 This can be modified by using `toolbarPlaceholder` props.
 
 By default, the toolbar is `hidden` on desktop, and `visible` on mobile.
@@ -238,5 +238,5 @@ You can pass custom components—to replace the icons, for example—as shown be
 
 ## Shortcuts
 
-You can add shortcuts to every pickers.
+You can add shortcuts to every Picker component.
 For more information, check the [dedicated page](/x/react-date-pickers/shortcuts/).

@@ -34,7 +34,7 @@ describe('<MonthCalendar /> - Describes', () => {
   describeValue(MonthCalendar, () => ({
     render,
     componentFamily: 'calendar',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 1, 1))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-02-01')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {

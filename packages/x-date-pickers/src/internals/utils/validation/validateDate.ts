@@ -35,7 +35,7 @@ export const validateDate: Validator<
     timezone,
   } = props;
 
-  const now = adapter.utils.dateWithTimezone(undefined, timezone);
+  const now = adapter.utils.date(undefined, timezone);
   const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
   const maxDate = applyDefaultDate(adapter.utils, props.maxDate, adapter.defaultDates.maxDate);
 

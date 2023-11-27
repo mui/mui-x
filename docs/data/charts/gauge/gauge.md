@@ -4,7 +4,7 @@ title: React Gauge chart
 
 # Charts - Gauge 🚧
 
-<p class="description">Gauge chart allows to evaluate a metric.</p>
+<p class="description">Gauge charts let the user evaluate metrics.</p>
 
 :::warning
 This feature isn't implemented yet. It's coming.

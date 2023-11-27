@@ -18,7 +18,7 @@ import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridCol
 import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
-import { findParentElementFromClassName } from '../utils/domUtils';
+import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
@@ -202,12 +202,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ): React.MouseEventHandler<HTMLDivElement> =>
       (event) => {
         // Ignore portal
-        // The target is not an element when triggered by a Select inside the cell
-        // See https://github.com/mui/material-ui/issues/10534
-        if (
-          (event.target as any).nodeType === 1 &&
-          !event.currentTarget.contains(event.target as Element)
-        ) {
+        if (isEventTargetInPortal(event)) {
           return;
         }
 

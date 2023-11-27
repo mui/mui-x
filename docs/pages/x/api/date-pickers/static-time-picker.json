@@ -61,16 +61,6 @@
       "type": { "name": "any" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
-    "shouldDisableClock": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
-      "signature": {
-        "type": "function(clockValue: number, view: TimeView) => boolean",
-        "describedArgs": ["clockValue", "view"],
-        "returned": "boolean"
-      }
-    },
     "shouldDisableTime": {
       "type": { "name": "func" },
       "signature": {

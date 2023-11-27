@@ -21,8 +21,6 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     shouldResolveObject: ({ name }) => {
       const propsToNotResolve = [
         'classes',
-        'components',
-        'componentsProps',
         'slots',
         'slotProps',
         'columns',

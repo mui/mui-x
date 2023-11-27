@@ -21,15 +21,7 @@ import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 export interface DateTimeViewRendererProps<TDate>
   extends Omit<
       DateCalendarProps<TDate> & MultiSectionDigitalClockProps<TDate>,
-      | 'views'
-      | 'openTo'
-      | 'view'
-      | 'onViewChange'
-      | 'focusedView'
-      | 'components'
-      | 'componentsProps'
-      | 'slots'
-      | 'slotProps'
+      'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView' | 'slots' | 'slotProps'
     >,
     Pick<DateTimePickerProps<TDate>, 'slots' | 'slotProps'> {
   view: DateOrTimeViewWithMeridiem;
@@ -62,7 +54,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   shouldDisableMonth,
   shouldDisableYear,
   shouldDisableTime,
-  shouldDisableClock,
   reduceAnimations,
   minutesStep,
   ampm,
@@ -70,7 +61,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   monthsPerRow,
   onYearChange,
   yearsPerRow,
-  defaultCalendarMonth,
   slots,
   slotProps,
   loading,
@@ -110,7 +100,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
     minTime,
     maxTime,
     shouldDisableTime,
-    shouldDisableClock,
     minutesStep,
     ampm,
     slots,
@@ -150,7 +139,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
           monthsPerRow={monthsPerRow}
           onYearChange={onYearChange}
           yearsPerRow={yearsPerRow}
-          defaultCalendarMonth={defaultCalendarMonth}
           slots={slots}
           slotProps={slotProps}
           loading={loading}
