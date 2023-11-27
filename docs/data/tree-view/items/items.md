@@ -12,6 +12,8 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Usage with `TreeView`
 
+The items can be defined as JSX children of the `TreeView` component:
+
 {{"demo": "BasicTreeView.js"}}
 
 ## Usage with `RichTreeView`
