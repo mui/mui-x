@@ -115,7 +115,7 @@ The number of seats purchased on your license must correspond to the number of c
   Only one developer is tasked with maintaining the Data Grid, but there are five total developers who work on the front-end.
   Company 'A' must purchase five seats.
 
-- **Example 2.** A UI development team at Company 'B' creates its own UI library for internal development and includes MUI X Pro as a component.
+- **Example 2.** A UI development team at Company 'B' creates its own UI library for internal development that includes MUI X Pro components.
   The teams working on 'AppY' and 'AppZ' both adopt this new library.
   'AppY' has five front-end developers, and 'AppZ' has three; additionally, there are two front-end developers on the company's UI development team.
   Company 'B' must purchase ten seats.
