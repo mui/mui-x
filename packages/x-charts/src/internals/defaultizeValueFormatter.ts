@@ -1,5 +1,3 @@
-import { isFunction } from './utils';
-
 function defaultizeValueFormatter<
   ISeries extends { valueFormatter?: IFormatter },
   IFormatter extends (v: any) => string,
