@@ -24,3 +24,6 @@ export interface TreeViewProps<Multiple extends boolean | undefined>
    */
   sx?: SxProps<Theme>;
 }
+
+export type SingleSelectTreeViewProps = TreeViewProps<false>;
+export type MultiSelectTreeViewProps = TreeViewProps<true>;

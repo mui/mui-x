@@ -6,7 +6,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import Collapse from '@mui/material/Collapse';
 import { alpha, styled } from '@mui/material/styles';
 import { TreeView } from '@mui/x-tree-view/TreeView';
-import { TreeItem, treeItemClasses, TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
 function MinusSquare(props: SvgIconProps) {
   return (

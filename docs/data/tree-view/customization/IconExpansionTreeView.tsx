@@ -7,8 +7,8 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import {
   TreeItem,
-  useTreeItem,
   TreeItemProps,
+  useTreeItem,
   TreeItemContentProps,
 } from '@mui/x-tree-view/TreeItem';
 

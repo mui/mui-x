@@ -1,3 +1,7 @@
 export * from './TreeView';
 export * from './treeViewClasses';
-export type { TreeViewProps } from './TreeView.types';
+export type {
+  TreeViewProps,
+  SingleSelectTreeViewProps,
+  MultiSelectTreeViewProps,
+} from './TreeView.types';

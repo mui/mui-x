@@ -13,7 +13,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { TreeView } from '@mui/x-tree-view/TreeView';
-import { TreeItem, treeItemClasses, TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
 declare module 'react' {
   interface CSSProperties {
