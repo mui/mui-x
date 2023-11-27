@@ -20,7 +20,7 @@ See [the Pricing page](https://mui.com/r/x-get-license/) for a detailed feature 
 
 ### Community plan
 
-The community version of MUI X is [published under an MIT license](https://www.tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
+The MUI X Community plan is [published under an MIT license](https://www.tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 This version contains features that we believe are maintainable by contributions from the open-source community.
 
 These are the Community MIT-licensed npm packages:
@@ -32,10 +32,12 @@ These are the Community MIT-licensed npm packages:
 
 ### Pro plan <span class="plan-pro"></span>
 
-The Pro version of MUI X expands on the features of the community version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the Data Grid; as well as the other advanced components.
+MUI X Pro expands on the Community version with more advanced features and functionality.
+The Data Grid Pro comes with multi-filtering, multi-sorting, column resizing, and column pinning in addition to the baseline features.
+You also gain access to the Date and Time Range Picker components.
 
 The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
-The features exclusive to it are marked with the <span class="plan-pro"></span> icon throughout the documentation.
+Exclusive features are marked with the <span class="plan-pro"></span> icon throughout the documentation.
 
 These are the Pro npm packages:
 
@@ -44,10 +46,10 @@ These are the Pro npm packages:
 
 ### Premium plan <span class="plan-premium"></span>
 
-The Premium version of MUI X covers the most advanced features of the Data Grid, such as row grouping, Excel export, and aggregation, as well as the other advanced components, in addition to everything that's included in the Pro plan.
+MUI X Premium unlocks the most advanced features of the Data Grid, including row grouping and Excel exporting, on top of everything else offered in the Pro plan.
 
 The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
-The features exclusive to it are marked with the <span class="plan-premium"></span> icon throughout the documentation.
+Exclusive features are marked with the <span class="plan-premium"></span> icon throughout the documentation.
 
 These are the Premium npm packages:
 
@@ -55,15 +57,15 @@ These are the Premium npm packages:
 
 ## Upgrading
 
-The [npm packages](#plans) of any given plan are a **superset** of the packages on the plan below.
-So to upgrade, replace them and the respective components' imports with the ones from the target plan.
+The [npm packages](#plans) of any given plan are a **superset** of the packages in the Community version.
+To upgrade, you must install the respective paid package and replace all imports with the new path.
 
 Below are upgrading scenarios using the Data Grid as an example:
 
 ### From Community to Pro
 
 `@mui/x-data-grid-pro` is a superset of `@mui/x-data-grid`.
-Upgrade it by updating the imports:
+Install the Pro package, then update all imports accordingly:
 
 ```diff
 -import { DataGrid } from '@mui/x-data-grid';
@@ -71,14 +73,14 @@ Upgrade it by updating the imports:
 ```
 
 :::warning
-There is an exception to the superset rule: the default value of the `pagination` prop changes.
-See the [Pagination](/x/react-data-grid/pagination/) doc for details.
+There is an exception to the superset rule: the Data Grid's `pagination` prop default value changes.
+See [the Pagination page](/x/react-data-grid/pagination/) for details.
 :::
 
 ### From Pro to Premium
 
 `@mui/x-data-grid-premium` is a superset of `@mui/x-data-grid-pro`.
-Upgrade it by updating the imports:
+Install the Premium package, then update all imports accordingly:
 
 ```diff
 -import { DataGridPro } from '@mui/x-data-grid-pro';
@@ -86,7 +88,9 @@ Upgrade it by updating the imports:
 ```
 
 :::success
-If you are looking for upgrading from Pro to Premium, please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium).
+Upgrading from Pro to Premium?
+Please contact [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium) to get started.
+
 We'll provide you with a discount based on the remaining time of your current license term.
 :::
 
@@ -108,22 +112,20 @@ The number of seats purchased on your license must correspond to the number of c
   The app needs to render 10K rows of data in a table and allow users to group, filter, and sort.
   The dev team adds MUI X Pro to the project to satisfy this requirement.
   Five front-end and ten back-end developers are working on 'AppA'.
-  Only one developer is tasked with configuring and modifying the data grid.
-  The front-end developers and only are contributing code to the front-end.
-  Company 'A' purchases five licenses.
+  Only one developer is tasked with maintaining the Data Grid, but there are five total developers who work on the front-end.
+  Company 'A' must purchase five seats.
 
-- **Example 2.** A UI development team at Company 'B' creates its own UI library for
-  internal development and includes MUI X Pro as a component.
-  The team working on 'AppA' uses the new library and so does the team working on 'AppB'.
-  'AppA' has 5 front-end developers and 'AppB' has three.
-  There are two front-end developers on the UI development team.
-  Company 'B' purchases ten licenses.
+- **Example 2.** A UI development team at Company 'B' creates its own UI library for internal development and includes MUI X Pro as a component.
+  The teams working on 'AppY' and 'AppZ' both adopt this new library.
+  'AppY' has five front-end developers, and 'AppZ' has three; additionally, there are two front-end developers on the company's UI development team.
+  Company 'B' must purchase ten seats.
 
 This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#required-quantity-of-licenses)
 
 ## License key
 
-By purchasing a commercial license, you should get a license key by email that removes all watermarks and console warnings.
+When you purchase a commercial license, you'll receive a license key by email.
+This key removes all watermarks and console warnings.
 
 :::warning
 Orders placed after **May 13, 2022** come with a license key by default that is only compatible with MUI X from `v5.11.0` and upwards.
@@ -135,8 +137,8 @@ If this isn't possible, please contact sales@mui.com to request a compatible lic
 
 ### How to install the key
 
-The license key depends on a package called `@mui/x-license-{plan}` that validates if it is active.
-With that in hand, import the `LicenseInfo` method from that package to call the `setLicenseKey()` function that will properly "install" it.
+The license key depends on a package called `@mui/x-license-{plan}` that validates whether or not it's active.
+Once you have your license key, import the `LicenseInfo` method from that package and call the `setLicenseKey()` function:
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -146,17 +148,11 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 You'll only need to do this once in your app.
 
-:::info
-
-If you're upgrading to a commercial plan from the Community version, you may want to check [the Upgrading section](#upgrading) first.
-
-:::
-
 ### Where to install the key
 
-Ensure you call the `setLicenseKey()` function before React renders the first component of your app.
+You must call the `setLicenseKey()` function before React renders the first component in your app.
 
-Its bundle size is relatively small, so it should be fine to call it in all your bundles, regardless of whether a commercial MUI X component is rendered.
+Its bundle size is relatively small, so it should be fine to call it in all of your bundles, regardless of whether a commercial MUI X component is rendered.
 
 ## Next.js integration
 
