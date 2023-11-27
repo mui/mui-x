@@ -136,7 +136,11 @@ export {
   createSelectorMemoized,
   unstable_resetCreateSelectorCache,
 } from '../utils/createSelector';
-export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
+export {
+  findParentElementFromClassName,
+  getActiveElement,
+  isEventTargetInPortal,
+} from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
