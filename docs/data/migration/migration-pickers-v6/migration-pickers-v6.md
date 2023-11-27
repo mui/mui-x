@@ -266,8 +266,10 @@ adapter.isValid(dayjs('2022-04-17T15:30'));
 If you are just passing an adapter to `LocalizationProvider`, then you can safely skip this section.
 :::
 
+### Removed methods
+
 <details>
-  <summary>Removed methods</summary>
+  <summary>Show breaking changes</summary>
 
 #### Remove the `dateWithTimezone` method
 
@@ -505,8 +507,10 @@ The `getYearRange` method used to accept two params and now accepts a tuple to b
 
 </details>
 
+### Modified methods
+
 <details>
-  <summary>Modified methods</summary>
+  <summary>Show breaking changes</summary>
 
 #### Restrict the input format of the `date` method
 
