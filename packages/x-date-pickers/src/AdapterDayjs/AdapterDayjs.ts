@@ -14,6 +14,10 @@ import {
 } from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
+defaultDayjs.extend(localizedFormatPlugin);
+defaultDayjs.extend(weekOfYearPlugin);
+defaultDayjs.extend(isBetweenPlugin);
+
 type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
 const localeNotFoundWarning = buildWarning([
@@ -157,8 +161,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     // Moved plugins to the constructor to allow for users to use options on the library
     // for reference: https://github.com/mui/mui-x/pull/11151
     defaultDayjs.extend(weekOfYearPlugin);
-    defaultDayjs.extend(localizedFormatPlugin);
-    defaultDayjs.extend(isBetweenPlugin);
     defaultDayjs.extend(customParseFormatPlugin);
   }
 
