@@ -138,10 +138,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => {
     let pluralForm = 'строк выбрано';
+    const penultimateDigit = Math.floor(count / 10) % 10;
     const lastDigit = count % 10;
-    if (lastDigit > 1 && lastDigit < 5) {
+    if (penultimateDigit !== 1 && lastDigit > 1 && lastDigit < 5) {
       pluralForm = 'строки выбраны';
-    } else if (lastDigit === 1) {
+    } else if (penultimateDigit !== 1 && lastDigit === 1) {
       pluralForm = 'строка выбрана';
     }
     return `${count} ${pluralForm}`;
