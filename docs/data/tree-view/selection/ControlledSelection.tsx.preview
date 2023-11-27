@@ -4,7 +4,7 @@
   </Button>
 </Box>
 <Box sx={{ height: 264, flexGrow: 1 }}>
-  <TreeView
+  <RichTreeView
     items={MUI_X_PRODUCTS}
     selected={selected}
     onNodeSelect={handleSelect}

@@ -5,12 +5,8 @@ import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { TransitionProps } from '@mui/material/transitions';
 import Collapse from '@mui/material/Collapse';
 import { alpha, styled } from '@mui/material/styles';
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import {
-  SimpleTreeItem,
-  SimpleTreeItemProps,
-} from '@mui/x-tree-view/SimpleTreeItem';
-import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { TreeView } from '@mui/x-tree-view/TreeView';
+import { TreeItem, treeItemClasses, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 
 function MinusSquare(props: SvgIconProps) {
   return (
@@ -60,8 +56,8 @@ function TransitionComponent(props: TransitionProps) {
 }
 
 const CustomTreeItem = React.forwardRef(
-  (props: SimpleTreeItemProps, ref: React.Ref<HTMLLIElement>) => (
-    <SimpleTreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
+  (props: TreeItemProps, ref: React.Ref<HTMLLIElement>) => (
+    <TreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
   ),
 );
 
@@ -81,7 +77,7 @@ const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
 export default function CustomizedTreeView() {
   return (
     <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
-      <SimpleTreeView
+      <TreeView
         aria-label="customized"
         defaultExpanded={['1']}
         defaultCollapseIcon={<MinusSquare />}
@@ -103,7 +99,7 @@ export default function CustomizedTreeView() {
           <StyledTreeItem nodeId="4" label="World" />
           <StyledTreeItem nodeId="5" label="Something something" />
         </StyledTreeItem>
-      </SimpleTreeView>
+      </TreeView>
     </Box>
   );
 }

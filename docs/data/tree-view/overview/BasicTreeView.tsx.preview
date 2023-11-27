@@ -1,4 +1,4 @@
-<TreeView
+<RichTreeView
   items={MUI_X_PRODUCTS}
   defaultCollapseIcon={<ExpandMoreIcon />}
   defaultExpandIcon={<ChevronRightIcon />}

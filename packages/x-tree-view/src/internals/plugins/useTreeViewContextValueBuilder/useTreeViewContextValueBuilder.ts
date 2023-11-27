@@ -8,6 +8,7 @@ export const useTreeViewContextValueBuilder: TreeViewPlugin<
     contextValue: {
       instance: instance as TreeViewInstance<any>,
       multiSelect: params.multiSelect,
+      runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
       disabledItemsFocusable: params.disabledItemsFocusable,
       icons: {
         defaultCollapseIcon: params.defaultCollapseIcon,

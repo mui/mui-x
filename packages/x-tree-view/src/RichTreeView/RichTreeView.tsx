@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
-import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
-import { SimpleTreeViewProps } from './SimpleTreeView.types';
+import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
+import { RichTreeViewProps } from './RichTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { SIMPLE_TREE_VIEW_PLUGINS } from './SimpleTreeView.plugins';
+import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
+import { TreeItem } from '../TreeItem';
+import { TreeViewBaseItem } from '../models';
 
-const useUtilityClasses = <Multiple extends boolean | undefined>(
-  ownerState: SimpleTreeViewProps<Multiple>,
+const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
+  ownerState: RichTreeViewProps<R, Multiple>,
 ) => {
   const { classes } = ownerState;
 
@@ -18,25 +20,47 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
     root: ['root'],
   };
 
-  return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
+  return composeClasses(slots, getRichTreeViewUtilityClass, classes);
 };
 
-const SimpleTreeViewRoot = styled('ul', {
-  name: 'MuiSimpleTreeView',
+const RichTreeViewRoot = styled('ul', {
+  name: 'MuiRichTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: SimpleTreeViewProps<any> }>({
+})<{ ownerState: RichTreeViewProps<any, any> }>({
   padding: 0,
   margin: 0,
   listStyle: 'none',
   outline: 0,
 });
 
-type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
-  props: SimpleTreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
+type TreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
+  props: RichTreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const EMPTY_ITEMS: any[] = [];
+function WrappedTreeItem<R extends {}>({
+  slots,
+  slotProps,
+  item,
+  children,
+}: Pick<RichTreeViewProps<R, any>, 'slots' | 'slotProps'> & {
+  item: TreeViewBaseItem<R>;
+  children: React.ReactNode;
+}) {
+  const Item = slots?.item ?? TreeItem;
+  const itemProps = useSlotProps({
+    elementType: Item,
+    externalSlotProps: slotProps?.item,
+    additionalProps: {
+      nodeId: item.nodeId,
+      id: item.id,
+      label: item.label,
+    },
+    ownerState: { item },
+  });
+
+  return <Item {...itemProps}>{children}</Item>;
+}
 
 /**
  *
@@ -48,11 +72,11 @@ const EMPTY_ITEMS: any[] = [];
  *
  * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
  */
-const SimpleTreeView = React.forwardRef(function SimpleTreeView<
+const RichTreeView = React.forwardRef(function RichTreeView<
+  R extends {},
   Multiple extends boolean | undefined = undefined,
->(inProps: SimpleTreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
-  const themeProps = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
-  const ownerState = themeProps as SimpleTreeViewProps<any>;
+>(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
 
   const {
     // Headless implementation
@@ -71,10 +95,13 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
+    items,
+    isItemDisabled,
     // Component implementation
-    children,
+    slots,
+    slotProps,
     ...other
-  } = themeProps as SimpleTreeViewProps<any>;
+  } = themeProps as RichTreeViewProps<any, any>;
 
   const { getRootProps, contextValue } = useTreeView({
     disabledItemsFocusable,
@@ -92,38 +119,44 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
-    items: EMPTY_ITEMS,
-    plugins: SIMPLE_TREE_VIEW_PLUGINS,
+    items,
+    isItemDisabled,
+    plugins: DEFAULT_TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
 
   const classes = useUtilityClasses(themeProps);
 
+  const Root = slots?.root ?? RichTreeViewRoot;
   const rootProps = useSlotProps({
-    elementType: SimpleTreeViewRoot,
-    externalSlotProps: {},
+    elementType: Root,
+    externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
     className: classes.root,
     getSlotProps: getRootProps,
-    ownerState,
+    ownerState: themeProps as RichTreeViewProps<any, any>,
   });
+
+  const renderItem = (item: TreeViewBaseItem<R>) => {
+    return (
+      <WrappedTreeItem item={item} slots={slots} slotProps={slotProps} key={item.nodeId}>
+        {item.children?.map(renderItem)}
+      </WrappedTreeItem>
+    );
+  };
 
   return (
     <TreeViewProvider value={contextValue}>
-      <SimpleTreeViewRoot {...rootProps}>{children}</SimpleTreeViewRoot>
+      <Root {...rootProps}>{items.map(renderItem)}</Root>
     </TreeViewProvider>
   );
-}) as SimpleTreeViewComponent;
+}) as TreeViewComponent;
 
-SimpleTreeView.propTypes = {
+RichTreeView.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * The content of the component.
-   */
-  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -185,6 +218,8 @@ SimpleTreeView.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  isItemDisabled: PropTypes.func,
+  items: PropTypes.array.isRequired,
   /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false
@@ -216,6 +251,16 @@ SimpleTreeView.propTypes = {
    */
   selected: PropTypes.any,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -225,4 +270,4 @@ SimpleTreeView.propTypes = {
   ]),
 } as any;
 
-export { SimpleTreeView };
+export { RichTreeView };

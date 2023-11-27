@@ -4,9 +4,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { SimpleTreeItem } from '@mui/x-tree-view/SimpleTreeItem';
-import { useTreeItem } from '@mui/x-tree-view/TreeItem';
+import { TreeView } from '@mui/x-tree-view/TreeView';
+import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
 
 const CustomContent = React.forwardRef(function CustomContent(props, ref) {
   const {
@@ -71,13 +70,13 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
 });
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  return <SimpleTreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
+  return <TreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
 });
 
 export default function IconExpansionTreeView() {
   return (
     <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
-      <SimpleTreeView
+      <TreeView
         aria-label="icon expansion"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
@@ -91,7 +90,7 @@ export default function IconExpansionTreeView() {
             <CustomTreeItem nodeId="8" label="index.js" />
           </CustomTreeItem>
         </CustomTreeItem>
-      </SimpleTreeView>
+      </TreeView>
     </Box>
   );
 }

@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 type MuiProduct = TreeViewBaseItem<{ disabled?: boolean }>;
 
@@ -71,7 +71,7 @@ export default function DisabledItemsFocusable() {
         />
       </Box>
       <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
-        <TreeView
+        <RichTreeView
           items={MUI_X_PRODUCTS}
           isItemDisabled={isItemDisabled}
           disabledItemsFocusable={disabledItemsFocusable}

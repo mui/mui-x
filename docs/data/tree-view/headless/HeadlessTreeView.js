@@ -37,7 +37,7 @@ useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
 
 // This could be exported from the package in the future
 const TreeViewRoot = styled('ul', {
-  name: 'MuiTreeView',
+  name: 'HeadlessTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })({
@@ -50,7 +50,7 @@ const TreeViewRoot = styled('ul', {
 const plugins = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
 
 function TreeView(inProps) {
-  const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
+  const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
   const ownerState = themeProps;
 
   const {

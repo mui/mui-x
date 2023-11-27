@@ -1,11 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "children": {
-      "description": "The content of the component.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "classes": {
       "description": "Override or extend the styles applied to the component.",
       "deprecated": "",
@@ -101,6 +96,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
       "deprecated": "",
@@ -108,5 +113,8 @@
     }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "item": "Custom component for the item.",
+    "root": "Element rendered at the root."
+  }
 }

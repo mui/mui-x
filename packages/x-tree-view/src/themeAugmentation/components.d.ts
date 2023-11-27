@@ -11,10 +11,10 @@ export interface TreeViewComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiTreeView'];
     variants?: ComponentsVariants['MuiTreeView'];
   };
-  MuiSimpleTreeView?: {
-    defaultProps?: ComponentsProps['MuiSimpleTreeView'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiSimpleTreeView'];
-    variants?: ComponentsVariants['MuiSimpleTreeView'];
+  MuiRichTreeView?: {
+    defaultProps?: ComponentsProps['MuiRichTreeView'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiRichTreeView'];
+    variants?: ComponentsVariants['MuiRichTreeView'];
   };
 }
 

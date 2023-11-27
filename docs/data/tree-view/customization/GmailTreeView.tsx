@@ -12,12 +12,8 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { SvgIconProps } from '@mui/material/SvgIcon';
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import {
-  SimpleTreeItem,
-  SimpleTreeItemProps,
-} from '@mui/x-tree-view/SimpleTreeItem';
-import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { TreeView } from '@mui/x-tree-view/TreeView';
+import { TreeItem, treeItemClasses, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 
 declare module 'react' {
   interface CSSProperties {
@@ -26,7 +22,7 @@ declare module 'react' {
   }
 }
 
-type StyledTreeItemProps = SimpleTreeItemProps & {
+type StyledTreeItemProps = TreeItemProps & {
   bgColor?: string;
   bgColorForDarkMode?: string;
   color?: string;
@@ -36,7 +32,7 @@ type StyledTreeItemProps = SimpleTreeItemProps & {
   labelText: string;
 };
 
-const StyledTreeItemRoot = styled(SimpleTreeItem)(({ theme }) => ({
+const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
   color: theme.palette.text.secondary,
   [`& .${treeItemClasses.content}`]: {
     color: theme.palette.text.secondary,
@@ -65,7 +61,7 @@ const StyledTreeItemRoot = styled(SimpleTreeItem)(({ theme }) => ({
       paddingLeft: theme.spacing(2),
     },
   },
-})) as unknown as typeof SimpleTreeItem;
+})) as unknown as typeof TreeItem;
 
 const StyledTreeItem = React.forwardRef(function StyledTreeItem(
   props: StyledTreeItemProps,
@@ -118,7 +114,7 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(
 
 export default function GmailTreeView() {
   return (
-    <SimpleTreeView
+    <TreeView
       aria-label="gmail"
       defaultExpanded={['3']}
       defaultCollapseIcon={<ArrowDropDownIcon />}
@@ -171,6 +167,6 @@ export default function GmailTreeView() {
         />
       </StyledTreeItem>
       <StyledTreeItem nodeId="4" labelText="History" labelIcon={Label} />
-    </SimpleTreeView>
+    </TreeView>
   );
 }

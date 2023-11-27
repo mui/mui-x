@@ -1,5 +1,6 @@
 {
   "props": {
+    "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "defaultCollapseIcon": { "type": { "name": "node" } },
@@ -41,8 +42,6 @@
       }
     },
     "selected": { "type": { "name": "any" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -51,20 +50,7 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "item",
-      "description": "Custom component for the item.",
-      "default": "TreeItem."
-    },
-    {
-      "class": null,
-      "name": "root",
-      "description": "Element rendered at the root.",
-      "default": "TreeViewRoot"
-    }
-  ],
+  "slots": [],
   "name": "TreeView",
   "imports": [
     "import { TreeView } from '@mui/x-tree-view/TreeView';",

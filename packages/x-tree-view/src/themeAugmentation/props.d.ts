@@ -1,11 +1,11 @@
 import { TreeItemProps } from '../TreeItem';
-import { SimpleTreeViewProps } from '../SimpleTreeView';
 import { TreeViewProps } from '../TreeView';
+import { RichTreeViewProps } from '../RichTreeView';
 
 export interface TreeViewComponentsPropsList {
   MuiTreeItem: TreeItemProps;
-  MuiTreeView: TreeViewProps<any, any>;
-  MuiSimpleTreeView: SimpleTreeViewProps<any>;
+  MuiTreeView: TreeViewProps<any>;
+  MuiRichTreeView: RichTreeViewProps<any, any>;
 }
 
 declare module '@mui/material/styles' {

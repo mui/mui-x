@@ -1,35 +1,16 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/base/utils';
 import { TreeViewClasses } from './treeViewClasses';
-import { DefaultTreeViewPluginParameters } from '../internals/plugins/defaultPlugins';
-import { TreeItem, TreeItemProps } from '../TreeItem';
-import { TreeViewBaseItem } from '../models';
+import { TreeViewPluginParameters } from './TreeView.plugins';
 
-interface TreeViewItemSlotOwnerState<R extends {}> {
-  item: TreeViewBaseItem<R>;
-}
-
-export interface TreeViewSlotsComponent {
+export interface TreeViewProps<Multiple extends boolean | undefined>
+  extends TreeViewPluginParameters<Multiple>,
+    React.HTMLAttributes<HTMLUListElement> {
   /**
-   * Element rendered at the root.
-   * @default TreeViewRoot
+   * The content of the component.
    */
-  root?: React.ElementType;
-  /**
-   * Custom component for the item.
-   * @default TreeItem.
-   */
-  item?: React.JSXElementConstructor<TreeItemProps>;
-}
-
-export interface TreeViewSlotsComponentsProps<R extends {}, Multiple extends boolean | undefined> {
-  root?: SlotComponentProps<'ul', {}, TreeViewProps<R, Multiple>>;
-  item?: SlotComponentProps<typeof TreeItem, {}, TreeViewItemSlotOwnerState<R>>;
-}
-
-export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
+  children?: React.ReactNode;
   /**
    * className applied to the root element.
    */
@@ -42,19 +23,4 @@ export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-}
-
-export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<R, Multiple>,
-    TreeViewPropsBase {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: TreeViewSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: TreeViewSlotsComponentsProps<R, Multiple>;
 }

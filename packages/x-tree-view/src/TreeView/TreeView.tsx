@@ -7,12 +7,10 @@ import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
-import { TreeItem } from '../TreeItem';
-import { TreeViewBaseItem } from '../models';
+import { TREE_VIEW_PLUGINS } from './TreeView.plugins';
 
-const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
-  ownerState: TreeViewProps<R, Multiple>,
+const useUtilityClasses = <Multiple extends boolean | undefined>(
+  ownerState: TreeViewProps<Multiple>,
 ) => {
   const { classes } = ownerState;
 
@@ -27,40 +25,18 @@ const TreeViewRoot = styled('ul', {
   name: 'MuiTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeViewProps<any, any> }>({
+})<{ ownerState: TreeViewProps<any> }>({
   padding: 0,
   margin: 0,
   listStyle: 'none',
   outline: 0,
 });
 
-type TreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
-  props: TreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
+type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
+  props: TreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-function WrappedTreeItem<R extends {}>({
-  slots,
-  slotProps,
-  item,
-  children,
-}: Pick<TreeViewProps<R, any>, 'slots' | 'slotProps'> & {
-  item: TreeViewBaseItem<R>;
-  children: React.ReactNode;
-}) {
-  const Item = slots?.item ?? TreeItem;
-  const itemProps = useSlotProps({
-    elementType: Item,
-    externalSlotProps: slotProps?.item,
-    additionalProps: {
-      nodeId: item.nodeId,
-      id: item.id,
-      label: item.label,
-    },
-    ownerState: { item },
-  });
-
-  return <Item {...itemProps}>{children}</Item>;
-}
+const EMPTY_ITEMS: any[] = [];
 
 /**
  *
@@ -73,10 +49,10 @@ function WrappedTreeItem<R extends {}>({
  * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
  */
 const TreeView = React.forwardRef(function TreeView<
-  R extends {},
   Multiple extends boolean | undefined = undefined,
->(inProps: TreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
+>(inProps: TreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
+  const ownerState = themeProps as TreeViewProps<any>;
 
   const {
     // Headless implementation
@@ -95,13 +71,10 @@ const TreeView = React.forwardRef(function TreeView<
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
-    items,
-    isItemDisabled,
     // Component implementation
-    slots,
-    slotProps,
+    children,
     ...other
-  } = themeProps as TreeViewProps<any, any>;
+  } = themeProps as TreeViewProps<any>;
 
   const { getRootProps, contextValue } = useTreeView({
     disabledItemsFocusable,
@@ -119,35 +92,25 @@ const TreeView = React.forwardRef(function TreeView<
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
-    items,
-    isItemDisabled,
-    plugins: DEFAULT_TREE_VIEW_PLUGINS,
+    items: EMPTY_ITEMS,
+    plugins: TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
 
   const classes = useUtilityClasses(themeProps);
 
-  const Root = slots?.root ?? TreeViewRoot;
   const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+    elementType: TreeViewRoot,
+    externalSlotProps: {},
     externalForwardedProps: other,
     className: classes.root,
     getSlotProps: getRootProps,
-    ownerState: themeProps as TreeViewProps<any, any>,
+    ownerState,
   });
-
-  const renderItem = (item: TreeViewBaseItem<R>) => {
-    return (
-      <WrappedTreeItem item={item} slots={slots} slotProps={slotProps} key={item.nodeId}>
-        {item.children?.map(renderItem)}
-      </WrappedTreeItem>
-    );
-  };
 
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{items.map(renderItem)}</Root>
+      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
     </TreeViewProvider>
   );
 }) as TreeViewComponent;
@@ -157,6 +120,10 @@ TreeView.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
+  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -218,8 +185,6 @@ TreeView.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
-  isItemDisabled: PropTypes.func,
-  items: PropTypes.array.isRequired,
   /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false
@@ -250,16 +215,6 @@ TreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
   selected: PropTypes.any,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

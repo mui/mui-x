@@ -140,16 +140,20 @@ const TreeItemGroup = styled(Collapse, {
  */
 export const TreeItem = React.forwardRef(function TreeItem(
   inProps: TreeItemProps,
-  ref: React.Ref<HTMLLIElement>,
+  inRef: React.Ref<HTMLLIElement>,
 ) {
   const {
     icons: contextIcons,
+    runItemPlugins,
     multiSelect,
     disabledItemsFocusable,
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
+  const inPropsWithTheme = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
+
+  const { props, ref, wrapItem } = runItemPlugins({ props: inPropsWithTheme, ref: inRef });
+
   const {
     children,
     className,
@@ -229,7 +233,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const idAttribute = instance.getTreeItemId(nodeId, id);
 
-  return (
+  const item = (
     <TreeItemRoot
       className={clsx(classes.root, className)}
       role="treeitem"
@@ -279,6 +283,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
       )}
     </TreeItemRoot>
   );
+
+  return wrapItem(item);
 });
 
 TreeItem.propTypes = {
@@ -335,7 +341,7 @@ TreeItem.propTypes = {
   /**
    * The id of the node.
    */
-  nodeId: PropTypes.any.isRequired,
+  nodeId: PropTypes.string.isRequired,
   /**
    * This prop isn't supported.
    * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.

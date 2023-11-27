@@ -1,6 +1,5 @@
 {
   "props": {
-    "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "defaultCollapseIcon": { "type": { "name": "node" } },
@@ -42,6 +41,8 @@
       }
     },
     "selected": { "type": { "name": "any" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -50,16 +51,29 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [],
-  "name": "SimpleTreeView",
-  "imports": [
-    "import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';",
-    "import { SimpleTreeView } from '@mui/x-tree-view';"
+  "slots": [
+    {
+      "class": null,
+      "name": "item",
+      "description": "Custom component for the item.",
+      "default": "TreeItem."
+    },
+    {
+      "class": null,
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "TreeViewRoot"
+    }
   ],
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSimpleTreeView" },
+  "name": "RichTreeView",
+  "imports": [
+    "import { RichTreeView } from '@mui/x-tree-view/RichTreeView';",
+    "import { RichTreeView } from '@mui/x-tree-view';"
+  ],
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiRichTreeView" },
   "spread": true,
   "forwardsRefTo": "HTMLUListElement",
-  "filename": "/packages/x-tree-view/src/SimpleTreeView/SimpleTreeView.tsx",
+  "filename": "/packages/x-tree-view/src/RichTreeView/RichTreeView.tsx",
   "inheritance": null,
   "demos": "<ul></ul>"
 }

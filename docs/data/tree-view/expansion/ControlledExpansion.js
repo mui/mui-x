@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 const MUI_X_PRODUCTS = [
   {
@@ -70,7 +70,7 @@ export default function ControlledExpansion() {
         </Button>
       </Box>
       <Box sx={{ height: 264, flexGrow: 1 }}>
-        <TreeView
+        <RichTreeView
           items={MUI_X_PRODUCTS}
           expanded={expanded}
           onNodeToggle={handleToggle}

@@ -6,7 +6,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
-import { TreeViewPropsBase } from '@mui/x-tree-view/TreeView';
+import { RichTreeViewPropsBase } from '@mui/x-tree-view/RichTreeView';
 import {
   TreeViewPlugin,
   TreeViewPluginSignature,
@@ -74,7 +74,7 @@ useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
 
 // This could be exported from the package in the future
 const TreeViewRoot = styled('ul', {
-  name: 'MuiTreeView',
+  name: 'HeadlessTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: TreeViewProps<any, any> }>({
@@ -87,14 +87,14 @@ const TreeViewRoot = styled('ul', {
 export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
   extends DefaultTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
-    TreeViewPropsBase {}
+    RichTreeViewPropsBase {}
 
 const plugins = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded] as const;
 
 function TreeView<R extends {}, Multiple extends boolean | undefined>(
   inProps: TreeViewProps<R, Multiple>,
 ) {
-  const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
+  const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
   const ownerState = themeProps as TreeViewProps<any, any>;
 
   const {

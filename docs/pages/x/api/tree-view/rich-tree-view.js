@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './simple-tree-item.json';
+import jsonPageContent from './rich-tree-view.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/tree-view',
     false,
-    /\.\/simple-tree-item(-[a-z]{2})?\.json$/,
+    /\.\/rich-tree-view(-[a-z]{2})?\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

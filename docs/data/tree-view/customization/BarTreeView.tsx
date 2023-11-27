@@ -1,16 +1,17 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, alpha } from '@mui/material/styles';
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import { TreeView } from '@mui/x-tree-view/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
-  SimpleTreeItem,
-  SimpleTreeItemProps,
-} from '@mui/x-tree-view/SimpleTreeItem';
-import { useTreeItem, TreeItemContentProps } from '@mui/x-tree-view/TreeItem';
-import clsx from 'clsx';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+  TreeItem,
+  useTreeItem,
+  TreeItemProps,
+  TreeItemContentProps,
+} from '@mui/x-tree-view/TreeItem';
 
 const CustomContentRoot = styled('div')(({ theme }) => ({
   WebkitTapHighlightColor: 'transparent',
@@ -122,16 +123,16 @@ const CustomContent = React.forwardRef(function CustomContent(
 });
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: SimpleTreeItemProps,
+  props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  return <SimpleTreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
+  return <TreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
 });
 
 export default function BarTreeView() {
   return (
     <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
-      <SimpleTreeView
+      <TreeView
         aria-label="icon expansion"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
@@ -146,7 +147,7 @@ export default function BarTreeView() {
             <CustomTreeItem nodeId="8" label="index.js" />
           </CustomTreeItem>
         </CustomTreeItem>
-      </SimpleTreeView>
+      </TreeView>
     </Box>
   );
 }
