@@ -435,9 +435,7 @@ describe('<TreeView />', () => {
         </TreeView>,
       );
 
-      act(() => {
-        fireEvent.click(getByTestId('icon'));
-      });
+      fireEvent.click(getByTestId('icon'));
 
       expect(handleNodeToggle.callCount).to.equal(1);
       expect(handleNodeToggle.args[0][1]).to.deep.equal(['1']);
