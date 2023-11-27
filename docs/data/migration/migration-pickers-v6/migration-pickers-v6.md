@@ -251,7 +251,7 @@ You can learn more about the new approach on the [dedicated doc page](https://mu
  </LocalizationProvider>
 ```
 
-## Adapters
+## Adapters internal changes
 
 :::success
 The following breaking changes only impact you if you are using the adapters outside the pickers like displayed in the following example:
@@ -266,7 +266,12 @@ adapter.isValid(dayjs('2022-04-17T15:30'));
 If you are just passing an adapter to `LocalizationProvider`, then you can safely skip this section.
 :::
 
-### Remove the `dateWithTimezone` method
+### Removed methods
+
+<details>
+  <summary>Show breaking changes</summary>
+
+#### Remove the `dateWithTimezone` method
 
 The `dateWithTimezone` method has been removed and its content has been moved the `date` method.
 You can use the `date` method instead:
@@ -276,7 +281,7 @@ You can use the `date` method instead:
 +adater.date(undefined, 'system');
 ```
 
-### Remove the `getDiff` method
+#### Remove the `getDiff` method
 
 The `getDiff` method have been removed, you can directly use your date library:
 
@@ -333,7 +338,7 @@ The `getDiff` method have been removed, you can directly use your date library:
 +const diff = value.diff(comparing, unit);
 ```
 
-### Remove the `getFormatHelperText` method
+#### Remove the `getFormatHelperText` method
 
 The `getFormatHelperText` method have been removed, you can use the `expandFormat` instead:
 
@@ -362,7 +367,7 @@ And if you need the exact same output, you can apply the following transformatio
 +const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
 ```
 
-### Remove the `getMeridiemText` method
+#### Remove the `getMeridiemText` method
 
 The `getMeridiemText` method have been removed, you can use the `setHours`, `date` and `format` methods to recreate its behavior:
 
@@ -376,7 +381,7 @@ The `getMeridiemText` method have been removed, you can use the `setHours`, `dat
 +const meridiem = getMeridiemText('am');
 ```
 
-### Remove the `getMonthArray` method
+#### Remove the `getMonthArray` method
 
 The `getMonthArray` method have been removed, you can use the `startOfYear` and `addMonths` methods to recreate its behavior:
 
@@ -397,7 +402,7 @@ The `getMonthArray` method have been removed, you can use the `startOfYear` and 
 +const monthArray = getMonthArray(value);
 ```
 
-### Remove the `getNextMonth` method
+#### Remove the `getNextMonth` method
 
 The `getNextMonth` method have been removed, you can use the `addMonths` method instead:
 
@@ -406,7 +411,7 @@ The `getNextMonth` method have been removed, you can use the `addMonths` method 
 +const nextMonth = adapter.addMonths(value, 1);
 ```
 
-### Remove the `getPreviousMonth` method
+#### Remove the `getPreviousMonth` method
 
 The `getPreviousMonth` method have been removed, you can use the `addMonths` method instead:
 
@@ -415,7 +420,7 @@ The `getPreviousMonth` method have been removed, you can use the `addMonths` met
 +const previousMonth = adapter.addMonths(value, -1);
 ```
 
-### Remove the `getWeekdays` method
+#### Remove the `getWeekdays` method
 
 The `getWeekdays` method have been removed, you can use the `startOfWeek` and `addDays` methods instead:
 
@@ -429,7 +434,7 @@ The `getWeekdays` method have been removed, you can use the `startOfWeek` and `a
 +const weekDays = getWeekdays(value);
 ```
 
-### Remove the `isNull` method
+#### Remove the `isNull` method
 
 The `isNull` method have been removed, you can replace it with a very basic check:
 
@@ -438,7 +443,7 @@ The `isNull` method have been removed, you can replace it with a very basic chec
 +const isNull = value === null;
 ```
 
-### Remove the `mergeDateAndTime` method
+#### Remove the `mergeDateAndTime` method
 
 The `mergeDateAndTime` method have been removed, you can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
 
@@ -459,7 +464,7 @@ The `mergeDateAndTime` method have been removed, you can use the `setHours`, `se
 +const result = mergeDateAndTime(valueWithDate, valueWithTime);
 ```
 
-### Remove the `parseISO` method
+#### Remove the `parseISO` method
 
 The `parseISO` method have been removed, you can directly use your date library:
 
@@ -481,7 +486,7 @@ The `parseISO` method have been removed, you can directly use your date library:
 +const value = moment(isoString, true);
 ```
 
-### Remove the `toISO` method
+#### Remove the `toISO` method
 
 The `toISO` method have been removed, you can directly use your date library:
 
@@ -500,7 +505,14 @@ The `getYearRange` method used to accept two params and now accepts a tuple to b
 +adapter.getYearRange([start, end])
 ```
 
-### Restrict the input format of the `date` method
+</details>
+
+### Modified methods
+
+<details>
+  <summary>Show breaking changes</summary>
+
+#### Restrict the input format of the `date` method
 
 The `date` method now have the behavior of the v6 `dateWithTimezone` method.
 It no longer accept `any` as a value but only `string | null | undefined`
@@ -519,7 +531,7 @@ It no longer accept `any` as a value but only `string | null | undefined`
 +adapter.getInvalidDate();
 ```
 
-### Restrict the input format of the `isEqual` method
+#### Restrict the input format of the `isEqual` method
 
 The `isEqual` method used to accept any type of value for its two input and tried to parse them before checking if they were equal.
 The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in the pickers)
@@ -560,7 +572,7 @@ The method has been simplified and now only accepts an already-parsed date or `n
 +const isEqual = adapterDateFns.isEqual(new Date('2022-04-17'), new Date('2022-04-17'));
 ```
 
-### Restrict the input format of the `isValid` method
+#### Restrict the input format of the `isValid` method
 
 The `isValid` method used to accept any type of value and tried to parse them before checking their validity.
 The method has been simplified and now only accepts an already-parsed date or `null`.
@@ -601,3 +613,5 @@ Which is the same type as the one accepted by the components `value` prop.
 -const isValid = adapterDateFns.isValid('2022-04-17');
 +const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
 ```
+
+</details>
