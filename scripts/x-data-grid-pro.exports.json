@@ -559,7 +559,6 @@
   { "name": "PaginationPropsOverrides", "kind": "Interface" },
   { "name": "PanelPropsOverrides", "kind": "Interface" },
   { "name": "plPL", "kind": "Variable" },
-  { "name": "PreferencesPanelPropsOverrides", "kind": "Interface" },
   { "name": "ptBR", "kind": "Variable" },
   { "name": "renderActionsCell", "kind": "Variable" },
   { "name": "renderBooleanCell", "kind": "Variable" },
