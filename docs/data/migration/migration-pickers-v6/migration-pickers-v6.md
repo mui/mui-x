@@ -129,7 +129,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 
 ### Use localized week with luxon
 
-The Date and Time Pickers now use the localized week when using `AdapterLuxon` and Luxon v3.4.4 or higher is installed.
+The `AdapterLuxon` now uses the localized week when Luxon `v3.4.4` or higher is installed.
 This new behavior allows `AdapterLuxon` to have the same behavior as the other adapters.
 
 If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
