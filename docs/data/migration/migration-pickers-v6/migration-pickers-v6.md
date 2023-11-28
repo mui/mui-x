@@ -270,11 +270,13 @@ You can learn more about the new approach on the [dedicated doc page](https://mu
  </LocalizationProvider>
 ```
 
-### Extend `dayjs` in the Day.js adapter
+### Usage with `customParseFormat`
 
-The calls to `dayjs.extend()` to apply the plugins got moved from the file level to the `AdapterDayjs` constructor.
-In case `dayjs` (with its extensions) is needed before the Adapter gets initialized the dayjs instance needs to be
-extended manually with the required plugins first.
+The call to `dayjs.extend(customParseFormatPlugin)` has been moved to the `AdapterDayjs` constructor. This allows users
+to pass custom options to this plugin before the adapter uses it.
+
+If you are using this plugin before the rendering of the first `LocalizationProvider` component and did not call
+`dayjs.extend` in your own codebase, you will need to manually extend `dayjs`:
 
 ```tsx
 import dayjs from 'dayjs';
@@ -282,6 +284,8 @@ import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 
 dayjs.extend(customParseFormatPlugin);
 ```
+
+The other plugins are still initialized before the adapter initialization.
 
 The plugin that got moved to the constructor is:
 
@@ -292,10 +296,6 @@ The other plugins will (still) be initialized before adapter initialization:
 - weekOfYear ('dayjs/plugin/weekOfYear')
 - isBetween ('dayjs/plugin/isBetween')
 - localizedFormat ('dayjs/plugin/localizedFormat')
-
-In the case of plugins that accept options (e.g. the `customParseFormat` plugin) it allows the user to pass custom
-options to the plugins where needed. Currently it is only one plugin that needs and support this feature, but to be
-future safe this approach will be considered for future additions to the plugins as well.
 
 ## Adapters internal changes
 
