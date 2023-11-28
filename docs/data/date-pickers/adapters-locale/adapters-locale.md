@@ -229,7 +229,7 @@ This prop is available on all components that render a day calendar, including t
 
 ## Custom start of week
 
-The Date and Time Pickers are using the week provided by your date libraries.
+The Date and Time Pickers are using the week settings provided by your date libraries.
 Each adapter uses its locale to define the start of the week.
 
 If the default start of the week defined in your adapter's locale is not the one you want, you can override it an shown in the following demos.
