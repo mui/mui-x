@@ -642,15 +642,9 @@ export const useGridVirtualScroller = () => {
     // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
     const height = Math.max(rowsMeta.currentPageTotalHeight, 1);
 
-    let shouldExtendContent = false;
-    if (scrollerRef.current && height <= scrollerRef.current.clientHeight) {
-      shouldExtendContent = true;
-    }
-
     const size: React.CSSProperties = {
       width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
       height,
-      minHeight: shouldExtendContent ? '100%' : 'auto',
     };
 
     if (rootProps.autoHeight && currentPage.rows.length === 0) {

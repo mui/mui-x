@@ -540,11 +540,13 @@ describe('<DataGridPro /> - Rows', () => {
         virtualScroller.scrollTop = 10e6; // scroll to the bottom
         act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
+        const dimensions = apiRef.current.state.dimensions;
         const lastCell = document.querySelector(
           '[role="row"]:last-child [role="cell"]:first-child',
         )!;
         expect(lastCell).to.have.text('31');
-        expect(virtualScroller.scrollHeight).to.equal(nbRows * rowHeight);
+        expect(virtualScroller.scrollHeight).to.equal(
+          dimensions.headerHeight + nbRows * rowHeight + dimensions.scrollbarSize);
       });
 
       it('should not virtualized the last page if smaller than viewport', () => {

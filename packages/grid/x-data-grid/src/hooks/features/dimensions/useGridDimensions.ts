@@ -173,8 +173,8 @@ export function useGridDimensions(
         height: rowsMeta.currentPageTotalHeight + (hasScrollX ? scrollbarSize : 0),
       };
       viewportInnerSize = {
-        width: viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0),
-        height: viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0),
+        width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
+        height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
       };
     } else {
       viewportOuterSize = {
@@ -182,8 +182,8 @@ export function useGridDimensions(
         height: rootDimensionsRef.current.height,
       };
       viewportInnerSize = {
-        width: viewportOuterSize.width - 0 /* XXX: right/left pinned */,
-        height: viewportOuterSize.height - topContainerHeight - bottomContainerHeight,
+        width: Math.max(0, viewportOuterSize.width - 0 /* XXX: right/left pinned */),
+        height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
       };
 
       const content = contentSize;
