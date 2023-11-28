@@ -1,9 +1,10 @@
----
+**\*\***---
 productId: x-date-pickers
 title: Date and Time Pickers - Date format and localization
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
+
 ---
 
 # Date format and localization
@@ -232,7 +233,7 @@ This prop is available on all components that render a day calendar, including t
 The Date and Time Pickers are using the week settings provided by your date libraries.
 Each adapter uses its locale to define the start of the week.
 
-If the default start of the week defined in your adapter's locale is not the one you want, you can override it as shown in the following demos.
+If the default start of the week defined in your adapter's locale is not the one you want, you can override it as shown in the following examples.
 
 :::warning
 If you want to update the start of the week after the first render of a component,
@@ -256,8 +257,6 @@ dayjs.updateLocale('en', {
 });
 ```
 
-{{"demo": "StartOfWeekDayjs.js", "defaultCodeExpanded": false}}
-
 ### With `date-fns`
 
 For `date-fns`, use the `setDefaultOptions` utility:
@@ -270,8 +269,6 @@ setDefaultOptions({
   weekStartsOn: 1,
 });
 ```
-
-{{"demo": "StartOfWeekDateFns.js", "defaultCodeExpanded": false}}
 
 ### With `luxon`
 
@@ -290,8 +287,6 @@ Settings.defaultWeekSettings = {
 };
 ```
 
-{{"demo": "StartOfWeekLuxon.js"}}
-
 ### With `moment`
 
 For `luxon`, use the `moment.updateLocale` method:
@@ -307,5 +302,3 @@ moment.updateLocale('en', {
   },
 });
 ```
-
-{{"demo": "StartOfWeekMoment.js"}}
