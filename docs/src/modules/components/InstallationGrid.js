@@ -9,20 +9,21 @@ import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 const content = [
   {
     title: 'Data Grid',
-    description: 'Feature-rich and fast table extension.',
+    description: 'Fast, feature-rich data table.',
     link: '/x/react-data-grid/getting-started/#installation',
     icon: <PivotTableChartRoundedIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Date and Time Pickers',
-    description: 'Let users pick a date and time, or both together.',
+    description: 'A suite of components for selecting dates, times, and ranges.',
     link: '/x/react-date-pickers/getting-started/#installation',
     icon: <CalendarMonthRoundedIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Charts',
     link: '/x/react-charts/#getting-started',
-    description: 'Features bar, lines, pie, scatter, and more types of graphs.',
+    description:
+      'A collection of data visualization graphs, including bar, line, pie, scatter, and more.',
     icon: <BarChartRoundedIcon fontSize="small" color="primary" />,
   },
   {
