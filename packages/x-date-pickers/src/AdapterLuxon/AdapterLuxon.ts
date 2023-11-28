@@ -475,15 +475,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {
-    const startDate = start.startOf('year');
-    const endDate = end.endOf('year');
-
-    let current = startDate;
+    const startDate = this.startOfYear(start);
+    const endDate = this.endOfYear(end);
     const years: DateTime[] = [];
 
-    while (current < endDate) {
+    let current = startDate;
+    while (this.isBefore(current, endDate)) {
       years.push(current);
-      current = current.plus({ year: 1 });
+      current = this.addYears(current, 1);
     }
 
     return years;
