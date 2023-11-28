@@ -28,49 +28,44 @@ pnpm add @mui/x-charts
 </codeblock>
 
 :::info
-With Next.js you might face the following error.
+With Next.js you might face the following error:
 
 ```bash
 [ESM][charts] Doesn't build due to require() of ES Module (ERR_REQUIRE_ESM)
 ```
 
-A [solution](https://github.com/mui/mui-x/issues/9826#issuecomment-1658333978) is to transpile the package by adding `transpilePackages: ['@mui/x-charts']` to your `next.config.js` file.
+The solution is to transpile the package by adding `transpilePackages: ['@mui/x-charts']` to your `next.config.js` file—see [this GitHub issue and comment](https://github.com/mui/mui-x/issues/9826#issuecomment-1658333978) for details.
 :::
 
-## Display charts
+## Displaying Charts
 
-Charts can be rendered in two ways.
-With a single component or by composing sub-components.
+A Chart can be rendered in one of two ways: as a single component, or by composing subcomponents.
 
-### Single charts
+### Single Charts
 
-For common use cases, the single component is the recommended way.
+For most common use cases, we recommend rendering as a single component.
 
-Those components' name ends with "Chart" and only require the `series` prop, describing the data to render.
-
-They also have plenty of other props to customize the chart behavior.
+The components intended to be rendered individually are named with "Chart" (as opposed to "Plot") and only require the `series` prop, which describes the data to render.
 
 {{"demo": "SimpleCharts.js"}}
 
 ### Multiple charts
 
-To combine different charts, like lines with bars, you can use composition with `<ChartContainer />` wrapper.
+To combine different Charts, like Lines with Bars, you can use composition with the `<ChartContainer />` wrapper.
 
-Inside this wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<AreaPlot />`, `<ScatterPlot />`)
-
-To get an overview of what is available, have a look at the [composition page](/x/react-charts/composition/).
+Inside this wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<AreaPlot />`, or `<ScatterPlot />`).
+See the [Composition doc](/x/react-charts/composition/) for complete details.
 
 {{"demo": "Combining.js"}}
 
 ## Axis management
 
-The library is flexible about axis management.
-It supports multiple-axis charts with any combination of scales and ranges.
+MUI X Charts are flexible when it comes to axis management: they support multiple-axis charts with any combination of scales and ranges.
 
-For more details, have a look at the [axis docs page](/x/react-charts/axis/).
+See the [Axis doc](/x/react-charts/axis/) for more details.
 
 ## Styling
 
-The library is following MUI styling behavior, such that customizing charts is made as simple as customizing buttons.
+The Charts library follows the same styling patterns as other MUI component libraries, such as Material UI.
 
-For more details, have a look at the [styling docs page](/x/react-charts/styling/).
+See the [Styling doc](/x/react-charts/styling/) for details.

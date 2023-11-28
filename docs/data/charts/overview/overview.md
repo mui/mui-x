@@ -20,7 +20,7 @@ They also provide a high level of customization.
 
 To achieve this goal, the `@mui/x-charts` relies on three levels of customization:
 
-- _single components_ with nice default
+- _single components_ with nice defaults
 - extensive _configuration props_
 - subcomponents for _composition_
 
@@ -37,7 +37,7 @@ Each component has two docs pages:
 - The first one describes behaviors that are specific to this component.
 - The second one provides a set of basic examples.
 
-For features shared across multiple components such as axis, or legend. They are documented in distinct pages:
+For features shared across multiple components, likes axes and legends, visit their corresponding documents:
 
 - [Axis](/x/react-charts/axis/)
 - [Custom components](/x/react-charts/components/)
@@ -48,4 +48,4 @@ For features shared across multiple components such as axis, or legend. They are
 
 ## What's next?
 
-Continue to the [next page](/x/react-charts/getting-started/) and learn how to prepare your application for the charts.
+Continue to the [Getting started doc](/x/react-charts/getting-started/) and learn how to prepare your application for Charts.
