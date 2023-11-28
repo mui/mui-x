@@ -290,13 +290,13 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public isAfterYear = (value: DateTime, comparing: DateTime) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
-    const diff = value.diff(comparingInValueTimezone.endOf('year'), 'years').toObject();
+    const diff = value.diff(this.endOfYear(comparingInValueTimezone), 'years').toObject();
     return diff.years! > 0;
   };
 
   public isAfterDay = (value: DateTime, comparing: DateTime) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
-    const diff = value.diff(comparingInValueTimezone.endOf('day'), 'days').toObject();
+    const diff = value.diff(this.endOfDay(comparingInValueTimezone), 'days').toObject();
     return diff.days! > 0;
   };
 
@@ -306,13 +306,13 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public isBeforeYear = (value: DateTime, comparing: DateTime) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
-    const diff = value.diff(comparingInValueTimezone.startOf('year'), 'years').toObject();
+    const diff = value.diff(this.startOfYear(comparingInValueTimezone), 'years').toObject();
     return diff.years! < 0;
   };
 
   public isBeforeDay = (value: DateTime, comparing: DateTime) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
-    const diff = value.diff(comparingInValueTimezone.startOf('day'), 'days').toObject();
+    const diff = value.diff(this.startOfDay(comparingInValueTimezone), 'days').toObject();
     return diff.days! < 0;
   };
 
@@ -333,7 +333,12 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public startOfWeek = (value: DateTime) => {
-    return value.startOf('week');
+    return value.startOf(
+      'week',
+      // TODO: remove when `@types/luxon` add support for the parameter.
+      // @ts-ignore
+      { useLocaleWeeks: true },
+    );
   };
 
   public startOfDay = (value: DateTime) => {
@@ -349,7 +354,12 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public endOfWeek = (value: DateTime) => {
-    return value.endOf('week');
+    return value.endOf(
+      'week',
+      // TODO: remove when `@types/luxon` add support for the parameter.
+      // @ts-ignore
+      { useLocaleWeeks: true },
+    );
   };
 
   public endOfDay = (value: DateTime) => {
@@ -447,17 +457,16 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public getWeekArray = (value: DateTime) => {
     const cleanValue = this.setLocaleToValue(value);
-    const { days } = cleanValue
-      .endOf('month')
-      .endOf('week')
-      .diff(cleanValue.startOf('month').startOf('week'), 'days')
-      .toObject();
+    const firstDay = this.startOfWeek(this.startOfMonth(cleanValue));
+    const lastDay = this.endOfWeek(this.endOfMonth(cleanValue));
+
+    const { days } = lastDay.diff(firstDay, 'days').toObject();
 
     const weeks: DateTime[][] = [];
     new Array<number>(Math.round(days!))
       .fill(0)
       .map((_, i) => i)
-      .map((day) => cleanValue.startOf('month').startOf('week').plus({ days: day }))
+      .map((day) => firstDay.plus({ days: day }))
       .forEach((v, i) => {
         if (i === 0 || (i % 7 === 0 && i > 6)) {
           weeks.push([v]);
@@ -471,7 +480,9 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekNumber = (value: DateTime) => {
-    return value.weekNumber;
+    // TODO: remove when `@types/luxon` add support for the parameter.
+    // @ts-ignore
+    return value.localeWeekNumber ?? value.weekNumber;
   };
 
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {
