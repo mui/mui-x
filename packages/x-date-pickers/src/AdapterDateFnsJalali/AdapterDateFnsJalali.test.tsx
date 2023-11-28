@@ -37,7 +37,7 @@ describe('<AdapterDateFnsJalali />', () => {
   });
 
   describe('Picker localization', () => {
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       enUS: {
         placeholder: 'MM/DD/YYYY hh:mm aa',

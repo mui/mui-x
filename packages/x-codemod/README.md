@@ -56,13 +56,126 @@ through jscodeshift's `printOptions` command line argument
 npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
 ```
 
-## Included scripts
+## v7.0.0
 
-### v6.0.0
+### 🚀 `preset-safe` for v7.0.0
 
-#### 🚀 `preset-safe`
+A combination of all important transformers for migrating v6 to v7.
+⚠️ This codemod should be run only once.
+It runs codemods for both Data Grid and Date and Time Pickers packages.
+To run codemods for a specific package, refer to the respective section.
 
-A combination of all important transformers for migrating v5 to v6. ⚠️ This codemod should be run only once. It runs codemods for both Data Grid and Date and Time Pickers packages. To run codemods for a specific package, refer to the respective section.
+```bash
+npx @mui/x-codemod v7.0.0/preset-safe <path|folder>
+```
+
+The corresponding sub-sections are listed below
+
+- [`preset-safe-for-pickers`](#preset-safe-for-pickers-v700)
+- [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v700)
+
+### Pickers codemods
+
+#### `preset-safe` for pickers v7.0.0
+
+The `preset-safe` codemods for pickers.
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-components-to-slots-pickers`](#rename-components-to-slots-pickers)
+- [`rename-default-calendar-month-to-reference-date`](#rename-default-calendar-month-to-reference-date)
+- [`rename-day-picker-classes`](/rename-day-picker-classes)
+
+#### `rename-components-to-slots-pickers`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects Date and Time Picker components.
+
+```diff
+ <DatePicker
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-components-to-slots <path>
+```
+
+#### `rename-default-calendar-month-to-reference-date`
+
+Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
+
+```diff
+- <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
++ <DateCalendar referenceDate{dayjs('2022-04-01')} />
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-default-calendar-month-to-reference-date <path>
+```
+
+#### `rename-day-picker-classes`
+
+Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
+
+```diff
+- import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
++ import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-day-picker-classes <path>
+```
+
+### Data grid codemods
+
+#### `preset-safe` for data grid v7.0.0
+
+The `preset-safe` codemods for data grid.
+
+```bash
+npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-components-to-slots-data-grid`](#rename-components-to-slots-data-grid)
+
+#### `rename-components-to-slots-data-grid`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects Data Grid components.
+
+```diff
+ <DataGrid
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ toolbar: { showQuickFilter: true }}}
++  slotProps={{ toolbar: { showQuickFilter: true }}}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/data-grid/rename-components-to-slots <path>
+```
+
+## v6.0.0
+
+### 🚀 `preset-safe` for v6.0.0
+
+A combination of all important transformers for migrating v5 to v6.
+⚠️ This codemod should be run only once.
+It runs codemods for both Data Grid and Date and Time Pickers packages.
+To run codemods for a specific package, refer to the respective section.
 
 ```bash
 npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
@@ -70,12 +183,12 @@ npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
 
 The corresponding sub-sections are listed below
 
-- [`preset-safe-for-pickers`](#preset-safe-for-pickers)
-- [`preset-safe-for-data-grid`](#preset-safe-for-data-grid)
+- [`preset-safe-for-pickers`](#preset-safe-for-pickers-v600)
+- [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v600)
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers
+#### `preset-safe` for pickers v6.0.0
 
 The `preset-safe` codemods for pickers.
 
@@ -385,7 +498,7 @@ npx @mui/x-codemod v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
-This change only affects pickers components.
+This change only affects Date and Time Pickers components.
 
 ```diff
  <DatePicker
@@ -402,7 +515,7 @@ npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 
 ### Data grid codemods
 
-#### `preset-safe` for data grid
+#### `preset-safe` for data grid v6.0.0
 
 The `preset-safe` codemods for data grid.
 
@@ -684,7 +797,7 @@ npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
-This change only affects data grid components.
+This change only affects Data Grid components.
 
 ```diff
  <DataGrid

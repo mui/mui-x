@@ -27,6 +27,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 import { gridClasses } from '../../../constants/gridClasses';
+import { isEventTargetInPortal } from '../../../utils/domUtils';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['rowSelectionModel'],
@@ -459,7 +460,7 @@ export const useGridRowSelection = (
 
       // Ignore portal
       // Do not apply shortcuts if the focus is not on the cell root component
-      if (!event.currentTarget.contains(event.target as Element)) {
+      if (isEventTargetInPortal(event)) {
         return;
       }
 

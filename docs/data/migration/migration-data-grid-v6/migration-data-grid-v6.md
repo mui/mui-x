@@ -44,7 +44,7 @@ Apart from the removed methods and exports that require manual intervention, aro
 :::
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -122,7 +122,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
    const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
 -  return (cellParams) => {
--  const { value } = cellParams;
+-    const { value } = cellParams;
 +  return (value, row, colDef, apiRef) => {
      return value != null ? filterRegex.test(String(value)) : false;
    };

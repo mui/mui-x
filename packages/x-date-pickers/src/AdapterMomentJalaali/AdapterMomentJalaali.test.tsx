@@ -59,7 +59,7 @@ describe('<AdapterMomentJalaali />', () => {
       moment.locale('en');
     });
 
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       fa: {
         placeholder: 'YYYY/MM/DD hh:mm',

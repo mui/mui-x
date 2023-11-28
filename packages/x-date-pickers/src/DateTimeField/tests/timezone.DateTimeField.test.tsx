@@ -40,7 +40,7 @@ describe('<DateTimeField /> - Timezone', () => {
       userEvent.keyPress(input, { key: 'ArrowRight' });
 
       return adapter.setHours(
-        adapter.setDate(adapter.setMonth(adapter.dateWithTimezone(undefined, timezone), 11), 31),
+        adapter.setDate(adapter.setMonth(adapter.date(undefined, timezone), 11), 31),
         23,
       );
     };
@@ -89,7 +89,7 @@ describe('<DateTimeField /> - Timezone', () => {
           const onChange = spy();
           render(
             <DateTimeField
-              value={adapter.dateWithTimezone(undefined, timezone)}
+              value={adapter.date(undefined, timezone)}
               onChange={onChange}
               timezone="America/Chicago"
               format={format}
@@ -103,7 +103,7 @@ describe('<DateTimeField /> - Timezone', () => {
           expectInputValue(input, '05/14/2022 19');
 
           // Check the `onChange` value (uses timezone prop)
-          const expectedDate = adapter.addMonths(adapter.dateWithTimezone(undefined, timezone), -1);
+          const expectedDate = adapter.addMonths(adapter.date(undefined, timezone), -1);
           const actualDate = onChange.lastCall.firstArg;
           expect(adapter.getTimezone(actualDate)).to.equal(timezone);
           expect(actualDate).toEqualDateTime(expectedDate);
@@ -119,7 +119,7 @@ describe('<DateTimeField /> - Timezone', () => {
       const { setProps } = render(<DateTimeField />);
       const input = getTextbox();
 
-      const date = adapter.date(new Date('2020-06-18T14:30:10.000Z')).setZone('UTC');
+      const date = adapter.date('2020-06-18T14:30:10.000Z').setZone('UTC');
       setProps({ value: date });
 
       expectInputValue(input, '06/18/2020 02:30 PM');

@@ -34,11 +34,6 @@
         "string": "The name to display."
       }
     },
-    "defaultCalendarMonth": {
-      "description": "Default calendar month displayed when <code>value</code> and <code>defaultValue</code> are empty.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "defaultValue": {
       "description": "The default value. Used when the component is not controlled.",
       "deprecated": "",
@@ -80,7 +75,7 @@
       "typeDescriptions": {}
     },
     "fixedWeekNumber": {
-      "description": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
+      "description": "The day view will show as many weeks as needed after the end of the current month to match this value. Put it to 6 to have a fixed number of weeks in Gregorian calendars",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -236,15 +231,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "shouldDisableClock": {
-      "description": "Disable specific clock time.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "clockValue": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
-      }
-    },
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "deprecated": "",
@@ -314,7 +300,7 @@
       "typeDescriptions": {}
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documentation</a> for more details.",
       "deprecated": "",
       "typeDescriptions": {}
     },

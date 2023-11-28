@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';

@@ -130,18 +130,15 @@ export class AdapterMomentJalaali
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = (value?: any) => {
+  public date = <T extends string | null | undefined>(
+    value?: T,
+  ): DateBuilderReturnType<T, Moment> => {
+    type R = DateBuilderReturnType<T, Moment>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
-    return this.moment(value).locale('fa');
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
-    value: T,
-  ): DateBuilderReturnType<T, Moment> => {
-    return <DateBuilderReturnType<T, Moment>>this.date(value);
+    return <R>this.moment(value).locale('fa');
   };
 
   public getTimezone = (): string => {
@@ -238,41 +235,7 @@ export class AdapterMomentJalaali
     return value.clone().jDate(date);
   };
 
-  public getWeekArray = (value: Moment) => {
-    const start = value.clone().startOf('jMonth').startOf('week');
-    const end = value.clone().endOf('jMonth').endOf('week');
-
-    let count = 0;
-    let current = start;
-    const nestedWeeks: Moment[][] = [];
-
-    while (current.isBefore(end)) {
-      const weekNumber = Math.floor(count / 7);
-      nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      nestedWeeks[weekNumber].push(current);
-
-      current = current.clone().add(1, 'day');
-      count += 1;
-    }
-
-    return nestedWeeks;
-  };
-
   public getWeekNumber = (value: Moment) => {
     return value.jWeek();
-  };
-
-  public getYearRange = ([start, end]: [Moment, Moment]) => {
-    const startDate = this.moment(start).startOf('jYear');
-    const endDate = this.moment(end).endOf('jYear');
-    const years: Moment[] = [];
-
-    let current = startDate;
-    while (current.isBefore(endDate)) {
-      years.push(current);
-      current = current.clone().add(1, 'jYear');
-    }
-
-    return years;
   };
 }

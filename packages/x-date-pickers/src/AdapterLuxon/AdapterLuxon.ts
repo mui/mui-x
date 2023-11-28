@@ -137,31 +137,9 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.setLocale(expectedLocale);
   };
 
-  public date = (value?: any) => {
-    if (typeof value === 'undefined') {
-      return DateTime.local();
-    }
-
-    if (value === null) {
-      return null;
-    }
-
-    if (typeof value === 'string') {
-      // @ts-ignore
-      return DateTime.fromJSDate(new Date(value), { locale: this.locale });
-    }
-
-    if (DateTime.isDateTime(value)) {
-      return value;
-    }
-
-    // @ts-ignore
-    return DateTime.fromJSDate(value, { locale: this.locale });
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
-    value: T,
-    timezone: PickersTimezone,
+  public date = <T extends string | null | undefined>(
+    value?: T,
+    timezone: PickersTimezone = 'default',
   ): DateBuilderReturnType<T, DateTime> => {
     type R = DateBuilderReturnType<T, DateTime>;
     if (value === null) {
@@ -176,6 +154,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     // @ts-ignore
     return <R>DateTime.fromISO(value, { locale: this.locale, zone: timezone });
   };
+
+  public getInvalidDate = () => DateTime.fromJSDate(new Date('Invalid Date'));
 
   public getTimezone = (value: DateTime): string => {
     // When using the system zone, we want to return "system", not something like "Europe/Paris"
@@ -500,7 +480,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekNumber = (value: DateTime) => {
-      // TODO: remove when `@types/luxon` add support for the parameter.
+    // TODO: remove when `@types/luxon` add support for the parameter.
     // @ts-ignore
     return value.localeWeekNumber ?? value.weekNumber;
   };
@@ -508,13 +488,12 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {
     const startDate = this.startOfYear(start);
     const endDate = this.endOfYear(end);
-
-    let current = startDate;
     const years: DateTime[] = [];
 
-    while (current < endDate) {
+    let current = startDate;
+    while (this.isBefore(current, endDate)) {
       years.push(current);
-      current = current.plus({ year: 1 });
+      current = this.addYears(current, 1);
     }
 
     return years;

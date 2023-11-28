@@ -15,3 +15,4 @@ Broken links found by `yarn docs:link-check` that exist:
 - https://mui.com/x/api/data-grid/data-grid/#props
 - https://mui.com/x/api/data-grid/data-grid/#slots
 - https://mui.com/x/api/date-pickers/date-picker/#slots
+- https://mui.com/x/introduction/licensing/#license-key-installation

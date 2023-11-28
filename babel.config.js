@@ -80,6 +80,10 @@ module.exports = function getBabelConfig(api) {
     ],
   ];
 
+  if (process.env.NODE_ENV === 'test') {
+    plugins.push(['@babel/plugin-transform-export-namespace-from']);
+  }
+
   if (process.env.NODE_ENV === 'production') {
     plugins.push(...productionPlugins);
 

@@ -111,10 +111,6 @@ MobileDatePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value` and `defaultValue` are empty.
-   */
-  defaultCalendarMonth: PropTypes.any,
-  /**
    * The default value.
    * Used when the component is not controlled.
    */
@@ -149,8 +145,8 @@ MobileDatePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
@@ -370,7 +366,7 @@ MobileDatePicker.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

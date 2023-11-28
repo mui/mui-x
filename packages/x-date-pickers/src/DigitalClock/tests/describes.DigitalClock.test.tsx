@@ -50,10 +50,7 @@ describe('<DigitalClock /> - Describes', () => {
     defaultProps: {
       views: ['hours'],
     },
-    values: [
-      adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 17, 0)),
-    ],
+    values: [adapterToUse.date('2018-01-01T15:30:00'), adapterToUse.date('2018-01-01T17:00:00')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
