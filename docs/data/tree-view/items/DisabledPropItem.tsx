@@ -11,7 +11,7 @@ type MuiXProduct = TreeViewBaseItem<{
   disabled?: boolean;
 }>;
 
-const MUI_X_PRODUCTS: MuiProduct[] = [
+const MUI_X_PRODUCTS: MuiXProduct[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -50,7 +50,7 @@ const MUI_X_PRODUCTS: MuiProduct[] = [
   },
 ];
 
-const isItemDisabled = (item: MuiProduct) => !!item.disabled;
+const isItemDisabled = (item: MuiXProduct) => !!item.disabled;
 
 export default function DisabledPropItem() {
   return (
