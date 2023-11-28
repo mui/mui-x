@@ -10,18 +10,9 @@ describe('<DataGrid /> - Components', () => {
 
   const baselineProps = {
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand' }],
   };
@@ -62,6 +53,29 @@ describe('<DataGrid /> - Components', () => {
         </div>,
       );
       expect(getCell(0, 0)).to.have.attr('data-name', 'foobar');
+    });
+
+    it('should not override cell dimensions when passing `slotProps.cell.style` to the cell', () => {
+      function Test() {
+        const [cellProps, setCellProps] = React.useState({});
+        return (
+          <div>
+            <button onClick={() => setCellProps({ style: {} })}>Apply cell styles</button>
+            <div style={{ width: 300, height: 500 }}>
+              <DataGrid {...baselineProps} slotProps={{ cell: cellProps }} />
+            </div>
+          </div>
+        );
+      }
+
+      render(<Test />);
+
+      const initialCellWidth = getCell(0, 0).getBoundingClientRect().width;
+
+      const button = screen.getByRole('button', { name: /Apply cell styles/i });
+      fireEvent.click(button);
+
+      expect(getCell(0, 0).getBoundingClientRect().width).to.equal(initialCellWidth);
     });
 
     it('should pass the props from componentsProps.row to the row', () => {
