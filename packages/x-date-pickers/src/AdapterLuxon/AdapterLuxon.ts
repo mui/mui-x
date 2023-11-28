@@ -355,6 +355,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   public startOfWeek = (value: DateTime) => {
     return value.startOf(
       'week',
+      // TODO: remove when `@types/luxon` add support for the parameter.
       // @ts-ignore
       { useLocaleWeeks: true },
     );
