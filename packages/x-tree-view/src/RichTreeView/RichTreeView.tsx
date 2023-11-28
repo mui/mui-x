@@ -46,7 +46,7 @@ function WrappedTreeItem<R extends {}>({
   nodeId,
   children,
 }: Pick<RichTreeViewProps<R, any>, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'nodeId' | 'label' | 'children'>) {
+  Pick<TreeItemProps, 'id' | 'nodeId' | 'children'> & { label: string }) {
   const Item = slots?.item ?? TreeItem;
   const itemProps = useSlotProps({
     elementType: Item,
