@@ -14,16 +14,16 @@ Commercial licenses enable us to support a full-time staff of engineers, which i
 
 Rest assured that when we release features commercially, it's only because we believe that you will not find a better MIT-licensed alternative anywhere else.
 
-See the [Pricing](https://mui.com/r/x-get-license/) page for a detailed feature comparison.
+See [the Pricing page](https://mui.com/r/x-get-license/) for a detailed feature comparison.
 
 ## Plans
 
 ### Community plan
 
-The community version of MUI X is [published under an MIT license](https://www.tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
+The MUI X Community plan is [published under an MIT license](https://www.tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 This version contains features that we believe are maintainable by contributions from the open-source community.
 
-MIT licensed npm packages:
+These are the Community MIT-licensed npm packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
@@ -32,69 +32,69 @@ MIT licensed npm packages:
 
 ### Pro plan <span class="plan-pro"></span>
 
-The Pro version of MUI X expands on the features of the community version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
+MUI X Pro expands on the Community version with more advanced features and functionality.
+The Data Grid Pro comes with multi-filtering, multi-sorting, column resizing, and column pinning in addition to the baseline features.
+You also gain access to the Date and Time Range Picker components.
 
 The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
+Exclusive features are marked with the <span class="plan-pro" aria-label="MUI X Pro plan icon"></span> icon throughout the documentation.
 
-Pro npm packages:
+These are the Pro npm packages:
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
 
-:::info
-The features exclusive to the Pro version are marked with the <span class="plan-pro"></span> icon throughout the documentation.
-:::
-
 ### Premium plan <span class="plan-premium"></span>
 
-The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, and aggregation, in addition to everything that's included in the Pro plan.
+MUI X Premium unlocks the most advanced features of the Data Grid, including row grouping and Excel exporting, on top of everything else offered in the Pro plan.
 
 The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
+Exclusive features are marked with the <span class="plan-premium" aria-label="MUI X Premium plan icon"></span> icon throughout the documentation.
 
-Premium npm package:
+These are the Premium npm packages:
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
-:::info
-The features exclusive to the Premium version are marked with the <span class="plan-premium"></span> icon throughout the documentation.
-:::
-
 ## Upgrading
 
-The npm packages of any given plan are a **superset** of the packages on the plan below.
-So to upgrade, replace the [npm packages](#plans) and the components' imports with the ones from the target plan.
+The [npm packages](#plans) of any given plan are a **superset** of the packages in the Community version.
+To upgrade, you must install the respective paid package and replace all imports with the new path.
 
-For example, when you want to upgrade the Data Grid:
+Below are upgrading scenarios using the Data Grid as an example:
 
-- **Upgrading from Community to Pro.**
+### From Community to Pro
 
-  `@mui/x-data-grid-pro` is a superset of `@mui/x-data-grid`, so you can upgrade from the Community to the Pro plan like this:
+`@mui/x-data-grid-pro` is a superset of `@mui/x-data-grid`.
+Install the Pro package, then update all imports accordingly:
 
-  ```diff
-  -import { DataGrid } from '@mui/x-data-grid';
-  +import { DataGridPro } from '@mui/x-data-grid-pro';
-  ```
+```diff
+-import { DataGrid } from '@mui/x-data-grid';
++import { DataGridPro } from '@mui/x-data-grid-pro';
+```
 
-  :::warning
-  There is an exception to the superset rule: the default value of the `pagination` prop changes.
-  See the [Pagination](/x/react-data-grid/pagination/) doc for details.
-  :::
+:::warning
+There is an exception to the superset rule: the Data Grid's `pagination` prop default value changes.
+See [the Pagination page](/x/react-data-grid/pagination/) for details.
+:::
 
-- **Upgrading from Pro to Premium.**
+### From Pro to Premium
 
-  `@mui/x-data-grid-premium` is a superset of `@mui/x-data-grid-pro`, so you can upgrade from Pro to Premium like this:
+`@mui/x-data-grid-premium` is a superset of `@mui/x-data-grid-pro`.
+Install the Premium package, then update all imports accordingly:
 
-  ```diff
-  -import { DataGridPro } from '@mui/x-data-grid-pro';
-  +import { DataGridPremium } from '@mui/x-data-grid-premium';
-  ```
+```diff
+-import { DataGridPro } from '@mui/x-data-grid-pro';
++import { DataGridPremium } from '@mui/x-data-grid-premium';
+```
 
-  :::info
-  If you are looking for upgrading from Pro to Premium, please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium).
-  We'll provide you with a discount based on the remaining time of your current license term.
-  :::
+:::success
+Upgrading from Pro to Premium?
+Please contact [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium) to get started.
 
-For more details on how to install the packages, please check out our [package installation guide](/x/introduction/installation/).
+We'll provide you with a discount based on the remaining time of your current license term.
+:::
+
+For more details on how to install each package, visit the [package installation guide](/x/introduction/installation/).
 
 ## Evaluation (trial) licenses
 
@@ -108,24 +108,21 @@ You will need to purchase a commercial license in order to remove the watermarks
 
 The number of seats purchased on your license must correspond to the number of concurrent developers contributing changes to the front-end code of the project that uses MUI X Pro or Premium.
 
-**Example 1.** Company 'A' is developing an application named 'AppA'.
-The app needs to render 10K rows of data in a table and allow users to group, filter, and sort.
-The dev team adds MUI X Pro to the project to satisfy this requirement.
-Five front-end and ten back-end developers are working on 'AppA'.
-Only one developer is tasked with configuring and modifying the data grid.
-The front-end developers and only are contributing code to the front-end.
-Company 'A' purchases five licenses.
+- **Example 1.** Company 'A' is developing an application named 'AppA'.
+  The app needs to render 10K rows of data in a table and allow users to group, filter, and sort.
+  The dev team adds MUI X Pro to the project to satisfy this requirement.
+  Five front-end and ten back-end developers are working on 'AppA'.
+  Only one developer is tasked with maintaining the Data Grid, but there are five total developers who work on the front-end.
+  Company 'A' must purchase five seats.
 
-**Example 2.** A UI development team at Company 'B' creates its own UI library for
-internal development and includes MUI X Pro as a component.
-The team working on 'AppA' uses the new library and so does the team working on 'AppB'.
-'AppA' has 5 front-end developers and 'AppB' has three.
-There are two front-end developers on the UI development team.
-Company 'B' purchases ten licenses.
+- **Example 2.** A UI development team at Company 'B' creates its own UI library for internal development that includes MUI X Pro components.
+  The teams working on 'AppY' and 'AppZ' both adopt this new library.
+  'AppY' has five front-end developers, and 'AppZ' has three; additionally, there are two front-end developers on the company's UI development team.
+  Company 'B' must purchase ten seats.
 
 This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#required-quantity-of-licenses)
 
-## License key installation
+## License key
 
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
@@ -138,15 +135,10 @@ Please update your npm package if you're using an earlier version.
 If this isn't possible, please contact sales@mui.com to request a compatible license key.
 :::
 
-## How to install the key
+### How to install the key
 
-First, make sure you have [any](#plans) of the commercial packages installed.
-They include a dependency called `@mui/x-license-pro`, used to validate the license.
-
-If you're upgrading from community, you may want to check the [upgrading](#upgrading-from-community) section.
-
-With a commercial packaged installed, use `LicenseInfo` to set your licence key as in the code snippet below.
-Calling `setLicenseKey()` "install" the key.
+The license key depends on a package called `@mui/x-license-{plan}` that validates whether or not it's active.
+Once you have your license key, import the `LicenseInfo` method from that package and call the `setLicenseKey()` function:
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -154,13 +146,13 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-You only need to install the key once in your application.
+You'll only need to do this once in your app.
 
-## Where to install the key
+### Where to install the key
 
-You need to call `setLicenseKey()` before React renders the first component.
+You must call the `setLicenseKey()` function before React renders the first component in your app.
 
-The bundle size of `setLicenseKey()` is relatively small, it should be small enough for you to be able to call it in all your bundles, regardless of whether a commercial MUI X component is rendered or not.
+Its bundle size is relatively small, so it should be fine to call it in all of your bundles, regardless of whether a commercial MUI X component is rendered.
 
 ## Next.js integration
 
@@ -258,7 +250,7 @@ End users can still use the component.
 
 Here are the different possible validation errors:
 
-### 1. `Missing license key`
+### 1. Missing license key
 
 This error indicates that your license key is missing. You might not be allowed to use the software.
 The component will look something like this:
@@ -273,7 +265,7 @@ The component will look something like this:
 To solve the issue, you can check the [free trial conditions](#evaluation-trial-licenses), if you are eligible no actions are required.
 If you are not eligible to the free trial, you need to [purchase a license](https://mui.com/r/x-get-license/) or stop using the software immediately.
 
-### 2. `Expired package version`
+### 2. Expired package version
 
 This error indicates that you have installed a version of MUI X Pro / Premium released after the end of your license term.
 By default, commercial licenses provide access to new versions released during the first year after the purchase.
@@ -282,7 +274,7 @@ To solve the issue, you can [renew your license](https://mui.com/r/x-get-license
 
 For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next twelve months.
 
-### 3. `Expired license key`
+### 3. Expired license key
 
 This error indicates that your annual license key is expired.
 
@@ -291,7 +283,7 @@ However, when the term ends, you are not allowed to use the current or older ver
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes to code depending on MUI X's APIs.
 
-### 4. `License key plan mismatch`
+### 4. License key plan mismatch
 
 This error indicates that your use of MUI X is not compatible with the plan of your license key.
 The feature you are trying to use is not included in the plan of your license key.
@@ -300,7 +292,7 @@ This happens if you try to use `DataGridPremium` with a license key for the Pro 
 To solve the issue, you can [upgrade your plan](https://mui.com/r/x-get-license/?scope=premium) from Pro to Premium.
 Or if you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.
 
-### 5. `Invalid license key`
+### 5. Invalid license key
 
 This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
@@ -308,7 +300,7 @@ It could be because the license key is missing a character or has a typo.
 To solve the issue, you need to double-check that `setLicenseKey()` is called with the right argument.
 Please check the [license key installation](#license-key-installation).
 
-### 6. Invalid license key (`TypeError: extracting license expiry timestamp`)
+### 6. Invalid license key (TypeError: extracting license expiry timestamp)
 
 The following JavaScript exception indicates that you may be trying to validate the new license's key format on an older version of the npm package.
 
