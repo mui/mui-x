@@ -44,7 +44,7 @@ For features shared across multiple components, likes axes and legends, visit th
 - [Legend](/x/react-charts/legend/)
 - [Stacking](/x/react-charts/stacking/)
 - [Styling](/x/react-charts/styling/)
-- [Tooltip & Highlights](/x/react-charts/tooltip/)
+- [Tooltips and Highlights](/x/react-charts/tooltip/)
 
 ## What's next?
 
