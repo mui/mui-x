@@ -498,6 +498,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekNumber = (value: DateTime) => {
+      // TODO: remove when `@types/luxon` add support for the parameter.
     // @ts-ignore
     return value.localeWeekNumber ?? value.weekNumber;
   };
