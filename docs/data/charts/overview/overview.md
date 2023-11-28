@@ -49,7 +49,7 @@ pnpm add @mui/x-charts@next
 ## Display charts
 
 Charts can be rendered in two ways.
-With a single component or by composing sub-components.
+With a single component or by composing subcomponents.
 
 ### Single charts
 
@@ -66,6 +66,8 @@ They also have plenty of other props to customize the chart behavior.
 To combine different charts, like lines with bars, you can use composition with `<ChartContainer />` wrapper.
 
 Inside this wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<AreaPlot />`, `<ScatterPlot />`)
+
+You can check the [composition page](/x/react-charts/composition/) for more information.
 
 {{"demo": "Combining.js"}}
 
