@@ -28,11 +28,11 @@ The quick filter values can be initialized by setting the `filter.filterModel.qu
 
 {{"demo": "QuickFilteringInitialize.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Excluding hidden columns
+## Including hidden columns
 
-By default, the quick filter searches all the columns, including those that are hidden.
+By default, the quick filter excludes hidden columns.
 
-To exclude the hidden columns from the quick filter, set `filterModel.quickFilterExcludeHiddenColumns` to `true`:
+To include hidden columns in the quick filter, set `filterModel.quickFilterExcludeHiddenColumns` to `false`:
 
 ```tsx
 <DataGrid
@@ -40,14 +40,15 @@ To exclude the hidden columns from the quick filter, set `filterModel.quickFilte
     filter: {
       filterModel: {
         items: [],
-        quickFilterExcludeHiddenColumns: true,
+        quickFilterExcludeHiddenColumns: false,
       },
     },
   }}
 />
 ```
 
-In the demo below, try hiding the `ID` column. You will see no results, because there are no visible columns that contain `1`:
+In the demo below, try hiding the `ID` column. You will see no results, because there are no visible columns that contain `1`.
+Once you disable the `Exclude hidden columns` switch, the rows with `ID` containing `1` will be shown, even though the column is hidden.
 
 {{"demo": "QuickFilteringExcludeHiddenColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
