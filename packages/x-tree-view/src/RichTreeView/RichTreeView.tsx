@@ -46,7 +46,7 @@ function WrappedTreeItem<R extends {}>({
   nodeId,
   children,
 }: Pick<RichTreeViewProps<R, any>, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'nodeId' | 'children'> & { label: string }) {
+  Pick<TreeItemProps, 'id' | 'nodeId' | 'label' | 'children'>) {
   const Item = slots?.item ?? TreeItem;
   const itemProps = useSlotProps({
     elementType: Item,
@@ -98,6 +98,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     defaultExpandIcon,
     defaultParentIcon,
     items,
+    getItemId,
+    getItemLabel,
     isItemDisabled,
     // Component implementation
     slots,
@@ -128,6 +130,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     defaultExpandIcon,
     defaultParentIcon,
     items,
+    getItemId,
+    getItemLabel,
     isItemDisabled,
     plugins: DEFAULT_TREE_VIEW_PLUGINS,
     rootRef: ref,

@@ -27,6 +27,106 @@ Otherwise, the Tree View will re-generate its entire structure.
 
 {{"demo": "BasicRichTreeView.js"}}
 
+## Item identifier
+
+Each item must have a unique identifier.
+
+This identifier is used internally to identify the item in the various models and to track the item across updates.
+
+### Item identifier on `TreeView`
+
+You must pass a `nodeId` prop to each `TreeItem` component:
+
+```tsx
+<TreeView>
+  <TreeItem nodeId="tree-view-community" {...otherItemProps} />
+</TreeView>
+```
+
+### Item identifier on `RichTreeView`
+
+By default, the `RichTreeView` component looks for a property named `id` in the data set to get that identifier:
+
+```tsx
+const ITEMS = [{ id: 'tree-view-community' }];
+
+<RichTreeView items={ITEMS} />;
+```
+
+If the item's identifier is not called `id`, then you need to use the `getItemId` prop to tell the `RichTreeView` component where it's located:
+
+The following demo shows how to use `getItemId` to grab the unique identifier from a property named `internalId`:
+
+```tsx
+const ITEMS = [{ internalId: 'tree-view-community' }];
+
+function getItemId(item) {
+  return item.internalId;
+}
+
+<RichTreeView items={ITEMS} getItemId={getItemId} />;
+```
+
+{{"demo": "GetItemId.js", "defaultCodeOpen": false}}
+
+:::warning
+Just like the `items` prop, the `getItemId` function should keep the same JavaScript reference between two renders.
+Otherwise, the Tree View will re-generate its entire structure.
+
+It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
+:::
+
+## Item label
+
+Each item must have a label which does not need to be unique.
+
+### Item label on `TreeView`
+
+You must pass a `label` prop to each `TreeItem` component:
+
+```tsx
+<TreeView>
+  <TreeItem label="@mui/x-tree-view" {...otherItemProps} />
+</TreeView>
+```
+
+### Item label on `RichTreeView`
+
+By default, the `RichTreeView` component looks for a property named `label` in the data set to get that label:
+
+```tsx
+const ITEMS = [{ label: '@mui/x-tree-view' }];
+
+<RichTreeView items={ITEMS} />;
+```
+
+If the item's label is not called `label`, then you need to use the `getItemLabel` prop to tell the `RichTreeView` component where it's located:
+
+The following demo shows how to use `getItemLabel` to grab the unique identifier from a property named `internalLabel`:
+
+```tsx
+const ITEMS = [{ internalLabel: '@mui/x-tree-view' }];
+
+function getItemLabel(item) {
+  return item.internalId;
+}
+
+<RichTreeView items={ITEMS} getItemLabel={getItemLabel} />;
+```
+
+{{"demo": "GetItemId.js", "defaultCodeOpen": false}}
+
+:::warning
+Just like the `items` prop, the `getItemLabel` function should keep the same JavaScript reference between two renders.
+Otherwise, the Tree View will re-generate its entire structure.
+
+It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
+:::
+
+:::warning
+Unlike the `TreeView` component, the `RichTreeView` component only supports string labels, you can't pass React nodes to it.
+:::
+
 ## Disabled items
 
 ### Disable items on `TreeView`
@@ -35,7 +135,7 @@ You can disable some of the items using the `disabled` prop on the `TreeItem` co
 
 ```tsx
 <TreeView>
-  <TreeItem nodeId="@mui/x-scheduler" label="Scheduler" disabled />
+  <TreeItem disabled {...otherItemProps} />
 </TreeView>
 ```
 
@@ -46,11 +146,11 @@ You can disable some of the items using the `disabled` prop on the `TreeItem` co
 You can disable some of the items using the `isItemDisabled` prop on the `RichTreeView` component:
 
 ```tsx
-function isItemDisabled(row) {
-  return row.disabled ?? false;
+function isItemDisabled(item) {
+  return item.disabled ?? false;
 }
 
-<TreeView isItemDisabled={isItemDisabled} />;
+<RichTreeView isItemDisabled={isItemDisabled} />;
 ```
 
 {{"demo": "DisabledPropItem.js", "defaultCodeOpen": false}}

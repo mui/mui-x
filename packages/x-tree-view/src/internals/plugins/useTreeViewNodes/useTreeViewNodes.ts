@@ -46,7 +46,7 @@ const updateState = ({
         [
           'MUI: The Tree View component requires all items to have a `label` property.',
           'Alternatively, you can use the `getItemLabel` prop to specify a custom label for each item.',
-          'An item was provided without id in the `items` prop:',
+          'An item was provided without label in the `items` prop:',
           JSON.stringify(item),
         ].join('\n'),
       );
@@ -182,4 +182,9 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
 };
 
 useTreeViewNodes.getInitialState = (params) =>
-  updateState({ items: params.items, isItemDisabled: params.isItemDisabled });
+  updateState({
+    items: params.items,
+    isItemDisabled: params.isItemDisabled,
+    getItemId: params.getItemId,
+    getItemLabel: params.getItemLabel,
+  });

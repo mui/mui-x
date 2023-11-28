@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
-type MuiProduct = TreeViewBaseItem<{
+type MuiXProduct = TreeViewBaseItem<{
   id: string;
   label: string;
   disabled?: boolean;
