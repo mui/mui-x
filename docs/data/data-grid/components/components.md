@@ -119,7 +119,7 @@ In the following demo, an illustration is added on top of the default "No Rows" 
 {{"demo": "CustomEmptyOverlayGrid.js", "bg": "inline"}}
 
 :::info
-As the no rows overlay, the data grid allows to override the no results overlay with the `NoResultsOverlay` slot.
+As with the no-rows overlay, the Data Grid also lets you override the no-results overlay using the `NoResultsOverlay` slot.
 :::
 
 ### Row

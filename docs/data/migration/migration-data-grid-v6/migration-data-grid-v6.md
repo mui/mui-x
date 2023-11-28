@@ -122,7 +122,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
    const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
 -  return (cellParams) => {
--  const { value } = cellParams;
+-    const { value } = cellParams;
 +  return (value, row, colDef, apiRef) => {
      return value != null ? filterRegex.test(String(value)) : false;
    };

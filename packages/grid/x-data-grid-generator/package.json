@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "7.0.0-alpha.1",
+  "version": "7.0.0-alpha.2",
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -8,11 +8,14 @@
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
-  "homepage": "https://mui.com/x/react-data-grid/",
+  "homepage": "https://github.com/mui/mui-x/tree/master/packages/grid/x-data-grid-generator",
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "mui-x"
+  ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
@@ -30,9 +33,9 @@
     "directory": "packages/grid/x-data-grid-generator"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.2",
+    "@babel/runtime": "^7.23.4",
     "@mui/base": "^5.0.0-beta.24",
-    "@mui/x-data-grid-premium": "7.0.0-alpha.1",
+    "@mui/x-data-grid-premium": "7.0.0-alpha.2",
     "chance": "^1.1.11",
     "clsx": "^2.0.0",
     "lru-cache": "^7.18.3"

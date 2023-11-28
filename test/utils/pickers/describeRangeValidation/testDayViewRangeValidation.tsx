@@ -41,7 +41,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
     const isDesktop = variant === 'desktop';
 
     const defaultProps = {
-      defaultCalendarMonth: adapterToUse.date('2018-03-12'),
+      referenceDate: adapterToUse.date('2018-03-12'),
       open: true,
     };
 
@@ -64,7 +64,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
-        const { defaultCalendarMonth, ...otherProps } = props;
+        const { referenceDate, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -88,7 +88,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
-        const { defaultCalendarMonth, ...otherProps } = props;
+        const { referenceDate, ...otherProps } = props;
         return <ElementToTest value={[now, null]} {...otherProps} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
@@ -112,7 +112,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       render(
         <ElementToTest
           {...defaultProps}
-          defaultCalendarMonth={adapterToUse.date('2019-06-15')}
+          referenceDate={adapterToUse.date('2019-06-15')}
           minDate={adapterToUse.date('2019-06-04')}
         />,
       );
@@ -131,7 +131,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       render(
         <ElementToTest
           {...defaultProps}
-          defaultCalendarMonth={adapterToUse.date('2019-06-15')}
+          referenceDate={adapterToUse.date('2019-06-15')}
           maxDate={adapterToUse.date('2019-06-04')}
         />,
       );

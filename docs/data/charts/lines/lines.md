@@ -56,7 +56,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ### Skip missing points
 
-Line series can have less data than the axis.
+Line series can have fewer data points than the axis.
 You can handle lines with partial data or data starting at different points by providing `null` values.
 
 By default, the tooltip does not show series if they have no value.
@@ -85,7 +85,7 @@ The following code plots a line for x between 2 and 4.
 
 Line series accepts a `connectNulls` property which will continue the interpolation across points with a `null` value.
 This property can link two sets of points, with `null` data between them.
-However, it can not extrapolate the curve before the first non-null data point or after the last one.
+However, it cannot extrapolate the curve before the first non-null data point or after the last one.
 
 {{"demo": "ConnectNulls.js"}}
 

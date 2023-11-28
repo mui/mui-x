@@ -625,8 +625,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public getWeekArray = (value: Dayjs) => {
     const cleanValue = this.setLocaleToValue(value);
-    const start = cleanValue.startOf('month').startOf('week');
-    const end = cleanValue.endOf('month').endOf('week');
+    const start = this.startOfWeek(this.startOfMonth(cleanValue));
+    const end = this.endOfWeek(this.endOfMonth(cleanValue));
 
     let count = 0;
     let current = start;
@@ -650,12 +650,12 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getYearRange = ([start, end]: [Dayjs, Dayjs]) => {
-    const startDate = start.startOf('year');
-    const endDate = end.endOf('year');
+    const startDate = this.startOfYear(start);
+    const endDate = this.endOfYear(end);
     const years: Dayjs[] = [];
 
     let current = startDate;
-    while (current < endDate) {
+    while (this.isBefore(current, endDate)) {
       years.push(current);
       current = this.addYears(current, 1);
     }

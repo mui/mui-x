@@ -186,7 +186,6 @@ describe('<DataGridPro /> - Cell editing', () => {
           error: false,
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
-          unstable_updateValueOnRender: false,
         });
       });
 
@@ -917,7 +916,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         expect(spiedStartCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          initialValue: 'a',
+          deleteValue: true,
         });
       });
 

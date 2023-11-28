@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { ItemInteractionData } from '../context/InteractionProvider';
@@ -11,7 +12,7 @@ import {
   ChartsTooltipPaper,
   ChartsTooltipRow,
 } from './ChartsTooltipTable';
-import { ChartsTooltipClasses } from './tooltipClasses';
+import { ChartsTooltipClasses } from './chartsTooltipClasses';
 
 export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
   /**
@@ -53,16 +54,20 @@ export function DefaultChartsItemContent<T extends ChartSeriesType = ChartSeries
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
-      <ChartsTooltipTable>
+      <ChartsTooltipTable className={classes.table}>
         <tbody>
-          <ChartsTooltipRow>
-            <ChartsTooltipCell className={classes.markCell}>
-              <ChartsTooltipMark ownerState={{ color }} />
+          <ChartsTooltipRow className={classes.row}>
+            <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+              <ChartsTooltipMark ownerState={{ color }} className={classes.mark} />
             </ChartsTooltipCell>
 
-            <ChartsTooltipCell className={classes.labelCell}>{displayedLabel}</ChartsTooltipCell>
+            <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
+              {displayedLabel}
+            </ChartsTooltipCell>
 
-            <ChartsTooltipCell className={classes.valueCell}>{formattedValue}</ChartsTooltipCell>
+            <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
+              {formattedValue}
+            </ChartsTooltipCell>
           </ChartsTooltipRow>
         </tbody>
       </ChartsTooltipTable>

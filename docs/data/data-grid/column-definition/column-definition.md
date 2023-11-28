@@ -27,7 +27,7 @@ You can create the array outside the render function or memoize it.
 
 ## Providing content
 
-By default, the data grid uses the field of a column to get its value.
+By default, the Data Grid uses the field of a column to get its value.
 For instance, the column with field `name` will render the value stored in `row.name`.
 But for some columns, it can be useful to manually get and format the value to render.
 
@@ -105,7 +105,7 @@ and `valueFormatter` is used to display it as a percentage (e.g. `20%`).
 
 ## Rendering cells
 
-By default, the data grid renders the value as a string in the cell.
+By default, the Data Grid renders the value as a string in the cell.
 It resolves the rendered output in the following order:
 
 1. `renderCell() => ReactElement`
@@ -141,8 +141,7 @@ const columns: GridColDef[] = [
 {{"demo": "RenderCellGrid.js", "bg": "inline", "defaultCodeOpen": false }}
 
 :::warning
-Using `renderCell`, requires paying attention to the following points.
-If the type of the value returned by `valueGetter` does not correspond to the column's `type`, you should:
+When using `renderCell`, if the type of the value returned by `valueGetter` does not correspond to the column's `type`, you should:
 
 - handle [sorting](/x/react-data-grid/sorting/#custom-comparator) by providing `sortComparator` to the column.
 - set a `valueFormatter` providing a representation for the value to be used when [exporting](/x/react-data-grid/export/#exported-cells) the data.
