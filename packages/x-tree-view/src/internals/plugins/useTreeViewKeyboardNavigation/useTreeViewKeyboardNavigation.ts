@@ -52,13 +52,15 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     const newFirstCharMap: { [nodeId: string]: string } = {};
 
     const processItem = (item: TreeViewBaseItem) => {
-      newFirstCharMap[item.nodeId] = item.label.substring(0, 1).toLowerCase();
+      const getItemId = params.getItemId;
+      const nodeId = getItemId ? getItemId(item) : (item as { id: string }).id;
+      newFirstCharMap[nodeId] = item.label.substring(0, 1).toLowerCase();
       item.children?.forEach(processItem);
     };
 
     params.items.forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [params.items]);
+  }, [params.items, params.getItemId]);
 
   populateInstance<UseTreeViewKeyboardNavigationSignature>(instance, {
     updateFirstCharMap,

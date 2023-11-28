@@ -39,7 +39,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const instanceRef = React.useRef<TreeViewInstance<Signatures>>(
     {} as TreeViewInstance<Signatures>,
   );
-  const instance = instanceRef.current;
+  const instance = instanceRef.current as TreeViewInstance<Signatures>;
   const innerRootRef = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
 
@@ -130,5 +130,5 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     return rootProps;
   };
 
-  return { getRootProps, rootRef: handleRootRef, contextValue };
+  return { getRootProps, rootRef: handleRootRef, contextValue, instance: instance as any };
 };

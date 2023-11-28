@@ -8,8 +8,7 @@ import { RichTreeViewProps } from './RichTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
-import { TreeItem } from '../TreeItem';
-import { TreeViewBaseItem } from '../models';
+import { TreeItem, TreeItemProps } from '../TreeItem';
 import { buildWarning } from '../internals/utils/warning';
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
@@ -42,22 +41,18 @@ type TreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = 
 function WrappedTreeItem<R extends {}>({
   slots,
   slotProps,
-  item,
+  label,
+  id,
+  nodeId,
   children,
-}: Pick<RichTreeViewProps<R, any>, 'slots' | 'slotProps'> & {
-  item: TreeViewBaseItem<R>;
-  children: React.ReactNode;
-}) {
+}: Pick<RichTreeViewProps<R, any>, 'slots' | 'slotProps'> &
+  Pick<TreeItemProps, 'id' | 'nodeId' | 'children'> & { label: string }) {
   const Item = slots?.item ?? TreeItem;
   const itemProps = useSlotProps({
     elementType: Item,
     externalSlotProps: slotProps?.item,
-    additionalProps: {
-      nodeId: item.nodeId,
-      id: item.id,
-      label: item.label,
-    },
-    ownerState: { item },
+    additionalProps: { nodeId, id, label },
+    ownerState: { nodeId, label },
   });
 
   return <Item {...itemProps}>{children}</Item>;
@@ -97,7 +92,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     selected,
     multiSelect,
     onNodeSelect,
-    id,
+    id: treeId,
     defaultCollapseIcon,
     defaultEndIcon,
     defaultExpandIcon,
@@ -116,7 +111,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView({
+  const { getRootProps, contextValue, instance } = useTreeView({
     disabledItemsFocusable,
     expanded,
     defaultExpanded,
@@ -127,7 +122,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     selected,
     multiSelect,
     onNodeSelect,
-    id,
+    id: treeId,
     defaultCollapseIcon,
     defaultEndIcon,
     defaultExpandIcon,
@@ -150,17 +145,31 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     ownerState: props as RichTreeViewProps<any, any>,
   });
 
-  const renderItem = (item: TreeViewBaseItem<R>) => {
+  const nodesToRender = instance.getNodesToRender();
+
+  const renderNode = ({
+    label,
+    nodeId,
+    id,
+    children,
+  }: ReturnType<typeof instance.getNodesToRender>[number]) => {
     return (
-      <WrappedTreeItem item={item} slots={slots} slotProps={slotProps} key={item.nodeId}>
-        {item.children?.map(renderItem)}
+      <WrappedTreeItem
+        slots={slots}
+        slotProps={slotProps}
+        key={nodeId}
+        label={label}
+        id={id}
+        nodeId={nodeId}
+      >
+        {children?.map(renderNode)}
       </WrappedTreeItem>
     );
   };
 
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{items.map(renderItem)}</Root>
+      <Root {...rootProps}>{nodesToRender.map(renderNode)}</Root>
     </TreeViewProvider>
   );
 }) as TreeViewComponent;
@@ -227,10 +236,34 @@ RichTreeView.propTypes = {
    */
   expanded: PropTypes.arrayOf(PropTypes.string),
   /**
+   * Used to determine the string label for a given item.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {string} The id of the item.
+   * @default `(item) => item.id`
+   */
+  getItemId: PropTypes.func,
+  /**
+   * Used to determine the string label for a given item.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {string} The label of the item.
+   * @default `(item) => item.label`
+   */
+  getItemLabel: PropTypes.func,
+  /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * Used to determine if a given item should be disabled.
+   * @template R
+   * @param {R} item The item to check
+   * @returns {boolean} `true` if the item should be disabled.
+   */
   isItemDisabled: PropTypes.func,
   items: PropTypes.array.isRequired,
   /**

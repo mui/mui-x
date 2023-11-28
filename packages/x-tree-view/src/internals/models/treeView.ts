@@ -9,6 +9,10 @@ export interface TreeViewNode {
   parentId: string | null;
   expandable: boolean;
   disabled: boolean;
+  /**
+   * Only defined for `RichTreeView`.
+   */
+  label?: string;
 }
 
 export interface TreeViewItemRange {

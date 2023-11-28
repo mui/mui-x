@@ -117,16 +117,16 @@ function TreeView(inProps) {
 
 const ITEMS = [
   {
-    nodeId: '1',
+    id: '1',
     label: 'Application',
-    children: [{ nodeId: '2', label: 'Calendar' }],
+    children: [{ id: '2', label: 'Calendar' }],
   },
   {
-    nodeId: '5',
+    id: '5',
     label: 'Documents',
     children: [
-      { nodeId: '10', label: 'OSS' },
-      { nodeId: '6', label: 'MUI', children: [{ nodeId: '8', label: 'index.js' }] },
+      { id: '10', label: 'OSS' },
+      { id: '6', label: 'MUI', children: [{ id: '8', label: 'index.js' }] },
     ],
   },
 ];

@@ -7,51 +7,51 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 const MUI_X_PRODUCTS = [
   {
-    nodeId: 'grid',
+    id: 'grid',
     label: 'Data Grid',
     children: [
-      { nodeId: 'grid-community', label: '@mui/x-data-grid' },
-      { nodeId: 'grid-pro', label: '@mui/x-data-grid-pro' },
-      { nodeId: 'grid-premium', label: '@mui/x-data-grid-premium' },
+      { id: 'grid-community', label: '@mui/x-data-grid' },
+      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
+      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
     ],
   },
   {
-    nodeId: 'pickers',
+    id: 'pickers',
     label: 'Date and Time Pickers',
     children: [
-      { nodeId: 'pickers-community', label: '@mui/x-date-pickers' },
-      { nodeId: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
+      { id: 'pickers-community', label: '@mui/x-date-pickers' },
+      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
   {
-    nodeId: 'charts',
+    id: 'charts',
     label: 'Charts',
-    children: [{ nodeId: 'charts-community', label: '@mui/x-charts' }],
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
   },
   {
-    nodeId: 'tree-view',
+    id: 'tree-view',
     label: 'Tree View',
-    children: [{ nodeId: 'tree-view-community', label: '@mui/x-tree-view' }],
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
   },
 ];
 
 const getAllItemNodeIds = () => {
-  const nodeIds = [];
+  const ids = [];
   const registerNodeId = (item) => {
-    nodeIds.push(item.nodeId);
+    ids.push(item.id);
     item.children?.forEach(registerNodeId);
   };
 
   MUI_X_PRODUCTS.forEach(registerNodeId);
 
-  return nodeIds;
+  return ids;
 };
 
 export default function ControlledSelection() {
   const [selected, setSelected] = React.useState([]);
 
-  const handleSelect = (event, nodeIds) => {
-    setSelected(nodeIds);
+  const handleSelect = (event, ids) => {
+    setSelected(ids);
   };
 
   const handleSelectClick = () => {

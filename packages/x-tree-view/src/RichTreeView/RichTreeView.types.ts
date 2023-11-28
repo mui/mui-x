@@ -5,10 +5,11 @@ import { SlotComponentProps } from '@mui/base/utils';
 import { RichTreeViewClasses } from './richTreeViewClasses';
 import { DefaultTreeViewPluginParameters } from '../internals/plugins/defaultPlugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
-import { TreeViewBaseItem } from '../models';
+import { TreeViewItemId } from '../models';
 
-interface RichTreeViewItemSlotOwnerState<R extends {}> {
-  item: TreeViewBaseItem<R>;
+interface RichTreeViewItemSlotOwnerState {
+  nodeId: TreeViewItemId;
+  label: string;
 }
 
 export interface RichTreeViewSlotsComponent {
@@ -29,7 +30,7 @@ export interface RichTreeViewSlotsComponentsProps<
   Multiple extends boolean | undefined,
 > {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
-  item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemSlotOwnerState<R>>;
+  item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemSlotOwnerState>;
 }
 
 export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {

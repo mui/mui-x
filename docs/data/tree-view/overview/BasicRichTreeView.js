@@ -7,20 +7,20 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 const MUI_X_PRODUCTS = [
   {
-    nodeId: 'grid',
+    id: 'grid',
     label: 'Data Grid',
     children: [
-      { nodeId: 'grid-community', label: '@mui/x-data-grid' },
-      { nodeId: 'grid-pro', label: '@mui/x-data-grid-pro' },
-      { nodeId: 'grid-premium', label: '@mui/x-data-grid-premium' },
+      { id: 'grid-community', label: '@mui/x-data-grid' },
+      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
+      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
     ],
   },
   {
-    nodeId: 'pickers',
+    id: 'pickers',
     label: 'Date and Time Pickers',
     children: [
-      { nodeId: 'pickers-community', label: '@mui/x-date-pickers' },
-      { nodeId: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
+      { id: 'pickers-community', label: '@mui/x-date-pickers' },
+      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
 ];
