@@ -5,7 +5,7 @@
   publish = "docs/export/"
 
   # Default build command.
-  command = "yarn docs:build && yarn docs:export"
+  command = "yarn docs:build"
 
 [build.environment]
   NODE_VERSION = "18"

@@ -3,6 +3,131 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.2
+
+_Nov 23, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📈 Export missing Charts props
+- 🌍 Improve Arabic (ar-SD) and Hebrew (he-IL) locales on Data Grid
+- 🌍 Add Macedonian (mk) locale and improve German (de-DE) locale on Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.0.0-alpha.2`
+
+- [l10n] Improve Arabic (ar-SD) locale (#11114) @MBilalShafi
+- [l10n] Improve Hebrew (he-IL) locale (#11056) (#11149) @MBilalShafi
+- [DataGrid] Remove unused utilities (#11156) @flaviendelangle
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.2`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.2`.
+
+### Date Pickers
+
+#### Breaking changes
+
+- The deprecated `shouldDisableClock` prop has been removed in favor of the more flexible `shouldDisableTime` prop.
+  The `shouldDisableClock` prop received `value` as a `number` of hours, minutes, or seconds.
+  Instead, the `shouldDisableTime` prop receives the date object (based on the used adapter).
+
+  You can read more about the deprecation of this prop in [v6 migration guide](https://next.mui.com//x/migration/migration-pickers-v5/#%E2%9C%85-rename-or-refactor-shoulddisabletime-prop).
+
+  ```diff
+   <DateTimePicker
+  -  shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+  +  shouldDisableTime={(value, view) => view === 'hours' && value.hour() < 12}
+   />
+  ```
+
+- The `adapter.dateWithTimezone` method has been removed and its content moved to the `date` method.
+  You can use the `adapter.date` method instead:
+
+  ```diff
+  - adapter.dateWithTimezone(undefined, 'system');
+  + adapter.date(undefined, 'system');
+  ```
+
+- The `dayPickerClasses` variable has been renamed to `dayCalendarClasses` to be consistent with the new name of the `DayCalendar` component introduced in v6.0.0.
+
+  ```diff
+  - import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
+  + import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+  ```
+
+- The deprecated `defaultCalendarMonth` prop has been removed in favor of the more flexible `referenceDate` prop.
+
+  ```diff
+  - <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
+  + <DateCalendar referenceDate{dayjs('2022-04-01')} />
+  ```
+
+- The `adapter.date` method now has the v6 `adapter.dateWithTimezone` method behavior.
+  It no longer accepts `any` as a value but only `string | null | undefined`.
+
+  ```diff
+  - adapter.date(new Date());
+  + adapter.date();
+
+  - adapter.date(new Date('2022-04-17');
+  + adapter.date('2022-04-17');
+
+  - adapter.date(new Date(2022, 3, 17, 4, 5, 34));
+  + adapter.date('2022-04-17T04:05:34');
+
+  - adapter.date(new Date('Invalid Date'));
+  + adapter.getInvalidDate();
+  ```
+
+#### `@mui/x-date-pickers@7.0.0-alpha.2`
+
+- [l10n] Improve German (de-DE) locale (#11103) @jho-vema
+- [l10n] Add Macedonian (mk) locale (#10935) @brsnik
+- [pickers] Remove the `defaultCalendarMonth` prop (#10987) @flaviendelangle
+- [pickers] Remove the `shouldDisableClock` prop (#11042) @flaviendelangle
+- [pickers] Rename the `dayPickerClasses` variable `dayCalendarClasses` (#11140) @flaviendelangle
+- [pickers] Replace `adapter.date` with the current `adapter.dateWithTimezone` (#10979) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.2`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.2`
+
+- [charts] Change export strategy in index files (#11113) @michelengelen
+- [charts] Fix `ChartsTooltip` component setup (#11152) @LukasTy
+
+### `@mui/x-codemod@7.0.0-alpha.2`
+
+- [codemod] Add codemod to use `referenceDate` instead of `defaultCalendarMonth` (#11139) @flaviendelangle
+- [codemod] Clean the components to slots codemod usage (#11145) @flaviendelangle
+
+### Docs
+
+- [docs] Add LTS section to support docs (#10927) @joserodolfofreitas
+- [docs] Clean the codemod README (#11051) @flaviendelangle
+- [docs] Fix typos and grammar issues (#11049) @flaviendelangle
+- [docs] Fix version links (#11001) @LukasTy
+- [docs] Point to the source of `@mui/x-data-grid-generator` (#11134) @oliviertassinari
+
+### Core
+
+- [core] Bump monorepo (#11160) @LukasTy
+- [core] Fix comment in doc generation (#11098) @flaviendelangle
+- [core] Rename OpenCollective @oliviertassinari
+- [core] Upgrade `babel-plugin-module-resolver` to 5.0.0 (#11065) @flaviendelangle
+- [changelog] Improve git diff format @oliviertassinari
+- [renovate] Monthly schedule for lockfile maintenance (#10336) @Janpot
+- [test] Skip flaky e2e test in webkit (#11110) @cherniavskii
+
 ## 7.0.0-alpha.1
 
 _Nov 17, 2023_
@@ -558,6 +683,59 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.18.2
+
+_Nov 23, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Arabic (ar-SD), Czech (cs-CZ), and Hebrew (he-IL) locales on Data Grid
+- 🌍 Add Basque (eu) and Macedonian (mk) locales on Pickers
+- 🌍 Improve German (de-DE) and Spanish (es-ES) locales on Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.2`
+
+- [l10n] Improve Arabic (ar-SD) locale (#11096) @OmarWebDev
+- [l10n] Improve Czech (cs-CZ) locale (#10968) @luborepka
+- [l10n] Improve Hebrew (he-IL) locale (#11056) @LironKiloma
+
+#### `@mui/x-data-grid-pro@6.18.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.2`.
+
+#### `@mui/x-data-grid-premium@6.18.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.2`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.2`
+
+- [l10n] Add Basque (eu) locale and improve Spanish (es-ES) locale (#10985) @lajtomekadimon
+- [l10n] Add Macedonian (mk) locale (#11155) @brsnik
+- [l10n] Improve German (de-DE) locale (#11104) @jho-vema
+- [pickers] Deprecate `defaultCalendarMonth` prop (#11138) @flaviendelangle
+- [pickers] Fix `DateCalendar` crashing when given an invalid value (#11101) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@6.18.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.2`.
+
+### Charts / `@mui/x-charts@6.18.2`
+
+- [charts] Fix `ChartsTooltip` component setup (#11157) @LukasTy
+- [charts] Remove outdated prop-types (#10998) @alexfauquette
+
+### Docs
+
+- [docs] Fix incoherent naming of a component in `Custom slots and subcomponents` page (#11003) @lhilgert9
+- [test] Skip flaky e2e test in webkit (#11115) @cherniavskii
+- [test] Wait for images to load (#11109) @cherniavskii
 
 ## 6.18.1
 

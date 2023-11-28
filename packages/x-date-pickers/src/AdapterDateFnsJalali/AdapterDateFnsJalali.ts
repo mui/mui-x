@@ -328,11 +328,11 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
   };
 
   public isAfterYear = (value: Date, comparing: Date) => {
-    return isAfter(value, endOfYear(comparing));
+    return isAfter(value, this.endOfYear(comparing));
   };
 
   public isAfterDay = (value: Date, comparing: Date) => {
-    return isAfter(value, endOfDay(comparing));
+    return isAfter(value, this.endOfDay(comparing));
   };
 
   public isBefore = (value: Date, comparing: Date) => {
@@ -340,11 +340,11 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
   };
 
   public isBeforeYear = (value: Date, comparing: Date) => {
-    return isBefore(value, startOfYear(comparing));
+    return isBefore(value, this.startOfYear(comparing));
   };
 
   public isBeforeDay = (value: Date, comparing: Date) => {
-    return isBefore(value, startOfDay(comparing));
+    return isBefore(value, this.startOfDay(comparing));
   };
 
   public isWithinRange = (value: Date, [start, end]: [Date, Date]) => {
@@ -472,19 +472,19 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
   };
 
   public getWeekArray = (value: Date) => {
-    const start = startOfWeek(startOfMonth(value), { locale: this.locale });
-    const end = endOfWeek(endOfMonth(value), { locale: this.locale });
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
     let count = 0;
     let current = start;
     const nestedWeeks: Date[][] = [];
 
-    while (isBefore(current, end)) {
+    while (this.isBefore(current, end)) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
       nestedWeeks[weekNumber].push(current);
 
-      current = addDays(current, 1);
+      current = this.addDays(current, 1);
       count += 1;
     }
 
@@ -496,14 +496,14 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
   };
 
   public getYearRange = ([start, end]: [Date, Date]) => {
-    const startDate = startOfYear(start);
-    const endDate = endOfYear(end);
+    const startDate = this.startOfYear(start);
+    const endDate = this.endOfYear(end);
     const years: Date[] = [];
 
     let current = startDate;
-    while (isBefore(current, endDate)) {
+    while (this.isBefore(current, endDate)) {
       years.push(current);
-      current = addYears(current, 1);
+      current = this.addYears(current, 1);
     }
 
     return years;

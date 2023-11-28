@@ -23,6 +23,7 @@ import {
   unstable_gridHeaderFilteringMenuSelector,
 } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { isEventTargetInPortal } from '../../../utils/domUtils';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -522,7 +523,7 @@ export const useGridKeyboardNavigation = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       // Ignore portal
-      if (!event.currentTarget.contains(event.target as Element)) {
+      if (isEventTargetInPortal(event)) {
         return;
       }
 

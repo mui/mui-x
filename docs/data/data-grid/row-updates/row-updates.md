@@ -41,7 +41,7 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 ## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 :::warning
-This feature is experimental, it needs to be explicitly activated using the `lazyLoading` experimental feature flag.
+This feature is experimental and must be explicitly activated using the `lazyLoading` experimental feature flag:
 
 ```tsx
 <DataGridPro experimentalFeatures={{ lazyLoading: true }} {...otherProps} />

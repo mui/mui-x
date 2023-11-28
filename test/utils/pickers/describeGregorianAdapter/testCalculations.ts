@@ -618,10 +618,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: startOfWeek', () => {
-    const expected =
-      adapter.lib === 'luxon' ? '2018-10-29T00:00:00.000Z' : '2018-10-28T00:00:00.000Z';
-    expect(adapter.startOfWeek(testDateIso)).toEqualDateTime(expected);
-    expect(adapter.startOfWeek(testDateLocale)).toEqualDateTime(expected);
+    expect(adapter.startOfWeek(testDateIso)).toEqualDateTime('2018-10-28T00:00:00.000Z');
+    expect(adapter.startOfWeek(testDateLocale)).toEqualDateTime('2018-10-28T00:00:00.000Z');
   });
 
   it('Method: startOfDay', () => {
@@ -654,10 +652,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: endOfWeek', () => {
-    const expected =
-      adapter.lib === 'luxon' ? '2018-11-04T23:59:59.999Z' : '2018-11-03T23:59:59.999Z';
-    expect(adapter.endOfWeek(testDateIso)).toEqualDateTime(expected);
-    expect(adapter.endOfWeek(testDateLocale)).toEqualDateTime(expected);
+    expect(adapter.endOfWeek(testDateIso)).toEqualDateTime('2018-11-03T23:59:59.999Z');
+    expect(adapter.endOfWeek(testDateLocale)).toEqualDateTime('2018-11-03T23:59:59.999Z');
   });
 
   it('Method: endOfDay', () => {
@@ -846,8 +842,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         expect(getLocaleFromDate(weekArray[0][0])).to.match(/en/);
       }
 
-      // Week should start on Monday (28th of March) for adapters supporting locale-based week start.
-      expect(adapter.getDate(weekArray[0][0])).to.equal(adapter.lib === 'luxon' ? 28 : 27);
+      // Week should start on Monday (28th of March).
+      expect(adapter.getDate(weekArray[0][0])).to.equal(27);
     });
   });
 

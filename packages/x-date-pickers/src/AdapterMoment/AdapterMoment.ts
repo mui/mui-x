@@ -510,8 +510,8 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
   public getWeekArray = (value: Moment) => {
     const cleanValue = this.setLocaleToValue(value);
-    const start = cleanValue.clone().startOf('month').startOf('week');
-    const end = cleanValue.clone().endOf('month').endOf('week');
+    const start = this.startOfWeek(this.startOfMonth(cleanValue));
+    const end = this.endOfWeek(this.endOfMonth(cleanValue));
 
     let count = 0;
     let current = start;
@@ -522,7 +522,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
       nestedWeeks[weekNumber].push(current);
 
-      current = current.clone().add(1, 'day');
+      current = this.addDays(current, 1);
       count += 1;
     }
 
@@ -533,17 +533,17 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.week();
   };
 
-  public getYearRange = ([start, end]: [Moment, Moment]) => {
-    const startDate = this.moment(start).startOf('year');
-    const endDate = this.moment(end).endOf('year');
+  public getYearRange([start, end]: [Moment, Moment]) {
+    const startDate = this.startOfYear(start);
+    const endDate = this.endOfYear(end);
     const years: Moment[] = [];
 
     let current = startDate;
-    while (current.isBefore(endDate)) {
+    while (this.isBefore(current, endDate)) {
       years.push(current);
-      current = current.clone().add(1, 'year');
+      current = this.addYears(current, 1);
     }
 
     return years;
-  };
+  }
 }
