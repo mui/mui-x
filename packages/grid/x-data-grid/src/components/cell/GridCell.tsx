@@ -546,6 +546,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
     onKeyUp,
     onDragEnter,
     onDragOver,
+    style: styleProp,
     ...other
   } = props;
 
@@ -680,6 +681,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
         opacity: 0,
         width: 0,
         border: 0,
+        ...styleProp,
       };
     }
     const cellStyle = {
@@ -687,9 +689,10 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
       maxWidth: width,
       minHeight: height,
       maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
+      ...styleProp,
     };
     return cellStyle;
-  }, [width, height, isNotVisible]);
+  }, [width, height, isNotVisible, styleProp]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
