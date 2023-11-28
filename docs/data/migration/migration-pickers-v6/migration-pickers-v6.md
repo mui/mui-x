@@ -270,8 +270,6 @@ You can learn more about the new approach on the [dedicated doc page](https://mu
  </LocalizationProvider>
 ```
 
-## Usage with Day.js
-
 ### Use UTC with the Day.js adapter
 
 The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.
