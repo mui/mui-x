@@ -130,7 +130,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 ### Use localized week with luxon
 
 The `AdapterLuxon` now uses the localized week when Luxon `v3.4.4` or higher is installed.
-This new behavior allows `AdapterLuxon` to have the same behavior as the other adapters.
+This improvement aligns `AdapterLuxon` with the behavior of other adapters.
 
 If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
 
