@@ -291,7 +291,7 @@ const buildAggregatedFilterItemsApplier = (
 };
 
 export const shouldQuickFilterExcludeHiddenColumns = (filterModel: GridFilterModel) => {
-  return filterModel.quickFilterExcludeHiddenColumns ?? false;
+  return filterModel.quickFilterExcludeHiddenColumns ?? true;
 };
 
 /**
