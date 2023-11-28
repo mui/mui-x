@@ -278,19 +278,24 @@ extended manually with the required plugins first.
 
 ```tsx
 import dayjs from 'dayjs';
-import isBetweenPlugin from 'dayjs/plugin/isBetween';
+import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 
-dayjs.extend(isBetweenPlugin);
+dayjs.extend(customParseFormatPlugin);
 ```
 
-Plugins that were moved to the constructor are:
+The plugin that got moved to the constructor is:
 
 - customParseFormat ('dayjs/plugin/customParseFormat')
+
+The other plugins will (still) be initialized before adapter initialization:
+
+- weekOfYear ('dayjs/plugin/weekOfYear')
 - isBetween ('dayjs/plugin/isBetween')
 - localizedFormat ('dayjs/plugin/localizedFormat')
 
 In the case of plugins that accept options (e.g. the `customParseFormat` plugin) it allows the user to pass custom
-options to the plugins where needed.
+options to the plugins where needed. Currently it is only one plugin that needs and support this feature, but to be
+future safe this approach will be considered for future additions to the plugins as well.
 
 ## Adapters internal changes
 
