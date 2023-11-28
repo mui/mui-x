@@ -97,11 +97,13 @@ function GridActionsCell(props: GridActionsCellProps) {
       focus() {
         // If ignoreCallToFocus is true, then one of the buttons was clicked and the focus is already set
         if (!ignoreCallToFocus.current) {
-          setFocusedButtonIndex(0);
+          // find the first focusable button and pass the index to the state
+          const focusableButtonIndex = options.findIndex((o) => !o.props.disabled);
+          setFocusedButtonIndex(focusableButtonIndex);
         }
       },
     }),
-    [],
+    [options],
   );
 
   React.useEffect(() => {
@@ -141,19 +143,26 @@ function GridActionsCell(props: GridActionsCellProps) {
       return;
     }
 
+    const getNewIndex = (index: number, direction: 'left' | 'right'): number => {
+      if (index < 0 || index > options.length) {
+        return index;
+      }
+
+      // for rtl mode we need to reverse the direction
+      const rtlMod = theme.direction === 'rtl' ? -1 : 1;
+      const indexMod = (direction === 'left' ? -1 : 1) * rtlMod;
+
+      // if the button that should receive focus is disabled go one more step
+      return options[index + indexMod]?.props.disabled
+        ? getNewIndex(index + indexMod, direction)
+        : index + indexMod;
+    };
+
     let newIndex: number = focusedButtonIndex;
     if (event.key === 'ArrowRight') {
-      if (theme.direction === 'rtl') {
-        newIndex -= 1;
-      } else {
-        newIndex += 1;
-      }
+      newIndex = getNewIndex(focusedButtonIndex, 'right');
     } else if (event.key === 'ArrowLeft') {
-      if (theme.direction === 'rtl') {
-        newIndex += 1;
-      } else {
-        newIndex -= 1;
-      }
+      newIndex = getNewIndex(focusedButtonIndex, 'left');
     }
 
     if (newIndex < 0 || newIndex >= numberOfButtons) {

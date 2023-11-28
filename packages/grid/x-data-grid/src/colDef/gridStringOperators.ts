@@ -5,6 +5,7 @@ import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { convertLegacyOperators, tagInternalFilter } from './utils';
+import { removeDiacritics } from '../hooks/features/filter/gridFilterUtils';
 
 export const getGridStringQuickFilterFn = tagInternalFilter(
   (value: any): GridApplyQuickFilterV7 | null => {
@@ -12,7 +13,11 @@ export const getGridStringQuickFilterFn = tagInternalFilter(
       return null;
     }
     const filterRegex = new RegExp(escapeRegExp(value), 'i');
-    return (columnValue): boolean => {
+    return (_, row, column, apiRef): boolean => {
+      let columnValue = apiRef.current.getRowFormattedValue(row, column);
+      if (apiRef.current.ignoreDiacritics) {
+        columnValue = removeDiacritics(columnValue);
+      }
       return columnValue != null ? filterRegex.test(columnValue.toString()) : false;
     };
   },

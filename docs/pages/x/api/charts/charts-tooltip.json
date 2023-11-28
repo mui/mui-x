@@ -32,7 +32,7 @@
     "import { ChartsTooltip } from '@mui/x-charts';"
   ],
   "styles": {
-    "classes": ["root", "markCell", "labelCell", "valueCell"],
+    "classes": ["root", "table", "row", "cell", "mark", "markCell", "labelCell", "valueCell"],
     "globalClasses": {},
     "name": "MuiChartsTooltip"
   },

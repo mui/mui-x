@@ -3,6 +3,117 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.18.2
+
+_Nov 23, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Arabic (ar-SD), Czech (cs-CZ), and Hebrew (he-IL) locales on Data Grid
+- 🌍 Add Basque (eu) and Macedonian (mk) locales on Pickers
+- 🌍 Improve German (de-DE) and Spanish (es-ES) locales on Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.2`
+
+- [l10n] Improve Arabic (ar-SD) locale (#11096) @OmarWebDev
+- [l10n] Improve Czech (cs-CZ) locale (#10968) @luborepka
+- [l10n] Improve Hebrew (he-IL) locale (#11056) @LironKiloma
+
+#### `@mui/x-data-grid-pro@6.18.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.2`.
+
+#### `@mui/x-data-grid-premium@6.18.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.2`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.2`
+
+- [l10n] Add Basque (eu) locale and improve Spanish (es-ES) locale (#10985) @lajtomekadimon
+- [l10n] Add Macedonian (mk) locale (#11155) @brsnik
+- [l10n] Improve German (de-DE) locale (#11104) @jho-vema
+- [pickers] Deprecate `defaultCalendarMonth` prop (#11138) @flaviendelangle
+- [pickers] Fix `DateCalendar` crashing when given an invalid value (#11101) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@6.18.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.2`.
+
+### Charts / `@mui/x-charts@6.18.2`
+
+- [charts] Fix `ChartsTooltip` component setup (#11157) @LukasTy
+- [charts] Remove outdated prop-types (#10998) @alexfauquette
+
+### Docs
+
+- [docs] Fix incoherent naming of a component in `Custom slots and subcomponents` page (#11003) @lhilgert9
+- [test] Skip flaky e2e test in webkit (#11115) @cherniavskii
+- [test] Wait for images to load (#11109) @cherniavskii
+
+## 6.18.1
+
+_Nov 9, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Fix aggregation label not showing when `renderHeader` is used (#10961) @cherniavskii
+- 📘 Server side data source [early documentation](https://mui.com/x/react-data-grid/server-side-data/) published
+- 📈 `<ChartsReferenceLine />` component is now available
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.1`
+
+- [DataGrid] Fix cell value type in quick filtering v7 (#10884) @cherniavskii
+- [DataGrid] Fix keyboard navigation for actions cell with disabled buttons (#10947) @michelengelen
+- [DataGrid] Fix `undefined` slot values (#10934) @romgrk
+
+#### `@mui/x-data-grid-pro@6.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.1`, plus:
+
+- [DataGridPro] Add data source interface and basic documentation (#10543) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@6.18.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.1`, plus:
+
+- [DataGridPremium] Render aggregation label when `renderHeader` is used (#10961) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.1`
+
+- [fields] Fix multi input date time field section selection (#10915) @noraleonte
+- [pickers] Always use up-to-date `defaultView` (#10889) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.1`.
+
+### Charts / `@mui/x-charts@6.18.1`
+
+- [charts] Add `<ChartsReferenceLine />` component (#10597) @wascou
+- [charts] Improve properties JSDoc (#10931) @alexfauquette
+
+### Docs
+
+- [docs] Fix charts docs as stable (#10888) @alexfauquette
+- [docs] Document how to hide the legend (#10954) @alexfauquette
+
+### Core
+
+- [core] Adds new alpha version to version select on the docs (#10944) @michelengelen
+- [core] Fix GitHub title tag consistency @oliviertassinari
+
 ## 6.18.0
 
 _Nov 3, 2023_
@@ -357,7 +468,7 @@ Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
 
 - [core] Fix casing consistency with legal and marketing content @oliviertassinari
 - [core] Revert the link in the priority support ticket description (#10517) @michelengelen
-- [CHANGELOG] Polish image @oliviertassinari
+- [changelog] Polish image @oliviertassinari
 
 ## 6.16.0
 
@@ -1149,7 +1260,7 @@ Same changes as in `@mui/x-date-pickers@6.10.1`.
 ### Core
 
 - [core] Add `validate` command (#9714) @romgrk
-- [CHANGELOG] Update generator to new format @oliviertassinari
+- [changelog] Update generator to new format @oliviertassinari
 
 ## 6.10.0
 
@@ -1207,7 +1318,7 @@ Same changes as in `@mui/x-date-pickers@6.10.0`.
 
 - [core] Disambiguate eslint plugin name @oliviertassinari
 - [core] Update priority support issue template and prompt (#9574) @DanailH
-- [CHANGELOG] Clarify each plan (#9446) @oliviertassinari
+- [changelog] Clarify each plan (#9446) @oliviertassinari
 - [license] Fix error terminology (#9614) @oliviertassinari
 
 ## 6.9.2
@@ -1356,8 +1467,8 @@ Same changes as in `@mui/x-date-pickers@6.9.1`.
 - [core] Fix priority support prompt action (#9472) @DanailH
 - [core] Update `uses` for priority support action (#9480) @DanailH
 - [core] Bumb update monorepo (#9476) @alexfauquette
-- [CHANGELOG] Fix media quality (#9439) @oliviertassinari
-- [CHANGELOG] Remove height img attribute @oliviertassinari
+- [changelog] Fix media quality (#9439) @oliviertassinari
+- [changelog] Remove height img attribute @oliviertassinari
 - [test] Skip flaky row pinning tests in JSDOM (#9511) @cherniavskii
 
 ## 6.9.0

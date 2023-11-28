@@ -214,7 +214,8 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
     setFocusedView: handleFocusedViewChange,
     nextView,
     previousView,
-    defaultView: defaultView.current,
+    // Always return up to date default view instead of the initial one (i.e. defaultView.current)
+    defaultView: views.includes(openTo!) ? openTo! : views[0],
     goToNextView,
     setValueAndGoToNextView,
     setValueAndGoToView,

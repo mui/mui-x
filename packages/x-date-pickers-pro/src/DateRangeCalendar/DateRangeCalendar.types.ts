@@ -64,6 +64,7 @@ export interface ExportedDateRangeCalendarProps<TDate>
   disableAutoMonthSwitching?: boolean;
   /**
    * Default calendar month displayed when `value={[null, null]}`.
+   * @deprecated Consider using `referenceDate` instead.
    */
   defaultCalendarMonth?: TDate;
   /**

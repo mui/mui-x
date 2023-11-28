@@ -1615,7 +1615,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 - [docs] Fix imports for x-grid-data-generator (#887) @DanailH
 - [docs] Skip download of playwright for docs @oliviertassinari
-- [CHANGELOG] Polish @oliviertassinari
+- [changelog] Polish @oliviertassinari
 
 ### core
 
@@ -1674,7 +1674,7 @@ Big thanks to the 2 contributors who made this release possible. Here are some h
 
 - [core] Update peer dependencies for React 17 (#814) @DanailH
 - [core] Batch small changes (#800) @oliviertassinari
-- [CHANGELOG] Use the format of the main repository @oliviertassinari
+- [changelog] Use the format of the main repository @oliviertassinari
 
 ## [4.0.0-alpha.14](https://github.com/mui/mui-x/compare/v4.0.0-alpha.13...v4.0.0-alpha.14)
 

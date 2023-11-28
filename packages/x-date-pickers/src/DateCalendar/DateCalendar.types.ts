@@ -56,6 +56,7 @@ export interface ExportedDateCalendarProps<TDate>
     TimezoneProps {
   /**
    * Default calendar month displayed when `value` and `defaultValue` are empty.
+   * @deprecated Consider using `referenceDate` instead.
    */
   defaultCalendarMonth?: TDate;
   /**

@@ -183,7 +183,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
         return;
       }
       // Check if the target is inside a Portal
-      if (!event.currentTarget.contains(event.target)) {
+      if (
+        (event.target as any).nodeType === 1 &&
+        !event.currentTarget.contains(event.target)
+      ) {
         event.defaultMuiPrevented = true;
       }
     }}

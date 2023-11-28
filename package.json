@@ -1,5 +1,5 @@
 {
-  "version": "6.18.0",
+  "version": "6.18.2",
   "private": true,
   "scripts": {
     "start": "yarn && yarn docs:dev",
@@ -90,7 +90,7 @@
     "@next/eslint-plugin-next": "^13.5.6",
     "@octokit/plugin-retry": "^6.0.1",
     "@octokit/rest": "^20.0.2",
-    "@playwright/test": "1.39.0",
+    "@playwright/test": "1.40.0",
     "@testing-library/react": "^14.0.0",
     "@types/babel__core": "^7.20.3",
     "@types/chai": "^4.3.9",
