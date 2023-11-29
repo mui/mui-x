@@ -18,7 +18,6 @@ export type ChartsAxisContentProps = {
   /**
    * Data identifying the triggered axis.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   axisData: AxisInteractionData;
   /**
    * The series linked to the triggered axis.
