@@ -37,7 +37,7 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
     itemData.seriesId
   ] as ChartSeriesDefaultized<T>;
 
-  const Content = content ?? DefaultChartsItemTooltipContent<T>;
+  const Content = content ?? DefaultChartsItemTooltipContent;
   const chartTooltipContentProps = useSlotProps({
     elementType: Content,
     externalSlotProps: contentProps,
