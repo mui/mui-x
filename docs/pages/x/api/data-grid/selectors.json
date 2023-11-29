@@ -240,6 +240,24 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridHeaderFilteringEditFieldSelector",
+    "returnType": "string | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridHeaderFilteringMenuSelector",
+    "returnType": "string | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridHeaderFilteringStateSelector",
+    "returnType": "GridHeaderFilteringState",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridPageCountSelector",
     "returnType": "number",
     "category": "Pagination",
@@ -494,24 +512,6 @@
     "returnType": "GridColumnGroupIdentifier | null",
     "description": "",
     "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridHeaderFilteringEditFieldSelector",
-    "returnType": "string | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridHeaderFilteringMenuSelector",
-    "returnType": "string | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridHeaderFilteringStateSelector",
-    "returnType": "GridHeaderFilteringState",
-    "description": "",
-    "supportsApiRef": false
   },
   {
     "name": "unstable_gridTabIndexColumnGroupHeaderSelector",

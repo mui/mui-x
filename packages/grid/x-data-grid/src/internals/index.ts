@@ -24,8 +24,8 @@ export { unwrapPrivateAPI } from '../hooks/core/useGridApiInitialization';
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
-  unstable_gridHeaderFilteringEditFieldSelector,
-  unstable_gridHeaderFilteringMenuSelector,
+  gridHeaderFilteringEditFieldSelector,
+  gridHeaderFilteringMenuSelector,
 } from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
 export type { GridSlotsComponentsProps } from '../models/gridSlotsComponentsProps';
 export type {
