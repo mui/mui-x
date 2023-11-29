@@ -9,10 +9,11 @@ import FormControl from '@mui/material/FormControl';
 import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
 import { PickersTextFieldProps } from './PickersTextField.types';
 import { PickersOutlinedInput } from '../PickersInput/PickersOutlinedInput';
+import { PickersFilledInput } from '../PickersInput/PickersFilledInput';
 
 const variantComponent = {
   standard: PickersOutlinedInput,
-  filled: PickersOutlinedInput,
+  filled: PickersFilledInput,
   outlined: PickersOutlinedInput,
 };
 
@@ -54,7 +55,6 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
     fullWidth = false,
     value,
     helperText,
-    valueType,
     id: idOverride,
     FormHelperTextProps,
     InputLabelProps,
@@ -120,15 +120,18 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
       fullWidth={fullWidth}
       required={required}
       ownerState={ownerState}
+      {...other}
     >
       <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
         {label}
       </InputLabel>
       <PickersInputComponent
-        {...InputProps}
-        {...inputProps}
-        {...{ elements, value, onWrapperClick, label }}
+        elements={elements}
+        value={value}
+        onWrapperClick={onWrapperClick}
+        label={label}
         {...other}
+        {...InputProps}
         ref={handleInputRef}
       />
       {helperText && (

@@ -28,8 +28,6 @@ export interface PickersBaseTextFieldProps
   helperText?: React.ReactNode;
   size?: 'small' | 'medium';
   variant?: 'filled' | 'outlined' | 'standard';
-  valueStr: string;
-  valueType: 'value' | 'placeholder';
   required?: boolean;
   inputProps?: React.HTMLAttributes<HTMLDivElement>;
 }

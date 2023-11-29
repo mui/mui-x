@@ -9,19 +9,36 @@ import {
   unstable_capitalize as capitalize,
   visuallyHidden,
 } from '@mui/utils';
-import { pickersInputClasses, getPickersOutlinedInputUtilityClass } from './pickersInputClasses';
+import { pickersInputClasses, getPickersInputUtilityClass } from './pickersInputClasses';
 import { PickersInputElement, PickersInputProps } from './PickersInput.types';
 
-const SectionsContainer = styled('div', {
+export const InputWrapper = styled(Box, {
+  name: 'MuiPickersInput',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.input,
+})<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
+  cursor: 'text',
+  padding: 0,
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: ownerState.fullWidth ? '100%' : '25ch',
+}));
+
+export const SectionsContainer = styled('div', {
   name: 'MuiPickersInput',
   slot: 'Input',
   overridesResolver: (props, styles) => styles.input,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+  padding: '16.5px 14px',
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
   flexGrow: 1,
   visibility: ownerState.adornedStart || ownerState.focused ? 'visible' : 'hidden',
+  ...(ownerState.size === 'small' && {
+    padding: '8.5px 14px',
+  }),
 }));
 
 const SectionContainer = styled('span', {
@@ -132,7 +149,7 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
     input: ['input'],
   };
 
-  return composeClasses(slots, getPickersOutlinedInputUtilityClass, classes);
+  return composeClasses(slots, getPickersInputUtilityClass, classes);
 };
 
 // TODO: move to utils
@@ -221,7 +238,8 @@ export const PickersInput = React.forwardRef(function PickersInput(
   };
   const classes = useUtilityClasses(ownerState);
 
-  const PickersInputRoot = slots?.root || Box;
+  const PickersInputRoot = slots?.root || InputWrapper;
+  const PickersInputInput = slots?.input || SectionsContainer;
 
   return (
     // this needs to change based on the variant
@@ -234,7 +252,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
       aria-invalid={fcs.error}
     >
       {startAdornment}
-      <SectionsContainer ownerState={ownerState} className={classes.input}>
+      <PickersInputInput ownerState={ownerState} className={classes.input}>
         <InputContent
           elements={elements}
           contentEditable={other.contentEditable}
@@ -247,7 +265,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
           aria-hidden="true"
           tabIndex={-1}
         />
-      </SectionsContainer>
+      </PickersInputInput>
       {endAdornment}
       {/* render conditionally depending on variant -> consider renderSuffix or children */}
       {renderSuffix

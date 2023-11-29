@@ -9,7 +9,7 @@ export interface PickersInputElement {
 
 export interface CommonProps {
   elements: PickersInputElement[];
-  defaultValue: string;
+  defaultValue?: string;
   label?: React.ReactNode;
   endAdornment?: React.ReactNode;
   startAdornment?: React.ReactNode;
@@ -20,7 +20,7 @@ export interface CommonProps {
   onKeyUp?: React.KeyboardEventHandler;
   focused?: boolean;
   areAllSectionsEmpty?: boolean;
-  value: string;
+  value?: string;
 }
 
 export interface PickersInputProps
@@ -42,9 +42,6 @@ export interface PickersInputProps
   ownerState?: any;
   margin?: 'dense' | 'none' | 'normal';
   onWrapperClick: () => void;
-  slots?: {
-    root?: React.ElementType;
-  };
   renderSuffix?: (state: {
     disabled?: boolean;
     error?: boolean;

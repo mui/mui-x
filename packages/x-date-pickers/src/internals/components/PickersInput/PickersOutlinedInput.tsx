@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 import {
@@ -12,9 +11,9 @@ import {
 } from './pickersInputClasses';
 import Outline from './Outline';
 import { PickersInputProps, PickersOutlinedInputProps } from './PickersInput.types';
-import { PickersInput } from './PickersInput';
+import { InputWrapper, PickersInput, SectionsContainer } from './PickersInput';
 
-const OutlinedSectionsWrapper = styled(Box, {
+const OutlinedSectionsWrapper = styled(InputWrapper, {
   name: 'MuiPickersOutliedInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -23,7 +22,7 @@ const OutlinedSectionsWrapper = styled(Box, {
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
     cursor: 'text',
-    padding: '16.5px 14px',
+    padding: 0,
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -60,12 +59,18 @@ const OutlinedSectionsWrapper = styled(Box, {
     [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.error.main,
     },
-
-    ...(ownerState.size === 'small' && {
-      padding: '8.5px 14px',
-    }),
   };
 });
+
+const OutlinedSectionsContainer = styled(SectionsContainer, {
+  name: 'MuiPickersOutlinedInput',
+  slot: 'Input',
+  overridesResolver: (props, styles) => styles.input,
+})<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
+  ...(ownerState.size === 'small' && {
+    padding: '8.5px 14px',
+  }),
+}));
 
 const NotchedOutlineRoot = styled(Outline, {
   name: 'MuiPickersOutliendInput',
@@ -137,7 +142,6 @@ interface OwnerStateType extends PickersInputProps {
   disabled?: boolean;
   error?: boolean;
   fullWidth?: boolean;
-  variant?: 'filled' | 'outlined' | 'standard';
   size?: 'small' | 'medium';
   adornedStart?: boolean;
 }
@@ -178,7 +182,7 @@ export const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInp
 
   return (
     <PickersInput
-      slots={{ root: OutlinedSectionsWrapper }}
+      slots={{ root: OutlinedSectionsWrapper, input: OutlinedSectionsContainer }}
       renderSuffix={(state) => (
         <NotchedOutlineRoot
           shrink={notched || state.adornedStart || state.focused || state.filled}

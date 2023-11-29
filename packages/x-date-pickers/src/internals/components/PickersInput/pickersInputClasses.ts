@@ -13,7 +13,7 @@ export interface PickersInputClasses {
   /** State class applied to the root element if `error=true`. */
   error: string;
   /** Styles applied to the NotchedOutline element. */
-  notchedOutline: string;
+  notchedOutline?: string;
   /** Styles applied to the fake input element. */
   input: string;
   /** Styles applied to the section of the picker. */
@@ -26,10 +26,15 @@ export interface PickersInputClasses {
   adornedStart: string;
   /** Styles applied to the root if there is an endAdornment present */
   adornedEnd: string;
+  /** Styles applied to the root element unless `disableUnderline={true}`. */
+  underline?: string;
 }
 
 export type PickersInputClassKey = keyof PickersInputClasses;
 
+export function getPickersInputUtilityClass(slot: string) {
+  return generateUtilityClass('MuiPickersInput', slot);
+}
 export function getPickersOutlinedInputUtilityClass(slot: string) {
   return generateUtilityClass('MuiPickersOutlinedInput', slot);
 }
@@ -53,19 +58,20 @@ export const pickersInputClasses = generateUtilityClasses<PickersInputClassKey>(
   'adornedEnd',
   'input',
 ]);
-export const pickersOutlinedInputClasses = generateUtilityClasses<PickersInputClassKey>(
-  'MuiPickersOutlinedInput',
-  [
+export const pickersOutlinedInputClasses = {
+  ...pickersInputClasses,
+  ...generateUtilityClasses<PickersInputClassKey>('MuiPickersOutlinedInput', [
     'root',
-    'focused',
-    'disabled',
-    'error',
     'notchedOutline',
-    'content',
-    'before',
-    'after',
-    'adornedStart',
-    'adornedEnd',
     'input',
-  ],
-);
+  ]),
+};
+
+export const pickersFilledInputClasses = {
+  ...pickersInputClasses,
+  ...generateUtilityClasses<PickersInputClassKey>('MuiPickersFilledInput', [
+    'root',
+    'underline',
+    'input',
+  ]),
+};
