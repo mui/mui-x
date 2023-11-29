@@ -222,6 +222,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridFocusColumnHeaderFilterSelector",
+    "returnType": "GridColumnIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFocusColumnHeaderSelector",
     "returnType": "GridColumnIdentifier | null",
     "description": "",
@@ -407,6 +413,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridTabIndexColumnHeaderFilterSelector",
+    "returnType": "GridColumnIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridTabIndexColumnHeaderSelector",
     "returnType": "GridColumnIdentifier | null",
     "description": "",
@@ -484,12 +496,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "unstable_gridFocusColumnHeaderFilterSelector",
-    "returnType": "GridColumnIdentifier | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "unstable_gridHeaderFilteringEditFieldSelector",
     "returnType": "string | null",
     "description": "",
@@ -510,12 +516,6 @@
   {
     "name": "unstable_gridTabIndexColumnGroupHeaderSelector",
     "returnType": "GridColumnGroupIdentifier | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridTabIndexColumnHeaderFilterSelector",
-    "returnType": "GridColumnIdentifier | null",
     "description": "",
     "supportsApiRef": true
   }

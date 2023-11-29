@@ -114,7 +114,7 @@ export default function CustomHeaderFilterDataGridPro() {
         slots={{
           headerFilterCell: CustomHeaderFilter,
         }}
-        unstable_headerFilters
+        headerFilters
       />
     </div>
   );
