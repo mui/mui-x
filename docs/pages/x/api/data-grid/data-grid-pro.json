@@ -146,6 +146,7 @@
       }
     },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "headerFilters": { "type": { "name": "bool" } },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
     "hideFooterRowCount": {
@@ -543,7 +544,6 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" } },
-    "unstable_headerFilters": { "type": { "name": "bool" } },
     "unstable_ignoreValueFormatterDuringExport": {
       "type": {
         "name": "union",
