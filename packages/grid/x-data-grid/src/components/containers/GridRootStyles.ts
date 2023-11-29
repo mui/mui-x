@@ -342,11 +342,24 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
-      boxSizing: 'border-box',
-      borderTop: `1px solid ${borderColor}`,
+
+      // HACK: Using a floating ::before instead of a border-top simplifies our layout testing,
+      // that's why it's done this way here. It would be fine to refactor it and the test suite
+      // to use border-top instead eventually.
+      '--rowBorderColor': borderColor,
+      position: 'relative',
+      '&::before': {
+        position: 'absolute',
+        content: '" "',
+        top: '0',
+        left: '0',
+        height: '1px',
+        width: '100%',
+        backgroundColor: 'var(--rowBorderColor)',
+      },
 
       [`&.${gridClasses['row--firstVisible']}`]: {
-        borderTopColor: 'transparent',
+        '--rowBorderColor': 'transparent',
       },
 
       '&:hover': {
@@ -381,7 +394,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']}`]:
       {
-        borderTopColor: 'transparent',
+        '--rowBorderColor': 'transparent',
       },
     [`& .${gridClasses['container--top']}, & .${gridClasses['container--bottom']}`]: {
       '[role=row]': {
@@ -396,10 +409,8 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
       '--width': '0px',
       '--height': '0px',
-      minWidth: 'var(--width)',
-      maxWidth: 'var(--width)',
-      minHeight: 'var(--height)',
-      maxHeight: 'var(--height)',
+      width: 'var(--width)',
+      height: 'var(--height)',
 
       '&.Mui-selected': {
         backgroundColor: theme.vars
@@ -555,10 +566,8 @@ export const GridRootStyles = styled('div', {
       maxHeight: 'unset !important',
     },
     [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
-      minWidth: 'var(--width)',
-      maxWidth: 'var(--width)',
-      minHeight: 'calc(var(--height) + var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
-      maxHeight: 'calc(var(--height) + var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+      width: 'var(--width)',
+      height: 'calc(var(--height) + var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
       paddingBottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
     },
     [`& .${gridClasses.treeDataGroupingCell}`]: {
