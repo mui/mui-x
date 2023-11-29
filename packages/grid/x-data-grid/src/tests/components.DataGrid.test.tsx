@@ -60,7 +60,9 @@ describe('<DataGrid /> - Components', () => {
         const [cellProps, setCellProps] = React.useState({});
         return (
           <div>
-            <button onClick={() => setCellProps({ style: {} })}>Apply cell styles</button>
+            <button onClick={() => setCellProps({ style: { backgroundColor: 'red' } })}>
+              Apply cell styles
+            </button>
             <div style={{ width: 300, height: 500 }}>
               <DataGrid {...baselineProps} slotProps={{ cell: cellProps }} />
             </div>
@@ -75,7 +77,9 @@ describe('<DataGrid /> - Components', () => {
       const button = screen.getByRole('button', { name: /Apply cell styles/i });
       fireEvent.click(button);
 
-      expect(getCell(0, 0).getBoundingClientRect().width).to.equal(initialCellWidth);
+      const cell = getCell(0, 0);
+      expect(cell.getBoundingClientRect().width).to.equal(initialCellWidth);
+      expect(cell).toHaveInlineStyle({ backgroundColor: 'red' });
     });
 
     it('should pass the props from componentsProps.row to the row', () => {
