@@ -149,6 +149,9 @@ Below are described the steps you need to make to migrate from v6 to v7.
  };
 ```
 
+- The Quick Filter now ignores hidden columns by default.
+  See [Including hidden columns](/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+
 <!-- ### Editing
 
 - -->

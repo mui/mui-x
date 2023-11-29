@@ -65,6 +65,8 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ## Component slots
 
+## Component slots
+
 ### Rename `components` to `slots`
 
 The `components` and `componentsProps` props are renamed to `slots` and `slotProps` props respectively.
@@ -102,6 +104,40 @@ For example:
 
 The same applies to `slotProps` and `componentsProps`.
 :::
+
+### Add new parameters to the `shortcuts` slot `onChange` callback
+
+:::warning
+The following breaking change only impacts you if you are overriding the `shortcuts` slot to create your own custom UI.
+If you are just passing shortcuts to the default UI using `slotProps={{ shortcuts: [...] }}` then you can safely skip this section.
+:::
+
+The `onChange` callback fired when selecting a shortcut now requires two new parameters (previously they were optional):
+
+- The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
+- The `item` containing the entire shortcut object.
+
+```diff
+ const CustomShortcuts = (props) => {
+   return (
+     <React.Fragment>
+       {props.items.map(item => {
+         const value = item.getValue({ isValid: props.isValid });
+         return (
+           <button
+-            onClick={() => onChange(value)}
++            onClick={() => onChange(value, props.changeImportance ?? 'accept', item)}
+           >
+             {value}
+           </button>
+         )
+       }}
+     </React.Fragment>
+   )
+ }
+
+ <DatePicker slots={{ shortcuts: CustomShortcuts }} />
+```
 
 ### Change the imports of the `calendarHeader` slot
 
