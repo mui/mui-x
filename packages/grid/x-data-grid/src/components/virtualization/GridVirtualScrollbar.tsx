@@ -39,7 +39,7 @@ const Scrollbar = styled('div')({
 const ScrollbarVertical = styled(Scrollbar)({
   width: 'var(--DataGrid-scrollbarSize)',
   height:
-    'calc(100% - var(--DataGrid-topContainerHeight) - var(--DataGrid-bottomContainerHeight) - var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+    'calc(var(--DataGrid-hasScrollY) * (100% - var(--DataGrid-topContainerHeight) - var(--DataGrid-bottomContainerHeight) - var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize)))',
   overflowY: 'auto',
   overflowX: 'hidden',
   '& > div': {
@@ -78,12 +78,13 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
     const propertyScroll = props.position === 'vertical' ? 'scrollTop' : 'scrollLeft';
 
-    const scrollbarSize =
+    const size =
       props.position === 'vertical'
         ? dimensions.viewportInnerSize.height
         : dimensions.viewportOuterSize.width;
-    const scrollbarContentSize =
-      scrollbarSize *
+
+    const contentSize =
+      size *
       (dimensions.contentSize[propertyDimension] / dimensions.viewportOuterSize[propertyDimension]);
 
     const scrollerContentSize =
@@ -108,7 +109,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       isLocked.current = true;
 
       const value = scroller[propertyScroll] / scrollerContentSize;
-      scrollbar[propertyScroll] = value * scrollbarContentSize;
+      scrollbar[propertyScroll] = value * contentSize;
 
       lastPosition.current = scroller[propertyScroll];
     });
@@ -123,7 +124,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       }
       isLocked.current = true;
 
-      const value = scrollbar[propertyScroll] / scrollbarContentSize;
+      const value = scrollbar[propertyScroll] / contentSize;
       scroller[propertyScroll] = value * scrollerContentSize;
     });
 
@@ -140,8 +141,8 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
 
     React.useEffect(() => {
       const content = contentRef.current!;
-      content.style.setProperty(propertyDimension, `${scrollbarContentSize}px`);
-    }, [scrollbarContentSize]);
+      content.style.setProperty(propertyDimension, `${contentSize}px`);
+    }, [contentSize]);
 
     const Container = props.position === 'vertical' ? ScrollbarVertical : ScrollbarHorizontal;
 

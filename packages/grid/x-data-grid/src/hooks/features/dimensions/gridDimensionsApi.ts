@@ -39,6 +39,10 @@ export interface GridDimensions {
    */
   rowWidth: number;
   /**
+   * Height of a row.
+   */
+  rowHeight: number;
+  /**
    * Size of all the visible columns.
    */
   columnsTotalWidth: number;

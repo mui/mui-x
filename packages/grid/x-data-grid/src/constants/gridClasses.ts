@@ -441,6 +441,10 @@ export interface GridClasses {
    */
   'row--dragging': string;
   /**
+   * Styles applied to the first visible row element on every page of the grid.
+   */
+  'row--firstVisible': string;
+  /**
    * Styles applied to the last visible row element on every page of the grid.
    */
   'row--lastVisible': string;
@@ -679,6 +683,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row',
   'row--editable',
   'row--editing',
+  'row--firstVisible',
   'row--lastVisible',
   'row--dragging',
   'row--dynamicHeight',

@@ -54,6 +54,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   scrollbarSize: 0,
   headerHeight: 0,
   rowWidth: 0,
+  rowHeight: 0,
   columnsTotalWidth: 0,
   headersTotalHeight: 0,
   topContainerHeight: 0,
@@ -155,7 +156,7 @@ export function useGridDimensions(
     const bottomContainerHeight = pinnedRowsHeight.bottom;
 
     const contentSize = {
-      width: Math.round(columnsTotalWidth),
+      width: roundToDecimalPlaces(columnsTotalWidth, 6),
       height: rowsMeta.currentPageTotalHeight,
     };
 
@@ -168,9 +169,13 @@ export function useGridDimensions(
       hasScrollY = false;
       hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootDimensionsRef.current.width);
 
+      if (hasScrollX) {
+        contentSize.height += scrollbarSize;
+      }
+
       viewportOuterSize = {
         width: rootDimensionsRef.current.width,
-        height: rowsMeta.currentPageTotalHeight + (hasScrollX ? scrollbarSize : 0),
+        height: topContainerHeight + bottomContainerHeight + contentSize.height,
       };
       viewportInnerSize = {
         width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
@@ -223,6 +228,7 @@ export function useGridDimensions(
       scrollbarSize,
       headerHeight,
       rowWidth,
+      rowHeight,
       columnsTotalWidth,
       headersTotalHeight,
       topContainerHeight,
@@ -321,6 +327,7 @@ export function useGridDimensions(
         errorShown.current = true;
       }
 
+      // XXX: remove?
       if (isTestEnvironment) {
         // We don't need to debounce the resize for tests.
         setSavedSize(size);
@@ -373,4 +380,10 @@ function measureScrollbarSize(
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
   rootElement.removeChild(scrollDiv);
   return size;
+}
+
+// Get rid of floating point errors
+// https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+function roundToDecimalPlaces(value: number, decimals: number) {
+  return Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
 }

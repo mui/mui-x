@@ -168,9 +168,6 @@ export const GridRootStyles = styled('div', {
     overflowAnchor: 'none', // Keep the same scrolling position
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
-      [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
-        borderBottomColor: 'transparent',
-      },
     },
     [`&.${gridClasses.autosizing}`]: {
       [`& .${gridClasses.columnHeaderTitleContainerContent} > *`]: {
@@ -181,10 +178,6 @@ export const GridRootStyles = styled('div', {
         whiteSpace: 'nowrap',
       },
     },
-    [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
-      {
-        borderBottomColor: 'transparent',
-      },
     [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
       lineHeight: null,
@@ -212,6 +205,7 @@ export const GridRootStyles = styled('div', {
       position: 'relative',
       display: 'flex',
       alignItems: 'center',
+      overflow: 'hidden',
     },
     [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}, & .${gridClasses['columnHeader--filtered']} .${gridClasses.iconButtonContainer}`]:
       {
@@ -344,10 +338,17 @@ export const GridRootStyles = styled('div', {
     [`.${gridClasses.menuOpen}`]: {
       visibility: 'visible',
     },
-    [`& .${gridClasses.row}`]: {
+    [`.${gridClasses.row}`]: {
       display: 'flex',
       width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
+      boxSizing: 'border-box',
+      borderTop: `1px solid ${borderColor}`,
+
+      [`&.${gridClasses['row--firstVisible']}`]: {
+        borderTopColor: 'transparent',
+      },
+
       '&:hover': {
         backgroundColor: (theme.vars || theme).palette.action.hover,
         // Reset on touch devices, it doesn't add specificity
@@ -378,6 +379,10 @@ export const GridRootStyles = styled('div', {
         },
       },
     },
+    [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']}`]:
+      {
+        borderTopColor: 'transparent',
+      },
     [`& .${gridClasses['container--top']}, & .${gridClasses['container--bottom']}`]: {
       '[role=row]': {
         background: 'var(--unstable_DataGrid-containerBackground)',
@@ -395,7 +400,7 @@ export const GridRootStyles = styled('div', {
       maxWidth: 'var(--width)',
       minHeight: 'var(--height)',
       maxHeight: 'var(--height)',
-      borderBottom: '1px solid',
+
       '&.Mui-selected': {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`

@@ -129,6 +129,7 @@ export const useGridVirtualScroller = () => {
   const innerSize = dimensions.viewportInnerSize;
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const hasTopPinnedRows = pinnedRows.top.length > 0;
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
@@ -146,6 +147,7 @@ export const useGridVirtualScroller = () => {
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const scrollbarVerticalRef = React.useRef<HTMLDivElement>(null);
   const scrollbarHorizontalRef = React.useRef<HTMLDivElement>(null);
+  const contentHeight = dimensions.contentSize.height;
 
   useResizeObserver(mainRef, () => apiRef.current.resize());
 
@@ -441,6 +443,9 @@ export const useGridVirtualScroller = () => {
       position?: GridPinnedRowsPosition;
     } = {},
   ) => {
+    const isFirstSection =
+      (!hasTopPinnedRows && params.position === undefined) ||
+      (hasTopPinnedRows && params.position === 'top');
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
       (hasBottomPinnedRows && params.position === 'bottom');
@@ -552,6 +557,11 @@ export const useGridVirtualScroller = () => {
         isSelected = apiRef.current.isRowSelectable(id);
       }
 
+      let isFirstVisible = false;
+      if (isFirstSection) {
+        isFirstVisible = i === 0;
+      }
+
       let isLastVisible = false;
       if (isLastSection) {
         if (!isPinnedSection) {
@@ -610,6 +620,7 @@ export const useGridVirtualScroller = () => {
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
           dimensions={dimensions}
+          isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
           isNotVisible={isRowNotVisible}
           {...rowProps}
@@ -640,15 +651,19 @@ export const useGridVirtualScroller = () => {
     // In cases where the columns exceed the available width,
     // the horizontal scrollbar should be shown even when there're no rows.
     // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-    const height = Math.max(rowsMeta.currentPageTotalHeight, 1);
+    const height = Math.max(contentHeight, 1);
 
     const size: React.CSSProperties = {
       width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
       height,
     };
 
-    if (rootProps.autoHeight && currentPage.rows.length === 0) {
-      size.height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
+    if (rootProps.autoHeight) {
+      if (currentPage.rows.length === 0) {
+        size.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
+      } else {
+        size.height = contentHeight;
+      }
     }
 
     return size;
@@ -656,7 +671,7 @@ export const useGridVirtualScroller = () => {
     apiRef,
     scrollerRef,
     columnsTotalWidth,
-    rowsMeta.currentPageTotalHeight,
+    contentHeight,
     needsHorizontalScrollbar,
     rootProps.autoHeight,
     rootProps.rowHeight,

@@ -57,7 +57,8 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   tabbableCell: string | null;
   row?: GridRowModel;
-  isLastVisible?: boolean;
+  isFirstVisible: boolean;
+  isLastVisible: boolean;
   focusedCellColumnIndexNotInRange?: number;
   isNotVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -70,19 +71,21 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
 type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
+  isFirstVisible: boolean;
   isLastVisible: boolean;
   classes?: DataGridProcessedProps['classes'];
   rowHeight: GridRowProps['rowHeight'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, isLastVisible, rowHeight, classes } = ownerState;
+  const { editable, editing, selected, isFirstVisible, isLastVisible, rowHeight, classes } = ownerState;
   const slots = {
     root: [
       'row',
       selected && 'selected',
       editable && 'row--editable',
       editing && 'row--editing',
+      isFirstVisible && 'row--firstVisible',
       isLastVisible && 'row--lastVisible',
       rowHeight === 'auto' && 'row--dynamicHeight',
     ],
@@ -118,7 +121,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     dimensions,
     firstColumnToRender,
     lastColumnToRender,
-    isLastVisible = false,
+    isFirstVisible,
+    isLastVisible,
     focusedCellColumnIndexNotInRange,
     isNotVisible,
     focusedCell,
@@ -147,6 +151,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const ownerState = {
     selected,
+    isFirstVisible,
     isLastVisible,
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
