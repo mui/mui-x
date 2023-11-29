@@ -80,6 +80,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 ### Removed props
 
 - The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
+- The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 
 <!-- ### State access
 
@@ -149,13 +150,19 @@ Below are described the steps you need to make to migrate from v6 to v7.
  };
 ```
 
+- The Quick Filter now ignores hidden columns by default.
+  See [Including hidden columns](/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+
 <!-- ### Editing
 
 - -->
 
 ### Other exports
 
-- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported. Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
+  Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+
+- The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
 
 <!-- ### CSS classes
 

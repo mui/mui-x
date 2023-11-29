@@ -290,8 +290,7 @@ export const usePickerValue = <
         validationError,
       };
 
-      // TODO v7: Remove 2nd condition
-      if (action.name === 'setValueFromShortcut' && action.shortcut != null) {
+      if (action.name === 'setValueFromShortcut') {
         context.shortcut = action.shortcut;
       }
 
@@ -377,17 +376,16 @@ export const usePickerValue = <
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
   );
 
-  // TODO v7: Make changeImportance and label mandatory.
   const handleSelectShortcut = useEventCallback(
     (
       newValue: TValue,
-      changeImportance?: PickerShortcutChangeImportance,
-      shortcut?: PickersShortcutsItemContext,
+      changeImportance: PickerShortcutChangeImportance,
+      shortcut: PickersShortcutsItemContext,
     ) =>
       updateDate({
         name: 'setValueFromShortcut',
         value: newValue,
-        changeImportance: changeImportance ?? 'accept',
+        changeImportance,
         shortcut,
       }),
   );

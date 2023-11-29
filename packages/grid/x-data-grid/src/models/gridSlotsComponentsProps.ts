@@ -49,7 +49,6 @@ export interface LoadingOverlayPropsOverrides {}
 export interface NoResultsOverlayPropsOverrides {}
 export interface NoRowsOverlayPropsOverrides {}
 export interface PanelPropsOverrides {}
-export interface PreferencesPanelPropsOverrides {}
 export interface RowPropsOverrides {}
 
 type SlotProps<Props, Overrides> = Partial<Props & Overrides>;
@@ -88,10 +87,6 @@ export interface GridSlotsComponentsProps {
   noRowsOverlay?: SlotProps<GridOverlayProps, NoRowsOverlayPropsOverrides>;
   pagination?: SlotProps<TablePaginationProps, PaginationPropsOverrides>;
   panel?: SlotProps<GridPanelProps, PanelPropsOverrides>;
-  preferencesPanel?: SlotProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    PreferencesPanelPropsOverrides
-  >;
   row?: SlotProps<GridRowProps, RowPropsOverrides>;
   toolbar?: SlotProps<GridToolbarProps, ToolbarPropsOverrides>;
 }

@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.4",
+    "@mui/system": "^5.14.18",
     "@mui/utils": "^5.14.18",
     "@mui/x-data-grid": "7.0.0-alpha.2",
     "@mui/x-license-pro": "7.0.0-alpha.1",
@@ -54,7 +55,6 @@
   },
   "peerDependencies": {
     "@mui/material": "^5.4.1",
-    "@mui/system": "^5.4.1",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
