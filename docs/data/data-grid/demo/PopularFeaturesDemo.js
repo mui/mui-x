@@ -283,7 +283,7 @@ function PlanTag(props) {
         '& .MuiChip-label': {
           fontWeight: 'medium',
           fontSize: theme.typography.pxToRem(12),
-          pl: 1.5,
+          pl: 1,
         },
         '& .MuiChip-avatar': {
           width: 16,
