@@ -10,9 +10,10 @@ import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
 import { PickersTextFieldProps } from './PickersTextField.types';
 import { PickersOutlinedInput } from '../PickersInput/PickersOutlinedInput';
 import { PickersFilledInput } from '../PickersInput/PickersFilledInput';
+import { PickersStandardInput } from '../PickersInput/PickersStandardInput';
 
 const variantComponent = {
-  standard: PickersOutlinedInput,
+  standard: PickersStandardInput,
   filled: PickersFilledInput,
   outlined: PickersOutlinedInput,
 };

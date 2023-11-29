@@ -75,3 +75,12 @@ export const pickersFilledInputClasses = {
     'input',
   ]),
 };
+
+export const pickersStandardInputClasses = {
+  ...pickersInputClasses,
+  ...generateUtilityClasses<PickersInputClassKey>('MuiPickersStandardInput', [
+    'root',
+    'underline',
+    'input',
+  ]),
+};
