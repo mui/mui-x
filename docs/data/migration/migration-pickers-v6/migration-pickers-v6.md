@@ -66,7 +66,7 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
-### Slot `shortcuts`: add new parameters to the `onChange` callback
+### Add new parameters to the `shortcuts` slot `onChange` callback
 
 :::warning
 The following breaking change only impacts you if you are overriding the `shortcuts` slot to create your own custom UI.
