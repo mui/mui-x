@@ -73,7 +73,7 @@ The following breaking change only impacts you if you are overriding the `shortc
 If you are just passing shortcuts to the default UI using `slotProps={{ shortcuts: [...] }}` then you can safely skip this section.
 :::
 
-The `onChange` callback fired when selecting a shortcut now requires two new parameters:
+The `onChange` callback fired when selecting a shortcut now requires two new parameters (previously they were optional):
 
 - The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
 - The `item` containing the entire shortcut object.
