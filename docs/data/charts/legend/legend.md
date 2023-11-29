@@ -28,7 +28,7 @@ This `padding` will add space between the SVG borders and the legend.
 
 By default, the legend is placed above the charts.
 
-{{"demo": "LegendPositionNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "LegendPositionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Hiding
 
@@ -43,14 +43,14 @@ Inside the legend, you can customize the pixel value of the width and height of 
 You can also access the `markGap` prop to change the gap between the mark and its label, or the `itemGap` to change the gap between two legend items.
 Both props impact the values defined in pixels.
 
-{{"demo": "LegendDimensionNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "LegendDimensionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Label styling
 
 To break lines in legend labels, use the special `\n` character. To customize the label style, you should not use CSS.
 Instead, pass a styling object to the `labelStyle` property.
 
-{{"demo": "LegendTextStylingNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "LegendTextStylingNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 :::info
 The `labelStyle` property is needed to measure text size, and then place legend items at the correct position.
