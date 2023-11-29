@@ -9,62 +9,8 @@ import {
   unstable_capitalize as capitalize,
   visuallyHidden,
 } from '@mui/utils';
-import { pickersInputClasses, getPickersInputUtilityClass } from './pickersTextFieldClasses';
-import Outline from './Outline';
+import { pickersInputClasses, getPickersOutlinedInputUtilityClass } from './pickersInputClasses';
 import { PickersInputElement, PickersInputProps } from './PickersInput.types';
-
-const SectionsWrapper = styled(Box, {
-  name: 'MuiPickersInput',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
-  const borderColor =
-    theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
-  return {
-    cursor: 'text',
-    padding: '16.5px 14px',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: ownerState.fullWidth ? '100%' : '25ch',
-    position: 'relative',
-    borderRadius: (theme.vars || theme).shape.borderRadius,
-    [`&:hover .${pickersInputClasses.notchedOutline}`]: {
-      borderColor: (theme.vars || theme).palette.text.primary,
-    },
-
-    // Reset on touch devices, it doesn't add specificity
-    '@media (hover: none)': {
-      [`&:hover .${pickersInputClasses.notchedOutline}`]: {
-        borderColor: theme.vars
-          ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`
-          : borderColor,
-      },
-    },
-    [`&.${pickersInputClasses.focused} .${pickersInputClasses.notchedOutline}`]: {
-      borderStyle: 'solid',
-      borderColor: (theme.vars || theme).palette[ownerState.color].main,
-      borderWidth: 2,
-    },
-    [`&.${pickersInputClasses.disabled}`]: {
-      [`& .${pickersInputClasses.notchedOutline}`]: {
-        borderColor: (theme.vars || theme).palette.action.disabled,
-      },
-
-      '*': {
-        color: (theme.vars || theme).palette.action.disabled,
-      },
-    },
-
-    [`&.${pickersInputClasses.error} .${pickersInputClasses.notchedOutline}`]: {
-      borderColor: (theme.vars || theme).palette.error.main,
-    },
-
-    ...(ownerState.size === 'small' && {
-      padding: '8.5px 14px',
-    }),
-  };
-});
 
 const SectionsContainer = styled('div', {
   name: 'MuiPickersInput',
@@ -114,20 +60,6 @@ const FakeHiddenInput = styled('input', {
   overridesResolver: (props, styles) => styles.hiddenInput,
 })({
   ...visuallyHidden,
-});
-
-const NotchedOutlineRoot = styled(Outline, {
-  name: 'MuiPickersInput',
-  slot: 'NotchedOutline',
-  overridesResolver: (props, styles) => styles.notchedOutline,
-})(({ theme }) => {
-  const borderColor =
-    theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
-  return {
-    borderColor: theme.vars
-      ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`
-      : borderColor,
-  };
 });
 
 function InputContent({
@@ -200,7 +132,7 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
     input: ['input'],
   };
 
-  return composeClasses(slots, getPickersInputUtilityClass, classes);
+  return composeClasses(slots, getPickersOutlinedInputUtilityClass, classes);
 };
 
 // TODO: move to utils
@@ -229,7 +161,7 @@ interface OwnerStateType extends PickersInputProps {
   adornedStart?: boolean;
 }
 
-const PickersInput = React.forwardRef(function PickersInput(
+export const PickersInput = React.forwardRef(function PickersInput(
   props: PickersInputProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -240,15 +172,15 @@ const PickersInput = React.forwardRef(function PickersInput(
     onFocus,
     onWrapperClick,
     onBlur,
-    valueStr,
-    onValueStrChange,
+    value,
+    onChange,
     id,
-    InputProps,
-    inputProps,
     autoFocus,
     ownerState: ownerStateProp,
     endAdornment,
     startAdornment,
+    renderSuffix,
+    slots,
     ...other
   } = props;
 
@@ -289,8 +221,11 @@ const PickersInput = React.forwardRef(function PickersInput(
   };
   const classes = useUtilityClasses(ownerState);
 
+  const PickersInputRoot = slots?.root || Box;
+
   return (
-    <SectionsWrapper
+    // this needs to change based on the variant
+    <PickersInputRoot
       ref={handleInputRef}
       {...other}
       className={classes.root}
@@ -306,32 +241,23 @@ const PickersInput = React.forwardRef(function PickersInput(
           ownerState={ownerState}
         />
         <FakeHiddenInput
-          value={valueStr}
-          onChange={onValueStrChange}
+          value={value}
+          onChange={onChange}
           id={id}
           aria-hidden="true"
           tabIndex={-1}
         />
       </SectionsContainer>
       {endAdornment}
-      <NotchedOutlineRoot
-        shrink={fcs.adornedStart || fcs.focused}
-        notched={fcs.adornedStart || fcs.focused}
-        className={classes.notchedOutline}
-        label={
-          label != null && label !== '' && fcs.required ? (
-            <React.Fragment>
-              {label}
-              &thinsp;{'*'}
-            </React.Fragment>
-          ) : (
-            label
-          )
-        }
-        ownerState={ownerState}
-      />
-    </SectionsWrapper>
+      {/* render conditionally depending on variant -> consider renderSuffix or children */}
+      {renderSuffix
+        ? renderSuffix({
+            ...fcs,
+            startAdornment,
+          })
+        : null}
+    </PickersInputRoot>
   );
 });
 
-export default PickersInput;
+(PickersInput as any).muiName = 'Input';
