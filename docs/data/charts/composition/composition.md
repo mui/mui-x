@@ -102,7 +102,7 @@ To display data, you have components named `<XxxPlot />` such as `<LinePlot />`,
 To add axes, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
 
 It takes an `axisId` prop that indicates which axis, defined in the container, should be rendered.
-If  `axisId` is not provided it will pick the first one.
+If `axisId` is not provided it will pick the first one.
 
 ### Additional information
 
