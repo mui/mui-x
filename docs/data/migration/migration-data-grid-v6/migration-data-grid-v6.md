@@ -80,7 +80,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 ### Removed props
 
 - The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
-- The `slots.preferencesPanel` slot was removed. Use the `slots.panel` slot instead.
+- The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 
 <!-- ### State access
 
