@@ -84,10 +84,12 @@ In the following demo, the columns panel is disabled, and access to columns `id`
 To show or hide specific columns in the column visibility panel, use the `slotProps.columnsPanel.getTogglableColumns` prop. It should return an array of column field names.
 
 ```tsx
+// stop `id`, `__row_group_by_columns_group__`, and `status` columns to be togglable
+const hiddenFields = ['id', '__row_group_by_columns_group__', 'status'];
+
 const getTogglableColumns = (columns: GridColDef[]) => {
-  // hide the column with field `id` from list of togglable columns
   return columns
-    .filter((column) => column.field !== 'id')
+    .filter((column) => !hiddenFields.includes(column.field))
     .map((column) => column.field);
 };
 
