@@ -620,8 +620,6 @@
   { "name": "selectedIdsLookupSelector", "kind": "Variable" },
   { "name": "setupExcelExportWebWorker", "kind": "Function" },
   { "name": "skSK", "kind": "Variable" },
-  { "name": "SUBMIT_FILTER_DATE_STROKE_TIME", "kind": "Variable" },
-  { "name": "SUBMIT_FILTER_STROKE_TIME", "kind": "Variable" },
   { "name": "svSE", "kind": "Variable" },
   { "name": "ToolbarPropsOverrides", "kind": "Interface" },
   { "name": "trTR", "kind": "Variable" },
