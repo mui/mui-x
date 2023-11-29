@@ -38,8 +38,7 @@ export default function ClipboardPasteEvents() {
         processRowUpdate={processRowUpdate}
         onClipboardPasteStart={() => setLoading(true)}
         onClipboardPasteEnd={() => setLoading(false)}
-        experimentalFeatures={{ clipboardPaste: true }}
-        unstable_ignoreValueFormatterDuringExport
+        ignoreValueFormatterDuringExport
       />
     </div>
   );

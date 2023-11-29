@@ -28,8 +28,7 @@ export default function ClipboardPaste() {
         checkboxSelection
         disableRowSelectionOnClick
         unstable_cellSelection
-        experimentalFeatures={{ clipboardPaste: true }}
-        unstable_ignoreValueFormatterDuringExport
+        ignoreValueFormatterDuringExport
       />
     </div>
   );
