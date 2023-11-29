@@ -65,8 +65,6 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ## Component slots
 
-## Component slots
-
 ### Rename `components` to `slots`
 
 The `components` and `componentsProps` props are renamed to `slots` and `slotProps` props respectively.
