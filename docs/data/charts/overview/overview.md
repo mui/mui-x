@@ -12,24 +12,15 @@ packageName: '@mui/x-charts'
 
 ## Overview
 
-The `@mui/x-charts` is an MIT library to render charts.
-It relies on D3.js for data manipulation and SVG for rendering.
+The `@mui/x-charts` is an MIT library for rendering charts relying on [D3.js](https://d3js.org/) for data manipulation and SVG for rendering.
+And, like other MUI X components, charts are production-ready components that integrate smoothly into your app.
 
-Like other MUI X components, charts are built to be production-ready components with nice integration into your application for common use cases.
-They also provide a high level of customization.
+With a high level of customization, MUI X Charts provides on three levels of customization layers: **single components** with great defaults, extensive **configuration props**, and **subcomponents** for flexible composition.
+Additionally, you can also use all the MUI System tools, such as the theme override or the `sx` prop.
 
-To achieve this goal, the `@mui/x-charts` relies on three levels of customization:
-_single components_ with nice default, extensive _configuration props_, and subcomponents for _composition_.
+## Installation
 
-To modify the styling of charts you can rely on all the MUI styling tools, such as the theme override, or the `sx` props.
-
-## Getting started
-
-:::warning
-The `next` tag is used to download the latest v7 **pre-release** version.
-:::
-
-To install this library, run
+Run one of the following commands to add the MUI X Charts to your project:
 
 <codeblock storageKey="package-manager">
 ```bash npm
@@ -46,24 +37,27 @@ pnpm add @mui/x-charts@next
 
 </codeblock>
 
-## Display charts
+:::info
+The `next` tag is used to download the latest, **pre-release**, v7 version.
+:::
 
-Charts can be rendered in two ways.
-With a single component or by composing sub-components.
+## Rendering charts
+
+Charts can be rendered in two ways: with a single component or by composing sub-components.
 
 ### Single charts
 
 For common use cases, the single component is the recommended way.
 
-Those components' name ends with "Chart" and only require the `series` prop, describing the data to render.
+Those components' names end with "Chart" and only require the series prop describing the data to render.
 
-They also have plenty of other props to customize the chart behavior.
+They also have plenty of other props to customize the Chart behavior.
 
 {{"demo": "SimpleCharts.js"}}
 
 ### Multiple charts
 
-To combine different charts, like lines with bars, you can use composition with `<ChartContainer />` wrapper.
+To combine different charts, like lines with bars, you can use composition with the `<ChartContainer />` wrapper.
 
 Inside this wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<AreaPlot />`, `<ScatterPlot />`)
 
@@ -71,13 +65,12 @@ Inside this wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot compon
 
 ## Axis management
 
-The library is flexible about axis management.
-It supports multiple-axis charts with any combination of scales and ranges.
+MUI X Charts have a flexible approach to axis management, supporting multiple-axis charts with any combination of scales and ranges.
 
-For more details, have a look at the [axis docs page](/x/react-charts/axis/).
+Check the [Axis page](/x/react-charts/axis/) for more details.
 
 ## Styling
 
-The library is following MUI styling behavior, such that customizing charts is made as simple as customizing buttons.
+MUI X Charts follows the Material UI styling and features all of the customization tools you'd find there, making tweaking charts as straightforward as designing buttons.
 
-For more details, have a look at the [styling docs page](/x/react-charts/styling/).
+Check the [Styling page](/x/react-charts/styling/) for more details.
