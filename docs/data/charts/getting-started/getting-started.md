@@ -49,7 +49,7 @@ The components intended to be rendered individually are named with "Chart" (as o
 
 {{"demo": "SimpleCharts.js"}}
 
-### Multiple charts
+### Composed Charts
 
 To combine different Charts, like Lines with Bars, you can use composition with the `<ChartContainer />` wrapper.
 
