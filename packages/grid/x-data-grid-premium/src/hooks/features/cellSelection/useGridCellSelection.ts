@@ -29,10 +29,10 @@ import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumPr
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const cellSelectionStateInitializer: GridStateInitializer<
-  Pick<DataGridPremiumProcessedProps, 'unstable_cellSelectionModel' | 'initialState'>
+  Pick<DataGridPremiumProcessedProps, 'cellSelectionModel' | 'initialState'>
 > = (state, props) => ({
   ...state,
-  cellSelection: { ...(props.unstable_cellSelectionModel ?? props.initialState?.cellSelection) },
+  cellSelection: { ...(props.cellSelectionModel ?? props.initialState?.cellSelection) },
 });
 
 function isKeyboardEvent(event: any): event is React.KeyboardEvent {
@@ -46,9 +46,9 @@ export const useGridCellSelection = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    | 'unstable_cellSelection'
-    | 'unstable_cellSelectionModel'
-    | 'unstable_onCellSelectionModelChange'
+    | 'cellSelection'
+    | 'cellSelectionModel'
+    | 'onCellSelectionModelChange'
     | 'pagination'
     | 'paginationMode'
     | 'unstable_ignoreValueFormatterDuringExport'
@@ -70,8 +70,8 @@ export const useGridCellSelection = (
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
-    propModel: props.unstable_cellSelectionModel,
-    propOnChange: props.unstable_onCellSelectionModelChange,
+    propModel: props.cellSelectionModel,
+    propOnChange: props.onCellSelectionModelChange,
     stateSelector: gridCellSelectionStateSelector,
     changeEvent: 'cellSelectionChange',
   });
@@ -79,40 +79,38 @@ export const useGridCellSelection = (
   const runIfCellSelectionIsEnabled =
     <Args extends any[]>(callback: (...args: Args) => void) =>
     (...args: Args) => {
-      if (props.unstable_cellSelection) {
+      if (props.cellSelection) {
         callback(...args);
       }
     };
 
-  const isCellSelected = React.useCallback<GridCellSelectionApi['unstable_isCellSelected']>(
+  const isCellSelected = React.useCallback<GridCellSelectionApi['isCellSelected']>(
     (id, field) => {
-      if (!props.unstable_cellSelection) {
+      if (!props.cellSelection) {
         return false;
       }
       const cellSelectionModel = gridCellSelectionStateSelector(apiRef.current.state);
       return cellSelectionModel[id] ? !!cellSelectionModel[id][field] : false;
     },
-    [apiRef, props.unstable_cellSelection],
+    [apiRef, props.cellSelection],
   );
 
   const getCellSelectionModel = React.useCallback(() => {
     return gridCellSelectionStateSelector(apiRef.current.state);
   }, [apiRef]);
 
-  const setCellSelectionModel = React.useCallback<
-    GridCellSelectionApi['unstable_setCellSelectionModel']
-  >(
+  const setCellSelectionModel = React.useCallback<GridCellSelectionApi['setCellSelectionModel']>(
     (newModel) => {
-      if (!props.unstable_cellSelection) {
+      if (!props.cellSelection) {
         return;
       }
       apiRef.current.setState((prevState) => ({ ...prevState, cellSelection: newModel }));
       apiRef.current.forceUpdate();
     },
-    [apiRef, props.unstable_cellSelection],
+    [apiRef, props.cellSelection],
   );
 
-  const selectCellRange = React.useCallback<GridCellSelectionApi['unstable_selectCellRange']>(
+  const selectCellRange = React.useCallback<GridCellSelectionApi['selectCellRange']>(
     (start, end, keepOtherSelected = false) => {
       const startRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(start.id);
       const startColumnIndex = apiRef.current.getColumnIndex(start.field);
@@ -138,7 +136,7 @@ export const useGridCellSelection = (
       const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
       const columnsInRange = visibleColumns.slice(finalStartColumnIndex, finalEndColumnIndex + 1);
 
-      const newModel = keepOtherSelected ? apiRef.current.unstable_getCellSelectionModel() : {};
+      const newModel = keepOtherSelected ? apiRef.current.getCellSelectionModel() : {};
 
       rowsInRange.forEach((row) => {
         if (!newModel[row.id]) {
@@ -149,15 +147,15 @@ export const useGridCellSelection = (
         }, {});
       });
 
-      apiRef.current.unstable_setCellSelectionModel(newModel);
+      apiRef.current.setCellSelectionModel(newModel);
     },
     [apiRef, visibleRows.rows],
   );
 
   const getSelectedCellsAsArray = React.useCallback<
-    GridCellSelectionApi['unstable_getSelectedCellsAsArray']
+    GridCellSelectionApi['getSelectedCellsAsArray']
   >(() => {
-    const model = apiRef.current.unstable_getCellSelectionModel();
+    const model = apiRef.current.getCellSelectionModel();
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     return Object.entries(model).reduce<{ id: GridRowId; field: string }[]>(
@@ -175,11 +173,11 @@ export const useGridCellSelection = (
   }, [apiRef]);
 
   const cellSelectionApi: GridCellSelectionApi = {
-    unstable_isCellSelected: isCellSelected,
-    unstable_getCellSelectionModel: getCellSelectionModel,
-    unstable_setCellSelectionModel: setCellSelectionModel,
-    unstable_selectCellRange: selectCellRange,
-    unstable_getSelectedCellsAsArray: getSelectedCellsAsArray,
+    isCellSelected,
+    getCellSelectionModel,
+    setCellSelectionModel,
+    selectCellRange,
+    getSelectedCellsAsArray,
   };
 
   useGridApiMethod(apiRef, cellSelectionApi, 'public');
@@ -320,7 +318,7 @@ export const useGridCellSelection = (
 
       const { id, field } = params;
 
-      apiRef.current.unstable_selectCellRange(
+      apiRef.current.selectCellRange(
         lastMouseDownCell.current,
         { id, field },
         event.ctrlKey || event.metaKey,
@@ -370,21 +368,21 @@ export const useGridCellSelection = (
 
     const focusedCell = gridFocusCellSelector(apiRef);
     if (event.shiftKey && focusedCell) {
-      apiRef.current.unstable_selectCellRange(focusedCell, { id, field });
+      apiRef.current.selectCellRange(focusedCell, { id, field });
       cellWithVirtualFocus.current = { id, field };
       return;
     }
 
     if (event.ctrlKey || event.metaKey) {
       // Add the clicked cell to the selection
-      const prevModel = apiRef.current.unstable_getCellSelectionModel();
-      apiRef.current.unstable_setCellSelectionModel({
+      const prevModel = apiRef.current.getCellSelectionModel();
+      apiRef.current.setCellSelectionModel({
         ...prevModel,
-        [id]: { ...prevModel[id], [field]: !apiRef.current.unstable_isCellSelected(id, field) },
+        [id]: { ...prevModel[id], [field]: !apiRef.current.isCellSelected(id, field) },
       });
     } else {
       // Clear the selection and keep only the clicked cell selected
-      apiRef.current.unstable_setCellSelectionModel({ [id]: { [field]: true } });
+      apiRef.current.setCellSelectionModel({ [id]: { [field]: true } });
     }
   });
 
@@ -397,7 +395,7 @@ export const useGridCellSelection = (
     }
 
     if (!event.shiftKey) {
-      apiRef.current.unstable_setCellSelectionModel({});
+      apiRef.current.setCellSelectionModel({});
       return;
     }
 
@@ -432,7 +430,7 @@ export const useGridCellSelection = (
     apiRef.current.scrollToIndexes({ rowIndex: endRowIndex, colIndex: endColumnIndex });
 
     const { id, field } = params;
-    apiRef.current.unstable_selectCellRange({ id, field }, cellWithVirtualFocus.current);
+    apiRef.current.selectCellRange({ id, field }, cellWithVirtualFocus.current);
   });
 
   useGridApiEventHandler(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
@@ -442,10 +440,10 @@ export const useGridCellSelection = (
   useGridApiEventHandler(apiRef, 'cellMouseOver', runIfCellSelectionIsEnabled(handleCellMouseOver));
 
   React.useEffect(() => {
-    if (props.unstable_cellSelectionModel) {
-      apiRef.current.unstable_setCellSelectionModel(props.unstable_cellSelectionModel);
+    if (props.cellSelectionModel) {
+      apiRef.current.setCellSelectionModel(props.cellSelectionModel);
     }
-  }, [apiRef, props.unstable_cellSelectionModel]);
+  }, [apiRef, props.cellSelectionModel]);
 
   React.useEffect(() => {
     const rootRef = apiRef.current.rootElementRef?.current;
@@ -460,7 +458,7 @@ export const useGridCellSelection = (
 
   const checkIfCellIsSelected = React.useCallback<GridPipeProcessor<'isCellSelected'>>(
     (isSelected, { id, field }) => {
-      return apiRef.current.unstable_isCellSelected(id, field);
+      return apiRef.current.isCellSelected(id, field);
     },
     [apiRef],
   );
@@ -469,7 +467,7 @@ export const useGridCellSelection = (
     (classes, { id, field }) => {
       const newClasses = [...classes];
 
-      if (!visibleRows.range || !apiRef.current.unstable_isCellSelected(id, field)) {
+      if (!visibleRows.range || !apiRef.current.isCellSelected(id, field)) {
         return classes;
       }
 
@@ -479,7 +477,7 @@ export const useGridCellSelection = (
 
       if (rowIndex > 0) {
         const { id: previousRowId } = visibleRows.rows[rowIndex - 1];
-        if (!apiRef.current.unstable_isCellSelected(previousRowId, field)) {
+        if (!apiRef.current.isCellSelected(previousRowId, field)) {
           newClasses.push(gridClasses['cell--rangeTop']);
         }
       } else {
@@ -488,7 +486,7 @@ export const useGridCellSelection = (
 
       if (rowIndex + visibleRows.range.firstRowIndex < visibleRows.range.lastRowIndex) {
         const { id: nextRowId } = visibleRows.rows[rowIndex + 1];
-        if (!apiRef.current.unstable_isCellSelected(nextRowId, field)) {
+        if (!apiRef.current.isCellSelected(nextRowId, field)) {
           newClasses.push(gridClasses['cell--rangeBottom']);
         }
       } else {
@@ -497,7 +495,7 @@ export const useGridCellSelection = (
 
       if (columnIndex > 0) {
         const { field: previousColumnField } = visibleColumns[columnIndex - 1];
-        if (!apiRef.current.unstable_isCellSelected(id, previousColumnField)) {
+        if (!apiRef.current.isCellSelected(id, previousColumnField)) {
           newClasses.push(gridClasses['cell--rangeLeft']);
         }
       } else {
@@ -506,7 +504,7 @@ export const useGridCellSelection = (
 
       if (columnIndex < visibleColumns.length - 1) {
         const { field: nextColumnField } = visibleColumns[columnIndex + 1];
-        if (!apiRef.current.unstable_isCellSelected(id, nextColumnField)) {
+        if (!apiRef.current.isCellSelected(id, nextColumnField)) {
           newClasses.push(gridClasses['cell--rangeRight']);
         }
       } else {
@@ -520,7 +518,7 @@ export const useGridCellSelection = (
 
   const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
     (initialValue, { event, cell }) => {
-      if (!cell || !props.unstable_cellSelection || !event.shiftKey) {
+      if (!cell || !props.cellSelection || !event.shiftKey) {
         return initialValue;
       }
 
@@ -535,15 +533,15 @@ export const useGridCellSelection = (
 
       return initialValue;
     },
-    [apiRef, props.unstable_cellSelection, hasClickedValidCellForRangeSelection],
+    [apiRef, props.cellSelection, hasClickedValidCellForRangeSelection],
   );
 
   const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
     (value) => {
-      if (apiRef.current.unstable_getSelectedCellsAsArray().length <= 1) {
+      if (apiRef.current.getSelectedCellsAsArray().length <= 1) {
         return value;
       }
-      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
+      const cellSelectionModel = apiRef.current.getCellSelectionModel();
       const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
         const fieldsMap = cellSelectionModel[rowId];
         const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {

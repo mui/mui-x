@@ -56,6 +56,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "cellSelection": {
+      "description": "If <code>true</code>, the cell selection mode is enabled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "cellSelectionModel": {
+      "description": "Set the cell selection model of the grid.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "checkboxSelection": {
       "description": "If <code>true</code>, the grid get a first column with a checkbox that allows to select rows.",
       "deprecated": "",
@@ -458,6 +468,14 @@
       "deprecated": "",
       "typeDescriptions": {
         "cellModesModel": "Object containing which cells are in &quot;edit&quot; mode.",
+        "details": "Additional details for this callback."
+      }
+    },
+    "onCellSelectionModelChange": {
+      "description": "Callback fired when the selection state of one or multiple cells changes.",
+      "deprecated": "",
+      "typeDescriptions": {
+        "cellSelectionModel": "Object in the shape of GridCellSelectionModel containing the selected cells.",
         "details": "Additional details for this callback."
       }
     },
@@ -918,16 +936,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "unstable_cellSelection": {
-      "description": "If <code>true</code>, the cell selection mode is enabled.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "unstable_cellSelectionModel": {
-      "description": "Set the cell selection model of the grid.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "unstable_headerFilters": {
       "description": "If <code>true</code>, enables the data grid filtering on header feature.",
       "deprecated": "",
@@ -937,14 +945,6 @@
       "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
       "deprecated": "",
       "typeDescriptions": {}
-    },
-    "unstable_onCellSelectionModelChange": {
-      "description": "Callback fired when the selection state of one or multiple cells changes.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "cellSelectionModel": "Object in the shape of GridCellSelectionModel containing the selected cells.",
-        "details": "Additional details for this callback."
-      }
     },
     "unstable_splitClipboardPastedText": {
       "description": "The function is used to split the pasted text into rows and cells.",

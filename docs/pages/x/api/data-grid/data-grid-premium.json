@@ -30,6 +30,8 @@
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
+    "cellSelection": { "type": { "name": "bool" } },
+    "cellSelectionModel": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" } },
     "checkboxSelectionVisibleOnly": {
       "type": { "name": "custom", "description": "bool" },
@@ -266,6 +268,13 @@
       "signature": {
         "type": "function(cellModesModel: GridCellModesModel, details: GridCallbackDetails) => void",
         "describedArgs": ["cellModesModel", "details"]
+      }
+    },
+    "onCellSelectionModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(cellSelectionModel: GridCellSelectionModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["cellSelectionModel", "details"]
       }
     },
     "onClipboardCopy": {
@@ -592,8 +601,6 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" } },
-    "unstable_cellSelection": { "type": { "name": "bool" } },
-    "unstable_cellSelectionModel": { "type": { "name": "object" } },
     "unstable_headerFilters": { "type": { "name": "bool" } },
     "unstable_ignoreValueFormatterDuringExport": {
       "type": {
@@ -601,13 +608,6 @@
         "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
       },
       "default": "false"
-    },
-    "unstable_onCellSelectionModelChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(cellSelectionModel: GridCellSelectionModel, details: GridCallbackDetails) => void",
-        "describedArgs": ["cellSelectionModel", "details"]
-      }
     },
     "unstable_splitClipboardPastedText": {
       "type": { "name": "func" },
