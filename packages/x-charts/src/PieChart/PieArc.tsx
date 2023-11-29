@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { arc as d3Arc } from 'd3-shape';
 import { animated, SpringValue, to } from '@react-spring/web';
 import composeClasses from '@mui/utils/composeClasses';
@@ -69,7 +70,7 @@ export type PieArcProps = PieArcOwnerState &
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
   };
 
-export default function PieArc(props: PieArcProps) {
+function PieArc(props: PieArcProps) {
   const {
     id,
     dataIndex,
@@ -122,3 +123,20 @@ export default function PieArc(props: PieArcProps) {
     />
   );
 }
+
+PieArc.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  dataIndex: PropTypes.number.isRequired,
+  highlightScope: PropTypes.shape({
+    faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+  }),
+  isFaded: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
+} as any;
+
+export { PieArc };

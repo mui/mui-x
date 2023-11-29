@@ -5,7 +5,7 @@
 :::error
 By default, the Data Grid has **no intrinsic dimensions**.
 Instead, it takes up the space given by its parent.
-The grid will raise an error in the console if its container has no intrinsic dimensions.
+The Data Grid will raise an error in the console if its container has no intrinsic dimensions.
 :::
 
 ## Percentage dimensions

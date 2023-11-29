@@ -21,6 +21,7 @@
     "react",
     "react-component",
     "mui",
+    "mui-x",
     "material-ui",
     "material design",
     "treeview"
@@ -42,8 +43,9 @@
     "directory": "packages/x-tree-view"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.2",
+    "@babel/runtime": "^7.23.4",
     "@mui/base": "^5.0.0-beta.24",
+    "@mui/system": "^5.14.18",
     "@mui/utils": "^5.14.18",
     "@types/react-transition-group": "^4.4.9",
     "clsx": "^2.0.0",
@@ -54,7 +56,6 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.8.6",
-    "@mui/system": "^5.8.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },

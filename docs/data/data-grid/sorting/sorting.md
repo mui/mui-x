@@ -11,7 +11,7 @@ Following clicks change the column's sorting direction. You can see the applied 
 ## Single and multi-sorting
 
 :::warning
-The `DataGrid` can only sort the rows according to one criterion at a time.
+The Data Grid can only sort the rows according to one criterion at a time.
 
 To use multi-sorting, you need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
@@ -137,7 +137,7 @@ Sorting can be run server-side by setting the `sortingMode` prop to `server`, an
 ## apiRef
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "SortingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

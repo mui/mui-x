@@ -11,6 +11,7 @@ import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnGroup } from '../../models/gridColumnGrouping';
 import { GridColumnGroupHeaderEventLookup } from '../../models/events';
 import { GridColumnGroupHeaderParams } from '../../models/params';
+import { isEventTargetInPortal } from '../../utils/domUtils';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -129,7 +130,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     (eventName: keyof GridColumnGroupHeaderEventLookup) => (event: React.SyntheticEvent) => {
       // Ignore portal
       // See https://github.com/mui/mui-x/issues/1721
-      if (!event.currentTarget.contains(event.target as Element)) {
+      if (isEventTargetInPortal(event)) {
         return;
       }
       apiRef.current.publishEvent(eventName, renderParams, event as any);

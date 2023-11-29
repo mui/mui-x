@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
+import {
+  unstable_useEventCallback as useEventCallback,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -166,11 +169,10 @@ export const useGridCellEditing = (
         if (!canStartEditing) {
           return;
         }
-
         if (isPrintableKey(event)) {
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
-          reason = GridCellEditStartReasons.printableKeyDown;
+          reason = GridCellEditStartReasons.pasteKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
         } else if (event.key === 'Delete' || event.key === 'Backspace') {
@@ -189,20 +191,15 @@ export const useGridCellEditing = (
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params) => {
-      const { id, field, reason, key, colDef } = params;
+      const { id, field, reason } = params;
 
       const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
-      if (reason === GridCellEditStartReasons.printableKeyDown) {
-        if (React.version.startsWith('17')) {
-          // In React 17, cleaning the input is enough.
-          // The sequence of events makes the key pressed by the end-users update the textbox directly.
-          startCellEditModeParams.deleteValue = true;
-        } else {
-          const initialValue = colDef.valueParser ? colDef.valueParser(key) : key;
-          startCellEditModeParams.initialValue = initialValue;
-        }
-      } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
+      if (
+        reason === GridCellEditStartReasons.printableKeyDown ||
+        reason === GridCellEditStartReasons.deleteKeyDown ||
+        reason === GridCellEditStartReasons.pasteKeyDown
+      ) {
         startCellEditModeParams.deleteValue = true;
       }
 
@@ -332,18 +329,14 @@ export const useGridCellEditing = (
       const { id, field, deleteValue, initialValue } = params;
 
       let newValue = apiRef.current.getCellValue(id, field);
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      let unstable_updateValueOnRender = false;
       if (deleteValue || initialValue) {
         newValue = deleteValue ? '' : initialValue;
-        unstable_updateValueOnRender = true;
       }
 
       const newProps = {
         value: newValue,
         error: false,
         isProcessingProps: false,
-        unstable_updateValueOnRender,
       };
 
       updateOrDeleteFieldState(id, field, newProps);
@@ -522,7 +515,8 @@ export const useGridCellEditing = (
     }
   }, [cellModesModelProp, updateCellModesModel]);
 
-  React.useEffect(() => {
+  // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
+  useEnhancedEffect(() => {
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopCellEditMode may change it later
