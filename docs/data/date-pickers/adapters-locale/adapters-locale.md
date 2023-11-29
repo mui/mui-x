@@ -219,6 +219,10 @@ You can use the appropriate `localeText` prop field to adjust the resulting plac
 
 {{"demo": "FieldPlaceholderCustomization.js"}}
 
+:::info
+All the field section placeholder methods receive the section `format` as a parameter so that you could have more freedom tailoring your translations.
+:::
+
 ### Custom toolbar format
 
 To customize the format used in the toolbar, use the `toolbarFormat` prop of the `toolbar` slot.
