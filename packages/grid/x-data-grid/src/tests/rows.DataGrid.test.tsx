@@ -34,6 +34,8 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
 
+  let apiRef: React.MutableRefObject<GridApi>;
+
   const baselineProps = {
     autoHeight: isJSDOM,
     rows: [
@@ -492,65 +494,70 @@ describe('<DataGrid /> - Rows', () => {
       const ROW_HEIGHT = 52;
       function TestCase(props: Partial<DataGridProps>) {
         const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
+            <DataGrid apiRef={apiRef} {...baselineProps} {...props} getRowId={getRowId} />
           </div>
         );
       }
 
       it('should set each row height whe rowHeight prop is used', () => {
         const { setProps } = render(<TestCase />);
+        const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
 
         expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
         expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
-        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT + scrollbarSize);
 
         setProps({ rowHeight: 30 });
 
         expect(getRow(0).clientHeight).to.equal(30);
         expect(getRow(1).clientHeight).to.equal(30);
-        expect(getRow(2).clientHeight).to.equal(30);
+        expect(getRow(2).clientHeight).to.equal(30 + scrollbarSize);
       });
 
       it('should set the second row to have a different row height than the others', () => {
         render(<TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />);
+        const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
 
         expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
         expect(getRow(1).clientHeight).to.equal(100);
-        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT + scrollbarSize);
       });
 
       it('should set density to all but the row with variable row height', () => {
         const { setProps } = render(
           <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
         );
+        const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
 
         expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
         expect(getRow(1).clientHeight).to.equal(100);
-        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT + scrollbarSize);
 
         setProps({ density: 'compact' });
 
         expect(getRow(0).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
         expect(getRow(1).clientHeight).to.equal(100);
-        expect(getRow(2).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
+        expect(getRow(2).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR) + scrollbarSize);
       });
 
       it('should set the correct rowHeight and variable row height', () => {
         const { setProps } = render(
           <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
         );
+        const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
 
         expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
         expect(getRow(1).clientHeight).to.equal(100);
-        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT + scrollbarSize);
 
         setProps({ rowHeight: 30 });
 
         expect(getRow(0).clientHeight).to.equal(30);
         expect(getRow(1).clientHeight).to.equal(100);
-        expect(getRow(2).clientHeight).to.equal(30);
+        expect(getRow(2).clientHeight).to.equal(30 + scrollbarSize);
       });
     });
 
@@ -1055,8 +1062,6 @@ describe('<DataGrid /> - Rows', () => {
       { id: 2, brand: 'Puma' },
     ];
     const columns = [{ field: 'brand', headerName: 'Brand' }];
-
-    let apiRef: React.MutableRefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProps>) {
       apiRef = useGridApiRef();
