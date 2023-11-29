@@ -112,6 +112,17 @@ export function useGridColumns(
     [apiRef],
   );
 
+  const getColumns = React.useCallback<GridColumnApi['getColumns']>(
+    (fields) => {
+      if (!Array.isArray(fields) || fields.length === 0) {
+        return [];
+      }
+      const columns = gridColumnLookupSelector(apiRef);
+      return fields.map((field) => columns[field]).filter(Boolean);
+    },
+    [apiRef],
+  );
+
   const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
     () => gridColumnDefinitionsSelector(apiRef),
     [apiRef],
@@ -261,6 +272,7 @@ export function useGridColumns(
 
   const columnApi: GridColumnApi = {
     getColumn,
+    getColumns,
     getAllColumns,
     getColumnIndex,
     getColumnPosition,

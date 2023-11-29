@@ -13,6 +13,12 @@ export interface GridColumnApi {
    */
   getColumn: (field: string) => GridStateColDef;
   /**
+   * Returns the [[GridColDef]]s for the given `fields`.
+   * @param {string[]} fields Array of column fields.
+   * @returns {{GridStateColDef[]}} Array of [[GridStateColDef]]s.
+   */
+  getColumns: (fields: string[]) => GridStateColDef[];
+  /**
    * Returns an array of [[GridColDef]] containing all the column definitions.
    * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
    */
