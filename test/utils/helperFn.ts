@@ -3,18 +3,18 @@ import { act } from '@mui-internal/test-utils';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
 
-export function $(selector: string): Element | null;
-export function $(target: Element, selector: string): Element | null;
-export function $(a: unknown, b?: unknown): Element | null {
-  const target = (b === undefined ? document : a) as Element;
+export function $(selector: string): HTMLElement | null;
+export function $(target: HTMLElement, selector: string): HTMLElement | null;
+export function $(a: unknown, b?: unknown): HTMLElement | null {
+  const target = (b === undefined ? document : a) as HTMLElement;
   const selector = (b === undefined ? a : b) as string;
   return target.querySelector(selector);
 }
 
-export function $$(selector: string): Element[];
-export function $$(target: Element, selector: string): Element[];
-export function $$(a: unknown, b?: unknown): Element[] {
-  const target = (b === undefined ? document : a) as Element;
+export function $$(selector: string): HTMLElement[];
+export function $$(target: HTMLElement, selector: string): HTMLElement[];
+export function $$(a: unknown, b?: unknown): HTMLElement[] {
+  const target = (b === undefined ? document : a) as HTMLElement;
   const selector = (b === undefined ? a : b) as string;
   return Array.from(target.querySelectorAll(selector));
 }
