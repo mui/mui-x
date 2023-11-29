@@ -10,7 +10,8 @@ export default function FieldPlaceholderCustomization() {
         format="DD MMM YYYY"
         localeText={{
           // Define it on the `LocalizationProvider` if you want to change this translation globally
-          fieldMonthPlaceholder: () => 'MMM',
+          fieldMonthPlaceholder: (params) =>
+            params.contentType === 'digit' ? 'MM' : params.format,
         }}
       />
     </LocalizationProvider>
