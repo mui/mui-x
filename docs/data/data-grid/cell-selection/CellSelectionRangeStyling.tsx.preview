@@ -1,1 +1,1 @@
-<StyledDataGridPremium rowSelection={false} unstable_cellSelection {...data} />
+<StyledDataGridPremium rowSelection={false} cellSelection {...data} />

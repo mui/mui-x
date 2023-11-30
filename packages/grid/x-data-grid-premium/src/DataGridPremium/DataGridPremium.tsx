@@ -134,6 +134,15 @@ DataGridPremiumRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  cellSelection: PropTypes.bool,
+  /**
+   * Set the cell selection model of the grid.
+   */
+  cellSelectionModel: PropTypes.object,
+  /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
    */
@@ -569,6 +578,12 @@ DataGridPremiumRaw.propTypes = {
    */
   onCellModesModelChange: PropTypes.func,
   /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellSelectionModelChange: PropTypes.func,
+  /**
    * Callback called when the data is copied to the clipboard.
    * @param {string} data The data copied to the clipboard.
    */
@@ -1002,15 +1017,6 @@ DataGridPremiumRaw.propTypes = {
    */
   treeData: PropTypes.bool,
   /**
-   * If `true`, the cell selection mode is enabled.
-   * @default false
-   */
-  unstable_cellSelection: PropTypes.bool,
-  /**
-   * Set the cell selection model of the grid.
-   */
-  unstable_cellSelectionModel: PropTypes.object,
-  /**
    * If `true`, enables the data grid filtering on header feature.
    * @default false
    */
@@ -1027,12 +1033,6 @@ DataGridPremiumRaw.propTypes = {
     }),
     PropTypes.bool,
   ]),
-  /**
-   * Callback fired when the selection state of one or multiple cells changes.
-   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  unstable_onCellSelectionModelChange: PropTypes.func,
   /**
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
