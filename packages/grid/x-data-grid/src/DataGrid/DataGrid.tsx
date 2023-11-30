@@ -5,7 +5,7 @@ import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../compon
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { useDataGridProps, DATA_GRID_PROPS_DEFAULT_VALUES } from './useDataGridProps';
+import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { GridValidRowModel } from '../models/gridRows';
 
@@ -48,18 +48,6 @@ interface DataGridComponent {
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
  */
 export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
-
-/**
- * Remove at v7
- * @deprecated
- */
-export const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs;
-
-/**
- * Remove at v7
- * @deprecated
- */
-export const SUBMIT_FILTER_DATE_STROKE_TIME = DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------

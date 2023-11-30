@@ -26,8 +26,8 @@ export default function ClipboardPasteDelimiter() {
         {...data}
         initialState={initialState}
         disableRowSelectionOnClick
-        unstable_cellSelection
         ignoreValueFormatterDuringExport
+        cellSelection
         clipboardCopyCellDelimiter={','}
         splitClipboardPastedText={(text) =>
           text.split('\n').map((row) => row.split(','))

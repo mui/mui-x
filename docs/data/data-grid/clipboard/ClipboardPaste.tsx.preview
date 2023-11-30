@@ -3,6 +3,6 @@
   initialState={initialState}
   checkboxSelection
   disableRowSelectionOnClick
-  unstable_cellSelection
   ignoreValueFormatterDuringExport
+  cellSelection
 />

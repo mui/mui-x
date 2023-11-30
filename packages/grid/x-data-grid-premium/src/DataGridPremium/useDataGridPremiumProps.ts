@@ -16,7 +16,7 @@ import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGri
  */
 export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDefaultValue = {
   ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
-  unstable_cellSelection: false,
+  cellSelection: false,
   disableAggregation: false,
   disableRowGrouping: false,
   rowGroupingColumnMode: 'single',

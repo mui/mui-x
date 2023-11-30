@@ -1,0 +1,62 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "arcLabel": {
+      "description": "The label displayed into the arc.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "arcLabelMinAngle": {
+      "description": "The minimal angle required to display the arc label.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "cornerRadius": {
+      "description": "The radius applied to arc corners (similar to border radius).",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "faded": {
+      "description": "Override the arc attibutes when it is faded.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "highlighted": {
+      "description": "Override the arc attibutes when it is highlighted.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "innerRadius": {
+      "description": "The radius between circle center and the begining of the arc.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "outerRadius": {
+      "description": "The radius between circle center and the end of the arc.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "paddingAngle": {
+      "description": "The padding angle (deg) between two arcs.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skiped.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "pieArcLabel": "" }
+}

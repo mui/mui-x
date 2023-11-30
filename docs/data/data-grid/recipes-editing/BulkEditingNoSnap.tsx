@@ -166,7 +166,7 @@ export default function BulkEditingNoSnap() {
           columns={columns}
           apiRef={apiRef}
           disableRowSelectionOnClick
-          unstable_cellSelection
+          cellSelection
           processRowUpdate={processRowUpdate}
           ignoreValueFormatterDuringExport
           sx={{
