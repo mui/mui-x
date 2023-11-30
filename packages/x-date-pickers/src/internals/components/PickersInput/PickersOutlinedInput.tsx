@@ -12,6 +12,7 @@ import {
 import Outline from './Outline';
 import { PickersInputProps, PickersOutlinedInputProps } from './PickersInput.types';
 import { InputWrapper, PickersInput, SectionsContainer } from './PickersInput';
+import { formControlState } from './pickersInputUtiles';
 
 const OutlinedSectionsWrapper = styled(InputWrapper, {
   name: 'MuiPickersOutliedInput',
@@ -120,22 +121,6 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
 
   return composeClasses(slots, getPickersOutlinedInputUtilityClass, classes);
 };
-
-// TODO: move to utils
-// Separates the state props from the form control
-function formControlState({ props, states, muiFormControl }) {
-  return states.reduce((acc, state) => {
-    acc[state] = props[state];
-
-    if (muiFormControl) {
-      if (typeof props[state] === 'undefined') {
-        acc[state] = muiFormControl[state];
-      }
-    }
-
-    return acc;
-  }, {});
-}
 
 interface OwnerStateType extends PickersInputProps {
   color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';

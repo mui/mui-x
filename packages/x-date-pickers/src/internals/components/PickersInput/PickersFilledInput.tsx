@@ -11,6 +11,7 @@ import {
 } from './pickersInputClasses';
 import { PickersInputProps, PickersFilledInputProps } from './PickersInput.types';
 import { InputWrapper, PickersInput, SectionsContainer } from './PickersInput';
+import { formControlState } from './pickersInputUtiles';
 
 const FilledSectionsWrapper = styled(InputWrapper, {
   name: 'MuiPickersOutliedInput',
@@ -24,9 +25,6 @@ const FilledSectionsWrapper = styled(InputWrapper, {
   const disabledBackground = light ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)';
 
   return {
-    // pickers specific
-
-    // variant specific
     position: 'relative',
     backgroundColor: theme.vars ? theme.vars.palette.FilledInput.bg : backgroundColor,
     borderTopLeftRadius: (theme.vars || theme).shape.borderRadius,
@@ -168,22 +166,6 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
 
   return composeClasses(slots, getPickersFilledInputUtilityClass, classes);
 };
-
-// TODO: move to utils
-// Separates the state props from the form control
-function formControlState({ props, states, muiFormControl }) {
-  return states.reduce((acc, state) => {
-    acc[state] = props[state];
-
-    if (muiFormControl) {
-      if (typeof props[state] === 'undefined') {
-        acc[state] = muiFormControl[state];
-      }
-    }
-
-    return acc;
-  }, {});
-}
 
 interface OwnerStateType extends PickersInputProps {
   color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';

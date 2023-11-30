@@ -11,6 +11,7 @@ import {
 } from '@mui/utils';
 import { pickersInputClasses, getPickersInputUtilityClass } from './pickersInputClasses';
 import { PickersInputElement, PickersInputProps } from './PickersInput.types';
+import { formControlState } from './pickersInputUtiles';
 
 export const InputWrapper = styled(Box, {
   name: 'MuiPickersInput',
@@ -147,22 +148,6 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
 
   return composeClasses(slots, getPickersInputUtilityClass, classes);
 };
-
-// TODO: move to utils
-// Separates the state props from the form control
-function formControlState({ props, states, muiFormControl }) {
-  return states.reduce((acc, state) => {
-    acc[state] = props[state];
-
-    if (muiFormControl) {
-      if (typeof props[state] === 'undefined') {
-        acc[state] = muiFormControl[state];
-      }
-    }
-
-    return acc;
-  }, {});
-}
 
 interface OwnerStateType extends PickersInputProps {
   color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
