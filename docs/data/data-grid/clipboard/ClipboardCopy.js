@@ -31,7 +31,7 @@ export default function ClipboardCopy() {
           initialState={initialState}
           checkboxSelection
           disableRowSelectionOnClick
-          unstable_cellSelection
+          cellSelection
           onClipboardCopy={(copiedString) => setCopiedData(copiedString)}
           unstable_ignoreValueFormatterDuringExport
         />

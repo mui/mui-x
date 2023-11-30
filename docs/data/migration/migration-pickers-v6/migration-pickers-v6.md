@@ -65,8 +65,6 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ## Component slots
 
-## Component slots
-
 ### Rename `components` to `slots`
 
 The `components` and `componentsProps` props are renamed to `slots` and `slotProps` props respectively.
@@ -279,7 +277,9 @@ The `dayPickerClasses` variable has been renamed `dayCalendarClasses` to be cons
 +import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 ```
 
-## Use UTC with the Day.js adapter
+## Usage with Day.js
+
+### Use UTC with the Day.js adapter
 
 The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.
 This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
@@ -303,6 +303,23 @@ You can learn more about the new approach on the [dedicated doc page](https://mu
 +  <DatePicker timezone="UTC" />
  </LocalizationProvider>
 ```
+
+### Usage with `customParseFormat`
+
+The call to `dayjs.extend(customParseFormatPlugin)` has been moved to the `AdapterDayjs` constructor. This allows users
+to pass custom options to this plugin before the adapter uses it.
+
+If you are using this plugin before the rendering of the first `LocalizationProvider` component and did not call
+`dayjs.extend` in your own codebase, you will need to manually extend `dayjs`:
+
+```tsx
+import dayjs from 'dayjs';
+import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormatPlugin);
+```
+
+The other plugins are still added before the adapter initialization.
 
 ## Adapters internal changes
 
