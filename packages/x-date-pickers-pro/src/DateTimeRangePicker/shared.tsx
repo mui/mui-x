@@ -106,10 +106,10 @@ export interface BaseDateTimeRangePickerProps<TDate>
     PickerViewRendererLookup<
       DateRange<TDate>,
       DateTimeRangePickerView,
-      Omit<DateRangeViewRendererProps<TDate, 'day'>, 'view'> &
+      Omit<DateRangeViewRendererProps<TDate, 'day'>, 'view' | 'slots' | 'slotProps'> &
         Omit<
           TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
-          'view'
+          'view' | 'slots' | 'slotProps'
         > & { view: DateTimeRangePickerView },
       {}
     >
