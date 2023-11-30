@@ -29,7 +29,7 @@ The priority of the data copied to the clipboard is the following, from highest 
 
 :::warning
 To make sure the copied cells are formatted correctly and can be parsed,
-it's recommended to set the `ignoreValueFormatterDuringExport` prop to `true`.
+it is recommended to set the `ignoreValueFormatterDuringExport` prop to `true`.
 During clipboard copy operation, the raw cell values will be copied instead of the formatted values,
 so that the values can be parsed correctly during the paste operation.
 
