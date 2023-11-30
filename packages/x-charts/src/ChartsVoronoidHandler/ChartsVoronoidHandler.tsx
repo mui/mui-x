@@ -72,7 +72,7 @@ function ChartsVoronoidHandler() {
       const outsideX = svgPt.x < left || svgPt.x > left + width;
       const outsideY = svgPt.y < top || svgPt.y > top + height;
       if (outsideX || outsideY) {
-        // dispatch({ type: 'updateAxis', data: { x: null, y: null } });
+        dispatch({ type: 'exitChart' });
         return;
       }
 

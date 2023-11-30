@@ -91,7 +91,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         x: -1,
         y: -1,
       };
-      dispatch({ type: 'updateAxis', data: { x: null, y: null } });
+      dispatch({ type: 'exitChart' });
     };
 
     const handleMouseMove = (event: MouseEvent) => {
@@ -109,7 +109,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       const outsideX = svgPt.x < left || svgPt.x > left + width;
       const outsideY = svgPt.y < top || svgPt.y > top + height;
       if (outsideX || outsideY) {
-        dispatch({ type: 'updateAxis', data: { x: null, y: null } });
+        dispatch({ type: 'exitChart' });
         return;
       }
       const newStateX = getUpdate(xAxis[usedXAxis], svgPt.x);
