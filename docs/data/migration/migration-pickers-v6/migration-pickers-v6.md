@@ -285,17 +285,7 @@ import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormatPlugin);
 ```
 
-The other plugins are still initialized before the adapter initialization.
-
-The plugin that got moved to the constructor is:
-
-- customParseFormat ('dayjs/plugin/customParseFormat')
-
-The other plugins will (still) be initialized before adapter initialization:
-
-- weekOfYear ('dayjs/plugin/weekOfYear')
-- isBetween ('dayjs/plugin/isBetween')
-- localizedFormat ('dayjs/plugin/localizedFormat')
+The other plugins are still added before the adapter initialization.
 
 ## Adapters internal changes
 
