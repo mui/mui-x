@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
-import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
+import { PickerComponentFamily } from './describe.types';
 import { OpenPickerParams } from './openPicker';
 
 export const stubMatchMedia = (matches = true) =>
@@ -55,4 +55,12 @@ export const getDateOffset = <TDate extends unknown>(
   const utcHour = adapter.getHours(adapter.setTimezone(adapter.startOfDay(date), 'UTC'));
   const cleanUtcHour = utcHour > 12 ? 24 - utcHour : -utcHour;
   return cleanUtcHour * 60;
+};
+
+export const formatFullTimeValue = <TDate extends unknown>(
+  adapter: MuiPickersAdapter<TDate>,
+  value: TDate,
+) => {
+  const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
+  return adapter.format(value, hasMeridiem ? 'fullTime12h' : 'fullTime24h');
 };

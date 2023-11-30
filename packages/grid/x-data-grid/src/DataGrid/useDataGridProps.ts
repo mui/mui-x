@@ -9,12 +9,7 @@ import {
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
-import {
-  computeSlots,
-  useProps,
-  uncapitalizeObjectKeys,
-  UncapitalizeObjectKeys,
-} from '../internals/utils';
+import { computeSlots, useProps } from '../internals/utils';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   disableMultipleColumnsFiltering: true,
@@ -48,6 +43,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableColumnMenu: false,
   disableColumnSelector: false,
   disableDensitySelector: false,
+  disableEval: false,
   disableMultipleColumnsFiltering: false,
   disableMultipleRowSelection: false,
   disableMultipleColumnsSorting: false,
@@ -61,6 +57,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   hideFooterPagination: false,
   hideFooterRowCount: false,
   hideFooterSelectedRowCount: false,
+  ignoreDiacritics: false,
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   pagination: false,
@@ -79,12 +76,13 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   keepColumnPositionIfDraggedOutside: false,
   unstable_ignoreValueFormatterDuringExport: false,
   clipboardCopyCellDelimiter: '\t',
+  rowPositionsDebounceMs: 166,
 };
 
-const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;
+const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
-  const [components, componentsProps, themedProps] = useProps(
+  const themedProps = useProps(
     useThemeProps({
       props: inProps,
       name: 'MuiDataGrid',
@@ -96,14 +94,13 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     [themedProps.localeText],
   );
 
-  const slots = React.useMemo<UncapitalizeObjectKeys<GridSlotsComponent>>(
+  const slots = React.useMemo<GridSlotsComponent>(
     () =>
       computeSlots<GridSlotsComponent>({
         defaultSlots,
         slots: themedProps.slots,
-        components,
       }),
-    [components, themedProps.slots],
+    [themedProps.slots],
   );
 
   return React.useMemo<DataGridProcessedProps<R>>(
@@ -112,9 +109,8 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
       ...themedProps,
       localeText,
       slots,
-      slotProps: themedProps.slotProps ?? componentsProps,
       ...DATA_GRID_FORCED_PROPS,
     }),
-    [themedProps, localeText, slots, componentsProps],
+    [themedProps, localeText, slots],
   );
 };

@@ -1,10 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ScatterPlot,
-  ScatterPlotSlotComponentProps,
-  ScatterPlotSlotsComponent,
-} from './ScatterPlot';
+import { ScatterPlot, ScatterPlotSlotProps, ScatterPlotSlots } from './ScatterPlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -12,24 +8,31 @@ import {
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  ChartsTooltip,
+  ChartsTooltipProps,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
+} from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
-  ChartsLegendSlotComponentProps,
-  ChartsLegendSlotsComponent,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 
-export interface ScatterChartSlotsComponent
-  extends ChartsAxisSlotsComponent,
-    ScatterPlotSlotsComponent,
-    ChartsLegendSlotsComponent {}
-export interface ScatterChartSlotComponentProps
-  extends ChartsAxisSlotComponentProps,
-    ScatterPlotSlotComponentProps,
-    ChartsLegendSlotComponentProps {}
+export interface ScatterChartSlots
+  extends ChartsAxisSlots,
+    ScatterPlotSlots,
+    ChartsLegendSlots,
+    ChartsTooltipSlots {}
+export interface ScatterChartSlotProps
+  extends ChartsAxisSlotProps,
+    ScatterPlotSlotProps,
+    ChartsLegendSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -37,19 +40,32 @@ export interface ScatterChartProps
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: ScatterChartSlotsComponent;
+  slots?: ScatterChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ScatterChartSlotComponentProps;
+  slotProps?: ScatterChartSlotProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Scatter](https://mui.com/x/react-charts/scatter/)
+ * - [Scatter demonstration](https://mui.com/x/react-charts/scatter-demo/)
+ *
+ * API:
+ *
+ * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
+ */
 const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
   const {
     xAxis,
@@ -107,7 +123,7 @@ ScatterChart.propTypes = {
   // ----------------------------------------------------------------------
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
+    y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Indicate which axis to display the bottom of the charts.
@@ -116,18 +132,26 @@ ScatterChart.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['bottom', 'top']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -141,9 +165,21 @@ ScatterChart.propTypes = {
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
   disableAxisListener: PropTypes.bool,
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * @default undefined
+   */
   height: PropTypes.number,
   /**
    * Indicate which axis to display the left of the charts.
@@ -152,18 +188,26 @@ ScatterChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['left', 'right']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -171,24 +215,26 @@ ScatterChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
     hidden: PropTypes.bool,
-    itemWidth: PropTypes.number,
-    markSize: PropTypes.number,
-    offset: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
     position: PropTypes.shape({
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
     }),
     slotProps: PropTypes.object,
     slots: PropTypes.object,
-    spacing: PropTypes.number,
   }),
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default object Depends on the charts type.
+   */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -202,18 +248,26 @@ ScatterChart.propTypes = {
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['left', 'right']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -264,6 +318,8 @@ ScatterChart.propTypes = {
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
     itemContent: PropTypes.elementType,
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
@@ -273,18 +329,26 @@ ScatterChart.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['bottom', 'top']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -298,7 +362,15 @@ ScatterChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * @default undefined
+   */
   width: PropTypes.number,
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
+   */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
@@ -312,6 +384,7 @@ ScatterChart.propTypes = {
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
@@ -320,6 +393,13 @@ ScatterChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -327,6 +407,10 @@ ScatterChart.propTypes = {
       valueFormatter: PropTypes.func,
     }),
   ),
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
+   */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
@@ -340,6 +424,7 @@ ScatterChart.propTypes = {
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
@@ -348,6 +433,13 @@ ScatterChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,

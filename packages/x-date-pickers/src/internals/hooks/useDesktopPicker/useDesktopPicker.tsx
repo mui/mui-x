@@ -43,6 +43,7 @@ export const useDesktopPicker = <
     disabled,
     autoFocus,
     localeText,
+    reduceAnimations,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -84,7 +85,7 @@ export const useDesktopPicker = <
     externalSlotProps: innerSlotProps?.openPickerButton,
     additionalProps: {
       disabled: disabled || readOnly,
-      onClick: actions.onOpen,
+      onClick: open ? actions.onClose : actions.onOpen,
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
       edge: inputAdornmentProps.position,
     },
@@ -141,6 +142,8 @@ export const useDesktopPicker = <
     unknown
   >['slots'] = {
     textField: slots.textField,
+    clearIcon: slots.clearIcon,
+    clearButton: slots.clearButton,
     ...fieldProps.slots,
   };
 
@@ -185,6 +188,7 @@ export const useDesktopPicker = <
         slots={slots}
         slotProps={slotProps}
         shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
       >
         <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}

@@ -1,5 +1,13 @@
 {
-  "props": {},
+  "props": {
+    "margin": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "object Depends on the charts type."
+    }
+  },
   "slots": [],
   "name": "DrawingProvider",
   "imports": [
@@ -8,6 +16,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDrawingProvider" },
   "filename": "/packages/x-charts/src/context/DrawingProvider.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "DrawingProvider" }]
+  "demos": "<ul></ul>"
 }

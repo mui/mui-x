@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
+import { fireEvent, screen, userEvent } from '@mui-internal/test-utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -18,11 +18,7 @@ describe('<MobileDatePicker />', () => {
   it('allows to change only year', () => {
     const onChangeMock = spy();
     render(
-      <MobileDatePicker
-        open
-        value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={onChangeMock}
-      />,
+      <MobileDatePicker open value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} />,
     );
 
     fireEvent.click(screen.getByLabelText(/switch to year view/i));
@@ -38,8 +34,8 @@ describe('<MobileDatePicker />', () => {
         open
         reduceAnimations
         openTo="year"
-        minDate={adapterToUse.date(new Date(2000, 0, 1))}
-        maxDate={adapterToUse.date(new Date(2010, 0, 1))}
+        minDate={adapterToUse.date('2000-01-01')}
+        maxDate={adapterToUse.date('2010-01-01')}
       />,
     );
 
@@ -93,7 +89,7 @@ describe('<MobileDatePicker />', () => {
       render(
         <MobileDatePicker
           open
-          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          defaultValue={adapterToUse.date('2018-01-01')}
           slotProps={{
             toolbar: {
               toolbarFormat: 'MMMM',
@@ -106,7 +102,7 @@ describe('<MobileDatePicker />', () => {
     });
 
     it('should render the toolbar when `hidden` is `false`', () => {
-      render(<MobileDatePicker open componentsProps={{ toolbar: { hidden: false } }} />);
+      render(<MobileDatePicker open slotProps={{ toolbar: { hidden: false } }} />);
 
       expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
     });
@@ -117,7 +113,7 @@ describe('<MobileDatePicker />', () => {
       render(
         <MobileDatePicker
           open
-          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          defaultValue={adapterToUse.date('2018-01-01')}
           slots={{
             day: (props) => <PickersDay {...props} data-testid="test-day" />,
           }}
@@ -126,14 +122,6 @@ describe('<MobileDatePicker />', () => {
 
       expect(screen.getAllByTestId('test-day')).to.have.length(31);
     });
-  });
-
-  it('prop `defaultCalendarMonth` – opens on provided month if date is `null`', () => {
-    render(
-      <MobileDatePicker open defaultCalendarMonth={adapterToUse.date(new Date(2018, 6, 1))} />,
-    );
-
-    expect(screen.getByText('July 2018')).toBeVisible();
   });
 
   describe('picker state', () => {
@@ -151,13 +139,13 @@ describe('<MobileDatePicker />', () => {
     it('should call `onAccept` even if controlled', () => {
       const onAccept = spy();
 
-      function ControledMobileDatePicker(props) {
+      function ControlledMobileDatePicker(props) {
         const [value, setValue] = React.useState(null);
 
         return <MobileDatePicker {...props} value={value} onChange={setValue} />;
       }
 
-      render(<ControledMobileDatePicker onAccept={onAccept} />);
+      render(<ControlledMobileDatePicker onAccept={onAccept} />);
 
       userEvent.mousePress(screen.getByRole('textbox'));
 
@@ -167,8 +155,8 @@ describe('<MobileDatePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
     });
 
-    it('should update internal state when controled value is updated', () => {
-      const value = adapterToUse.date(new Date(2019, 0, 1));
+    it('should update internal state when controlled value is updated', () => {
+      const value = adapterToUse.date('2019-01-01');
 
       const { setProps } = render(<MobileDatePicker value={value} />);
 

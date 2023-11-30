@@ -4,6 +4,8 @@ import {
 } from '@mui/utils';
 
 export interface DayCalendarClasses {
+  /** Styles applied to the root element. */
+  root: string;
   /** Styles applied to the header element. */
   header: string;
   /** Styles applied to the week day label element. */
@@ -27,7 +29,8 @@ export type DayCalendarClassKey = keyof DayCalendarClasses;
 export const getDayCalendarUtilityClass = (slot: string) =>
   generateUtilityClass('MuiDayCalendar', slot);
 
-export const dayPickerClasses: DayCalendarClasses = generateUtilityClasses('MuiDayCalendar', [
+export const dayCalendarClasses: DayCalendarClasses = generateUtilityClasses('MuiDayCalendar', [
+  'root',
   'header',
   'weekDayLabel',
   'loadingContainer',

@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { useUtils } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter, PickersTimezone } from '../models';
 import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -98,7 +98,6 @@ interface UseCalendarStateParams<TDate>
     DateCalendarDefaultizedProps<TDate>,
     | 'value'
     | 'referenceDate'
-    | 'defaultCalendarMonth'
     | 'disableFuture'
     | 'disablePast'
     | 'minDate'
@@ -115,7 +114,6 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
   const {
     value,
     referenceDate: referenceDateProp,
-    defaultCalendarMonth,
     disableFuture,
     disablePast,
     disableSwitchToMonthOnDayFocus = false,
@@ -127,7 +125,6 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
     timezone,
   } = params;
 
-  const now = useNow<TDate>(timezone);
   const utils = useUtils<TDate>();
 
   const reducerFn = React.useRef(
@@ -140,20 +137,12 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
 
   const referenceDate = React.useMemo(
     () => {
-      let externalReferenceDate: TDate | null = null;
-      if (referenceDateProp) {
-        externalReferenceDate = referenceDateProp;
-      } else if (defaultCalendarMonth) {
-        // For `defaultCalendarMonth`, we just want to keep the month and the year to avoid a behavior change.
-        externalReferenceDate = utils.startOfMonth(defaultCalendarMonth);
-      }
-
       return singleItemValueManager.getInitialReferenceValue({
         value,
         utils,
         timezone,
         props: params,
-        referenceDate: externalReferenceDate,
+        referenceDate: referenceDateProp,
         granularity: SECTION_TYPE_GRANULARITY.day,
       });
     },
@@ -162,7 +151,7 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
-    focusedDay: value || now,
+    focusedDay: referenceDate,
     currentMonth: utils.startOfMonth(referenceDate),
     slideDirection: 'left',
   });

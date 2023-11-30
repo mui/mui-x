@@ -2,18 +2,6 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "direction": {
       "type": {
@@ -69,16 +57,6 @@
       "type": {
         "name": "union",
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
-      }
-    },
-    "shouldDisableClock": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
-      "signature": {
-        "type": "function(clockValue: number, view: TimeView) => boolean",
-        "describedArgs": ["clockValue", "view"],
-        "returned": "boolean"
       }
     },
     "shouldDisableDate": {
@@ -137,7 +115,7 @@
     {
       "class": null,
       "name": "textField",
-      "description": "Form control with an input to render a date and time.\nIt is rendered twice: once for the start date time and once for the end date time.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render a date and time. It is rendered twice: once for the start date time and once for the end date time. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     }
   ],
@@ -152,8 +130,5 @@
     "name": "MuiMultiInputDateTimeRangeField"
   },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiInputDateTimeRangeField" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
 }

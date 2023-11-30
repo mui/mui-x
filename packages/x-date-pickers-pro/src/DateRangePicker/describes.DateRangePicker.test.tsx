@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance } from '@mui/monorepo/test/utils';
+import { describeConformance } from '@mui-internal/test-utils';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers';
 

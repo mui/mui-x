@@ -8,44 +8,68 @@ import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { PieSeriesType } from '../models/seriesType';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  ChartsTooltip,
+  ChartsTooltipProps,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
+} from '../ChartsTooltip';
 import {
   ChartsLegend,
   ChartsLegendProps,
-  ChartsLegendSlotComponentProps,
-  ChartsLegendSlotsComponent,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { PiePlot, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
+import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
-import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 
-export interface PieChartSlotsComponent
-  extends ChartsAxisSlotsComponent,
-    PiePlotSlotsComponent,
-    ChartsLegendSlotsComponent {}
-export interface PieChartSlotComponentProps
-  extends ChartsAxisSlotComponentProps,
-    PiePlotSlotComponentProps,
-    ChartsLegendSlotComponentProps {}
+export interface PieChartSlots
+  extends ChartsAxisSlots,
+    PiePlotSlots,
+    ChartsLegendSlots,
+    ChartsTooltipSlots {}
+
+export interface PieChartSlotProps
+  extends ChartsAxisSlotProps,
+    PiePlotSlotProps,
+    ChartsLegendSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface PieChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Pick<PiePlotProps, 'skipAnimation'> {
   series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend?: ChartsLegendProps;
+  onClick?: PiePlotProps['onClick'];
 
-  slots?: PieChartSlotsComponent;
+  slots?: PieChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PieChartSlotComponentProps;
+  slotProps?: PieChartSlotProps;
 }
 
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 100 };
+
+/**
+ * Demos:
+ *
+ * - [Pie](https://mui.com/x/react-charts/pie/)
+ * - [Pie demonstration](https://mui.com/x/react-charts/pie-demo/)
+ *
+ * API:
+ *
+ * - [PieChart API](https://mui.com/x/api/charts/pie-chart/)
+ */
 function PieChart(props: PieChartProps) {
   const {
     xAxis,
@@ -58,6 +82,7 @@ function PieChart(props: PieChartProps) {
     sx,
     tooltip = { trigger: 'item' },
     axisHighlight = { x: 'none', y: 'none' },
+    skipAnimation,
     legend = { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } },
     topAxis = null,
     leftAxis = null,
@@ -66,6 +91,7 @@ function PieChart(props: PieChartProps) {
     children,
     slots,
     slotProps,
+    onClick,
   } = props;
 
   const margin = { ...defaultMargin, ...marginProps };
@@ -101,7 +127,12 @@ function PieChart(props: PieChartProps) {
         slots={slots}
         slotProps={slotProps}
       />
-      <PiePlot slots={slots} slotProps={slotProps} />
+      <PiePlot
+        slots={slots}
+        slotProps={slotProps}
+        onClick={onClick}
+        skipAnimation={skipAnimation}
+      />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       <ChartsTooltip {...tooltip} />
@@ -117,7 +148,7 @@ PieChart.propTypes = {
   // ----------------------------------------------------------------------
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
+    y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Indicate which axis to display the bottom of the charts.
@@ -126,18 +157,26 @@ PieChart.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['bottom', 'top']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -151,9 +190,21 @@ PieChart.propTypes = {
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
   disableAxisListener: PropTypes.bool,
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * @default undefined
+   */
   height: PropTypes.number,
   /**
    * Indicate which axis to display the left of the charts.
@@ -162,18 +213,26 @@ PieChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['left', 'right']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -181,30 +240,33 @@ PieChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  /**
+   * @deprecated Consider using `slotProps.legend` instead.
+   */
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
     hidden: PropTypes.bool,
-    itemWidth: PropTypes.number,
-    markSize: PropTypes.number,
-    offset: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
     position: PropTypes.shape({
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
     }),
     slotProps: PropTypes.object,
     slots: PropTypes.object,
-    spacing: PropTypes.number,
   }),
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default object Depends on the charts type.
+   */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  onClick: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -212,18 +274,26 @@ PieChart.propTypes = {
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['left', 'right']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -253,15 +323,19 @@ PieChart.propTypes = {
       endAngle: PropTypes.number,
       faded: PropTypes.shape({
         additionalRadius: PropTypes.number,
+        color: PropTypes.string,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
+        paddingAngle: PropTypes.number,
       }),
       highlighted: PropTypes.shape({
         additionalRadius: PropTypes.number,
+        color: PropTypes.string,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
+        paddingAngle: PropTypes.number,
       }),
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
@@ -281,6 +355,11 @@ PieChart.propTypes = {
     }),
   ).isRequired,
   /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -296,6 +375,8 @@ PieChart.propTypes = {
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
     itemContent: PropTypes.elementType,
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
@@ -305,18 +386,26 @@ PieChart.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
+      axisId: PropTypes.string,
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       position: PropTypes.oneOf(['bottom', 'top']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -330,7 +419,15 @@ PieChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * @default undefined
+   */
   width: PropTypes.number,
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
+   */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
@@ -344,6 +441,7 @@ PieChart.propTypes = {
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
@@ -352,6 +450,13 @@ PieChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
@@ -359,6 +464,10 @@ PieChart.propTypes = {
       valueFormatter: PropTypes.func,
     }),
   ),
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
+   */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
@@ -372,6 +481,7 @@ PieChart.propTypes = {
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
+      labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
@@ -380,6 +490,13 @@ PieChart.propTypes = {
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,

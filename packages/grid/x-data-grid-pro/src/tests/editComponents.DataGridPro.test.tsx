@@ -10,7 +10,7 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
+import { act, createRenderer, fireEvent, screen, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { getCell, spyApi } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
@@ -37,7 +37,7 @@ const generateDate = (
   return rawDate.getTime();
 };
 
-describe('<DataGridPro /> - Edit Components', () => {
+describe('<DataGridPro /> - Edit components', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -246,20 +246,6 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect((spiedSetEditCellValue.lastCall.args[0].value! as Date).toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
-    });
-
-    it('should call setEditCellValue when entering the edit mode by pressing a digit', () => {
-      render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
-
-      const cell = getCell(0, 0);
-      userEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: '5' });
-
-      expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
-      expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('createdAt');
-      expect(spiedSetEditCellValue.lastCall.args[0].debounceMs).to.equal(undefined);
-      expect(spiedSetEditCellValue.lastCall.args[0].value).to.be.instanceOf(Date);
     });
 
     it('should call setEditCellValue with null when entered an empty value', () => {
@@ -623,7 +609,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       userEvent.mousePress(screen.queryAllByRole('option')[1]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
-      fireEvent.keyDown(screen.getByRole('button', { name: 'Adidas' }), { key: 'Enter' });
+      fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Enter' });
       expect(screen.queryByRole('listbox')).to.equal(null);
 
       resolveCallback!();

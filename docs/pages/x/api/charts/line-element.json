@@ -3,7 +3,14 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [
+    {
+      "class": null,
+      "name": "line",
+      "description": "The component that renders the root.",
+      "default": "LineElementPath"
+    }
+  ],
   "name": "LineElement",
   "imports": [
     "import { LineElement } from '@mui/x-charts/LineChart';",
@@ -15,6 +22,5 @@
     "name": "MuiLineElement"
   },
   "filename": "/packages/x-charts/src/LineChart/LineElement.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "LineElement" }]
+  "demos": "<ul></ul>"
 }

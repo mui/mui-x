@@ -8,7 +8,7 @@ import {
   fireEvent,
   screen,
   describeConformance,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import Portal from '@mui/material/Portal';
 import { TreeView, treeViewClasses as classes } from '@mui/x-tree-view/TreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
@@ -42,7 +42,7 @@ describe('<TreeView />', () => {
 
     it('should warn when switching from controlled to uncontrolled of the selected prop', () => {
       const { setProps } = render(
-        <TreeView selected={[]}>
+        <TreeView selected={null}>
           <TreeItem nodeId="1" label="one" />
         </TreeView>,
       );
@@ -439,6 +439,99 @@ describe('<TreeView />', () => {
 
       expect(handleNodeToggle.callCount).to.equal(1);
       expect(handleNodeToggle.args[0][1]).to.deep.equal(['1']);
+    });
+  });
+
+  describe('useTreeViewFocus', () => {
+    it('should focus the selected item when the tree is focused', () => {
+      const onNodeFocus = spy();
+
+      const { getByRole } = render(
+        <TreeView selected={'2'} onNodeFocus={onNodeFocus}>
+          <TreeItem nodeId="1" label="1" />
+          <TreeItem nodeId="2" label="2" />
+        </TreeView>,
+      );
+
+      act(() => {
+        getByRole('tree').focus();
+      });
+
+      expect(onNodeFocus.lastCall.lastArg).to.equal('2');
+    });
+
+    it('should focus the selected item when the tree is focused (multi select)', () => {
+      const onNodeFocus = spy();
+
+      const { getByRole } = render(
+        <TreeView multiSelect selected={['2']} onNodeFocus={onNodeFocus}>
+          <TreeItem nodeId="1" label="1" />
+          <TreeItem nodeId="2" label="2" />
+        </TreeView>,
+      );
+
+      act(() => {
+        getByRole('tree').focus();
+      });
+
+      expect(onNodeFocus.lastCall.lastArg).to.equal('2');
+    });
+
+    it('should focus the first visible selected item when the tree is focused (multi select)', () => {
+      const onNodeFocus = spy();
+
+      const { getByRole } = render(
+        <TreeView multiSelect selected={['1.1', '2']} onNodeFocus={onNodeFocus}>
+          <TreeItem nodeId="1" label="1">
+            <TreeItem nodeId="1.1" label="1.1" />
+          </TreeItem>
+          <TreeItem nodeId="2" label="2" />
+        </TreeView>,
+      );
+
+      act(() => {
+        getByRole('tree').focus();
+      });
+
+      expect(onNodeFocus.lastCall.lastArg).to.equal('2');
+    });
+
+    it('should focus the first item if the selected item is not visible', () => {
+      const onNodeFocus = spy();
+
+      const { getByRole } = render(
+        <TreeView selected="1.1" onNodeFocus={onNodeFocus}>
+          <TreeItem nodeId="1" label="1">
+            <TreeItem nodeId="1.1" label="1.1" />
+          </TreeItem>
+          <TreeItem nodeId="2" label="2" />
+        </TreeView>,
+      );
+
+      act(() => {
+        getByRole('tree').focus();
+      });
+
+      expect(onNodeFocus.lastCall.lastArg).to.equal('1');
+    });
+
+    it('should focus the first item if no selected item is visible (multi select)', () => {
+      const onNodeFocus = spy();
+
+      const { getByRole } = render(
+        <TreeView multiSelect selected={['1.1']} onNodeFocus={onNodeFocus}>
+          <TreeItem nodeId="1" label="1">
+            <TreeItem nodeId="1.1" label="1.1" />
+          </TreeItem>
+          <TreeItem nodeId="2" label="2" />
+        </TreeView>,
+      );
+
+      act(() => {
+        getByRole('tree').focus();
+      });
+
+      expect(onNodeFocus.lastCall.lastArg).to.equal('1');
     });
   });
 

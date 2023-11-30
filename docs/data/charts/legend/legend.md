@@ -12,28 +12,48 @@ In chart components, the legend links series with `label` properties and their c
 
 {{"demo": "BasicLegend.js"}}
 
-## Placement
+## Customization
+
+### Position
 
 The legend can either be displayed in a `'column'` or `'row'` layout controlled with the `direction` property.
 
-It can also be moved by a combination of `position: { vertical, horizontal }` properties and the legend offset values.
-The `position` places the legend just next to the drawing area, and offset values move it relative to this base position.
+It can also be moved with the `position: { vertical, horizontal }` property which defines how the legend aligns within the SVG.
 
 - `vertical` can be `'top'`, `'middle'`, or `'bottom'`.
 - `horizontal` can be `'left'`, `'middle'`, or `'right'`.
-- offsets are set with CSS variables `--ChartsLegend-rootOffsetX` and `--ChartsLegend-rootOffsetY`.
 
-Defaults are such that the legend is placed on top of the charts.
+You can add spacing to a given `position` with the `padding` property, which can be either a number or an object `{ top, bottom, left, right }`.
+This `padding` will add space between the SVG borders and the legend.
 
-{{"demo": "LegendCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+By default, the legend is placed above the charts.
 
-## Dimensions
+{{"demo": "LegendPositionNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
-The dimension of the legend is defined by some CSS variables:
+### Hiding
 
-- `--ChartsLegend-itemWidth`: The width of one series (including the mark and the label).
-- `--ChartsLegend-itemMarkSize`: The size of the mark square.
-- `--ChartsLegend-labelSpacing`: The space between the mark and the label.
-- `--ChartsLegend-rootSpacing`: The space between two series.
+You can hide the legend with the property `slotProps.legend.hidden`.
 
-{{"demo": "DimensionsNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "HiddenLegend.js"}}
+
+### Dimensions
+
+Inside the legend, you can customize the pixel value of the width and height of the mark with the `itemMarkWidth` and `itemMarkHeight` props.
+
+You can also access the `markGap` prop to change the gap between the mark and its label, or the `itemGap` to change the gap between two legend items.
+Both props impact the values defined in pixels.
+
+{{"demo": "LegendDimensionNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+
+### Label styling
+
+To break lines in legend labels, use the special `\n` character. To customize the label style, you should not use CSS.
+Instead, pass a styling object to the `labelStyle` property.
+
+{{"demo": "LegendTextStylingNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+
+:::info
+The `labelStyle` property is needed to measure text size, and then place legend items at the correct position.
+Style applied by other means will not be taken into account.
+Which can lead to label overflow.
+:::

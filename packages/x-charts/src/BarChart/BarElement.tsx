@@ -1,11 +1,12 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { SlotComponentProps } from '@mui/base';
-import { useSlotProps } from '@mui/base/utils';
+import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { animated } from '@react-spring/web';
 import {
   getIsFaded,
   getIsHighlighted,
@@ -34,7 +35,7 @@ export function getBarElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiBarElement', slot);
 }
 
-export const lineElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
+export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
   'root',
 ]);
 
@@ -47,7 +48,7 @@ const useUtilityClasses = (ownerState: BarElementOwnerState) => {
   return composeClasses(slots, getBarElementUtilityClass, classes);
 };
 
-export const BarElementPath = styled('rect', {
+export const BarElementPath = styled(animated.rect, {
   name: 'MuiBarElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
@@ -84,7 +85,7 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
     };
   };
 
-export function BarElement(props: BarElementProps) {
+function BarElement(props: BarElementProps) {
   const {
     id,
     dataIndex,
@@ -93,6 +94,7 @@ export function BarElement(props: BarElementProps) {
     highlightScope,
     slots,
     slotProps,
+    style,
     ...other
   } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
@@ -124,9 +126,35 @@ export function BarElement(props: BarElementProps) {
     additionalProps: {
       ...other,
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
+      style,
       className: classes.root,
     },
     ownerState,
   });
   return <Bar {...barProps} />;
 }
+
+BarElement.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  dataIndex: PropTypes.number.isRequired,
+  highlightScope: PropTypes.shape({
+    faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+  }),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { BarElement };

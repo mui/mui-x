@@ -2,7 +2,7 @@
 title: Data Grid - Master detail
 ---
 
-# Data Grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Expand your rows to display additional information.</p>
 
@@ -41,7 +41,7 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 
 :::warning
 Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
-The grid depends on the referential value of these props to cache their values and optimize the rendering.
+The Data Grid depends on the referential value of these props to cache their values and optimize the rendering.
 
 ```tsx
 const getDetailPanelContent = React.useCallback(() => { ... }, []);

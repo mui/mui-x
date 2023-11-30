@@ -1,12 +1,11 @@
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { StackOrderType } from '@mui/x-charts/models';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
-// Data comming from https://www.insee.fr/fr/statistiques/5013868
+// Data coming from https://www.insee.fr/fr/statistiques/5013868
 const commonTransportation = [
   6.5, 12.5, 17.2, 19.6, 20.1, 20.0, 19.5, 18.8, 18.2, 17.3, 16.4, 15.9, 15.2, 14.7,
   14.3, 14.3, 14.3, 14.1, 14.2, 14.2, 14.0, 13.8, 13.8, 13.9, 13.6, 14.0, 14.9, 14.8,
@@ -87,43 +86,42 @@ export default function StackOrderDemo() {
 
   const modifiedSeries = [{ ...series[0], stackOrder }, ...series.slice(1)];
   return (
-    <div>
-      <Stack direction="row">
-        <TextField
-          sx={{ minWidth: 150, mr: 5 }}
-          select
-          label="stackOrder"
-          value={stackOrder}
-          onChange={(event) => setStackOrder(event.target.value as any)}
-        >
-          {availableStackOrder.map((offset) => (
-            <MenuItem key={offset} value={offset}>
-              {offset}
-            </MenuItem>
-          ))}
-        </TextField>
-      </Stack>
-      <BarChart
-        width={700}
-        height={300}
-        xAxis={[xAxis]}
-        yAxis={[{ min: 0, max: 100 }]}
-        series={modifiedSeries}
-        margin={{ bottom: 60 }}
-        sx={{
-          [`.${axisClasses.bottom}`]: {
-            [`.${axisClasses.tickLabel}`]: {
-              transform: 'rotate(45deg)',
-              dominantBaseline: 'hanging',
-              textAnchor: 'start',
+    <Box sx={{ width: '100%' }}>
+      <TextField
+        sx={{ minWidth: 150, mr: 5, mt: 1 }}
+        select
+        label="stackOrder"
+        value={stackOrder}
+        onChange={(event) => setStackOrder(event.target.value as any)}
+      >
+        {availableStackOrder.map((offset) => (
+          <MenuItem key={offset} value={offset}>
+            {offset}
+          </MenuItem>
+        ))}
+      </TextField>
+      <Box sx={{ overflow: 'auto', py: 2 }}>
+        <BarChart
+          width={700}
+          height={300}
+          xAxis={[
+            {
+              ...xAxis,
+              tickLabelStyle: {
+                angle: 45,
+                dominantBaseline: 'hanging',
+                textAnchor: 'start',
+              },
+              labelStyle: {
+                transform: 'translateY(15px)',
+              },
             },
-            [`.${axisClasses.label}`]: {
-              transform: 'translateY(15px)',
-            },
-          },
-          '--ChartsLegend-itemWidth': '110px',
-        }}
-      />
-    </div>
+          ]}
+          yAxis={[{ min: 0, max: 100 }]}
+          series={modifiedSeries}
+          margin={{ bottom: 70 }}
+        />
+      </Box>
+    </Box>
   );
 }

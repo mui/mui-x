@@ -1,10 +1,10 @@
 ---
-title: Charts - Funnel
+title: React Funnel chart
 ---
 
-# Charts - Funnel 🚧
+# Charts - Funnel 🚧[<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Funnel charts allows to express quantity evolution along a process, such as audience engagement.</p>
+<p class="description">Funnel charts allow to express quantity evolution along a process, such as audience engagement.</p>
 
 :::warning
 This feature isn't implemented yet. It's coming.

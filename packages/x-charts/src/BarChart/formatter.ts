@@ -30,7 +30,8 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
     }
   });
 
-  const completedSeries: { [id: string]: DefaultizedProps<ChartSeries<'bar'>, 'data'> } = {};
+  const completedSeries: { [id: string]: DefaultizedProps<ChartSeries<'bar'>, 'data' | 'layout'> } =
+    {};
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
@@ -49,6 +50,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
       completedSeries[id] = {
+        layout: 'vertical',
         ...series[id],
         data: dataKey ? dataset!.map((d) => d[dataKey]) : series[id].data!,
         stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
@@ -59,7 +61,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => v.toLocaleString()),
+    series: defaultizeValueFormatter(completedSeries, (v) => v?.toLocaleString()),
   };
 };
 

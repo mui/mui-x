@@ -1,7 +1,14 @@
 import * as React from 'react';
-import { createRenderer, screen, userEvent, within, act } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  screen,
+  userEvent,
+  within,
+  act,
+  fireEvent,
+} from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
@@ -12,6 +19,7 @@ import {
   GridRenderCellParams,
   GridGroupNode,
   useGridApiRef,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -146,6 +154,35 @@ describe('<DataGridPremium /> - Aggregation', () => {
         setProps({ aggregationModel: {} });
         expect(getColumnHeaderCell(0, 0).textContent).to.equal('id');
       });
+
+      // See https://github.com/mui/mui-x/issues/10864
+      it('should correctly handle changing aggregated column from non-editable to editable', async () => {
+        const column: GridColDef = { field: 'value', type: 'number', editable: false };
+        const { setProps } = render(
+          <Test
+            columns={[column]}
+            rows={[
+              { id: 1, value: 1 },
+              { id: 2, value: 10 },
+            ]}
+            aggregationModel={{ value: 'sum' }}
+          />,
+        );
+
+        const cell = getCell(0, 0);
+
+        fireEvent.doubleClick(cell);
+        expect(cell.querySelector('input')).to.equal(null);
+
+        setProps({ columns: [{ ...column, editable: true }] });
+        fireEvent.doubleClick(cell);
+        expect(cell.querySelector('input')).not.to.equal(null);
+        userEvent.mousePress(getCell(1, 0));
+
+        setProps({ columns: [column] });
+        fireEvent.doubleClick(cell);
+        expect(cell.querySelector('input')).to.equal(null);
+      });
     });
   });
 
@@ -275,7 +312,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe('Tree Data', () => {
+  describe('Tree data', () => {
     function TreeDataTest(props: Omit<DataGridPremiumProps, 'columns'>) {
       return (
         <Test
@@ -355,7 +392,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe('Column Menu', () => {
+  describe('Column menu', () => {
     it('should render select on aggregable column', () => {
       render(<Test />);
 
@@ -763,6 +800,74 @@ describe('<DataGridPremium /> - Aggregation', () => {
         '5',
         '5' /* Agg "Cat B" */,
       ]);
+    });
+  });
+
+  describe('built-in aggregation functions', () => {
+    describe('`sum`', () => {
+      it('should work with numbers', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sum.apply({
+            values: [0, 10, 12, 23],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(45);
+      });
+
+      it('should ignore non-numbers', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sum.apply({
+            values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(45);
+      });
+    });
+
+    describe('`avg`', () => {
+      it('should work with numbers', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.avg.apply({
+            values: [0, 10, 12, 23],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(11.25);
+      });
+
+      it('should ignore non-numbers', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.avg.apply({
+            values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(11.25);
+      });
+    });
+
+    describe('`size`', () => {
+      it('should work with any value types', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.size.apply({
+            values: [23, '', 'a', NaN, {}, false, true],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(7);
+      });
+
+      it('should ignore undefined values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.size.apply({
+            values: [23, '', 'a', NaN, {}, false, true, undefined],
+            field: 'value',
+            groupId: 0,
+          }),
+        ).to.equal(7);
+      });
     });
   });
 });

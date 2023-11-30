@@ -4,18 +4,6 @@
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -65,15 +53,13 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "shouldDisableClock": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
-      "signature": {
-        "type": "function(clockValue: number, view: TimeView) => boolean",
-        "describedArgs": ["clockValue", "view"],
-        "returned": "boolean"
-      }
+    "reduceAnimations": {
+      "type": { "name": "bool" },
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
+    },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "shouldDisableTime": {
       "type": { "name": "func" },
@@ -123,7 +109,7 @@
     {
       "class": null,
       "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
     },
     {
       "class": null,
@@ -173,9 +159,5 @@
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers/src/StaticTimePicker/StaticTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "StaticTimePicker" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "StaticTimePicker" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }

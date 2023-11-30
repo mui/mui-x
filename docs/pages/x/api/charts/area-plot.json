@@ -3,7 +3,14 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": [],
+  "slots": [
+    {
+      "class": null,
+      "name": "area",
+      "description": "The component that renders the root.",
+      "default": "AreaElementPath"
+    }
+  ],
   "name": "AreaPlot",
   "imports": [
     "import { AreaPlot } from '@mui/x-charts/LineChart';",
@@ -11,6 +18,5 @@
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiAreaPlot" },
   "filename": "/packages/x-charts/src/LineChart/AreaPlot.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "AreaPlot" }]
+  "demos": "<ul></ul>"
 }

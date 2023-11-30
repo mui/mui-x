@@ -5,11 +5,11 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 
-export interface MarkPlotSlotsComponent {
+export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
 }
 
-export interface MarkPlotSlotComponentProps {
+export interface MarkPlotSlotProps {
   mark?: Partial<MarkElementProps>;
 }
 
@@ -18,16 +18,26 @@ export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
    * Overridable component slots.
    * @default {}
    */
-  slots?: MarkPlotSlotsComponent;
+  slots?: MarkPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MarkPlotSlotComponentProps;
+  slotProps?: MarkPlotSlotProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
+ */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps } = props;
+  const { slots, slotProps, ...other } = props;
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
@@ -43,14 +53,20 @@ function MarkPlot(props: MarkPlotProps) {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <g {...props}>
+    <g {...other}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
+            data,
+            showMark = true,
           } = series[seriesId];
+
+          if (showMark === false) {
+            return null;
+          }
 
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
@@ -77,27 +93,50 @@ function MarkPlot(props: MarkPlotProps) {
 
           return xData
             ?.map((x, index) => {
-              const y = stackedData[index][1];
+              const value = data[index] == null ? null : stackedData[index][1];
               return {
                 x: xScale(x),
-                y: yScale(y),
+                y: value === null ? null : yScale(value)!,
+                position: x,
+                value,
                 index,
               };
             })
-            .filter(isInRange)
-            .map(({ x, y, index }) => (
-              <Mark
-                key={`${seriesId}-${index}`}
-                id={seriesId}
-                dataIndex={index}
-                shape="circle"
-                color={series[seriesId].color}
-                x={x}
-                y={y}
-                highlightScope={series[seriesId].highlightScope}
-                {...slotProps?.mark}
-              />
-            ));
+            .filter(({ x, y, index, position, value }) => {
+              if (value === null || y === null) {
+                // Remove missing data point
+                return false;
+              }
+              if (!isInRange({ x, y })) {
+                // Remove out of range
+                return false;
+              }
+              if (showMark === true) {
+                return true;
+              }
+              return showMark({
+                x,
+                y,
+                index,
+                position,
+                value,
+              });
+            })
+            .map(({ x, y, index }) => {
+              return (
+                <Mark
+                  key={`${seriesId}-${index}`}
+                  id={seriesId}
+                  dataIndex={index}
+                  shape="circle"
+                  color={series[seriesId].color}
+                  x={x}
+                  y={y!} // Don't knwo why TS don't get from the filter that y can't be null
+                  highlightScope={series[seriesId].highlightScope}
+                  {...slotProps?.mark}
+                />
+              );
+            });
         });
       })}
     </g>

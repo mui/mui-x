@@ -11,16 +11,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "The props used for each component slot.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled.",
       "deprecated": "",
@@ -117,15 +107,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "shouldDisableClock": {
-      "description": "Disable specific clock time.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "clockValue": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
-      }
-    },
     "shouldDisableTime": {
       "description": "Disable specific time.",
       "deprecated": "",
@@ -157,7 +138,7 @@
       "typeDescriptions": {}
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documentation</a> for more details.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -182,6 +163,6 @@
   "slotDescriptions": {
     "root": "Element rendered at the root.",
     "separator": "Element rendered between the two inputs.",
-    "textField": "Form control with an input to render a time.\nIt is rendered twice: once for the start time and once for the end time.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "textField": "Form control with an input to render a time. It is rendered twice: once for the start time and once for the end time. Receives the same props as <code>@mui/material/TextField</code>."
   }
 }

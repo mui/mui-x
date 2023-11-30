@@ -8,40 +8,46 @@ import type {
 } from 'd3-scale';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
+import { ChartsTextProps } from '../internals/components/ChartsText';
 
-export type D3Scale =
-  | ScaleBand<any>
-  | ScaleLogarithmic<any, any>
-  | ScalePoint<any>
-  | ScalePower<any, any>
-  | ScaleTime<any, any>
-  | ScaleLinear<any, any>;
+export type D3Scale<
+  Domain extends { toString(): string } = number | Date | string,
+  Range = number,
+  Output = number,
+> =
+  | ScaleBand<Domain>
+  | ScaleLogarithmic<Range, Output>
+  | ScalePoint<Domain>
+  | ScalePower<Range, Output>
+  | ScaleTime<Range, Output>
+  | ScaleLinear<Range, Output>;
 
-export type D3ContinuouseScale =
-  | ScaleLogarithmic<any, any>
-  | ScalePower<any, any>
-  | ScaleTime<any, any>
-  | ScaleLinear<any, any>;
+export type D3ContinuouseScale<Range = number, Output = number> =
+  | ScaleLogarithmic<Range, Output>
+  | ScalePower<Range, Output>
+  | ScaleTime<Range, Output>
+  | ScaleLinear<Range, Output>;
 
-export interface ChartsAxisSlotsComponent {
+export interface ChartsAxisSlots {
   axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
   axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
-  axisTickLabel?: React.JSXElementConstructor<React.SVGAttributes<SVGTextElement>>;
-  axisLabel?: React.JSXElementConstructor<React.SVGAttributes<SVGTextElement>>;
+  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
 }
 
-export interface ChartsAxisSlotComponentProps {
+export interface ChartsAxisSlotProps {
   axisLine?: Partial<React.SVGAttributes<SVGPathElement>>;
   axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTickLabel?: Partial<React.SVGAttributes<SVGTextElement>>;
-  axisLabel?: Partial<React.SVGAttributes<SVGTextElement>>;
+  axisTickLabel?: Partial<ChartsTextProps>;
+  axisLabel?: Partial<ChartsTextProps>;
 }
 
 export interface ChartsAxisProps extends TickParams {
   /**
-   * Id of the axis to render.
+   * The id of the axis to render.
+   * If undefined, it will be the first defined axis.
    */
-  axisId: string;
+  axisId?: string;
   /**
    * If true, the axis line is disabled.
    * @default false
@@ -60,8 +66,24 @@ export interface ChartsAxisProps extends TickParams {
   /**
    * The font size of the axis ticks text.
    * @default 12
+   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
    */
   tickFontSize?: number;
+  /**
+   * The style applied to ticks text.
+   */
+  tickLabelStyle?: ChartsTextProps['style'];
+  /**
+   * The style applied to the axis label.
+   */
+  labelStyle?: ChartsTextProps['style'];
+  /**
+   * Defines which ticks get its label displayed. Its value can be:
+   * - 'auto' In such case, labels are displayed if they do not overlap with the previous one.
+   * - a filtering function of the form (value, index) => boolean. Warning: the index is tick index, not data ones.
+   * @default 'auto'
+   */
+  tickLabelInterval?: 'auto' | ((value: any, index: number) => boolean);
   /**
    * The label of the axis.
    */
@@ -69,6 +91,7 @@ export interface ChartsAxisProps extends TickParams {
   /**
    * The font size of the axis label.
    * @default 14
+   * @deprecated Consider using `labelStyle.fontSize` instead.
    */
   labelFontSize?: number;
   /**
@@ -89,12 +112,12 @@ export interface ChartsAxisProps extends TickParams {
    * Overridable component slots.
    * @default {}
    */
-  slots?: Partial<ChartsAxisSlotsComponent>;
+  slots?: Partial<ChartsAxisSlots>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: Partial<ChartsAxisSlotComponentProps>;
+  slotProps?: Partial<ChartsAxisSlotProps>;
 }
 
 export interface ChartsYAxisProps extends ChartsAxisProps {
@@ -117,57 +140,71 @@ export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 
 interface AxisScaleConfig {
   band: {
     scaleType: 'band';
-    scale: ScaleBand<any>;
+    scale: ScaleBand<number | Date | string>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
      * 0 means no gap, and 1 no data.
-     * @default 0.1
+     * @default 0.2
      */
     categoryGapRatio: number;
     /**
      * The ratio between the width of a bar, and the gap between two bars.
      * 0 means no gap, and 1 no bar.
-     * @default 0
+     * @default 0.1
      */
     barGapRatio: number;
   };
   point: {
     scaleType: 'point';
-    scale: ScalePoint<any>;
+    scale: ScalePoint<number | Date | string>;
   };
   log: {
     scaleType: 'log';
-    scale: ScaleLogarithmic<any, any>;
+    scale: ScaleLogarithmic<number, number>;
   };
   pow: {
     scaleType: 'pow';
-    scale: ScalePower<any, any>;
+    scale: ScalePower<number, number>;
   };
   sqrt: {
     scaleType: 'sqrt';
-    scale: ScalePower<any, any>;
+    scale: ScalePower<number, number>;
   };
   time: {
     scaleType: 'time';
-    scale: ScaleTime<any, any>;
+    scale: ScaleTime<number, number>;
   };
   utc: {
     scaleType: 'utc';
-    scale: ScaleTime<any, any>;
+    scale: ScaleTime<number, number>;
   };
   linear: {
     scaleType: 'linear';
-    scale: ScaleLinear<any, any>;
+    scale: ScaleLinear<number, number>;
   };
 }
 
 export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
+  /**
+   * Id used to identify the axis.
+   */
   id: string;
+  /**
+   * The minimal value of the domain.
+   * If not provided, it gets computed to display the entire chart data.
+   */
   min?: number | Date;
+  /**
+   * The maximal value of the domain.
+   * If not provided, it gets computed to display the entire chart data.
+   */
   max?: number | Date;
+  /**
+   * The data used by `'band'` and `'point'` scales.
+   */
   data?: V[];
   /**
-   * The key used to retrieve data from the dataset prop.
+   * The key used to retrieve `data` from the `dataset` prop.
    */
   dataKey?: string;
   valueFormatter?: (value: V) => string;
@@ -184,7 +221,10 @@ export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
   'scaleType'
 > &
   AxisScaleConfig[S] & {
-    ticksNumber: number;
+    /**
+     * An indication of the expected number of ticks.
+     */
+    tickNumber: number;
   };
 
 export function isBandScaleConfig(

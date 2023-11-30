@@ -1,40 +1,42 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import { BarPlot } from '../BarChart';
-import { LinePlot, MarkPlot, AreaPlot, markElementClasses } from '../LineChart';
+import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  ChartsTooltip,
+  ChartsTooltipProps,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
+} from '../ChartsTooltip';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
 import { LineSeriesType } from '../models/seriesType/line';
-import { AreaPlotSlotsComponent, AreaPlotSlotComponentProps } from '../LineChart/AreaPlot';
-import { LinePlotSlotsComponent, LinePlotSlotComponentProps } from '../LineChart/LinePlot';
-import { MarkPlotSlotsComponent, MarkPlotSlotComponentProps } from '../LineChart/MarkPlot';
-import { BarPlotSlotsComponent, BarPlotSlotComponentProps } from '../BarChart/BarPlot';
+import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
+import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
+import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
+import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
+import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
 
-const SparkLineMarkPlot = styled(MarkPlot)({
-  [`& .${markElementClasses.root}`]: {
-    display: 'none',
-    [`&.${markElementClasses.highlighted}`]: { display: 'inherit' },
-  },
-});
-
-export interface SparkLineChartSlotsComponent
-  extends AreaPlotSlotsComponent,
-    LinePlotSlotsComponent,
-    MarkPlotSlotsComponent,
-    BarPlotSlotsComponent {}
-export interface SparkLineChartSlotComponentProps
-  extends AreaPlotSlotComponentProps,
-    LinePlotSlotComponentProps,
-    MarkPlotSlotComponentProps,
-    BarPlotSlotComponentProps {}
+export interface SparkLineChartSlots
+  extends AreaPlotSlots,
+    LinePlotSlots,
+    MarkPlotSlots,
+    LineHighlightPlotSlots,
+    BarPlotSlots,
+    ChartsTooltipSlots {}
+export interface SparkLineChartSlotProps
+  extends AreaPlotSlotProps,
+    LinePlotSlotProps,
+    MarkPlotSlotProps,
+    LineHighlightPlotSlotProps,
+    BarPlotSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis'> {
@@ -86,12 +88,12 @@ export interface SparkLineChartProps
    * Overridable component slots.
    * @default {}
    */
-  slots?: SparkLineChartSlotsComponent;
+  slots?: SparkLineChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: SparkLineChartSlotComponentProps;
+  slotProps?: SparkLineChartSlotProps;
 }
 
 const SPARKLINE_DEFAULT_MARGIN = {
@@ -101,6 +103,15 @@ const SPARKLINE_DEFAULT_MARGIN = {
   right: 5,
 };
 
+/**
+ * Demos:
+ *
+ * - [SparkLine](https://mui.com/x/react-charts/sparkline/)
+ *
+ * API:
+ *
+ * - [SparkLineChart API](https://mui.com/x/api/charts/spark-line-chart/)
+ */
 const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLineChartProps, ref) {
   const {
     xAxis,
@@ -134,7 +145,12 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     <ResponsiveChartContainer
       ref={ref}
       series={[
-        { type: plotType, data, valueFormatter, ...(plotType === 'bar' ? {} : { area, curve }) },
+        {
+          type: plotType,
+          data,
+          valueFormatter,
+          ...(plotType === 'bar' ? {} : { area, curve, disableHighlight: !showHighlight }),
+        },
       ]}
       width={width}
       height={height}
@@ -142,7 +158,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
       xAxis={[
         {
           id: DEFAULT_X_AXIS_KEY,
-          scaleType: plotType === 'bar' ? 'band' : 'linear',
+          scaleType: plotType === 'bar' ? 'band' : 'point',
           data: Array.from({ length: data.length }, (_, index) => index),
           hideTooltip: xAxis === undefined,
           ...xAxis,
@@ -156,17 +172,20 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
         axisHighlight?.y === 'none'
       }
     >
-      {plotType === 'bar' && <BarPlot slots={slots} slotProps={slotProps} />}
+      {plotType === 'bar' && (
+        <BarPlot slots={slots} slotProps={slotProps} sx={{ shapeRendering: 'auto' }} />
+      )}
+
       {plotType === 'line' && (
         <React.Fragment>
           <AreaPlot slots={slots} slotProps={slotProps} />
           <LinePlot slots={slots} slotProps={slotProps} />
-          {showHighlight && <SparkLineMarkPlot />}
+          <LineHighlightPlot slots={slots} slotProps={slotProps} />
         </React.Fragment>
       )}
 
       <ChartsAxisHighlight {...axisHighlight} />
-      {showTooltip && <ChartsTooltip {...tooltip} />}
+      {showTooltip && <ChartsTooltip {...tooltip} slotProps={slotProps} slots={slots} />}
 
       {children}
     </ResponsiveChartContainer>
@@ -186,7 +205,7 @@ SparkLineChart.propTypes = {
   area: PropTypes.bool,
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
+    y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   children: PropTypes.node,
   className: PropTypes.string,
@@ -211,10 +230,28 @@ SparkLineChart.propTypes = {
    * Data to plot.
    */
   data: PropTypes.arrayOf(PropTypes.number).isRequired,
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
   disableAxisListener: PropTypes.bool,
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * @default undefined
+   */
   height: PropTypes.number,
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default object Depends on the charts type.
+   */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -258,6 +295,8 @@ SparkLineChart.propTypes = {
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
     itemContent: PropTypes.elementType,
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
@@ -272,6 +311,10 @@ SparkLineChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * @default undefined
+   */
   width: PropTypes.number,
   /**
    * The xAxis configuration.
@@ -289,6 +332,7 @@ SparkLineChart.propTypes = {
     id: PropTypes.string,
     label: PropTypes.string,
     labelFontSize: PropTypes.number,
+    labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
@@ -297,6 +341,9 @@ SparkLineChart.propTypes = {
     slots: PropTypes.object,
     stroke: PropTypes.string,
     tickFontSize: PropTypes.number,
+    tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
+    tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+    tickLabelStyle: PropTypes.object,
     tickMaxStep: PropTypes.number,
     tickMinStep: PropTypes.number,
     tickNumber: PropTypes.number,

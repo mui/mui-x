@@ -1,4 +1,4 @@
-# Data Grid - Localization
+# Data Grid - Translated components
 
 <p class="description">The data grid allows to support users from different locales, with formatting, and localized strings.</p>
 
@@ -16,9 +16,9 @@ In the following example, the labels of the density selector are customized.
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
 
 :::warning
-It's important to note that because the data grid uses components from the Material UI library some translation keys need to be accessed using that component key.
+It's important to note that because the Data Grid uses components from the Material UI library, some translation keys need to be accessed using that component key.
 
-One example is the table pagination component used in the data grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [`TablePagination`](/material-ui/api/table-pagination/) component.
+One example is the table pagination component used in the Data Grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [Table Pagination](/material-ui/api/table-pagination/) component.
 
 ```jsx
 <DataGrid
@@ -101,13 +101,14 @@ You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Data Grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
 
-## RTL Support 🚧
+## RTL Support
 
-:::warning
-RTL is not fully supported in the Data Grid.
+Right-to-left languages such as Arabic, Persian, or Hebrew are supported.
+Follow [this guide](/material-ui/guides/right-to-left/) to use them.
 
-👍 Upvote [issue #230](https://github.com/mui/mui-x/issues/230) if that's a requirement in your project.
-:::
+The example below demonstrates how to use an RTL language (Arabic) with the data grid.
+
+{{"demo": "DataGridRTL.js", "bg": "inline"}}
 
 ## API
 

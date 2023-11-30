@@ -37,7 +37,7 @@ The simplest way to use a selector is to call it as a function with `apiRef` as 
 const paginationModel = gridPaginationModelSelector(apiRef);
 ```
 
-:::info
+:::warning
 Calling with `apiRef.current.state` also works, but may cause side effects when multiple Data Grid instances are present on a single page.
 If you still need to call it with the state, don't forget to pass the instance ID as the example:
 
@@ -92,6 +92,14 @@ If you restore the page using `initialState` before the data is fetched, the Dat
 :::
 
 {{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Save and restore the state from external storage
+
+You can use `apiRef.current.exportState()` to save a snapshot of the state to an external storage (e.g. using `localStorage` or `redux`).
+This way the state can be persisted on refresh or navigating to another page. This is done by listening on the `beforeunload` event.
+When the component is unmounted, the `useLayoutEffect` cleanup function is being used instead.
+
+{{"demo": "SaveAndRestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Restore the state with apiRef
 

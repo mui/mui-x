@@ -2,7 +2,7 @@
 title: Data Grid - Row ordering
 ---
 
-# Data Grid - Row ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Row ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Drag and drop your rows to reorder them.</p>
 
@@ -74,7 +74,7 @@ To start with our suggested configuration, spread `GRID_REORDER_COL_DEF` when de
 This approach can also be used to change the location of the toggle column.
 
 :::warning
-For now, row reordering is disabled if sorting is applied to the data grid.
+For now, row reordering is disabled if sorting is applied to the Data Grid.
 :::
 
 ## Reordering rows with row grouping 🚧

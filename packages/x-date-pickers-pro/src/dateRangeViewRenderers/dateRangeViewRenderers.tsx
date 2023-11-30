@@ -16,6 +16,7 @@ export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeViewW
 export const renderDateRangeViewCalendar = <TDate extends unknown>({
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -26,14 +27,11 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   shouldDisableDate,
   reduceAnimations,
   onMonthChange,
-  defaultCalendarMonth,
   rangePosition,
   defaultRangePosition,
   onRangePositionChange,
   calendars,
   currentMonthCalendarPosition,
-  components,
-  componentsProps,
   slots,
   slotProps,
   loading,
@@ -54,6 +52,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   <DateRangeCalendar
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}
@@ -64,14 +63,11 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     shouldDisableDate={shouldDisableDate}
     reduceAnimations={reduceAnimations}
     onMonthChange={onMonthChange}
-    defaultCalendarMonth={defaultCalendarMonth}
     rangePosition={rangePosition}
     defaultRangePosition={defaultRangePosition}
     onRangePositionChange={onRangePositionChange}
     calendars={calendars}
     currentMonthCalendarPosition={currentMonthCalendarPosition}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     loading={loading}

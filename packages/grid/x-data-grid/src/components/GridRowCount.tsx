@@ -13,7 +13,7 @@ interface RowCountProps {
   visibleRowCount: number;
 }
 
-type GridRowCountProps = React.HTMLAttributes<HTMLDivElement> &
+export type GridRowCountProps = React.HTMLAttributes<HTMLDivElement> &
   RowCountProps & {
     sx?: SxProps<Theme>;
   };

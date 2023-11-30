@@ -18,10 +18,7 @@ import type {
   GridAggregationFunction,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
-import {
-  GridPremiumSlotsComponent,
-  UncapitalizedGridPremiumSlotsComponent,
-} from './gridPremiumSlotsComponent';
+import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
@@ -37,13 +34,8 @@ export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
   /**
    * Overridable components.
-   * @deprecated Use the `slots` prop instead.
    */
-  components?: Partial<GridPremiumSlotsComponent>;
-  /**
-   * Overridable components.
-   */
-  slots?: Partial<UncapitalizedGridPremiumSlotsComponent>;
+  slots?: Partial<GridPremiumSlotsComponent>;
 }
 
 /**
@@ -59,7 +51,7 @@ export interface DataGridPremiumProps<R extends GridValidRowModel = any>
 
 export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueAfterProcessing, 'localeText'> {
-  slots: UncapitalizedGridPremiumSlotsComponent;
+  slots: GridPremiumSlotsComponent;
 }
 
 /**
@@ -68,7 +60,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
 export interface DataGridPremiumProcessedProps
   extends DataGridPremiumPropsWithDefaultValue,
     DataGridPremiumPropsWithComplexDefaultValueAfterProcessing,
-    Omit<DataGridPremiumPropsWithoutDefaultValue, 'componentsProps'> {}
+    DataGridPremiumPropsWithoutDefaultValue {}
 
 export type DataGridPremiumForcedPropsKey = 'signature';
 
@@ -82,7 +74,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * If `true`, the cell selection mode is enabled.
    * @default false
    */
-  unstable_cellSelection: boolean;
+  cellSelection: boolean;
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -167,13 +159,13 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * Set the cell selection model of the grid.
    */
-  unstable_cellSelectionModel?: GridCellSelectionModel;
+  cellSelectionModel?: GridCellSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple cells changes.
    * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  unstable_onCellSelectionModelChange?: (
+  onCellSelectionModelChange?: (
     cellSelectionModel: GridCellSelectionModel,
     details: GridCallbackDetails,
   ) => void;

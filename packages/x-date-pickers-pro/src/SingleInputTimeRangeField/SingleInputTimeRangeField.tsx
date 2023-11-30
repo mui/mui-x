@@ -1,34 +1,49 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useClearableField } from '@mui/x-date-pickers/hooks';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
+import { refType } from '@mui/utils';
+import {
+  SingleInputTimeRangeFieldProps,
+  SingleInputTimeRangeFieldSlotsComponent,
+  SingleInputTimeRangeFieldSlotsComponentsProps,
+} from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
-  props: SingleInputTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+  props: SingleInputTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
 
+/**
+ * Demos:
+ *
+ * - [TimeRangeField](http://mui.com/x/react-date-pickers/time-range-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ *
+ * - [SingleInputTimeRangeField API](https://mui.com/x/api/single-input-time-range-field/)
+ */
 const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<TDate>(
   inProps: SingleInputTimeRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiSingleInputTimeRangeField',
   });
 
-  const { slots, slotProps, components, componentsProps, InputProps, inputProps, ...other } =
-    themeProps;
+  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? MuiTextField;
   const { inputRef: externalInputRef, ...textFieldProps }: SingleInputTimeRangeFieldProps<TDate> =
     useSlotProps({
       elementType: TextField,
-      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+      externalSlotProps: slotProps?.textField,
       externalForwardedProps: other,
       ownerState,
     });
@@ -43,17 +58,33 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     onKeyDown,
     inputMode,
     readOnly,
+    clearable,
+    onClear,
     ...fieldProps
   } = useSingleInputTimeRangeField<TDate, typeof textFieldProps>({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
+    typeof fieldProps,
+    typeof fieldProps.InputProps,
+    SingleInputTimeRangeFieldSlotsComponent,
+    SingleInputTimeRangeFieldSlotsComponentsProps<TDate>
+  >({
+    onClear,
+    clearable,
+    fieldProps,
+    InputProps: fieldProps.InputProps,
+    slots,
+    slotProps,
+  });
+
   return (
     <TextField
       ref={ref}
-      {...fieldProps}
-      InputProps={{ ...fieldProps.InputProps, readOnly }}
+      {...processedFieldProps}
+      InputProps={{ ...ProcessedInputProps, readOnly }}
       inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
     />
   );
@@ -78,25 +109,18 @@ SingleInputTimeRangeField.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable: PropTypes.bool,
+  /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
-   * [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+   * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   component: PropTypes.elementType,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -179,12 +203,7 @@ SingleInputTimeRangeField.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */
@@ -223,9 +242,9 @@ SingleInputTimeRangeField.propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * @ignore
+   * Callback fired when the clear button is clicked.
    */
-  onClick: PropTypes.func,
+  onClear: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -285,14 +304,6 @@ SingleInputTimeRangeField.propTypes = {
     }),
   ]),
   /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
-  /**
    * Disable specific time.
    * @template TDate
    * @param {TDate} value The value to check.
@@ -342,7 +353,7 @@ SingleInputTimeRangeField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

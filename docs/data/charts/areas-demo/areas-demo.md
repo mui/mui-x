@@ -4,7 +4,7 @@ title: Charts - Areas demonstration
 
 # Charts - Areas demonstration
 
-<p class="description">This page groups demonstration using areas charts.</p>
+<p class="description">This page groups demonstration using area charts.</p>
 
 ## SimpleAreaChart
 
@@ -21,3 +21,7 @@ title: Charts - Areas demonstration
 ## PercentAreaChart
 
 {{"demo": "PercentAreaChart.js"}}
+
+## AreaChartConnectNulls
+
+{{"demo": "AreaChartConnectNulls.js"}}

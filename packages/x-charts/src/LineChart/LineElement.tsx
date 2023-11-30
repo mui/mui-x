@@ -2,8 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { color as d3Color } from 'd3-color';
 import composeClasses from '@mui/utils/composeClasses';
-import { SlotComponentProps } from '@mui/base';
-import { useSlotProps } from '@mui/base/utils';
+import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
@@ -26,7 +25,7 @@ export interface LineElementClasses {
 
 export type LineElementClassKey = keyof LineElementClasses;
 
-export interface LineElementOwnerState {
+interface LineElementOwnerState {
   id: string;
   color: string;
   isFaded: boolean;
@@ -111,6 +110,16 @@ export type LineElementProps = Omit<LineElementOwnerState, 'isFaded' | 'isHighli
     };
   };
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [LineElement API](https://mui.com/x/api/charts/line-element/)
+ */
 function LineElement(props: LineElementProps) {
   const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
 

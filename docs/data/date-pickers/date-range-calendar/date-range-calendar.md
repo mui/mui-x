@@ -6,7 +6,7 @@ githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Date Range Calendar [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Date Range Calendar [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">The Date Range Calendar lets the user select a range of dates without any input or popper / modal.</p>
 
@@ -60,4 +60,4 @@ You can find the documentation in the [Validation page](/x/react-date-pickers/va
 
 ## Localization
 
-You can find the documentation about localization in the [Date localization](/x/react-date-pickers/adapters-locale/) and [Component localization](/x/react-date-pickers/localization/).
+You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).

@@ -7,7 +7,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, userEvent, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, userEvent, waitFor } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { stub, SinonStub, spy } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
@@ -44,7 +44,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           {...other}
           apiRef={apiRef}
           disableRowSelectionOnClick
-          unstable_cellSelection
+          cellSelection
           disableVirtualization
           experimentalFeatures={{ clipboardPaste: true }}
         />
@@ -250,6 +250,43 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getCell(1, 2)).to.have.text(secondColumnValuesBeforePaste[1]);
         expect(getCell(2, 2)).to.have.text(secondColumnValuesBeforePaste[2]);
       });
+
+      // https://github.com/mui/mui-x/issues/9732
+      it('should ignore the `pageSize` when pagination is disabled', async () => {
+        render(
+          <Test
+            rowLength={8}
+            colLength={4}
+            paginationModel={{ page: 0, pageSize: 5 }}
+            pagination={false}
+          />,
+        );
+
+        const cell = getCell(1, 1);
+        cell.focus();
+        userEvent.mousePress(cell);
+
+        const clipboardData = [
+          ['p11', 'p12', 'p13'],
+          ['p21', 'p22', 'p23'],
+          ['p31', 'p32', 'p33'],
+          ['p41', 'p42', 'p43'],
+          ['p51', 'p52', 'p53'],
+          ['p61', 'p62', 'p63'],
+          ['p71', 'p72', 'p73'],
+        ]
+          .map((row) => row.join('\t'))
+          .join('\n');
+
+        paste(cell, clipboardData);
+
+        await waitFor(() => {
+          expect(getCell(3, 3).textContent).to.equal('p33');
+          expect(getCell(6, 2).textContent).to.equal('p62');
+          expect(getCell(7, 1).textContent).to.equal('p71');
+          expect(getCell(7, 3).textContent).to.equal('p73');
+        });
+      });
     });
 
     describe('row selection', () => {
@@ -340,7 +377,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               rows={rows}
               getRowId={(row) => row.customIdField}
               rowSelection={false}
-              unstable_cellSelection
+              cellSelection
               experimentalFeatures={{ clipboardPaste: true }}
             />
           </div>
@@ -406,7 +443,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               rows={rows}
               getRowId={(row) => row.customIdField}
               rowSelection={false}
-              unstable_cellSelection
+              cellSelection
               experimentalFeatures={{ clipboardPaste: true }}
             />
           </div>
@@ -541,7 +578,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               columns={columns}
               rows={rows}
               rowSelection={false}
-              unstable_cellSelection
+              cellSelection
               experimentalFeatures={{ clipboardPaste: true }}
               disableVirtualization
             />

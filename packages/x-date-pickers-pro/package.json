@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "6.11.1",
+  "version": "7.0.0-alpha.2",
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -17,6 +17,7 @@
     "react",
     "react-component",
     "mui",
+    "mui-x",
     "material-ui",
     "material design",
     "datepicker",
@@ -41,10 +42,12 @@
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.22.6",
-    "@mui/utils": "^5.14.3",
-    "@mui/x-date-pickers": "6.11.1",
-    "@mui/x-license-pro": "6.10.2",
+    "@babel/runtime": "^7.23.4",
+    "@mui/base": "^5.0.0-beta.24",
+    "@mui/system": "^5.14.18",
+    "@mui/utils": "^5.14.18",
+    "@mui/x-date-pickers": "7.0.0-alpha.2",
+    "@mui/x-license-pro": "7.0.0-alpha.1",
     "clsx": "^2.0.0",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"
@@ -52,9 +55,7 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/base": "^5.0.0-alpha.87",
     "@mui/material": "^5.8.6",
-    "@mui/system": "^5.8.0",
     "date-fns": "^2.25.0",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.10.7",
@@ -95,10 +96,10 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.1",
+    "@types/luxon": "^3.3.5",
     "date-fns": "^2.30.0",
-    "dayjs": "^1.11.9",
-    "luxon": "^3.3.0",
+    "dayjs": "^1.11.10",
+    "luxon": "^3.4.4",
     "moment": "^2.29.4"
   },
   "setupFiles": [

@@ -72,7 +72,7 @@ export function useMouseTracker() {
 
 export type TriggerOptions = 'item' | 'axis' | 'none';
 
-export function getTootipHasData(
+export function getTooltipHasData(
   trigger: TriggerOptions,
   displayedData: null | AxisInteractionData | ItemInteractionData<ChartSeriesType>,
 ): boolean {

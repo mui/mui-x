@@ -23,6 +23,7 @@ import {
   unstable_gridHeaderFilteringMenuSelector,
 } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { isEventTargetInPortal } from '../../../utils/domUtils';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -171,7 +172,7 @@ export const useGridKeyboardNavigation = (
 
   const getRowIdFromIndex = React.useCallback(
     (rowIndex: number) => {
-      return currentPageRows?.[rowIndex].id;
+      return currentPageRows[rowIndex]?.id;
     },
     [currentPageRows],
   );
@@ -197,7 +198,7 @@ export const useGridKeyboardNavigation = (
 
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
-      const firstRowIndexInPage = 0;
+      const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : null;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
       const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
@@ -522,7 +523,7 @@ export const useGridKeyboardNavigation = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       // Ignore portal
-      if (!event.currentTarget.contains(event.target as Element)) {
+      if (isEventTargetInPortal(event)) {
         return;
       }
 

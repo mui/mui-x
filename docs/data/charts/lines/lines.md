@@ -1,5 +1,5 @@
 ---
-title: Charts - Lines
+title: React Line chart
 ---
 
 # Charts - Lines
@@ -52,6 +52,43 @@ By default, they are stacked in the order you defined them, with positive values
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
 
+## Partial data
+
+### Skip missing points
+
+Line series can have fewer data points than the axis.
+You can handle lines with partial data or data starting at different points by providing `null` values.
+
+By default, the tooltip does not show series if they have no value.
+To override this behavior, use the `valueFormatter` to return a string if the value is `null` or `undefined`.
+
+{{"demo": "DifferentLength.js"}}
+
+:::info
+When series data length is smaller than the axis one, overflowing values are `undefined` and not `null`.
+
+The following code plots a line for x between 2 and 4.
+
+- For x<2, values are set to `null` and then not shown.
+- For x>4, values are set to `undefined` and then not shown.
+
+```jsx
+<LineChart
+  series={[{ data: [null, null, 10, 11, 12] }]}
+  xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6] }]}
+/>
+```
+
+:::
+
+### Connect missing points
+
+Line series accepts a `connectNulls` property which will continue the interpolation across points with a `null` value.
+This property can link two sets of points, with `null` data between them.
+However, it cannot extrapolate the curve before the first non-null data point or after the last one.
+
+{{"demo": "ConnectNulls.js"}}
+
 ## Styling
 
 ### Interpolation
@@ -59,7 +96,26 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
 
-{{"demo": "InterpolationDemo.js", "hideToolbar": true, "bg": "inline"}}
+This series property adds the option to control the interpolation of a series.
+Different series could even have different interpolations.
+
+{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+
+### Optimization
+
+To show mark elements, use `showMark` series property.
+It accepts a boolean or a callback.
+The next example shows how to use it to display only one mark every two data points.
+
+When a value is highlighted, a mark is rendered for that given value.
+If the charts already have some marks (due to `showMark=true`) the highlight one will be on top of others.
+
+This behavior can be removed with the `disableHighlight` series property or at the root of the line chart with a `disableLineItemHighlight` prop.
+
+In this example, you have one mark for every value with an even index.
+The highlighted data has a mark regardless if it has an even or odd index.
+
+{{"demo": "MarkOptimization.js"}}
 
 ### CSS
 
@@ -77,9 +133,6 @@ sx={{
   '& .MuiLineElement-root': {
     strokeDasharray: '10 5',
     strokeWidth: 4,
-  },
-  '& .MuiMarkElement-root': {
-    display: 'none',
   },
   '& .MuiAreaElement-series-Germany': {
     fill: "url('#myGradient')",

@@ -14,7 +14,6 @@ import {
 import {
   splitFieldInternalAndForwardedProps,
   FieldsTextFieldProps,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
@@ -58,12 +57,22 @@ const MultiInputDateTimeRangeFieldSeparator = styled(
 )({});
 
 type MultiInputDateTimeRangeFieldComponent = (<TDate>(
-  props: MultiInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+  props: MultiInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateTimeRangeField](http://mui.com/x/react-date-pickers/date-time-range-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ *
+ * - [MultiInputDateTimeRangeField API](https://mui.com/x/api/multi-input-date-time-range-field/)
+ */
 const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<TDate>(
   inProps: MultiInputDateTimeRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,
@@ -73,14 +82,15 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   const { internalProps: dateTimeFieldInternalProps, forwardedProps } =
     splitFieldInternalAndForwardedProps<
       typeof themeProps,
-      keyof Omit<UseDateTimeRangeFieldProps<any>, 'unstableFieldRef' | 'disabled'>
+      keyof Omit<
+        UseDateTimeRangeFieldProps<any>,
+        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
+      >
     >(themeProps, 'date-time');
 
   const {
-    slots: innerSlots,
-    slotProps: innerSlotProps,
-    components,
-    componentsProps,
+    slots,
+    slotProps,
     disabled,
     autoFocus,
     unstableStartFieldRef,
@@ -88,9 +98,6 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     className,
     ...otherForwardedProps
   } = forwardedProps;
-
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   const ownerState = themeProps;
   const classes = useUtilityClasses(ownerState);
@@ -206,18 +213,6 @@ MultiInputDateTimeRangeField.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   component: PropTypes.elementType,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -358,15 +353,10 @@ MultiInputDateTimeRangeField.propTypes = {
     }),
   ]),
   /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
-  /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
@@ -429,7 +419,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

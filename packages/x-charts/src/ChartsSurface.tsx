@@ -1,4 +1,4 @@
-import { styled, SxProps, Theme } from '@mui/system';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { useAxisEvents } from './hooks/useAxisEvents';
 
@@ -9,7 +9,13 @@ type ViewBox = {
   height?: number;
 };
 export interface ChartsSurfaceProps {
+  /**
+   * The width of the chart in px.
+   */
   width: number;
+  /**
+   * The height of the chart in px.
+   */
   height: number;
   viewBox?: ViewBox;
   className?: string;
@@ -17,6 +23,11 @@ export interface ChartsSurfaceProps {
   desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
   disableAxisListener?: boolean;
 }
 
@@ -34,7 +45,6 @@ export const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>
       viewBox,
       disableAxisListener = false,
       className,
-      sx,
       ...other
     } = props;
     const svgView = { width, height, x: 0, y: 0, ...viewBox };
@@ -47,16 +57,6 @@ export const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>
         height={height}
         viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
         ref={ref}
-        sx={[
-          {
-            '--ChartsLegend-itemWidth': '100px',
-            '--ChartsLegend-itemMarkSize': '20px',
-            '--ChartsLegend-rootSpacing': '5px',
-            '--ChartsLegend-labelSpacing': '5px',
-            '--ChartsLegend-rootOffsetY': '-20px',
-          },
-          ...(Array.isArray(sx) ? sx : [sx]),
-        ]}
         {...other}
       >
         <title>{props.title}</title>

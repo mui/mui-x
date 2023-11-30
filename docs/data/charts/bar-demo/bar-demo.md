@@ -22,6 +22,10 @@ title: Charts - Bar demonstration
 
 {{"demo": "MixedBarChart.js"}}
 
+## PositiveAndNegativeBarChart
+
+{{"demo": "PositiveAndNegativeBarChart.js"}}
+
 ## BarChartStackedBySign
 
 {{"demo": "BarChartStackedBySign.js"}}

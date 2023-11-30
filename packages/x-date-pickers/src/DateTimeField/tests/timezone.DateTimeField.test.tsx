@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { userEvent } from '@mui/monorepo/test/utils';
+import { userEvent } from '@mui-internal/test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { createPickerRenderer, expectInputValue, getTextbox } from 'test/utils/pickers';
-import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
+import {
+  createPickerRenderer,
+  expectInputValue,
+  getTextbox,
+  describeAdapters,
+} from 'test/utils/pickers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -36,7 +40,7 @@ describe('<DateTimeField /> - Timezone', () => {
       userEvent.keyPress(input, { key: 'ArrowRight' });
 
       return adapter.setHours(
-        adapter.setDate(adapter.setMonth(adapter.dateWithTimezone(undefined, timezone)!, 11), 31),
+        adapter.setDate(adapter.setMonth(adapter.date(undefined, timezone), 11), 31),
         23,
       );
     };
@@ -85,7 +89,7 @@ describe('<DateTimeField /> - Timezone', () => {
           const onChange = spy();
           render(
             <DateTimeField
-              value={adapter.dateWithTimezone(undefined, timezone)}
+              value={adapter.date(undefined, timezone)}
               onChange={onChange}
               timezone="America/Chicago"
               format={format}
@@ -99,10 +103,7 @@ describe('<DateTimeField /> - Timezone', () => {
           expectInputValue(input, '05/14/2022 19');
 
           // Check the `onChange` value (uses timezone prop)
-          const expectedDate = adapter.addMonths(
-            adapter.dateWithTimezone(undefined, timezone)!,
-            -1,
-          );
+          const expectedDate = adapter.addMonths(adapter.date(undefined, timezone), -1);
           const actualDate = onChange.lastCall.firstArg;
           expect(adapter.getTimezone(actualDate)).to.equal(timezone);
           expect(actualDate).toEqualDateTime(expectedDate);
@@ -118,7 +119,7 @@ describe('<DateTimeField /> - Timezone', () => {
       const { setProps } = render(<DateTimeField />);
       const input = getTextbox();
 
-      const date = adapter.date(new Date('2020-06-18T14:30:10.000Z')).setZone('UTC');
+      const date = adapter.date('2020-06-18T14:30:10.000Z').setZone('UTC');
       setProps({ value: date });
 
       expectInputValue(input, '06/18/2020 02:30 PM');

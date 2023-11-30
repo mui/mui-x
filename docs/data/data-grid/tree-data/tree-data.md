@@ -2,7 +2,7 @@
 title: Data Grid - Tree data
 ---
 
-# Data Grid - Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Use Tree data to handle rows with parent / child relationship.</p>
 
@@ -102,16 +102,19 @@ You can limit the sorting to the top-level rows with the `disableChildrenSorting
 
 {{"demo": "TreeDataDisableChildrenSorting.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> If you are using `sortingMode="server"`, you need to always put the children of a row after its parent.
-> For instance:
->
-> ```ts
-> // ✅ The row A.A is immediately after its parent
-> const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
->
-> // ❌ The row A.A is not immediately after its parent
-> const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
-> ```
+:::warning
+If you are using `sortingMode="server"`, the children of a row must always immediately follow their parent.
+For instance:
+
+```ts
+// ✅ The row A.A is immediately after its parent
+const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
+
+// ❌ The row A.A is not immediately after its parent
+const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
+```
+
+:::
 
 ## Children lazy-loading 🚧
 

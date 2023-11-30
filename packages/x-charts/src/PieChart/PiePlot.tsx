@@ -1,58 +1,45 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SeriesContext } from '../context/SeriesContextProvider';
-import PieArc, { PieArcProps } from './PieArc';
-import PieArcLabel, { PieArcLabelProps } from './PieArcLabel';
 import { DrawingContext } from '../context/DrawingProvider';
-import { DefaultizedPieValueType, PieSeriesType } from '../models/seriesType/pie';
+import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
+import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
 
-const RATIO = 180 / Math.PI;
+export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
-function getItemLabel(
-  arcLabel: PieSeriesType['arcLabel'],
-  arcLabelMinAngle: number,
-  item: DefaultizedPieValueType,
-) {
-  if (!arcLabel) {
-    return null;
-  }
-  const angle = (item.endAngle - item.startAngle) * RATIO;
-  if (angle < arcLabelMinAngle) {
-    return null;
-  }
+export interface PiePlotSlotProps extends PieArcPlotSlotProps, PieArcLabelPlotSlotProps {}
 
-  if (typeof arcLabel === 'string') {
-    return item[arcLabel]?.toString();
-  }
-
-  return arcLabel(item);
-}
-
-export interface PiePlotSlotsComponent {
-  pieArc?: React.JSXElementConstructor<PieArcProps>;
-  pieArcLabel?: React.JSXElementConstructor<PieArcLabelProps>;
-}
-
-export interface PiePlotSlotComponentProps {
-  pieArc?: Partial<PieArcProps>;
-  pieArcLabel?: Partial<PieArcLabelProps>;
-}
-
-export interface PiePlotProps {
+export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'onClick'> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: PiePlotSlotsComponent;
+  slots?: PiePlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PiePlotSlotComponentProps;
+  slotProps?: PiePlotSlotProps;
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
+   * @param {DefaultizedPieValueType} item The pie item.
+   */
 }
 
+/**
+ * Demos:
+ *
+ * - [Pie](https://mui.com/x/react-charts/pie/)
+ * - [Pie demonstration](https://mui.com/x/react-charts/pie-demo/)
+ *
+ * API:
+ *
+ * - [PiePlot API](https://mui.com/x/api/charts/pie-plot/)
+ */
 function PiePlot(props: PiePlotProps) {
-  const { slots, slotProps } = props;
+  const { skipAnimation, slots, slotProps, onClick } = props;
   const seriesData = React.useContext(SeriesContext).pie;
   const { left, top, width, height } = React.useContext(DrawingContext);
 
@@ -67,8 +54,6 @@ function PiePlot(props: PiePlotProps) {
   };
   const { series, seriesOrder } = seriesData;
 
-  const Arc = slots?.pieArc ?? PieArc;
-  const ArcLabel = slots?.pieArcLabel ?? PieArcLabel;
   return (
     <g>
       {seriesOrder.map((seriesId) => {
@@ -76,13 +61,13 @@ function PiePlot(props: PiePlotProps) {
           innerRadius,
           outerRadius,
           cornerRadius,
-          arcLabel,
-          arcLabelMinAngle = 0,
+          paddingAngle,
           data,
           cx,
           cy,
           highlighted,
           faded,
+          highlightScope,
         } = series[seriesId];
         return (
           <g
@@ -91,43 +76,56 @@ function PiePlot(props: PiePlotProps) {
               cy === undefined ? center.y : top + cy
             })`}
           >
-            <g>
-              {data.map((item, index) => {
-                return (
-                  <Arc
-                    {...item}
-                    key={item.id}
-                    innerRadius={innerRadius}
-                    outerRadius={outerRadius ?? availableRadius}
-                    cornerRadius={cornerRadius}
-                    id={seriesId}
-                    color={item.color}
-                    dataIndex={index}
-                    highlightScope={series[seriesId].highlightScope}
-                    highlighted={highlighted}
-                    faded={faded}
-                    {...slotProps?.pieArc}
-                  />
-                );
-              })}
-              {data.map((item, index) => {
-                return (
-                  <ArcLabel
-                    {...item}
-                    key={item.id}
-                    innerRadius={innerRadius}
-                    outerRadius={outerRadius ?? availableRadius}
-                    cornerRadius={cornerRadius}
-                    id={seriesId}
-                    color={item.color}
-                    dataIndex={index}
-                    highlightScope={series[seriesId].highlightScope}
-                    formattedArcLabel={getItemLabel(arcLabel, arcLabelMinAngle, item)}
-                    {...slotProps?.pieArcLabel}
-                  />
-                );
-              })}
-            </g>
+            <PieArcPlot
+              innerRadius={innerRadius}
+              outerRadius={outerRadius ?? availableRadius}
+              cornerRadius={cornerRadius}
+              paddingAngle={paddingAngle}
+              id={seriesId}
+              data={data}
+              skipAnimation={skipAnimation}
+              highlightScope={highlightScope}
+              highlighted={highlighted}
+              faded={faded}
+              onClick={onClick}
+              slots={slots}
+              slotProps={slotProps}
+            />
+          </g>
+        );
+      })}
+      {seriesOrder.map((seriesId) => {
+        const {
+          innerRadius,
+          outerRadius,
+          cornerRadius,
+          paddingAngle,
+          arcLabel,
+          arcLabelMinAngle,
+          data,
+          cx,
+          cy,
+          highlightScope,
+        } = series[seriesId];
+        return (
+          <g
+            key={seriesId}
+            transform={`translate(${cx === undefined ? center.x : left + cx}, ${
+              cy === undefined ? center.y : top + cy
+            })`}
+          >
+            <PieArcLabelPlot
+              innerRadius={innerRadius}
+              outerRadius={outerRadius ?? availableRadius}
+              cornerRadius={cornerRadius}
+              paddingAngle={paddingAngle}
+              id={seriesId}
+              data={data}
+              skipAnimation={skipAnimation}
+              arcLabel={arcLabel}
+              arcLabelMinAngle={arcLabelMinAngle}
+              highlightScope={highlightScope}
+            />
           </g>
         );
       })}
@@ -140,6 +138,18 @@ PiePlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
+   * @param {DefaultizedPieValueType} item The pie item.
+   */
+  onClick: PropTypes.func,
+  /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

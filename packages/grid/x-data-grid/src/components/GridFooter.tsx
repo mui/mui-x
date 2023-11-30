@@ -5,7 +5,6 @@ import { gridTopLevelRowCountSelector } from '../hooks/features/rows/gridRowsSel
 import { selectedGridRowsCountSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
 import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -29,7 +28,11 @@ const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(fu
 
   const rowCountElement =
     !rootProps.hideFooterRowCount && !rootProps.pagination ? (
-      <GridRowCount rowCount={totalTopLevelRowCount} visibleRowCount={visibleTopLevelRowCount} />
+      <rootProps.slots.footerRowCount
+        {...rootProps.slotProps?.footerRowCount}
+        rowCount={totalTopLevelRowCount}
+        visibleRowCount={visibleTopLevelRowCount}
+      />
     ) : null;
 
   const paginationElement = rootProps.pagination &&

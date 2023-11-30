@@ -41,8 +41,28 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "autosizeOnMount": {
+      "description": "If <code>true</code>, columns are autosized after the datagrid is mounted.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "autosizeOptions": {
+      "description": "The options for autosize when user-initiated.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "cellModesModel": {
       "description": "Controls the modes of the cells.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "cellSelection": {
+      "description": "If <code>true</code>, the cell selection mode is enabled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "cellSelectionModel": {
+      "description": "Set the cell selection model of the grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -91,16 +111,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "components": {
-      "description": "Overridable components.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "componentsProps": {
-      "description": "Overridable components props dynamically passed to the component at rendering.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "defaultGroupingExpansionDepth": {
       "description": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded.",
       "deprecated": "",
@@ -118,6 +128,11 @@
     },
     "disableAggregation": {
       "description": "If <code>true</code>, aggregation is disabled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "disableAutosize": {
+      "description": "If <code>true</code>, column autosizing on header separator double-click is disabled.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -328,6 +343,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "ignoreDiacritics": {
+      "description": "If <code>true</code>, the diacritics (accents) are ignored when filtering or quick filtering. E.g. when filter value is <code>cafe</code>, the rows with <code>café</code> will be visible.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "initialState": {
       "description": "The initial state of the DataGridPremium. The data in it is set in the state on initialization but isn&#39;t controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins.",
       "deprecated": "",
@@ -448,6 +468,14 @@
       "deprecated": "",
       "typeDescriptions": {
         "cellModesModel": "Object containing which cells are in &quot;edit&quot; mode.",
+        "details": "Additional details for this callback."
+      }
+    },
+    "onCellSelectionModelChange": {
+      "description": "Callback fired when the selection state of one or multiple cells changes.",
+      "deprecated": "",
+      "typeDescriptions": {
+        "cellSelectionModel": "Object in the shape of GridCellSelectionModel containing the selected cells.",
         "details": "Additional details for this callback."
       }
     },
@@ -812,6 +840,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "rowPositionsDebounceMs": {
+      "description": "The milliseconds delay to wait after measuring the row height before recalculating row positions. Setting it to a lower value could be useful when using dynamic row height, but might reduce performance when displaying a large number of rows.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "rowReordering": {
       "description": "If <code>true</code>, the reordering of rows is enabled.",
       "deprecated": "",
@@ -903,16 +936,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "unstable_cellSelection": {
-      "description": "If <code>true</code>, the cell selection mode is enabled.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "unstable_cellSelectionModel": {
-      "description": "Set the cell selection model of the grid.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "unstable_headerFilters": {
       "description": "If <code>true</code>, enables the data grid filtering on header feature.",
       "deprecated": "",
@@ -922,14 +945,6 @@
       "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
       "deprecated": "",
       "typeDescriptions": {}
-    },
-    "unstable_onCellSelectionModelChange": {
-      "description": "Callback fired when the selection state of one or multiple cells changes.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "cellSelectionModel": "Object in the shape of GridCellSelectionModel containing the selected cells.",
-        "details": "Additional details for this callback."
-      }
     },
     "unstable_splitClipboardPastedText": {
       "description": "The function is used to split the pasted text into rows and cells.",
@@ -971,6 +986,10 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "<code>autoHeight={true}</code>"
+    },
+    "autosizing": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element while it is being autosized"
     },
     "booleanCell": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1025,6 +1044,11 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "it is at the right edge of a cell selection range"
+    },
+    "cell--selectionMode": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is in a cell selection range"
     },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "cellContent": {
@@ -1533,6 +1557,7 @@
     "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter panel.",
     "filterPanelRemoveAllIcon": "Icon displayed for deleting all the active filters from filter panel.",
     "footer": "Footer component rendered at the bottom of the grid viewport.",
+    "footerRowCount": "Row count component rendered in the footer",
     "groupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "headerFilterCell": "Component responsible for showing menu adornment in Header filter row",
@@ -1545,7 +1570,6 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
-    "preferencesPanel": "PreferencesPanel component rendered inside the Header component.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",

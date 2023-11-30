@@ -2,24 +2,13 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
+    "clearable": { "type": { "name": "bool" } },
     "color": {
       "type": {
         "name": "enum",
         "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
       },
       "default": "'primary'"
-    },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
@@ -40,9 +29,7 @@
     "InputLabelProps": { "type": { "name": "object" } },
     "inputProps": { "type": { "name": "object" } },
     "InputProps": { "type": { "name": "object" } },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current: any }" }
-    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "margin": {
       "type": {
@@ -66,6 +53,7 @@
         "describedArgs": ["value", "context"]
       }
     },
+    "onClear": { "type": { "name": "func" } },
     "onError": {
       "type": { "name": "func" },
       "signature": {
@@ -90,16 +78,6 @@
       "type": {
         "name": "union",
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
-      }
-    },
-    "shouldDisableClock": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
-      "signature": {
-        "type": "function(clockValue: number, view: TimeView) => boolean",
-        "describedArgs": ["clockValue", "view"],
-        "returned": "boolean"
       }
     },
     "shouldDisableDate": {
@@ -164,8 +142,20 @@
   "slots": [
     {
       "class": null,
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon"
+    },
+    {
+      "class": null,
       "name": "textField",
-      "description": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "description": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>.",
       "default": "TextField from '@mui/material'"
     }
   ],
@@ -180,9 +170,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateTimeField/DateTimeField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-field/\">Date Time Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimeField" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DateTimeField" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-field/\">Date Time Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
 }

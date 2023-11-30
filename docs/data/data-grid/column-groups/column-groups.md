@@ -5,7 +5,7 @@
 Grouping columns allows you to have a multi-level hierarchy of columns in your header.
 
 :::warning
-This feature is experimental, it needs to be explicitly activated using the `columnGrouping` experimental feature flag.
+This feature is experimental and must be explicitly activated using the `columnGrouping` experimental feature flag:
 
 ```tsx
 <DataGrid experimentalFeatures={{ columnGrouping: true }} {...otherProps} />
@@ -66,7 +66,7 @@ In addition to the required `groupId` and `children`, you can use the following 
 
 {{"demo": "CustomizationDemo.js", "bg": "inline"}}
 
-## Column reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Column reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 By default, the columns that are part of a group cannot be dragged to outside their group.
 You can customize this behavior on specific groups by setting `freeReordering: true` in a column group object.
@@ -87,7 +87,7 @@ This feature isn't implemented yet. It's coming.
 Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
 :::
 
-## Column group ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)🚧
+## Column group ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
 Users could drag and drop group header to move all the group children at once, [like they can already do it with normal columns](/x/react-data-grid/column-ordering/).
 

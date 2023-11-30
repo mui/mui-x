@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, screen, userEvent } from '@mui-internal/test-utils';
 import { DateCalendar, dateCalendarClasses as classes } from '@mui/x-date-pickers/DateCalendar';
 import { pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import {
+  adapterToUse,
+  wrapPickerMount,
+  createPickerRenderer,
+  describeValidation,
+  describeValue,
+} from 'test/utils/pickers';
 
 describe('<DateCalendar /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -31,7 +35,7 @@ describe('<DateCalendar /> - Describes', () => {
   describeValue(DateCalendar, () => ({
     render,
     componentFamily: 'calendar',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
