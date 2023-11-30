@@ -90,9 +90,24 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - -->
 
-<!-- ### Columns
+### Columns
 
-- -->
+- The `GridColDef['type']` has been narrowed down to only accept the built-in column types.
+  TypeScript users will need to make sure to use the `GridColDef` interface when defining columns:
+
+  ```tsx
+  // 🛑 `type` is casted to `string` which is too wide
+  const columns = [{ type: 'number', id: 'field' }];
+  <DataGrid columns={columns} />;
+
+  // ✅ `type` is casted to `'number'`
+  const columns: GridColDef[] = [{ type: 'number', id: 'field' }];
+  <DataGrid columns={columns} />;
+
+  // ✅ Alternalively, `as const` can be used to narrow down the type
+  const columns = [{ type: 'number', id: 'field' as const }];
+  <DataGrid columns={columns} />;
+  ```
 
 <!-- ### Rows
 
@@ -114,21 +129,21 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - The `unstable_` prefix has been removed from the cell selection props listed below.
 
-  | Old name                              | New name                     |
-  | :------------------------------------ | :--------------------------- |
-  | `unstable_cellSelection`              | `cellSelection`              |
-  | `unstable_cellSelectionModel`         | `cellSelectionModel`         |
-  | `unstable_onCellSelectionModelChange` | `onCellSelectionModelChange` |
+| Old name                              | New name                     |
+| :------------------------------------ | :--------------------------- |
+| `unstable_cellSelection`              | `cellSelection`              |
+| `unstable_cellSelectionModel`         | `cellSelectionModel`         |
+| `unstable_onCellSelectionModelChange` | `onCellSelectionModelChange` |
 
 - The `unstable_` prefix has been removed from the cell selection API methods listed below.
 
-  | Old name                           | New name                  |
-  | :--------------------------------- | :------------------------ |
-  | `unstable_getCellSelectionModel`   | `getCellSelectionModel`   |
-  | `unstable_getSelectedCellsAsArray` | `getSelectedCellsAsArray` |
-  | `unstable_isCellSelected`          | `isCellSelected`          |
-  | `unstable_selectCellRange`         | `selectCellRange`         |
-  | `unstable_setCellSelectionModel`   | `setCellSelectionModel`   |
+| Old name                           | New name                  |
+| :--------------------------------- | :------------------------ |
+| `unstable_getCellSelectionModel`   | `getCellSelectionModel`   |
+| `unstable_getSelectedCellsAsArray` | `getSelectedCellsAsArray` |
+| `unstable_isCellSelected`          | `isCellSelected`          |
+| `unstable_selectCellRange`         | `selectCellRange`         |
+| `unstable_setCellSelectionModel`   | `setCellSelectionModel`   |
 
 ### Filtering
 
@@ -138,18 +153,18 @@ Below are described the steps you need to make to migrate from v6 to v7.
 - The signature of the function returned by `getApplyFilterFn` has changed for performance reasons:
 
 ```diff
- const getApplyFilterFn: GetApplyFilterFn<any, unknown> = (filterItem) => {
-   if (!filterItem.value) {
-     return null;
-   }
+const getApplyFilterFn: GetApplyFilterFn<any, unknown> = (filterItem) => {
+ if (!filterItem.value) {
+   return null;
+ }
 
-   const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
+ const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
 -  return (cellParams) => {
 -    const { value } = cellParams;
 +  return (value, row, colDef, apiRef) => {
-     return value != null ? filterRegex.test(String(value)) : false;
-   };
- }
+   return value != null ? filterRegex.test(String(value)) : false;
+ };
+}
 ```
 
 - The `getApplyQuickFilterFnV7` in `GridColDef` was renamed to `getApplyQuickFilterFn`.

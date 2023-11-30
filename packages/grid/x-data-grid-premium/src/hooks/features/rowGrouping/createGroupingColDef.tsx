@@ -24,7 +24,6 @@ const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
 };
 
 const GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<GridColDef, 'type' | 'editable' | 'groupable'> = {
-  type: 'rowGroupByColumnsGroup',
   editable: false,
   groupable: false,
 };

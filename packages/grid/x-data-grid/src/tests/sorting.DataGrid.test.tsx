@@ -30,7 +30,7 @@ describe('<DataGrid /> - Sorting', () => {
       },
     ],
     columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
-  };
+  } as const;
 
   it('should keep the initial order', () => {
     const cols = [{ field: 'id' }];

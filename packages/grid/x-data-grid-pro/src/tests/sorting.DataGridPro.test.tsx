@@ -35,7 +35,7 @@ describe('<DataGridPro /> - Sorting', () => {
       },
     ],
     columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
-  };
+  } as const;
 
   const { render } = createRenderer({ clock: 'fake' });
 
