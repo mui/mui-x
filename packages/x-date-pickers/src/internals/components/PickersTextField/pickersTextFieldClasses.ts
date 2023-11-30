@@ -32,12 +32,16 @@ export interface PickersInputClasses {
   focused: string;
   /** State class applied to the root element if `disabled=true`. */
   disabled: string;
+  /** State class applied to the root element if `readOnly=true`. */
+  readOnly: string;
   /** State class applied to the root element if `error=true`. */
   error: string;
   /** Styles applied to the NotchedOutline element. */
   notchedOutline: string;
-  /** Styles applied to the fake input element. */
+  /** Styles applied to the real hidden input element. */
   input: string;
+  /** Styles applied to the fake input element. */
+  fakeInput: string;
   /** Styles applied to the section of the picker. */
   content: string;
   /** Styles applied to the startSeparator */
@@ -68,4 +72,5 @@ export const pickersInputClasses = generateUtilityClasses<PickersInputClassKey>(
   'adornedStart',
   'adornedEnd',
   'input',
+  'fakeInput',
 ]);
