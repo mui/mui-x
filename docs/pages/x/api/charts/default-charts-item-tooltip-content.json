@@ -1,0 +1,36 @@
+{
+  "props": {
+    "classes": {
+      "type": { "name": "object" },
+      "required": true,
+      "additionalInfo": { "cssApi": true }
+    },
+    "itemData": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'scatter' }"
+      },
+      "required": true
+    },
+    "series": {
+      "type": {
+        "name": "shape",
+        "description": "{ color?: string, data: Array&lt;number&gt;, highlightScope?: { faded?: 'global'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series', highlighted?: 'item'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series' }, id: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'scatter', valueFormatter: func }"
+      },
+      "required": true
+    }
+  },
+  "slots": [],
+  "name": "DefaultChartsItemTooltipContent",
+  "imports": [
+    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",
+    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts';"
+  ],
+  "styles": {
+    "classes": ["root", "table", "row", "cell", "mark", "markCell", "labelCell", "valueCell"],
+    "globalClasses": {},
+    "name": "MuiDefaultChartsItemTooltipContent"
+  },
+  "filename": "/packages/x-charts/src/ChartsTooltip/DefaultChartsItemTooltipContent.tsx",
+  "demos": "<ul></ul>"
+}

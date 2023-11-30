@@ -1,0 +1,16 @@
+{
+  "props": {},
+  "slots": [],
+  "name": "ChartsItemTooltipContent",
+  "imports": [
+    "import { ChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",
+    "import { ChartsItemTooltipContent } from '@mui/x-charts';"
+  ],
+  "styles": {
+    "classes": ["root", "table", "row", "cell", "mark", "markCell", "labelCell", "valueCell"],
+    "globalClasses": {},
+    "name": "MuiChartsItemTooltipContent"
+  },
+  "filename": "/packages/x-charts/src/ChartsTooltip/ChartsItemTooltipContent.tsx",
+  "demos": "<ul></ul>"
+}

@@ -381,9 +381,12 @@ const pages: MuiPage[] = [
     newFeature: true,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
+      { pathname: '/x/react-charts/getting-started' },
       {
         pathname: '/x/react-charts-available',
         subheader: 'Available components',
+        pathname: '/x/react-charts-components',
+        subheader: 'Components',
         children: [
           {
             pathname: '/x/react-charts-bars',
@@ -391,6 +394,8 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-charts/bars', title: 'Bars overview' },
               { pathname: '/x/react-charts/bar-demo', title: 'Demos' },
+              { pathname: '/x/react-charts/bars', title: 'Bars' },
+              { pathname: '/x/react-charts/bar-demo', title: 'Demo' },
             ],
           },
           {
@@ -400,6 +405,9 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/lines', title: 'Lines overview' },
               { pathname: '/x/react-charts/line-demo', title: 'Lines demo' },
               { pathname: '/x/react-charts/areas-demo', title: 'Area demo' },
+              { pathname: '/x/react-charts/lines', title: 'Lines' },
+              { pathname: '/x/react-charts/line-demo', title: 'Demo lines' },
+              { pathname: '/x/react-charts/areas-demo', title: 'Demo area' },
             ],
           },
           {
@@ -407,6 +415,7 @@ const pages: MuiPage[] = [
             title: 'Pie',
             children: [
               { pathname: '/x/react-charts/pie', title: 'Pie overview' },
+              { pathname: '/x/react-charts/pie', title: 'Pie' },
               { pathname: '/x/react-charts/pie-demo', title: 'Demo' },
             ],
           },
@@ -415,6 +424,7 @@ const pages: MuiPage[] = [
             title: 'Scatter',
             children: [
               { pathname: '/x/react-charts/scatter', title: 'Scatter overview' },
+              { pathname: '/x/react-charts/scatter', title: 'Scatter' },
               { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
             ],
           },
@@ -454,6 +464,33 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-charts/components', title: 'Custom components' },
         ],
       },
+        ],
+      },
+      {
+        pathname: '/x/react-charts/common-features',
+        subheader: 'Common features',
+        children: [
+          { pathname: '/x/react-charts/axis', title: 'Axis' },
+          { pathname: '/x/react-charts/components', title: 'Custom components' },
+          { pathname: '/x/react-charts/composition', title: 'Composition' },
+          { pathname: '/x/react-charts/legend', title: 'Legend' },
+          { pathname: '/x/react-charts/stacking', title: 'Stacking' },
+          { pathname: '/x/react-charts/styling', title: 'Styling' },
+          { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+        ],
+      },
+      {
+        pathname: '/x/api/charts-group',
+        title: 'API Reference',
+        children: [...chartsComponentApi],
+      },
+      { pathname: '/x/react-charts/gauge', title: 'Gauge 🚧' },
+      { pathname: '/x/react-charts/tree-map', title: 'Tree map 🚧' },
+      { pathname: '/x/react-charts/heat-map', title: 'Heat map 🚧' },
+      { pathname: '/x/react-charts/radar', title: 'Radar 🚧' },
+      { pathname: '/x/react-charts/funnel', title: 'Funnel 🚧', plan: 'pro' },
+      { pathname: '/x/react-charts/sankey', title: 'Sankey 🚧', plan: 'pro' },
+      { pathname: '/x/react-charts/gantt', title: 'Gantt 🚧', plan: 'pro' },
     ],
   },
   {

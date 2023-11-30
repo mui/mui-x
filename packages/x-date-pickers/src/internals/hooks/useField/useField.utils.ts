@@ -356,50 +356,52 @@ const getSectionPlaceholder = <TDate>(
   timezone: PickersTimezone,
   localeText: PickersLocaleText<TDate>,
   sectionConfig: Pick<FieldSection, 'type' | 'contentType'>,
-  currentTokenValue: string,
+  sectionFormat: string,
 ) => {
   switch (sectionConfig.type) {
     case 'year': {
       return localeText.fieldYearPlaceholder({
-        digitAmount: utils.formatByString(utils.date(undefined, timezone), currentTokenValue)
-          .length,
+        digitAmount: utils.formatByString(utils.date(undefined, timezone), sectionFormat).length,
+        format: sectionFormat,
       });
     }
 
     case 'month': {
       return localeText.fieldMonthPlaceholder({
         contentType: sectionConfig.contentType,
+        format: sectionFormat,
       });
     }
 
     case 'day': {
-      return localeText.fieldDayPlaceholder();
+      return localeText.fieldDayPlaceholder({ format: sectionFormat });
     }
 
     case 'weekDay': {
       return localeText.fieldWeekDayPlaceholder({
         contentType: sectionConfig.contentType,
+        format: sectionFormat,
       });
     }
 
     case 'hours': {
-      return localeText.fieldHoursPlaceholder();
+      return localeText.fieldHoursPlaceholder({ format: sectionFormat });
     }
 
     case 'minutes': {
-      return localeText.fieldMinutesPlaceholder();
+      return localeText.fieldMinutesPlaceholder({ format: sectionFormat });
     }
 
     case 'seconds': {
-      return localeText.fieldSecondsPlaceholder();
+      return localeText.fieldSecondsPlaceholder({ format: sectionFormat });
     }
 
     case 'meridiem': {
-      return localeText.fieldMeridiemPlaceholder();
+      return localeText.fieldMeridiemPlaceholder({ format: sectionFormat });
     }
 
     default: {
-      return currentTokenValue;
+      return sectionFormat;
     }
   }
 };

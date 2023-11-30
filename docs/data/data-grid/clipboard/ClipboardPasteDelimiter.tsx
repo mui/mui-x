@@ -26,7 +26,7 @@ export default function ClipboardPasteDelimiter() {
         {...data}
         initialState={initialState}
         disableRowSelectionOnClick
-        unstable_cellSelection
+        cellSelection
         experimentalFeatures={{ clipboardPaste: true }}
         unstable_ignoreValueFormatterDuringExport
         clipboardCopyCellDelimiter={','}

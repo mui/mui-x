@@ -21,21 +21,35 @@ Additionally, you can also use all the MUI System tools, such as the theme overr
 ## Installation
 
 Run one of the following commands to add the MUI X Charts to your project:
+To achieve this goal, the `@mui/x-charts` relies on three levels of customization:
 
-<codeblock storageKey="package-manager">
-```bash npm
-npm install @mui/x-charts@next
-```
+- _single components_ with nice defaults
+- extensive _configuration props_
+- subcomponents for _composition_
 
-```bash yarn
-yarn add @mui/x-charts@next
-```
+To modify the styling of charts you can rely on all the MUI styling tools, such as the theme override, or the `sx` props.
 
-```bash pnpm
-pnpm add @mui/x-charts@next
-```
+## Documentation
 
-</codeblock>
+:::info
+This documentation does not follow the usual MUI structure.
+:::
+
+Each component has two docs pages:
+
+- The first one describes behaviors that are specific to this component.
+- The second one provides a set of basic examples.
+
+For features shared across multiple components, likes axes and legends, visit their corresponding documents:
+
+- [Axis](/x/react-charts/axis/)
+- [Custom components](/x/react-charts/components/)
+- [Legend](/x/react-charts/legend/)
+- [Stacking](/x/react-charts/stacking/)
+- [Styling](/x/react-charts/styling/)
+- [Tooltips and Highlights](/x/react-charts/tooltip/)
+
+## What's next?
 
 :::info
 The `next` tag is used to download the latest, **pre-release**, v7 version.
@@ -74,3 +88,4 @@ Check the [Axis page](/x/react-charts/axis/) for more details.
 MUI X Charts follows the Material UI styling and features all of the customization tools you'd find there, making tweaking charts as straightforward as designing buttons.
 
 Check the [Styling page](/x/react-charts/styling/) for more details.
+Continue to the [Getting started doc](/x/react-charts/getting-started/) and learn how to prepare your application for Charts.
