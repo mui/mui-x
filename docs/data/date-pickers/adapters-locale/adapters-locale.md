@@ -214,14 +214,24 @@ Placeholders translations depend on locale.
 Some locales might keep using English placeholders, because that format is commonly used in a given locale.
 :::
 
-Certain formats might result in a placeholder that is not the most ideal for your use case.
-You can use the appropriate `localeText` prop field to adjust the resulting placeholder to your needs.
+You can customize the specific placeholder section translation to your needs.
+All the available placeholder translation methods and their parameters are available in [the source file](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts).
+You can override them using the `localeText` prop defined on the `LocalizationProvider` or specific on a Picker component if you need more fine grained control.
 
-{{"demo": "FieldPlaceholderCustomization.js"}}
+A common use case is to change the placeholder of the month section to a short letter form (Jan, Feb, etc.).
+The default translation implementation might not be what you want, so you can override it:
 
-:::info
-All the field section placeholder methods receive the section `format` as a parameter so that you could have more freedom tailoring your translations.
-:::
+```tsx
+<LocalizationProvider
+  dateAdapter={AdapterDayjs}
+  localeText={{
+    fieldMonthPlaceholder: (params) =>
+      params.contentType === 'digit' ? 'MM' : params.format,
+  }}
+>
+  <DatePicker />
+</LocalizationProvider>
+```
 
 ### Custom toolbar format
 
