@@ -133,10 +133,10 @@ function NewViewListButton(props) {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = (event) => {
     onSubmit();
     setIsAddingView(false);
-    e.preventDefault();
+    event.preventDefault();
   };
 
   return (
