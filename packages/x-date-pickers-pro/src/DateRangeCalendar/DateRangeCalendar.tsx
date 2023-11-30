@@ -14,7 +14,6 @@ import {
 import {
   applyDefaultDate,
   BaseDateValidationProps,
-  DAY_MARGIN,
   DayCalendar,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
@@ -56,6 +55,7 @@ import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
 import { useRangePosition } from '../internals/hooks/useRangePosition';
+import { DAY_RANGE_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 
 const releaseInfo = getReleaseInfo();
 
@@ -85,7 +85,6 @@ const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
   justifyContent: 'space-between',
 });
 
-const DAY_RANGE_SIZE = 40;
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
 const warnInvalidCurrentMonthCalendarPosition = buildWarning([

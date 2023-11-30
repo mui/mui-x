@@ -10,10 +10,13 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
-import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { VIEW_HEIGHT } from '@mui/x-date-pickers/internals/constants/dimensions';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
+import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock/digitalClockClasses';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -26,6 +29,7 @@ import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
+import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const DesktopDateTimeRangeContainer = styled('div')({
   display: 'flex',
@@ -47,8 +51,10 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
     sx: {
       borderBottom: 0,
       width: 'auto',
-      [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-        maxHeight: VIEW_HEIGHT,
+      [`&.${multiSectionDigitalClockClasses.root},
+       .${multiSectionDigitalClockSectionClasses.root},
+        &.${digitalClockClasses.root}`]: {
+        maxHeight: RANGE_VIEW_HEIGHT,
       },
       ...(Array.isArray(rendererProps.sx) ? rendererProps.sx : [rendererProps.sx]),
     },

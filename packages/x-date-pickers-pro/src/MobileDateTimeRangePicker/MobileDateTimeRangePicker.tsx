@@ -12,7 +12,11 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
-import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock/digitalClockClasses';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -25,6 +29,7 @@ import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
+import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const rendererInterceptor = function rendererInterceptor<TDate>(
   inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
@@ -47,6 +52,11 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
         [`.${multiSectionDigitalClockSectionClasses.item}`]: {
           width: 'auto',
         },
+      },
+      [`&.${multiSectionDigitalClockClasses.root},
+        .${multiSectionDigitalClockSectionClasses.root},
+        &.${digitalClockClasses.root}`]: {
+        maxHeight: RANGE_VIEW_HEIGHT - 1,
       },
       ...(Array.isArray(rendererProps.sx) ? rendererProps.sx : [rendererProps.sx]),
     },
