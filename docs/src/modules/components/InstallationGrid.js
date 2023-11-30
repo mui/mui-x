@@ -21,7 +21,7 @@ const content = [
   },
   {
     title: 'Charts',
-    link: '/x/react-charts/#getting-started',
+    link: '/x/react-charts/getting-started/#installation',
     description:
       'A collection of data visualization graphs, including bar, line, pie, scatter, and more.',
     icon: <BarChartRoundedIcon fontSize="small" color="primary" />,
