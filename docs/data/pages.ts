@@ -381,49 +381,63 @@ const pages: MuiPage[] = [
     newFeature: true,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
+      { pathname: '/x/react-charts/getting-started' },
       {
-        pathname: '/x/react-charts-bars',
-        title: 'Bars',
+        pathname: '/x/react-charts-components',
+        subheader: 'Components',
         children: [
-          { pathname: '/x/react-charts/bars', title: 'Bars' },
-          { pathname: '/x/react-charts/bar-demo', title: 'Demo' },
+          {
+            pathname: '/x/react-charts-bars',
+            title: 'Bars',
+            children: [
+              { pathname: '/x/react-charts/bars', title: 'Bars' },
+              { pathname: '/x/react-charts/bar-demo', title: 'Demo' },
+            ],
+          },
+          {
+            pathname: '/x/react-charts-lines',
+            title: 'Lines',
+            children: [
+              { pathname: '/x/react-charts/lines', title: 'Lines' },
+              { pathname: '/x/react-charts/line-demo', title: 'Demo lines' },
+              { pathname: '/x/react-charts/areas-demo', title: 'Demo area' },
+            ],
+          },
+          {
+            pathname: '/x/react-charts-pie',
+            title: 'Pie',
+            children: [
+              { pathname: '/x/react-charts/pie', title: 'Pie' },
+              { pathname: '/x/react-charts/pie-demo', title: 'Demo' },
+            ],
+          },
+          {
+            pathname: '/x/react-charts-scatter',
+            title: 'Scatter',
+            children: [
+              { pathname: '/x/react-charts/scatter', title: 'Scatter' },
+              { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
+            ],
+          },
+          {
+            pathname: '/x/react-charts/sparkline',
+            title: 'Sparkline',
+          },
         ],
       },
       {
-        pathname: '/x/react-charts-lines',
-        title: 'Lines',
+        pathname: '/x/react-charts/common-features',
+        subheader: 'Common features',
         children: [
-          { pathname: '/x/react-charts/lines', title: 'Lines' },
-          { pathname: '/x/react-charts/line-demo', title: 'Demo lines' },
-          { pathname: '/x/react-charts/areas-demo', title: 'Demo area' },
+          { pathname: '/x/react-charts/axis', title: 'Axis' },
+          { pathname: '/x/react-charts/components', title: 'Custom components' },
+          { pathname: '/x/react-charts/composition', title: 'Composition' },
+          { pathname: '/x/react-charts/legend', title: 'Legend' },
+          { pathname: '/x/react-charts/stacking', title: 'Stacking' },
+          { pathname: '/x/react-charts/styling', title: 'Styling' },
+          { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
         ],
       },
-      {
-        pathname: '/x/react-charts-pie',
-        title: 'Pie',
-        children: [
-          { pathname: '/x/react-charts/pie', title: 'Pie' },
-          { pathname: '/x/react-charts/pie-demo', title: 'Demo' },
-        ],
-      },
-      {
-        pathname: '/x/react-charts-scatter',
-        title: 'Scatter',
-        children: [
-          { pathname: '/x/react-charts/scatter', title: 'Scatter' },
-          { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
-        ],
-      },
-      {
-        pathname: '/x/react-charts/sparkline',
-        title: 'Sparkline',
-      },
-      { pathname: '/x/react-charts/axis', title: 'Axis' },
-      { pathname: '/x/react-charts/components', title: 'Custom components' },
-      { pathname: '/x/react-charts/legend', title: 'Legend' },
-      { pathname: '/x/react-charts/stacking', title: 'Stacking' },
-      { pathname: '/x/react-charts/styling', title: 'Styling' },
-      { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
       {
         pathname: '/x/api/charts-group',
         title: 'API Reference',

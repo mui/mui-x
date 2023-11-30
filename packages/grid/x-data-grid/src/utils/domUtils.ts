@@ -49,3 +49,15 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
 
   return activeEl;
 };
+
+export function isEventTargetInPortal(event: React.SyntheticEvent) {
+  if (
+    // The target is not an element when triggered by a Select inside the cell
+    // See https://github.com/mui/material-ui/issues/10534
+    (event.target as any).nodeType === 1 &&
+    !event.currentTarget.contains(event.target as Element)
+  ) {
+    return true;
+  }
+  return false;
+}
