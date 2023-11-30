@@ -176,7 +176,12 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
           alignItems: 'center',
         }}
       >
-        <Typography id="usage-props" component="h3" fontWeight="lg" sx={{ scrollMarginTop: 160 }}>
+        <Typography
+          id="usage-props"
+          component="h3"
+          fontWeight="bold"
+          sx={{ scrollMarginTop: 160, fontFamily: 'General Sans' }}
+        >
           Playground
         </Typography>
         <IconButton

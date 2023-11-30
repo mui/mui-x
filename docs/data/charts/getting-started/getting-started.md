@@ -64,12 +64,12 @@ See the [Composition doc](/x/react-charts/composition/) for complete details.
 
 ## Axis management
 
-MUI X Charts are flexible when it comes to axis management: they support multiple-axis charts with any combination of scales and ranges.
+MUI X Charts have a flexible approach to axis management, supporting multiple-axis charts with any combination of scales and ranges.
 
-See the [Axis doc](/x/react-charts/axis/) for more details.
+Visit the [Axis page](/x/react-charts/axis/) for more details.
 
 ## Styling
 
-The Charts library follows the same styling patterns as other MUI component libraries, such as Material UI.
+MUI X Charts follows the Material UI styling and features all of the customization tools you'd find there, making tweaking charts as straightforward as designing buttons.
 
-See the [Styling doc](/x/react-charts/styling/) for details.
+Visit the [Styling page](/x/react-charts/styling/) for more details.
