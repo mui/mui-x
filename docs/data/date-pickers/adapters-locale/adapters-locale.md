@@ -114,7 +114,6 @@ You can override the default setting with the `ampm` prop:
 
 ## Custom formats
 
-:::warning
 The format received by the props described below depends on the date library you are using.
 Please refer to each library's documentation for the full format table:
 
@@ -122,8 +121,6 @@ Please refer to each library's documentation for the full format table:
 - [date-fns](https://date-fns.org/docs/format)
 - [Luxon](https://moment.github.io/luxon/#/formatting?id=table-of-tokens)
 - [Moment.js](https://momentjs.com/docs/#/displaying/format/)
-
-:::
 
 ### Custom field format
 
@@ -217,9 +214,28 @@ Placeholders translations depend on locale.
 Some locales might keep using English placeholders, because that format is commonly used in a given locale.
 :::
 
+You can customize the specific placeholder section translation to your needs.
+All the available placeholder translation methods and their parameters are available in [the source file](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts).
+You can override them using the `localeText` prop defined on the `LocalizationProvider` or on a specific Picker component if you need more fine-grained control.
+
+A common use case is to change the placeholder of the month section to a short letter form (Jan, Feb, etc.).
+The default translation implementation might not be what you want, so you can override it:
+
+```tsx
+<LocalizationProvider
+  dateAdapter={AdapterDayjs}
+  localeText={{
+    fieldMonthPlaceholder: (params) =>
+      params.contentType === 'digit' ? 'MM' : params.format,
+  }}
+>
+  <DatePicker />
+</LocalizationProvider>
+```
+
 ### Custom toolbar format
 
-To customize the format used in the toolbar, use the `toolbarFormat` prop of the toolbar slot.
+To customize the format used in the toolbar, use the `toolbarFormat` prop of the `toolbar` slot.
 
 :::info
 This prop is available on all pickers.
@@ -244,3 +260,13 @@ This prop is available on all components that render a day calendar, including t
 The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
+
+### Custom calendar header format
+
+To customize the format used on the calendar header, use the `format` prop of the `calendarHeader` slot.
+
+:::info
+This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
+:::
+
+{{"demo": "CustomCalendarHeaderFormat.js"}}

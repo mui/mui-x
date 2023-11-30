@@ -124,7 +124,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     disableFuture,
     disablePast,
     minutesStep = 1,
-    shouldDisableClock,
     shouldDisableTime,
     onChange,
     view: inView,
@@ -202,14 +201,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     if (containerRef.current === null) {
       return;
     }
-    const selectedItem = containerRef.current.querySelector<HTMLElement>(
-      '[role="listbox"] [role="option"][aria-selected="true"]',
+    const activeItem = containerRef.current.querySelector<HTMLElement>(
+      '[role="listbox"] [role="option"][tabindex="0"], [role="listbox"] [role="option"][aria-selected="true"]',
     );
 
-    if (!selectedItem) {
+    if (!activeItem) {
       return;
     }
-    const offsetTop = selectedItem.offsetTop;
+    const offsetTop = activeItem.offsetTop;
+    if (autoFocus || !!focusedView) {
+      activeItem.focus();
+    }
 
     // Subtracting the 4px of extra margin intended for the first visible section item
     containerRef.current.scrollTop = offsetTop - 4;
@@ -244,10 +246,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           return false;
         }
 
-        if (shouldDisableClock?.(utils.toJsDate(valueToCheck).getTime(), 'hours')) {
-          return false;
-        }
-
         if (shouldDisableTime) {
           return !shouldDisableTime(valueToCheck, 'hours');
         }
@@ -266,7 +264,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       now,
       disablePast,
       minutesStep,
-      shouldDisableClock,
       shouldDisableTime,
     ],
   );
@@ -281,6 +278,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ];
   }, [valueOrReferenceDate, timeStep, utils]);
 
+  const focusedOptionIndex = timeOptions.findIndex((option) =>
+    utils.isEqual(option, valueOrReferenceDate),
+  );
+
   return (
     <DigitalClockRoot
       ref={handleRef}
@@ -289,19 +290,22 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       {...other}
     >
       <DigitalClockList
-        autoFocusItem={autoFocus || !!focusedView}
         role="listbox"
         aria-label={localeText.timePickerToolbarTitle}
         className={classes.list}
       >
-        {timeOptions.map((option) => {
+        {timeOptions.map((option, index) => {
           if (skipDisabled && isTimeDisabled(option)) {
             return null;
           }
           const isSelected = utils.isEqual(option, value);
+          const formattedValue = utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
+          const tabIndex =
+            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
+
           return (
             <ClockItem
-              key={utils.toISO(option)}
+              key={formattedValue}
               onClick={() => !readOnly && handleItemSelect(option)}
               selected={isSelected}
               disabled={disabled || isTimeDisabled(option)}
@@ -310,9 +314,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
               // aria-readonly is not supported here and does not have any effect
               aria-disabled={readOnly}
               aria-selected={isSelected}
+              tabIndex={tabIndex}
               {...clockItemProps}
             >
-              {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
+              {formattedValue}
             </ClockItem>
           );
         })}
@@ -425,14 +430,6 @@ DigitalClock.propTypes = {
    */
   referenceDate: PropTypes.any,
   /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
-  /**
    * Disable specific time.
    * @template TDate
    * @param {TDate} value The value to check.
@@ -473,7 +470,7 @@ DigitalClock.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

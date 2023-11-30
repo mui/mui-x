@@ -1,10 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 import {
   dateCalendarClasses,
-  dayPickerClasses,
-  pickersCalendarHeaderClasses,
+  dayCalendarClasses,
   pickersSlideTransitionClasses,
 } from '../DateCalendar';
+import { pickersCalendarHeaderClasses } from '../PickersCalendarHeader';
 import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
   clockClasses,
@@ -255,7 +255,7 @@ createTheme({
       styleOverrides: {
         header: {
           backgroundColor: 'red',
-          [`.${dayPickerClasses.weekContainer}`]: {
+          [`.${dayCalendarClasses.weekContainer}`]: {
             backgroundColor: 'green',
           },
         },

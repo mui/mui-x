@@ -915,12 +915,6 @@
     },
     {
       "class": null,
-      "name": "preferencesPanel",
-      "description": "PreferencesPanel component rendered inside the Header component.",
-      "default": "GridPreferencesPanel"
-    },
-    {
-      "class": null,
       "name": "quickFilterClearIcon",
       "description": "Icon displayed on the quick filter reset input.",
       "default": "GridCloseIcon"

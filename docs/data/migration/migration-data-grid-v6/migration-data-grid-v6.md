@@ -44,7 +44,7 @@ Apart from the removed methods and exports that require manual intervention, aro
 :::
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -80,6 +80,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 ### Removed props
 
 - The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
+- The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 
 <!-- ### State access
 
@@ -122,7 +123,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
    const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
 -  return (cellParams) => {
--  const { value } = cellParams;
+-    const { value } = cellParams;
 +  return (value, row, colDef, apiRef) => {
      return value != null ? filterRegex.test(String(value)) : false;
    };
@@ -149,13 +150,19 @@ Below are described the steps you need to make to migrate from v6 to v7.
  };
 ```
 
+- The Quick Filter now ignores hidden columns by default.
+  See [Including hidden columns](/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+
 <!-- ### Editing
 
 - -->
 
-<!-- ### Other exports
+### Other exports
 
-- -->
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
+  Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+
+- The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
 
 <!-- ### CSS classes
 

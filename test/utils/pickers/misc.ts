@@ -56,3 +56,11 @@ export const getDateOffset = <TDate extends unknown>(
   const cleanUtcHour = utcHour > 12 ? 24 - utcHour : -utcHour;
   return cleanUtcHour * 60;
 };
+
+export const formatFullTimeValue = <TDate extends unknown>(
+  adapter: MuiPickersAdapter<TDate>,
+  value: TDate,
+) => {
+  const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
+  return adapter.format(value, hasMeridiem ? 'fullTime12h' : 'fullTime24h');
+};

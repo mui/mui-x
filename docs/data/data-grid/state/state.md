@@ -37,7 +37,7 @@ The simplest way to use a selector is to call it as a function with `apiRef` as 
 const paginationModel = gridPaginationModelSelector(apiRef);
 ```
 
-:::info
+:::warning
 Calling with `apiRef.current.state` also works, but may cause side effects when multiple Data Grid instances are present on a single page.
 If you still need to call it with the state, don't forget to pass the instance ID as the example:
 

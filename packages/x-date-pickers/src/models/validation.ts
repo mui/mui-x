@@ -16,9 +16,6 @@ export type TimeValidationError =
   | 'minutesStep'
   | 'minTime'
   | 'maxTime'
-  | 'shouldDisableClock-hours'
-  | 'shouldDisableClock-minutes'
-  | 'shouldDisableClock-seconds'
   | 'shouldDisableTime-hours'
   | 'shouldDisableTime-minutes'
   | 'shouldDisableTime-seconds';

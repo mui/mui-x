@@ -7,6 +7,7 @@ import {
   getTextbox,
   describeValidation,
   describeValue,
+  formatFullTimeValue,
 } from 'test/utils/pickers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 
@@ -23,7 +24,7 @@ describe('<TimeField /> - Describes', () => {
   describeValue(TimeField, () => ({
     render,
     componentFamily: 'field',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
@@ -33,7 +34,7 @@ describe('<TimeField /> - Describes', () => {
         expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
       const expectedValueStr = expectedValue
-        ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+        ? formatFullTimeValue(adapterToUse, expectedValue)
         : '';
       expectInputValue(input, expectedValueStr);
     },

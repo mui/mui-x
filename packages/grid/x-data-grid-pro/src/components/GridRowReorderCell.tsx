@@ -9,7 +9,7 @@ import {
   useGridSelector,
   getDataGridUtilityClass,
 } from '@mui/x-data-grid';
-import { gridEditRowsStateSelector } from '@mui/x-data-grid/internals';
+import { gridEditRowsStateSelector, isEventTargetInPortal } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -58,12 +58,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
       ): React.MouseEventHandler<HTMLDivElement> =>
       (event) => {
         // Ignore portal
-        // The target is not an element when triggered by a Select inside the cell
-        // See https://github.com/mui/material-ui/issues/10534
-        if (
-          (event.target as any).nodeType === 1 &&
-          !event.currentTarget.contains(event.target as Element)
-        ) {
+        if (isEventTargetInPortal(event)) {
           return;
         }
 

@@ -62,10 +62,7 @@ type UseDatePickerDefaultizedProps<
   Props extends BaseDatePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  Omit<
-    DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>,
-    'components' | 'componentsProps'
-  >
+  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
 >;
 
 export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePickerProps<TDate>>(

@@ -14,9 +14,11 @@ Most breaking changes are renaming of CSS classes or variables to improve the co
 
 ## Migrating MUI Core from v4
 
-> We strongly recommend you [migrate MUI Core to v5](/material-ui/migration/migration-v4/) when using MUI X v5.
-> However, this might not be possible, depending on the complexity of the application.
-> The alternative is to install MUI Core v5 and configure it to keep MUI Core v4 running alongside.
+:::warning
+We strongly recommend you [migrate MUI Core to v5](/material-ui/migration/migration-v4/) when using MUI X v5.
+However, this might not be possible, depending on the complexity of the application.
+The alternative is to install MUI Core v5 and configure it to keep MUI Core v4 running alongside.
+:::
 
 ### Using MUI Core v4 with v5
 
