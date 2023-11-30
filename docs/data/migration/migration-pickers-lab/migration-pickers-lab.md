@@ -73,7 +73,7 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-Learn more on [the Licensing page](/x/introduction/licensing/#license-key-installation).
+Learn more on [the Licensing page](/x/introduction/licensing/#license-key).
 
 ### 2. Run the code mod
 
