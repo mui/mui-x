@@ -1,0 +1,43 @@
+{
+  "props": {
+    "outerRadius": {
+      "type": { "name": "number" },
+      "default": "R_max The maximal radius that fit into the drawing area.",
+      "required": true
+    },
+    "cornerRadius": { "type": { "name": "number" }, "default": "0" },
+    "faded": {
+      "type": {
+        "name": "shape",
+        "description": "{ additionalRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+      }
+    },
+    "highlighted": {
+      "type": {
+        "name": "shape",
+        "description": "{ additionalRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+      }
+    },
+    "innerRadius": { "type": { "name": "number" }, "default": "0" },
+    "onClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, pieItemIdentifier: PieItemIdentifier, item: DefaultizedPieValueType) => void",
+        "describedArgs": ["event", "pieItemIdentifier", "item"]
+      }
+    },
+    "paddingAngle": { "type": { "name": "number" }, "default": "0" },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [{ "class": null, "name": "pieArc", "description": "" }],
+  "name": "PieArcPlot",
+  "imports": [
+    "import { PieArcPlot } from '@mui/x-charts/PieChart';",
+    "import { PieArcPlot } from '@mui/x-charts';"
+  ],
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPieArcPlot" },
+  "filename": "/packages/x-charts/src/PieChart/PieArcPlot.tsx",
+  "demos": "<ul></ul>"
+}
