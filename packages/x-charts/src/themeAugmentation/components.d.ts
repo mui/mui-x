@@ -24,6 +24,7 @@ export interface ChartsComponents {
   };
   MuiChartsTooltip?: {
     defaultProps?: ComponentsProps['MuiChartsTooltip'];
+    styleOverrides?: ComponentsOverrides['MuiChartsTooltip'];
   };
   MuiChartsSurface?: {
     defaultProps?: ComponentsProps['MuiChartsSurface'];

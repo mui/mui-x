@@ -146,6 +146,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     labelId,
     className,
     timezone,
+    format = `${utils.formats.month} ${utils.formats.year}`,
     ...other
   } = props;
 
@@ -207,6 +208,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     return null;
   }
 
+  const label = utils.formatByString(month, format);
+
   return (
     <PickersCalendarHeaderRoot
       {...other}
@@ -222,17 +225,14 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
         aria-live="polite"
         className={classes.labelContainer}
       >
-        <PickersFadeTransitionGroup
-          reduceAnimations={reduceAnimations}
-          transKey={utils.format(month, 'monthAndYear')}
-        >
+        <PickersFadeTransitionGroup reduceAnimations={reduceAnimations} transKey={label}>
           <PickersCalendarHeaderLabel
             id={labelId}
             data-mui-test="calendar-month-and-year-text"
             ownerState={ownerState}
             className={classes.label}
           >
-            {utils.format(month, 'monthAndYear')}
+            {label}
           </PickersCalendarHeaderLabel>
         </PickersFadeTransitionGroup>
         {views.length > 1 && !disabled && (
@@ -274,6 +274,11 @@ PickersCalendarHeader.propTypes = {
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,
   disablePast: PropTypes.bool,
+  /**
+   * Format used to display the date.
+   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   */
+  format: PropTypes.string,
   labelId: PropTypes.string,
   maxDate: PropTypes.any.isRequired,
   minDate: PropTypes.any.isRequired,

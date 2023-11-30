@@ -1,6 +1,8 @@
-import { DatePicker } from '@mui/x-date-pickers';
+import { DatePicker, dayPickerClasses } from '@mui/x-date-pickers';
 import { DateRangePicker } from '@mui/x-date-pickers-pro';
 import TextField from '@mui/material/TextField';
+
+const className = dayPickerClasses.root;
 
 <div>
   <DateRangePicker

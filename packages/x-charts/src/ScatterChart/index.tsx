@@ -1,3 +1,3 @@
-export { ScatterPlot } from './ScatterPlot';
-export { ScatterChart } from './ScatterChart';
-export { Scatter } from './Scatter';
+export * from './ScatterPlot';
+export * from './ScatterChart';
+export * from './Scatter';

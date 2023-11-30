@@ -62,7 +62,12 @@ By default, the axis domain is computed such that all your data is visible.
 To show a specific range of values, you can provide properties `min` and/or `max` to the axis definition.
 
 ```js
-xAxis={[{ min: 10, max: 50,  }]}
+xAxis={[
+  {
+    min: 10,
+    max: 50,
+  },
+]}
 ```
 
 {{"demo": "MinMaxExample.js"}}

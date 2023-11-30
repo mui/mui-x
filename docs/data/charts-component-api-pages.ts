@@ -22,6 +22,8 @@ export default [
   { pathname: '/x/api/charts/line-plot', title: 'LinePlot' },
   { pathname: '/x/api/charts/mark-element', title: 'MarkElement' },
   { pathname: '/x/api/charts/mark-plot', title: 'MarkPlot' },
+  { pathname: '/x/api/charts/pie-arc', title: 'PieArc' },
+  { pathname: '/x/api/charts/pie-arc-label', title: 'PieArcLabel' },
   { pathname: '/x/api/charts/pie-chart', title: 'PieChart' },
   { pathname: '/x/api/charts/pie-plot', title: 'PiePlot' },
   { pathname: '/x/api/charts/scatter', title: 'Scatter' },

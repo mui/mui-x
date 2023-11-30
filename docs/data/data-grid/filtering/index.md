@@ -17,7 +17,7 @@ _See [the dedicated section](/x/react-data-grid/filtering/customization/) to lea
 ## Single and multi-filters
 
 :::warning
-The `DataGrid` can only filter the rows according to one criterion at the time.
+The Data Grid can only filter the rows according to one criterion at the time.
 
 To use [multi-filters](/x/react-data-grid/filtering/multi-filters/), you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
@@ -136,7 +136,7 @@ You can ignore diacritics (accents) when filtering the rows. See [Quick filter -
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

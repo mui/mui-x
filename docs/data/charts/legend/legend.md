@@ -30,7 +30,7 @@ By default, the legend is placed above the charts.
 
 {{"demo": "LegendPositionNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
-### Hidding
+### Hiding
 
 You can hide the legend with the property `slotProps.legend.hidden`.
 
