@@ -8,20 +8,76 @@ import {
   PickerViewRendererLookup,
   isDatePickerView,
   PickerViewRenderer,
+  DefaultizedProps,
 } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
 import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
+import {
+  UseMobileRangePickerProps,
+  useMobileRangePicker,
+} from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
+
+const rendererInterceptor = function rendererInterceptor<TDate>(
+  inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
+  popperView: DateTimeRangePickerView,
+  rendererProps: DefaultizedProps<
+    Omit<UseMobileRangePickerProps<TDate, DateTimeRangePickerView, any, any>, 'onChange'>,
+    'rangePosition' | 'onRangePositionChange' | 'openTo'
+  >,
+) {
+  const { view, openTo, ...otherRendererProps } = rendererProps;
+  const finalProps = {
+    ...otherRendererProps,
+    focusedView: null,
+    sx: {
+      width: DIALOG_WIDTH,
+      [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+        flex: 1,
+        // account for the border on `MultiSectionDigitalClock`
+        maxHeight: VIEW_HEIGHT - 1,
+        [`.${multiSectionDigitalClockSectionClasses.item}`]: {
+          width: 'auto',
+        },
+      },
+      ...(Array.isArray(rendererProps.sx) ? rendererProps.sx : [rendererProps.sx]),
+    },
+  };
+  const isTimeView = isInternalTimeView(popperView);
+  const viewRenderer = inViewRenderers[popperView];
+  if (!viewRenderer) {
+    return null;
+  }
+  if (isTimeView) {
+    return (
+      <DateTimeRangePickerTimeWrapper
+        {...finalProps}
+        viewRenderer={
+          viewRenderer as PickerViewRenderer<DateRange<TDate>, DateTimeRangePickerView, any, {}>
+        }
+        view={view && isInternalTimeView(view) ? view : 'hours'}
+        openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
+      />
+    );
+  }
+  // avoiding problem of `props: never`
+  const typedViewRenderer = viewRenderer as PickerViewRenderer<DateRange<TDate>, 'day', any, {}>;
+
+  return typedViewRenderer({
+    ...finalProps,
+    views: finalProps.views.filter(isDatePickerView),
+    view: view && isDatePickerView(view) ? view : 'day',
+    openTo: isDatePickerView(openTo) ? openTo : 'day',
+  });
+};
 
 type MobileDateRangePickerComponent = (<TDate>(
   props: MobileDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -85,57 +141,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     valueManager: rangeValueManager,
     valueType: 'date-time',
     validator: validateDateTimeRange,
-    rendererInterceptor(inViewRenderers, popperView, rendererProps) {
-      const { view, views, openTo, ...otherRendererProps } = rendererProps;
-      const finalProps = {
-        ...otherRendererProps,
-        focusedView: null,
-        sx: {
-          width: DIALOG_WIDTH,
-          [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-            flex: 1,
-            // account for the border on `MultiSectionDigitalClock`
-            maxHeight: VIEW_HEIGHT - 1,
-            [`.${multiSectionDigitalClockSectionClasses.item}`]: {
-              width: 'auto',
-            },
-          },
-          ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-        },
-      };
-      const isTimeView = isInternalTimeView(popperView);
-      const viewRenderer = inViewRenderers[popperView];
-      if (!viewRenderer) {
-        return null;
-      }
-      if (isTimeView) {
-        return (
-          <DateTimeRangePickerTimeWrapper
-            {...finalProps}
-            viewRenderer={
-              viewRenderer as PickerViewRenderer<DateRange<TDate>, TimeViewWithMeridiem, any, {}>
-            }
-            views={views.filter(isInternalTimeView)}
-            view={view && isInternalTimeView(view) ? view : 'hours'}
-            openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
-          />
-        );
-      }
-      // avoiding problem of `props: never`
-      const typedViewRenderer = viewRenderer as PickerViewRenderer<
-        DateRange<TDate>,
-        'day',
-        any,
-        {}
-      >;
-
-      return typedViewRenderer({
-        ...finalProps,
-        views: views.filter(isDatePickerView),
-        view: view && isDatePickerView(view) ? view : 'day',
-        openTo: isDatePickerView(openTo) ? openTo : 'day',
-      });
-    },
+    rendererInterceptor,
   });
 
   return renderPicker();

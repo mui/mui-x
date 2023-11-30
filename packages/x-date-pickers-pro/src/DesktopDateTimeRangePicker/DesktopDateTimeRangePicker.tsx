@@ -14,7 +14,6 @@ import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/Mult
 import { VIEW_HEIGHT } from '@mui/x-date-pickers/internals/constants/dimensions';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
-import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -65,15 +64,12 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
       <Divider orientation="vertical" />
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
-        views={
-          finalProps.views.filter((view) => isInternalTimeView(view)) as TimeViewWithMeridiem[]
-        }
         view={isTimeViewActive ? popperView : 'hours'}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
         viewRenderer={
           inViewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
             DateRange<TDate>,
-            TimeViewWithMeridiem,
+            DateTimeRangePickerView,
             any,
             {}
           >

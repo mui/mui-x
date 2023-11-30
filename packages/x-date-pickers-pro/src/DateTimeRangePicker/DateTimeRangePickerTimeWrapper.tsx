@@ -8,15 +8,18 @@ import {
   isInternalTimeView,
   useUtils,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internals/models';
+import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import { isRangeValid } from '../internals/utils/date-utils';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
 
 export type DateTimeRangePickerTimeWrapperProps<
   TDate,
-  TView extends TimeViewWithMeridiem,
-  TComponentProps extends Omit<BaseClockProps<TDate, TView>, 'value' | 'defaultValue' | 'onChange'>,
+  TView extends DateTimeRangePickerView,
+  TComponentProps extends Omit<
+    BaseClockProps<TDate, TimeViewWithMeridiem>,
+    'value' | 'defaultValue' | 'onChange'
+  >,
 > = Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> &
   Omit<
     TComponentProps,
@@ -44,8 +47,11 @@ const DateTimeRangePickerTimeWrapperRoot = styled('div', {
 
 function DateTimeRangePickerTimeWrapper<
   TDate,
-  TView extends TimeViewWithMeridiem,
-  TComponentProps extends Omit<BaseClockProps<TDate, TView>, 'value' | 'defaultValue' | 'onChange'>,
+  TView extends DateTimeRangePickerView,
+  TComponentProps extends Omit<
+    BaseClockProps<TDate, TimeViewWithMeridiem>,
+    'value' | 'defaultValue' | 'onChange'
+  >,
 >(
   inProps: DateTimeRangePickerTimeWrapperProps<TDate, TView, TComponentProps>,
   ref: React.Ref<HTMLDivElement>,
