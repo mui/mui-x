@@ -102,6 +102,11 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - -->
 
+### Clipboard
+
+- Clipboard paste is now enabled by default. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
+- The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are not anymore prefixed with `unstable_`.
+
 ### Print export
 
 - The print export will now only print the selected rows if there are any.
