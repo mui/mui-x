@@ -25,7 +25,7 @@ export type DateTimeRangePickerTimeWrapperProps<
     view: TView;
     onViewChange?: (view: TView) => void;
     views: readonly TView[];
-    value: DateRange<TDate>;
+    value?: DateRange<TDate>;
     defaultValue?: DateRange<TDate>;
     onChange?: (
       value: DateRange<TDate>,
@@ -78,7 +78,7 @@ function DateTimeRangePickerTimeWrapper<
     selectionState: PickerSelectionState,
     selectedView: TView,
   ) => {
-    if (!onChange) {
+    if (!onChange || !value) {
       return;
     }
     const { newRange } = calculateRangeChange({

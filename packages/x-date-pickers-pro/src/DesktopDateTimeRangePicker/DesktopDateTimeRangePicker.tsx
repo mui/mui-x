@@ -1,9 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
+  DefaultizedProps,
   extractValidationProps,
   isDatePickerView,
   isInternalTimeView,
+  PickerViewRenderer,
   PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
@@ -12,10 +14,14 @@ import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/Mult
 import { VIEW_HEIGHT } from '@mui/x-date-pickers/internals/constants/dimensions';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
+import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
+import {
+  useDesktopRangePicker,
+  UseDesktopRangePickerProps,
+} from '../internals/hooks/useDesktopRangePicker';
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
@@ -30,10 +36,14 @@ const DesktopDateTimeRangeContainer = styled('div')({
 const rendererInterceptor = function rendererInterceptor<TDate>(
   inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
   popperView: DateTimeRangePickerView,
-  rendererProps: any,
+  rendererProps: DefaultizedProps<
+    Omit<UseDesktopRangePickerProps<TDate, DateTimeRangePickerView, any, any>, 'onChange'>,
+    'rangePosition' | 'onRangePositionChange' | 'openTo'
+  >,
 ) {
+  const { openTo, ...otherProps } = rendererProps;
   const finalProps = {
-    ...rendererProps,
+    ...otherProps,
     focusedView: null,
     sx: {
       borderBottom: 0,
@@ -41,6 +51,7 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
       [`.${multiSectionDigitalClockSectionClasses.root}`]: {
         maxHeight: VIEW_HEIGHT,
       },
+      ...(Array.isArray(rendererProps.sx) ? rendererProps.sx : [rendererProps.sx]),
     },
   };
   const isTimeViewActive = isInternalTimeView(popperView);
@@ -54,8 +65,19 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
       <Divider orientation="vertical" />
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
+        views={
+          finalProps.views.filter((view) => isInternalTimeView(view)) as TimeViewWithMeridiem[]
+        }
         view={isTimeViewActive ? popperView : 'hours'}
-        viewRenderer={inViewRenderers[isTimeViewActive ? popperView : 'hours']}
+        openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
+        viewRenderer={
+          inViewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
+            DateRange<TDate>,
+            TimeViewWithMeridiem,
+            any,
+            {}
+          >
+        }
       />
     </DesktopDateTimeRangeContainer>
   );
