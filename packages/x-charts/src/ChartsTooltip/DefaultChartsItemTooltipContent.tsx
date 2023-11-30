@@ -81,10 +81,10 @@ DefaultChartsItemTooltipContent.propTypes = {
     data: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.number),
       PropTypes.shape({
-        '__@iterator@33399': PropTypes.func.isRequired,
-        '__@unscopables@36265': PropTypes.shape({
-          '__@iterator@33399': PropTypes.bool,
-          '__@unscopables@36265': PropTypes.bool,
+        '__@iterator@33385': PropTypes.func.isRequired,
+        '__@unscopables@36251': PropTypes.shape({
+          '__@iterator@33385': PropTypes.bool,
+          '__@unscopables@36251': PropTypes.bool,
           at: PropTypes.bool,
           concat: PropTypes.bool,
           copyWithin: PropTypes.bool,

@@ -71,8 +71,8 @@ ChartsItemTooltipContent.propTypes = {
       data: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.number),
         PropTypes.shape({
-          '__@iterator@33399': PropTypes.func.isRequired,
-          '__@unscopables@36265': PropTypes.object.isRequired,
+          '__@iterator@33385': PropTypes.func.isRequired,
+          '__@unscopables@36251': PropTypes.object.isRequired,
           at: PropTypes.func.isRequired,
           concat: PropTypes.func.isRequired,
           copyWithin: PropTypes.func.isRequired,
