@@ -201,7 +201,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 }
 ```
 
-### Next.js pages
+### Next.js Pages Router
 
 When using Next.js pages, a great place to call `setLicenseKey` is in [`_app.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app).
 
