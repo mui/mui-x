@@ -17,6 +17,14 @@ import {
 import { applyDefaultViewProps } from '@mui/x-date-pickers/internals/utils/views';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import {
+  DigitalClockSlotsComponent,
+  DigitalClockSlotsComponentsProps,
+} from '@mui/x-date-pickers/DigitalClock/DigitalClock.types';
+import {
+  MultiSectionDigitalClockSlotsComponent,
+  MultiSectionDigitalClockSlotsComponentsProps,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock/MultiSectionDigitalClock.types';
 import { DateTimeRangeValidationError } from '../models';
 import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import {
@@ -37,7 +45,9 @@ import {
 } from './DateTimeRangePickerTabs';
 
 export interface BaseDateTimeRangePickerSlotsComponent<TDate>
-  extends DateRangeCalendarSlotsComponent<TDate> {
+  extends DateRangeCalendarSlotsComponent<TDate>,
+    DigitalClockSlotsComponent,
+    MultiSectionDigitalClockSlotsComponent {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimeRangePickerTabs
@@ -51,7 +61,9 @@ export interface BaseDateTimeRangePickerSlotsComponent<TDate>
 }
 
 export interface BaseDateTimeRangePickerSlotsComponentsProps<TDate>
-  extends DateRangeCalendarSlotsComponentsProps<TDate> {
+  extends DateRangeCalendarSlotsComponentsProps<TDate>,
+    DigitalClockSlotsComponentsProps,
+    MultiSectionDigitalClockSlotsComponentsProps {
   /**
    * Props passed down to the tabs component.
    */
