@@ -35,15 +35,9 @@
       "description": "Formats the day of week displayed in the calendar header.",
       "deprecated": "",
       "typeDescriptions": {
-        "day": "The day of week provided by the adapter.  Deprecated, will be removed in v7: Use <code>date</code> instead.",
         "date": "The date of the day of week provided by the adapter.",
         "string": "The name to display."
       }
-    },
-    "defaultCalendarMonth": {
-      "description": "Default calendar month displayed when <code>value={[null, null]}</code>.",
-      "deprecated": "",
-      "typeDescriptions": {}
     },
     "defaultRangePosition": {
       "description": "The initial position in the edited date range. Used when the component is not controlled.",
@@ -101,7 +95,7 @@
       "typeDescriptions": {}
     },
     "fixedWeekNumber": {
-      "description": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
+      "description": "The day view will show as many weeks as needed after the end of the current month to match this value. Put it to 6 to have a fixed number of weeks in Gregorian calendars",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -237,7 +231,7 @@
       "typeDescriptions": {}
     },
     "renderLoading": {
-      "description": "Component displaying when passed <code>loading</code> true.",
+      "description": "Component rendered on the &quot;day&quot; view when <code>props.loading</code> is true.",
       "deprecated": "",
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
@@ -245,15 +239,6 @@
       "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally.",
       "deprecated": "",
       "typeDescriptions": {}
-    },
-    "shouldDisableClock": {
-      "description": "Disable specific clock time.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "clockValue": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
-      }
     },
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
@@ -309,7 +294,7 @@
       "typeDescriptions": {}
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documentation</a> for more details.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -333,12 +318,15 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display inside the clear button.",
     "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
     "desktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
     "desktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "desktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
+    "digitalClockItem": "Component responsible for rendering a single digital clock item.",
+    "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
     "field": "",
     "fieldRoot": "Element rendered at the root. Ignored if the field has only one input.",
     "fieldSeparator": "Element rendered between the two inputs. Ignored if the field has only one input.",

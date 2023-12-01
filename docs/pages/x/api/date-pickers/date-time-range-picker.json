@@ -19,12 +19,11 @@
       "type": { "name": "func" },
       "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(day: string, date: TDate) => string",
-        "describedArgs": ["day", "date"],
+        "type": "function(date: TDate) => string",
+        "describedArgs": ["date"],
         "returned": "string"
       }
     },
-    "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultRangePosition": {
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
@@ -133,16 +132,6 @@
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
-    "shouldDisableClock": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
-      "signature": {
-        "type": "function(clockValue: number, view: TimeView) => boolean",
-        "describedArgs": ["clockValue", "view"],
-        "returned": "boolean"
-      }
-    },
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
@@ -211,6 +200,12 @@
     },
     {
       "class": null,
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
+    },
+    {
+      "class": null,
       "name": "clearButton",
       "description": "Button to clear the value.",
       "default": "IconButton"
@@ -250,6 +245,18 @@
       "name": "dialog",
       "description": "Custom component for the dialog inside which the views are rendered on mobile.",
       "default": "PickersModalDialogRoot"
+    },
+    {
+      "class": null,
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'"
+    },
+    {
+      "class": null,
+      "name": "digitalClockSectionItem",
+      "description": "Component responsible for rendering a single multi section digital clock section item.",
+      "default": "MenuItem from '@mui/material'"
     },
     { "class": null, "name": "field", "description": "" },
     {
