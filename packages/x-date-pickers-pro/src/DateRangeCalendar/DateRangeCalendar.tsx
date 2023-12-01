@@ -140,6 +140,7 @@ function useDateRangeCalendarDefaultizedProps<TDate>(
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
+    availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
   };
 }
 
@@ -210,7 +211,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     disableDragEditing,
     displayWeekNumber,
     timezone: timezoneProp,
-    forceFinishSelection,
+    availableRangePositions,
     views,
     view: inView,
     openTo,
@@ -271,14 +272,15 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         shouldMergeDateAndTime: true,
       });
 
-      if (!forceFinishSelection) {
+      const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
+      if (isNextSectionAvailable) {
         onRangePositionChange(nextSelection);
       }
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
       setValueAndGoToNextView(
         newRange,
-        isFullRangeSelected || forceFinishSelection ? 'finish' : 'partial',
+        isFullRangeSelected || !isNextSectionAvailable ? 'finish' : 'partial',
       );
     },
   );
@@ -644,6 +646,14 @@ DateRangeCalendar.propTypes = {
    */
   autoFocus: PropTypes.bool,
   /**
+   * Range positions available for selection.
+   * This list is checked against when checking if a next range position can be selected.
+   *
+   * Used on Date Time Range pickers with current `rangePosition` to force a `finish` selection after just one range position selection.
+   * @default ['start', 'end']
+   */
+  availableRangePositions: PropTypes.arrayOf(PropTypes.oneOf(['end', 'start']).isRequired),
+  /**
    * The number of calendars to render.
    * @default 2
    */
@@ -717,12 +727,6 @@ DateRangeCalendar.propTypes = {
    * Controlled focused view.
    */
   focusedView: PropTypes.oneOf(['day']),
-  /**
-   * If `true`, force a `finish` selection state.
-   * Used on Date Time Range pickers to enable date -> time -> date -> time selection flow.
-   * @default false
-   */
-  forceFinishSelection: PropTypes.bool,
   /**
    * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.

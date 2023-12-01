@@ -44,9 +44,10 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
     'rangePosition' | 'onRangePositionChange' | 'openTo'
   >,
 ) {
-  const { openTo, ...otherProps } = rendererProps;
+  const { openTo, rangePosition, ...otherProps } = rendererProps;
   const finalProps = {
     ...otherProps,
+    rangePosition,
     focusedView: null,
     sx: {
       borderBottom: 0,
@@ -64,6 +65,7 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
     <DesktopDateTimeRangeContainer>
       {inViewRenderers.day?.({
         ...rendererProps,
+        availableRangePositions: [rangePosition],
         view: !isTimeViewActive ? popperView : 'day',
         views: rendererProps.views.filter(isDatePickerView),
       })}
@@ -118,7 +120,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     viewRenderers,
     // force true to correctly handle `renderTimeViewClock` as a renderer
     ampmInClock: true,
-    forceFinishSelection: true,
     slots: {
       field: MultiInputDateTimeRangeField,
       ...defaultizedProps.slots,

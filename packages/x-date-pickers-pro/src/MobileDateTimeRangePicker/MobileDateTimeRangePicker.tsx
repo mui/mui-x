@@ -39,9 +39,10 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
     'rangePosition' | 'onRangePositionChange' | 'openTo'
   >,
 ) {
-  const { view, openTo, ...otherRendererProps } = rendererProps;
+  const { view, openTo, rangePosition, ...otherRendererProps } = rendererProps;
   const finalProps = {
     ...otherRendererProps,
+    rangePosition,
     focusedView: null,
     sx: {
       width: DIALOG_WIDTH,
@@ -83,6 +84,7 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
 
   return typedViewRenderer({
     ...finalProps,
+    availableRangePositions: [rangePosition],
     views: finalProps.views.filter(isDatePickerView),
     view: view && isDatePickerView(view) ? view : 'day',
     openTo: isDatePickerView(openTo) ? openTo : 'day',
@@ -122,7 +124,6 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     viewRenderers,
     // force true to correctly handle `renderTimeViewClock` as a renderer
     ampmInClock: true,
-    forceFinishSelection: true,
     slots: {
       field: MultiInputDateTimeRangeField,
       ...defaultizedProps.slots,

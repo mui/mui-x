@@ -153,11 +153,13 @@ export interface DateRangeCalendarProps<TDate>
    */
   slotProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
   /**
-   * If `true`, force a `finish` selection state.
-   * Used on Date Time Range pickers to enable date -> time -> date -> time selection flow.
-   * @default false
+   * Range positions available for selection.
+   * This list is checked against when checking if a next range position can be selected.
+   *
+   * Used on Date Time Range pickers with current `rangePosition` to force a `finish` selection after just one range position selection.
+   * @default ['start', 'end']
    */
-  forceFinishSelection?: boolean;
+  availableRangePositions?: DateRangePosition[];
 }
 
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {
@@ -171,5 +173,6 @@ export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
   | 'reduceAnimations'
   | 'calendars'
   | 'disableDragEditing'
+  | 'availableRangePositions'
   | keyof BaseDateValidationProps<TDate>
 >;
