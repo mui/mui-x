@@ -46,6 +46,17 @@ describe('<DataGrid /> - Toolbar', () => {
   };
 
   describe('density selector', () => {
+
+    function expectHeight(value: number) {
+      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
+        maxHeight: `${Math.floor(value)}px`,
+      });
+
+      expect(getComputedStyle(screen.getAllByRole('cell')[1]).height).to.equal(
+        `${Math.floor(value)}px`
+      );
+    }
+
     it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
       const { getByText } = render(
@@ -64,13 +75,7 @@ describe('<DataGrid /> - Toolbar', () => {
       clock.tick(100);
       fireEvent.click(getByText('Compact'));
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        height: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        height: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
+      expectHeight(rowHeight * COMPACT_DENSITY_FACTOR)
     });
 
     it('should decrease grid density when selecting comfortable density', () => {
@@ -90,13 +95,7 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('Comfortable'));
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        height: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        height: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
+      expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
     });
 
     it('should increase grid density even if toolbar is not enabled', () => {
@@ -107,13 +106,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        height: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        height: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
+      expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
     it('should decrease grid density even if toolbar is not enabled', () => {
@@ -124,13 +117,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        height: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        height: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
+      expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
     });
 
     it('should apply to the root element a class corresponding to the current density', () => {
