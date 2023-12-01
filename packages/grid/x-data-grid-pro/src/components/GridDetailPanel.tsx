@@ -18,7 +18,8 @@ const DetailPanel = styled(Box, {
   overflow: 'auto',
 }));
 
-interface GridDetailPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GridDetailPanelProps
+  extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className' | 'children'> {
   /**
    * The row ID that this panel belongs to.
    */
@@ -30,7 +31,7 @@ interface GridDetailPanelProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function GridDetailPanel(props: GridDetailPanelProps) {
-  const { rowId, height, ...rest } = props;
+  const { rowId, height, className, children } = props;
   const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement>();
   const rootProps = useGridRootProps();
@@ -70,8 +71,10 @@ function GridDetailPanel(props: GridDetailPanelProps) {
       ownerState={ownerState}
       role="presentation"
       style={{ height }}
-      {...rest}
-    />
+      className={className}
+    >
+      {children}
+    </DetailPanel>
   );
 }
 
