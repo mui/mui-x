@@ -3,6 +3,149 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.3
+
+_Dec 1, 2023_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+#### Highlight
+
+### Data Grid
+
+#### Breaking changes
+
+-  🎉 The clipboard paste feature is now stable. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop.
+
+- The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are no more prefixed with `unstable_`
+
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the `DataGrid` exports. Use the [`filterDebounceMs`](https://mui.com/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+
+- The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
+
+- The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
+
+- The cell selection feature is now stable.
+
+- The `unstable_` prefix has been removed from the cell selection props listed below.
+
+  | Old name                              | New name                     |
+  | :------------------------------------ | :--------------------------- |
+  | `unstable_cellSelection`              | `cellSelection`              |
+  | `unstable_cellSelectionModel`         | `cellSelectionModel`         |
+  | `unstable_onCellSelectionModelChange` | `onCellSelectionModelChange` |
+
+- The `unstable_` prefix has been removed from the cell selection API methods listed below.
+
+  | Old name                           | New name                  |
+  | :--------------------------------- | :------------------------ |
+  | `unstable_getCellSelectionModel`   | `getCellSelectionModel`   |
+  | `unstable_getSelectedCellsAsArray` | `getSelectedCellsAsArray` |
+  | `unstable_isCellSelected`          | `isCellSelected`          |
+  | `unstable_selectCellRange`         | `selectCellRange`         |
+  | `unstable_setCellSelectionModel`   | `setCellSelectionModel`   |
+
+- The Quick Filter now ignores hidden columns by default.
+  See [Including hidden columns](/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+
+#### `@mui/x-data-grid@7.0.0-alpha.3`
+
+- [DataGrid] Cell clipboard paste, leading "v" (#9205) @prasad5795
+- [DataGrid] Exclude hidden columns from quick filtering by default (#11229) @cherniavskii
+- [DataGrid] Fix `onFilterModelChange` being fired with stale field value (#11000) @gitstart
+- [DataGrid] Fix handling of event target in portal (#11174) @cherniavskii
+- [DataGrid] Remove deprecated constants (#11233) @michelengelen
+- [DataGrid] Remove the `preferencesPanel` slot (#11228) @cherniavskii
+- [l10n] Improve Bulgarian (bg-BG) locale (#10856) @Kristiqn95
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.3`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
+
+- [DataGridPremium] Fix aggregated column ignoring column definition changes (#11129) @cherniavskii
+- [DataGridPremium] Make `cell selection` feature stable (#11246) @MBilalShafi
+- [DataGridPremium] Make `clipboard paste` feature stable (#11248) @MBilalShafi
+
+### Date Pickers
+
+#### Breaking changes
+
+- 🚀 The Date and Time Pickers now support localized week when using `AdapterLuxon`.
+  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g.: Sunday for `en-US`, Monday for `fr-FR`).
+
+- The Date and Time Pickers now use the localized week when using `AdapterLuxon` and Luxon v3.4.4 or higher is installed.
+  This new behavior allows `AdapterLuxon` to have the same behavior as the other adapters.
+  If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
+
+  ```ts
+  import { Settings } from 'luxon';
+
+  Settings.defaultWeekSettings = {
+    firstDay: 1,
+    minimalDays: Info.getMinimumDaysInFirstWeek(),
+    weekend: [6, 7],
+  };
+  ```
+
+#### `@mui/x-date-pickers@7.0.0-alpha.3`
+
+- [pickers] Expand field placeholder methods flexibility by providing `format` parameter (#11130) @LukasTy
+- [pickers] Make `changeImportance` and `shortcut` mandatory in `PickersShortcuts` (#10941) @flaviendelangle
+- [pickers] Moved extend with `customParseFormat` to constructor (#11151) @michelengelen
+- [pickers] POC: `PickersTextField` styling - outlined variant (#10778) @noraleonte
+- [pickers] Support localized start of the week on `AdapterLuxon` (#10964) @flaviendelangle
+- [pickers] Use adapter methods instead of date library ones whenever possible (#11142) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.3`
+
+- [charts] Adjusted `defaultizeValueFormatter` util to accept an optional `series.valueFormatter` value (#11144) @michelengelen
+- [charts] Apply `labelStyle` and `tickLabelStyle` props on `<ChartsYAxis />` (#11180) @akamfoad
+- [charts] Fix TS config (#11259) @alexfauquette
+- [charts] Fix error with empty dataset (#11063) @alexfauquette
+- [charts] Fix export strategy (#11235) @alexfauquette
+- [charts] Remove outdated prop-types (#11045) @alexfauquette
+
+### Tree View / `@mui/x-tree-view@7.0.0-alpha.1`
+
+No change
+
+### Docs
+
+- [docs] Add `TextField` styling example to customization playground (#10812) @noraleonte
+- [docs] Add a card grid to the installation page (#11177) @danilo-leal
+- [docs] Add end v6 blogpost to whats new page (#10999) @joserodolfofreitas
+- [docs] Add small formatting improvements to the licensing page (#11178) @danilo-leal
+- [docs] Document charts composition (#10710) (#11239) @alexfauquette
+- [docs] Fix <title> generation (#11182) @oliviertassinari
+- [docs] Fix dead anchor link (#11265) @oliviertassinari
+- [docs] Improve Data Grid togglable columns example (#11238) @MBilalShafi
+- [docs] Improve the prop descriptions of `DayCalendar` (#11158) @flaviendelangle
+- [docs] Move the adapter breaking changes in a collapsable block (#11205) @flaviendelangle
+- [docs] Polish Next.js header description @oliviertassinari
+- [docs] Remove the `newFeature` flag on v6 features (#11168) @flaviendelangle
+- [docs] Simplify a bit chart demo (#11173) @oliviertassinari
+- [docs] Standardize the usage of callouts in the MUI X docs (#7127) @samuelsycamore
+- [docs][Data Grid] Adjust the demo page design (#11231) @danilo-leal
+
+### Core
+
+- [core] Make `@mui/system` a direct dependency (#11128) @LukasTy
+- [core] Remove blank lines, coding style @oliviertassinari
+- [core] Remove outdated ENABLE_AD env variable (#11181) @oliviertassinari
+- [core] yarn proptypes (#11175) @cherniavskii
+- [chore] Fix linter error (#11242) @cherniavskii
+- [github] Do not add `plan: Pro` and `plan: Premium` labels on pro / premium issue templates (#10183) @flaviendelangle
+
 ## 7.0.0-alpha.2
 
 _Nov 23, 2023_
