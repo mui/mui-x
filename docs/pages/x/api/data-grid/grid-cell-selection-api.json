@@ -3,27 +3,27 @@
   "description": "The cell selection API interface that is available in the grid apiRef.",
   "properties": [
     {
-      "name": "unstable_getCellSelectionModel",
+      "name": "getCellSelectionModel",
       "description": "Returns an object containing the selection state of the cells. The keys of the object correpond to the row IDs. The value of each key is another object whose keys are the fields and values are the selection state.",
       "type": "() => GridCellSelectionModel"
     },
     {
-      "name": "unstable_getSelectedCellsAsArray",
+      "name": "getSelectedCellsAsArray",
       "description": "Returns an array containing only the selected cells. Each item is an object with the ID and field of the cell.",
       "type": "() => GridCellCoordinates[]"
     },
     {
-      "name": "unstable_isCellSelected",
+      "name": "isCellSelected",
       "description": "Determines if a cell is selected or not.",
       "type": "(id: GridRowId, field: GridColDef['field']) => boolean"
     },
     {
-      "name": "unstable_selectCellRange",
+      "name": "selectCellRange",
       "description": "Selects all cells that are inside the range given by <code>start</code> and <code>end</code> coordinates.",
       "type": "(start: GridCellCoordinates, end: GridCellCoordinates, keepOtherSelected?: boolean) => void"
     },
     {
-      "name": "unstable_setCellSelectionModel",
+      "name": "setCellSelectionModel",
       "description": "Updates the selected cells to be those passed to the <code>newModel</code> argument. Any cell already selected will be unselected.",
       "type": "(newModel: GridCellSelectionModel) => void"
     }

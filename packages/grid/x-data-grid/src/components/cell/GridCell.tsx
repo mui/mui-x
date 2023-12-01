@@ -617,8 +617,8 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
-  const isSelectionMode = rootProps.unstable_cellSelection ?? false;
+  // @ts-expect-error To access `cellSelection` flag as it's a `premium` feature
+  const isSelectionMode = rootProps.cellSelection ?? false;
   const ownerState = {
     align,
     showRightBorder,
