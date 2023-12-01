@@ -79,7 +79,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ ariaV7?: bool, clipboardPaste?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ ariaV7?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
@@ -177,6 +177,13 @@
     },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
     "ignoreDiacritics": { "type": { "name": "bool" } },
+    "ignoreValueFormatterDuringExport": {
+      "type": {
+        "name": "union",
+        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
+      },
+      "default": "false"
+    },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -592,6 +599,10 @@
         "description": "Array&lt;{ field: string, sort?: 'asc'<br>&#124;&nbsp;'desc' }&gt;"
       }
     },
+    "splitClipboardPastedText": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(text: string) => void", "describedArgs": ["text"] }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -601,18 +612,7 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" } },
-    "unstable_headerFilters": { "type": { "name": "bool" } },
-    "unstable_ignoreValueFormatterDuringExport": {
-      "type": {
-        "name": "union",
-        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
-      },
-      "default": "false"
-    },
-    "unstable_splitClipboardPastedText": {
-      "type": { "name": "func" },
-      "signature": { "type": "function(text: string) => void", "describedArgs": ["text"] }
-    }
+    "unstable_headerFilters": { "type": { "name": "bool" } }
   },
   "slots": [
     {

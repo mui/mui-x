@@ -50,7 +50,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
           disableRowSelectionOnClick
           cellSelection
           disableVirtualization
-          experimentalFeatures={{ clipboardPaste: true }}
         />
       </div>
     );
@@ -382,7 +381,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
               getRowId={(row) => row.customIdField}
               rowSelection={false}
               cellSelection
-              experimentalFeatures={{ clipboardPaste: true }}
             />
           </div>
         );
@@ -448,7 +446,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
               getRowId={(row) => row.customIdField}
               rowSelection={false}
               cellSelection
-              experimentalFeatures={{ clipboardPaste: true }}
             />
           </div>
         );
@@ -498,7 +495,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
               rows={rows}
               rowSelection={false}
               processRowUpdate={processRowUpdateSpy}
-              experimentalFeatures={{ clipboardPaste: true }}
             />
           </div>
         );
@@ -540,12 +536,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       function Component() {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPremium
-              columns={columns}
-              rows={rows}
-              rowSelection={false}
-              experimentalFeatures={{ clipboardPaste: true }}
-            />
+            <DataGridPremium columns={columns} rows={rows} rowSelection={false} />
           </div>
         );
       }
@@ -583,7 +574,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
               rows={rows}
               rowSelection={false}
               cellSelection
-              experimentalFeatures={{ clipboardPaste: true }}
               disableVirtualization
             />
           </div>
@@ -814,12 +804,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       function CopyPasteTest(props: DataGridPremiumProps) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPremium
-              rowSelection={false}
-              experimentalFeatures={{ clipboardPaste: true }}
-              unstable_ignoreValueFormatterDuringExport
-              {...props}
-            />
+            <DataGridPremium rowSelection={false} ignoreValueFormatterDuringExport {...props} />
           </div>
         );
       }
@@ -1021,16 +1006,14 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
     });
 
-    it('should use `unstable_splitClipboardPastedText` prop to parse the clipboard string', async () => {
+    it('should use `splitClipboardPastedText` prop to parse the clipboard string', async () => {
       const cellDelimiter = ',';
       const rowDelimiter = ';\n';
 
       const splitClipboardText = (text: string) =>
         text.split(rowDelimiter).map((row) => row.split(cellDelimiter));
 
-      render(
-        <Test rowLength={5} colLength={5} unstable_splitClipboardPastedText={splitClipboardText} />,
-      );
+      render(<Test rowLength={5} colLength={5} splitClipboardPastedText={splitClipboardText} />);
 
       const cell = getCell(0, 1);
       cell.focus();

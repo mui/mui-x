@@ -252,8 +252,7 @@ export default function ClipboardPastePersistence() {
           checkboxSelection
           cellSelection
           processRowUpdate={processRowUpdate}
-          experimentalFeatures={{ clipboardPaste: true }}
-          unstable_ignoreValueFormatterDuringExport
+          ignoreValueFormatterDuringExport
         />
       </div>
     </div>
