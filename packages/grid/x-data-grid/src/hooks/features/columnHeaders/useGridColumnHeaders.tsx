@@ -12,6 +12,7 @@ import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColu
 import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getIndexesToRender } from '../virtualization/useGridVirtualScroller';
+import { gridDimensionsSelector } from '../dimensions';
 import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
@@ -104,7 +105,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [visibleColumns.length],
   );
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const dimensions = apiRef.current.getRootDimensions();
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
