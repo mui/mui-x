@@ -1,6 +1,10 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
+    "availableRangePositions": {
+      "type": { "name": "arrayOf", "description": "Array&lt;'end'<br>&#124;&nbsp;'start'&gt;" },
+      "default": "['start', 'end']"
+    },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
@@ -32,7 +36,6 @@
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "focusedView": { "type": { "name": "enum", "description": "'day'" } },
-    "forceFinishSelection": { "type": { "name": "bool" } },
     "loading": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },

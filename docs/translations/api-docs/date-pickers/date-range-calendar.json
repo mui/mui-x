@@ -6,6 +6,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "availableRangePositions": {
+      "description": "Range positions available for selection. This list is checked against when checking if a next range position can be selected.<br>Used on Date Time Range pickers with current <code>rangePosition</code> to force a <code>finish</code> selection after just one range position selection.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "calendars": {
       "description": "The number of calendars to render.",
       "deprecated": "",
@@ -76,11 +81,6 @@
     },
     "focusedView": {
       "description": "Controlled focused view.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "forceFinishSelection": {
-      "description": "If <code>true</code>, force a <code>finish</code> selection state. Used on Date Time Range pickers to enable date -&gt; time -&gt; date -&gt; time selection flow.",
       "deprecated": "",
       "typeDescriptions": {}
     },
