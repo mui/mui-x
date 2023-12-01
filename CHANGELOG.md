@@ -23,7 +23,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 -  🎉 The clipboard paste feature is now stable. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop.
 
-- The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are no more prefixed with `unstable_`
+- The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are no longer prefixed with `unstable_`.
 
 - The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the `DataGrid` exports. Use the [`filterDebounceMs`](https://mui.com/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
 
