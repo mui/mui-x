@@ -12,6 +12,7 @@ import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
     Omit<UseGridColumnHeadersProps, 'innerRef'> {
+  ref?: React.Ref<HTMLDivElement>;
   innerRef?: React.Ref<HTMLDivElement>;
 }
 

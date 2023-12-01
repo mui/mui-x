@@ -4,7 +4,6 @@ import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
-  gridColumnPositionsSelector,
   gridColumnVisibilityModelSelector,
   gridVisibleColumnDefinitionsSelector,
 } from '../hooks/features/columns/gridColumnsSelector';
@@ -30,7 +29,6 @@ function GridHeaders() {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
-  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnGroupHeaderTabIndexState = useGridSelector(
