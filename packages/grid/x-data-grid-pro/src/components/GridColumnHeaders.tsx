@@ -86,6 +86,11 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   }),
 );
 
+const Filler = styled('div')({
+  flex: 1,
+  backgroundColor: 'var(--unstable_DataGrid-containerBackground)',
+})
+
 GridColumnHeadersPinnedColumnHeaders.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
@@ -240,7 +245,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
           })}
         </GridColumnHeadersInner>
         <GridScrollArea scrollDirection="right" />
-        <div style={{ flex: 1 }} />
+        <Filler />
         {rightRenderContext && (
           <GridColumnHeadersPinnedColumnHeaders
             ownerState={{

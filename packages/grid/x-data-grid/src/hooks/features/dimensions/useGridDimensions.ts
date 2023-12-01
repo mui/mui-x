@@ -221,7 +221,7 @@ export function useGridDimensions(
       }
     }
 
-    const rowWidth = Math.max(viewportInnerSize.width, columnsTotalWidth);
+    const rowWidth = Math.max(viewportOuterSize.width, columnsTotalWidth);
 
     const minimumSize = {
       width: contentSize.width,
