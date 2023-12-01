@@ -56,7 +56,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 #### `@mui/x-data-grid@7.0.0-alpha.3`
 
-- [DataGrid] Cell clipboard paste, leading "v" (#9205) @prasad5795
+- [DataGrid] Fix cell editing adding a leading "v" on paste (#9205) @prasad5795
 - [DataGrid] Exclude hidden columns from quick filtering by default (#11229) @cherniavskii
 - [DataGrid] Fix `onFilterModelChange` being fired with stale field value (#11000) @gitstart
 - [DataGrid] Fix handling of event target in portal (#11174) @cherniavskii
