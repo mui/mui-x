@@ -337,7 +337,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
 
     return cellStyle;
-  }, [width, height, isNotVisible, styleProp]);
+  }, [width, height, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {

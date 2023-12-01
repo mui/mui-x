@@ -48,11 +48,6 @@ export interface UseGridColumnHeadersProps {
   innerRef?: React.Ref<HTMLDivElement>;
   minColumnIndex?: number;
   visibleColumns: GridStateColDef[];
-  visiblePinnedColumns: {
-    // XXX: unused
-    left: GridStateColDef[];
-    right: GridStateColDef[];
-  };
   sortColumnLookup: GridSortColumnLookup;
   filterColumnLookup: GridFilterActiveItemsLookup;
   columnPositions: number[]; // XXX: unused

@@ -67,7 +67,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   bottomContainerHeight: 0,
 };
 
-export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (state, _props) => {
+export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (state) => {
   const dimensions = EMPTY_DIMENSIONS;
 
   return {
@@ -267,10 +267,10 @@ export function useGridDimensions(
     props.scrollbarSize,
     props.autoHeight,
     rowsMeta.currentPageTotalHeight,
+    rowHeight,
     headerHeight,
     columnsTotalWidth,
     headersTotalHeight,
-    hasHeaderFilters,
     leftPinnedWidth,
     rightPinnedWidth,
   ]);
@@ -300,20 +300,19 @@ export function useGridDimensions(
     if (!root) {
       return;
     }
-    root.style.setProperty('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
-    root.style.setProperty('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
-    root.style.setProperty('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);
-    root.style.setProperty('--DataGrid-rowWidth', `${dimensions.rowWidth}px`);
-    root.style.setProperty('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
-    root.style.setProperty('--DataGrid-leftPinnedWidth', `${dimensions.leftPinnedWidth}px`);
-    root.style.setProperty('--DataGrid-rightPinnedWidth', `${dimensions.rightPinnedWidth}px`);
-    root.style.setProperty('--DataGrid-headerHeight', `${dimensions.headerHeight}px`);
-    root.style.setProperty('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
-    root.style.setProperty('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
-    root.style.setProperty(
-      '--DataGrid-bottomContainerHeight',
-      `${dimensions.bottomContainerHeight}px`,
-    );
+    const set = (k: string, v: string) => root.style.setProperty(k, v);
+    set('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
+    set('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
+    set('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);
+    set('--DataGrid-rowWidth', `${dimensions.rowWidth}px`);
+    set('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
+    set('--DataGrid-leftPinnedWidth', `${dimensions.leftPinnedWidth}px`);
+    set('--DataGrid-rightPinnedWidth', `${dimensions.rightPinnedWidth}px`);
+    set('--DataGrid-headerHeight', `${dimensions.headerHeight}px`);
+    set('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
+    set('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
+    set('--DataGrid-bottomContainerHeight', `${dimensions.bottomContainerHeight}px`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiRef.current.rootElementRef.current, apiRef.current.state.dimensions]);
 
   const isFirstSizing = React.useRef(true);
@@ -407,5 +406,5 @@ function measureScrollbarSize(
 // Get rid of floating point imprecision errors
 // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
 function roundToDecimalPlaces(value: number, decimals: number) {
-  return Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+  return Math.round(value * 10 ** decimals) / 10 ** decimals;
 }

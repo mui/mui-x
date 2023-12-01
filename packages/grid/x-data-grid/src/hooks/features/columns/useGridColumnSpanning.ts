@@ -44,7 +44,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridPrivate
         }
       }
     },
-    [calculateCellColSpan],
+    [apiRef],
   );
 
   const columnSpanningPublicApi: GridColumnSpanningApi = {

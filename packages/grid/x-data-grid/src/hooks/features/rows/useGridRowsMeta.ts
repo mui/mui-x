@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_debounce as debounce, unstable_capitalize as capitalize } from '@mui/utils';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';

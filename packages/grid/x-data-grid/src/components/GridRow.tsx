@@ -336,6 +336,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     rowClassNames.push(rootProps.getRowClassName(rowParams));
   }
 
+  const randomNumber = randomNumberBetween(10000, 20, 80);
+
   const getCell = (
     column: GridStateColDef,
     indexInSection: number,
@@ -421,8 +423,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   if (!rowNode) {
     return null;
   }
-
-  const randomNumber = randomNumberBetween(10000, 20, 80);
 
   const leftCells = pinnedColumns.left.map((column, i) => {
     const indexRelativeToAllColumns = i;

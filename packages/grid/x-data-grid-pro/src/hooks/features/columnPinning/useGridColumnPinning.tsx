@@ -195,7 +195,7 @@ export const useGridColumnPinning = (
 
       return params;
     },
-    [apiRef],
+    [apiRef, theme],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
@@ -266,7 +266,7 @@ export const useGridColumnPinning = (
       updateState(apiRef, newPinnedColumns, theme);
       apiRef.current.forceUpdate();
     },
-    [apiRef, checkIfEnabled],
+    [apiRef, checkIfEnabled, theme],
   );
 
   const isColumnPinned = React.useCallback<GridColumnPinningApi['isColumnPinned']>(

@@ -30,5 +30,6 @@ export function useResizeObserver(ref: React.MutableRefObject<HTMLElement | null
 
       observer.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

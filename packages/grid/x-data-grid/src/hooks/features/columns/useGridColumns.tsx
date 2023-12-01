@@ -155,7 +155,7 @@ export function useGridColumns(
         apiRef.current.forceUpdate();
       }
     },
-    [apiRef],
+    [apiRef, theme],
   );
 
   const updateColumns = React.useCallback<GridColumnApi['updateColumns']>(
@@ -169,7 +169,7 @@ export function useGridColumns(
       });
       setGridColumnsState(columnsState);
     },
-    [apiRef, setGridColumnsState],
+    [apiRef, setGridColumnsState, theme],
   );
 
   const setColumnVisibility = React.useCallback<GridColumnApi['setColumnVisibility']>(
@@ -355,7 +355,7 @@ export function useGridColumns(
 
       return params;
     },
-    [apiRef],
+    [apiRef, theme],
   );
 
   const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
@@ -420,7 +420,7 @@ export function useGridColumns(
       keepOnlyColumnsToUpsert: false,
     });
     setGridColumnsState(columnsState);
-  }, [apiRef, logger, setGridColumnsState]);
+  }, [apiRef, logger, setGridColumnsState, theme]);
 
   useGridRegisterPipeApplier(apiRef, 'hydrateColumns', hydrateColumns);
 
@@ -452,7 +452,7 @@ export function useGridColumns(
     });
     previousColumnsProp.current = props.columns;
     setGridColumnsState(columnsState);
-  }, [logger, apiRef, setGridColumnsState, props.columns]);
+  }, [logger, apiRef, setGridColumnsState, props.columns, theme]);
 
   React.useEffect(() => {
     if (props.columnVisibilityModel !== undefined) {

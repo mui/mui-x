@@ -136,7 +136,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
     React.useEffect(() => {
       const content = contentRef.current!;
       content.style.setProperty(propertyDimension, `${scrollbarInnerSize}px`);
-    }, [scrollbarInnerSize]);
+    }, [scrollbarInnerSize, propertyDimension]);
 
     const Container = props.position === 'vertical' ? ScrollbarVertical : ScrollbarHorizontal;
 

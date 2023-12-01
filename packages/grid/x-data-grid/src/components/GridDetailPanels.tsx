@@ -4,6 +4,7 @@ export interface GridDetailPanelsProps {
   virtualScroller: VirtualScroller;
 }
 
-export function GridDetailPanels(_props: GridDetailPanelsProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function GridDetailPanels(_: GridDetailPanelsProps) {
   return null;
 }

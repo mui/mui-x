@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { fastMemo } from '../utils/fastMemo';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';

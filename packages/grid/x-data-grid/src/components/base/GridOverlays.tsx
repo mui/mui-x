@@ -1,10 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/utils';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridExpandedRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';

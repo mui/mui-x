@@ -458,7 +458,7 @@ describe('<DataGridPro /> - Rows', () => {
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
       const styles = getComputedStyle(root);
-      const offsetTop = parseInt(styles.getPropertyValue('--DataGrid-offsetTop'));
+      const offsetTop = parseInt(styles.getPropertyValue('--DataGrid-offsetTop'), 10);
       expect(offsetTop).to.equal(distanceToFirstRow);
       expect(virtualScroller.scrollHeight - scrollbarSize).to.equal(nbRows * rowHeight);
     });

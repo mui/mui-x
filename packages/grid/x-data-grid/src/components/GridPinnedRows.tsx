@@ -6,6 +6,7 @@ export interface GridPinnedRowsProps extends React.HTMLAttributes<HTMLDivElement
   virtualScroller: VirtualScroller;
 }
 
-export function GridPinnedRows(_props: GridPinnedRowsProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function GridPinnedRows(_: GridPinnedRowsProps) {
   return null;
 }

@@ -11,7 +11,11 @@ import {
   GridPinnedColumns,
   GridPinnedColumnFields,
 } from './gridColumnsInterfaces';
-import { DEFAULT_GRID_COL_TYPE_KEY, GRID_STRING_COL_DEF } from '../../../colDef';
+import {
+  DEFAULT_GRID_COL_TYPE_KEY,
+  GRID_STRING_COL_DEF,
+  getGridDefaultColumnTypes,
+} from '../../../colDef';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -23,7 +27,6 @@ import {
 import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridRowEntry } from '../../../models/gridRows';
-import { getGridDefaultColumnTypes } from '../../../colDef';
 import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 

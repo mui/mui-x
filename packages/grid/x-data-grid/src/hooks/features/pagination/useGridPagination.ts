@@ -15,7 +15,6 @@ import {
 } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPaginationModelSelector } from './gridPaginationSelector';
-import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 import {
   getPageCount,
   noRowCountInServerMode,

@@ -19,7 +19,7 @@ import {
   act,
   userEvent,
 } from '@mui-internal/test-utils';
-import { $, $$, getRow, getCell, getColumnValues, microtasks, sleep } from 'test/utils/helperFn';
+import { $, $$, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

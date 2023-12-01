@@ -10,7 +10,7 @@ import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useLazyRef } from '../../utils/useLazyRef';
-import { useResizeObserver } from '../../../hooks/utils/useResizeObserver';
+import { useResizeObserver } from '../../utils/useResizeObserver';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
