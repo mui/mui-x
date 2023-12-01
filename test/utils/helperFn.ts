@@ -24,6 +24,10 @@ export function grid(klass: keyof typeof gridClasses) {
   return $('.' + gridClasses[klass]);
 }
 
+export function gridVar(name: string) {
+  return $('.' + gridClasses.root)!.style.getPropertyValue(name);
+}
+
 export function sleep(duration: number): Promise<void> {
   return new Promise<void>((resolve) => {
     setTimeout(() => {

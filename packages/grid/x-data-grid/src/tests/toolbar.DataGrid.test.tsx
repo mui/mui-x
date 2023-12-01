@@ -65,11 +65,11 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Compact'));
 
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+        height: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
 
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+        height: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
     });
 
@@ -91,11 +91,11 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Comfortable'));
 
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+        height: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
 
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+        height: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
     });
 
@@ -108,11 +108,11 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+        height: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
 
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+        height: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
     });
 
@@ -125,11 +125,11 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+        height: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
 
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+        height: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
     });
 

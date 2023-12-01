@@ -24,7 +24,7 @@ import {
   GridApi,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { grid, getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
+import { grid, gridVar, getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
 import Dialog from '@mui/material/Dialog';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
@@ -834,15 +834,10 @@ describe('<DataGrid /> - Rows', () => {
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
 
-        const virtualScrollerRenderZone = document.querySelector(
-          '.MuiDataGrid-virtualScrollerRenderZone',
-        )!;
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
         await waitFor(() => {
-          expect(virtualScrollerRenderZone).toHaveInlineStyle({
-            transform: 'translate3d(0px, 0px, 0px)',
-          });
+          expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
         });
       });
 
@@ -866,16 +861,9 @@ describe('<DataGrid /> - Rows', () => {
             {...data}
           />,
         );
-        const virtualScrollerRenderZone = document.querySelector(
-          '.MuiDataGrid-virtualScrollerRenderZone',
-        )!;
-        expect(virtualScrollerRenderZone).toHaveInlineStyle({
-          transform: 'translate3d(0px, 0px, 0px)',
-        });
+        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
         setProps({ pageSize: 5 });
-        expect(virtualScrollerRenderZone).toHaveInlineStyle({
-          transform: 'translate3d(0px, 0px, 0px)',
-        });
+        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
       });
 
       it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
@@ -903,14 +891,9 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
 
-        const virtualScrollerRenderZone = document.querySelector(
-          '.MuiDataGrid-virtualScrollerRenderZone',
-        )!;
-        expect(virtualScrollerRenderZone).toHaveInlineStyle({
-          transform: 'translate3d(0px, 0px, 0px)',
-        });
+        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
 
-        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        const virtualScroller = grid('virtualScroller')!;
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
 
@@ -918,9 +901,7 @@ describe('<DataGrid /> - Rows', () => {
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
         await waitFor(() => {
-          expect(virtualScrollerRenderZone).toHaveInlineStyle({
-            transform: 'translate3d(0px, 0px, 0px)',
-          });
+          expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
         });
       });
     });
