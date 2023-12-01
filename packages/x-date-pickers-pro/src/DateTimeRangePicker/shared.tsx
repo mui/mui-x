@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
+import { LocalizedComponent } from '@mui/x-date-pickers/locales';
 import {
   DefaultizedProps,
   useDefaultDates,
@@ -135,17 +135,6 @@ export function useDateTimeRangePickerDefaultizedProps<
     name,
   });
 
-  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
-    if (themeProps.localeText?.toolbarTitle == null) {
-      return themeProps.localeText;
-    }
-
-    return {
-      ...themeProps.localeText,
-      dateRangePickerToolbarTitle: themeProps.localeText.toolbarTitle,
-    };
-  }, [themeProps.localeText]);
-
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
   return {
@@ -157,7 +146,6 @@ export function useDateTimeRangePickerDefaultizedProps<
       defaultOpenTo: 'day',
     }),
     timeSteps: { hours: 1, minutes: 5, seconds: 5, ...themeProps.timeSteps },
-    localeText,
     ampm,
     calendars: themeProps.calendars ?? 1,
     disableFuture: themeProps.disableFuture ?? false,
