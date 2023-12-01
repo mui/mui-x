@@ -39,7 +39,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, Props>(function GridC
     ...other
   } = props;
 
-  const { isDragging, getRootProps, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
+  const { isDragging, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
     useGridColumnHeaders({
       innerRef,
       visibleColumns,
@@ -59,7 +59,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, Props>(function GridC
     });
 
   return (
-    <GridBaseColumnHeaders ref={ref} {...getRootProps(other)}>
+    <GridBaseColumnHeaders ref={ref} {...other}>
       <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
         {getColumnGroupHeaders()}
         {getColumnHeaders()}

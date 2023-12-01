@@ -603,7 +603,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       />,
     );
 
-    expect(document.querySelector(`.${gridClasses.main}`)!.clientHeight).to.equal(
+    expect(grid('main')!.clientHeight).to.equal(
       columnHeaderHeight + rowHeight * rowCount,
     );
   });

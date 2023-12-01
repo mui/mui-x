@@ -12,7 +12,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['columnHeaders', 'withBorderColor'],
+    root: ['columnHeaders'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -25,7 +25,6 @@ const GridColumnHeadersRoot = styled('div', {
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   boxSizing: 'border-box',
-  borderBottom: '1px solid',
   borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
   borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
   lineHeight: 'var(--DataGrid-headerHeight)',
