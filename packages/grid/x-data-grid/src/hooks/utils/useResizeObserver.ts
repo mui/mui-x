@@ -9,12 +9,12 @@ export function useResizeObserver(ref: React.MutableRefObject<HTMLElement | null
       return () => {};
     }
 
-    const target = ref.current;
+    let frameID = 0;
 
-    let animationFrame: number;
+    const target = ref.current;
     const observer = new ResizeObserver(() => {
       // See https://github.com/mui/mui-x/issues/8733
-      animationFrame = requestAnimationFrame(() => {
+      frameID = requestAnimationFrame(() => {
         fn();
       });
     });
@@ -24,13 +24,11 @@ export function useResizeObserver(ref: React.MutableRefObject<HTMLElement | null
     }
 
     return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
+      if (frameID) {
+        cancelAnimationFrame(frameID);
       }
 
-      if (target) {
-        observer.unobserve(target);
-      }
+      observer.disconnect();
     };
   }, []);
 }
