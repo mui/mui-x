@@ -133,11 +133,6 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   pinnedRows: React.JSXElementConstructor<GridPinnedRowsProps>;
   /**
-   * PreferencesPanel component rendered inside the Header component.
-   * @default GridPreferencesPanel
-   */
-  preferencesPanel: React.JSXElementConstructor<any>;
-  /**
    * Loading overlay component rendered when the grid is in a loading state.
    * @default GridLoadingOverlay
    */

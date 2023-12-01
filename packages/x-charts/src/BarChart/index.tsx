@@ -1,2 +1,3 @@
-export * from './BarPlot';
 export * from './BarChart';
+export * from './BarPlot';
+export * from './BarElement';

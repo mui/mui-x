@@ -74,7 +74,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableColumnResize: false,
   keepNonExistentRowsSelected: false,
   keepColumnPositionIfDraggedOutside: false,
-  unstable_ignoreValueFormatterDuringExport: false,
+  ignoreValueFormatterDuringExport: false,
   clipboardCopyCellDelimiter: '\t',
   rowPositionsDebounceMs: 166,
 };

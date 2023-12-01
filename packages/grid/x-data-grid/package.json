@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.4",
+    "@mui/system": "^5.14.18",
     "@mui/utils": "^5.14.18",
     "clsx": "^2.0.0",
     "prop-types": "^15.8.1",
@@ -55,7 +56,6 @@
   },
   "peerDependencies": {
     "@mui/material": "^5.4.1",
-    "@mui/system": "^5.4.1",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },

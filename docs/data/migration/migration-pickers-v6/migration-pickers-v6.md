@@ -103,6 +103,40 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
+### Add new parameters to the `shortcuts` slot `onChange` callback
+
+:::warning
+The following breaking change only impacts you if you are overriding the `shortcuts` slot to create your own custom UI.
+If you are just passing shortcuts to the default UI using `slotProps={{ shortcuts: [...] }}` then you can safely skip this section.
+:::
+
+The `onChange` callback fired when selecting a shortcut now requires two new parameters (previously they were optional):
+
+- The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
+- The `item` containing the entire shortcut object.
+
+```diff
+ const CustomShortcuts = (props) => {
+   return (
+     <React.Fragment>
+       {props.items.map(item => {
+         const value = item.getValue({ isValid: props.isValid });
+         return (
+           <button
+-            onClick={() => onChange(value)}
++            onClick={() => onChange(value, props.changeImportance ?? 'accept', item)}
+           >
+             {value}
+           </button>
+         )
+       }}
+     </React.Fragment>
+   )
+ }
+
+ <DatePicker slots={{ shortcuts: CustomShortcuts }} />
+```
+
 ### Change the imports of the `calendarHeader` slot
 
 The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DateCalendar` to `@mui/x-date-pickers/PickersCalendarHeader`:
@@ -194,7 +228,24 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
  return <DateField unstableFieldRef={fieldRef} />;
 ```
 
-## Removed formats
+## Date management
+
+### Use localized week with luxon
+
+The `AdapterLuxon` now uses the localized week when Luxon `v3.4.4` or higher is installed.
+This improvement aligns `AdapterLuxon` with the behavior of other adapters.
+
+If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
+
+```ts
+import { Settings } from 'luxon';
+
+Settings.defaultWeekSettings = {
+  firstDay: 1,
+  minimalDays: Info.getMinimumDaysInFirstWeek(),
+  weekend: [6, 7],
+};
+```
 
 ### Remove the `monthAndYear` format
 
@@ -226,7 +277,9 @@ The `dayPickerClasses` variable has been renamed `dayCalendarClasses` to be cons
 +import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 ```
 
-## Use UTC with the Day.js adapter
+## Usage with Day.js
+
+### Use UTC with the Day.js adapter
 
 The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.
 This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
@@ -250,6 +303,23 @@ You can learn more about the new approach on the [dedicated doc page](https://mu
 +  <DatePicker timezone="UTC" />
  </LocalizationProvider>
 ```
+
+### Usage with `customParseFormat`
+
+The call to `dayjs.extend(customParseFormatPlugin)` has been moved to the `AdapterDayjs` constructor. This allows users
+to pass custom options to this plugin before the adapter uses it.
+
+If you are using this plugin before the rendering of the first `LocalizationProvider` component and did not call
+`dayjs.extend` in your own codebase, you will need to manually extend `dayjs`:
+
+```tsx
+import dayjs from 'dayjs';
+import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormatPlugin);
+```
+
+The other plugins are still added before the adapter initialization.
 
 ## Adapters internal changes
 

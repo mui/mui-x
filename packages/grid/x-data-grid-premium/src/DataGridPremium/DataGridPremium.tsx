@@ -126,6 +126,15 @@ DataGridPremiumRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  cellSelection: PropTypes.bool,
+  /**
+   * Set the cell selection model of the grid.
+   */
+  cellSelectionModel: PropTypes.object,
+  /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
    */
@@ -301,7 +310,6 @@ DataGridPremiumRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     ariaV7: PropTypes.bool,
-    clipboardPaste: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
@@ -450,6 +458,18 @@ DataGridPremiumRaw.propTypes = {
    */
   ignoreDiacritics: PropTypes.bool,
   /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default false
+   */
+  ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
+  /**
    * The initial state of the DataGridPremium.
    * The data in it is set in the state on initialization but isn't controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -560,6 +580,12 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
+  /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellSelectionModelChange: PropTypes.func,
   /**
    * Callback called when the data is copied to the clipboard.
    * @param {string} data The data copied to the clipboard.
@@ -975,6 +1001,13 @@ DataGridPremiumRaw.propTypes = {
     }),
   ),
   /**
+   * The function is used to split the pasted text into rows and cells.
+   * @param {string} text The text pasted from the clipboard.
+   * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
+   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
+   */
+  splitClipboardPastedText: PropTypes.func,
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -994,42 +1027,8 @@ DataGridPremiumRaw.propTypes = {
    */
   treeData: PropTypes.bool,
   /**
-   * If `true`, the cell selection mode is enabled.
-   * @default false
-   */
-  unstable_cellSelection: PropTypes.bool,
-  /**
-   * Set the cell selection model of the grid.
-   */
-  unstable_cellSelectionModel: PropTypes.object,
-  /**
    * If `true`, enables the data grid filtering on header feature.
    * @default false
    */
   unstable_headerFilters: PropTypes.bool,
-  /**
-   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
-   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default false
-   */
-  unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
-    PropTypes.shape({
-      clipboardExport: PropTypes.bool,
-      csvExport: PropTypes.bool,
-    }),
-    PropTypes.bool,
-  ]),
-  /**
-   * Callback fired when the selection state of one or multiple cells changes.
-   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  unstable_onCellSelectionModelChange: PropTypes.func,
-  /**
-   * The function is used to split the pasted text into rows and cells.
-   * @param {string} text The text pasted from the clipboard.
-   * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
-   */
-  unstable_splitClipboardPastedText: PropTypes.func,
 } as any;
