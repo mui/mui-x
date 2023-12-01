@@ -140,7 +140,7 @@ No change
 - [docs] Remove the `newFeature` flag on v6 features (#11168) @flaviendelangle
 - [docs] Simplify a bit chart demo (#11173) @oliviertassinari
 - [docs] Standardize the usage of callouts in the MUI X docs (#7127) @samuelsycamore
-- [docs][Data Grid] Adjust the demo page design (#11231) @danilo-leal
+- [docs] Adjust the Data Grid demo page design (#11231) @danilo-leal
 
 ### Core
 
