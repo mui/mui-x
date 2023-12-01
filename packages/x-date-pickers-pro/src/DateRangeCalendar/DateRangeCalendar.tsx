@@ -598,7 +598,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             renderLoading={renderLoading}
             slots={slotsForDayCalendar}
             slotProps={slotPropsForDayCalendar}
-            autoFocus={month === focusedMonth}
+            autoFocus={visibleMonths[month] === focusedMonth}
             fixedWeekNumber={fixedWeekNumber}
             displayWeekNumber={displayWeekNumber}
             timezone={timezone}
