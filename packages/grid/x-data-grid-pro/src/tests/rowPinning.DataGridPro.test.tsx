@@ -20,6 +20,8 @@ import {
   waitFor,
 } from '@mui-internal/test-utils';
 import {
+  $,
+  grid,
   getActiveCell,
   getActiveColumnHeader,
   getCell,
@@ -35,14 +37,14 @@ describe('<DataGridPro /> - Row pinning', () => {
   const { render } = createRenderer();
 
   function getRowById(id: number | string) {
-    return document.querySelector(`[data-id="${id}"]`);
+    return $(`[data-id="${id}"]`);
   }
 
   function getTopPinnedRowsContainer() {
-    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--top']}`);
+    return grid('pinnedRows--top');
   }
   function getBottomPinnedRowsContainer() {
-    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--bottom']}`);
+    return grid('pinnedRows--bottom');
   }
 
   function isRowPinned(row: Element | null, section: 'top' | 'bottom') {
@@ -561,21 +563,21 @@ describe('<DataGridPro /> - Row pinning', () => {
     await microtasks();
     const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
 
-    expect(getRowById(0)?.clientHeight).to.equal(defaultRowHeight);
-    expect(document.querySelector(`.${gridClasses['pinnedRows--top']}`)?.clientHeight).to.equal(
+    expect(getRowById(0)!.offsetHeight).to.equal(defaultRowHeight);
+    expect(grid('pinnedRows--top')!.offsetHeight).to.equal(
       defaultRowHeight,
     );
-    expect(getRowById(1)?.clientHeight).to.equal(defaultRowHeight + scrollbarSize);
-    expect(document.querySelector(`.${gridClasses['pinnedRows--bottom']}`)?.clientHeight).to.equal(
+    expect(getRowById(1)!.clientHeight).to.equal(defaultRowHeight + scrollbarSize);
+    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(
       defaultRowHeight + scrollbarSize,
     );
 
     setProps({ rowHeight: 36 });
 
     expect(getRowById(0)?.clientHeight).to.equal(36);
-    expect(document.querySelector(`.${gridClasses['pinnedRows--top']}`)?.clientHeight).to.equal(36);
+    expect(grid('pinnedRows--top')!.offsetHeight).to.equal(36);
     expect(getRowById(1)?.clientHeight).to.equal(36 + scrollbarSize);
-    expect(document.querySelector(`.${gridClasses['pinnedRows--bottom']}`)?.clientHeight).to.equal(
+    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(
       36 + scrollbarSize,
     );
   });

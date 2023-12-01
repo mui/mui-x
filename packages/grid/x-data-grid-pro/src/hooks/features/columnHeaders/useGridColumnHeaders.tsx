@@ -50,7 +50,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     apiRef,
     unstable_gridTabIndexColumnHeaderFilterSelector,
   );
-  const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity({
+  const { getColumnsToRender, ...otherProps } = useGridColumnHeadersCommunity({
     ...props,
     hasOtherElementInTabSequence:
       hasOtherElementInTabSequence || columnHeaderFilterTabIndexState !== null,
@@ -162,17 +162,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     );
   };
 
-  const rootStyle = {
-    minHeight: dimensions.headersTotalHeight,
-    maxHeight: dimensions.headersTotalHeight,
-    lineHeight: `${dimensions.headerHeight}px`,
-  };
-
   return {
     ...otherProps,
     getColumnFilters,
-    getRootProps: disableHeaderFiltering
-      ? getRootProps
-      : (other = {}) => ({ style: rootStyle, ...other }),
   };
 };

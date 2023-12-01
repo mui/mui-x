@@ -248,12 +248,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.unstable_cellSelection ?? false;
 
+  const isFirstCell = sectionIndex === 0;
+  const isLastCell = sectionIndex === sectionLength - 1;
+
   const showLeftBorder =
     rootProps.showCellVerticalBorder && pinnedPosition === PinnedPosition.RIGHT;
-  const showRightBorder = rootProps.showCellVerticalBorder;
-  const showLeftShadow = pinnedPosition === PinnedPosition.RIGHT && sectionIndex === 0;
-  const showRightShadow =
-    pinnedPosition === PinnedPosition.LEFT && sectionIndex === sectionLength - 1;
+  const showRightBorder = rootProps.showCellVerticalBorder && !(isLastCell && pinnedPosition !== PinnedPosition.LEFT);
+  const showLeftShadow = pinnedPosition === PinnedPosition.RIGHT && isFirstCell;
+  const showRightShadow = pinnedPosition === PinnedPosition.LEFT && isLastCell;
 
   const ownerState = {
     align,

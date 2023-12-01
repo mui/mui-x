@@ -65,20 +65,23 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     top: 0,
     display: 'flex',
     flexDirection: 'column',
+    boxSizing: 'border-box',
     boxShadow: theme.shadows[2],
-    backgroundColor: 'var(--unstable_DataGrid-pinnedBackground)',
+    backgroundColor: 'var(--DataGrid-pinnedBackground)',
     ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
     ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
-    ...(ownerState.side === GridPinnedPosition.right &&
-      ownerState.showCellVerticalBorder && {
-        borderLeftWidth: '1px',
-        borderLeftStyle: 'solid',
-      }),
     [`&.${gridClasses['pinnedColumnHeaders--left']}`]: {
       left: 0,
+      width: 'var(--DataGrid-leftPinnedWidth)',
     },
     [`&.${gridClasses['pinnedColumnHeaders--right']}`]: {
       right: 0,
+      width: 'var(--DataGrid-rightPinnedWidth)',
+      '& > [role="row"] > [role="columnheader"]:first-child': {
+        ...(ownerState.showCellVerticalBorder && {
+          borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
+        }),
+      }
     },
   }),
 );
@@ -129,7 +132,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     const {
       isDragging,
       renderContext,
-      getRootProps,
       getInnerProps,
       getColumnHeaders,
       getColumnFilters,
@@ -186,7 +188,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     };
 
     return (
-      <GridBaseColumnHeaders ref={ref} className={className} {...getRootProps(other)}>
+      <GridBaseColumnHeaders ref={ref} className={className} {...other}>
         {leftRenderContext && (
           <GridColumnHeadersPinnedColumnHeaders
             className={classes.leftPinnedColumns}

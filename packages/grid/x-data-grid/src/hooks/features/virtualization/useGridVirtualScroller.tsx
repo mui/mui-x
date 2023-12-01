@@ -14,7 +14,6 @@ import { useResizeObserver } from '../../../hooks/utils/useResizeObserver';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
-  gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
 } from '../columns/gridColumnsSelector';
 import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
@@ -135,7 +134,6 @@ export const useGridVirtualScroller = () => {
 
   const theme = useTheme();
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
@@ -148,6 +146,8 @@ export const useGridVirtualScroller = () => {
   const scrollbarVerticalRef = React.useRef<HTMLDivElement>(null);
   const scrollbarHorizontalRef = React.useRef<HTMLDivElement>(null);
   const contentHeight = dimensions.contentSize.height;
+  const leftPinnedWidth = dimensions.leftPinnedWidth;
+  const columnsTotalWidth = dimensions.columnsTotalWidth;
 
   useResizeObserver(mainRef, () => apiRef.current.resize());
 
@@ -216,6 +216,7 @@ export const useGridVirtualScroller = () => {
     }
 
     const { top, left } = scrollPosition;
+    const realLeft = Math.abs(left) + leftPinnedWidth;
 
     // Clamp the value because the search may return an index out of bounds.
     // In the last index, this is not needed because Array.slice doesn't include it.
@@ -245,8 +246,8 @@ export const useGridVirtualScroller = () => {
       }
 
       if (!hasRowWithAutoHeight) {
-        firstColumnIndex = binarySearch(Math.abs(left), columnPositions);
-        lastColumnIndex = binarySearch(Math.abs(left) + innerSize.width, columnPositions);
+        firstColumnIndex = binarySearch(realLeft, columnPositions);
+        lastColumnIndex = binarySearch(realLeft + innerSize.width, columnPositions);
       }
     }
 
@@ -743,6 +744,7 @@ export const useGridVirtualScroller = () => {
 };
 
 function createGetRenderedColumns() {
+  // XXX: This options can be removed
   // The `maxSize` is 3 so that reselect caches the `renderedColumns` values for the pinned left,
   // unpinned, and pinned right sections.
   const memoizeOptions = { maxSize: 3 };

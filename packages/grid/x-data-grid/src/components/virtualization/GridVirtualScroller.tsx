@@ -7,12 +7,13 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { GridOverlays } from '../base/GridOverlays';
 import { GridHeaders } from '../GridHeaders';
-import { GridVirtualScrollerContainer as Container } from './GridVirtualScrollerContainer';
+import { GridMainContainer as Container } from './GridMainContainer';
+import { GridTopContainer as TopContainer } from './GridTopContainer';
+import { GridBottomContainer as BottomContainer } from './GridBottomContainer';
 import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerContent';
+import { GridVirtualScrollerFiller as Filler } from './GridVirtualScrollerFiller';
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
-import { GridTopContainer } from './GridTopContainer';
-import { GridBottomContainer } from './GridBottomContainer';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -31,21 +32,20 @@ const Scroller = styled('div', {
   slot: 'VirtualScroller',
   overridesResolver: (props, styles) => styles.virtualScroller,
 })<{ ownerState: OwnerState }>({
+  position: 'relative',
   height: '100%',
-
   overflow: 'scroll',
   scrollbarWidth: 'none' /* Firefox */,
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
   },
 
-  // See https://github.com/mui/mui-x/issues/4360
-  position: 'relative',
-
   '@media print': {
     overflow: 'hidden',
   },
-  zIndex: 0, // See https://github.com/mui/mui-x/issues/10547
+
+  // See https://github.com/mui/mui-x/issues/10547
+  zIndex: 0,
 });
 
 export interface GridVirtualScrollerProps {
@@ -69,11 +69,11 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   return (
     <Container {...getContainerProps()}>
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
-        <GridTopContainer>
+        <TopContainer>
           <GridHeaders />
           <GridOverlays />
-          <rootProps.slots.pinnedRows virtualScroller={virtualScroller} position="top" />
-        </GridTopContainer>
+          <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
+        </TopContainer>
 
         <Content {...getContentProps()}>
           <RenderZone {...getRenderZoneProps()}>
@@ -82,9 +82,11 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           </RenderZone>
         </Content>
 
-        <GridBottomContainer>
-          <rootProps.slots.pinnedRows virtualScroller={virtualScroller} position="bottom" />
-        </GridBottomContainer>
+        <Filler />
+
+        <BottomContainer>
+          <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+        </BottomContainer>
       </Scroller>
       <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
       <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />

@@ -17,7 +17,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
-import { gridColumnsTotalWidthSelector } from '../columns';
+import { gridColumnsTotalWidthSelector, gridVisiblePinnedColumnDefinitionsSelector } from '../columns';
 import { gridDensityFactorSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -49,6 +49,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   viewportOuterSize: EMPTY_SIZE,
   viewportInnerSize: EMPTY_SIZE,
   contentSize: EMPTY_SIZE,
+  minimumSize: EMPTY_SIZE,
   hasScrollX: false,
   hasScrollY: false,
   scrollbarSize: 0,
@@ -56,6 +57,8 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   rowWidth: 0,
   rowHeight: 0,
   columnsTotalWidth: 0,
+  leftPinnedWidth: 0,
+  rightPinnedWidth: 0,
   headersTotalHeight: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
@@ -78,14 +81,18 @@ export function useGridDimensions(
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
+  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
-  const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
+  const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 6);
   const hasHeaderFilters = Boolean((props as any).unstable_headerFilters); // XXX: this is kinda unsafe
   const headersTotalHeight =
     getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
     Number(hasHeaderFilters) * headerHeight;
+
+  const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0)
+  const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0)
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
   const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
@@ -98,13 +105,12 @@ export function useGridDimensions(
   });
 
   const resize = React.useCallback(() => {
-    const mainEl = apiRef.current.mainElementRef?.current;
-    if (!mainEl) {
+    const element = apiRef.current.mainElementRef.current;
+    if (!element) {
       return;
     }
 
-    const win = ownerWindow(mainEl);
-    const computedStyle = win.getComputedStyle(mainEl);
+    const computedStyle = ownerWindow(element).getComputedStyle(element);
 
     const height = parseFloat(computedStyle.height) || 0;
     const width = parseFloat(computedStyle.width) || 0;
@@ -156,7 +162,7 @@ export function useGridDimensions(
     const bottomContainerHeight = pinnedRowsHeight.bottom;
 
     const contentSize = {
-      width: roundToDecimalPlaces(columnsTotalWidth, 6),
+      width: columnsTotalWidth,
       height: rowsMeta.currentPageTotalHeight,
     };
 
@@ -187,7 +193,7 @@ export function useGridDimensions(
         height: rootDimensionsRef.current.height,
       };
       viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width - 0 /* XXX: right/left pinned */),
+        width: Math.max(0, viewportOuterSize.width - leftPinnedWidth - rightPinnedWidth),
         height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
       };
 
@@ -217,12 +223,18 @@ export function useGridDimensions(
 
     const rowWidth = Math.max(viewportInnerSize.width, columnsTotalWidth);
 
+    const minimumSize = {
+      width: contentSize.width,
+      height: topContainerHeight + contentSize.height + bottomContainerHeight,
+    }
+
     const newFullDimensions: GridDimensions = {
       isReady: true,
       root: rootDimensionsRef.current,
       viewportOuterSize,
       viewportInnerSize,
       contentSize,
+      minimumSize,
       hasScrollX,
       hasScrollY,
       scrollbarSize,
@@ -230,6 +242,8 @@ export function useGridDimensions(
       rowWidth,
       rowHeight,
       columnsTotalWidth,
+      leftPinnedWidth,
+      rightPinnedWidth,
       headersTotalHeight,
       topContainerHeight,
       bottomContainerHeight,
@@ -254,6 +268,8 @@ export function useGridDimensions(
     columnsTotalWidth,
     headersTotalHeight,
     hasHeaderFilters,
+    leftPinnedWidth,
+    rightPinnedWidth,
   ]);
 
   const apiPublic: GridDimensionsApi = {
@@ -286,6 +302,9 @@ export function useGridDimensions(
     root.style.setProperty('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);
     root.style.setProperty('--DataGrid-rowWidth', `${dimensions.rowWidth}px`);
     root.style.setProperty('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
+    root.style.setProperty('--DataGrid-leftPinnedWidth', `${dimensions.leftPinnedWidth}px`);
+    root.style.setProperty('--DataGrid-rightPinnedWidth', `${dimensions.rightPinnedWidth}px`);
+    root.style.setProperty('--DataGrid-headerHeight', `${dimensions.headerHeight}px`);
     root.style.setProperty('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
     root.style.setProperty('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
     root.style.setProperty(
@@ -382,7 +401,7 @@ function measureScrollbarSize(
   return size;
 }
 
-// Get rid of floating point errors
+// Get rid of floating point imprecision errors
 // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
 function roundToDecimalPlaces(value: number, decimals: number) {
   return Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);

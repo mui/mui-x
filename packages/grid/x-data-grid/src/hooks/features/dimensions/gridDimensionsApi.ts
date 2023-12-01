@@ -18,9 +18,13 @@ export interface GridDimensions {
    */
   viewportInnerSize: ElementSize;
   /**
-   * The size of the grid content.
+   * The size of the main content (unpinned rows & columns).
    */
   contentSize: ElementSize;
+  /**
+   * The minimum size to display the grid, including all pinned sections and headers.
+   */
+  minimumSize: ElementSize;
   /**
    * Indicates if a scroll is currently needed to go from the beginning of the first column to the end of the last column.
    */
@@ -46,6 +50,14 @@ export interface GridDimensions {
    * Size of all the visible columns.
    */
   columnsTotalWidth: number;
+  /**
+   * Size of left pinned columns.
+   */
+  leftPinnedWidth: number;
+  /**
+   * Size of right pinned columns.
+   */
+  rightPinnedWidth: number;
   /**
    * Height of one headers.
    */

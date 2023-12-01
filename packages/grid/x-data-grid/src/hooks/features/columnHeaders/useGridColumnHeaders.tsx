@@ -379,19 +379,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     return columns;
   };
 
-  const rootStyle = {
-    minHeight: dimensions.headersTotalHeight,
-    maxHeight: dimensions.headersTotalHeight,
-    lineHeight: `${dimensions.headerHeight}px`,
-  };
-
   return {
     renderContext,
     getColumnHeaders,
     getColumnsToRender,
     getColumnGroupHeaders,
     isDragging: !!dragCol,
-    getRootProps: (other = {}) => ({ style: rootStyle, ...other }),
     getInnerProps: () => ({
       ref: handleInnerRef,
       role: 'rowgroup',

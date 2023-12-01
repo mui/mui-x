@@ -131,14 +131,16 @@ export const GridRootStyles = styled('div', {
     '--unstable_DataGrid-containerBackground': theme.vars
       ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.8)`
       : alpha(theme.palette.background.default, 0.8),
-    '--unstable_DataGrid-pinnedBackground':
+    '--DataGrid-pinnedBackground':
       // FIXME: Adapt for light & dark themes
-      lighten(
+      alpha(lighten(
         theme.vars
           ? theme.vars.palette.background.defaultChannel
           : theme.palette.background.default,
         0.1,
-      ),
+      ), 0.6),
+    '--DataGrid-rowBorderColor': borderColor,
+
     '--DataGrid-cellOffsetMultiplier': 2,
     '--DataGrid-hasScrollX': '0',
     '--DataGrid-hasScrollY': '0',
@@ -147,6 +149,9 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-scrollbarSize': '10px',
     '--DataGrid-rowWidth': '0px',
     '--DataGrid-columnsTotalWidth': '0px',
+    '--DataGrid-leftPinnedWidth': '0px',
+    '--DataGrid-rightPinnedWidth': '0px',
+    '--DataGrid-headerHeight': '0px',
     '--DataGrid-headersTotalHeight': '0px',
     '--DataGrid-topContainerHeight': '0px',
     '--DataGrid-bottomContainerHeight': '0px',
@@ -338,25 +343,14 @@ export const GridRootStyles = styled('div', {
     [`.${gridClasses.menuOpen}`]: {
       visibility: 'visible',
     },
+
+    /* Row styles */
     [`.${gridClasses.row}`]: {
       display: 'flex',
       width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
 
-      // HACK: Using a floating ::before instead of a border-top simplifies our layout testing,
-      // that's why it's done this way here. It would be fine to refactor it and the test suite
-      // to use border-top instead eventually.
-      '--rowBorderColor': borderColor,
-      position: 'relative',
-      '&::before': {
-        position: 'absolute',
-        content: '" "',
-        top: '0',
-        left: '0',
-        height: '1px',
-        width: '100%',
-        backgroundColor: 'var(--rowBorderColor)',
-      },
+      '--rowBorderColor': 'var(--DataGrid-rowBorderColor)',
 
       [`&.${gridClasses['row--firstVisible']}`]: {
         '--rowBorderColor': 'transparent',
@@ -392,25 +386,27 @@ export const GridRootStyles = styled('div', {
         },
       },
     },
-    [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']}`]:
-      {
-        '--rowBorderColor': 'transparent',
-      },
     [`& .${gridClasses['container--top']}, & .${gridClasses['container--bottom']}`]: {
       '[role=row]': {
         background: 'var(--unstable_DataGrid-containerBackground)',
       },
       [`.${gridClasses.pinnedColumnHeaders} [role=row]`]: {
-        background: 'var(--unstable_DataGrid-pinnedBackground)',
+        background: 'var(--DataGrid-pinnedBackground)',
       },
     },
+
+    /* Cell styles */
     [`& .${gridClasses.cell}`]: {
       display: 'flex',
       alignItems: 'center',
-      '--width': '0px',
-      '--height': '0px',
       width: 'var(--width)',
       height: 'var(--height)',
+
+      '--width': '0px',
+      '--height': '0px',
+
+      boxSizing: 'border-box',
+      borderTop: `1px solid var(--rowBorderColor)`,
 
       '&.Mui-selected': {
         backgroundColor: theme.vars
@@ -434,6 +430,10 @@ export const GridRootStyles = styled('div', {
         },
       },
     },
+    [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
+      {
+        borderTopColor: 'transparent',
+      },
     [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]: {
       userSelect: 'none',
     },
@@ -528,6 +528,15 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses['cell--textCenter']}`]: {
       justifyContent: 'center',
     },
+    [`& .${gridClasses['cell--pinnedLeft']}, & .${gridClasses['cell--pinnedRight']}`]: {
+      position: 'sticky',
+      zIndex: 3,
+      background: 'var(--DataGrid-pinnedBackground)',
+    },
+    [`& .${gridClasses.cell}:not(.${gridClasses['cell--pinnedLeft']}):not(.${gridClasses['cell--pinnedRight']})`]:
+      {
+        transform: 'translate3d(var(--DataGrid-offsetLeft), 0, 0)',
+      },
     [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
       display: 'flex',
       width: '100%',
@@ -552,15 +561,6 @@ export const GridRootStyles = styled('div', {
         display: 'flex',
       },
     },
-    [`& .${gridClasses['cell--pinnedLeft']}, & .${gridClasses['cell--pinnedRight']}`]: {
-      position: 'sticky',
-      zIndex: 3,
-      background: 'var(--unstable_DataGrid-pinnedBackground)',
-    },
-    [`& .${gridClasses.cell}:not(.${gridClasses['cell--pinnedLeft']}):not(.${gridClasses['cell--pinnedRight']})`]:
-      {
-        transform: 'translate3d(var(--DataGrid-offsetLeft), 0, 0)',
-      },
     [`& .${gridClasses['row--lastVisible']}`]: {
       minHeight: 'unset !important',
       maxHeight: 'unset !important',

@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { act } from '@mui-internal/test-utils';
+import { gridClasses } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
 
@@ -17,6 +18,10 @@ export function $$(a: unknown, b?: unknown): HTMLElement[] {
   const target = (b === undefined ? document : a) as HTMLElement;
   const selector = (b === undefined ? a : b) as string;
   return Array.from(target.querySelectorAll(selector));
+}
+
+export function grid(klass: keyof typeof gridClasses) {
+  return $('.' + gridClasses[klass]);
 }
 
 export function sleep(duration: number): Promise<void> {

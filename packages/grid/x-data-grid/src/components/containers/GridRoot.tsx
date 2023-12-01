@@ -31,7 +31,7 @@ type OwnerState = DataGridProcessedProps & {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { autoHeight, density, classes } = ownerState;
+  const { autoHeight, density, classes, showCellVerticalBorder } = ownerState;
 
   const slots = {
     root: [
@@ -39,6 +39,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       autoHeight && 'autoHeight',
       `root--density${capitalize(density)}`,
       'withBorderColor',
+      showCellVerticalBorder && 'withVerticalBorder',
     ],
   };
 

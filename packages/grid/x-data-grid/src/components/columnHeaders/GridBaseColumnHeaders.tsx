@@ -24,11 +24,11 @@ const GridColumnHeadersRoot = styled('div', {
   overridesResolver: (props, styles) => styles.columnHeaders,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
-  alignItems: 'center',
   boxSizing: 'border-box',
   borderBottom: '1px solid',
   borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
   borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
+  lineHeight: 'var(--DataGrid-headerHeight)',
 });
 
 interface GridBaseColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
