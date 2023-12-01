@@ -6,7 +6,6 @@ import {
   GridSortModel,
   useGridApiRef,
   GridColDef,
-  DataGridProps,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
@@ -16,7 +15,7 @@ import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helper
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Sorting', () => {
-  const baselineProps: DataGridProps = {
+  const baselineProps: DataGridProProps = {
     autoHeight: isJSDOM,
     rows: [
       {
