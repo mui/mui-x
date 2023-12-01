@@ -9,9 +9,13 @@ _Dec 1, 2023_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
-
 #### Highlight
+
+- 🚀 Support localized start of the week on `AdapterLuxon` (#10964)
+- 📈 Fix a lot of Charts package issues
+- 🌍 Improve Bulgarian (bg-BG) locale on Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 ### Data Grid
 
