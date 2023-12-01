@@ -8,6 +8,11 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
   data: ScatterValueType[];
   markerSize?: number;
   label?: string;
+  /**
+   * If true, the interaction will not use element hover for this series.
+   * @default false
+   */
+  disableHover?: boolean;
 }
 
 /**

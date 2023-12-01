@@ -9,6 +9,7 @@ import {
 } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 import { D3Scale } from '../models/axis';
+import { HighlightScope } from '../context';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -31,9 +32,15 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, markerSize } = props;
 
-  const highlightScope = series.highlightScope ?? { highlighted: 'item', faded: 'global' };
-  const { item } = React.useContext(InteractionContext);
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
+  const highlightScope: HighlightScope = React.useMemo(
+    () => ({ highlighted: 'item', faded: 'global', ...series.highlightScope }),
+    [series.highlightScope],
+  );
+
+  const { item, useVoronoiInteraction } = React.useContext(InteractionContext);
+
+  const skipInteractionHandlers = useVoronoiInteraction || series.disableHover;
+  const getInteractionItemProps = useInteractionItemProps(highlightScope, skipInteractionHandlers);
 
   const cleanData = React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);

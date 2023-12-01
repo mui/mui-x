@@ -22,7 +22,9 @@ import {
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
-import ChartsVoronoidHandler from '../ChartsVoronoidHandler/ChartsVoronoidHandler';
+import ChartsVoronoiHandler, {
+  ChartsVoronoiHandlerProps,
+} from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -37,10 +39,16 @@ export interface ScatterChartSlotProps
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    ChartsVoronoiHandlerProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * If true, the interaction will not use voronoi cell and fall back on hover events.
+   * @default false
+   */
+  disableVoronoi?: boolean;
   /**
    * @deprecated Consider using `slotProps.legend` instead.
    */
@@ -74,6 +82,8 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     series,
     tooltip,
     axisHighlight,
+    voronoiMaxRadius,
+    disableVoronoi,
     legend,
     width,
     height,
@@ -100,7 +110,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
       yAxis={yAxis}
       sx={sx}
     >
-      <ChartsVoronoidHandler />
+      {!disableVoronoi && <ChartsVoronoiHandler voronoiMaxRadius={voronoiMaxRadius} />}
       <ChartsAxis
         topAxis={topAxis}
         leftAxis={leftAxis}
