@@ -74,7 +74,6 @@ function GridHeaders() {
       visibleColumns={visibleColumns}
       filterColumnLookup={filterColumnLookup}
       sortColumnLookup={sortColumnLookup}
-      columnPositions={columnPositions}
       columnHeaderTabIndexState={columnHeaderTabIndexState}
       columnGroupHeaderTabIndexState={columnGroupHeaderTabIndexState}
       columnHeaderFocus={columnHeaderFocus}

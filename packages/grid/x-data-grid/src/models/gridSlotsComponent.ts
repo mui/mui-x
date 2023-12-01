@@ -4,6 +4,7 @@ import type { GridRowProps } from '../components/GridRow';
 import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 import type { GridCellProps } from '../components/cell/GridCell';
+import type { GridColumnHeadersProps } from '../components/GridColumnHeaders';
 
 export interface GridBaseSlots {
   /**
@@ -106,7 +107,7 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * Component responsible for rendering the column headers.
    * @default DataGridColumnHeaders
    */
-  columnHeaders: React.JSXElementConstructor<any>;
+  columnHeaders: React.JSXElementConstructor<GridColumnHeadersProps>;
   /**
    * Component responsible for rendering the detail panels.
    * @default GridDetailPanels

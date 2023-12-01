@@ -151,7 +151,7 @@ export {
   isEventTargetInPortal,
 } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
-export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
+export * from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';

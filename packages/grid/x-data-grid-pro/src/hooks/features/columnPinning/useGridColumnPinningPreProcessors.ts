@@ -4,6 +4,7 @@ import {
   GridPipeProcessor,
   gridPinnedColumnsSelector,
   useGridRegisterPipeProcessor,
+  eslintUseValue,
 } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -25,6 +26,8 @@ export const useGridColumnPinningPreProcessors = (
 
   const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
+      eslintUseValue(pinnedColumns);
+
       if (columnsState.orderedFields.length === 0 || disableColumnPinning) {
         return columnsState;
       }

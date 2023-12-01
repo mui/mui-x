@@ -354,14 +354,23 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       return null;
     }
 
-    const pinnedOffset =
-      pinnedPosition === PinnedPosition.LEFT
-        ? columnPositions[indexRelativeToAllColumns]
-        : pinnedPosition === PinnedPosition.RIGHT
-        ? dimensions.columnsTotalWidth -
+    let pinnedOffset: number;
+    // FIXME: Why is the switch check exhaustiveness not validated with typescript-eslint?
+    // eslint-disable-next-line default-case
+    switch (pinnedPosition) {
+      case PinnedPosition.LEFT:
+        pinnedOffset = columnPositions[indexRelativeToAllColumns];
+        break;
+      case PinnedPosition.RIGHT:
+        pinnedOffset =
+          dimensions.columnsTotalWidth -
           columnPositions[indexRelativeToAllColumns] -
-          column.computedWidth
-        : 0;
+          column.computedWidth;
+        break;
+      case PinnedPosition.NONE:
+        pinnedOffset = 0;
+        break;
+    }
 
     if (rowNode?.type === 'skeletonRow') {
       const { width } = cellColSpanInfo.cellProps;

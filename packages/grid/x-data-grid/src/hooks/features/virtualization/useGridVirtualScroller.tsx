@@ -261,6 +261,7 @@ export const useGridVirtualScroller = () => {
     enabled,
     enabledForColumns,
     getNearestIndexToRender,
+    leftPinnedWidth,
     rowsMeta.positions.length,
     rootProps.autoHeight,
     rootProps.rowBuffer,
@@ -269,6 +270,7 @@ export const useGridVirtualScroller = () => {
     visibleColumns.length,
     apiRef,
     innerSize,
+    scrollPosition,
   ]);
 
   const computeRealRenderContext = React.useCallback(
@@ -304,13 +306,20 @@ export const useGridVirtualScroller = () => {
         lastColumnIndex: lastColumnToRender,
       };
     },
-    [visibleColumns.length, rootProps.rowBuffer, rootProps.columnBuffer, currentPage.rows],
+    [
+      apiRef,
+      visibleColumns.length,
+      pinnedColumns.left.length,
+      pinnedColumns.right.length,
+      rootProps.rowBuffer,
+      rootProps.columnBuffer,
+      currentPage.rows,
+    ],
   );
 
   const updateRenderZonePosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
       const direction = theme.direction === 'ltr' ? 1 : -1;
-      const columnPositions = gridColumnPositionsSelector(apiRef);
 
       const top = gridRowsMetaSelector(apiRef.current.state).positions[
         nextRenderContext.firstRowIndex
@@ -322,7 +331,7 @@ export const useGridVirtualScroller = () => {
       gridRootRef.current!.style.setProperty('--DataGrid-offsetTop', `${top}px`);
       gridRootRef.current!.style.setProperty('--DataGrid-offsetLeft', `${left}px`);
     },
-    [apiRef, computeRealRenderContext, theme.direction],
+    [apiRef, gridRootRef, theme.direction, columnPositions, pinnedColumns.left.length],
   );
 
   const updateRenderContext = React.useCallback(
@@ -331,12 +340,12 @@ export const useGridVirtualScroller = () => {
         return;
       }
 
-      const realRenderContext = computeRealRenderContext(nextRenderContext);
+      const nextRealRenderContext = computeRealRenderContext(nextRenderContext);
 
       setRenderContext(nextRenderContext);
-      setRealRenderContext(realRenderContext);
+      setRealRenderContext(nextRealRenderContext);
 
-      updateRenderZonePosition(realRenderContext);
+      updateRenderZonePosition(nextRealRenderContext);
 
       const didRowIntervalChange =
         nextRenderContext.firstRowIndex !== prevRenderContext.current.firstRowIndex ||
@@ -347,8 +356,8 @@ export const useGridVirtualScroller = () => {
       // So we wait until we have valid dimensions before publishing the first event.
       if (dimensions.isReady && didRowIntervalChange) {
         apiRef.current.publishEvent('renderedRowsIntervalChange', {
-          firstRowToRender: realRenderContext.firstRowIndex,
-          lastRowToRender: realRenderContext.lastRowIndex,
+          firstRowToRender: nextRealRenderContext.firstRowIndex,
+          lastRowToRender: nextRealRenderContext.lastRowIndex,
         });
       }
 
@@ -357,10 +366,9 @@ export const useGridVirtualScroller = () => {
     [
       apiRef,
       prevRenderContext,
-      currentPage.rows.length,
-      rootProps.rowBuffer,
       dimensions.isReady,
       updateRenderZonePosition,
+      computeRealRenderContext,
     ],
   );
 
@@ -452,12 +460,20 @@ export const useGridVirtualScroller = () => {
       (hasBottomPinnedRows && params.position === 'bottom');
     const isPinnedSection = params.position !== undefined;
 
-    const rowIndexOffset =
-      isPinnedSection && params.position === 'top'
-        ? 0
-        : isPinnedSection && params.position === 'bottom'
-        ? pinnedRows.top.length + currentPage.rows.length
-        : pinnedRows.top.length;
+    let rowIndexOffset;
+    // FIXME: Why is the switch check exhaustiveness not validated with typescript-eslint?
+    // eslint-disable-next-line default-case
+    switch (params.position) {
+      case 'top':
+        rowIndexOffset = 0;
+        break;
+      case 'bottom':
+        rowIndexOffset = pinnedRows.top.length + currentPage.rows.length;
+        break;
+      case undefined:
+        rowIndexOffset = pinnedRows.top.length;
+        break;
+    }
 
     if (innerSize.width === 0) {
       return [];
@@ -670,12 +686,10 @@ export const useGridVirtualScroller = () => {
     return size;
   }, [
     apiRef,
-    scrollerRef,
     columnsTotalWidth,
     contentHeight,
     needsHorizontalScrollbar,
     rootProps.autoHeight,
-    rootProps.rowHeight,
     currentPage.rows.length,
   ]);
 
@@ -686,7 +700,7 @@ export const useGridVirtualScroller = () => {
   useEnhancedEffect(() => {
     // FIXME: Is this really necessary?
     apiRef.current.resize();
-  }, [rowsMeta.currentPageTotalHeight]);
+  }, [apiRef, rowsMeta.currentPageTotalHeight]);
 
   useEnhancedEffect(() => {
     if (enabled) {
@@ -697,10 +711,10 @@ export const useGridVirtualScroller = () => {
       gridRootRef.current?.style.setProperty('--DataGrid-offsetTop', '0px');
       gridRootRef.current?.style.setProperty('--DataGrid-offsetLeft', '0px');
     }
-  }, [enabled]);
+  }, [enabled, gridRootRef, scrollerRef]);
 
   useEnhancedEffect(() => {
-    if (outerSize.width == 0) {
+    if (outerSize.width === 0) {
       return;
     }
 
@@ -712,7 +726,7 @@ export const useGridVirtualScroller = () => {
       left: scrollPosition.left,
       renderContext: initialRenderContext,
     });
-  }, [apiRef, outerSize.width, computeRenderContext, updateRenderContext]);
+  }, [apiRef, outerSize.width, computeRenderContext, updateRenderContext, scrollPosition]);
 
   apiRef.current.register('private', {
     getRenderContext,

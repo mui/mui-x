@@ -53,7 +53,7 @@ interface GridColumnHeadersPinnedColumnHeadersProps {
 const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PinnedColumnHeaders',
-  overridesResolver: (props, styles) => [
+  overridesResolver: (_, styles) => [
     { [`&.${gridClasses['pinnedColumnHeaders--left']}`]: styles['pinnedColumnHeaders--left'] },
     { [`&.${gridClasses['pinnedColumnHeaders--right']}`]: styles['pinnedColumnHeaders--right'] },
     styles.pinnedColumnHeaders,
@@ -115,7 +115,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       visibleColumns,
       sortColumnLookup,
       filterColumnLookup,
-      columnPositions,
       columnHeaderTabIndexState,
       columnGroupHeaderTabIndexState,
       columnHeaderFocus,
@@ -145,10 +144,8 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     } = useGridColumnHeaders({
       innerRef,
       visibleColumns,
-      visiblePinnedColumns,
       sortColumnLookup,
       filterColumnLookup,
-      columnPositions,
       columnHeaderTabIndexState,
       hasOtherElementInTabSequence,
       columnGroupHeaderTabIndexState,
@@ -314,7 +311,6 @@ GridColumnHeaders.propTypes = {
     field: PropTypes.string,
     open: PropTypes.bool.isRequired,
   }).isRequired,
-  columnPositions: PropTypes.arrayOf(PropTypes.number).isRequired,
   columnVisibility: PropTypes.object.isRequired,
   filterColumnLookup: PropTypes.object.isRequired,
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,

@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import { getDataGridUtilityClass, useGridSelector, GridRowId } from '@mui/x-data-grid';
 import { GridDetailPanelsProps, EMPTY_DETAIL_PANELS } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -29,6 +32,7 @@ export function GridDetailPanels(props: GridDetailPanelsProps) {
 function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
   const apiRef = useGridPrivateApiContext();
   const classes = useUtilityClasses();
+  const { setPanels } = virtualScroller;
 
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const detailPanelsContent = useGridSelector(
@@ -40,7 +44,7 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
     gridDetailPanelExpandedRowsHeightCacheSelector,
   );
 
-  const getDetailPanel = (rowId: GridRowId): React.ReactNode => {
+  const getDetailPanel = useEventCallback((rowId: GridRowId): React.ReactNode => {
     const content = detailPanelsContent[rowId];
 
     // Check if the id exists in the current page
@@ -64,19 +68,19 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
         {content}
       </GridDetailPanel>
     );
-  };
+  });
 
   React.useEffect(() => {
     if (expandedRowIds.length === 0) {
-      virtualScroller.setPanels(EMPTY_DETAIL_PANELS);
+      setPanels(EMPTY_DETAIL_PANELS);
     } else {
-      virtualScroller.setPanels(
+      setPanels(
         new Map<GridRowId, React.ReactNode>(
           expandedRowIds.map((rowId) => [rowId, getDetailPanel(rowId)]),
         ),
       );
     }
-  }, [expandedRowIds]);
+  }, [expandedRowIds, setPanels, getDetailPanel]);
 
   return null;
 }

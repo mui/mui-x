@@ -50,7 +50,6 @@ export interface UseGridColumnHeadersProps {
   visibleColumns: GridStateColDef[];
   sortColumnLookup: GridSortColumnLookup;
   filterColumnLookup: GridFilterActiveItemsLookup;
-  columnPositions: number[]; // XXX: unused
   columnHeaderTabIndexState: GridColumnIdentifier | null;
   columnGroupHeaderTabIndexState: GridColumnGroupIdentifier | null;
   columnHeaderFocus: GridColumnIdentifier | null;
