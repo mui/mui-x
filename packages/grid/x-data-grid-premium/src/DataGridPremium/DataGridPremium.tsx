@@ -318,7 +318,6 @@ DataGridPremiumRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     ariaV7: PropTypes.bool,
-    clipboardPaste: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
@@ -466,6 +465,18 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   ignoreDiacritics: PropTypes.bool,
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default false
+   */
+  ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
   /**
    * The initial state of the DataGridPremium.
    * The data in it is set in the state on initialization but isn't controlled.
@@ -998,6 +1009,13 @@ DataGridPremiumRaw.propTypes = {
     }),
   ),
   /**
+   * The function is used to split the pasted text into rows and cells.
+   * @param {string} text The text pasted from the clipboard.
+   * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
+   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
+   */
+  splitClipboardPastedText: PropTypes.func,
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -1021,23 +1039,4 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   unstable_headerFilters: PropTypes.bool,
-  /**
-   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
-   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default false
-   */
-  unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
-    PropTypes.shape({
-      clipboardExport: PropTypes.bool,
-      csvExport: PropTypes.bool,
-    }),
-    PropTypes.bool,
-  ]),
-  /**
-   * The function is used to split the pasted text into rows and cells.
-   * @param {string} text The text pasted from the clipboard.
-   * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
-   */
-  unstable_splitClipboardPastedText: PropTypes.func,
 } as any;

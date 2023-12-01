@@ -321,19 +321,17 @@ export const useGridClipboardImport = (
     | 'getRowId'
     | 'onClipboardPasteStart'
     | 'onClipboardPasteEnd'
-    | 'experimentalFeatures'
-    | 'unstable_splitClipboardPastedText'
+    | 'splitClipboardPastedText'
     | 'disableClipboardPaste'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
-  const enableClipboardPaste =
-    (!props.disableClipboardPaste && props.experimentalFeatures?.clipboardPaste) ?? false;
+  const enableClipboardPaste = !props.disableClipboardPaste;
   const rootEl = apiRef.current.rootElementRef?.current;
 
-  const splitClipboardPastedText = props.unstable_splitClipboardPastedText;
+  const splitClipboardPastedText = props.splitClipboardPastedText;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {

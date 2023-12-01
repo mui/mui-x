@@ -10,7 +10,6 @@
     checkboxSelection
     cellSelection
     processRowUpdate={processRowUpdate}
-    experimentalFeatures={{ clipboardPaste: true }}
-    unstable_ignoreValueFormatterDuringExport
+    ignoreValueFormatterDuringExport
   />
 </div>

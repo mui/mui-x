@@ -26,11 +26,10 @@ export default function ClipboardPasteDelimiter() {
         {...data}
         initialState={initialState}
         disableRowSelectionOnClick
+        ignoreValueFormatterDuringExport
         cellSelection
-        experimentalFeatures={{ clipboardPaste: true }}
-        unstable_ignoreValueFormatterDuringExport
         clipboardCopyCellDelimiter={','}
-        unstable_splitClipboardPastedText={(text) =>
+        splitClipboardPastedText={(text) =>
           text.split('\n').map((row) => row.split(','))
         }
       />
