@@ -41,8 +41,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   }
 
   function isRowPinned(row: Element | null, section: 'top' | 'bottom') {
-    const container =
-      section === 'top' ? grid('pinnedRows--top') : grid('pinnedRows--bottom');
+    const container = section === 'top' ? grid('pinnedRows--top') : grid('pinnedRows--bottom');
     if (!row || !container) {
       return false;
     }
