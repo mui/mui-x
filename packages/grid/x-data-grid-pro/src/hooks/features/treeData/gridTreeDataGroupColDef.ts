@@ -3,9 +3,8 @@ import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount
  */
-export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'editable'> = {
+export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editable'> = {
   ...GRID_STRING_COL_DEF,
-  field: '__treeDataGroup__',
   sortable: false,
   filterable: false,
   disableColumnMenu: true,
