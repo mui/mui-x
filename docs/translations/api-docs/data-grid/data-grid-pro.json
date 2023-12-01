@@ -305,6 +305,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "ignoreValueFormatterDuringExport": {
+      "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "initialState": {
       "description": "The initial state of the DataGridPro. The data in it will be set in the state on initialization but will not be controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins.",
       "deprecated": "",
@@ -841,11 +846,6 @@
     },
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "unstable_ignoreValueFormatterDuringExport": {
-      "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
       "deprecated": "",
       "typeDescriptions": {}
     }

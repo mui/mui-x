@@ -102,11 +102,38 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - -->
 
+### Clipboard
+
+- Clipboard paste is now enabled by default. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
+- The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are not anymore prefixed with `unstable_`.
+
 ### Print export
 
 - The print export will now only print the selected rows if there are any.
   If there are no selected rows, it will print all rows. This makes the print export consistent with the other exports.
   You can [customize the rows to export by using the `getRowsToExport` function](/x/react-data-grid/export/#customizing-the-rows-to-export).
+
+### Selection
+
+- The cell selection feature is now stable.
+
+- The `unstable_` prefix has been removed from the cell selection props listed below.
+
+  | Old name                              | New name                     |
+  | :------------------------------------ | :--------------------------- |
+  | `unstable_cellSelection`              | `cellSelection`              |
+  | `unstable_cellSelectionModel`         | `cellSelectionModel`         |
+  | `unstable_onCellSelectionModelChange` | `onCellSelectionModelChange` |
+
+- The `unstable_` prefix has been removed from the cell selection API methods listed below.
+
+  | Old name                           | New name                  |
+  | :--------------------------------- | :------------------------ |
+  | `unstable_getCellSelectionModel`   | `getCellSelectionModel`   |
+  | `unstable_getSelectedCellsAsArray` | `getSelectedCellsAsArray` |
+  | `unstable_isCellSelected`          | `isCellSelected`          |
+  | `unstable_selectCellRange`         | `selectCellRange`         |
+  | `unstable_setCellSelectionModel`   | `setCellSelectionModel`   |
 
 ### Filtering
 
@@ -168,6 +195,9 @@ Below are described the steps you need to make to migrate from v6 to v7.
 - -->
 
 ### Other exports
+
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
+  Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
 

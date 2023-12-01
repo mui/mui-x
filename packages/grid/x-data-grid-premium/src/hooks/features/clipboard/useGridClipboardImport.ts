@@ -219,8 +219,8 @@ function defaultPasteResolver({
 }) {
   const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
-  const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
-  if (cellSelectionModel && apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
+  const cellSelectionModel = apiRef.current.getCellSelectionModel();
+  if (cellSelectionModel && apiRef.current.getSelectedCellsAsArray().length > 1) {
     Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
       const rowDataArr = pastedData[isSingleValuePasted ? 0 : rowIndex];
       const hasRowData = isSingleValuePasted ? true : rowDataArr !== undefined;
@@ -321,19 +321,17 @@ export const useGridClipboardImport = (
     | 'getRowId'
     | 'onClipboardPasteStart'
     | 'onClipboardPasteEnd'
-    | 'experimentalFeatures'
-    | 'unstable_splitClipboardPastedText'
+    | 'splitClipboardPastedText'
     | 'disableClipboardPaste'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
-  const enableClipboardPaste =
-    (!props.disableClipboardPaste && props.experimentalFeatures?.clipboardPaste) ?? false;
+  const enableClipboardPaste = !props.disableClipboardPaste;
   const rootEl = apiRef.current.rootElementRef?.current;
 
-  const splitClipboardPastedText = props.unstable_splitClipboardPastedText;
+  const splitClipboardPastedText = props.splitClipboardPastedText;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
