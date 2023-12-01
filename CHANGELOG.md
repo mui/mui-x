@@ -86,6 +86,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
 - The Date and Time Pickers now use the localized week when using `AdapterLuxon` and Luxon v3.4.4 or higher is installed.
   This new behavior allows `AdapterLuxon` to have the same behavior as the other adapters.
   If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
+  The Firefox browser currently does not support this behavior because the [getWeekInfo](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) API is not yet implemented.
 
   ```ts
   import { Settings } from 'luxon';
