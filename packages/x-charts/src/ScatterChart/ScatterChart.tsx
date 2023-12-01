@@ -22,7 +22,8 @@ import {
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
-import ChartsVoronoiHandler, {
+import {
+  ChartsVoronoiHandler,
   ChartsVoronoiHandlerProps,
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
 
@@ -189,6 +190,11 @@ ScatterChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If true, the interaction will not use voronoi cell and fall back on hover events.
+   * @default false
+   */
+  disableVoronoi: PropTypes.bool,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    * @default undefined
    */
@@ -297,6 +303,7 @@ ScatterChart.propTypes = {
           y: PropTypes.number.isRequired,
         }),
       ).isRequired,
+      disableHover: PropTypes.bool,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
@@ -374,6 +381,12 @@ ScatterChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
+  /**
+   * Defines the maximal distance between scatter point and mouse that triggers the interaction.
+   * If undefined, the radius is assume to be infinit.
+   * @default undefined
+   */
+  voronoiMaxRadius: PropTypes.number,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    * @default undefined

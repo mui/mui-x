@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { Delaunay } from 'd3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { InteractionContext } from '../context/InteractionProvider';
@@ -15,6 +16,7 @@ export type ChartsVoronoiHandlerProps = {
    */
   voronoiMaxRadius?: number;
 };
+
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius } = props;
   const svgRef = React.useContext(SVGContext);
@@ -133,6 +135,20 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       element.removeEventListener('mousemove', handleMouseMove);
     };
   }, [svgRef, dispatch, left, width, top, height, yAxis, xAxis, voronoiMaxRadius]);
-  return null;
+  return <g />; // Workaround to fix docs scripts
 }
-export default ChartsVoronoiHandler;
+
+ChartsVoronoiHandler.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Defines the maximal distance between scatter point and mouse that triggers the interaction.
+   * If undefined, the radius is assume to be infinit.
+   * @default undefined
+   */
+  voronoiMaxRadius: PropTypes.number,
+} as any;
+
+export { ChartsVoronoiHandler };

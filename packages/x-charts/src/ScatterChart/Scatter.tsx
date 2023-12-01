@@ -122,6 +122,7 @@ Scatter.propTypes = {
         y: PropTypes.number.isRequired,
       }),
     ).isRequired,
+    disableHover: PropTypes.bool,
     highlightScope: PropTypes.shape({
       faded: PropTypes.oneOf(['global', 'none', 'series']),
       highlighted: PropTypes.oneOf(['item', 'none', 'series']),

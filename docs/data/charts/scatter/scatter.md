@@ -24,6 +24,12 @@ Or set `disableVoronoi` prop to true to only interact with hover events.
 
 {{"demo": "VoronoiInteraction.js"}}
 
+To use this feature with composition, add the ChartsVoronoiHandler.
+
+```jsx
+<ChartsVoronoiHandler voronoiMaxRadius={50} />
+```
+
 ## Styling
 
 ### CSS 🚧
