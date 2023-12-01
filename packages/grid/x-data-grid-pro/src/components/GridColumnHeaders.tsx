@@ -77,7 +77,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     [`&.${gridClasses['pinnedColumnHeaders--right']}`]: {
       right: 0,
       width: 'var(--DataGrid-rightPinnedWidth)',
-      '& > [role="row"] > [role="columnheader"]:first-child': {
+      '& > [role="row"] > [role="columnheader"]:first-of-type': {
         ...(ownerState.showCellVerticalBorder && {
           borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
         }),
