@@ -52,7 +52,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   | `unstable_setCellSelectionModel`   | `setCellSelectionModel`   |
 
 - The Quick Filter now ignores hidden columns by default.
-  See [Including hidden columns](/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+  See [including hidden columns](/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
 
 #### `@mui/x-data-grid@7.0.0-alpha.3`
 
