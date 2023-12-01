@@ -728,6 +728,16 @@
       "nodeName": "the cell element",
       "conditions": "it is at the right edge of a cell selection range"
     },
+    "cell--pinnedLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is pinned to the left"
+    },
+    "cell--pinnedRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is pinned to the right"
+    },
     "cell--selectionMode": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -888,6 +898,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns panel row element"
     },
+    "container--top": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top container"
+    },
+    "container--bottom": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bottom container"
+    },
     "detailPanel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the detail panel element"
@@ -1034,14 +1052,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned columns"
     },
-    "pinnedColumns--left": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the left pinned columns"
-    },
-    "pinnedColumns--right": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the right pinned columns"
-    },
     "pinnedColumnHeaders": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned column headers"
@@ -1090,6 +1100,10 @@
       "nodeName": "the floating special row reorder cell element",
       "conditions": "it is dragged"
     },
+    "row--firstVisible": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the first visible row element on every page of the grid"
+    },
     "row--lastVisible": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the last visible row element on every page of the grid"
@@ -1131,6 +1145,15 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the right scroll area element"
     },
+    "scrollbar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the scrollbars" },
+    "scrollbar--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal scrollbar"
+    },
+    "scrollbar--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal scrollbar"
+    },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
@@ -1147,6 +1170,9 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
     },
+    "withVerticalBorder": {
+      "description": "Styles applied the grid if `showColumnVerticalBorder={true}`."
+    },
     "withBorderColor": {
       "description": "Styles applied to {{nodeName}}, {{conditions}}.\nSets border color only.",
       "nodeName": "cells",
@@ -1155,6 +1181,11 @@
     "cell--withRightBorder": {
       "description": "Styles applied the cell if `showColumnVerticalBorder={true}`."
     },
+    "cell--withLeftBorder": {
+      "description": "Styles applied the cell if `showColumnVerticalBorder={true}`."
+    },
+    "cell--withRightShadow": { "description": "Styles applied for column pinning." },
+    "cell--withLeftShadow": { "description": "Styles applied for column pinning." },
     "columnHeader--withRightBorder": {
       "description": "Styles applied the column header if `showColumnVerticalBorder={true}`."
     },
@@ -1229,6 +1260,7 @@
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
     "detailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
     "detailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
+    "detailPanels": "Component responsible for rendering the detail panels.",
     "exportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "filterPanel": "Filter panel component rendered when clicking the filter button.",
     "filterPanelAddIcon": "Icon displayed for deleting the filter from filter panel.",
@@ -1246,6 +1278,7 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
+    "pinnedRows": "Pinned rows container.",
     "preferencesPanel": "PreferencesPanel component rendered inside the Header component.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",

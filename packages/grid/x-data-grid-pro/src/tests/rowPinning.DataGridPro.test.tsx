@@ -564,22 +564,16 @@ describe('<DataGridPro /> - Row pinning', () => {
     const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
 
     expect(getRowById(0)!.offsetHeight).to.equal(defaultRowHeight);
-    expect(grid('pinnedRows--top')!.offsetHeight).to.equal(
-      defaultRowHeight,
-    );
+    expect(grid('pinnedRows--top')!.offsetHeight).to.equal(defaultRowHeight);
     expect(getRowById(1)!.clientHeight).to.equal(defaultRowHeight + scrollbarSize);
-    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(
-      defaultRowHeight + scrollbarSize,
-    );
+    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(defaultRowHeight + scrollbarSize);
 
     setProps({ rowHeight: 36 });
 
     expect(getRowById(0)?.clientHeight).to.equal(36);
     expect(grid('pinnedRows--top')!.offsetHeight).to.equal(36);
     expect(getRowById(1)?.clientHeight).to.equal(36 + scrollbarSize);
-    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(
-      36 + scrollbarSize,
-    );
+    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(36 + scrollbarSize);
   });
 
   it('should work with `autoHeight`', function test() {
@@ -603,9 +597,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       />,
     );
 
-    expect(grid('main')!.clientHeight).to.equal(
-      columnHeaderHeight + rowHeight * rowCount,
-    );
+    expect(grid('main')!.clientHeight).to.equal(columnHeaderHeight + rowHeight * rowCount);
   });
 
   it('should work with `autoPageSize`', function test() {

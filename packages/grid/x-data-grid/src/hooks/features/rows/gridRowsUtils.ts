@@ -384,9 +384,7 @@ export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApi
   };
 }
 
-export function getMinimalContentHeight(
-  apiRef: React.MutableRefObject<GridApiCommunity>
-) {
+export function getMinimalContentHeight(apiRef: React.MutableRefObject<GridApiCommunity>) {
   const dimensions = gridDimensionsSelector(apiRef.current.state);
   return `var(--DataGrid-overlayHeight, ${2 * dimensions.rowHeight}px)`;
 }

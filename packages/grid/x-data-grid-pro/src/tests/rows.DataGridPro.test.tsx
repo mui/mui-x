@@ -545,7 +545,8 @@ describe('<DataGridPro /> - Rows', () => {
         )!;
         expect(lastCell).to.have.text('31');
         expect(virtualScroller.scrollHeight).to.equal(
-          dimensions.headerHeight + nbRows * rowHeight + dimensions.scrollbarSize);
+          dimensions.headerHeight + nbRows * rowHeight + dimensions.scrollbarSize,
+        );
       });
 
       it('should not virtualized the last page if smaller than viewport', () => {

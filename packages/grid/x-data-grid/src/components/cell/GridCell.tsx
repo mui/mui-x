@@ -253,7 +253,8 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   const showLeftBorder =
     rootProps.showCellVerticalBorder && pinnedPosition === PinnedPosition.RIGHT;
-  const showRightBorder = rootProps.showCellVerticalBorder && !(isLastCell && pinnedPosition !== PinnedPosition.LEFT);
+  const showRightBorder =
+    rootProps.showCellVerticalBorder && !(isLastCell && pinnedPosition !== PinnedPosition.LEFT);
   const showLeftShadow = pinnedPosition === PinnedPosition.RIGHT && isFirstCell;
   const showRightShadow = pinnedPosition === PinnedPosition.LEFT && isLastCell;
 
@@ -494,7 +495,11 @@ GridCell.propTypes = {
   onKeyDown: PropTypes.func,
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
+  pinnedOffset: PropTypes.number.isRequired,
+  pinnedPosition: PropTypes.oneOf([0, 1, 2]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  sectionIndex: PropTypes.number.isRequired,
+  sectionLength: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
 } as any;
 

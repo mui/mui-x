@@ -64,7 +64,9 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{ overlayType: string
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   let height: React.CSSProperties['height'] =
-    dimensions.viewportOuterSize.height - dimensions.headersTotalHeight - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+    dimensions.viewportOuterSize.height -
+    dimensions.headersTotalHeight -
+    (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
 
   if ((rootProps.autoHeight && currentPage.rows.length === 0) || height === 0) {
     height = getMinimalContentHeight(apiRef);

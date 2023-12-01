@@ -133,12 +133,15 @@ export const GridRootStyles = styled('div', {
       : alpha(theme.palette.background.default, 0.8),
     '--DataGrid-pinnedBackground':
       // FIXME: Adapt for light & dark themes
-      alpha(lighten(
-        theme.vars
-          ? theme.vars.palette.background.defaultChannel
-          : theme.palette.background.default,
-        0.1,
-      ), 0.6),
+      alpha(
+        lighten(
+          theme.vars
+            ? theme.vars.palette.background.defaultChannel
+            : theme.palette.background.default,
+          0.1,
+        ),
+        0.6,
+      ),
     '--DataGrid-rowBorderColor': borderColor,
 
     '--DataGrid-cellOffsetMultiplier': 2,

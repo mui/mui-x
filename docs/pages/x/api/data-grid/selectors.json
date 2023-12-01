@@ -97,6 +97,13 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridColumnsStateSelector",
+    "returnType": "GridColumnsState",
+    "category": "Columns",
+    "description": "Get the columns state",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridColumnsTotalWidthSelector",
     "returnType": "number",
     "category": "Visible Columns",
@@ -144,6 +151,12 @@
     "returnType": "Record<GridRowId, number>",
     "description": "",
     "supportsApiRef": true
+  },
+  {
+    "name": "gridDimensionsSelector",
+    "returnType": "GridDimensions",
+    "description": "",
+    "supportsApiRef": false
   },
   {
     "name": "gridExpandedRowCountSelector",
@@ -284,9 +297,10 @@
   },
   {
     "name": "gridPinnedColumnsSelector",
-    "returnType": "GridPinnedColumns",
-    "description": "",
-    "supportsApiRef": false
+    "returnType": "GridPinnedColumnFields",
+    "category": "Visible Columns",
+    "description": "Get the visible pinned columns model.",
+    "supportsApiRef": true
   },
   {
     "name": "gridPreferencePanelStateSelector",
@@ -457,6 +471,13 @@
     "returnType": "string[]",
     "category": "Visible Columns",
     "description": "Get the field of each visible column.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridVisiblePinnedColumnDefinitionsSelector",
+    "returnType": "GridPinnedColumns",
+    "category": "Visible Columns",
+    "description": "Get the visible pinned columns.",
     "supportsApiRef": true
   },
   {

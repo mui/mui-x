@@ -24,7 +24,14 @@ import {
   GridApi,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { grid, gridVar, getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
+import {
+  grid,
+  gridVar,
+  getColumnValues,
+  getRow,
+  getActiveCell,
+  getCell,
+} from 'test/utils/helperFn';
 import Dialog from '@mui/material/Dialog';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
@@ -540,7 +547,9 @@ describe('<DataGrid /> - Rows', () => {
 
         expect(getRow(0).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
         expect(getRow(1).clientHeight).to.equal(100);
-        expect(getRow(2).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR) + scrollbarSize);
+        expect(getRow(2).clientHeight).to.equal(
+          Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR) + scrollbarSize,
+        );
       });
 
       it('should set the correct rowHeight and variable row height', () => {
@@ -771,14 +780,20 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         const virtualScroller = grid('virtualScroller')!;
-        await waitFor(() => expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52));
+        await waitFor(() =>
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52),
+        );
         virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
         virtualScroller.dispatchEvent(new Event('scroll'));
 
-        await waitFor(() => expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52));
+        await waitFor(() =>
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52),
+        );
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
-        await waitFor(() => expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101));
+        await waitFor(() =>
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101),
+        );
       });
 
       it('should allow to mix rows with dynamic row height and default row height', async () => {

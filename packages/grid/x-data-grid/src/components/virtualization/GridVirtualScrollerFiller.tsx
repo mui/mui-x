@@ -12,7 +12,7 @@ const Filler = styled('div')({
   width: 'var(--DataGrid-rowWidth)',
   boxSizing: 'border-box',
   // backgroundColor: 'rgb(255 0 0 / 0.2)',
-})
+});
 
 const Pinned = styled('div')({
   position: 'sticky',
@@ -20,24 +20,24 @@ const Pinned = styled('div')({
   boxSizing: 'border-box',
   borderTop: '1px solid var(--DataGrid-rowBorderColor)',
   backgroundColor: 'var(--DataGrid-pinnedBackground)',
-})
+});
 const PinnedLeft = styled(Pinned)({
   left: 0,
   [`.${gridClasses.withVerticalBorder}`]: {
     borderRight: '1px solid var(--DataGrid-rowBorderColor)',
   },
-})
+});
 const PinnedRight = styled(Pinned)({
   right: 0,
   [`.${gridClasses.withVerticalBorder}`]: {
     borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
   },
-})
+});
 
 const Main = styled('div')({
   flexGrow: 1,
   borderTop: '1px solid var(--DataGrid-rowBorderColor)',
-})
+});
 
 function GridVirtualScrollerFiller() {
   const apiRef = useGridApiContext();
@@ -52,20 +52,20 @@ function GridVirtualScrollerFiller() {
 
   const unknownGap = 2;
 
-  const height = Math.max(0,
-    viewportOuterSize.height - minimumSize.height - (hasScrollX ? scrollbarSize : 0) - unknownGap);
+  const height = Math.max(
+    0,
+    viewportOuterSize.height - minimumSize.height - (hasScrollX ? scrollbarSize : 0) - unknownGap,
+  );
 
   return (
     <Filler role="presentation" style={{ height, display: height === 0 ? 'none' : undefined }}>
-      <PinnedLeft style={{ width: leftPinnedWidth }}/>
+      <PinnedLeft style={{ width: leftPinnedWidth }} />
       <Main />
-      <PinnedRight style={{ width: rightPinnedWidth }}/>
+      <PinnedRight style={{ width: rightPinnedWidth }} />
     </Filler>
   );
 }
 
-const Memoized = fastMemo(GridVirtualScrollerFiller)
+const Memoized = fastMemo(GridVirtualScrollerFiller);
 
-export {
-  Memoized as GridVirtualScrollerFiller
-};
+export { Memoized as GridVirtualScrollerFiller };

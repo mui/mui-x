@@ -17,7 +17,10 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
-import { gridColumnsTotalWidthSelector, gridVisiblePinnedColumnDefinitionsSelector } from '../columns';
+import {
+  gridColumnsTotalWidthSelector,
+  gridVisiblePinnedColumnDefinitionsSelector,
+} from '../columns';
 import { gridDensityFactorSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -91,8 +94,8 @@ export function useGridDimensions(
     getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
     Number(hasHeaderFilters) * headerHeight;
 
-  const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0)
-  const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0)
+  const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
+  const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
   const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
@@ -226,7 +229,7 @@ export function useGridDimensions(
     const minimumSize = {
       width: contentSize.width,
       height: topContainerHeight + contentSize.height + bottomContainerHeight,
-    }
+    };
 
     const newFullDimensions: GridDimensions = {
       isReady: true,

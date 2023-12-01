@@ -46,14 +46,13 @@ describe('<DataGrid /> - Toolbar', () => {
   };
 
   describe('density selector', () => {
-
     function expectHeight(value: number) {
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(value)}px`,
       });
 
       expect(getComputedStyle(screen.getAllByRole('cell')[1]).height).to.equal(
-        `${Math.floor(value)}px`
+        `${Math.floor(value)}px`,
       );
     }
 
@@ -75,7 +74,7 @@ describe('<DataGrid /> - Toolbar', () => {
       clock.tick(100);
       fireEvent.click(getByText('Compact'));
 
-      expectHeight(rowHeight * COMPACT_DENSITY_FACTOR)
+      expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
     it('should decrease grid density when selecting comfortable density', () => {

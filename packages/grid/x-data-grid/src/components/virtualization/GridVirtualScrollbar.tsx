@@ -86,8 +86,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
         : dimensions.viewportOuterSize.width;
 
     const scrollbarInnerSize =
-      scrollbarSize *
-      (contentSize / dimensions.viewportOuterSize[propertyDimension]);
+      scrollbarSize * (contentSize / dimensions.viewportOuterSize[propertyDimension]);
 
     const onScrollerScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;

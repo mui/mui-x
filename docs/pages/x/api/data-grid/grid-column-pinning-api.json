@@ -5,7 +5,7 @@
     {
       "name": "getPinnedColumns",
       "description": "Returns which columns are pinned.",
-      "type": "() => GridPinnedColumns"
+      "type": "() => GridPinnedColumnFields"
     },
     {
       "name": "isColumnPinned",
@@ -20,7 +20,7 @@
     {
       "name": "setPinnedColumns",
       "description": "Changes the pinned columns.",
-      "type": "(pinnedColumns: GridPinnedColumns) => void"
+      "type": "(pinnedColumns: GridPinnedColumnFields) => void"
     },
     { "name": "unpinColumn", "description": "Unpins a column.", "type": "(field: string) => void" }
   ]

@@ -14,9 +14,16 @@ import {
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { $, getColumnHeaderCell, getColumnValues, getCell, getRow, sleep } from 'test/utils/helperFn';
+import {
+  $,
+  getColumnHeaderCell,
+  getColumnValues,
+  getCell,
+  getRow,
+  sleep,
+} from 'test/utils/helperFn';
 
-const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name)
+const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
 describe('<DataGrid /> - Layout & warnings', () => {
   const { clock, render } = createRenderer();
@@ -667,9 +674,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         const rowsHeight = rowHeight * baselineProps.rows.length;
-        expect($('.MuiDataGrid-main')!.clientHeight).to.equal(
-          columnHeaderHeight + rowsHeight,
-        );
+        expect($('.MuiDataGrid-main')!.clientHeight).to.equal(columnHeaderHeight + rowsHeight);
         expect($('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
           columnHeaderHeight + rowsHeight,
         );
@@ -689,9 +694,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         const rowsHeight = rowHeight * baselineProps.rows.length;
-        expect($('.MuiDataGrid-main')!.clientHeight).to.equal(
-          columnHeaderHeight + rowsHeight,
-        );
+        expect($('.MuiDataGrid-main')!.clientHeight).to.equal(columnHeaderHeight + rowsHeight);
         expect($('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
           columnHeaderHeight + rowsHeight,
         );
@@ -705,9 +708,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
         const columnHeaderHeight = 40;
         const rowHeight = 30;
 
-        let apiRef!: React.MutableRefObject<GridApi>
+        let apiRef!: React.MutableRefObject<GridApi>;
         function Test() {
-          apiRef = useGridApiRef()
+          apiRef = useGridApiRef();
           return (
             <div style={{ width: 150 }}>
               <DataGrid
@@ -719,7 +722,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
                 autoHeight
               />
             </div>
-          )
+          );
         }
         render(<Test />);
 
@@ -737,9 +740,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
             <DataGrid {...baselineProps} rows={[]} rowHeight={rowHeight} autoHeight />
           </div>,
         );
-        expect($('.MuiDataGrid-overlay')!.clientHeight).to.equal(
-          rowHeight * 2,
-        );
+        expect($('.MuiDataGrid-overlay')!.clientHeight).to.equal(rowHeight * 2);
       });
 
       it('should allow to override the noRows overlay height', () => {
@@ -814,9 +815,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
       const columnHeaderHeight = 40;
       const height = 300;
       const border = 1;
-      let apiRef!: React.MutableRefObject<GridApi>
+      let apiRef!: React.MutableRefObject<GridApi>;
       function Test() {
-        apiRef = useGridApiRef()
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 100 + 2 * border, height: height + 2 * border }}>
             <DataGrid
@@ -827,7 +828,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
               hideFooter
             />
           </div>
-        )
+        );
       }
       render(<Test />);
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
