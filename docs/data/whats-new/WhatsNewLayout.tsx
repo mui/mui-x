@@ -21,6 +21,39 @@ type Blog = {
 
 const blogs: Blog[] = [
   {
+    title: 'MUI X v6.18.x',
+    description:
+      'New stable components, polished features, better performance, and more.',
+    announcementDate: 'Monday, Nov 13, 2023',
+    url: 'https://mui.com/blog/mui-x-end-v6-features/',
+    highlightList: [
+      {
+        title: 'Charts - stable version',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#charts',
+      },
+      {
+        title: 'Tree View - stable version',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#tree-view',
+      },
+      {
+        title: 'Clearable date and time fields',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#clearable-field',
+      },
+      {
+        title: 'Customization playgrounds for Date and Time Pickers',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#customization-playgrounds',
+      },
+      {
+        title: 'Data Grid column autosizing',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
+      },
+      {
+        title: 'Sparklines on Data Grid ',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#sparkline-as-a-column-type',
+      },
+    ],
+  },
+  {
     title: 'MUI X v6.11.0',
     description: 'A roundup of all new features since v6.0.0.',
     announcementDate: 'Monday, Aug 14, 2023',
