@@ -24,7 +24,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   aggregationRowsScope: 'filtered',
   getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
   disableClipboardPaste: false,
-  unstable_splitClipboardPastedText: (pastedText) => {
+  splitClipboardPastedText: (pastedText) => {
     // Excel on Windows adds an empty line break at the end of the copied text.
     // See https://github.com/mui/mui-x/issues/9103
     const text = pastedText.replace(/\r?\n$/, '');

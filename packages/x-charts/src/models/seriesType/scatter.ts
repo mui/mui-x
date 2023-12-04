@@ -21,4 +21,4 @@ export type ScatterItemIdentifier = {
 };
 
 export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps> {}
+  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color'> {}

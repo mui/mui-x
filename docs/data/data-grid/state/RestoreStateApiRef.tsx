@@ -160,7 +160,7 @@ function ViewListItem(props: {
 function NewViewListButton(props: {
   label: string;
   onLabelChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   onSubmit: () => void;
   isValid: boolean;
@@ -168,10 +168,10 @@ function NewViewListButton(props: {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
-  const handleSubmitForm: React.FormEventHandler = (e) => {
+  const handleSubmitForm: React.FormEventHandler = (event) => {
     onSubmit();
     setIsAddingView(false);
-    e.preventDefault();
+    event.preventDefault();
   };
 
   return (
