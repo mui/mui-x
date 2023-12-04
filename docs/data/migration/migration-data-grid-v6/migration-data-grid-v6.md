@@ -93,14 +93,14 @@ Below are described the steps you need to make to migrate from v6 to v7.
 ### Columns
 
 - The `GridColDef['type']` has been narrowed down to only accept the built-in column types.
-  TypeScript users will need to make sure to use the `GridColDef` interface when defining columns:
+  TypeScript users need to use the `GridColDef` interface when defining columns:
 
   ```tsx
-  // 🛑 `type` is casted to `string` which is too wide
+  // 🛑 `type` is inferred as `string` and is too wide
   const columns = [{ type: 'number', field: 'id' }];
   <DataGrid columns={columns} />;
 
-  // ✅ `type` is casted to `'number'`
+  // ✅ `type` is `'number'`
   const columns: GridColDef[] = [{ type: 'number', field: 'id' }];
   <DataGrid columns={columns} />;
 
