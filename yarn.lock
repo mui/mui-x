@@ -2942,10 +2942,10 @@
   dependencies:
     lru-cache "*"
 
-"@types/luxon@^3.3.5":
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.3.5.tgz#ffdcec196994998dbef6284523b3ac88a9e6c45f"
-  integrity sha512-1cyf6Ge/94zlaWIZA2ei1pE6SZ8xpad2hXaYa5JEFiaUH0YS494CZwyi4MXNpXD9oEuv6ZH0Bmh0e7F9sPhmZA==
+"@types/luxon@^3.3.7":
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.3.7.tgz#043d413b6492a012de47503907bdf3ec4f827933"
+  integrity sha512-gKc9P2d4g5uYwmy4s/MO/yOVPmvHyvzka1YH6i5dM03UrFofHSmgc0D0ymbDRStFWHusk6cwwF6nhLm/ckBbbQ==
 
 "@types/minimatch@^3.0.3":
   version "3.0.5"
