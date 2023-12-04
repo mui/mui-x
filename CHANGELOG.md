@@ -11,6 +11,9 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 
 - 🚀 Support localized start of the week on pickers' `AdapterLuxon`
+
+  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g.: Sunday for `en-US`, Monday for `fr-FR`).
+
 - 📈 Fix a lot of Charts package issues
 - 🎉 The Data Grid features Cell selection and Clipboard paste are now stable
 - 🌍 Improve Bulgarian (bg-BG) locale on Data Grid
@@ -78,9 +81,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
 
 #### Breaking changes
 
-- 🚀 The Date and Time Pickers now support localized week when using `AdapterLuxon`.
-  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g.: Sunday for `en-US`, Monday for `fr-FR`).
-
 - The Date and Time Pickers now use the localized week when using `AdapterLuxon` and Luxon v3.4.4 or higher is installed.
   This new behavior allows `AdapterLuxon` to have the same behavior as the other adapters.
   If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
@@ -99,10 +99,10 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
 - Add new parameters to the `shortcuts` slot `onChange` callback
 
   The `onChange` callback fired when selecting a shortcut now requires two new parameters (previously they were optional):
-  
+
   - The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
   - The `item` containing the entire shortcut object.
-  
+
   ```diff
    const CustomShortcuts = (props) => {
      return (
@@ -121,22 +121,22 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
        </React.Fragment>
      )
    }
-  
+
    <DatePicker slots={{ shortcuts: CustomShortcuts }} />
   ```
 
   - Usage of `AdapterDayjs` with the `customParseFormat` plugin
     The call to `dayjs.extend(customParseFormatPlugin)` has been moved to the `AdapterDayjs` constructor. This allows users to pass custom options to this plugin before the adapter uses it.
-  
+
   If you are using this plugin before the rendering of the first `LocalizationProvider` component and did not call `dayjs.extend` in your own codebase, you will need to manually extend `dayjs`:
-  
+
   ```tsx
   import dayjs from 'dayjs';
   import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
-  
+
   dayjs.extend(customParseFormatPlugin);
   ```
-  
+
   The other plugins are still added before the adapter initialization.
 
 #### `@mui/x-date-pickers@7.0.0-alpha.3`
