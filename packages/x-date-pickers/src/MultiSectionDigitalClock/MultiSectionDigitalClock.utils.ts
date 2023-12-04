@@ -58,8 +58,9 @@ export const getHourSectionOptions = <TDate>({
   return result;
 };
 
-interface IGetTimeSectionOptions {
+interface IGetTimeSectionOptions<TDate> {
   value: number | null;
+  utils: MuiPickersAdapter<TDate>;
   isDisabled: (value: number) => boolean;
   timeStep: number;
   resolveLabel: (value: number) => string;
@@ -67,14 +68,15 @@ interface IGetTimeSectionOptions {
   resolveAriaLabel: (value: string) => string;
 }
 
-export const getTimeSectionOptions = ({
+export const getTimeSectionOptions = <TDate>({
   value,
+  utils,
   isDisabled,
   timeStep,
   resolveLabel,
   resolveAriaLabel,
   hasValue = true,
-}: IGetTimeSectionOptions): MultiSectionDigitalClockOption<number>[] => {
+}: IGetTimeSectionOptions<TDate>): MultiSectionDigitalClockOption<number>[] => {
   const isSelected = (timeValue: number) => {
     if (value === null) {
       return false;
@@ -88,7 +90,7 @@ export const getTimeSectionOptions = ({
       const timeValue = timeStep * index;
       return {
         value: timeValue,
-        label: resolveLabel(timeValue),
+        label: utils.formatNumber(resolveLabel(timeValue)),
         isDisabled,
         isSelected,
         ariaLabel: resolveAriaLabel(timeValue.toString()),

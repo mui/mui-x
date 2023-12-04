@@ -315,6 +315,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
             },
             items: getTimeSectionOptions({
               value: utils.getMinutes(valueOrReferenceDate),
+              utils,
               isDisabled: (minutes) => disabled || isTimeDisabled(minutes, 'minutes'),
               resolveLabel: (minutes) => utils.format(utils.setMinutes(now, minutes), 'minutes'),
               timeStep: timeSteps.minutes,
@@ -331,6 +332,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
             },
             items: getTimeSectionOptions({
               value: utils.getSeconds(valueOrReferenceDate),
+              utils,
               isDisabled: (seconds) => disabled || isTimeDisabled(seconds, 'seconds'),
               resolveLabel: (seconds) => utils.format(utils.setSeconds(now, seconds), 'seconds'),
               timeStep: timeSteps.seconds,
