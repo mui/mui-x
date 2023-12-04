@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "6.18.2",
+  "version": "6.18.3",
   "description": "The community edition of the charts components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
