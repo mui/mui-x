@@ -63,6 +63,7 @@ export interface UseGridColumnHeadersProps {
 }
 
 export interface GetHeadersParams {
+  center?: boolean;
   renderContext: GridRenderContext | null;
   minFirstColumn?: number;
   maxLastColumn?: number;
@@ -95,17 +96,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
-  const renderContext = React.useMemo<GridRenderContext>(
-    () => ({
-      firstRowIndex: 0,
-      lastRowIndex: 0,
-      firstColumnIndex: 0,
-      lastColumnIndex: visibleColumns.length,
-    }),
-    [visibleColumns.length],
-  );
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const [renderContext, setRenderContext] = React.useState(() => apiRef.current.getRenderContext());
+
+  useGridApiEventHandler(apiRef, 'renderedColumnsIntervalChange', setRenderContext);
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;

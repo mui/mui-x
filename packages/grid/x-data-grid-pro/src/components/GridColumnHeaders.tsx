@@ -12,6 +12,7 @@ import {
 import {
   GridBaseColumnHeaders,
   GridColumnHeadersInner,
+  GridColumnHeadersFiller,
   GridPinnedColumnFields,
   UseGridColumnHeadersProps,
 } from '@mui/x-data-grid/internals';
@@ -223,7 +224,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
             })}
           </GridColumnHeadersPinnedColumnHeaders>
         )}
-
+        <GridColumnHeadersFiller />
         <GridScrollArea scrollDirection="left" />
         <GridColumnHeadersInner isDragging={isDragging} {...innerProps}>
           {getColumnGroupHeaders({

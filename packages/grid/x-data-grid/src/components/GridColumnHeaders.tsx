@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { refType } from '@mui/utils';
+import { styled } from '@mui/material/styles';
 import { fastMemo } from '../utils/fastMemo';
 import {
   useGridColumnHeaders,
@@ -8,6 +9,10 @@ import {
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
+
+export const GridColumnHeadersFiller = styled('div')({
+  width: 'calc(var(--DataGrid-offsetLeft) - var(--DataGrid-leftPinnedWidth))',
+})
 
 export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -55,6 +60,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
 
     return (
       <GridBaseColumnHeaders ref={ref} {...other}>
+        <GridColumnHeadersFiller />
         <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
           {getColumnGroupHeaders()}
           {getColumnHeaders()}

@@ -347,18 +347,26 @@ export const useGridVirtualScroller = () => {
 
       updateRenderZonePosition(nextRealRenderContext);
 
-      const didRowIntervalChange =
+      const didRowsIntervalChange =
         nextRenderContext.firstRowIndex !== prevRenderContext.current.firstRowIndex ||
         nextRenderContext.lastRowIndex !== prevRenderContext.current.lastRowIndex;
+
+      const didColumnsIntervalChange =
+        nextRenderContext.firstColumnIndex !== prevRenderContext.current.firstColumnIndex ||
+        nextRenderContext.lastColumnIndex !== prevRenderContext.current.lastColumnIndex;
+
 
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if the dimensions are also available.
       // So we wait until we have valid dimensions before publishing the first event.
-      if (dimensions.isReady && didRowIntervalChange) {
-        apiRef.current.publishEvent('renderedRowsIntervalChange', {
-          firstRowToRender: nextRealRenderContext.firstRowIndex,
-          lastRowToRender: nextRealRenderContext.lastRowIndex,
-        });
+      if (dimensions.isReady && didRowsIntervalChange) {
+        apiRef.current.publishEvent('renderedRowsIntervalChange', nextRealRenderContext);
+      }
+
+      // The column headers only need to re-render when the columns change, not when the rows
+      // change, so we expose an event specifically for that.
+      if (dimensions.isReady && didColumnsIntervalChange) {
+        apiRef.current.publishEvent('renderedColumnsIntervalChange', nextRealRenderContext);
       }
 
       prevRenderContext.current = nextRenderContext;

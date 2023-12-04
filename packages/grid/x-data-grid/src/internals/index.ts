@@ -11,6 +11,7 @@ export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
+export { GridColumnHeadersFiller } from '../components/GridColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
