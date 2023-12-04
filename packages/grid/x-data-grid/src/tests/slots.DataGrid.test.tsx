@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { DataGrid, GridOverlay } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Slots', () => {
@@ -62,6 +62,26 @@ describe('<DataGrid /> - Slots', () => {
         </div>,
       );
       expect(getCell(0, 0)).to.have.attr('data-name', 'foobar');
+    });
+
+    it('should not override cell dimensions when passing `slotProps.cell.style` to the cell', () => {
+      function Test(props: Partial<DataGridProps>) {
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid {...baselineProps} {...props} />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Test slotProps={{ cell: {} }} />);
+
+      const initialCellWidth = getCell(0, 0).getBoundingClientRect().width;
+
+      setProps({ slotProps: { cell: { style: { backgroundColor: 'red' } } } });
+
+      const cell = getCell(0, 0);
+      expect(cell).toHaveInlineStyle({ backgroundColor: 'red' });
+      expect(cell.getBoundingClientRect().width).to.equal(initialCellWidth);
     });
 
     it('should pass the props from slotProps.row to the row', () => {
