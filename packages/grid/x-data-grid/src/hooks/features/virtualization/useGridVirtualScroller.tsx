@@ -765,11 +765,6 @@ export const useGridVirtualScroller = () => {
 };
 
 function createGetRenderedColumns() {
-  // XXX: This options can be removed
-  // The `maxSize` is 3 so that reselect caches the `renderedColumns` values for the pinned left,
-  // unpinned, and pinned right sections.
-  const memoizeOptions = { maxSize: 3 };
-
   return defaultMemoize(
     (
       columns: GridStateColDef[],
@@ -808,6 +803,5 @@ function createGetRenderedColumns() {
         renderedColumns,
       };
     },
-    memoizeOptions,
   );
 }
