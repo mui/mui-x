@@ -29,6 +29,7 @@ pnpm add @mui/x-charts@next
 
 :::info
 The `next` tag is used to download the latest, **pre-release**, v7 version.
+Remove it to get the current stable version.
 :::
 
 ### Usage with Next.js
