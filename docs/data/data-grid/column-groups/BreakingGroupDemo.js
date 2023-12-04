@@ -25,7 +25,7 @@ const columns = [
 const rows = [
   { id: 1, isAdmin: false, lastName: 'Snow', firstName: 'Jon', age: 35 },
   { id: 2, isAdmin: true, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, isAdmin: false, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+  { id: 3, isAdmin: false, lastName: 'Lannister', firstName: 'Jaime', age: 42 },
   { id: 4, isAdmin: false, lastName: 'Stark', firstName: 'Arya', age: 16 },
   { id: 5, isAdmin: true, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
   { id: 6, isAdmin: true, lastName: 'Melisandre', firstName: null, age: 150 },
