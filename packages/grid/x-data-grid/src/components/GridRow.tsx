@@ -272,12 +272,15 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       'width' | 'colSpan' | 'showRightBorder' | 'indexRelativeToAllColumns'
     >,
   ) => {
-    const disableDragEvents =
-      (disableColumnReorder && column.disableReorder) ||
-      (!rowReordering &&
-        !!sortModel.length &&
-        treeDepth > 1 &&
-        Object.keys(editRowsState).length > 0);
+    // when the cell is a reorder cell we are not allowing to reorder the col
+    // fixes https://github.com/mui/mui-x/issues/11126
+    const isReorderCell = column.field === '__reorder__';
+    const isEditingRows = Object.keys(editRowsState).length > 0;
+
+    const canReorderColumn = !(disableColumnReorder || column.disableReorder);
+    const canReorderRow = rowReordering && !sortModel.length && treeDepth <= 1 && !isEditingRows;
+
+    const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
 
     const editCellState = editRowsState[rowId]?.[column.field] ?? null;
     let cellIsNotVisible = false;
