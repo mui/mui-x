@@ -79,7 +79,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   'filterOperator<=': '<=',
 
   // Header filter operators text
-  headerFilterOperatorContains: 'Contains',
+  headerFilterOperatorContains: 'Indeholder',
   headerFilterOperatorEquals: 'Lig med',
   headerFilterOperatorStartsWith: 'Begynder med',
   headerFilterOperatorEndsWith: 'Ender med',
