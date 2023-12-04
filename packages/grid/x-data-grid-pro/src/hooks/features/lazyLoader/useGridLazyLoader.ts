@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   useGridApiEventHandler,
-  GridRenderedRowsIntervalChangeParams,
   useGridSelector,
   gridSortModelSelector,
   gridFilterModelSelector,
@@ -104,7 +103,7 @@ export const useGridLazyLoader = (
   const visibleRows = useGridVisibleRows(privateApiRef, props);
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
   const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
-  const renderedRowsIntervalCache = React.useRef<GridRenderedRowsIntervalChangeParams>({
+  const renderedRowsIntervalCache = React.useRef({
     firstRowToRender: 0,
     lastRowToRender: 0,
   });
@@ -127,15 +126,15 @@ export const useGridLazyLoader = (
       }
 
       const fetchRowsParams: GridFetchRowsParams = {
-        firstRowToRender: params.firstRowToRender,
-        lastRowToRender: params.lastRowToRender,
+        firstRowToRender: params.firstRowIndex,
+        lastRowToRender: params.lastRowIndex,
         sortModel,
         filterModel,
       };
 
       if (
-        renderedRowsIntervalCache.current.firstRowToRender === params.firstRowToRender &&
-        renderedRowsIntervalCache.current.lastRowToRender === params.lastRowToRender
+        renderedRowsIntervalCache.current.firstRowToRender === params.firstRowIndex &&
+        renderedRowsIntervalCache.current.lastRowToRender === params.lastRowIndex
       ) {
         return;
       }
@@ -145,8 +144,8 @@ export const useGridLazyLoader = (
           apiRef: privateApiRef,
           visibleRows: visibleRows.rows,
           range: {
-            firstRowIndex: params.firstRowToRender,
-            lastRowIndex: params.lastRowToRender,
+            firstRowIndex: params.firstRowIndex,
+            lastRowIndex: params.lastRowIndex,
           },
         });
 
@@ -158,7 +157,10 @@ export const useGridLazyLoader = (
         fetchRowsParams.lastRowToRender = skeletonRowsSection.lastRowIndex;
       }
 
-      renderedRowsIntervalCache.current = params;
+      renderedRowsIntervalCache.current = {
+        firstRowToRender: params.firstRowIndex,
+        lastRowToRender: params.lastRowIndex,
+      };
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },

@@ -12,7 +12,7 @@ import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
 export const GridColumnHeadersFiller = styled('div')({
   width: 'calc(var(--DataGrid-offsetLeft) - var(--DataGrid-leftPinnedWidth))',
-})
+});
 
 export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,

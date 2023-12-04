@@ -355,7 +355,6 @@ export const useGridVirtualScroller = () => {
         nextRenderContext.firstColumnIndex !== prevRenderContext.current.firstColumnIndex ||
         nextRenderContext.lastColumnIndex !== prevRenderContext.current.lastColumnIndex;
 
-
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if the dimensions are also available.
       // So we wait until we have valid dimensions before publishing the first event.
