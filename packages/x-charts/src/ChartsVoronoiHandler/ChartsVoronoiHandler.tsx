@@ -144,8 +144,8 @@ ChartsVoronoiHandler.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Defines the maximal distance between scatter point and mouse that triggers the interaction.
-   * If undefined, the radius is assume to be infinit.
+   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * If `undefined`, the radius is assumed to be infinite.
    * @default undefined
    */
   voronoiMaxRadius: PropTypes.number,
