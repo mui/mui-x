@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.18.3
+
+_Dec 4, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📈 Fix a lot of Charts package issues
+- 🌍 Improve Bulgarian (bg-BG) locale on Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.3`
+
+- [DataGrid] Fix cell editing adding a leading "v" on paste (#11166) @prasad5795
+- [DataGrid] Fix handling of event target in portal (#11209) @cherniavskii
+- [DataGrid] Fix `onFilterModelChange` being fired with stale field value (#11244) @gitstart
+- [l10n] Improve Bulgarian (bg-BG) locale (#10856) (#11206) @Kristiqn95
+
+#### `@mui/x-data-grid-pro@6.18.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.3`.
+
+#### `@mui/x-data-grid-premium@6.18.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.3`, plus:
+
+- [DataGridPremium] Fix aggregated column ignoring column definition changes (#11176) @cherniavskii
+- [DataGridPremium] Fix custom filter operators not working on aggregated column (#11201) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.3`
+
+- [pickers] Correctly format `MultiSectionDigitalClock` number sections (#11297) @LukasTy
+- [pickers] Expand field placeholder methods flexibility by providing `format` parameter (#11254) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.3`.
+
+### Charts / `@mui/x-charts@6.18.3`
+
+- [charts] Adjusted `defaultizeValueFormatter` util to accept an optional `series.valueFormatter` value (#11213) @michelengelen
+- [charts] Apply `labelStyle` and `tickLabelStyle` props on `<ChartsYAxis />` (#11180) @akamfoad
+- [charts] Fix TS config (#11259) @alexfauquette
+- [charts] Fix error with empty dataset (#11063) @alexfauquette
+- [charts] Fix export strategy (#11235) @alexfauquette
+
+### Docs
+
+- [docs] Add LTS section to support page (#11300) @joserodolfofreitas
+- [docs] Add end v6 blogpost to whats new page (#11299) @joserodolfofreitas
+- [docs] Document charts composition (#10710) @alexfauquette
+- [docs] Fix version links (#11167) @LukasTy
+- [docs] Improve Data Grid togglable columns example (#11241) @MBilalShafi
+- [docs] Split charts overview and getting started in distinct pages (#10910) @alexfauquette
+
 ## 6.18.2
 
 _Nov 23, 2023_
