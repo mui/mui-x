@@ -97,15 +97,15 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
   ```tsx
   // 🛑 `type` is casted to `string` which is too wide
-  const columns = [{ type: 'number', id: 'field' }];
+  const columns = [{ type: 'number', field: 'id' }];
   <DataGrid columns={columns} />;
 
   // ✅ `type` is casted to `'number'`
-  const columns: GridColDef[] = [{ type: 'number', id: 'field' }];
+  const columns: GridColDef[] = [{ type: 'number', field: 'id' }];
   <DataGrid columns={columns} />;
 
   // ✅ Alternalively, `as const` can be used to narrow down the type
-  const columns = [{ type: 'number', id: 'field' as const }];
+  const columns = [{ type: 'number' as const, field: 'id' }];
   <DataGrid columns={columns} />;
   ```
 
