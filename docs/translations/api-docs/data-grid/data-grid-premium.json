@@ -348,6 +348,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "ignoreValueFormatterDuringExport": {
+      "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "initialState": {
       "description": "The initial state of the DataGridPremium. The data in it is set in the state on initialization but isn&#39;t controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins.",
       "deprecated": "",
@@ -921,6 +926,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "splitClipboardPastedText": {
+      "description": "The function is used to split the pasted text into rows and cells.",
+      "deprecated": "",
+      "typeDescriptions": { "text": "The text pasted from the clipboard." }
+    },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
       "deprecated": "",
@@ -940,16 +950,6 @@
       "description": "If <code>true</code>, enables the data grid filtering on header feature.",
       "deprecated": "",
       "typeDescriptions": {}
-    },
-    "unstable_ignoreValueFormatterDuringExport": {
-      "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "unstable_splitClipboardPastedText": {
-      "description": "The function is used to split the pasted text into rows and cells.",
-      "deprecated": "",
-      "typeDescriptions": { "text": "The text pasted from the clipboard." }
     }
   },
   "classDescriptions": {

@@ -51,7 +51,7 @@ export const useGridCellSelection = (
     | 'onCellSelectionModelChange'
     | 'pagination'
     | 'paginationMode'
-    | 'unstable_ignoreValueFormatterDuringExport'
+    | 'ignoreValueFormatterDuringExport'
     | 'clipboardCopyCellDelimiter'
   >,
 ) => {
@@ -61,7 +61,7 @@ export const useGridCellSelection = (
   const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
   const autoScrollRAF = React.useRef<number | null>();
 
-  const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
+  const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
     (typeof ignoreValueFormatterProp === 'object'
       ? ignoreValueFormatterProp?.clipboardExport
