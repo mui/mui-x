@@ -3,6 +3,188 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.3
+
+_Dec 4, 2023_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Support localized start of the week on pickers' `AdapterLuxon`
+
+  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g.: Sunday for `en-US`, Monday for `fr-FR`).
+
+- 📈 Fix a lot of Charts package issues
+- 🎉 The Data Grid features Cell selection and Clipboard paste are now stable
+- 🌍 Improve Bulgarian (bg-BG) locale on Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### Breaking changes
+
+- The clipboard paste feature is now enabled by default. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop.
+
+- The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are no longer prefixed with `unstable_`.
+
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the `DataGrid` exports. Use the [`filterDebounceMs`](https://next.mui.com/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+
+- The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
+
+- The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
+
+- The `unstable_` prefix has been removed from the cell selection props listed below.
+
+  | Old name                              | New name                     |
+  | :------------------------------------ | :--------------------------- |
+  | `unstable_cellSelection`              | `cellSelection`              |
+  | `unstable_cellSelectionModel`         | `cellSelectionModel`         |
+  | `unstable_onCellSelectionModelChange` | `onCellSelectionModelChange` |
+
+- The `unstable_` prefix has been removed from the cell selection API methods listed below.
+
+  | Old name                           | New name                  |
+  | :--------------------------------- | :------------------------ |
+  | `unstable_getCellSelectionModel`   | `getCellSelectionModel`   |
+  | `unstable_getSelectedCellsAsArray` | `getSelectedCellsAsArray` |
+  | `unstable_isCellSelected`          | `isCellSelected`          |
+  | `unstable_selectCellRange`         | `selectCellRange`         |
+  | `unstable_setCellSelectionModel`   | `setCellSelectionModel`   |
+
+- The Quick Filter now ignores hidden columns by default.
+  See [including hidden columns](https://next.mui.com/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+
+#### `@mui/x-data-grid@7.0.0-alpha.3`
+
+- [DataGrid] Fix cell editing adding a leading "v" on paste (#9205) @prasad5795
+- [DataGrid] Exclude hidden columns from quick filtering by default (#11229) @cherniavskii
+- [DataGrid] Fix `onFilterModelChange` being fired with stale field value (#11000) @gitstart
+- [DataGrid] Fix handling of event target in portal (#11174) @cherniavskii
+- [DataGrid] Remove deprecated constants (#11233) @michelengelen
+- [DataGrid] Remove the `preferencesPanel` slot (#11228) @cherniavskii
+- [l10n] Improve Bulgarian (bg-BG) locale (#10856) @Kristiqn95
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.3`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
+
+- [DataGridPremium] Fix aggregated column ignoring column definition changes (#11129) @cherniavskii
+- [DataGridPremium] Make Cell selection feature stable (#11246) @MBilalShafi
+- [DataGridPremium] Make Clipboard paste feature stable (#11248) @MBilalShafi
+
+### Date Pickers
+
+#### Breaking changes
+
+- The Date and Time Pickers now use the localized week when using `AdapterLuxon` and Luxon v3.4.4 or higher is installed.
+  This new behavior allows `AdapterLuxon` to have the same behavior as the other adapters.
+  If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
+  The Firefox browser currently does not support this behavior because the [getWeekInfo](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) API is not yet implemented.
+
+  ```ts
+  import { Settings } from 'luxon';
+
+  Settings.defaultWeekSettings = {
+    firstDay: 1,
+    minimalDays: Info.getMinimumDaysInFirstWeek(),
+    weekend: [6, 7],
+  };
+  ```
+
+- Add new parameters to the `shortcuts` slot `onChange` callback
+
+  The `onChange` callback fired when selecting a shortcut now requires two new parameters (previously they were optional):
+
+  - The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
+  - The `item` containing the entire shortcut object.
+
+  ```diff
+   const CustomShortcuts = (props) => {
+     return (
+       <React.Fragment>
+         {props.items.map(item => {
+           const value = item.getValue({ isValid: props.isValid });
+           return (
+             <button
+  -            onClick={() => onChange(value)}
+  +            onClick={() => onChange(value, props.changeImportance ?? 'accept', item)}
+             >
+               {value}
+             </button>
+           )
+         }}
+       </React.Fragment>
+     )
+   }
+
+   <DatePicker slots={{ shortcuts: CustomShortcuts }} />
+  ```
+
+  - Usage of `AdapterDayjs` with the `customParseFormat` plugin
+    The call to `dayjs.extend(customParseFormatPlugin)` has been moved to the `AdapterDayjs` constructor. This allows users to pass custom options to this plugin before the adapter uses it.
+
+  If you are using this plugin before the rendering of the first `LocalizationProvider` component and did not call `dayjs.extend` in your own codebase, you will need to manually extend `dayjs`:
+
+  ```tsx
+  import dayjs from 'dayjs';
+  import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
+
+  dayjs.extend(customParseFormatPlugin);
+  ```
+
+  The other plugins are still added before the adapter initialization.
+
+#### `@mui/x-date-pickers@7.0.0-alpha.3`
+
+- [pickers] Expand field placeholder methods flexibility by providing `format` parameter (#11130) @LukasTy
+- [pickers] Make `changeImportance` and `shortcut` mandatory in `PickersShortcuts` (#10941) @flaviendelangle
+- [pickers] Moved extend with `customParseFormat` to constructor (#11151) @michelengelen
+- [pickers] POC: `PickersTextField` styling - outlined variant (#10778) @noraleonte
+- [pickers] Support localized start of the week on `AdapterLuxon` (#10964) @flaviendelangle
+- [pickers] Use adapter methods instead of date library ones whenever possible (#11142) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.3`
+
+- [charts] Adjusted `defaultizeValueFormatter` util to accept an optional `series.valueFormatter` value (#11144) @michelengelen
+- [charts] Apply `labelStyle` and `tickLabelStyle` props on `<ChartsYAxis />` (#11180) @akamfoad
+- [charts] Fix TS config (#11259) @alexfauquette
+- [charts] Fix error with empty dataset (#11063) @alexfauquette
+- [charts] Fix export strategy (#11235) @alexfauquette
+- [charts] Remove outdated prop-types (#11045) @alexfauquette
+
+### Docs
+
+- [docs] Add `TextField` styling example to customization playground (#10812) @noraleonte
+- [docs] Add a card grid to the installation page (#11177) @danilo-leal
+- [docs] Add end v6 blogpost to whats new page (#10999) @joserodolfofreitas
+- [docs] Add small formatting improvements to the licensing page (#11178) @danilo-leal
+- [docs] Document charts composition (#10710) (#11239) @alexfauquette
+- [docs] Fix <title> generation (#11182) @oliviertassinari
+- [docs] Fix dead anchor link (#11265) @oliviertassinari
+- [docs] Improve Data Grid togglable columns example (#11238) @MBilalShafi
+- [docs] Improve the prop descriptions of `DayCalendar` (#11158) @flaviendelangle
+- [docs] Move the adapter breaking changes in a collapsable block (#11205) @flaviendelangle
+- [docs] Polish Next.js header description @oliviertassinari
+- [docs] Remove the `newFeature` flag on v6 features (#11168) @flaviendelangle
+- [docs] Simplify a bit chart demo (#11173) @oliviertassinari
+- [docs] Standardize the usage of callouts in the MUI X docs (#7127) @samuelsycamore
+- [docs] Adjust the Data Grid demo page design (#11231) @danilo-leal
+
+### Core
+
+- [core] Make `@mui/system` a direct dependency (#11128) @LukasTy
+- [core] Remove blank lines, coding style @oliviertassinari
+- [core] Remove outdated `ENABLE_AD` env variable (#11181) @oliviertassinari
+- [github] Do not add `plan: Pro` and `plan: Premium` labels on pro / premium issue templates (#10183) @flaviendelangle
+
 ## 7.0.0-alpha.2
 
 _Nov 23, 2023_
@@ -683,6 +865,65 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.18.3
+
+_Dec 4, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📈 Fix a lot of Charts package issues
+- 🌍 Improve Bulgarian (bg-BG) locale on Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.3`
+
+- [DataGrid] Fix cell editing adding a leading "v" on paste (#11166) @prasad5795
+- [DataGrid] Fix handling of event target in portal (#11209) @cherniavskii
+- [DataGrid] Fix `onFilterModelChange` being fired with stale field value (#11244) @gitstart
+- [l10n] Improve Bulgarian (bg-BG) locale (#10856) (#11206) @Kristiqn95
+
+#### `@mui/x-data-grid-pro@6.18.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.3`.
+
+#### `@mui/x-data-grid-premium@6.18.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.3`, plus:
+
+- [DataGridPremium] Fix aggregated column ignoring column definition changes (#11176) @cherniavskii
+- [DataGridPremium] Fix custom filter operators not working on aggregated column (#11201) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.3`
+
+- [pickers] Correctly format `MultiSectionDigitalClock` number sections (#11297) @LukasTy
+- [pickers] Expand field placeholder methods flexibility by providing `format` parameter (#11254) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.3`.
+
+### Charts / `@mui/x-charts@6.18.3`
+
+- [charts] Adjusted `defaultizeValueFormatter` util to accept an optional `series.valueFormatter` value (#11213) @michelengelen
+- [charts] Apply `labelStyle` and `tickLabelStyle` props on `<ChartsYAxis />` (#11180) @akamfoad
+- [charts] Fix TS config (#11259) @alexfauquette
+- [charts] Fix error with empty dataset (#11063) @alexfauquette
+- [charts] Fix export strategy (#11235) @alexfauquette
+
+### Docs
+
+- [docs] Add LTS section to support page (#11300) @joserodolfofreitas
+- [docs] Add end v6 blogpost to whats new page (#11299) @joserodolfofreitas
+- [docs] Document charts composition (#10710) @alexfauquette
+- [docs] Fix version links (#11167) @LukasTy
+- [docs] Improve Data Grid togglable columns example (#11241) @MBilalShafi
+- [docs] Split charts overview and getting started in distinct pages (#10910) @alexfauquette
 
 ## 6.18.2
 
