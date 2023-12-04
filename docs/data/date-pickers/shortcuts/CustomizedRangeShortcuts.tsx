@@ -55,7 +55,7 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
 ];
 
 function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
-  const { items, onChange, isValid } = props;
+  const { items, onChange, isValid, changeImportance = 'accept' } = props;
 
   if (items == null || items.length === 0) {
     return null;
@@ -67,7 +67,7 @@ function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue);
+        onChange(newValue, changeImportance, item);
       },
       disabled: !isValid(newValue),
     };

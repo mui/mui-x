@@ -5,7 +5,7 @@ import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../compon
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { useDataGridProps, DATA_GRID_PROPS_DEFAULT_VALUES } from './useDataGridProps';
+import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { GridValidRowModel } from '../models/gridRows';
 
@@ -48,18 +48,6 @@ interface DataGridComponent {
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
  */
 export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
-
-/**
- * Remove at v7
- * @deprecated
- */
-export const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs;
-
-/**
- * Remove at v7
- * @deprecated
- */
-export const SUBMIT_FILTER_DATE_STROKE_TIME = DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -297,6 +285,18 @@ DataGridRaw.propTypes = {
    * @default false
    */
   ignoreDiacritics: PropTypes.bool,
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default false
+   */
+  ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
   /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -711,17 +711,5 @@ DataGridRaw.propTypes = {
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
-  ]),
-  /**
-   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
-   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default false
-   */
-  unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
-    PropTypes.shape({
-      clipboardExport: PropTypes.bool,
-      csvExport: PropTypes.bool,
-    }),
-    PropTypes.bool,
   ]),
 } as any;

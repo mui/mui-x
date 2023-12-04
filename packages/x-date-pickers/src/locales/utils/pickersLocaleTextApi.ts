@@ -71,14 +71,20 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   dateTableLabel: string;
 
   // Field section placeholders
-  fieldYearPlaceholder: (params: { digitAmount: number }) => string;
-  fieldMonthPlaceholder: (params: { contentType: FieldSectionContentType }) => string;
-  fieldDayPlaceholder: () => string;
-  fieldWeekDayPlaceholder: (params: { contentType: FieldSectionContentType }) => string;
-  fieldHoursPlaceholder: () => string;
-  fieldMinutesPlaceholder: () => string;
-  fieldSecondsPlaceholder: () => string;
-  fieldMeridiemPlaceholder: () => string;
+  fieldYearPlaceholder: (params: { digitAmount: number; format: string }) => string;
+  fieldMonthPlaceholder: (params: {
+    contentType: FieldSectionContentType;
+    format: string;
+  }) => string;
+  fieldDayPlaceholder: (params: { format: string }) => string;
+  fieldWeekDayPlaceholder: (params: {
+    contentType: FieldSectionContentType;
+    format: string;
+  }) => string;
+  fieldHoursPlaceholder: (params: { format: string }) => string;
+  fieldMinutesPlaceholder: (params: { format: string }) => string;
+  fieldSecondsPlaceholder: (params: { format: string }) => string;
+  fieldMeridiemPlaceholder: (params: { format: string }) => string;
 }
 
 export interface PickersLocaleText<TDate>

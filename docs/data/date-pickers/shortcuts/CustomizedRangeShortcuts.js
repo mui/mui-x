@@ -51,7 +51,7 @@ const shortcutsItems = [
 ];
 
 function CustomRangeShortcuts(props) {
-  const { items, onChange, isValid } = props;
+  const { items, onChange, isValid, changeImportance = 'accept' } = props;
 
   if (items == null || items.length === 0) {
     return null;
@@ -63,7 +63,7 @@ function CustomRangeShortcuts(props) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue);
+        onChange(newValue, changeImportance, item);
       },
       disabled: !isValid(newValue),
     };

@@ -61,10 +61,10 @@ export const useGridClipboard = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'unstable_ignoreValueFormatterDuringExport' | 'onClipboardCopy' | 'clipboardCopyCellDelimiter'
+    'ignoreValueFormatterDuringExport' | 'onClipboardCopy' | 'clipboardCopyCellDelimiter'
   >,
 ): void => {
-  const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
+  const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
     (typeof ignoreValueFormatterProp === 'object'
       ? ignoreValueFormatterProp?.clipboardExport

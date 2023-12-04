@@ -1,5 +1,1 @@
-<DataGridPremium
-  {...data}
-  experimentalFeatures={{ clipboardPaste: true }}
-  disableClipboardPaste
-/>
+<DataGridPremium {...data} disableClipboardPaste />

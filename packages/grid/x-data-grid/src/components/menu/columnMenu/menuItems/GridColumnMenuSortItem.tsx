@@ -31,7 +31,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
       onClick(event);
       const direction = event.currentTarget.getAttribute('data-value') || null;
       apiRef.current.sortColumn(
-        colDef!,
+        colDef!.field,
         (direction === sortDirection ? null : direction) as GridSortDirection,
       );
     },
