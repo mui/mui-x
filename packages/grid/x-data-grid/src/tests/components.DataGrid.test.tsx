@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { DataGrid, GridOverlay } from '@mui/x-data-grid';
+import { DataGrid, GridOverlay, DataGridProps } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Components', () => {
@@ -56,30 +56,23 @@ describe('<DataGrid /> - Components', () => {
     });
 
     it('should not override cell dimensions when passing `slotProps.cell.style` to the cell', () => {
-      function Test() {
-        const [cellProps, setCellProps] = React.useState({});
+      function Test(props: Partial<DataGridProps>) {
         return (
-          <div>
-            <button onClick={() => setCellProps({ style: { backgroundColor: 'red' } })}>
-              Apply cell styles
-            </button>
-            <div style={{ width: 300, height: 500 }}>
-              <DataGrid {...baselineProps} slotProps={{ cell: cellProps }} />
-            </div>
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid {...baselineProps} {...props} />
           </div>
         );
       }
 
-      render(<Test />);
+      const { setProps } = render(<Test slotProps={{ cell: {} }} />);
 
       const initialCellWidth = getCell(0, 0).getBoundingClientRect().width;
 
-      const button = screen.getByRole('button', { name: /Apply cell styles/i });
-      fireEvent.click(button);
+      setProps({ slotProps: { cell: { style: { backgroundColor: 'red' } } } });
 
       const cell = getCell(0, 0);
-      expect(cell.getBoundingClientRect().width).to.equal(initialCellWidth);
       expect(cell).toHaveInlineStyle({ backgroundColor: 'red' });
+      expect(cell.getBoundingClientRect().width).to.equal(initialCellWidth);
     });
 
     it('should pass the props from componentsProps.row to the row', () => {
