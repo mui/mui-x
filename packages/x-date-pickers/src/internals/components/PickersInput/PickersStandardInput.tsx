@@ -24,7 +24,6 @@ const StandardSectionsWrapper = styled(InputWrapper, {
     bottomLineColor = `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`;
   }
   return {
-    position: 'relative',
     'label + &': {
       marginTop: 16,
     },

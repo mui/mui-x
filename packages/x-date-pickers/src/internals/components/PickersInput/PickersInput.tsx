@@ -18,12 +18,16 @@ export const InputWrapper = styled(Box, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.input,
 })<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
+  letterSpacing: 'inherit',
   cursor: 'text',
   padding: 0,
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  width: ownerState.fullWidth ? '100%' : '25ch',
+  position: 'relative',
+  ...(ownerState.fullWidth && {
+    width: '100%',
+  }),
 }));
 
 export const SectionsContainer = styled('div', {
@@ -34,6 +38,7 @@ export const SectionsContainer = styled('div', {
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
+  minWidth: '20ch',
   flexGrow: 1,
   visibility: ownerState.adornedStart || ownerState.focused ? 'visible' : 'hidden',
 }));
@@ -216,6 +221,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
     focused: fcs.focused,
     fullWidth: fcs.fullWidth,
     size: fcs.size,
+    adornedStart: fcs.adornedStart,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -248,7 +254,6 @@ export const PickersInput = React.forwardRef(function PickersInput(
         />
       </PickersInputInput>
       {endAdornment}
-      {/* render conditionally depending on variant -> consider renderSuffix or children */}
       {renderSuffix
         ? renderSuffix({
             ...fcs,

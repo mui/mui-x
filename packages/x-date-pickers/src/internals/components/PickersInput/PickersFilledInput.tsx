@@ -25,7 +25,6 @@ const FilledSectionsWrapper = styled(InputWrapper, {
   const disabledBackground = light ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)';
 
   return {
-    position: 'relative',
     backgroundColor: theme.vars ? theme.vars.palette.FilledInput.bg : backgroundColor,
     borderTopLeftRadius: (theme.vars || theme).shape.borderRadius,
     borderTopRightRadius: (theme.vars || theme).shape.borderRadius,

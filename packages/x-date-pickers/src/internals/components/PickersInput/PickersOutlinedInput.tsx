@@ -22,13 +22,7 @@ const OutlinedSectionsWrapper = styled(InputWrapper, {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
-    cursor: 'text',
-    padding: 0,
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: ownerState.fullWidth ? '100%' : '25ch',
-    position: 'relative',
+    padding: '16.5px 14px',
     borderRadius: (theme.vars || theme).shape.borderRadius,
     [`&:hover .${pickersOutlinedInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
@@ -72,20 +66,6 @@ const OutlinedSectionsContainer = styled(SectionsContainer, {
     padding: '8.5px 14px',
   }),
 }));
-
-const NotchedOutlineRoot = styled(Outline, {
-  name: 'MuiPickersOutliendInput',
-  slot: 'NotchedOutline',
-  overridesResolver: (props, styles) => styles.notchedOutline,
-})(({ theme }) => {
-  const borderColor =
-    theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
-  return {
-    borderColor: theme.vars
-      ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`
-      : borderColor,
-  };
-});
 
 const useUtilityClasses = (ownerState: OwnerStateType) => {
   const {
@@ -169,7 +149,7 @@ export const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInp
     <PickersInput
       slots={{ root: OutlinedSectionsWrapper, input: OutlinedSectionsContainer }}
       renderSuffix={(state) => (
-        <NotchedOutlineRoot
+        <Outline
           shrink={notched || state.adornedStart || state.focused || state.filled}
           notched={notched || state.adornedStart || state.focused || state.filled}
           className={classes.notchedOutline}
