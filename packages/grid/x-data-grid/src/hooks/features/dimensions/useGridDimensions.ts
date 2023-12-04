@@ -29,8 +29,6 @@ import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
-const isTestEnvironment = process.env.NODE_ENV === 'test';
-
 type RootProps = Pick<
   DataGridProcessedProps,
   | 'onResize'
@@ -347,14 +345,6 @@ export function useGridDimensions(
           ].join('\n'),
         );
         errorShown.current = true;
-      }
-
-      // XXX: remove?
-      if (isTestEnvironment) {
-        // We don't need to debounce the resize for tests.
-        setSavedSize(size);
-        isFirstSizing.current = false;
-        return;
       }
 
       if (isFirstSizing.current) {
