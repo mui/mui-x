@@ -145,6 +145,7 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-rowBorderColor': borderColor,
 
     '--DataGrid-cellOffsetMultiplier': 2,
+    '--DataGrid-width': '0px',
     '--DataGrid-hasScrollX': '0',
     '--DataGrid-hasScrollY': '0',
     '--DataGrid-offsetTop': '0px',

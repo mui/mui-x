@@ -301,6 +301,7 @@ export function useGridDimensions(
       return;
     }
     const set = (k: string, v: string) => root.style.setProperty(k, v);
+    set('--DataGrid-width', `${dimensions.viewportOuterSize.width}px`);
     set('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
     set('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
     set('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);

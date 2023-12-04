@@ -13,7 +13,9 @@ const DetailPanel = styled(Box, {
   slot: 'DetailPanel',
   overridesResolver: (props, styles) => styles.detailPanel,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  width: '100%',
+  position: 'sticky',
+  left: 0,
+  width: 'calc(var(--DataGrid-width) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
   backgroundColor: (theme.vars || theme).palette.background.default,
   overflow: 'auto',
 }));
