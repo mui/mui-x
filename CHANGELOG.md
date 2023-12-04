@@ -9,7 +9,6 @@ _Dec 4, 2023_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-
 - 🚀 Support localized start of the week on pickers' `AdapterLuxon`
 
   When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g.: Sunday for `en-US`, Monday for `fr-FR`).
