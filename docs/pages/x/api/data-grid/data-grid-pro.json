@@ -154,6 +154,13 @@
     },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
     "ignoreDiacritics": { "type": { "name": "bool" } },
+    "ignoreValueFormatterDuringExport": {
+      "type": {
+        "name": "union",
+        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
+      },
+      "default": "false"
+    },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -543,14 +550,7 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" } },
-    "unstable_headerFilters": { "type": { "name": "bool" } },
-    "unstable_ignoreValueFormatterDuringExport": {
-      "type": {
-        "name": "union",
-        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
-      },
-      "default": "false"
-    }
+    "unstable_headerFilters": { "type": { "name": "bool" } }
   },
   "slots": [
     {

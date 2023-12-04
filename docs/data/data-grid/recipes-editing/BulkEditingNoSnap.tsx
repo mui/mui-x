@@ -168,8 +168,7 @@ export default function BulkEditingNoSnap() {
           disableRowSelectionOnClick
           cellSelection
           processRowUpdate={processRowUpdate}
-          experimentalFeatures={{ clipboardPaste: true }}
-          unstable_ignoreValueFormatterDuringExport
+          ignoreValueFormatterDuringExport
           sx={{
             '& .MuiDataGrid-row.row--removed': {
               backgroundColor: (theme) => {
