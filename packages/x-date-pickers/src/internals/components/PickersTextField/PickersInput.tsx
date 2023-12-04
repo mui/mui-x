@@ -65,10 +65,10 @@ const PickersInputRoot = styled(Box, {
   };
 });
 
-const PickersInputFakeInput = styled('div', {
+const PickersInputSectionsContainer = styled('div', {
   name: 'MuiPickersInput',
-  slot: 'FakeInput',
-  overridesResolver: (props, styles) => styles.fakeInput,
+  slot: 'SectionsContainer',
+  overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
@@ -102,7 +102,7 @@ const PickersInputSection = styled('span', {
 
 const PickersInputContent = styled('span', {
   name: 'MuiPickersInput',
-  slot: 'Content',
+  slot: 'SectionContent',
   overridesResolver: (props, styles) => styles.content,
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
@@ -169,11 +169,11 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
       Boolean(endAdornment) && 'adornedEnd',
     ],
     notchedOutline: ['notchedOutline'],
-    before: ['before'],
-    after: ['after'],
-    content: ['content'],
     input: ['input'],
-    fakeInput: ['fakeInput'],
+    sectionsContainer: ['sectionsContainer'],
+    sectionContent: ['sectionContent'],
+    sectionBefore: ['sectionBefore'],
+    sectionAfter: ['sectionAfter'],
   };
 
   return composeClasses(slots, getPickersInputUtilityClass, classes);
@@ -204,15 +204,13 @@ export const PickersInput = React.forwardRef(function PickersInput(
 
     inputProps,
     inputRef,
-    fakeInputProps,
-    fakeInputRef,
+    sectionsContainerRef,
     ...other
   } = props;
 
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
-  const handleFakeInputRef = useForkRef(fakeInputProps?.ref, fakeInputRef);
 
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
@@ -264,17 +262,15 @@ export const PickersInput = React.forwardRef(function PickersInput(
       ref={handleRootRef}
     >
       {startAdornment}
-      <PickersInputFakeInput
-        {...inputProps}
+      <PickersInputSectionsContainer
         ownerState={ownerState}
-        className={classes.fakeInput}
+        className={classes.sectionsContainer}
         contentEditable={contentEditable}
         suppressContentEditableWarning
         onFocus={handleInputFocus}
         onBlur={muiFormControl.onBlur}
         tabIndex={tabIndex}
-        {...fakeInputProps}
-        ref={handleFakeInputRef}
+        ref={sectionsContainerRef}
       >
         {contentEditable ? (
           elements
@@ -289,23 +285,23 @@ export const PickersInput = React.forwardRef(function PickersInput(
               <PickersInputSection key={elementIndex} {...container}>
                 <PickersInputSeparator
                   {...before}
-                  className={clsx(pickersInputClasses.before, before?.className)}
+                  className={clsx(pickersInputClasses.sectionBefore, before?.className)}
                 />
                 <PickersInputContent
                   {...content}
                   suppressContentEditableWarning
-                  className={clsx(pickersInputClasses.content, content?.className)}
+                  className={clsx(pickersInputClasses.sectionContent, content?.className)}
                   {...{ ownerState }}
                 />
                 <PickersInputSeparator
                   {...after}
-                  className={clsx(pickersInputClasses.after, after?.className)}
+                  className={clsx(pickersInputClasses.sectionAfter, after?.className)}
                 />
               </PickersInputSection>
             ))}
           </React.Fragment>
         )}
-      </PickersInputFakeInput>
+      </PickersInputSectionsContainer>
       {endAdornment}
       <NotchedOutlineRoot
         shrink={muiFormControl.adornedStart || muiFormControl.focused || muiFormControl.filled}
@@ -330,7 +326,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
         id={id}
         aria-hidden="true"
         tabIndex={-1}
-        {...fakeInputProps}
+        {...inputProps}
         ref={handleInputRef}
       />
     </PickersInputRoot>

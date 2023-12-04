@@ -43,8 +43,7 @@ export interface PickersInputPropsUsedByField {
   inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
   inputRef?: React.Ref<HTMLInputElement>;
 
-  fakeInputProps?: React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> };
-  fakeInputRef?: React.Ref<HTMLDivElement>;
+  sectionsContainerRef?: React.Ref<HTMLDivElement>;
 }
 
 export interface PickersInputOtherProps extends Omit<BoxProps, keyof PickersInputPropsUsedByField> {
