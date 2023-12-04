@@ -5,13 +5,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.0.0-alpha.3
 
-_Dec 1, 2023_
+_Dec 4, 2023_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 
 - 🚀 Support localized start of the week on pickers' `AdapterLuxon`
 - 📈 Fix a lot of Charts package issues
+- 🎉 The Data Grid features Cell selection and Clipboard paste are now stable
 - 🌍 Improve Bulgarian (bg-BG) locale on Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -20,17 +21,15 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 #### Breaking changes
 
--  🎉 The clipboard paste feature is now stable. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop.
+-  The clipboard paste feature is now enabled by default. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop.
 
 - The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are no longer prefixed with `unstable_`.
 
-- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the `DataGrid` exports. Use the [`filterDebounceMs`](https://mui.com/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the `DataGrid` exports. Use the [`filterDebounceMs`](https://next.mui.com/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 
 - The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
-
-- The cell selection feature is now stable.
 
 - The `unstable_` prefix has been removed from the cell selection props listed below.
 
@@ -51,7 +50,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   | `unstable_setCellSelectionModel`   | `setCellSelectionModel`   |
 
 - The Quick Filter now ignores hidden columns by default.
-  See [including hidden columns](/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+  See [including hidden columns](https://next.mui.com/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
 
 #### `@mui/x-data-grid@7.0.0-alpha.3`
 
@@ -72,8 +71,8 @@ Same changes as in `@mui/x-data-grid@7.0.0-alpha.3`.
 Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
 
 - [DataGridPremium] Fix aggregated column ignoring column definition changes (#11129) @cherniavskii
-- [DataGridPremium] Make `cell selection` feature stable (#11246) @MBilalShafi
-- [DataGridPremium] Make `clipboard paste` feature stable (#11248) @MBilalShafi
+- [DataGridPremium] Make Cell selection feature stable (#11246) @MBilalShafi
+- [DataGridPremium] Make Clipboard paste feature stable (#11248) @MBilalShafi
 
 ### Date Pickers
 
@@ -97,6 +96,49 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
   };
   ```
 
+- Add new parameters to the `shortcuts` slot `onChange` callback
+
+  The `onChange` callback fired when selecting a shortcut now requires two new parameters (previously they were optional):
+  
+  - The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
+  - The `item` containing the entire shortcut object.
+  
+  ```diff
+   const CustomShortcuts = (props) => {
+     return (
+       <React.Fragment>
+         {props.items.map(item => {
+           const value = item.getValue({ isValid: props.isValid });
+           return (
+             <button
+  -            onClick={() => onChange(value)}
+  +            onClick={() => onChange(value, props.changeImportance ?? 'accept', item)}
+             >
+               {value}
+             </button>
+           )
+         }}
+       </React.Fragment>
+     )
+   }
+  
+   <DatePicker slots={{ shortcuts: CustomShortcuts }} />
+  ```
+
+  - Usage of `AdapterDayjs` with the `customParseFormat` plugin
+    The call to `dayjs.extend(customParseFormatPlugin)` has been moved to the `AdapterDayjs` constructor. This allows users to pass custom options to this plugin before the adapter uses it.
+  
+  If you are using this plugin before the rendering of the first `LocalizationProvider` component and did not call `dayjs.extend` in your own codebase, you will need to manually extend `dayjs`:
+  
+  ```tsx
+  import dayjs from 'dayjs';
+  import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
+  
+  dayjs.extend(customParseFormatPlugin);
+  ```
+  
+  The other plugins are still added before the adapter initialization.
+
 #### `@mui/x-date-pickers@7.0.0-alpha.3`
 
 - [pickers] Expand field placeholder methods flexibility by providing `format` parameter (#11130) @LukasTy
@@ -118,10 +160,6 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 - [charts] Fix error with empty dataset (#11063) @alexfauquette
 - [charts] Fix export strategy (#11235) @alexfauquette
 - [charts] Remove outdated prop-types (#11045) @alexfauquette
-
-### Tree View / `@mui/x-tree-view@7.0.0-alpha.1`
-
-No change
 
 ### Docs
 
@@ -145,9 +183,7 @@ No change
 
 - [core] Make `@mui/system` a direct dependency (#11128) @LukasTy
 - [core] Remove blank lines, coding style @oliviertassinari
-- [core] Remove outdated ENABLE_AD env variable (#11181) @oliviertassinari
-- [core] yarn proptypes (#11175) @cherniavskii
-- [chore] Fix linter error (#11242) @cherniavskii
+- [core] Remove outdated `ENABLE_AD` env variable (#11181) @oliviertassinari
 - [github] Do not add `plan: Pro` and `plan: Premium` labels on pro / premium issue templates (#10183) @flaviendelangle
 
 ## 7.0.0-alpha.2
