@@ -71,12 +71,12 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'Indeholder ikke data',
   filterOperatorIsNotEmpty: 'Indeholder data',
   filterOperatorIsAnyOf: 'indeholder en af',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
   // headerFilterOperatorContains: 'Contains',
