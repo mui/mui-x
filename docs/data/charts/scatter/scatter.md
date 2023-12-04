@@ -16,11 +16,12 @@ Those objects require `x`, `y`, and `id` properties.
 ## Interaction
 
 Since scatter element can be small, interaction do not require to hover elements.
-By default when mouse is in the drawing area, the closest element will be used for interactions (tooltip, or highlights).
+When the pointer is in the drawing area, the closest scatter element will be used for interactions (tooltip or highlights).
+To do so, the chart computes [Voronoi cells](https://en.wikipedia.org/wiki/Voronoi_diagram) which map the pointer position to the closest element.
 
-To limit this behavior, you define a maximal radius with prop `voronoiMaxRadius`.
-If the distance with the mouse is larger than this radius, no item will be selected.
-Or set `disableVoronoi` prop to true to only interact with hover events.
+You can define a maximal radius with the `voronoiMaxRadius` prop.
+If the distance with the pointer is larger than this radius, no item will be selected.
+Or set `disableVoronoi` prop to `true` to interact with hover events instead of Voronoi cells.
 
 {{"demo": "VoronoiInteraction.js"}}
 

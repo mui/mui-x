@@ -10,11 +10,11 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 
 export type ChartsVoronoiHandlerProps = {
   /**
-   * Defines the maximal distance between scatter point and mouse that triggers the interaction.
-   * If undefined, the radius is assume to be infinit.
+   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * If `undefined`, the radius is assumed to be infinite.
    * @default undefined
    */
-  voronoiMaxRadius?: number;
+  voronoiMaxRadius?: number | undefined;
 };
 
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
