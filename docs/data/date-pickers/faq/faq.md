@@ -11,7 +11,7 @@ packageName: '@mui/x-date-pickers'
 
 If you still have trouble, you can get in touch with through the [support page](/x/introduction/support/).
 
-## What is the DemoContainer?
+## What is the DemoContainer and DemoItem?
 
 The `<DemoContainer />` is an internal component used together with the `<DemoItem />` to display multiple components in a consistent layout throughout the demos.
 
