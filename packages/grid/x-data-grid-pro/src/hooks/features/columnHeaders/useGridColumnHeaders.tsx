@@ -155,6 +155,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         aria-rowindex={headerGroupingMaxDepth + 2}
       >
         {filters}
+        {otherProps.getFiller(params)}
       </GridHeaderFilterRow>
     );
   };

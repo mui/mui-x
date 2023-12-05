@@ -21,9 +21,10 @@ import { GridSortColumnLookup } from '../sorting';
 import { GridFilterActiveItemsLookup } from '../filter';
 import { GridColumnGroupIdentifier, GridColumnIdentifier } from '../focus';
 import { GridColumnMenuState } from '../columnMenu';
-import { GridColumnVisibilityModel } from '../columns';
+import { GridPinnedColumnPosition, GridColumnVisibilityModel } from '../columns';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { gridClasses } from '../../../constants/gridClasses';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -63,11 +64,19 @@ export interface UseGridColumnHeadersProps {
 }
 
 export interface GetHeadersParams {
-  center?: boolean;
+  position?: GridPinnedColumnPosition;
   renderContext: GridRenderContext | null;
   minFirstColumn?: number;
   maxLastColumn?: number;
 }
+
+const Filler = styled('div')({
+  /* GridRootStyles conflict */
+  '&:not(.increase-specificity):not(.x2)': {
+    padding: 0,
+    width: 'calc(var(--DataGrid-width) - var(--DataGrid-columnsTotalWidth))',
+  },
+});
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const {
@@ -234,6 +243,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         ownerState={rootProps}
       >
         {columns}
+        {getFiller(params)}
       </GridColumnHeaderRow>
     );
   };
@@ -363,6 +373,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               );
             },
           )}
+          {getFiller(params)}
         </GridColumnHeaderRow>,
       );
     });
@@ -379,5 +390,13 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       ref: handleInnerRef,
       role: 'rowgroup',
     }),
+    getFiller,
   };
 };
+
+function getFiller(params: GetHeadersParams | undefined) {
+  if (params?.position !== undefined) {
+    return null;
+  }
+  return <Filler className={gridClasses.columnHeader} />;
+}

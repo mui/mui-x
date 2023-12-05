@@ -1,6 +1,11 @@
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import type { GridColumnDimensionProperties } from './gridColumnsUtils';
 
+export enum GridPinnedColumnPosition {
+  LEFT = 'left',
+  RIGHT = 'right',
+}
+
 export type GridColumnLookup = {
   [field: string]: GridStateColDef;
 };
