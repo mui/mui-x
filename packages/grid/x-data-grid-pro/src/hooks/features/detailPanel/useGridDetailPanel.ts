@@ -253,6 +253,8 @@ export const useGridDetailPanel = (
 
   useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCachesAndForceUpdate);
 
+  React.useEffect(updateCachesAndForceUpdate, [updateCachesAndForceUpdate]);
+
   const previousGetDetailPanelContentProp =
     React.useRef<DataGridProProcessedProps['getDetailPanelContent']>();
   const previousGetDetailPanelHeightProp =

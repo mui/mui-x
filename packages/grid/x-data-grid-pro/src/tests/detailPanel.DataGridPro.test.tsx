@@ -19,7 +19,7 @@ import {
   act,
   userEvent,
 } from '@mui-internal/test-utils';
-import { $, $$, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
+import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -371,9 +371,6 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   it('should update the panel height if getDetailPanelHeight is changed while the panel is open', function test() {
-    // XXX: see XXX notes below
-    this.skip();
-
     if (isJSDOM) {
       this.skip(); // Doesn't work with mocked window.getComputedStyle
     }
@@ -398,16 +395,14 @@ describe('<DataGridPro /> - Detail panel', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
     const detailPanel = $$('.MuiDataGrid-detailPanel')[0];
     expect(detailPanel).toHaveComputedStyle({ height: '100px' });
-    const virtualScroller = $('.MuiDataGrid-virtualScroller')!;
+    const virtualScroller = grid('virtualScroller')!;
     expect(virtualScroller.scrollHeight).to.equal(208);
 
     const getDetailPanelHeight2 = spy(() => 200);
     setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
 
-    // XXX: error here
-    // XXX: How do we wait until rendering has occured?
     expect(detailPanel).toHaveComputedStyle({ height: '200px' });
-    expect(virtualScroller.scrollHeight).to.equal(200 + 52);
+    expect(virtualScroller.scrollHeight).to.equal(200 + 52 + 56);
   });
 
   it('should only call getDetailPanelHeight on the rows that have detail content', () => {
