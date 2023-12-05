@@ -131,7 +131,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       pinnedPosition === PinnedPosition.LEFT && 'cell--pinnedLeft',
       pinnedPosition === PinnedPosition.RIGHT && 'cell--pinnedRight',
       isSelectionMode && !isEditable && 'cell--selectionMode',
-      'withBorderColor',
     ],
     content: ['cellContent'],
   };

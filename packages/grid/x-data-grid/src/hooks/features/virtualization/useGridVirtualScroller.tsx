@@ -582,7 +582,7 @@ export const useGridVirtualScroller = () => {
       }
 
       let isFirstVisible = false;
-      if (isFirstSection) {
+      if (params.position === undefined) {
         isFirstVisible = i === 0;
       }
 

@@ -104,7 +104,7 @@ function EmptyCell({ width }: { width: number }) {
 
   const style = { width };
 
-  return <div className={`${gridClasses.cell} ${gridClasses.withBorderColor}`} style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
+  return <div className={`${gridClasses.cell}`} style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 }
 
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {

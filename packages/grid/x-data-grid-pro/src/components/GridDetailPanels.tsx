@@ -41,31 +41,34 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
     gridDetailPanelExpandedRowsHeightCacheSelector,
   );
 
-  const getDetailPanel = React.useCallback((rowId: GridRowId): React.ReactNode => {
-    const content = detailPanelsContent[rowId];
+  const getDetailPanel = React.useCallback(
+    (rowId: GridRowId): React.ReactNode => {
+      const content = detailPanelsContent[rowId];
 
-    // Check if the id exists in the current page
-    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
-    const exists = rowIndex !== undefined;
+      // Check if the id exists in the current page
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
+      const exists = rowIndex !== undefined;
 
-    if (!React.isValidElement(content) || !exists) {
-      return null;
-    }
+      if (!React.isValidElement(content) || !exists) {
+        return null;
+      }
 
-    const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(rowId);
-    const height = hasAutoHeight ? 'auto' : detailPanelsHeights[rowId];
+      const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(rowId);
+      const height = hasAutoHeight ? 'auto' : detailPanelsHeights[rowId];
 
-    return (
-      <GridDetailPanel
-        key={`panel-${rowId}`}
-        rowId={rowId}
-        height={height}
-        className={classes.detailPanel}
-      >
-        {content}
-      </GridDetailPanel>
-    );
-  }, [apiRef, classes.detailPanel, detailPanelsHeights, detailPanelsContent]);
+      return (
+        <GridDetailPanel
+          key={`panel-${rowId}`}
+          rowId={rowId}
+          height={height}
+          className={classes.detailPanel}
+        >
+          {content}
+        </GridDetailPanel>
+      );
+    },
+    [apiRef, classes.detailPanel, detailPanelsHeights, detailPanelsContent],
+  );
 
   React.useEffect(() => {
     if (expandedRowIds.length === 0) {

@@ -27,7 +27,6 @@ const GridColumnHeadersRoot = styled('div', {
   boxSizing: 'border-box',
   borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
   borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
-  lineHeight: 'var(--DataGrid-headerHeight)',
 });
 
 interface GridBaseColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {

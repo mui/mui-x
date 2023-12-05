@@ -69,7 +69,6 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     boxSizing: 'border-box',
     boxShadow: theme.shadows[2],
     backgroundColor: 'var(--DataGrid-pinnedBackground)',
-    borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
     ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
     ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
     [`&.${gridClasses['pinnedColumnHeaders--left']}`]: {
@@ -90,7 +89,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
 
 const Filler = styled('div')({
   flex: 1,
-  backgroundColor: 'var(--unstable_DataGrid-containerBackground)',
+  backgroundColor: 'var(--DataGrid-containerBackground)',
 });
 
 GridColumnHeadersPinnedColumnHeaders.propTypes = {
