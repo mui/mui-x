@@ -1,7 +1,17 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 
-const OutlineRoot = styled('fieldset')({
+interface OutlineProps extends React.HTMLAttributes<HTMLFieldSetElement> {
+  notched: boolean;
+  shrink: boolean;
+  label: React.ReactNode;
+}
+
+interface OutlineOwnerState extends OutlineProps {
+  withLabel: boolean;
+}
+
+const OutlineRoot = styled('fieldset')<{ ownerState: OutlineOwnerState }>({
   textAlign: 'left',
   position: 'absolute',
   bottom: 0,
@@ -60,12 +70,11 @@ const OutlineLegend = styled('legend')<{ ownerState: any }>(({ ownerState, theme
   }),
 }));
 
-export default function Outline(props) {
-  const { children, classes, className, label, notched, ...other } = props;
+export default function Outline(props: OutlineProps) {
+  const { children, className, label, ...other } = props;
   const withLabel = label != null && label !== '';
   const ownerState = {
     ...props,
-    notched,
     withLabel,
   };
   return (
