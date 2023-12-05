@@ -9,7 +9,7 @@ import {
   pickersFilledInputClasses,
   getPickersFilledInputUtilityClass,
 } from './pickersInputClasses';
-import { PickersInputProps, PickersFilledInputProps } from './PickersInput.types';
+import { PickersFilledInputProps } from './PickersInput.types';
 import { InputWrapper, PickersInput, SectionsContainer } from './PickersInput';
 import { formControlState } from './pickersInputUtiles';
 
@@ -129,6 +129,15 @@ const FilledSectionsContainer = styled(SectionsContainer, {
   ...(ownerState.endAdornment && {
     paddingRight: 0,
   }),
+  ...(ownerState.hiddenLabel && {
+    paddingTop: 16,
+    paddingBottom: 17,
+  }),
+  ...(ownerState.hiddenLabel &&
+    ownerState.size === 'small' && {
+      paddingTop: 8,
+      paddingBottom: 9,
+    }),
 }));
 
 const useUtilityClasses = (ownerState: OwnerStateType) => {
@@ -166,14 +175,13 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
   return composeClasses(slots, getPickersFilledInputUtilityClass, classes);
 };
 
-interface OwnerStateType extends PickersInputProps {
+interface OwnerStateType extends PickersFilledInputProps {
   color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
   disabled?: boolean;
   error?: boolean;
   fullWidth?: boolean;
   size?: 'small' | 'medium';
   adornedStart?: boolean;
-  disableUnderline?: boolean;
 }
 
 export const PickersFilledInput = React.forwardRef(function PickersFilledInput(

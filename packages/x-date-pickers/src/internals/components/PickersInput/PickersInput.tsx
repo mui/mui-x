@@ -35,12 +35,16 @@ export const SectionsContainer = styled('div', {
   slot: 'Input',
   overridesResolver: (props, styles) => styles.input,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+  padding: '4px 0 5px',
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
   minWidth: '20ch',
   flexGrow: 1,
   visibility: ownerState.adornedStart || ownerState.focused ? 'visible' : 'hidden',
+  ...(ownerState.size === 'small' && {
+    paddingTop: 1,
+  }),
 }));
 
 const SectionContainer = styled('span', {

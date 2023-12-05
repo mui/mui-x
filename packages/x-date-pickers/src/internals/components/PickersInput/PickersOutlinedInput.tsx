@@ -22,7 +22,8 @@ const OutlinedSectionsWrapper = styled(InputWrapper, {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
-    padding: '16.5px 14px',
+    padding: '0 14px',
+
     borderRadius: (theme.vars || theme).shape.borderRadius,
     [`&:hover .${pickersOutlinedInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
@@ -62,8 +63,9 @@ const OutlinedSectionsContainer = styled(SectionsContainer, {
   slot: 'Input',
   overridesResolver: (props, styles) => styles.input,
 })<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
+  padding: '16.5px 0',
   ...(ownerState.size === 'small' && {
-    padding: '8.5px 14px',
+    padding: '8.5px 0',
   }),
 }));
 
