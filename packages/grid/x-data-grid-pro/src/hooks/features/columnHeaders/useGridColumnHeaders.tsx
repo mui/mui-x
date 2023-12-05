@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  unstable_gridFocusColumnHeaderFilterSelector,
+  gridFocusColumnHeaderFilterSelector,
   useGridSelector,
   gridFilterModelSelector,
-  unstable_gridTabIndexColumnHeaderFilterSelector,
+  gridTabIndexColumnHeaderFilterSelector,
   getDataGridUtilityClass,
   GridFilterItem,
 } from '@mui/x-data-grid';
@@ -48,7 +48,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const { headerGroupingMaxDepth, hasOtherElementInTabSequence } = props;
   const columnHeaderFilterTabIndexState = useGridSelector(
     apiRef,
-    unstable_gridTabIndexColumnHeaderFilterSelector,
+    gridTabIndexColumnHeaderFilterSelector,
   );
   const { getColumnsToRender, ...otherProps } = useGridColumnHeadersCommunity({
     ...props,
@@ -62,14 +62,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const disableHeaderFiltering = !rootProps.unstable_headerFilters;
+  const disableHeaderFiltering = !rootProps.headerFilters;
   const dimensions = apiRef.current.getRootDimensions();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
 
-  const columnHeaderFilterFocus = useGridSelector(
-    apiRef,
-    unstable_gridFocusColumnHeaderFilterSelector,
-  );
+  const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
 
   const getFilterItem = React.useCallback(
     (colDef: GridStateColDef) => {
