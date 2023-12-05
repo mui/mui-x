@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.4",
-    "@mui/base": "^5.0.0-beta.24",
+    "@mui/base": "^5.0.0-beta.26",
     "@mui/x-data-grid-premium": "7.0.0-alpha.3",
     "chance": "^1.1.11",
     "clsx": "^2.0.0",
