@@ -20,6 +20,7 @@ import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector
 
 const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,
+  type: 'custom',
   disableReorder: true,
 };
 

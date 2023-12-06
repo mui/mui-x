@@ -9,6 +9,7 @@ export const GRID_CHECKBOX_SELECTION_FIELD = '__check__';
 
 export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
+  type: 'custom',
   field: GRID_CHECKBOX_SELECTION_FIELD,
   width: 50,
   resizable: false,

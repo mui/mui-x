@@ -5,6 +5,7 @@ export type GridNativeColTypes =
   | 'dateTime'
   | 'boolean'
   | 'singleSelect'
-  | 'actions';
+  | 'actions'
+  | 'custom';
 
 export type GridColType = GridNativeColTypes;

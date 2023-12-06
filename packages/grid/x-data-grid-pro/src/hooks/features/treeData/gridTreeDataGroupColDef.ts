@@ -5,6 +5,7 @@ import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
  */
 export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editable'> = {
   ...GRID_STRING_COL_DEF,
+  type: 'custom',
   sortable: false,
   filterable: false,
   disableColumnMenu: true,

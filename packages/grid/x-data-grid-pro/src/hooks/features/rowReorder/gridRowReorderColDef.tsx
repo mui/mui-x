@@ -3,6 +3,7 @@ import { renderRowReorderCell } from '../../../components/GridRowReorderCell';
 
 export const GRID_REORDER_COL_DEF: GridColDef = {
   ...GRID_STRING_COL_DEF,
+  type: 'custom',
   field: '__reorder__',
   sortable: false,
   filterable: false,
