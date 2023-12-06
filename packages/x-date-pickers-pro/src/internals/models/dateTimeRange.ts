@@ -40,3 +40,5 @@ export type UseDateTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
 >;
 
 export type DateTimeRangePickerView = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;
+
+export type DateTimeRangePickerViewExternal = Exclude<DateTimeRangePickerView, 'meridiem'>;

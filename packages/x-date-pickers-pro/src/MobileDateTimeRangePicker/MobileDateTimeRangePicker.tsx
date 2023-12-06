@@ -11,7 +11,10 @@ import {
   DefaultizedProps,
 } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
-import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '@mui/x-date-pickers/timeViewRenderers';
 import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
@@ -110,6 +113,10 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     MobileDateTimeRangePickerProps<TDate>
   >(inProps, 'MuiMobileDateTimeRangePicker');
 
+  const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
+    ? renderDigitalClockTimeView
+    : renderMultiSectionDigitalClockTimeView;
+
   const viewRenderers: PickerViewRendererLookup<
     DateRange<TDate>,
     DateTimeRangePickerView,
@@ -117,10 +124,10 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     {}
   > = {
     day: renderDateRangeViewCalendar,
-    hours: renderMultiSectionDigitalClockTimeView,
-    minutes: renderMultiSectionDigitalClockTimeView,
-    seconds: renderMultiSectionDigitalClockTimeView,
-    meridiem: renderMultiSectionDigitalClockTimeView,
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
 

@@ -25,8 +25,14 @@ import {
   MultiSectionDigitalClockSlotsComponent,
   MultiSectionDigitalClockSlotsComponentsProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock/MultiSectionDigitalClock.types';
+import { resolveTimeViewsResponse } from '@mui/x-date-pickers/internals/utils/date-time-utils';
+import { UseViewsOptions } from '@mui/x-date-pickers/internals/hooks/useViews';
 import { DateTimeRangeValidationError } from '../models';
-import { DateRange, DateTimeRangePickerView } from '../internals/models';
+import {
+  DateRange,
+  DateTimeRangePickerView,
+  DateTimeRangePickerViewExternal,
+} from '../internals/models';
 import {
   DateRangeCalendarSlotsComponent,
   DateRangeCalendarSlotsComponentsProps,
@@ -82,11 +88,14 @@ export interface BaseDateTimeRangePickerProps<TDate>
         DateTimeRangePickerView,
         DateTimeRangeValidationError
       >,
-      'orientation'
+      'orientation' | 'views' | 'openTo'
     >,
     ExportedDateRangeCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
-    DesktopOnlyTimePickerProps<TDate> {
+    DesktopOnlyTimePickerProps<TDate>,
+    Partial<
+      Pick<UseViewsOptions<DateRange<TDate>, DateTimeRangePickerViewExternal>, 'openTo' | 'views'>
+    > {
   /**
    * Overridable component slots.
    * @default {}
@@ -122,7 +131,9 @@ type UseDateTimeRangePickerDefaultizedProps<
 > = LocalizedComponent<
   TDate,
   DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseDateValidationProps<TDate>>
->;
+> & {
+  shouldRenderTimeInASingleColumn: boolean;
+};
 
 export function useDateTimeRangePickerDefaultizedProps<
   TDate,
@@ -136,16 +147,31 @@ export function useDateTimeRangePickerDefaultizedProps<
   });
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const { openTo, views: defaultViews } = applyDefaultViewProps<DateTimeRangePickerViewExternal>({
+    views: themeProps.views,
+    openTo: themeProps.openTo,
+    defaultViews: ['day', 'hours', 'minutes'],
+    defaultOpenTo: 'day',
+  });
+  const {
+    shouldRenderTimeInASingleColumn,
+    thresholdToRenderTimeInASingleColumn,
+    views,
+    timeSteps,
+  } = resolveTimeViewsResponse<TDate, DateTimeRangePickerViewExternal, DateTimeRangePickerView>({
+    thresholdToRenderTimeInASingleColumn: themeProps.thresholdToRenderTimeInASingleColumn,
+    ampm,
+    timeSteps: themeProps.timeSteps,
+    views: defaultViews,
+  });
 
   return {
     ...themeProps,
-    ...applyDefaultViewProps({
-      views: themeProps.views,
-      openTo: themeProps.openTo,
-      defaultViews: ampm ? ['day', 'hours', 'minutes', 'meridiem'] : ['day', 'hours', 'minutes'],
-      defaultOpenTo: 'day',
-    }),
-    timeSteps: { hours: 1, minutes: 5, seconds: 5, ...themeProps.timeSteps },
+    timeSteps,
+    openTo,
+    shouldRenderTimeInASingleColumn,
+    thresholdToRenderTimeInASingleColumn,
+    views,
     ampm,
     calendars: themeProps.calendars ?? 1,
     disableFuture: themeProps.disableFuture ?? false,
