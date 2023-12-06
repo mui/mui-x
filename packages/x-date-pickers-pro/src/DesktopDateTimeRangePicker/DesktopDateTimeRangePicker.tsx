@@ -122,8 +122,16 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     ...defaultizedProps.viewRenderers,
   };
 
+  // Need to avoid adding the `meridiem` view when unexpected renderer is specified
+  const shouldHoursRendererContainMeridiemView =
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+  const views = !shouldHoursRendererContainMeridiemView
+    ? defaultizedProps.views.filter((view) => view !== 'meridiem')
+    : defaultizedProps.views;
+
   const props = {
     ...defaultizedProps,
+    views,
     viewRenderers,
     // force true to correctly handle `renderTimeViewClock` as a renderer
     ampmInClock: true,

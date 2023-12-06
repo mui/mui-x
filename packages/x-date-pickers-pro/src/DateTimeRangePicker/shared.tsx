@@ -130,9 +130,10 @@ type UseDateTimeRangePickerDefaultizedProps<
   Props extends BaseDateTimeRangePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseDateValidationProps<TDate>>
+  Omit<DefaultizedProps<Props, 'openTo' | 'ampm' | keyof BaseDateValidationProps<TDate>>, 'views'>
 > & {
   shouldRenderTimeInASingleColumn: boolean;
+  views: readonly DateTimeRangePickerView[];
 };
 
 export function useDateTimeRangePickerDefaultizedProps<
