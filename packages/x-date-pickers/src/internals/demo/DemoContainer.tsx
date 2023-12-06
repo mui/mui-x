@@ -80,7 +80,6 @@ export function DemoItem(props: DemoItemProps) {
     sx = {
       ...sx,
       [`& .${textFieldClasses.root}`]: {
-        ...sx?.[`& .${textFieldClasses.root}`],
         flexGrow: 1,
       },
     };
