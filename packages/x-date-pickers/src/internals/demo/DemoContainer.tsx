@@ -165,7 +165,11 @@ export function DemoContainer(props: DemoGridProps) {
     } else {
       extraSx = {
         [`& > .${textFieldClasses.root}`]: {
-          minWidth: { xs: 300, md: 400 },
+          minWidth: {
+            xs: 300,
+            // If demo also contains MultiInputDateTimeRangeField, increase width to avoid cutting off the value.
+            md: childrenTypes.has('multi-input-range-field') ? 460 : 400,
+          },
         },
       };
     }
