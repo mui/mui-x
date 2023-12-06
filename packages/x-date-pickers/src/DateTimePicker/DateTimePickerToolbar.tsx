@@ -291,18 +291,16 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
           ownerState={ownerState}
         >
           {views.includes('hours') && (
-            <PickersToolbarButton
-              variant={isDesktop ? 'h5' : 'h3'}
-              width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
-              data-mui-test="hours"
-              onClick={() => onViewChange('hours')}
-              selected={markSelected && view === 'hours'}
-              value={value ? formatHours(value) : '--'}
-            />
-          )}
-
-          {views.includes('minutes') && (
             <React.Fragment>
+              <PickersToolbarButton
+                variant={isDesktop ? 'h5' : 'h3'}
+                width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
+                data-mui-test="hours"
+                onClick={() => onViewChange('hours')}
+                selected={markSelected && view === 'hours'}
+                value={value ? formatHours(value) : '--'}
+              />
+
               <DateTimePickerToolbarSeparator
                 variant={isDesktop ? 'h5' : 'h3'}
                 value=":"
@@ -316,6 +314,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
                 onClick={() => onViewChange('minutes')}
                 selected={markSelected && view === 'minutes'}
                 value={value ? utils.format(value, 'minutes') : '--'}
+                disabled={!views.includes('minutes')}
               />
             </React.Fragment>
           )}
