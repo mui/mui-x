@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { DataGridPremium, GridRenderCellParams } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridRenderCellParams,
+  GridColDef,
+} from '@mui/x-data-grid-premium';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
@@ -72,7 +76,7 @@ function ComponentTag(props: { value?: string; plan?: string }) {
   );
 }
 
-const columns = [
+const columns: GridColDef[] = [
   {
     field: 'slot',
     headerName: 'Slot',

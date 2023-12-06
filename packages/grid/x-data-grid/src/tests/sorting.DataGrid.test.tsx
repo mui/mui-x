@@ -10,7 +10,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGrid /> - Sorting', () => {
   const { render } = createRenderer();
 
-  const baselineProps = {
+  const baselineProps: DataGridProps = {
     autoHeight: isJSDOM,
     rows: [
       {
@@ -177,7 +177,7 @@ describe('<DataGrid /> - Sorting', () => {
 
   it('should keep rows sorted when rows prop change', () => {
     interface TestCaseProps {
-      rows: any[];
+      rows: DataGridProps['rows'];
     }
 
     function TestCase(props: TestCaseProps) {

@@ -718,7 +718,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('should focus actions cell with one disabled item', () => {
-    const columns = [
+    const columns: GridColDef[] = [
       {
         field: 'actions',
         type: 'actions',
@@ -752,7 +752,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('should focus actions cell with all items disabled', () => {
-    const columns = [
+    const columns: GridColDef[] = [
       {
         field: 'actions',
         type: 'actions',
@@ -783,7 +783,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('should be able to navigate the actions', () => {
-    const columns = [
+    const columns: GridColDef[] = [
       {
         field: 'actions',
         type: 'actions',
