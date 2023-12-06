@@ -263,7 +263,7 @@ you will have to manually remount your component to apply the new locale configu
 
 For `dayjs`, use the `updateLocale` plugin:
 
-```tsx
+```ts
 import updateLocale from 'dayjs/plugin/updateLocale';
 
 dayjs.extend(updateLocale);
@@ -279,7 +279,7 @@ dayjs.updateLocale('en', {
 
 For `date-fns`, use the `setDefaultOptions` utility:
 
-```tsx
+```ts
 import setDefaultOptions from 'date-fns/setDefaultOptions';
 
 setDefaultOptions({
@@ -292,24 +292,41 @@ setDefaultOptions({
 
 For `luxon`, use the `Settings.defaultWeekSettings` object:
 
-```tsx
+```ts
 import { Settings } from 'luxon';
 
 Settings.defaultWeekSettings = {
   // Sunday = 7, Monday = 1.
   firstDay: 1,
-
-  // Makes sure we don't loose the other information from `defaultWeekSettings
+  // Makes sure we don't lose the other information from `defaultWeekSettings`
   minimalDays: Info.getMinimumDaysInFirstWeek(),
-  weekend: [6, 7],
+  weekend: Info.getWeekendWeekdays(),
 };
 ```
 
+:::warning
+The browser API used by Luxon to determine the start of the week in the current locale is not yet supported by Firefox.
+Users on this browser will always see Monday as the start of the week.
+If you want to have the same start of week on all browsers,
+you will have to manually override the `defaultWeekSettings` to set the `firstDay` corresponding to your locale.
+
+For example, when using the `en-US` locale:
+
+```ts
+Settings.defaultWeekSettings = {
+  firstDay: 7,
+  minimalDays: Info.getMinimumDaysInFirstWeek(),
+  weekend: Info.getWeekendWeekdays(),
+};
+```
+
+:::
+
 ### With `moment`
 
-For `luxon`, use the `moment.updateLocale` method:
+For `moment`, use the `moment.updateLocale` method:
 
-```tsx
+```ts
 import moment from 'moment';
 
 // Replace "en" with the name of the locale you want to update.
