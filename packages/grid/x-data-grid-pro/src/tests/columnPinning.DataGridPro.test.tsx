@@ -7,7 +7,7 @@ import {
   useGridApiRef,
   DataGridProProps,
   gridClasses,
-  GridPinnedPosition,
+  GridPinnedColumnPosition,
   GridColumnGroupingModel,
   GridColDef,
 } from '@mui/x-data-grid-pro';
@@ -231,12 +231,12 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
-      act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
+      act(() => apiRef.current.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
       expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
         left: ['currencyPair'],
         right: [],
       });
-      act(() => apiRef.current.pinColumn('price17M', GridPinnedPosition.right));
+      act(() => apiRef.current.pinColumn('price17M', GridPinnedColumnPosition.RIGHT));
       expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
         left: ['currencyPair'],
         right: ['price17M'],
@@ -252,7 +252,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         />,
       );
       expect($$(`[role="cell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
-      act(() => apiRef.current.pinColumn('price17M', GridPinnedPosition.left));
+      act(() => apiRef.current.pinColumn('price17M', GridPinnedColumnPosition.LEFT));
       await microtasks();
       expect($$(`[role="cell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
       expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
@@ -276,7 +276,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(
         document.querySelector(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`),
       ).not.to.equal(null);
-      act(() => apiRef.current.pinColumn('price17M', GridPinnedPosition.left));
+      act(() => apiRef.current.pinColumn('price17M', GridPinnedColumnPosition.LEFT));
       expect(
         document.querySelector(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`),
       ).not.to.equal(null);
@@ -306,7 +306,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
     it('should throw an error when calling `apiRef.current.pinColumn`', () => {
       render(<TestCase disableColumnPinning />);
-      expect(() => apiRef.current.pinColumn('id', GridPinnedPosition.left)).to.throw();
+      expect(() => apiRef.current.pinColumn('id', GridPinnedColumnPosition.LEFT)).to.throw();
     });
 
     it('should throw an error when calling `apiRef.current.unpinColumn`', () => {
@@ -356,7 +356,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       it('should pin the given column', () => {
         render(<TestCase />);
         expect($('[data-field="currencyPair"]')?.className).not.to.include('pinned');
-        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
         expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(
           null,
         );
@@ -369,13 +369,13 @@ describe('<DataGridPro /> - Column pinning', () => {
 
         expect($(renderZone, '[data-field="currencyPair"]')!.className).not.to.include('pinned');
 
-        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
         expect(
           $(renderZone, `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`),
         ).not.to.equal(null);
         expect($(renderZone, '[data-field="currencyPair"]')!.className).to.include('pinned');
 
-        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.right));
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedColumnPosition.RIGHT));
         expect($$(renderZone, `.${gridClasses['cell--pinnedLeft']}`).length).to.equal(0);
         expect(
           $(renderZone, `.${gridClasses['cell--pinnedRight']}[data-field="currencyPair"]`),
@@ -384,9 +384,9 @@ describe('<DataGridPro /> - Column pinning', () => {
 
       it('should not change the columns when called on a pinned column with the same side ', () => {
         render(<TestCase />);
-        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
         expect($$(`.${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
-        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
         expect($$(`.${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
       });
     });
@@ -394,7 +394,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     describe('unpinColumn', () => {
       it('should unpin the given column', () => {
         render(<TestCase />);
-        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
         expect($$(`.${gridClasses['cell--pinnedLeft']}`).length).not.to.equal(0);
         act(() => apiRef.current.unpinColumn('currencyPair'));
         expect($$(`.${gridClasses['cell--pinnedLeft']}`).length).to.equal(0);
@@ -408,8 +408,8 @@ describe('<DataGridPro /> - Column pinning', () => {
         render(
           <TestCase initialState={{ pinnedColumns: { left: ['id'], right: ['price16M'] } }} />,
         );
-        expect(apiRef.current.isColumnPinned('id')).to.equal(GridPinnedPosition.left);
-        expect(apiRef.current.isColumnPinned('price16M')).to.equal(GridPinnedPosition.right);
+        expect(apiRef.current.isColumnPinned('id')).to.equal(GridPinnedColumnPosition.LEFT);
+        expect(apiRef.current.isColumnPinned('price16M')).to.equal(GridPinnedColumnPosition.RIGHT);
         expect(apiRef.current.isColumnPinned('currencyPair')).to.equal(false);
       });
     });

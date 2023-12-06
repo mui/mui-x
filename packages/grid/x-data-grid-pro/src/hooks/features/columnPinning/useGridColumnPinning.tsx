@@ -24,7 +24,7 @@ import {
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridColumnPinningApi, GridPinnedPosition } from './gridColumnPinningInterface';
+import { GridColumnPinningApi, GridPinnedColumnPosition } from './gridColumnPinningInterface';
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<
@@ -224,7 +224,7 @@ export const useGridColumnPinning = (
   );
 
   const pinColumn = React.useCallback<GridColumnPinningApi['pinColumn']>(
-    (field: string, side: GridPinnedPosition) => {
+    (field: string, side: GridPinnedColumnPosition) => {
       checkIfEnabled('pinColumn');
 
       if (apiRef.current.isColumnPinned(field) === side) {
@@ -232,7 +232,7 @@ export const useGridColumnPinning = (
       }
 
       const otherSide =
-        side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
+        side === GridPinnedColumnPosition.RIGHT ? GridPinnedColumnPosition.LEFT : GridPinnedColumnPosition.RIGHT;
 
       const newPinnedColumns = {
         [side]: [...(pinnedColumns[side] || []), field],
@@ -274,11 +274,11 @@ export const useGridColumnPinning = (
       checkIfEnabled('isColumnPinned');
       const leftPinnedColumns = pinnedColumns.left || [];
       if (leftPinnedColumns.includes(field)) {
-        return GridPinnedPosition.left;
+        return GridPinnedColumnPosition.LEFT;
       }
       const rightPinnedColumns = pinnedColumns.right || [];
       if (rightPinnedColumns.includes(field)) {
-        return GridPinnedPosition.right;
+        return GridPinnedColumnPosition.RIGHT;
       }
       return false;
     },
