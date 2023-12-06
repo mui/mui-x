@@ -54,9 +54,14 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
           width: 'auto',
         },
       },
+      [`&.${digitalClockClasses.root}`]: {
+        maxHeight: RANGE_VIEW_HEIGHT,
+        [`.${digitalClockClasses.item}`]: {
+          justifyContent: 'center',
+        },
+      },
       [`&.${multiSectionDigitalClockClasses.root},
-        .${multiSectionDigitalClockSectionClasses.root},
-        &.${digitalClockClasses.root}`]: {
+        .${multiSectionDigitalClockSectionClasses.root}`]: {
         maxHeight: RANGE_VIEW_HEIGHT - 1,
       },
       ...(Array.isArray(rendererProps.sx) ? rendererProps.sx : [rendererProps.sx]),
