@@ -186,7 +186,8 @@ export const useGridSorting = (
   );
 
   const sortColumn = React.useCallback<GridSortApi['sortColumn']>(
-    (column, direction, allowMultipleSorting) => {
+    (field, direction, allowMultipleSorting) => {
+      const column = apiRef.current.getColumn(field);
       if (!column.sortable) {
         return;
       }
@@ -307,18 +308,18 @@ export const useGridSorting = (
    * EVENTS
    */
   const handleColumnHeaderClick = React.useCallback<GridEventListener<'columnHeaderClick'>>(
-    ({ colDef }, event) => {
+    ({ field }, event) => {
       const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
-      sortColumn(colDef, undefined, allowMultipleSorting);
+      sortColumn(field, undefined, allowMultipleSorting);
     },
     [sortColumn],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
-    ({ colDef }, event) => {
+    ({ field }, event) => {
       // Ctrl + Enter opens the column menu
       if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
-        sortColumn(colDef, undefined, event.shiftKey);
+        sortColumn(field, undefined, event.shiftKey);
       }
     },
     [sortColumn],

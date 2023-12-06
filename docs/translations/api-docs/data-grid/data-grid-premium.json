@@ -56,6 +56,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "cellSelection": {
+      "description": "If <code>true</code>, the cell selection mode is enabled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "cellSelectionModel": {
+      "description": "Set the cell selection model of the grid.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "checkboxSelection": {
       "description": "If <code>true</code>, the grid get a first column with a checkbox that allows to select rows.",
       "deprecated": "",
@@ -313,6 +323,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "headerFilters": {
+      "description": "If <code>true</code>, enables the data grid filtering on header feature.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "hideFooter": {
       "description": "If <code>true</code>, the footer component is hidden.",
       "deprecated": "",
@@ -335,6 +350,11 @@
     },
     "ignoreDiacritics": {
       "description": "If <code>true</code>, the diacritics (accents) are ignored when filtering or quick filtering. E.g. when filter value is <code>cafe</code>, the rows with <code>café</code> will be visible.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "ignoreValueFormatterDuringExport": {
+      "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -458,6 +478,14 @@
       "deprecated": "",
       "typeDescriptions": {
         "cellModesModel": "Object containing which cells are in &quot;edit&quot; mode.",
+        "details": "Additional details for this callback."
+      }
+    },
+    "onCellSelectionModelChange": {
+      "description": "Callback fired when the selection state of one or multiple cells changes.",
+      "deprecated": "",
+      "typeDescriptions": {
+        "cellSelectionModel": "Object in the shape of GridCellSelectionModel containing the selected cells.",
         "details": "Additional details for this callback."
       }
     },
@@ -903,6 +931,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "splitClipboardPastedText": {
+      "description": "The function is used to split the pasted text into rows and cells.",
+      "deprecated": "",
+      "typeDescriptions": { "text": "The text pasted from the clipboard." }
+    },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
       "deprecated": "",
@@ -917,39 +950,6 @@
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop.",
       "deprecated": "",
       "typeDescriptions": {}
-    },
-    "unstable_cellSelection": {
-      "description": "If <code>true</code>, the cell selection mode is enabled.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "unstable_cellSelectionModel": {
-      "description": "Set the cell selection model of the grid.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "unstable_headerFilters": {
-      "description": "If <code>true</code>, enables the data grid filtering on header feature.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "unstable_ignoreValueFormatterDuringExport": {
-      "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "unstable_onCellSelectionModelChange": {
-      "description": "Callback fired when the selection state of one or multiple cells changes.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "cellSelectionModel": "Object in the shape of GridCellSelectionModel containing the selected cells.",
-        "details": "Additional details for this callback."
-      }
-    },
-    "unstable_splitClipboardPastedText": {
-      "description": "The function is used to split the pasted text into rows and cells.",
-      "deprecated": "",
-      "typeDescriptions": { "text": "The text pasted from the clipboard." }
     }
   },
   "classDescriptions": {

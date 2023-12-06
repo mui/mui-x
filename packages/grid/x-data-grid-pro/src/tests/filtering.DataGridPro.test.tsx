@@ -869,7 +869,7 @@ describe('<DataGridPro /> - Filter', () => {
 
   describe('Header filters', () => {
     it('should reflect the `filterModel` prop in header filters correctly', () => {
-      render(<TestCase filterModel={filterModel} unstable_headerFilters />);
+      render(<TestCase filterModel={filterModel} headerFilters />);
 
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
       const filterCellInput = getColumnHeaderCell(0, 1).querySelector('input');
@@ -877,7 +877,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should apply filters on type when the focus is on cell', () => {
-      render(<TestCase unstable_headerFilters />);
+      render(<TestCase headerFilters />);
 
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const filterCell = getColumnHeaderCell(0, 1);
@@ -892,7 +892,7 @@ describe('<DataGridPro /> - Filter', () => {
 
     it('should call `onFilterModelChange` when filters are updated', () => {
       const onFilterModelChange = spy();
-      render(<TestCase onFilterModelChange={onFilterModelChange} unstable_headerFilters />);
+      render(<TestCase onFilterModelChange={onFilterModelChange} headerFilters />);
 
       const filterCell = getColumnHeaderCell(0, 1);
       const filterCellInput = filterCell.querySelector('input')!;
@@ -920,7 +920,7 @@ describe('<DataGridPro /> - Filter', () => {
             },
           }}
           onFilterModelChange={onFilterModelChange}
-          unstable_headerFilters
+          headerFilters
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
@@ -952,7 +952,7 @@ describe('<DataGridPro /> - Filter', () => {
               },
             },
           }}
-          unstable_headerFilters
+          headerFilters
         />,
       );
 
@@ -967,7 +967,7 @@ describe('<DataGridPro /> - Filter', () => {
           columns={[
             { field: 'brand', headerName: 'Brand', renderHeaderFilter: () => 'Custom Filter Cell' },
           ]}
-          unstable_headerFilters
+          headerFilters
         />,
       );
 
@@ -990,7 +990,7 @@ describe('<DataGridPro /> - Filter', () => {
               ],
             },
           ]}
-          unstable_headerFilters
+          headerFilters
         />,
       );
 
