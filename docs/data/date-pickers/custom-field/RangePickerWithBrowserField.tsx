@@ -33,6 +33,7 @@ interface BrowserFieldProps
   focused?: boolean;
   ownerState?: any;
   sx?: any;
+  textField: 'v6' | 'v7';
 }
 
 type BrowserFieldComponent = ((
@@ -52,6 +53,7 @@ const BrowserField = React.forwardRef(
       focused,
       ownerState,
       sx,
+      textField,
       ...other
     } = props;
 
@@ -103,24 +105,26 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
       selectedSections,
       onSelectedSectionsChange,
       className,
+      unstableStartFieldRef,
+      unstableEndFieldRef,
     } = props;
 
-    const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
+    const startTextFieldProps = useSlotProps({
       elementType: 'input',
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'start' },
     }) as MultiInputFieldSlotTextFieldProps;
 
-    const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
+    const endTextFieldProps = useSlotProps({
       elementType: 'input',
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'end' },
     }) as MultiInputFieldSlotTextFieldProps;
 
-    const {
-      startDate: { ref: startRef, ...startDateProps },
-      endDate: { ref: endRef, ...endDateProps },
-    } = useMultiInputDateRangeField<Dayjs, MultiInputFieldSlotTextFieldProps>({
+    const fieldResponse = useMultiInputDateRangeField<
+      Dayjs,
+      MultiInputFieldSlotTextFieldProps
+    >({
       sharedProps: {
         value,
         defaultValue,
@@ -136,11 +140,12 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
+        shouldUseV6TextField: true,
       },
       startTextFieldProps,
       endTextFieldProps,
-      startInputRef,
-      endInputRef,
+      unstableStartFieldRef,
+      unstableEndFieldRef,
     });
 
     return (
@@ -151,9 +156,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         overflow="auto"
         className={className}
       >
-        <BrowserField {...startDateProps} inputRef={startRef} />
+        <BrowserField {...fieldResponse.startDate} />
         <span> — </span>
-        <BrowserField {...endDateProps} inputRef={endRef} />
+        <BrowserField {...fieldResponse.endDate} />
       </Stack>
     );
   },
