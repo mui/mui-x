@@ -305,7 +305,7 @@ Settings.defaultWeekSettings = {
 ```
 
 :::warning
-The browser API used by Luxon to determine the start of the week in the current locale is not yet supported by Firefox.
+The [browser API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) used by Luxon to determine the start of the week in the current locale is not yet supported by Firefox.
 Users on this browser will always see Monday as the start of the week.
 If you want to have the same start of week on all browsers,
 you will have to manually override the `defaultWeekSettings` to set the `firstDay` corresponding to your locale.
