@@ -6,7 +6,7 @@ import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
 import { GRID_SINGLE_SELECT_COL_DEF } from './gridSingleSelectColDef';
 import { GRID_ACTIONS_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from './gridActionsColDef';
 
-export const DEFAULT_GRID_COL_TYPE_KEY = '__default__';
+export const DEFAULT_GRID_COL_TYPE_KEY = 'string';
 export const getGridDefaultColumnTypes = () => {
   const nativeColumnTypes: GridColumnTypesRecord = {
     string: GRID_STRING_COL_DEF,
@@ -16,7 +16,6 @@ export const getGridDefaultColumnTypes = () => {
     boolean: GRID_BOOLEAN_COL_DEF,
     singleSelect: GRID_SINGLE_SELECT_COL_DEF,
     [GRID_ACTIONS_COLUMN_TYPE]: GRID_ACTIONS_COL_DEF,
-    [DEFAULT_GRID_COL_TYPE_KEY]: GRID_STRING_COL_DEF,
   };
 
   return nativeColumnTypes;
