@@ -312,7 +312,10 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
                 data-mui-test="minutes"
                 onClick={() => onViewChange('minutes')}
-                selected={markSelected && view === 'minutes'}
+                selected={
+                  markSelected &&
+                  (view === 'minutes' || (!views.includes('minutes') && view === 'hours'))
+                }
                 value={value ? utils.format(value, 'minutes') : '--'}
                 disabled={!views.includes('minutes')}
               />
