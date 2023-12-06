@@ -99,7 +99,7 @@ This property expects one of the following string values, corresponding to the i
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
-{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
 
 ### Optimization
 
