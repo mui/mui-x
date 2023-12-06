@@ -16,6 +16,7 @@ export const getGridDefaultColumnTypes = () => {
     boolean: GRID_BOOLEAN_COL_DEF,
     singleSelect: GRID_SINGLE_SELECT_COL_DEF,
     [GRID_ACTIONS_COLUMN_TYPE]: GRID_ACTIONS_COL_DEF,
+    custom: GRID_STRING_COL_DEF,
   };
 
   return nativeColumnTypes;
