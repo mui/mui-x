@@ -290,6 +290,10 @@ const buildAggregatedFilterItemsApplier = (
   return filterItem;
 };
 
+export const shouldQuickFilterExcludeHiddenColumns = (filterModel: GridFilterModel) => {
+  return filterModel.quickFilterExcludeHiddenColumns ?? true;
+};
+
 /**
  * Generates a method to easily check if a row is matching the current quick filter.
  * @param {any[]} filterModel The model with which we want to filter the rows.
@@ -305,9 +309,7 @@ const buildAggregatedQuickFilterApplier = (
     return null;
   }
 
-  const quickFilterExcludeHiddenColumns = filterModel.quickFilterExcludeHiddenColumns ?? false;
-
-  const columnFields = quickFilterExcludeHiddenColumns
+  const columnFields = shouldQuickFilterExcludeHiddenColumns(filterModel)
     ? gridVisibleColumnFieldsSelector(apiRef)
     : gridColumnFieldsSelector(apiRef);
 

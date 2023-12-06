@@ -1,4 +1,4 @@
-import { InputBaseProps } from '@mui/material/InputBase';
+import { BoxProps } from '@mui/material/Box';
 
 export interface PickersInputElement {
   container: React.HTMLAttributes<HTMLSpanElement>;
@@ -7,41 +7,49 @@ export interface PickersInputElement {
   after: React.HTMLAttributes<HTMLSpanElement>;
 }
 
-export interface CommonProps {
+export interface PickersInputPropsUsedByField {
+  /**
+   * The elements to render.
+   * Each element contains the prop to edit a section of the value.
+   */
   elements: PickersInputElement[];
-  defaultValue?: string;
-  label?: React.ReactNode;
+  /**
+   * Is `true` if the current values equals the empty value.
+   * For a single item value, it means that `value === null`
+   * For a range value, it means that `value === [null, null]`
+   */
+  areAllSectionsEmpty: boolean;
+
+  onClick: React.MouseEventHandler<HTMLDivElement>;
+  onKeyDown: React.KeyboardEventHandler<HTMLDivElement>;
+  onInput: React.FormEventHandler<HTMLDivElement>;
+  onPaste: React.ClipboardEventHandler<HTMLDivElement>;
+
   endAdornment?: React.ReactNode;
   startAdornment?: React.ReactNode;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  onBlur?: React.FocusEventHandler;
-  onFocus?: React.FocusEventHandler;
-  onKeyDown?: React.KeyboardEventHandler;
-  onKeyUp?: React.KeyboardEventHandler;
-  focused?: boolean;
-  areAllSectionsEmpty?: boolean;
-  value?: string;
+
+  tabIndex: number | undefined;
+  contentEditable: boolean;
+
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+
+  label?: React.ReactNode;
+  id?: string;
+  fullWidth?: boolean;
+  readOnly?: boolean;
+
+  inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
+  inputRef?: React.Ref<HTMLInputElement>;
+
+  sectionsContainerRef?: React.Ref<HTMLDivElement>;
 }
 
 export interface PickersInputProps
-  extends Omit<
-      InputBaseProps,
-      | 'children'
-      | 'defaultValue'
-      | 'onBlur'
-      | 'onChange'
-      | 'onFocus'
-      | 'onInvalid'
-      | 'onKeyDown'
-      | 'onKeyUp'
-      | 'value'
-      | 'margin'
-      | 'color'
-    >,
-    CommonProps {
+  extends Omit<BoxProps, keyof PickersInputPropsUsedByField>,
+    PickersInputPropsUsedByField {
   ownerState?: any;
   margin?: 'dense' | 'none' | 'normal';
-  onWrapperClick: () => void;
   renderSuffix?: (state: {
     disabled?: boolean;
     error?: boolean;
@@ -51,6 +59,18 @@ export interface PickersInputProps
     required?: boolean;
     adornedStart?: boolean;
   }) => React.ReactNode;
+  ref?: React.Ref<HTMLDivElement>;
+  /**
+   * The components used for each slot inside.
+   *
+   * This prop is an alias for the `components` prop, which will be deprecated in the future.
+   *
+   * @default {}
+   */
+  slots?: {
+    root?: React.ElementType;
+    input?: React.ElementType;
+  };
 }
 
 export interface PickersOutlinedInputProps extends PickersInputProps {

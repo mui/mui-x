@@ -1,35 +1,35 @@
-import { BaseTextFieldProps, TextFieldClasses, TextFieldVariants } from '@mui/material/TextField';
+import * as React from 'react';
+import { FormControlProps } from '@mui/material/FormControl';
+import { FormHelperTextProps } from '@mui/material/FormHelperText';
+import { InputLabelProps } from '@mui/material/InputLabel';
+import { TextFieldVariants } from '@mui/material/TextField';
 import {
-  CommonProps,
   PickersFilledInputProps,
+  PickersInputPropsUsedByField,
   PickersOutlinedInputProps,
   PickersStandardInputProps,
 } from '../PickersInput/PickersInput.types';
 
+interface PickersTextFieldPropsUsedByField {
+  onFocus: React.FocusEventHandler<HTMLDivElement>;
+  onBlur: React.FocusEventHandler<HTMLDivElement>;
+  disabled: boolean;
+  error: boolean;
+}
+
 export interface PickersBaseTextFieldProps
-  extends Omit<
-      BaseTextFieldProps,
-      | 'inputProps'
-      | 'defaultValue'
-      | 'onBlur'
-      | 'onChange'
-      | 'onFocus'
-      | 'onInvalid'
-      | 'onKeyDown'
-      | 'onKeyUp'
-      | 'value'
-    >,
-    CommonProps {
-  classes?: Partial<TextFieldClasses>;
-  className?: string;
-  disabled?: boolean;
-  error?: boolean;
-  fullWidth?: boolean;
+  extends PickersInputPropsUsedByField,
+    PickersTextFieldPropsUsedByField,
+    Omit<
+      FormControlProps,
+      keyof PickersInputPropsUsedByField | keyof PickersTextFieldPropsUsedByField
+    > {
+  FormHelperTextProps?: Partial<FormHelperTextProps>;
+  InputLabelProps?: Partial<InputLabelProps>;
+  /**
+   * The helper text content.
+   */
   helperText?: React.ReactNode;
-  size?: 'small' | 'medium';
-  variant?: 'filled' | 'outlined' | 'standard';
-  required?: boolean;
-  inputProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export interface PickersStandardTextFieldProps extends PickersBaseTextFieldProps {

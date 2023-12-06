@@ -38,7 +38,7 @@ It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
 And a value of `-1` will make bars overlap on top of each over.
 
-{{"demo": "BarGapNoSnap.js"}}
+{{"demo": "BarGapNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Stacking
 
@@ -58,7 +58,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 ## Layout
 
 Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
-If you're using [composition](/x/react-charts/#multiple-charts), you should set the property `layout: 'horizontal'` to each bar series object.
+If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
 

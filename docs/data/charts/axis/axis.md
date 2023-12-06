@@ -156,13 +156,13 @@ For example `leftAxis={null}` hides the left axis.
 
 Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
 
-{{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Text customization
 
 To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
 
-{{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Composition
 

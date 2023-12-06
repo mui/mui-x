@@ -11,7 +11,15 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 
-const blogs = [
+type Blog = {
+  title: string;
+  announcementDate: string;
+  description: string;
+  url: string;
+  highlightList: { title: string; url: string }[];
+};
+
+const blogs: Blog[] = [
   {
     title: 'MUI X v6.18.x',
     description:
@@ -185,7 +193,7 @@ const blogs = [
   },
 ];
 
-function BlogCard(props) {
+function BlogCard(props: { blog: Blog }) {
   return (
     <Card
       sx={{
@@ -276,7 +284,7 @@ function BlogCard(props) {
   );
 }
 
-export default function WhatsNewLayout() {
+export default function WhatsNewLayoutNoSnap() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
       {blogs.map((blog) => (

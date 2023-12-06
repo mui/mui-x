@@ -1,11 +1,21 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 
+interface OutlineProps extends React.HTMLAttributes<HTMLFieldSetElement> {
+  notched: boolean;
+  shrink: boolean;
+  label: React.ReactNode;
+}
+
+interface OutlineOwnerState extends OutlineProps {
+  withLabel: boolean;
+}
+
 const OutlineRoot = styled('fieldset', {
   name: 'MuiPickersOutliendInput',
   slot: 'NotchedOutline',
   overridesResolver: (props, styles) => styles.notchedOutline,
-})(({ theme }) => {
+})<{ ownerState: OutlineOwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
@@ -75,12 +85,11 @@ const OutlineLegend = styled('legend')<{ ownerState: any }>(({ ownerState, theme
   }),
 }));
 
-export default function Outline(props) {
-  const { children, classes, className, label, notched, ...other } = props;
+export default function Outline(props: OutlineProps) {
+  const { children, className, label, ...other } = props;
   const withLabel = label != null && label !== '';
   const ownerState = {
     ...props,
-    notched,
     withLabel,
   };
   return (
