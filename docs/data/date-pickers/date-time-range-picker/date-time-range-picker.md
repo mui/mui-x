@@ -94,6 +94,12 @@ You can find more information in a [dedicated documentation page section](/x/rea
 
 You can find the documentation in the [Custom field page](/x/react-date-pickers/custom-field/).
 
+### Change view renderer
+
+You can pass a different view renderer to the Date Time Range Picker to customize the views.
+
+{{"demo": "DateTimeRangePickerViewRenderer.js"}}
+
 ## Validation
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
