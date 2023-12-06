@@ -220,16 +220,16 @@ By default, columns are assumed to hold strings, so the default column string ty
 
 The following are the native column types with their required value types:
 
-| Column type            | Value type                          |
-| :--------------------- | :---------------------------------- |
-| `'string'` (default)   | `string`                            |
-| `'number'`             | `number`                            |
-| `'date'`               | `Date() object`                     |
-| `'dateTime'`           | `Date() object`                     |
-| `'boolean'`            | `boolean`                           |
-| `'singleSelect'`       | A value in `.valueOptions`          |
-| `'multipleSelect'`     | A list of values in `.valueOptions` |
-| `'actions'`            | Not applicable                      |
+| Column type          | Value type                          |
+| :------------------- | :---------------------------------- |
+| `'string'` (default) | `string`                            |
+| `'number'`           | `number`                            |
+| `'date'`             | `Date() object`                     |
+| `'dateTime'`         | `Date() object`                     |
+| `'boolean'`          | `boolean`                           |
+| `'singleSelect'`     | A value in `.valueOptions`          |
+| `'multipleSelect'`   | A list of values in `.valueOptions` |
+| `'actions'`          | Not applicable                      |
 
 ### Converting types
 
