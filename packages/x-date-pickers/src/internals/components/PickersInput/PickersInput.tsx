@@ -24,6 +24,7 @@ export const PickersInputRoot = styled(Box, {
   position: 'relative',
   ...(ownerState.fullWidth && {
     width: '100%',
+    background: 'red',
   }),
 }));
 

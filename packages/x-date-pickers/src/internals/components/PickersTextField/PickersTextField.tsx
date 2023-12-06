@@ -120,6 +120,7 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
       variant={variant}
       error={error}
       color={color}
+      fullWidth={fullWidth}
       required={required}
       ownerState={ownerState}
       {...other}
