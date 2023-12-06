@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import {
   PickersLayout,
   PickersLayoutSlotsComponentsProps,
@@ -45,6 +46,9 @@ export const useMobileRangePicker = <
     sx,
     format,
     formatDensity,
+    shouldUseV6TextField,
+    selectedSections,
+    onSelectedSectionsChange,
     timezone,
     label,
     inputRef,
@@ -54,7 +58,14 @@ export const useMobileRangePicker = <
     localeText,
   } = props;
 
-  const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
+  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+
+  const fieldType = (slots.field as any).fieldType ?? 'multi-input';
+  const { rangePosition, onRangePositionChange } = useRangePosition(
+    props,
+    fieldType === 'single-input' ? startFieldRef : undefined,
+  );
   const labelId = useId();
   const contextLocaleText = useLocaleText();
 
@@ -76,6 +87,7 @@ export const useMobileRangePicker = <
     props,
     wrapperVariant: 'mobile',
     autoFocusView: true,
+    fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
@@ -83,7 +95,6 @@ export const useMobileRangePicker = <
   });
 
   const Field = slots.field;
-  const fieldType = (Field as any).fieldType ?? 'multi-input';
 
   const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
@@ -101,8 +112,11 @@ export const useMobileRangePicker = <
       sx,
       format,
       formatDensity,
+      shouldUseV6TextField,
+      selectedSections,
+      onSelectedSectionsChange,
       timezone,
-      ...(fieldType === 'single-input' && { inputRef }),
+      ...(inputRef ? { inputRef } : {}),
     },
     ownerState: props,
   });
@@ -125,10 +139,11 @@ export const useMobileRangePicker = <
     localeText,
     rangePosition,
     onRangePositionChange,
-    singleInputFieldRef,
     pickerSlots: slots,
     pickerSlotProps: innerSlotProps,
     fieldProps,
+    startFieldRef,
+    endFieldRef,
   });
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {

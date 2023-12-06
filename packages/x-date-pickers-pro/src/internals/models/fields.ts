@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import { BaseFieldProps, FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
-import { FieldSection } from '@mui/x-date-pickers/models';
+import { FieldRef, FieldSection } from '@mui/x-date-pickers/models';
 
 export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
@@ -35,6 +35,8 @@ export interface MultiInputFieldSlotRootProps {
  */
 export interface BaseMultiInputFieldProps<TValue, TDate, TSection extends FieldSection, TError>
   extends BaseFieldProps<TValue, TDate, TSection, TError> {
+  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   slots?: {
     root?: React.ElementType;
     separator?: React.ElementType;

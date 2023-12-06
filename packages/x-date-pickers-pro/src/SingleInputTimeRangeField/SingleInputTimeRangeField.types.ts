@@ -5,11 +5,6 @@ import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/field
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from '@mui/x-date-pickers/internals';
 import { UseTimeRangeFieldDefaultizedProps, UseTimeRangeFieldProps } from '../internals/models';
 
-export interface UseSingleInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  props: UseSingleInputTimeRangeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
-
 export interface UseSingleInputTimeRangeFieldProps<TDate> extends UseTimeRangeFieldProps<TDate> {}
 
 export type UseSingleInputTimeRangeFieldDefaultizedProps<

@@ -7,12 +7,10 @@ export type {
   UseFieldResponse,
   FieldChangeHandler,
   FieldChangeHandlerContext,
-  FieldRef,
   FieldSlotsComponents,
   FieldSlotsComponentsProps,
 } from './useField.types';
 export {
-  splitFormatIntoSections,
-  addPositionPropertiesToSections,
-  createDateStrForInputFromSections,
+  createDateStrForV7HiddenInputFromSections,
+  createDateStrForV6InputFromSections,
 } from './useField.utils';

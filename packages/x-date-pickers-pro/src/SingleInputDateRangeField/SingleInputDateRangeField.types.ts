@@ -8,11 +8,6 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { UseDateRangeFieldDefaultizedProps, UseDateRangeFieldProps } from '../internals/models';
 
-export interface UseSingleInputDateRangeFieldParams<TDate, TChildProps extends {}> {
-  props: UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
-
 export interface UseSingleInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
 
 export type UseSingleInputDateRangeFieldDefaultizedProps<

@@ -52,8 +52,8 @@ export interface UsePickerParams<
       'valueManager' | 'valueType' | 'wrapperVariant' | 'validator'
     >,
     Pick<
-      UsePickerViewParams<TValue, TDate, TView, TExternalProps, TAdditionalProps>,
-      'additionalViewProps' | 'inputRef' | 'autoFocusView'
+      UsePickerViewParams<TValue, TDate, TView, TSection, TExternalProps, TAdditionalProps>,
+      'additionalViewProps' | 'autoFocusView' | 'fieldRef'
     > {
   props: TExternalProps;
 }

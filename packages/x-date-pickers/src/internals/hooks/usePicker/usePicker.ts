@@ -25,10 +25,10 @@ export const usePicker = <
   valueManager,
   valueType,
   wrapperVariant,
-  inputRef,
   additionalViewProps,
   validator,
   autoFocusView,
+  fieldRef,
 }: UsePickerParams<
   TValue,
   TDate,
@@ -54,13 +54,14 @@ export const usePicker = <
     TValue,
     TDate,
     TView,
+    TSection,
     TExternalProps,
     TAdditionalProps
   >({
     props,
-    inputRef,
     additionalViewProps,
     autoFocusView,
+    fieldRef,
     propsFromPickerValue: pickerValueResponse.viewProps,
   });
 

@@ -4,13 +4,11 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import {
-  DateFieldProps,
-  DateFieldSlotsComponent,
-  DateFieldSlotsComponentsProps,
-} from './DateField.types';
+import { DateFieldProps } from './DateField.types';
 import { useDateField } from './useDateField';
 import { useClearableField } from '../hooks';
+import { PickersTextField } from '../internals/components/PickersTextField';
+import { useConvertFieldResponseIntoMuiTextFieldProps } from '../internals/hooks/useConvertFieldResponseIntoMuiTextFieldProps';
 
 type DateFieldComponent = (<TDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -28,7 +26,7 @@ type DateFieldComponent = (<TDate>(
  */
 const DateField = React.forwardRef(function DateField<TDate>(
   inProps: DateFieldProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
+  inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,
@@ -39,11 +37,15 @@ const DateField = React.forwardRef(function DateField<TDate>(
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? MuiTextField;
-  const { inputRef: externalInputRef, ...textFieldProps }: DateFieldProps<TDate> = useSlotProps({
+  const TextField =
+    slots?.textField ?? (inProps.shouldUseV6TextField ? MuiTextField : PickersTextField);
+  const textFieldProps: DateFieldProps<TDate> = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
+    additionalProps: {
+      ref: inRef,
+    },
     ownerState,
   });
 
@@ -51,45 +53,16 @@ const DateField = React.forwardRef(function DateField<TDate>(
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const {
-    ref: inputRef,
-    onPaste,
-    onKeyDown,
-    inputMode,
-    readOnly,
-    clearable,
-    onClear,
-    ...fieldProps
-  } = useDateField<TDate, typeof textFieldProps>({
-    props: textFieldProps,
-    inputRef: externalInputRef,
-  });
+  const fieldResponse = useDateField<TDate, typeof textFieldProps>(textFieldProps);
+  const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
-    typeof fieldProps,
-    typeof fieldProps.InputProps,
-    DateFieldSlotsComponent,
-    DateFieldSlotsComponentsProps<TDate>
-  >({
-    onClear,
-    clearable,
-    fieldProps,
-    InputProps: fieldProps.InputProps,
+  const processedFieldProps = useClearableField({
+    props: convertedFieldResponse,
     slots,
     slotProps,
   });
 
-  return (
-    <TextField
-      ref={ref}
-      {...processedFieldProps}
-      InputProps={{
-        ...ProcessedInputProps,
-        readOnly,
-      }}
-      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
-    />
-  );
+  return <TextField {...processedFieldProps} />;
 }) as DateFieldComponent;
 
 DateField.propTypes = {
@@ -263,9 +236,9 @@ DateField.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -281,10 +254,6 @@ DateField.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -325,6 +294,10 @@ DateField.propTypes = {
    * @default `false`
    */
   shouldRespectLeadingZeros: PropTypes.bool,
+  /**
+   * @defauilt false
+   */
+  shouldUseV6TextField: PropTypes.bool,
   /**
    * The size of the component.
    */

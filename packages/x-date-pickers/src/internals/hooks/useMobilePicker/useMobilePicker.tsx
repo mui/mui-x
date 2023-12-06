@@ -10,7 +10,7 @@ import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
-import { FieldSection, BaseSingleInputFieldProps } from '../../../models';
+import { FieldSection, BaseSingleInputFieldProps, FieldRef } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -35,6 +35,9 @@ export const useMobilePicker = <
     sx,
     format,
     formatDensity,
+    shouldUseV6TextField,
+    selectedSections,
+    onSelectedSectionsChange,
     timezone,
     label,
     inputRef,
@@ -44,7 +47,8 @@ export const useMobilePicker = <
   } = props;
 
   const utils = useUtils<TDate>();
-  const internalInputRef = React.useRef<HTMLInputElement>(null);
+  const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
@@ -57,7 +61,7 @@ export const useMobilePicker = <
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
-    inputRef: internalInputRef,
+    fieldRef,
     autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'mobile',
@@ -85,8 +89,12 @@ export const useMobilePicker = <
       sx,
       format,
       formatDensity,
+      shouldUseV6TextField,
+      selectedSections,
+      onSelectedSectionsChange,
       timezone,
       label,
+      ...(inputRef ? { inputRef } : {}),
     },
     ownerState: props,
   });
@@ -109,8 +117,6 @@ export const useMobilePicker = <
 
   const Layout = slots.layout ?? PickersLayout;
 
-  const handleInputRef = useForkRef(internalInputRef, fieldProps.inputRef, inputRef);
-
   let labelledById = labelId;
   if (isToolbarHidden) {
     if (label) {
@@ -131,13 +137,15 @@ export const useMobilePicker = <
     },
   };
 
+  const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <Field
         {...fieldProps}
         slots={slotsForField}
         slotProps={slotProps}
-        inputRef={handleInputRef}
+        unstableFieldRef={handleFieldRef}
       />
       <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
         <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>

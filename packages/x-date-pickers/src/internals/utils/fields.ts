@@ -14,11 +14,13 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'onChange',
   'timezone',
   'readOnly',
+  'autoFocus',
   'onError',
   'shouldRespectLeadingZeros',
   'selectedSections',
   'onSelectedSectionsChange',
   'unstableFieldRef',
+  'shouldUseV6TextField',
 ] as const;
 
 export const splitFieldInternalAndForwardedProps = <

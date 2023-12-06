@@ -70,11 +70,13 @@ const PickersInputSectionsContainer = styled('div', {
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+  direction: 'ltr /*! @noflip */' as any,
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
-  flexGrow: 1,
   outline: 'none',
+  flexGrow: 1,
+  ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
   ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
     color: 'currentColor',
     ...(ownerState.label == null &&

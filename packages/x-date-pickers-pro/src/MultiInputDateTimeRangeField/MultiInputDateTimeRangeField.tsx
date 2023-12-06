@@ -14,6 +14,8 @@ import {
 import {
   splitFieldInternalAndForwardedProps,
   FieldsTextFieldProps,
+  PickersTextField,
+  useConvertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
@@ -92,7 +94,6 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     slots,
     slotProps,
     disabled,
-    autoFocus,
     unstableStartFieldRef,
     unstableEndFieldRef,
     className,
@@ -114,11 +115,11 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     className: clsx(className, classes.root),
   });
 
-  const TextField = slots?.textField ?? MuiTextField;
+  const TextField =
+    slots?.textField ?? (inProps.shouldUseV6TextField ? MuiTextField : PickersTextField);
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
-    additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
   const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
@@ -135,63 +136,22 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     className: classes.separator,
   });
 
-  const {
-    startDate: {
-      onKeyDown: onStartInputKeyDown,
-      ref: startInputRef,
-      readOnly: startReadOnly,
-      inputMode: startInputMode,
-      ...startDateProps
-    },
-    endDate: {
-      onKeyDown: onEndInputKeyDown,
-      ref: endInputRef,
-      readOnly: endReadOnly,
-      inputMode: endInputMode,
-      ...endDateProps
-    },
-  } = useMultiInputDateTimeRangeField<TDate, FieldsTextFieldProps>({
+  const fieldResponse = useMultiInputDateTimeRangeField<TDate, FieldsTextFieldProps>({
     sharedProps: { ...dateTimeFieldInternalProps, disabled },
     startTextFieldProps,
     endTextFieldProps,
-    startInputRef: startTextFieldProps.inputRef,
     unstableStartFieldRef,
-    endInputRef: endTextFieldProps.inputRef,
     unstableEndFieldRef,
   });
 
+  const startDateProps = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse.startDate);
+  const endDateProps = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse.endDate);
+
   return (
     <Root {...rootProps}>
-      <TextField
-        fullWidth
-        {...startDateProps}
-        InputProps={{
-          ...startDateProps.InputProps,
-          readOnly: startReadOnly,
-        }}
-        inputProps={{
-          ...startDateProps.inputProps,
-          ref: startInputRef,
-          inputMode: startInputMode,
-          onKeyDown: onStartInputKeyDown,
-        }}
-      />
+      <TextField fullWidth {...startDateProps} />
       <Separator {...separatorProps} />
-      <TextField
-        fullWidth
-        {...endDateProps}
-        InputProps={{
-          ...endDateProps.InputProps,
-          readOnly: endReadOnly,
-        }}
-        inputProps={{
-          ...endDateProps.inputProps,
-          ref: endInputRef,
-          readOnly: endReadOnly,
-          inputMode: endInputMode,
-          onKeyDown: onEndInputKeyDown,
-        }}
-      />
+      <TextField fullWidth {...endDateProps} />
     </Root>
   );
 }) as MultiInputDateTimeRangeFieldComponent;
@@ -206,6 +166,9 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
@@ -329,9 +292,9 @@ MultiInputDateTimeRangeField.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -347,10 +310,6 @@ MultiInputDateTimeRangeField.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -386,6 +345,10 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default `false`
    */
   shouldRespectLeadingZeros: PropTypes.bool,
+  /**
+   * @defauilt false
+   */
+  shouldUseV6TextField: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

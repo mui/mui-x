@@ -5,10 +5,15 @@ import { adapterToUse } from 'test/utils/pickers';
 
 const isDisable = (el: HTMLElement) => el.getAttribute('disabled') !== null;
 
+const isFieldElement = (el: HTMLElement) => el.className.includes('MuiPickersInput');
+
 const testDisabledDate = (day: string, expectedAnswer: boolean[], isDesktop: boolean) => {
-  expect(screen.getAllByText(day).map(isDisable)).to.deep.equal(
-    isDesktop ? expectedAnswer : expectedAnswer.slice(0, 1),
-  );
+  expect(
+    screen
+      .getAllByText(day)
+      .filter((el) => !isFieldElement(el))
+      .map(isDisable),
+  ).to.deep.equal(isDesktop ? expectedAnswer : expectedAnswer.slice(0, 1));
 };
 
 const testMonthSwitcherAreDisable = (areDisable: [boolean, boolean]) => {

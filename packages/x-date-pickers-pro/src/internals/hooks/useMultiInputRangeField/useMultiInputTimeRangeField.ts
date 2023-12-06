@@ -29,6 +29,7 @@ import type {
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 import { excludeProps } from './shared';
+import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 
 export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseMultiInputTimeRangeFieldProps<TDate>,
@@ -49,10 +50,8 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
 export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {}>({
   sharedProps: inSharedProps,
   startTextFieldProps,
-  startInputRef,
   unstableStartFieldRef,
   endTextFieldProps,
-  endInputRef,
   unstableEndFieldRef,
 }: UseMultiInputTimeRangeFieldParams<
   TDate,
@@ -74,6 +73,7 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     readOnly,
     selectedSections,
     onSelectedSectionsChange,
+    autoFocus,
   } = sharedProps;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
@@ -121,23 +121,29 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     rangeValueManager.defaultErrorState,
   );
 
+  const selectedSectionsResponse = useMultiInputFieldSelectedSections({
+    selectedSections,
+    onSelectedSectionsChange,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
+  });
+
   const startFieldProps: UseTimeFieldComponentProps<
     TDate,
     UseTimeFieldDefaultizedProps<TTextFieldSlotProps>
   > = {
     error: !!validationError[0],
     ...startTextFieldProps,
+    ...selectedSectionsResponse.start,
     format,
     shouldRespectLeadingZeros,
     disabled,
     readOnly,
     timezone,
-    unstableFieldRef: unstableStartFieldRef,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
-    selectedSections,
-    onSelectedSectionsChange,
+    autoFocus, // Do not add on end field.
   };
 
   const endFieldProps: UseTimeFieldComponentProps<
@@ -146,28 +152,23 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
   > = {
     error: !!validationError[1],
     ...endTextFieldProps,
+    ...selectedSectionsResponse.end,
     format,
     shouldRespectLeadingZeros,
     disabled,
     readOnly,
     timezone,
-    unstableFieldRef: unstableEndFieldRef,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
-    selectedSections,
-    onSelectedSectionsChange,
   };
 
-  const startDateResponse = useTimeField({
-    props: startFieldProps,
-    inputRef: startInputRef,
-  }) as UseFieldResponse<TTextFieldSlotProps>;
+  const startDateResponse = useTimeField(startFieldProps) as UseFieldResponse<
+    TTextFieldSlotProps,
+    any
+  >;
 
-  const endDateResponse = useTimeField({
-    props: endFieldProps,
-    inputRef: endInputRef,
-  }) as UseFieldResponse<TTextFieldSlotProps>;
+  const endDateResponse = useTimeField(endFieldProps) as UseFieldResponse<TTextFieldSlotProps, any>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

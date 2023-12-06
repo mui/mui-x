@@ -28,15 +28,13 @@ import {
   SingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import type {
-  SingleInputDateRangeFieldSlotsComponent,
-  SingleInputDateRangeFieldSlotsComponentsProps,
-} from '@mui/x-date-pickers-pro/SingleInputDateRangeField/SingleInputDateRangeField.types';
 
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
+  inputRef?: React.Ref<HTMLInputElement>;
+  textField?: 'v6' | 'v7';
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -58,6 +56,8 @@ const JoyField = React.forwardRef(
       endDecorator,
       startDecorator,
       slotProps,
+      inputRef,
+      textField,
       ...other
     } = props;
 
@@ -82,6 +82,7 @@ const JoyField = React.forwardRef(
           slotProps={{
             ...slotProps,
             root: { ...slotProps?.root, ref: containerRef },
+            input: { ...slotProps?.input, ref: inputRef },
           }}
           {...other}
         />
@@ -103,10 +104,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
   (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
 
-    const {
-      inputRef: externalInputRef,
-      ...textFieldProps
-    }: SingleInputDateRangeFieldProps<
+    const textFieldProps: SingleInputDateRangeFieldProps<
       Dayjs,
       JoyFieldProps & { inputRef: React.Ref<HTMLInputElement> }
     > = useSlotProps({
@@ -116,41 +114,21 @@ const JoySingleInputDateRangeField = React.forwardRef(
       ownerState: props as any,
     });
 
-    const {
-      onClear,
-      clearable,
-      ref: inputRef,
-      ...fieldProps
-    } = useSingleInputDateRangeField<Dayjs, JoyFieldProps>({
-      props: textFieldProps,
-      inputRef: externalInputRef,
-    });
+    const fieldResponse = useSingleInputDateRangeField<Dayjs, JoyFieldProps>(
+      textFieldProps,
+    );
 
     /* If you don't need a clear button, you can skip the use of this hook */
-    const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-      useClearableField<
-        {},
-        typeof textFieldProps.InputProps,
-        SingleInputDateRangeFieldSlotsComponent,
-        SingleInputDateRangeFieldSlotsComponentsProps<Dayjs>
-      >({
-        onClear,
-        clearable,
-        fieldProps,
-        InputProps: fieldProps.InputProps,
-        slots: { ...slots, clearButton: IconButton },
-        slotProps: { ...slotProps, clearIcon: { color: 'action' } },
-      });
+    const processedFieldProps = useClearableField({
+      props: fieldResponse as any,
+      slots: { ...slots, clearButton: IconButton },
+      slotProps: { ...slotProps, clearIcon: { color: 'action' } },
+    });
 
     return (
       <JoyField
         {...processedFieldProps}
         ref={ref}
-        slotProps={{
-          input: {
-            ref: inputRef,
-          },
-        }}
         endDecorator={
           <IconButton
             onClick={onAdornmentClick}
@@ -161,7 +139,6 @@ const JoySingleInputDateRangeField = React.forwardRef(
             <DateRangeIcon color="action" />
           </IconButton>
         }
-        InputProps={{ ...ProcessedInputProps }}
       />
     );
   },
@@ -196,6 +173,7 @@ const JoySingleInputDateRangePicker = React.forwardRef(
           field: {
             ...props?.slotProps?.field,
             onAdornmentClick: toggleOpen,
+            shouldUseV6TextField: true,
           } as any,
         }}
       />

@@ -91,6 +91,7 @@ export interface DesktopOnlyPickerProps<TDate>
     UsePickerViewsNonStaticProps {
   /**
    * If `true`, the `input` element is focused during the first mount.
+   * @default false
    */
   autoFocus?: boolean;
 }

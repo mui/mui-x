@@ -8,11 +8,6 @@ import { FieldsTextFieldProps } from '../internals/models/fields';
 import { FieldSection, TimeValidationError } from '../models';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../internals';
 
-export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
-  props: UseTimeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
-
 export interface UseTimeFieldProps<TDate>
   extends MakeOptional<
       UseFieldInternalProps<TDate | null, TDate, FieldSection, TimeValidationError>,

@@ -84,7 +84,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection } = renderWithProps({
+        const { selectSection, pressKey } = renderWithProps({
           onChange,
           onAccept,
           onClose,
@@ -95,7 +95,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection });
+        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
         userEvent.mousePress(screen.getByText(/cancel/i));
@@ -144,7 +144,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection } = renderWithProps({
+        const { selectSection, pressKey } = renderWithProps({
           onChange,
           onAccept,
           onClose,
@@ -155,7 +155,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection });
+        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
         userEvent.mousePress(screen.getByText(/ok/i));

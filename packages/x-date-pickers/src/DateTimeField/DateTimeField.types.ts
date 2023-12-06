@@ -16,11 +16,6 @@ import {
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../internals';
 
-export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
-  props: UseDateTimeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
-
 export interface UseDateTimeFieldProps<TDate>
   extends MakeOptional<
       UseFieldInternalProps<TDate | null, TDate, FieldSection, DateTimeValidationError>,

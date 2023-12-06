@@ -34,6 +34,8 @@ const JoyField = React.forwardRef((props, ref) => {
     endDecorator,
     startDecorator,
     slotProps,
+    inputRef,
+    textField,
     ...other
   } = props;
 
@@ -58,6 +60,7 @@ const JoyField = React.forwardRef((props, ref) => {
         slotProps={{
           ...slotProps,
           root: { ...slotProps?.root, ref: containerRef },
+          input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
       />
@@ -116,24 +119,22 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
     selectedSections,
     onSelectedSectionsChange,
     className,
+    shouldUseV6TextField,
   } = props;
 
-  const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
+  const startTextFieldProps = useSlotProps({
     elementType: FormControl,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'start' },
   });
 
-  const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
+  const endTextFieldProps = useSlotProps({
     elementType: FormControl,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'end' },
   });
 
-  const {
-    startDate: { ref: startRef, ...startDateProps },
-    endDate: { ref: endRef, ...endDateProps },
-  } = useMultiInputDateRangeField({
+  const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
       value,
       defaultValue,
@@ -149,32 +150,17 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      shouldUseV6TextField,
     },
     startTextFieldProps,
     endTextFieldProps,
-    startInputRef,
-    endInputRef,
   });
 
   return (
     <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
-      <JoyField
-        {...startDateProps}
-        slotProps={{
-          input: {
-            ref: startRef,
-          },
-        }}
-      />
+      <JoyField {...fieldResponse.startDate} />
       <MultiInputJoyDateRangeFieldSeparator />
-      <JoyField
-        {...endDateProps}
-        slotProps={{
-          input: {
-            ref: endRef,
-          },
-        }}
-      />
+      <JoyField {...fieldResponse.endDate} />
     </MultiInputJoyDateRangeFieldRoot>
   );
 });
@@ -185,6 +171,9 @@ const JoyDateRangePicker = React.forwardRef((props, ref) => {
       ref={ref}
       {...props}
       slots={{ ...props?.slots, field: JoyMultiInputDateRangeField }}
+      slotProps={{
+        field: { shouldUseV6TextField: true },
+      }}
     />
   );
 });

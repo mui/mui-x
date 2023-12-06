@@ -1,3 +1,4 @@
+export { PickersTextField } from './components/PickersTextField';
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher/PickersArrowSwitcher';
 export type {
   ExportedPickersArrowSwitcherProps,
@@ -51,12 +52,13 @@ export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
+export { useConvertFieldResponseIntoMuiTextFieldProps } from './hooks/useConvertFieldResponseIntoMuiTextFieldProps';
 export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
-  createDateStrForInputFromSections,
-  addPositionPropertiesToSections,
+  createDateStrForV7HiddenInputFromSections,
+  createDateStrForV6InputFromSections,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,

@@ -1,18 +1,17 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui-internal/test-utils';
-import { adapterToUse } from 'test/utils/pickers';
+import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput: boolean | undefined) => {
   const answers = isSingleInput ? [expectedAnswer[0] || expectedAnswer[1]] : expectedAnswer;
 
-  const textBoxes = screen.getAllByRole('textbox');
+  const fields = getAllFieldInputRoot();
   answers.forEach((answer, index) => {
-    const textBox = textBoxes[index];
+    const fieldRoot = fields[index];
 
-    expect(textBox).to.have.attribute('aria-invalid', answer ? 'true' : 'false');
+    expect(fieldRoot).to.have.attribute('aria-invalid', answer ? 'true' : 'false');
   });
 };
 

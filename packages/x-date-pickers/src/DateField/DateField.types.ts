@@ -13,11 +13,6 @@ import {
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 
-export interface UseDateFieldParams<TDate, TChildProps extends {}> {
-  props: UseDateFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
-
 export interface UseDateFieldProps<TDate>
   extends MakeOptional<
       UseFieldInternalProps<TDate | null, TDate, FieldSection, DateValidationError>,

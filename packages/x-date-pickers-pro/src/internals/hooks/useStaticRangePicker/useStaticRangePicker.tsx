@@ -50,6 +50,7 @@ export const useStaticRangePicker = <
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
+    fieldRef: undefined,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,

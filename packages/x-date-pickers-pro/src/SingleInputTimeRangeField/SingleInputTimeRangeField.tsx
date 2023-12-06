@@ -1,15 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
 import MuiTextField from '@mui/material/TextField';
+import { useClearableField } from '@mui/x-date-pickers/hooks';
+import {
+  PickersTextField,
+  useConvertFieldResponseIntoMuiTextFieldProps,
+} from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import {
-  SingleInputTimeRangeFieldProps,
-  SingleInputTimeRangeFieldSlotsComponent,
-  SingleInputTimeRangeFieldSlotsComponentsProps,
-} from './SingleInputTimeRangeField.types';
+import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
@@ -28,7 +28,7 @@ type DateRangeFieldComponent = (<TDate>(
  */
 const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<TDate>(
   inProps: SingleInputTimeRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
+  inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,
@@ -39,55 +39,32 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? MuiTextField;
-  const { inputRef: externalInputRef, ...textFieldProps }: SingleInputTimeRangeFieldProps<TDate> =
-    useSlotProps({
-      elementType: TextField,
-      externalSlotProps: slotProps?.textField,
-      externalForwardedProps: other,
-      ownerState,
-    });
+  const TextField =
+    slots?.textField ?? (inProps.shouldUseV6TextField ? MuiTextField : PickersTextField);
+  const textFieldProps: SingleInputTimeRangeFieldProps<TDate> = useSlotProps({
+    elementType: TextField,
+    externalSlotProps: slotProps?.textField,
+    externalForwardedProps: other,
+    ownerState,
+    additionalProps: {
+      ref: inRef,
+    },
+  });
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const {
-    ref: inputRef,
-    onPaste,
-    onKeyDown,
-    inputMode,
-    readOnly,
-    clearable,
-    onClear,
-    ...fieldProps
-  } = useSingleInputTimeRangeField<TDate, typeof textFieldProps>({
-    props: textFieldProps,
-    inputRef: externalInputRef,
-  });
+  const fieldResponse = useSingleInputTimeRangeField<TDate, typeof textFieldProps>(textFieldProps);
+  const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
-    typeof fieldProps,
-    typeof fieldProps.InputProps,
-    SingleInputTimeRangeFieldSlotsComponent,
-    SingleInputTimeRangeFieldSlotsComponentsProps<TDate>
-  >({
-    onClear,
-    clearable,
-    fieldProps,
-    InputProps: fieldProps.InputProps,
+  const processedFieldProps = useClearableField({
+    props: convertedFieldResponse,
     slots,
     slotProps,
   });
 
-  return (
-    <TextField
-      ref={ref}
-      {...processedFieldProps}
-      InputProps={{ ...ProcessedInputProps, readOnly }}
-      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
-    />
-  );
+  return <TextField {...processedFieldProps} />;
 }) as DateRangeFieldComponent;
 
 SingleInputTimeRangeField.fieldType = 'single-input';
@@ -280,9 +257,9 @@ SingleInputTimeRangeField.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -298,10 +275,6 @@ SingleInputTimeRangeField.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific time.
@@ -326,6 +299,10 @@ SingleInputTimeRangeField.propTypes = {
    * @default `false`
    */
   shouldRespectLeadingZeros: PropTypes.bool,
+  /**
+   * @defauilt false
+   */
+  shouldUseV6TextField: PropTypes.bool,
   /**
    * The size of the component.
    */
