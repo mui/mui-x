@@ -7,7 +7,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid';
 import { refType, unstable_useId as useId } from '@mui/utils';
-import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
+import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const sx = {
@@ -32,7 +32,7 @@ function GridHeaderFilterMenuContainer(props: {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const open = Boolean(
-    unstable_gridHeaderFilteringMenuSelector(apiRef) === field && headerFilterMenuRef.current,
+    gridHeaderFilteringMenuSelector(apiRef) === field && headerFilterMenuRef.current,
   );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

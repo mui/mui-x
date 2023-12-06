@@ -1,19 +1,17 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Box from '@mui/material/Box';
-import { useFormControl } from '@mui/material/FormControl';
+import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_capitalize as capitalize,
-  visuallyHidden,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
+import visuallyHidden from '@mui/utils/visuallyHidden';
 import { pickersInputClasses, getPickersInputUtilityClass } from './pickersTextFieldClasses';
 import Outline from './Outline';
-import { PickersInputElement, PickersInputProps } from './PickersInput.types';
+import { PickersInputProps } from './PickersInput.types';
 
-const SectionsWrapper = styled(Box, {
+const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -28,6 +26,7 @@ const SectionsWrapper = styled(Box, {
     alignItems: 'center',
     width: ownerState.fullWidth ? '100%' : '25ch',
     position: 'relative',
+    outline: 'none',
     borderRadius: (theme.vars || theme).shape.borderRadius,
     [`&:hover .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
@@ -43,7 +42,7 @@ const SectionsWrapper = styled(Box, {
     },
     [`&.${pickersInputClasses.focused} .${pickersInputClasses.notchedOutline}`]: {
       borderStyle: 'solid',
-      borderColor: (theme.vars || theme).palette[ownerState.color].main,
+      borderColor: (theme.vars || theme).palette[ownerState.color!].main,
       borderWidth: 2,
     },
     [`&.${pickersInputClasses.disabled}`]: {
@@ -66,19 +65,31 @@ const SectionsWrapper = styled(Box, {
   };
 });
 
-const SectionsContainer = styled('div', {
+const PickersInputSectionsContainer = styled('div', {
   name: 'MuiPickersInput',
-  slot: 'Input',
-  overridesResolver: (props, styles) => styles.input,
+  slot: 'SectionsContainer',
+  overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
   flexGrow: 1,
-  visibility: ownerState.adornedStart || ownerState.focused ? 'visible' : 'hidden',
+  outline: 'none',
+  ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
+    color: 'currentColor',
+    ...(ownerState.label == null &&
+      (theme.vars
+        ? {
+            opacity: theme.vars.opacity.inputPlaceholder,
+          }
+        : {
+            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
+          })),
+    ...(ownerState.label != null && { opacity: 0 }),
+  }),
 }));
 
-const SectionContainer = styled('span', {
+const PickersInputSection = styled('span', {
   name: 'MuiPickersInput',
   slot: 'Section',
   overridesResolver: (props, styles) => styles.section,
@@ -89,9 +100,9 @@ const SectionContainer = styled('span', {
   flexGrow: 1,
 }));
 
-const SectionInput = styled('span', {
+const PickersInputContent = styled('span', {
   name: 'MuiPickersInput',
-  slot: 'Content',
+  slot: 'SectionContent',
   overridesResolver: (props, styles) => styles.content,
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
@@ -100,7 +111,7 @@ const SectionInput = styled('span', {
   width: 'fit-content',
 }));
 
-const SectionSeparator = styled('span', {
+const PickersInputSeparator = styled('span', {
   name: 'MuiPickersInput',
   slot: 'Separator',
   overridesResolver: (props, styles) => styles.separator,
@@ -108,9 +119,9 @@ const SectionSeparator = styled('span', {
   whiteSpace: 'pre',
 }));
 
-const FakeHiddenInput = styled('input', {
+const PickersInputInput = styled('input', {
   name: 'MuiPickersInput',
-  slot: 'HiddenInput',
+  slot: 'Input',
   overridesResolver: (props, styles) => styles.hiddenInput,
 })({
   ...visuallyHidden,
@@ -120,7 +131,7 @@ const NotchedOutlineRoot = styled(Outline, {
   name: 'MuiPickersInput',
   slot: 'NotchedOutline',
   overridesResolver: (props, styles) => styles.notchedOutline,
-})(({ theme }) => {
+})<{ ownerState: OwnerStateType }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
@@ -130,44 +141,6 @@ const NotchedOutlineRoot = styled(Outline, {
   };
 });
 
-function InputContent({
-  elements,
-  contentEditable,
-  ownerState,
-}: {
-  elements: PickersInputElement[];
-  contentEditable?: string | boolean;
-  ownerState: OwnerStateType;
-}) {
-  if (contentEditable) {
-    return elements
-      .map(({ content, before, after }) => `${before.children}${content.children}${after.children}`)
-      .join('');
-  }
-
-  return (
-    <React.Fragment>
-      {elements.map(({ container, content, before, after }, elementIndex) => (
-        <SectionContainer key={elementIndex} {...container}>
-          <SectionSeparator
-            {...before}
-            className={clsx(pickersInputClasses.before, before?.className)}
-          />
-          <SectionInput
-            {...content}
-            className={clsx(pickersInputClasses.content, content?.className)}
-            {...{ ownerState }}
-          />
-          <SectionSeparator
-            {...after}
-            className={clsx(pickersInputClasses.after, after?.className)}
-          />
-        </SectionContainer>
-      ))}
-    </React.Fragment>
-  );
-}
-
 const useUtilityClasses = (ownerState: OwnerStateType) => {
   const {
     focused,
@@ -175,6 +148,7 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
     error,
     classes,
     fullWidth,
+    readOnly,
     color,
     size,
     endAdornment,
@@ -186,90 +160,73 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
       'root',
       focused && !disabled && 'focused',
       disabled && 'disabled',
+      readOnly && 'readOnly',
       error && 'error',
       fullWidth && 'fullWidth',
-      `color${capitalize(color)}`,
+      `color${capitalize(color!)}`,
       size === 'small' && 'inputSizeSmall',
       Boolean(startAdornment) && 'adornedStart',
       Boolean(endAdornment) && 'adornedEnd',
     ],
     notchedOutline: ['notchedOutline'],
-    before: ['before'],
-    after: ['after'],
-    content: ['content'],
     input: ['input'],
+    sectionsContainer: ['sectionsContainer'],
+    sectionContent: ['sectionContent'],
+    sectionBefore: ['sectionBefore'],
+    sectionAfter: ['sectionAfter'],
   };
 
   return composeClasses(slots, getPickersInputUtilityClass, classes);
 };
 
-// TODO: move to utils
-// Separates the state props from the form control
-function formControlState({ props, states, muiFormControl }) {
-  return states.reduce((acc, state) => {
-    acc[state] = props[state];
+interface OwnerStateType
+  extends FormControlState,
+    Omit<PickersInputProps, keyof FormControlState> {}
 
-    if (muiFormControl) {
-      if (typeof props[state] === 'undefined') {
-        acc[state] = muiFormControl[state];
-      }
-    }
-
-    return acc;
-  }, {});
-}
-
-interface OwnerStateType extends PickersInputProps {
-  color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-  disabled?: boolean;
-  error?: boolean;
-  fullWidth?: boolean;
-  variant?: 'filled' | 'outlined' | 'standard';
-  size?: 'small' | 'medium';
-  adornedStart?: boolean;
-}
-
-const PickersInput = React.forwardRef(function PickersInput(
+export const PickersInput = React.forwardRef(function PickersInput(
   props: PickersInputProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
     elements,
+    areAllSectionsEmpty,
     defaultValue,
     label,
-    onFocus,
-    onWrapperClick,
-    onBlur,
-    valueStr,
-    onValueStrChange,
+    value,
+    onChange,
     id,
-    InputProps,
-    inputProps,
     autoFocus,
-    ownerState: ownerStateProp,
     endAdornment,
     startAdornment,
+    contentEditable,
+    tabIndex,
+    fullWidth,
+
+    inputProps,
+    inputRef,
+    sectionsContainerRef,
     ...other
   } = props;
 
-  const inputRef = React.useRef<HTMLDivElement>(null);
-  const handleInputRef = useForkRef(ref, inputRef);
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const handleRootRef = useForkRef(ref, rootRef);
+  const handleInputRef = useForkRef(inputProps?.ref, inputRef);
 
   const muiFormControl = useFormControl();
-  const fcs = formControlState({
-    props,
-    muiFormControl,
-    states: [
-      'color',
-      'disabled',
-      'error',
-      'focused',
-      'size',
-      'required',
-      'fullWidth',
-      'adornedStart',
-    ],
-  });
+  if (!muiFormControl) {
+    throw new Error('MUI: PickersInput should always be used inside a PickersTextField component');
+  }
+
+  const handleInputFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+    // Fix a bug with IE11 where the focus/blur events are triggered
+    // while the component is disabled.
+    if (muiFormControl.disabled) {
+      event.stopPropagation();
+      return;
+    }
+
+    muiFormControl.onFocus?.(event);
+  };
 
   React.useEffect(() => {
     if (muiFormControl) {
@@ -277,49 +234,81 @@ const PickersInput = React.forwardRef(function PickersInput(
     }
   }, [muiFormControl, startAdornment]);
 
-  const ownerState = {
-    ...props,
-    ...ownerStateProp,
-    color: fcs.color || 'primary',
-    disabled: fcs.disabled,
-    error: fcs.error,
-    focused: fcs.focused,
-    fullWidth: fcs.fullWidth,
-    size: fcs.size,
+  React.useEffect(() => {
+    if (!muiFormControl) {
+      return;
+    }
+
+    if (areAllSectionsEmpty) {
+      muiFormControl.onEmpty();
+    } else {
+      muiFormControl.onFilled();
+    }
+  }, [muiFormControl, areAllSectionsEmpty]);
+
+  const ownerState: OwnerStateType = {
+    ...(props as Omit<PickersInputProps, keyof FormControlState>),
+    ...muiFormControl,
   };
+
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <SectionsWrapper
-      ref={handleInputRef}
+    <PickersInputRoot
       {...other}
       className={classes.root}
-      onClick={onWrapperClick}
       ownerState={ownerState}
-      aria-invalid={fcs.error}
+      aria-invalid={muiFormControl.error}
+      ref={handleRootRef}
     >
       {startAdornment}
-      <SectionsContainer ownerState={ownerState} className={classes.input}>
-        <InputContent
-          elements={elements}
-          contentEditable={other.contentEditable}
-          ownerState={ownerState}
-        />
-        <FakeHiddenInput
-          value={valueStr}
-          onChange={onValueStrChange}
-          id={id}
-          aria-hidden="true"
-          tabIndex={-1}
-        />
-      </SectionsContainer>
+      <PickersInputSectionsContainer
+        ownerState={ownerState}
+        className={classes.sectionsContainer}
+        contentEditable={contentEditable}
+        suppressContentEditableWarning
+        onFocus={handleInputFocus}
+        onBlur={muiFormControl.onBlur}
+        tabIndex={tabIndex}
+        ref={sectionsContainerRef}
+      >
+        {contentEditable ? (
+          elements
+            .map(
+              ({ content, before, after }) =>
+                `${before.children}${content.children}${after.children}`,
+            )
+            .join('')
+        ) : (
+          <React.Fragment>
+            {elements.map(({ container, content, before, after }, elementIndex) => (
+              <PickersInputSection key={elementIndex} {...container}>
+                <PickersInputSeparator
+                  {...before}
+                  className={clsx(pickersInputClasses.sectionBefore, before?.className)}
+                />
+                <PickersInputContent
+                  {...content}
+                  suppressContentEditableWarning
+                  className={clsx(pickersInputClasses.sectionContent, content?.className)}
+                  {...{ ownerState }}
+                />
+                <PickersInputSeparator
+                  {...after}
+                  className={clsx(pickersInputClasses.sectionAfter, after?.className)}
+                />
+              </PickersInputSection>
+            ))}
+          </React.Fragment>
+        )}
+      </PickersInputSectionsContainer>
       {endAdornment}
       <NotchedOutlineRoot
-        shrink={fcs.adornedStart || fcs.focused}
-        notched={fcs.adornedStart || fcs.focused}
+        shrink={muiFormControl.adornedStart || muiFormControl.focused || muiFormControl.filled}
+        notched={muiFormControl.adornedStart || muiFormControl.focused || muiFormControl.filled}
         className={classes.notchedOutline}
         label={
-          label != null && label !== '' && fcs.required ? (
+          label != null && label !== '' && muiFormControl.required ? (
             <React.Fragment>
               {label}
               &thinsp;{'*'}
@@ -330,8 +319,18 @@ const PickersInput = React.forwardRef(function PickersInput(
         }
         ownerState={ownerState}
       />
-    </SectionsWrapper>
+      <PickersInputInput
+        className={classes.input}
+        value={value}
+        onChange={onChange}
+        id={id}
+        aria-hidden="true"
+        tabIndex={-1}
+        {...inputProps}
+        ref={handleInputRef}
+      />
+    </PickersInputRoot>
   );
 });
 
-export default PickersInput;
+(PickersInput as any).muiName = 'Input';

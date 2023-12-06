@@ -85,18 +85,22 @@ But if the callback is not defined or if calling it does not update the prop val
 ### Restore the state with initialState
 
 You can pass the state returned by `apiRef.current.exportState()` to the `initialState` prop.
+
 In the demo below, clicking on **Recreate the 2nd grid** will re-mount the second Data Grid with the current state of the first Grid.
+
+{{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
 If you restore the page using `initialState` before the data is fetched, the Data Grid will automatically move to the first page.
 :::
 
-{{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
-
 ### Save and restore the state from external storage
 
-You can use `apiRef.current.exportState()` to save a snapshot of the state to an external storage (e.g. using `localStorage` or `redux`).
-This way the state can be persisted on refresh or navigating to another page. This is done by listening on the `beforeunload` event.
+You can use `apiRef.current.exportState()` to save a snapshot of the state to an external storage (e.g. using local storage or redux).
+This way the state can be persisted on refresh or navigating to another page.
+
+In the following demo, the state is saved to `localStorage` and restored when the page is refreshed.
+This is done by listening on the `beforeunload` event.
 When the component is unmounted, the `useLayoutEffect` cleanup function is being used instead.
 
 {{"demo": "SaveAndRestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}

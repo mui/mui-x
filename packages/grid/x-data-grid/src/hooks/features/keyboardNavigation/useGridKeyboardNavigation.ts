@@ -19,8 +19,8 @@ import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {
-  unstable_gridHeaderFilteringEditFieldSelector,
-  unstable_gridHeaderFilteringMenuSelector,
+  gridHeaderFilteringEditFieldSelector,
+  gridHeaderFilteringMenuSelector,
 } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
@@ -107,7 +107,7 @@ export const useGridKeyboardNavigation = (
 
   const headerFilteringEnabled =
     // @ts-expect-error // TODO move relevant code to the `DataGridPro`
-    props.signature !== 'DataGrid' && props.unstable_headerFilters;
+    props.signature !== 'DataGrid' && props.headerFilters;
 
   /**
    * @param {number} colIndex Index of the column to focus
@@ -315,8 +315,8 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const isEditing = unstable_gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
-      const isHeaderMenuOpen = unstable_gridHeaderFilteringMenuSelector(apiRef) === params.field;
+      const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
+      const isHeaderMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === params.field;
 
       if (isEditing || isHeaderMenuOpen || !isNavigationKey(event.key)) {
         return;
