@@ -87,7 +87,8 @@ export function useGridDimensions(
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
   const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 6);
-  const hasHeaderFilters = Boolean((props as any).unstable_headerFilters); // XXX: this is kinda unsafe
+  // XXX: The `props as any` below is not resilient to change.
+  const hasHeaderFilters = Boolean((props as any).headerFilters);
   const headersTotalHeight =
     getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
     Number(hasHeaderFilters) * headerHeight;
