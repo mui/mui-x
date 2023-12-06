@@ -92,7 +92,7 @@ export default function transform(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI
     // + apiRef.current.getLocaleText('filterPanelLogicOperator')
     root
       .find(j.Literal)
-      .filter((path) => !!renamedLiterals[path.node.value as any])
+      .filter((path) => renamedLiterals.hasOwnProperty(path.node.value as any))
       .replaceWith((path) => j.literal(renamedLiterals[path.node.value as any]));
 
     // Rename the classes

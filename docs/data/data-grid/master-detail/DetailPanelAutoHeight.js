@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -49,7 +48,6 @@ function DetailPanelContent({ row: rowProp }) {
       const newProducts = rowProp.products.filter(
         (product) => product.id !== productId,
       );
-
       apiRef.current.updateRows([{ ...rowProp, products: newProducts }]);
     },
     [apiRef, rowProp],
@@ -115,11 +113,11 @@ function DetailPanelContent({ row: rowProp }) {
               </Typography>
             </Grid>
           </Grid>
-          <Box>
+          <div>
             <Button variant="outlined" size="small" onClick={addProduct}>
               Add Product
             </Button>
-          </Box>
+          </div>
           <DataGridPro
             density="compact"
             autoHeight
@@ -133,10 +131,6 @@ function DetailPanelContent({ row: rowProp }) {
     </Stack>
   );
 }
-
-DetailPanelContent.propTypes = {
-  row: PropTypes.object.isRequired,
-};
 
 const columns = [
   { field: 'id', headerName: 'Order ID' },
@@ -152,7 +146,6 @@ const columns = [
         (acc, product) => product.unitPrice * product.quantity,
         0,
       );
-
       const taxes = subtotal * 0.05;
       return subtotal + taxes;
     },

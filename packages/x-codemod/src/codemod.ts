@@ -3,7 +3,7 @@
 import childProcess from 'child_process';
 import { promises as fs } from 'fs';
 import path from 'path';
-import yargs from 'yargs';
+import yargs, { CommandModule } from 'yargs';
 
 const jscodeshiftPackage = require('jscodeshift/package.json');
 
@@ -123,9 +123,8 @@ yargs
           type: 'array',
         });
     },
-    // @ts-expect-error
     handler: run,
-  })
+  } as CommandModule<{}, HandlerArgv>)
   .scriptName('npx @mui/x-codemod')
   .example('$0 v6.0.0/preset-safe src', 'Run "preset-safe" codemod on "src" path')
   .example(

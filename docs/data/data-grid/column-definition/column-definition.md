@@ -27,53 +27,85 @@ You can create the array outside the render function or memoize it.
 
 ## Providing content
 
-By default, the data grid uses the field of a column to get its value.
+By default, the Data Grid uses the field of a column to get its value.
 For instance, the column with field `name` will render the value stored in `row.name`.
 But for some columns, it can be useful to manually get and format the value to render.
 
 ### Value getter
 
-Sometimes a column might not have a corresponding value, or you might want to render a combination of different fields.
+Sometimes a column might not have a desired value.
+You can use the `valueGetter` attribute of `GridColDef` to:
 
-To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below.
+1. Transform the value
 
-```tsx
-function getFullName(params) {
-  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
-}
+   ```tsx
+   const columns: GridColDef[] = [
+     {
+       field: 'taxRate',
+       valueGetter: (params) => {
+         if (!params.value) {
+           return params.value;
+         }
+         // Convert the decimal value to a percentage
+         return params.value * 100;
+       },
+     },
+   ];
+   ```
 
-const columns: GridColDef[] = [
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    width: 160,
-    valueGetter: getFullName,
-  },
-];
-```
+2. Render a combination of different fields
 
-{{"demo": "ValueGetterGrid.js", "bg": "inline"}}
+   ```tsx
+   const columns: GridColDef[] = [
+     {
+       field: 'fullName',
+       valueGetter: (params) => {
+         return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
+       },
+     },
+   ];
+   ```
 
-The value generated is used for filtering, sorting, rendering, etc. unless overridden by a more specific configuration.
+3. Derive a value from a complex value
+
+   ```tsx
+   const columns: GridColDef[] = [
+     {
+       field: 'profit',
+       valueGetter: ({ row }) => {
+         if (!row.gross || !row.costs) {
+           return null;
+         }
+         return row.gross - row.costs;
+       },
+     },
+   ];
+   ```
+
+The value returned by `valueGetter` is used for:
+
+- Filtering
+- Sorting
+- Rendering (unless enhanced further by [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) or [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells))
+
+{{"demo": "ValueGetterGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Value formatter
 
 The value formatter allows you to convert the value before displaying it.
 Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (e.g. "1,000.50").
 
-In the following demo, a formatter is used to display the tax rate's decimal value (e.g. 0.2) as a percentage (e.g. 20%).
+Note, that the value returned by `valueFormatter` is only used for rendering purposes.
+Filtering and sorting are based on the raw value (`row[field]`) or the value returned by [`valueGetter`](/x/react-data-grid/column-definition/#value-getter).
+
+In the following demo, `valueGetter` is used to convert the tax rate (e.g. `0.2`) to a decimal value (e.g. `20`),
+and `valueFormatter` is used to display it as a percentage (e.g. `20%`).
 
 {{"demo": "ValueFormatterGrid.js", "bg": "inline"}}
 
-The value generated is only used for rendering purposes.
-Filtering and sorting do not rely on the formatted value.
-Use the [`valueParser`](/x/react-data-grid/editing/#value-parser-and-value-setter) to support filtering.
-
 ## Rendering cells
 
-By default, the data grid renders the value as a string in the cell.
+By default, the Data Grid renders the value as a string in the cell.
 It resolves the rendered output in the following order:
 
 1. `renderCell() => ReactElement`
@@ -89,7 +121,7 @@ const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    renderCell: (params: GridRenderCellParams<Date>) => (
+    renderCell: (params: GridRenderCellParams<any, Date>) => (
       <strong>
         {params.value.getFullYear()}
         <Button
@@ -109,8 +141,7 @@ const columns: GridColDef[] = [
 {{"demo": "RenderCellGrid.js", "bg": "inline", "defaultCodeOpen": false }}
 
 :::warning
-Using `renderCell`, requires paying attention to the following points.
-If the type of the value returned by `valueGetter` does not correspond to the column's `type`, you should:
+When using `renderCell`, if the type of the value returned by `valueGetter` does not correspond to the column's `type`, you should:
 
 - handle [sorting](/x/react-data-grid/sorting/#custom-comparator) by providing `sortComparator` to the column.
 - set a `valueFormatter` providing a representation for the value to be used when [exporting](/x/react-data-grid/export/#exported-cells) the data.
@@ -185,18 +216,20 @@ Updating the row will rerender the row and so call renderCell with updated param
 ## Column types
 
 To facilitate the configuration of the columns, some column types are predefined.
-By default, columns are assumed to hold strings, so the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell.
+By default, columns are assumed to hold strings, so the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell. Some column types require that their value have a specific type.
 
-The following are the native column types:
+The following are the native column types with their required value types:
 
-- `'string'` (default)
-- `'number'`
-- `'date'`
-- `'dateTime'`
-- `'boolean'`
-- `'singleSelect'`
-- `'multipleSelect'`
-- `'actions'`
+| Column type            | Value type                          |
+| :--------------------- | :---------------------------------- |
+| `'string'` (default)   | `string`                            |
+| `'number'`             | `number`                            |
+| `'date'`               | `Date() object`                     |
+| `'dateTime'`           | `Date() object`                     |
+| `'boolean'`            | `boolean`                           |
+| `'singleSelect'`       | A value in `.valueOptions`          |
+| `'multipleSelect'`     | A list of values in `.valueOptions` |
+| `'actions'`            | Not applicable                      |
 
 ### Converting types
 
@@ -235,7 +268,7 @@ However, some types require additional properties to be set to make them work co
   // Without getOptionValue and getOptionLabel
   {
     valueOptions: [
-      { value: 'BR', label: 'Brazil' }
+      { value: 'BR', label: 'Brazil' },
       { value: 'FR', label: 'France' }
     ]
   }
@@ -245,7 +278,7 @@ However, some types require additional properties to be set to make them work co
     getOptionValue: (value: any) => value.code,
     getOptionLabel: (value: any) => value.name,
     valueOptions: [
-      { code: 'BR', name: 'Brazil' }
+      { code: 'BR', name: 'Brazil' },
       { code: 'FR', name: 'France' }
     ]
   }
@@ -269,26 +302,9 @@ However, some types require additional properties to be set to make them work co
 
 {{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
 
-## Custom column types
+### Custom column types
 
-You can extend the native column types with your own by simply spreading the necessary properties.
-
-The demo below defines a new column type: `usdPrice` that extends the native `number` column type.
-
-```ts
-const usdPrice: GridColTypeDef = {
-  type: 'number',
-  width: 130,
-  valueFormatter: ({ value }) => valueFormatter.format(Number(value)),
-  cellClassName: 'font-tabular-nums',
-};
-```
-
-{{"demo": "CustomColumnTypesGrid.js", "bg": "inline"}}
-
-:::info
-If an unsupported column type is used, the `string` column type will be used instead.
-:::
+Please refer to the [custom columns](/x/react-data-grid/custom-columns/) page for documentation and integration examples.
 
 ## Selectors
 

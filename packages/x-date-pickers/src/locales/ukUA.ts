@@ -1,5 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'годин',
+  minutes: 'хвилин',
+  seconds: 'секунд',
+  meridiem: 'Південь',
+};
 
 const ukUAPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -32,12 +40,15 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
+    `Вибрати ${timeViews[view]}. ${
       time === null ? 'Час не вибраний' : `Вибрано час ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} годин`,
   minutesClockNumberText: (minutes) => `${minutes} хвилин`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
+
+  // Digital clock labels
+  selectViewText: (view) => `Вибрати ${timeViews[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Номер тижня',
@@ -54,6 +65,7 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Оберіть час, обраний час  ${utils.format(value, 'fullTime')}`
       : 'Оберіть час',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'оберіть час',
@@ -63,7 +75,7 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',

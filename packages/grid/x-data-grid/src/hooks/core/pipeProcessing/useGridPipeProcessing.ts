@@ -49,14 +49,16 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
     [G in GridPipeProcessorGroup]?: GridPipeGroupCache;
   }>({});
 
+  const isRunning = React.useRef(false);
   const runAppliers = React.useCallback((groupCache: GridPipeGroupCache | undefined) => {
-    if (!groupCache) {
+    if (isRunning.current || !groupCache) {
       return;
     }
-
+    isRunning.current = true;
     Object.values(groupCache.appliers).forEach((callback) => {
       callback();
     });
+    isRunning.current = false;
   }, []);
 
   const registerPipeProcessor = React.useCallback<

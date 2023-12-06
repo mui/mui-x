@@ -1,10 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'le ore',
   minutes: 'i minuti',
   seconds: 'i secondi',
+  meridiem: 'il meridiano',
 };
 
 const itITPickers: Partial<PickersLocaleText<any>> = {
@@ -47,6 +49,9 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} minuti`,
   secondsClockNumberText: (seconds) => `${seconds} secondi`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Seleziona ${views[view]}`,
+
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Numero settimana',
   calendarWeekNumberHeaderText: '#',
@@ -62,6 +67,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Scegli l'ora, l'ora selezionata è ${utils.format(value, 'fullTime')}`
       : "Scegli l'ora",
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: "scegli un'ora",

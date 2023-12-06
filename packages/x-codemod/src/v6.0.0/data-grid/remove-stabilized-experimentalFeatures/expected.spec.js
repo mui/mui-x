@@ -11,7 +11,9 @@ function App() {
       <DataGridPremium
         experimentalFeatures={{
           columnGrouping: true,
-        }} />
+        }}
+      />
+      <DataGridPro {...props} />
     </React.Fragment>
   );
 }

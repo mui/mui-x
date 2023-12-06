@@ -69,6 +69,7 @@ export const useGridRowsMeta = (
     | 'pagination'
     | 'paginationMode'
     | 'rowHeight'
+    | 'rowPositionsDebounceMs'
   >,
 ): void => {
   const { getRowHeight: getRowHeightProp, getRowSpacing, getEstimatedRowHeight } = props;
@@ -79,7 +80,7 @@ export const useGridRowsMeta = (
       autoHeight: boolean; // Determines if the row has dynamic height
       needsFirstMeasurement: boolean; // Determines if the row was never measured. If true, use the estimated height as row height.
     };
-  }>({});
+  }>(Object.create(null));
 
   // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
   const lastMeasuredRowIndex = React.useRef(-1);
@@ -144,21 +145,14 @@ export const useGridRowsMeta = (
         rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
       }
 
-      const existingBaseSizes = Object.entries(sizes).reduce<Record<string, number>>(
-        (acc, [key, size]) => {
-          if (/^base[A-Z]/.test(key)) {
-            acc[key] = size;
-          }
-          return acc;
-        },
-        {},
-      );
-
-      // We use an object to make simple to check if a height is already added or not
-      const initialHeights: Record<string, number> = {
-        ...existingBaseSizes,
-        baseCenter: baseRowHeight,
-      };
+      const initialHeights = {} as Record<string, number>;
+      /* eslint-disable-next-line no-restricted-syntax */
+      for (const key in sizes) {
+        if (/^base[A-Z]/.test(key)) {
+          initialHeights[key] = sizes[key];
+        }
+      }
+      initialHeights.baseCenter = baseRowHeight;
 
       if (getRowSpacing) {
         const indexRelativeToCurrentPage = apiRef.current.getRowIndexRelativeToVisibleRows(row.id);
@@ -193,13 +187,15 @@ export const useGridRowsMeta = (
       let otherSizes = 0;
 
       const processedSizes = calculateRowProcessedSizes(row);
-      Object.entries(processedSizes).forEach(([size, value]) => {
-        if (/^base[A-Z]/.test(size)) {
+      /* eslint-disable-next-line no-restricted-syntax, guard-for-in */
+      for (const key in processedSizes) {
+        const value = processedSizes[key];
+        if (/^base[A-Z]/.test(key)) {
           maximumBaseSize = value > maximumBaseSize ? value : maximumBaseSize;
         } else {
           otherSizes += value;
         }
-      });
+      }
 
       return acc + maximumBaseSize + otherSizes;
     }, 0);
@@ -261,8 +257,8 @@ export const useGridRowsMeta = (
   );
 
   const debouncedHydrateRowsMeta = React.useMemo(
-    () => debounce(hydrateRowsMeta),
-    [hydrateRowsMeta],
+    () => debounce(hydrateRowsMeta, props.rowPositionsDebounceMs),
+    [hydrateRowsMeta, props.rowPositionsDebounceMs],
   );
 
   const storeMeasuredRowHeight = React.useCallback<

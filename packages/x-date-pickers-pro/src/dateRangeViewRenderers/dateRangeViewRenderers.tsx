@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DateOrTimeView } from '@mui/x-date-pickers/models';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
-export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeView>
+export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends DateRangeCalendarProps<TDate> {
   view: TView;
   onViewChange?: (view: TView) => void;
@@ -16,6 +16,7 @@ export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeView>
 export const renderDateRangeViewCalendar = <TDate extends unknown>({
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -26,13 +27,11 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   shouldDisableDate,
   reduceAnimations,
   onMonthChange,
-  defaultCalendarMonth,
   rangePosition,
   defaultRangePosition,
   onRangePositionChange,
   calendars,
-  components,
-  componentsProps,
+  currentMonthCalendarPosition,
   slots,
   slotProps,
   loading,
@@ -48,10 +47,12 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   fixedWeekNumber,
   disableDragEditing,
   displayWeekNumber,
+  timezone,
 }: DateRangeViewRendererProps<TDate, any>) => (
   <DateRangeCalendar
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}
@@ -62,13 +63,11 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     shouldDisableDate={shouldDisableDate}
     reduceAnimations={reduceAnimations}
     onMonthChange={onMonthChange}
-    defaultCalendarMonth={defaultCalendarMonth}
     rangePosition={rangePosition}
     defaultRangePosition={defaultRangePosition}
     onRangePositionChange={onRangePositionChange}
     calendars={calendars}
-    components={components}
-    componentsProps={componentsProps}
+    currentMonthCalendarPosition={currentMonthCalendarPosition}
     slots={slots}
     slotProps={slotProps}
     loading={loading}
@@ -84,5 +83,6 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     fixedWeekNumber={fixedWeekNumber}
     disableDragEditing={disableDragEditing}
     displayWeekNumber={displayWeekNumber}
+    timezone={timezone}
   />
 );

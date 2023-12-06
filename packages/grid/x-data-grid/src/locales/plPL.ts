@@ -46,7 +46,7 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Usuń wszystkie',
   filterPanelDeleteIconLabel: 'Usuń',
   filterPanelLogicOperator: 'Operator logiczny',
   filterPanelOperator: 'Operator',
@@ -72,6 +72,33 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorIsNotEmpty: 'nie jest pusty',
   filterOperatorIsAnyOf: 'jest jednym z',
   // filterOperatorContainsAnyOf: 'contains any of',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Zawiera',
+  headerFilterOperatorEquals: 'Równa się',
+  headerFilterOperatorStartsWith: 'Zaczyna się od',
+  headerFilterOperatorEndsWith: 'Kończy się na',
+  // headerFilterOperatorIs: 'Is',
+  headerFilterOperatorNot: 'Niepuste',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'dowolny',
@@ -81,7 +108,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Zarządzaj kolumnami',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Ukryj',
   columnMenuUnsort: 'Anuluj sortowanie',

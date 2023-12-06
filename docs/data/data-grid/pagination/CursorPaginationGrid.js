@@ -25,7 +25,6 @@ export default function CursorPaginationGrid() {
     }),
     [paginationModel],
   );
-
   const { isLoading, rows, pageInfo } = useQuery(queryOptions);
 
   const handlePaginationModelChange = (newPaginationModel) => {
@@ -50,7 +49,6 @@ export default function CursorPaginationGrid() {
   const [rowCountState, setRowCountState] = React.useState(
     pageInfo?.totalRowCount || 0,
   );
-
   React.useEffect(() => {
     setRowCountState((prevRowCountState) =>
       pageInfo?.totalRowCount !== undefined

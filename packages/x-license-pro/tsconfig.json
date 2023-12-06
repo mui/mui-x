@@ -1,12 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["react", "mocha", "node"],
-    "noImplicitAny": true
+    "types": ["react", "mocha", "node"]
   },
   "include": [
     "src/**/*",
-    "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts",
+    "../../test/utils/addChaiAssertions.ts",
+    "../../node_modules/@mui/monorepo/packages/test-utils/src/initMatchers.ts",
     "../../node_modules/@mui/material/themeCssVarsAugmentation"
   ]
 }

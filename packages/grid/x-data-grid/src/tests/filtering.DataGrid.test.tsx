@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -9,8 +9,10 @@ import {
   GridFilterItem,
   GridPreferencePanelsValue,
   GridToolbar,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -37,10 +39,20 @@ describe('<DataGrid /> - Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
+  let disableEval = false;
+
+  function testEval(fn: Function) {
+    disableEval = false;
+    fn();
+    disableEval = true;
+    fn();
+    disableEval = false;
+  }
+
   function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...baselineProps} {...props} />
+        <DataGrid {...baselineProps} {...props} disableEval={disableEval} />
       </div>
     );
   }
@@ -214,6 +226,33 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
+  describe('prop: getRowId', () => {
+    it('works with filter', () => {
+      render(
+        <TestCase
+          getRowId={(row) => row.brand}
+          filterModel={{
+            items: [{ id: 0, field: 'brand', operator: 'contains', value: 'Nike' }],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+    });
+
+    it('works with quick filter', () => {
+      render(
+        <TestCase
+          getRowId={(row) => row.brand}
+          filterModel={{
+            items: [],
+            quickFilterValues: ['Nike'],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+    });
+  });
+
   describe('column type: string', () => {
     const getRows = (item: Omit<GridFilterItem, 'field'>) => {
       const { unmount } = render(
@@ -247,25 +286,27 @@ describe('<DataGrid /> - Filter', () => {
     const ALL_ROWS = ['', '', '', 'France (fr)', 'Germany', '0', '1'];
 
     it('should filter with operator "contains"', () => {
-      expect(getRows({ operator: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
+      testEval(() => {
+        expect(getRows({ operator: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
 
-      // Trim value
-      expect(getRows({ operator: 'contains', value: ' Fra ' })).to.deep.equal(['France (fr)']);
+        // Trim value
+        expect(getRows({ operator: 'contains', value: ' Fra ' })).to.deep.equal(['France (fr)']);
 
-      // Case-insensitive
-      expect(getRows({ operator: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
+        // Case-insensitive
+        expect(getRows({ operator: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
 
-      // Number casting
-      expect(getRows({ operator: 'contains', value: '0' })).to.deep.equal(['0']);
-      expect(getRows({ operator: 'contains', value: '1' })).to.deep.equal(['1']);
+        // Number casting
+        expect(getRows({ operator: 'contains', value: '0' })).to.deep.equal(['0']);
+        expect(getRows({ operator: 'contains', value: '1' })).to.deep.equal(['1']);
 
-      // Empty values
-      expect(getRows({ operator: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operator: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
+        // Empty values
+        expect(getRows({ operator: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
+        expect(getRows({ operator: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
 
-      // Value with regexp special literal
-      expect(getRows({ operator: 'contains', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal([]);
-      expect(getRows({ operator: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
+        // Value with regexp special literal
+        expect(getRows({ operator: 'contains', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal([]);
+        expect(getRows({ operator: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
+      });
     });
 
     it('should filter with operator "equals"', () => {
@@ -366,6 +407,52 @@ describe('<DataGrid /> - Filter', () => {
         '0',
         '1',
       ]);
+    });
+
+    describe('ignoreDiacritics', () => {
+      function DiacriticsTestCase({
+        filterValue,
+        ...props
+      }: Partial<DataGridProps> & { filterValue: GridFilterItem['value'] }) {
+        return (
+          <TestCase
+            filterModel={{
+              items: [{ field: 'label', operator: 'contains', value: filterValue }],
+            }}
+            {...props}
+            rows={[{ id: 0, label: 'Apă' }]}
+            columns={[{ field: 'label', type: 'string' }]}
+          />
+        );
+      }
+
+      it('should not ignore diacritics by default', () => {
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apa" />);
+          expect(getColumnValues(0)).to.deep.equal([]);
+          unmount();
+        });
+
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apă" />);
+          expect(getColumnValues(0)).to.deep.equal(['Apă']);
+          unmount();
+        });
+      });
+
+      it('should ignore diacritics when `ignoreDiacritics` is enabled', () => {
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apa" ignoreDiacritics />);
+          expect(getColumnValues(0)).to.deep.equal(['Apă']);
+          unmount();
+        });
+
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apă" ignoreDiacritics />);
+          expect(getColumnValues(0)).to.deep.equal(['Apă']);
+          unmount();
+        });
+      });
     });
   });
 
@@ -1105,8 +1192,59 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
+  describe('filter button tooltip', () => {
+    it('should display `falsy` value', () => {
+      const { setProps } = render(
+        <DataGrid
+          filterModel={{
+            items: [{ id: 0, field: 'isAdmin', operator: 'is', value: false }],
+          }}
+          autoHeight
+          rows={[
+            {
+              id: 0,
+              isAdmin: false,
+              level: 0,
+            },
+          ]}
+          columns={[
+            {
+              field: 'isAdmin',
+              type: 'singleSelect',
+              valueOptions: [
+                {
+                  value: false,
+                  label: false,
+                },
+              ],
+            },
+            {
+              field: 'level',
+              type: 'number',
+            },
+          ]}
+          slots={{ toolbar: GridToolbarFilterButton }}
+        />,
+      );
+
+      const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+
+      fireEvent.mouseOver(filterButton);
+      clock.tick(1000); // tooltip display delay
+
+      const tooltip = screen.getByRole('tooltip');
+
+      expect(tooltip).toBeVisible();
+      expect(tooltip.textContent).to.contain('false');
+
+      setProps({ filterModel: { items: [{ id: 0, field: 'level', operator: '=', value: 0 }] } });
+      expect(tooltip.textContent).to.contain('0');
+    });
+  });
+
   describe('custom `filterOperators`', () => {
-    it('should allow to cutomize filter tooltip using `filterOperator.getValueAsString`', () => {
+    it('should allow to customize filter tooltip using `filterOperator.getValueAsString`', () => {
       render(
         <div style={{ width: '100%', height: '400px' }}>
           <DataGrid
@@ -1132,24 +1270,24 @@ describe('<DataGrid /> - Filter', () => {
                     label: 'Contains',
                     value: 'contains',
                     getApplyFilterFn: (filterItem) => {
-                      return (params) => {
+                      return (value) => {
                         if (
                           !filterItem.field ||
                           !filterItem.value ||
                           !filterItem.operator ||
-                          !params.value
+                          !value
                         ) {
                           return null;
                         }
-                        return params.value.includes(filterItem.value);
+                        return value.includes(filterItem.value);
                       };
                     },
                     getValueAsString: (value) => `"${value}" text string`,
                   },
-                ],
+                ] as GridFilterOperator<any, string>[],
               },
             ]}
-            components={{ Toolbar: GridToolbarFilterButton }}
+            slots={{ toolbar: GridToolbarFilterButton }}
           />
         </div>,
       );
@@ -1189,12 +1327,84 @@ describe('<DataGrid /> - Filter', () => {
                 },
               ],
             }}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
           />
         </div>
       );
     }).not.to.throw();
+  });
+
+  it('should update the filter model on columns change', () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const onFilterModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            filterModel={{
+              items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
+            }}
+            onFilterModelChange={onFilterModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+
+    setProps({ columns: [{ field: 'id' }] });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+    expect(onFilterModelChange.callCount).to.equal(1);
+    expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({ items: [] });
+  });
+
+  // See https://github.com/mui/mui-x/issues/9204
+  it('should not clear the filter model when both columns and filterModel change', async () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+
+    const onFilterModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            filterModel={{
+              items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
+            }}
+            onFilterModelChange={onFilterModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+
+    setProps({
+      columns: [{ field: 'id' }],
+      filterModel: {
+        items: [{ field: 'id', operator: 'equals', value: '1' }],
+      },
+    });
+    expect(getColumnValues(0)).to.deep.equal(['1']);
+    expect(onFilterModelChange.callCount).to.equal(0);
   });
 });

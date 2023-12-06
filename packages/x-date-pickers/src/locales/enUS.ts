@@ -41,6 +41,9 @@ const enUSPickers: PickersLocaleText<any> = {
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} seconds`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Select ${view}`,
+
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Week number',
   calendarWeekNumberHeaderText: '#',
@@ -56,6 +59,8 @@ const enUSPickers: PickersLocaleText<any> = {
     value !== null && utils.isValid(value)
       ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
       : 'Choose time',
+
+  fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'pick time',

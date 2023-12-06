@@ -2,7 +2,7 @@
 title: Data Grid - Row pinning
 ---
 
-# Data Grid - Row pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Row pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Pin rows to keep them visible at all times.</p>
 
@@ -30,7 +30,7 @@ Pinned rows data should also meet [Row identifier](/x/react-data-grid/row-defini
 
 :::warning
 Just like the `rows` prop, `pinnedRows` prop should keep the same reference between two renders.
-Otherwise, the data grid will re-apply heavy work like sorting and filtering.
+Otherwise, the Data Grid will re-apply heavy work like sorting and filtering.
 :::
 
 ## Controlling pinned rows
@@ -52,7 +52,6 @@ Pagination does not impact pinned rows as well - they stay pinned regardless the
 :::info
 Pinned rows do not support the following features:
 
-- editing ([issue #5591](https://github.com/mui/mui-x/issues/5591))
 - selection
 - row grouping
 - tree data

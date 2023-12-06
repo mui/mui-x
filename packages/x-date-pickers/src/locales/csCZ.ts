@@ -1,19 +1,19 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-
-// This object is not Partial<PickersLocaleText> because it is the default values
+import { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
-const timeViews = {
+const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'Hodiny',
   minutes: 'Minuty',
   seconds: 'Sekundy',
+  meridiem: 'Odpoledne',
 };
 
 const csCZPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
-  previousMonth: 'Další měsíc',
-  nextMonth: 'Předchozí month',
+  previousMonth: 'Předchozí měsíc',
+  nextMonth: 'Další měsíc',
 
   // View navigation
   openPreviousView: 'otevřít předchozí zobrazení',
@@ -48,6 +48,9 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Vyberte ${timeViews[view]}`,
+
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Týden v roce',
   calendarWeekNumberHeaderText: '#',
@@ -57,12 +60,13 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Vybrané datum, vybrané datum je ${utils.format(value, 'fullDate')}`
+      ? `Vyberte datum, vybrané datum je ${utils.format(value, 'fullDate')}`
       : 'Vyberte datum',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Vybrané čas, vybraný čas je ${utils.format(value, 'fullTime')}`
+      ? `Vyberte čas, vybraný čas je ${utils.format(value, 'fullTime')}`
       : 'Vyberte čas',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'vyberte čas',

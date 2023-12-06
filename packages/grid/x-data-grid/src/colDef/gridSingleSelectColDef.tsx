@@ -46,4 +46,25 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
   },
   renderEditCell: renderEditSingleSelectCell,
   filterOperators: getGridSingleSelectOperators(),
+  // @ts-ignore
+  pastedValueParser: (value, params) => {
+    const colDef = params.colDef;
+    const colDefValueOptions = (colDef as GridSingleSelectColDef).valueOptions;
+    const valueOptions =
+      typeof colDefValueOptions === 'function'
+        ? colDefValueOptions({ field: colDef.field })
+        : colDefValueOptions || [];
+    const getOptionValue = (colDef as GridSingleSelectColDef).getOptionValue!;
+    const valueOption = valueOptions.find((option) => {
+      if (getOptionValue(option) === value) {
+        return true;
+      }
+      return false;
+    });
+    if (valueOption) {
+      return value;
+    }
+    // do not paste the value if it is not in the valueOptions
+    return undefined;
+  },
 };

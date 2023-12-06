@@ -1,8 +1,6 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -26,24 +24,10 @@ function ButtonField(props) {
       aria-label={ariaLabel}
       onClick={() => setOpen?.((prev) => !prev)}
     >
-      {label ?? 'Pick a date'}
+      {label ? `Current date: ${label}` : 'Pick a date'}
     </Button>
   );
 }
-
-ButtonField.propTypes = {
-  disabled: PropTypes.bool,
-  id: PropTypes.string,
-  inputProps: PropTypes.shape({
-    'aria-label': PropTypes.string,
-  }),
-  InputProps: PropTypes.shape({
-    endAdornment: PropTypes.node,
-    startAdornment: PropTypes.node,
-  }),
-  label: PropTypes.node,
-  setOpen: PropTypes.func,
-};
 
 function ButtonDatePicker(props) {
   const [open, setOpen] = React.useState(false);
@@ -60,28 +44,16 @@ function ButtonDatePicker(props) {
   );
 }
 
-ButtonDatePicker.propTypes = {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.any,
-};
-
 export default function PickerWithButtonField() {
   const [value, setValue] = React.useState(null);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={1}>
-        <ButtonDatePicker
-          label={`Current date: ${
-            value == null ? 'null' : value.format('MM/DD/YYYY')
-          }`}
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-        />
-      </Stack>
+      <ButtonDatePicker
+        label={value == null ? null : value.format('MM/DD/YYYY')}
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+      />
     </LocalizationProvider>
   );
 }

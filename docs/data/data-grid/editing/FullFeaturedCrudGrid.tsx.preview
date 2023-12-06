@@ -1,10 +1,9 @@
-<DataGridPro
+<DataGrid
   rows={rows}
   columns={columns}
   editMode="row"
   rowModesModel={rowModesModel}
   onRowModesModelChange={handleRowModesModelChange}
-  onRowEditStart={handleRowEditStart}
   onRowEditStop={handleRowEditStop}
   processRowUpdate={processRowUpdate}
   slots={{

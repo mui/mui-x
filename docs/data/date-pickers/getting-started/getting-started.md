@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: Date and Time Picker - Getting started
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
@@ -9,9 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # Date and Time Pickers - Getting Started
 
-<p class="description">Get started with the Date and Time pickers. Install the package, configure your application and start using the components.</p>
-
-{{"component": "modules/components/ComponentLinkHeader.js"}}
+<p class="description">Get started with the Date and Time Pickers. Install the package, configure your application and start using the components.</p>
 
 ## Installation
 
@@ -19,6 +17,10 @@ Using your favorite package manager, install:
 
 - `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
 - The date library to manipulate the date.
+
+:::warning
+The `next` tag is used to download the latest v7 **pre-release** version.
+:::
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
@@ -30,32 +32,54 @@ take a look at the [dedicated section](/x/react-date-pickers/#date-library)
 The Date and Time Pickers package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
-```sh
-// with npm
+<codeblock storageKey="package-manager">
+```bash npm
 npm install @mui/material @emotion/react @emotion/styled
-
-// with yarn
+```
+```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
+```bash pnpm
+pnpm add @mui/material @emotion/react @emotion/styled
+```
+</codeblock>
 
 <!-- #react-peer-version -->
 
-Please note that [react](https://www.npmjs.com/package/react) >= 17.0.2 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.2 are peer dependencies.
+Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
 
-MUI is using [emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
-
-```sh
-// with npm
-npm install @mui/material @mui/styled-engine-sc styled-components
-
-// with yarn
-yarn add @mui/material @mui/styled-engine-sc styled-components
+```json
+"peerDependencies": {
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
+},
 ```
 
-## Code setup
+### Style engine
+
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+
+<codeblock storageKey="package-manager">
+```bash npm
+npm install @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
+```
+
+```bash pnpm
+pnpm add @mui/styled-engine-sc styled-components
+```
+
+</codeblock>
+
+Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+
+## Setup your date library adapter
 
 Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
-This component receives your chosen date library's adapter and makes it accessible to all the Date and Time Pickers component using React context.
+This component receives your chosen [date library's adapter](https://mui.com/x/react-date-pickers/#date-library) (the doc uses `AdapterDayjs` which is based on [dayjs](https://day.js.org/)) and makes it accessible to all the Date and Time Pickers component using React context.
 
 Each demonstration in the documentation has its own `LocalizationProvider` wrapper.
 This is **not** a pattern to reproduce.

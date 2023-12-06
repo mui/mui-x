@@ -1,4 +1,4 @@
-import globalChance, { Chance } from 'chance';
+import { Chance } from 'chance';
 import {
   COLORS,
   COMMODITY_OPTIONS,
@@ -12,15 +12,17 @@ import {
 } from './static-data';
 import { GridDataGeneratorContext } from './gridColDefGenerator';
 
-const chanceId = globalChance();
 let chance: Chance.Chance;
+let chanceGuid: Chance.Chance;
 
 declare const DISABLE_CHANCE_RANDOM: any;
 
 if (typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM) {
-  chance = globalChance(() => 0.5);
+  chance = new Chance(() => 0.5);
+  chanceGuid = new Chance(42);
 } else {
-  chance = chanceId;
+  chance = new Chance();
+  chanceGuid = chance;
 }
 
 type ColumnDataGenerator<Value> = (data: any, context: GridDataGeneratorContext) => Value;
@@ -102,8 +104,7 @@ function datePast(years?: number, refDate?: string) {
 }
 
 export const random = (min: number, max: number): number => chance.floating({ min, max });
-export const randomInt = (min: number, max: number): number =>
-  Math.floor(random(0, 1) * (max - min + 1) + min);
+export const randomInt = (min: number, max: number): number => chance.integer({ min, max });
 export const randomPrice = (min = 0, max = 100000): number => Number(random(min, max).toFixed(2));
 export const randomRate = (): number => random(0, 1);
 export const randomDate = (start: Date, end: Date) =>
@@ -114,7 +115,7 @@ export const randomArrayItem = <T>(arr: T[]) => arr[randomInt(0, arr.length - 1)
 export const randomBoolean = (): boolean => randomArrayItem([true, false]);
 
 export const randomColor = () => randomArrayItem(COLORS);
-export const randomId = () => chanceId.guid();
+export const randomId = () => chanceGuid.guid();
 export const randomDesk = () => `D-${chance.integer({ min: 0, max: 10000 })}`;
 export const randomCommodity = () => randomArrayItem(COMMODITY_OPTIONS);
 export const randomTraderName = () => chance.name();

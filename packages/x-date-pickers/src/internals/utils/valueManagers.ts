@@ -6,7 +6,8 @@ import {
   FieldSection,
 } from '../../models';
 import type { FieldValueManager } from '../hooks/useField';
-import { areDatesEqual, replaceInvalidDateByNull } from './date-utils';
+import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
+import { getDefaultReferenceDate } from './getDefaultReferenceDate';
 import {
   addPositionPropertiesToSections,
   createDateStrForInputFromSections,
@@ -20,19 +21,30 @@ export type SingleItemPickerValueManager<
 
 export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
+  getTodayValue: getTodayDate,
+  getInitialReferenceValue: ({ value, referenceDate, ...params }) => {
+    if (value != null && params.utils.isValid(value)) {
+      return value;
+    }
+
+    if (referenceDate != null) {
+      return referenceDate;
+    }
+
+    return getDefaultReferenceDate(params);
+  },
   cleanValue: replaceInvalidDateByNull,
   areValuesEqual: areDatesEqual,
   isSameError: (a, b) => a === b,
+  hasError: (error) => error != null,
   defaultErrorState: null,
+  getTimezone: (utils, value) =>
+    value == null || !utils.isValid(value) ? null : utils.getTimezone(value),
+  setTimezone: (utils, timezone, value) =>
+    value == null ? null : utils.setTimezone(value, timezone),
 };
 
-export const singleItemFieldValueManager: FieldValueManager<
-  any,
-  any,
-  FieldSection,
-  DateValidationError | TimeValidationError | DateTimeValidationError
-> = {
+export const singleItemFieldValueManager: FieldValueManager<any, any, FieldSection> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, date, prevSections, isRTL, getSectionsFromDate) => {
@@ -45,11 +57,11 @@ export const singleItemFieldValueManager: FieldValueManager<
     return addPositionPropertiesToSections(getSectionsFromDate(date), isRTL);
   },
   getValueStrFromSections: createDateStrForInputFromSections,
-  getActiveDateSections: (sections) => sections,
   getActiveDateManager: (utils, state) => ({
-    activeDate: state.value,
-    referenceActiveDate: state.referenceValue,
-    getNewValueFromNewActiveDate: (newActiveDate) => ({
+    date: state.value,
+    referenceDate: state.referenceValue,
+    getSections: (sections) => sections,
+    getNewValuesFromNewActiveDate: (newActiveDate) => ({
       value: newActiveDate,
       referenceValue:
         newActiveDate == null || !utils.isValid(newActiveDate)
@@ -59,5 +71,4 @@ export const singleItemFieldValueManager: FieldValueManager<
   }),
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
-  hasError: (error) => error != null,
 };

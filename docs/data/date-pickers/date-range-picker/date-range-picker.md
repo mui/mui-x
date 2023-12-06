@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Range Picker component
 components: DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateRangeCalendar, DateRangePickerDay
 githubLabel: 'component: DateRangePicker'
@@ -7,9 +7,9 @@ packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
 
-# Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The Date Range Picker let the user select a range of dates.</p>
+<p class="description">The Date Range Picker lets the user select a range of dates.</p>
 
 ## Basic usage
 
@@ -25,11 +25,19 @@ Check-out their documentation page for more information:
 - [Date Range Field](/x/react-date-pickers/date-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
 
-## Uncontrolled vs. Controlled
+## Uncontrolled vs. controlled value
 
-The component can be uncontrolled or controlled.
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateRangePickerValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
 
 ## Available components
 
@@ -73,22 +81,38 @@ This prop will be ignored on the mobile picker.
 
 {{"demo": "DateRangePickerCalendarProp.js"}}
 
+### Use a single input field
+
+You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing:
+
+{{"demo": "SingleInputDateRangePicker.js"}}
+
+:::info
+You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers).
+:::
+
 ### Add shortcuts
 
 To simplify range selection, you can add [shortcuts](/x/react-date-pickers/shortcuts/#range-shortcuts).
 
 {{"demo": "BasicRangeShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Customize the field
+
+You can find the documentation in the [Custom field page](/x/react-date-pickers/custom-field/).
+
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
 
-## 🚧 Month Range Picker
+## Month Range Picker 🚧
+
+The Month Range Picker allows setting a range of months.
 
 :::warning
 This feature isn't implemented yet. It's coming.
 
 👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
-:::
 
-The Month Range Picker allows setting a range of months.
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+:::

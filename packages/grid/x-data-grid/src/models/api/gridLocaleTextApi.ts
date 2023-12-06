@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ComponentsPropsList } from '@mui/material/styles';
+import { GridColDef } from '../colDef';
 
 /**
  * Set the types of the texts in the grid.
@@ -74,6 +75,33 @@ export interface GridLocaleText {
   filterOperatorIsNotEmpty: string;
   filterOperatorIsAnyOf: string;
   filterOperatorContainsAnyOf: string;
+  'filterOperator=': string;
+  'filterOperator!=': string;
+  'filterOperator>': string;
+  'filterOperator>=': string;
+  'filterOperator<': string;
+  'filterOperator<=': string;
+
+  // Header filter operators text
+  headerFilterOperatorContains: string;
+  headerFilterOperatorEquals: string;
+  headerFilterOperatorStartsWith: string;
+  headerFilterOperatorEndsWith: string;
+  headerFilterOperatorIs: string;
+  headerFilterOperatorNot: string;
+  headerFilterOperatorAfter: string;
+  headerFilterOperatorOnOrAfter: string;
+  headerFilterOperatorBefore: string;
+  headerFilterOperatorOnOrBefore: string;
+  headerFilterOperatorIsEmpty: string;
+  headerFilterOperatorIsNotEmpty: string;
+  headerFilterOperatorIsAnyOf: string;
+  'headerFilterOperator=': string;
+  'headerFilterOperator!=': string;
+  'headerFilterOperator>': string;
+  'headerFilterOperator>=': string;
+  'headerFilterOperator<': string;
+  'headerFilterOperator<=': string;
 
   // Filter values text
   filterValueAny: string;
@@ -87,8 +115,8 @@ export interface GridLocaleText {
   columnMenuFilter: React.ReactNode;
   columnMenuHideColumn: React.ReactNode;
   columnMenuUnsort: React.ReactNode;
-  columnMenuSortAsc: React.ReactNode;
-  columnMenuSortDesc: React.ReactNode;
+  columnMenuSortAsc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
+  columnMenuSortDesc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;

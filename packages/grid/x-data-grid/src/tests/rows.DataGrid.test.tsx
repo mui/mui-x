@@ -7,7 +7,7 @@ import {
   userEvent,
   ErrorBoundary,
   waitFor,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -25,6 +25,8 @@ import {
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
+import Dialog from '@mui/material/Dialog';
+
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -122,6 +124,43 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(1);
   });
 
+  // https://github.com/mui/mui-x/issues/8042
+  it('should not throw when clicking the cell in the nested grid in a portal', () => {
+    const rows = [
+      { id: 1, firstName: 'Jon', age: 35 },
+      { id: 2, firstName: 'Cersei', age: 42 },
+      { id: 3, firstName: 'Jaime', age: 45 },
+    ];
+
+    function NestedGridDialog() {
+      return (
+        <Dialog open>
+          <div style={{ height: 300, width: '100%' }}>
+            <DataGrid rows={rows} columns={[{ field: 'id' }, { field: 'age' }]} />
+          </div>
+        </Dialog>
+      );
+    }
+
+    expect(() => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[
+              { field: 'id' },
+              { field: 'firstName', renderCell: () => <NestedGridDialog /> },
+            ]}
+            rows={rows}
+          />
+        </div>,
+      );
+
+      // click on the cell in the nested grid in the column that is not defined in the parent grid
+      const cell = document.querySelector('[data-rowindex="0"] [role="cell"][data-field="age"]')!;
+      fireEvent.click(cell);
+    }).not.toErrorDev();
+  });
+
   describe('prop: getRowClassName', () => {
     it('should apply the CSS class returned by getRowClassName', () => {
       const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
@@ -167,7 +206,7 @@ describe('<DataGrid /> - Rows', () => {
     function TestCase({
       getActions,
       ...other
-    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) {
+    }: { getActions?: () => React.JSX.Element[] } & Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -235,13 +274,14 @@ describe('<DataGrid /> - Rows', () => {
       });
     });
 
-    it('should not select the row when clicking in an action', () => {
+    it('should not select the row when clicking in an action', async () => {
       render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
-      expect(getRow(0)).not.to.have.class('Mui-selected');
+
+      await waitFor(() => expect(getRow(0)).not.to.have.class('Mui-selected'));
     });
 
     it('should not select the row when clicking in a menu action', async () => {
@@ -1071,5 +1111,49 @@ describe('<DataGrid /> - Rows', () => {
       act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
+  });
+
+  // https://github.com/mui/mui-x/issues/10373
+  it('should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport', async function test() {
+    if (isJSDOM) {
+      // needs virtualization
+      this.skip();
+    }
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          columns={[{ field: 'id' }]}
+          rows={[
+            { id: 0 },
+            { id: 1 },
+            { id: 2 },
+            { id: 3 },
+            { id: 4 },
+            { id: 5 },
+            { id: 6 },
+            { id: 7 },
+            { id: 8 },
+            { id: 9 },
+          ]}
+        />
+      </div>,
+    );
+
+    const cell = getCell(0, 0);
+    userEvent.mousePress(cell);
+
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+    virtualScroller.scrollTop = 1000;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+
+    const focusedRow = getRow(0);
+    expect(focusedRow.getAttribute('data-id')).to.equal('0');
+    expect(focusedRow.getAttribute('data-rowindex')).to.equal('0');
+    expect(focusedRow.getAttribute('aria-rowindex')).to.equal('2'); // 1-based, 1 is the header
+
+    const lastRow = getRow(9);
+    expect(lastRow.getAttribute('data-id')).to.equal('9');
+    expect(lastRow.getAttribute('data-rowindex')).to.equal('9');
+    expect(lastRow.getAttribute('aria-rowindex')).to.equal('11'); // 1-based, 1 is the header
   });
 });

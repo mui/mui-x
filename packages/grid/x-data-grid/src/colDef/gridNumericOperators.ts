@@ -1,7 +1,7 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterOperator } from '../models/gridFilterOperator';
-import { GridCellParams } from '../models';
+import type { GetApplyQuickFilterFn } from '../models/colDef/gridColDef';
 
 const parseNumericValue = (value: unknown) => {
   if (value == null) {
@@ -11,12 +11,14 @@ const parseNumericValue = (value: unknown) => {
   return Number(value);
 };
 
-export const getGridNumericQuickFilterFn = (value: any) => {
+export const getGridNumericQuickFilterFn: GetApplyQuickFilterFn<any, number | string | null> = (
+  value,
+) => {
   if (value == null || Number.isNaN(value) || value === '') {
     return null;
   }
 
-  return ({ value: columnValue }: GridCellParams): boolean => {
+  return (columnValue) => {
     return parseNumericValue(columnValue) === parseNumericValue(value);
   };
 };
@@ -27,14 +29,13 @@ export const getGridNumericOperators = (): GridFilterOperator<
   any
 >[] => [
   {
-    label: '=',
     value: '=',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value): boolean => {
         return parseNumericValue(value) === filterItem.value;
       };
     },
@@ -42,14 +43,13 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '!=',
     value: '!=',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value): boolean => {
         return parseNumericValue(value) !== filterItem.value;
       };
     },
@@ -57,14 +57,13 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '>',
     value: '>',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value): boolean => {
         if (value == null) {
           return false;
         }
@@ -76,14 +75,13 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '>=',
     value: '>=',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value): boolean => {
         if (value == null) {
           return false;
         }
@@ -95,14 +93,13 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '<',
     value: '<',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value): boolean => {
         if (value == null) {
           return false;
         }
@@ -114,14 +111,13 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '<=',
     value: '<=',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value): boolean => {
         if (value == null) {
           return false;
         }
@@ -135,7 +131,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
   {
     value: 'isEmpty',
     getApplyFilterFn: () => {
-      return ({ value }): boolean => {
+      return (value): boolean => {
         return value == null;
       };
     },
@@ -144,7 +140,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
   {
     value: 'isNotEmpty',
     getApplyFilterFn: () => {
-      return ({ value }): boolean => {
+      return (value): boolean => {
         return value != null;
       };
     },
@@ -157,7 +153,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value): boolean => {
         return value != null && filterItem.value.includes(Number(value));
       };
     },

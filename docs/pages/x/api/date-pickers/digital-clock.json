@@ -1,0 +1,86 @@
+{
+  "props": {
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "autoFocus": { "type": { "name": "bool" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "defaultValue": { "type": { "name": "any" } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "focusedView": { "type": { "name": "enum", "description": "'hours'" } },
+    "maxTime": { "type": { "name": "any" } },
+    "minTime": { "type": { "name": "any" } },
+    "minutesStep": { "type": { "name": "number" }, "default": "1" },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate | null, selectionState: PickerSelectionState | undefined, selectedView: TView | undefined) => void",
+        "describedArgs": ["value", "selectionState", "selectedView"]
+      }
+    },
+    "onFocusedViewChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(view: TView, hasFocus: boolean) => void",
+        "describedArgs": ["view", "hasFocus"]
+      }
+    },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
+    "openTo": { "type": { "name": "enum", "description": "'hours'" } },
+    "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
+    },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      }
+    },
+    "skipDisabled": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "timeStep": { "type": { "name": "number" }, "default": "30" },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+    },
+    "value": { "type": { "name": "any" } },
+    "view": { "type": { "name": "enum", "description": "'hours'" } },
+    "views": { "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" } }
+  },
+  "slots": [
+    {
+      "class": null,
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'"
+    }
+  ],
+  "name": "DigitalClock",
+  "imports": [
+    "import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';",
+    "import { DigitalClock } from '@mui/x-date-pickers';",
+    "import { DigitalClock } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": { "classes": ["root", "list", "item"], "globalClasses": {}, "name": "MuiDigitalClock" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-date-pickers/src/DigitalClock/DigitalClock.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li></ul>"
+}

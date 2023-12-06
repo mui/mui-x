@@ -10,8 +10,9 @@ import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../validation/useValidation';
-import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../../models';
+import { InferError } from '../useValidation';
+import { FieldSection, BaseSingleInputFieldProps } from '../../../models';
+import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -21,13 +22,12 @@ import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../.
  */
 export const useDesktopPicker = <
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
   getOpenDialogAriaText,
-  validator,
+  ...pickerParams
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
   const {
     slots,
@@ -35,12 +35,15 @@ export const useDesktopPicker = <
     className,
     sx,
     format,
+    formatDensity,
+    timezone,
     label,
     inputRef,
     readOnly,
     disabled,
     autoFocus,
     localeText,
+    reduceAnimations,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -58,10 +61,9 @@ export const useDesktopPicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
+    ...pickerParams,
     props,
     inputRef: internalInputRef,
-    valueManager,
-    validator,
     autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
@@ -83,7 +85,7 @@ export const useDesktopPicker = <
     externalSlotProps: innerSlotProps?.openPickerButton,
     additionalProps: {
       disabled: disabled || readOnly,
-      onClick: actions.onOpen,
+      onClick: open ? actions.onClose : actions.onOpen,
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
       edge: inputAdornmentProps.position,
     },
@@ -95,6 +97,7 @@ export const useDesktopPicker = <
   const Field = slots.field;
   const fieldProps: BaseSingleInputFieldProps<
     TDate | null,
+    TDate,
     FieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
@@ -108,8 +111,11 @@ export const useDesktopPicker = <
       className,
       sx,
       format,
+      formatDensity,
+      timezone,
       label,
       autoFocus: autoFocus && !props.open,
+      focused: open ? true : undefined,
     },
     ownerState: props,
   });
@@ -129,8 +135,15 @@ export const useDesktopPicker = <
     };
   }
 
-  const slotsForField: BaseSingleInputFieldProps<TDate | null, FieldSection, unknown>['slots'] = {
+  const slotsForField: BaseSingleInputFieldProps<
+    TDate | null,
+    TDate,
+    FieldSection,
+    unknown
+  >['slots'] = {
     textField: slots.textField,
+    clearIcon: slots.clearIcon,
+    clearButton: slots.clearButton,
     ...fieldProps.slots,
   };
 
@@ -175,6 +188,7 @@ export const useDesktopPicker = <
         slots={slots}
         slotProps={slotProps}
         shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
       >
         <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}

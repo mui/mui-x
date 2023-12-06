@@ -46,7 +46,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: '清除全部',
   filterPanelDeleteIconLabel: '删除',
   filterPanelLogicOperator: '逻辑操作器',
   filterPanelOperator: '操作器',
@@ -72,6 +72,33 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterOperatorIsNotEmpty: '不为空',
   filterOperatorIsAnyOf: '属于',
   // filterOperatorContainsAnyOf: 'contains any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: '包含',
+  headerFilterOperatorEquals: '等于',
+  headerFilterOperatorStartsWith: '开始于',
+  headerFilterOperatorEndsWith: '结束于',
+  headerFilterOperatorIs: '是',
+  headerFilterOperatorNot: '不是',
+  headerFilterOperatorAfter: '在后面',
+  headerFilterOperatorOnOrAfter: '在当前或后面',
+  headerFilterOperatorBefore: '在前面',
+  headerFilterOperatorOnOrBefore: '在当前或前面',
+  headerFilterOperatorIsEmpty: '为空',
+  headerFilterOperatorIsNotEmpty: '不为空',
+  headerFilterOperatorIsAnyOf: '属于',
+  'headerFilterOperator=': '等于',
+  'headerFilterOperator!=': '不等于',
+  'headerFilterOperator>': '大于',
+  'headerFilterOperator>=': '大于或等于',
+  'headerFilterOperator<': '小雨',
+  'headerFilterOperator<=': '小于或等于',
 
   // Filter values text
   filterValueAny: '任何',
@@ -81,7 +108,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '菜单',
   columnMenuShowColumns: '显示',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: '管理列',
   columnMenuFilter: '筛选器',
   columnMenuHideColumn: '隐藏',
   columnMenuUnsort: '恢复默认',

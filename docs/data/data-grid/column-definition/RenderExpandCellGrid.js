@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
@@ -102,28 +101,11 @@ const GridCellExpand = React.memo(function GridCellExpand(props) {
   );
 });
 
-GridCellExpand.propTypes = {
-  value: PropTypes.string.isRequired,
-  width: PropTypes.number.isRequired,
-};
-
 function renderCellExpand(params) {
   return (
     <GridCellExpand value={params.value || ''} width={params.colDef.computedWidth} />
   );
 }
-
-renderCellExpand.propTypes = {
-  /**
-   * The column of the row that the current cell belongs to.
-   */
-  colDef: PropTypes.object.isRequired,
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.string,
-};
 
 const columns = [
   { field: 'col1', headerName: 'Column 1', width: 80, renderCell: renderCellExpand },

@@ -55,7 +55,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Очистить фильтр',
   filterPanelDeleteIconLabel: 'Удалить',
   filterPanelLogicOperator: 'Логические операторы',
   filterPanelOperator: 'Операторы',
@@ -81,6 +81,33 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorIsNotEmpty: 'не пустой',
   filterOperatorIsAnyOf: 'любой из',
   // filterOperatorContainsAnyOf: 'contains any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'содержит',
+  headerFilterOperatorEquals: 'равен',
+  headerFilterOperatorStartsWith: 'начинается с',
+  headerFilterOperatorEndsWith: 'заканчивается на',
+  headerFilterOperatorIs: 'равен',
+  headerFilterOperatorNot: 'не равен',
+  headerFilterOperatorAfter: 'больше чем',
+  headerFilterOperatorOnOrAfter: 'больше или равно',
+  headerFilterOperatorBefore: 'меньше чем',
+  headerFilterOperatorOnOrBefore: 'меньше или равно',
+  headerFilterOperatorIsEmpty: 'пустой',
+  headerFilterOperatorIsNotEmpty: 'не пустой',
+  headerFilterOperatorIsAnyOf: 'любой из',
+  'headerFilterOperator=': 'содержит',
+  'headerFilterOperator!=': 'не содержит',
+  'headerFilterOperator>': 'больше чем',
+  'headerFilterOperator>=': 'больше или равно',
+  'headerFilterOperator<': 'меньше чем',
+  'headerFilterOperator<=': 'меньше или равно',
 
   // Filter values text
   filterValueAny: 'любой',
@@ -90,7 +117,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показать столбцы',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Управление колонками',
   columnMenuFilter: 'Фильтр',
   columnMenuHideColumn: 'Скрыть',
   columnMenuUnsort: 'Отменить сортировку',

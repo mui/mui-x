@@ -11,8 +11,8 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarDensity: 'Densidad',
   toolbarDensityLabel: 'Densidad',
   toolbarDensityCompact: 'Compacta',
-  toolbarDensityStandard: 'Standard',
-  toolbarDensityComfortable: 'Comoda',
+  toolbarDensityStandard: 'Estándar',
+  toolbarDensityComfortable: 'Cómoda',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columnas',
@@ -47,7 +47,7 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Remover todos',
   filterPanelDeleteIconLabel: 'Borrar',
   filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operadores',
@@ -69,10 +69,37 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'es en o posterior',
   filterOperatorBefore: 'es anterior',
   filterOperatorOnOrBefore: 'es en o anterior',
-  filterOperatorIsEmpty: 'está vacío',
+  filterOperatorIsEmpty: 'esta vacío',
   filterOperatorIsNotEmpty: 'no esta vacío',
   filterOperatorIsAnyOf: 'es cualquiera de',
   // filterOperatorContainsAnyOf: 'contains any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Contiene',
+  headerFilterOperatorEquals: 'Es igual a',
+  headerFilterOperatorStartsWith: 'Comienza con',
+  headerFilterOperatorEndsWith: 'Termina con',
+  headerFilterOperatorIs: 'Es',
+  headerFilterOperatorNot: 'No es',
+  headerFilterOperatorAfter: 'Esta después de',
+  headerFilterOperatorOnOrAfter: 'Esta en o después de',
+  headerFilterOperatorBefore: 'Esta antes de',
+  headerFilterOperatorOnOrBefore: 'Esta en o antes de',
+  headerFilterOperatorIsEmpty: 'Esta vacío',
+  headerFilterOperatorIsNotEmpty: 'No esta vacío',
+  headerFilterOperatorIsAnyOf: 'Es cualquiera de',
+  'headerFilterOperator=': 'Es igual a',
+  'headerFilterOperator!=': 'Es diferente a',
+  'headerFilterOperator>': 'Es mayor que',
+  'headerFilterOperator>=': 'Es mayor o igual que',
+  'headerFilterOperator<': 'Es menor que',
+  'headerFilterOperator<=': 'Es menor o igual que',
 
   // Filter values text
   filterValueAny: 'cualquiera',
@@ -82,7 +109,7 @@ const esESGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menú',
   columnMenuShowColumns: 'Mostrar columnas',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Administrar columnas',
   columnMenuFilter: 'Filtro',
   columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desordenar',

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -34,7 +34,7 @@ function getSelectedRowIds() {
     );
 }
 
-describe('<DataGrid /> - Row Selection', () => {
+describe('<DataGrid /> - Row selection', () => {
   const { render, clock } = createRenderer();
 
   const defaultData = getBasicGridData(4, 2);
@@ -190,7 +190,7 @@ describe('<DataGrid /> - Row Selection', () => {
       expect(getColumnHeaderCell(0).querySelectorAll('input')).to.have.length(1);
     });
 
-    it('should check and uncheck when double clicking the row', () => {
+    it('should check then uncheck when clicking twice the row', () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getSelectedRowIds()).to.deep.equal([]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
@@ -297,28 +297,16 @@ describe('<DataGrid /> - Row Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 
-    it('should keep only one selected row when turning off checkboxSelection', () => {
+    it('should reset selected rows when turning off checkboxSelection', () => {
       const { setProps } = render(<TestDataGridSelection checkboxSelection />);
       fireEvent.click(getCell(0, 0).querySelector('input')!);
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
       setProps({ checkboxSelection: false });
-      expect(getSelectedRowIds()).to.deep.equal([0]);
+      expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
-    it('should keep only one selectable row as selected when turning off checkboxSelection', () => {
-      const { setProps } = render(<TestDataGridSelection checkboxSelection />);
-      fireEvent.click(getCell(0, 0).querySelector('input')!);
-      fireEvent.click(getCell(1, 0).querySelector('input')!);
-      expect(getSelectedRowIds()).to.deep.equal([0, 1]);
-      setProps({
-        checkboxSelection: false,
-        isRowSelectable: ({ id }: { id: GridRowId }) => id > 0,
-      });
-      expect(getSelectedRowIds()).to.deep.equal([1]);
-    });
-
-    it('should keep only the first row in the current page as selected when turning off checkboxSelection', () => {
+    it('should reset row selection in the current page as selected when turning off checkboxSelection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           checkboxSelection
@@ -333,8 +321,8 @@ describe('<DataGrid /> - Row Selection', () => {
       fireEvent.click(getCell(2, 0).querySelector('input')!);
       expect(screen.getByText('2 rows selected')).not.to.equal(null);
       setProps({ checkboxSelection: false });
-      expect(getSelectedRowIds()).to.deep.equal([2]);
-      expect(screen.getByText('1 row selected')).not.to.equal(null);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(screen.queryByText('2 row selected')).to.equal(null);
     });
 
     it('should set the correct aria-label on the column header checkbox', () => {
@@ -533,7 +521,7 @@ describe('<DataGrid /> - Row Selection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           rowSelectionModel={[1]}
-          isRowSelectable={(params) => params.id > 0}
+          isRowSelectable={(params) => Number(params.id) > 0}
           checkboxSelection
         />,
       );
@@ -558,7 +546,7 @@ describe('<DataGrid /> - Row Selection', () => {
             paginationMode="server"
             rowCount={4}
             rowSelectionModel={[1, 4]}
-            isRowSelectable={(params) => params.id > 0}
+            isRowSelectable={(params) => Number(params.id) > 0}
             checkboxSelection
           />,
         );
@@ -784,6 +772,50 @@ describe('<DataGrid /> - Row Selection', () => {
     it('should not select rows passed in the rowSelectionModel prop', () => {
       render(<TestDataGridSelection rowSelection={false} rowSelectionModel={[0]} />);
       expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+  });
+
+  describe('performance', () => {
+    it('should not rerender unrelated nodes', () => {
+      // Couldn't use <RenderCounter> because we need to track multiple components
+      let commits: any[] = [];
+      function CustomCell(props: any) {
+        React.useEffect(() => {
+          commits.push({
+            rowId: props.id,
+          });
+        });
+        return <div>Hello</div>;
+      }
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[
+              { field: 'id', headerName: 'id', type: 'number' },
+              {
+                field: 'currencyPair',
+                headerName: 'Currency Pair',
+                renderCell: (params) => <CustomCell {...params} />,
+              },
+            ]}
+            rows={[
+              { id: 0, currencyPair: 'USDGBP' },
+              { id: 1, currencyPair: 'USDEUR' },
+            ]}
+            autoHeight={isJSDOM}
+            checkboxSelection
+          />
+        </div>,
+      );
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', false);
+      commits = [];
+      fireEvent.click(getCell(0, 1));
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', true);
+      // It shouldn't rerender any of the custom cells
+      expect(commits).to.deep.equal([]);
     });
   });
 });

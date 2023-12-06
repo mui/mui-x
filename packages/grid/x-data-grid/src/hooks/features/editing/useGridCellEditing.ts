@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
+import {
+  unstable_useEventCallback as useEventCallback,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -41,7 +44,7 @@ const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
     'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
     'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#server-side-persistence.',
   ],
   'error',
 );
@@ -157,14 +160,19 @@ export const useGridCellEditing = (
       } else if (params.isEditable) {
         let reason: GridCellEditStartReasons | undefined;
 
-        if (event.key === ' ') {
-          return; // Space scrolls to the last row
-        }
+        const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
+          'canStartEditing',
+          true,
+          { event, cellParams: params, editMode: 'cell' },
+        );
 
+        if (!canStartEditing) {
+          return;
+        }
         if (isPrintableKey(event)) {
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
-          reason = GridCellEditStartReasons.printableKeyDown;
+          reason = GridCellEditStartReasons.pasteKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
         } else if (event.key === 'Delete' || event.key === 'Backspace') {
@@ -183,19 +191,15 @@ export const useGridCellEditing = (
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params) => {
-      const { id, field, reason, key } = params;
+      const { id, field, reason } = params;
 
       const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
-      if (reason === GridCellEditStartReasons.printableKeyDown) {
-        if (React.version.startsWith('17')) {
-          // In React 17, cleaning the input is enough.
-          // The sequence of events makes the key pressed by the end-users update the textbox directly.
-          startCellEditModeParams.deleteValue = true;
-        } else {
-          startCellEditModeParams.initialValue = key;
-        }
-      } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
+      if (
+        reason === GridCellEditStartReasons.printableKeyDown ||
+        reason === GridCellEditStartReasons.deleteKeyDown ||
+        reason === GridCellEditStartReasons.pasteKeyDown
+      ) {
         startCellEditModeParams.deleteValue = true;
       }
 
@@ -511,7 +515,8 @@ export const useGridCellEditing = (
     }
   }, [cellModesModelProp, updateCellModesModel]);
 
-  React.useEffect(() => {
+  // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
+  useEnhancedEffect(() => {
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopCellEditMode may change it later

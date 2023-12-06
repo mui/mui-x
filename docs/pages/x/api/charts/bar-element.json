@@ -1,0 +1,22 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [
+    {
+      "class": null,
+      "name": "bar",
+      "description": "The component that renders the root.",
+      "default": "BarElementPath"
+    }
+  ],
+  "name": "BarElement",
+  "imports": [
+    "import { BarElement } from '@mui/x-charts/BarChart';",
+    "import { BarElement } from '@mui/x-charts';"
+  ],
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiBarElement" },
+  "filename": "/packages/x-charts/src/BarChart/BarElement.tsx",
+  "demos": "<ul></ul>"
+}

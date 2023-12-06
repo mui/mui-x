@@ -1,2 +1,5 @@
-<BrowserDatePicker />
-<BrowserDateRangePicker />
+<BrowserDatePicker
+  slotProps={{
+    field: { clearable: true },
+  }}
+/>

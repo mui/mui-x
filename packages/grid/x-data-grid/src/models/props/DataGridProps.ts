@@ -31,7 +31,6 @@ import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColu
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationModel } from '../gridPaginationProps';
-import { UncapitalizeObjectKeys } from '../../internals/utils';
 
 export interface GridExperimentalFeatures {
   /**
@@ -43,6 +42,12 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * Enables accessibility improvements that will be enabled by default in v7.
+   * If you rely on the v6 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
+   * @default false
+   */
+  ariaV7: boolean;
 }
 
 /**
@@ -63,7 +68,7 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
-    Omit<DataGridPropsWithoutDefaultValue<R>, 'componentsProps'> {}
+    DataGridPropsWithoutDefaultValue<R> {}
 
 /**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
@@ -86,7 +91,7 @@ export type DataGridForcedPropsKey =
  * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
-  slots: UncapitalizeObjectKeys<GridSlotsComponent>;
+  slots: GridSlotsComponent;
   localeText: GridLocaleText;
 }
 
@@ -96,13 +101,8 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
    * Overridable components.
-   * @deprecated Use `slots` instead.
    */
-  components?: Partial<GridSlotsComponent>;
-  /**
-   * Overridable components.
-   */
-  slots?: UncapitalizeObjectKeys<Partial<GridSlotsComponent>>;
+  slots?: Partial<GridSlotsComponent>;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
@@ -189,6 +189,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableDensitySelector: boolean;
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: boolean;
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -225,6 +231,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   filterMode: GridFeatureMode;
   /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: number;
+  /**
    * Sets the height in pixel of the column headers in the grid.
    * @default 56
    */
@@ -250,6 +261,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   hideFooterSelectedRowCount: boolean;
+  /**
+   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * @default false
+   */
+  ignoreDiacritics: boolean;
   /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
@@ -288,7 +305,7 @@ export interface DataGridPropsWithDefaultValues {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: number[];
+  pageSizeOptions: Array<number | { value: number; label: string }>;
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -308,7 +325,7 @@ export interface DataGridPropsWithDefaultValues {
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */
-  sortingOrder: GridSortDirection[];
+  sortingOrder: readonly GridSortDirection[];
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
@@ -338,6 +355,29 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default false
+   */
+  ignoreValueFormatterDuringExport:
+    | boolean
+    | {
+        csvExport?: boolean;
+        clipboardExport?: boolean;
+      };
+  /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: string;
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: number;
 }
 
 /**
@@ -349,6 +389,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps?: Record<string, unknown>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
@@ -403,7 +448,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
   /**
@@ -667,7 +712,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Set of columns of type [[GridColDef[]]].
    */
-  columns: GridColDef<R>[];
+  columns: readonly GridColDef<R>[];
   /**
    * Return the id of a given [[GridRowModel]].
    */
@@ -695,11 +740,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   slotProps?: GridSlotsComponentsProps;
   /**
-   * Overridable components props dynamically passed to the component at rendering.
-   * @deprecated Use the `slotProps` prop instead.
-   */
-  componentsProps?: GridSlotsComponentsProps;
-  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
@@ -722,4 +762,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onProcessRowUpdateError?: (error: any) => void;
   columnGroupingModel?: GridColumnGroupingModel;
+  /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy?: GridEventListener<'clipboardCopy'>;
 }

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -20,13 +19,6 @@ function CustomToolbar(props) {
     </Box>
   );
 }
-
-CustomToolbar.propTypes = {
-  /**
-   * className applied to the root component.
-   */
-  className: PropTypes.string,
-};
 
 export default function ToolbarComponent() {
   return (

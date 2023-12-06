@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -55,149 +54,6 @@ function LayoutWithKeyboardView(props) {
   );
 }
 
-LayoutWithKeyboardView.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.shape({
-    /**
-     * Props passed down to the action bar component.
-     */
-    actionBar: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-    /**
-     * Props passed down to the layoutRoot component.
-     */
-    layout: PropTypes.shape({
-      children: PropTypes.node,
-      classes: PropTypes.object,
-      className: PropTypes.string,
-      /**
-       * Overridable components.
-       * @default {}
-       * @deprecated Please use `slots`.
-       */
-      components: PropTypes.shape({
-        /**
-         * Custom component for the action bar, it is placed below the picker views.
-         * @default PickersActionBar
-         */
-        ActionBar: PropTypes.elementType,
-        /**
-         * Custom component for wrapping the layout.
-         * It wraps the toolbar, views, action bar, and shortcuts.
-         */
-        Layout: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-        /**
-         * Custom component for the shortcuts.
-         * @default PickersShortcuts
-         */
-        Shortcuts: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-        /**
-         * Tabs enabling toggling between views.
-         */
-        Tabs: PropTypes.elementType,
-        /**
-         * Custom component for the toolbar.
-         * It is placed above the picker views.
-         */
-        Toolbar: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-      }),
-      /**
-       * The props used for each component slot.
-       * @default {}
-       * @deprecated Please use `slotProps`.
-       */
-      componentsProps: PropTypes.object,
-      disabled: PropTypes.bool,
-      isLandscape: PropTypes.bool,
-      isValid: PropTypes.func,
-      onAccept: PropTypes.func,
-      onCancel: PropTypes.func,
-      onChange: PropTypes.func,
-      onClear: PropTypes.func,
-      onClose: PropTypes.func,
-      onDismiss: PropTypes.func,
-      onOpen: PropTypes.func,
-      onSetToday: PropTypes.func,
-      onViewChange: PropTypes.func,
-      /**
-       * Force rendering in particular orientation.
-       */
-      orientation: PropTypes.oneOf(['landscape', 'portrait']),
-      readOnly: PropTypes.bool,
-      /**
-       * The props used for each component slot.
-       * @default {}
-       */
-      slotProps: PropTypes.object,
-      /**
-       * Overridable component slots.
-       * @default {}
-       */
-      slots: PropTypes.any,
-      sx: PropTypes.oneOfType([
-        PropTypes.arrayOf(
-          PropTypes.oneOfType([
-            PropTypes.oneOf([null]),
-            PropTypes.func,
-            PropTypes.object,
-            PropTypes.bool,
-          ]),
-        ),
-        PropTypes.func,
-        PropTypes.object,
-      ]),
-      value: PropTypes.object,
-      view: PropTypes.oneOf([
-        'day',
-        'hours',
-        'minutes',
-        'month',
-        'seconds',
-        'year',
-        null,
-      ]).isRequired,
-      views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year'])),
-      wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
-    }),
-    /**
-     * Props passed down to the shortcuts component.
-     */
-    shortcuts: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-    /**
-     * Props passed down to the tabs component.
-     */
-    tabs: PropTypes.object,
-    /**
-     * Props passed down to the toolbar component.
-     */
-    toolbar: PropTypes.shape({
-      /**
-       * className applied to the root component.
-       */
-      className: PropTypes.string,
-      /**
-       * If `true`, show the toolbar even in desktop mode.
-       * @default `true` for Desktop, `false` for Mobile.
-       */
-      hidden: PropTypes.bool,
-      /**
-       * Toolbar date format.
-       */
-      toolbarFormat: PropTypes.string,
-      /**
-       * Toolbar value placeholder—it is displayed when the value is empty.
-       * @default "––"
-       */
-      toolbarPlaceholder: PropTypes.node,
-    }),
-  }),
-  value: PropTypes.object,
-  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile', null]).isRequired,
-};
-
 function ToolbarWithKeyboardViewSwitch(props) {
   const { showKeyboardViewSwitch, showKeyboardView, setShowKeyboardView, ...other } =
     props;
@@ -230,14 +86,6 @@ function ToolbarWithKeyboardViewSwitch(props) {
 
   return <DatePickerToolbar {...other} />;
 }
-
-ToolbarWithKeyboardViewSwitch.propTypes = {
-  isLandscape: PropTypes.bool.isRequired,
-  setShowKeyboardView: PropTypes.func,
-  showKeyboardView: PropTypes.bool,
-  showKeyboardViewSwitch: PropTypes.bool,
-};
-
 export default function MobileKeyboardView() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

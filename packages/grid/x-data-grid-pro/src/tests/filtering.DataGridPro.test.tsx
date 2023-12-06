@@ -6,19 +6,22 @@ import {
   GridLogicOperator,
   GridPreferencePanelsValue,
   GridRowModel,
-  SUBMIT_FILTER_STROKE_TIME,
+  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   useGridApiRef,
   DataGridPro,
   GetColumnForNewFilterArgs,
   FilterColumnsArgs,
   GridToolbar,
   gridExpandedSortedRowEntriesSelector,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+
+const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -72,7 +75,7 @@ describe('<DataGridPro /> - Filter', () => {
     ],
   };
 
-  it('componentsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
+  it('slotProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
     const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
       // remove already filtered fields from list of columns
       const filteredFields = currentFilters?.map((item) => item.field);
@@ -100,8 +103,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
@@ -129,8 +132,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             getColumnForNewFilter,
           },
@@ -155,8 +158,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
@@ -349,7 +352,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        componentsProps={{
+        slotProps={{
           filterPanel: {
             disableAddFilterButton: true,
           },
@@ -357,6 +360,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Remove all' })).not.to.equal(null);
   });
 
   it('should hide `Remove all` in filter panel when `disableRemoveAllButton` is `true`', () => {
@@ -368,13 +372,14 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        componentsProps={{
+        slotProps={{
           filterPanel: {
             disableRemoveAllButton: true,
           },
         }}
       />,
     );
+    expect(screen.queryByRole('button', { name: 'Add filter' })).not.to.equal(null);
     expect(screen.queryByRole('button', { name: 'Remove all' })).to.equal(null);
   });
 
@@ -841,6 +846,155 @@ describe('<DataGridPro /> - Filter', () => {
 
       const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
+    });
+  });
+
+  it('should give a stable ID to the filter item used as placeholder', function test() {
+    if (isJSDOM) {
+      this.skip(); // It's not re-rendering the filter panel correctly
+    }
+
+    const { rerender } = render(<TestCase slots={{ toolbar: GridToolbar }} />);
+    const filtersButton = screen.getByRole('button', { name: /Filters/i });
+    fireEvent.click(filtersButton);
+
+    let filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
+    const oldId = filterForm!.dataset.id;
+
+    rerender(<TestCase slots={{ toolbar: GridToolbar }} rows={[{ id: 0, brand: 'ADIDAS' }]} />);
+    filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
+    const newId = filterForm!.dataset.id;
+    expect(oldId).to.equal(newId);
+  });
+
+  describe('Header filters', () => {
+    it('should reflect the `filterModel` prop in header filters correctly', () => {
+      render(<TestCase filterModel={filterModel} headerFilters />);
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      const filterCellInput = getColumnHeaderCell(0, 1).querySelector('input');
+      expect(filterCellInput).to.have.value('a');
+    });
+
+    it('should apply filters on type when the focus is on cell', () => {
+      render(<TestCase headerFilters />);
+
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      const filterCell = getColumnHeaderCell(0, 1);
+      const filterCellInput = filterCell.querySelector('input')!;
+      expect(filterCellInput).not.toHaveFocus();
+      fireEvent.mouseDown(filterCellInput);
+      expect(filterCellInput).toHaveFocus();
+      fireEvent.change(filterCellInput, { target: { value: 'ad' } });
+      clock.tick(SUBMIT_FILTER_STROKE_TIME);
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+    });
+
+    it('should call `onFilterModelChange` when filters are updated', () => {
+      const onFilterModelChange = spy();
+      render(<TestCase onFilterModelChange={onFilterModelChange} headerFilters />);
+
+      const filterCell = getColumnHeaderCell(0, 1);
+      const filterCellInput = filterCell.querySelector('input')!;
+      fireEvent.click(filterCell);
+      fireEvent.change(filterCellInput, { target: { value: 'ad' } });
+      clock.tick(SUBMIT_FILTER_STROKE_TIME);
+      expect(onFilterModelChange.callCount).to.equal(1);
+    });
+
+    it('should allow to change the operator from operator menu', () => {
+      const onFilterModelChange = spy();
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'brand',
+                    operator: 'contains',
+                    value: 'a',
+                  },
+                ],
+              },
+            },
+          }}
+          onFilterModelChange={onFilterModelChange}
+          headerFilters
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+
+      const filterCell = getColumnHeaderCell(0, 1);
+      fireEvent.click(filterCell);
+
+      fireEvent.click(within(filterCell).getByLabelText('Operator'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Equals' }));
+
+      expect(onFilterModelChange.callCount).to.equal(1);
+      expect(onFilterModelChange.lastCall.firstArg.items[0].operator).to.equal('equals');
+      expect(getColumnValues(0)).to.deep.equal([]);
+    });
+
+    it('should allow to clear the filter by clear button', () => {
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'brand',
+                    operator: 'contains',
+                    value: 'a',
+                  },
+                ],
+              },
+            },
+          }}
+          headerFilters
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      fireEvent.click(screen.getByRole('button', { name: 'Clear filter' }));
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
+
+    it('should allow to customize header filter cell using `renderHeaderFilter`', () => {
+      render(
+        <TestCase
+          columns={[
+            { field: 'brand', headerName: 'Brand', renderHeaderFilter: () => 'Custom Filter Cell' },
+          ]}
+          headerFilters
+        />,
+      );
+
+      expect(getColumnHeaderCell(0, 1).textContent).to.equal('Custom Filter Cell');
+    });
+
+    it('should allow to customize header filter cell using `filterOperators`', () => {
+      render(
+        <TestCase
+          columns={[
+            {
+              field: 'brand',
+              headerName: 'Brand',
+              filterOperators: [
+                {
+                  value: 'contains',
+                  getApplyFilterFn: () => () => true,
+                  InputComponent: () => <div>Custom Input</div>,
+                },
+              ],
+            },
+          ]}
+          headerFilters
+        />,
+      );
+
+      expect(getColumnHeaderCell(0, 1).textContent).to.equal('Custom Input');
     });
   });
 });

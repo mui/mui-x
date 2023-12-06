@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ClockNumber } from './ClockNumber';
-import { MuiPickersAdapter } from '../internals/models';
+import { MuiPickersAdapter } from '../models';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 
 interface GetHourNumbersOptions<TDate> {
@@ -30,7 +30,7 @@ export const getHourNumbers = <TDate extends unknown>({
 }: GetHourNumbersOptions<TDate>) => {
   const currentHours = value ? utils.getHours(value) : null;
 
-  const hourNumbers: JSX.Element[] = [];
+  const hourNumbers: React.JSX.Element[] = [];
   const startHour = ampm ? 1 : 0;
   const endHour = ampm ? 12 : 23;
 

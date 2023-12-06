@@ -1,10 +1,10 @@
 import {
   DateCalendarClassKey,
   DayCalendarClassKey,
-  PickersCalendarHeaderClassKey,
   PickersFadeTransitionGroupClassKey,
   PickersSlideTransitionClassKey,
 } from '../DateCalendar';
+import { PickersCalendarHeaderClassKey } from '../PickersCalendarHeader';
 import { DayCalendarSkeletonClassKey } from '../DayCalendarSkeleton';
 import {
   ClockClassKey,
@@ -26,6 +26,11 @@ import {
   PickersToolbarClassKey,
   PickersToolbarTextClassKey,
 } from '../internals';
+import { DigitalClockClassKey } from '../DigitalClock';
+import {
+  MultiSectionDigitalClockClassKey,
+  MultiSectionDigitalClockSectionClassKey,
+} from '../MultiSectionDigitalClock';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
@@ -33,14 +38,15 @@ export interface PickersComponentNameToClassKey {
   MuiClockNumber: ClockNumberClassKey;
   MuiClockPointer: ClockPointerClassKey;
   MuiDateCalendar: DateCalendarClassKey;
-  MuiDateField: never;
   MuiDatePickerToolbar: DatePickerToolbarClassKey;
   MuiDateTimePickerTabs: DateTimePickerTabsClassKey;
   MuiDateTimePickerToolbar: DateTimePickerToolbarClassKey;
   MuiDayCalendar: DayCalendarClassKey;
   MuiDayCalendarSkeleton: DayCalendarSkeletonClassKey;
-  MuiLocalizationProvider: never;
+  MuiDigitalClock: DigitalClockClassKey;
   MuiMonthCalendar: MonthCalendarClassKey;
+  MuiMultiSectionDigitalClock: MultiSectionDigitalClockClassKey;
+  MuiMultiSectionDigitalClockSection: MultiSectionDigitalClockSectionClassKey;
   MuiPickersArrowSwitcher: PickersArrowSwitcherClassKey;
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
@@ -56,24 +62,6 @@ export interface PickersComponentNameToClassKey {
   MuiTimeClock: TimeClockClassKey;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;
-
-  // Date Pickers
-  MuiDatePicker: never;
-  MuiDesktopDatePicker: never;
-  MuiMobileDatePicker: never;
-  MuiStaticDatePicker: never;
-
-  // Time Pickers
-  MuiTimePicker: never;
-  MuiDesktopTimePicker: never;
-  MuiMobileTimePicker: never;
-  MuiStaticTimePicker: never;
-  
-  // Date Time Pickers
-  MuiDateTimePicker: never;
-  MuiDesktopDateTimePicker: never;
-  MuiMobileDateTimePicker: never;
-  MuiStaticDateTimePicker: never;
 }
 
 declare module '@mui/material/styles' {

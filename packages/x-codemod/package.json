@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "6.0.3",
+  "version": "7.0.0-alpha.2",
   "bin": "./codemod.js",
   "private": false,
   "author": "MUI Team",
@@ -9,6 +9,7 @@
     "react",
     "react-component",
     "mui",
+    "mui-x",
     "codemod",
     "jscodeshift"
   ],
@@ -25,18 +26,18 @@
     "directory": "packages/x-codemod"
   },
   "license": "MIT",
-  "homepage": "https://github.com/mui/mui-x/blob/-/packages/x-codemod",
+  "homepage": "https://github.com/mui/mui-x/tree/master/packages/x-codemod",
   "funding": {
     "type": "opencollective",
-    "url": "https://opencollective.com/mui"
+    "url": "https://opencollective.com/mui-org"
   },
   "dependencies": {
-    "@babel/core": "^7.21.3",
-    "@babel/runtime": "^7.21.0",
-    "@babel/traverse": "^7.21.3",
+    "@babel/core": "^7.23.3",
+    "@babel/runtime": "^7.23.4",
+    "@babel/traverse": "^7.23.4",
     "jscodeshift": "0.13.1",
     "jscodeshift-add-imports": "^1.0.10",
-    "yargs": "^17.7.1"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/jscodeshift": "^0.11.5"

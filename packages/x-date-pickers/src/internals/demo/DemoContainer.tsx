@@ -15,6 +15,7 @@ type PickersGridChildComponentType =
   | 'multi-input-range-field'
   | 'single-input-range-field'
   | 'UI-view'
+  | 'Tall-UI-view'
   | 'multi-panel-UI-view';
 
 type PickersSupportedSections = 'date' | 'time' | 'date-time';
@@ -22,6 +23,10 @@ type PickersSupportedSections = 'date' | 'time' | 'date-time';
 const getChildTypeFromChildName = (childName: string): PickersGridChildComponentType => {
   if (childName.match(/^([A-Za-z]+)Range(Calendar|Clock)$/)) {
     return 'multi-panel-UI-view';
+  }
+
+  if (childName.match(/^([A-Za-z]*)(DigitalClock)$/)) {
+    return 'Tall-UI-view';
   }
 
   if (childName.match(/^Static([A-Za-z]+)/) || childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)) {
@@ -59,6 +64,10 @@ interface DemoItemProps {
   component?: string;
   children: React.ReactNode;
 }
+/**
+ * WARNING: This is an internal component used in documentation to achieve a desired layout.
+ * Please do not use it in your application.
+ */
 export function DemoItem(props: DemoItemProps) {
   const { label, children, component } = props;
 
@@ -85,6 +94,10 @@ export function DemoItem(props: DemoItemProps) {
   );
 }
 
+/**
+ * WARNING: This is an internal component used in documentation to achieve a desired layout.
+ * Please do not use it in your application.
+ */
 export function DemoContainer(props: DemoGridProps) {
   const { children, components, sx: sxProp } = props;
 
@@ -98,7 +111,7 @@ export function DemoContainer(props: DemoGridProps) {
 
   const getSpacing = (direction: 'column' | 'row') => {
     if (direction === 'row') {
-      return childrenTypes.has('UI-view') ? 3 : 2;
+      return childrenTypes.has('UI-view') || childrenTypes.has('Tall-UI-view') ? 3 : 2;
     }
 
     return childrenTypes.has('UI-view') ? 4 : 3;
@@ -131,12 +144,21 @@ export function DemoContainer(props: DemoGridProps) {
   if (childrenTypes.has('UI-view')) {
     // noop
   } else if (childrenTypes.has('single-input-range-field')) {
-    sx = {
-      ...sx,
-      [`& > .${textFieldClasses.root}`]: {
-        minWidth: { xs: 300, md: 400 },
-      },
-    };
+    if (!childrenSupportedSections.has('date-time')) {
+      sx = {
+        ...sx,
+        [`& > .${textFieldClasses.root}`]: {
+          minWidth: 300,
+        },
+      };
+    } else {
+      sx = {
+        ...sx,
+        [`& > .${textFieldClasses.root}`]: {
+          minWidth: { xs: 300, md: 400 },
+        },
+      };
+    }
   } else if (childrenSupportedSections.has('date-time')) {
     sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 270 } };
   } else {

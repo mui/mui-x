@@ -1,10 +1,9 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
-  DataGridPro,
+  DataGrid,
   useGridApiContext,
   GridCellEditStopReasons,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import InputBase from '@mui/material/InputBase';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
@@ -93,30 +92,6 @@ function EditTextarea(props) {
   );
 }
 
-EditTextarea.propTypes = {
-  /**
-   * The column of the row that the current cell belongs to.
-   */
-  colDef: PropTypes.object.isRequired,
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * If true, the cell is the active element.
-   */
-  hasFocus: PropTypes.bool.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.string,
-};
-
 const multilineColumn = {
   type: 'string',
   renderEditCell: (params) => <EditTextarea {...params} />,
@@ -155,7 +130,7 @@ for (let i = 0; i < 50; i += 1) {
 export default function MultilineEditing() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         onCellEditStop={(params, event) => {

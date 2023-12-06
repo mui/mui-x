@@ -14,32 +14,59 @@ export interface PickersShortcutsItem<TValue> {
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
 }
 
-export interface PickersShortcutsProps<TValue> extends Omit<ListProps, 'onChange'> {
+export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<unknown>, 'getValue'>;
+
+export type PickerShortcutChangeImportance = 'set' | 'accept';
+
+export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'onChange'> {
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
    * @default `[]`
    */
   items?: PickersShortcutsItem<TValue>[];
+  /**
+   * Importance of the change when picking a shortcut:
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
+   */
+  changeImportance?: PickerShortcutChangeImportance;
+}
+
+export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  onChange: (newValue: TValue) => void;
+  onChange: (
+    newValue: TValue,
+    changeImportance: PickerShortcutChangeImportance,
+    shortcut: PickersShortcutsItemContext,
+  ) => void;
   isValid: (value: TValue) => boolean;
 }
 
+/**
+ * Demos:
+ *
+ * - [Shortcuts](https://mui.com/x/react-date-pickers/shortcuts/)
+ *
+ * API:
+ *
+ * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
+ */
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, isLandscape, onChange, isValid, ...other } = props;
+  const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {
     return null;
   }
 
-  const resolvedItems = items.map((item) => {
-    const newValue = item.getValue({ isValid });
+  const resolvedItems = items.map(({ getValue, ...item }) => {
+    const newValue = getValue({ isValid });
 
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue);
+        onChange(newValue, changeImportance, item);
       },
       disabled: !isValid(newValue),
     };
@@ -74,7 +101,15 @@ PickersShortcuts.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Importance of the change when picking a shortcut:
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
+   */
+  changeImportance: PropTypes.oneOf(['accept', 'set']),
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * If `true`, compact vertical padding designed for keyboard and mouse input is used for
    * the list and list items.

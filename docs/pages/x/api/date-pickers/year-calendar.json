@@ -1,6 +1,6 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
@@ -9,14 +9,33 @@
     "disablePast": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
-    "onChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: TDate) => void", "describedArgs": ["value"] }
+    },
     "readOnly": { "type": { "name": "bool" } },
-    "shouldDisableYear": { "type": { "name": "func" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid year using the validation props, except callbacks such as `shouldDisableYear`."
+    },
+    "shouldDisableYear": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(year: TDate) => boolean",
+        "describedArgs": ["year"],
+        "returned": "boolean"
+      }
+    },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "value": { "type": { "name": "any" } },
     "yearsPerRow": {
@@ -24,13 +43,17 @@
       "default": "3"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "YearCalendar",
+  "imports": [
+    "import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';",
+    "import { YearCalendar } from '@mui/x-date-pickers';",
+    "import { YearCalendar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearCalendar" },
+  "spread": true,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "YearCalendar" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "YearCalendar" }
-  ]
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
 }

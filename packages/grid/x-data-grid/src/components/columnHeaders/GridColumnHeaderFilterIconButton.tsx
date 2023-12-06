@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import Badge from '@mui/material/Badge';
+import { useGridSelector } from '../../hooks';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -37,6 +38,9 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
+  const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
+  const labelId = useId();
+  const panelId = useId();
 
   const toggleFilter = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,27 +52,33 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef.current.hideFilterPanel();
       } else {
-        apiRef.current.showFilterPanel();
+        apiRef.current.showFilterPanel(undefined, panelId, labelId);
       }
 
       if (onClick) {
         onClick(apiRef.current.getColumnHeaderParams(field), event);
       }
     },
-    [apiRef, field, onClick],
+    [apiRef, field, onClick, panelId, labelId],
   );
 
   if (!counter) {
     return null;
   }
 
+  const open = preferencePanel.open && preferencePanel.labelId === labelId;
+
   const iconButton = (
     <rootProps.slots.baseIconButton
+      id={labelId}
       onClick={toggleFilter}
       color="default"
       aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
       tabIndex={-1}
+      aria-haspopup="menu"
+      aria-expanded={open}
+      aria-controls={open ? panelId : undefined}
       {...rootProps.slotProps?.baseIconButton}
     >
       <rootProps.slots.columnFilteredIcon className={classes.icon} fontSize="small" />

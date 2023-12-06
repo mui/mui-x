@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import {
   DataGrid,
@@ -46,14 +45,6 @@ function CustomTypeEditComponent(props) {
 
   return <GridEditSingleSelectCell onValueChange={handleValueChange} {...other} />;
 }
-
-CustomTypeEditComponent.propTypes = {
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  setRows: PropTypes.func.isRequired,
-};
 
 export default function LinkedFieldsCellEditing() {
   const editingRow = React.useRef(null);
@@ -125,7 +116,6 @@ export default function LinkedFieldsCellEditing() {
     setRows((prevRows) =>
       prevRows.map((row) => (row.id === editingRow.current?.id ? newRow : row)),
     );
-
     return newRow;
   };
 

@@ -1,6 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../models';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'uren',
+  minutes: 'minuten',
+  seconds: 'seconden',
+  meridiem: 'meridium',
+};
 
 const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,7 +17,7 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'open vorige view',
   openNextView: 'open volgende view',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'jaarweergave is geopend, schakel over naar kalenderweergave'
       : 'kalenderweergave is geopend, switch naar jaarweergave',
@@ -33,7 +40,7 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Selecteer ${view}. ${
+    `Selecteer ${timeViews[view]}. ${
       time === null
         ? 'Geen tijd geselecteerd'
         : `Geselecteerde tijd is ${adapter.format(time, 'fullTime')}`
@@ -41,6 +48,9 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} uren`,
   minutesClockNumberText: (minutes) => `${minutes} minuten`,
   secondsClockNumberText: (seconds) => `${seconds} seconden`,
+
+  // Digital clock labels
+  selectViewText: (view) => `Selecteer ${timeViews[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Weeknummer',
@@ -57,20 +67,21 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Kies tijd, geselecteerde tijd is ${utils.format(value, 'fullTime')}`
       : 'Kies tijd',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'kies tijd',
   dateTableLabel: 'kies datum',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const nlNL = getPickersLocalization(nlNLPickers);

@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
+  unstable_useId as useId,
 } from '@mui/utils';
 import Badge from '@mui/material/Badge';
 import { ButtonProps } from '@mui/material/Button';
@@ -35,7 +36,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
-  overridesResolver: (props, styles) => styles.toolbarFilterList,
+  overridesResolver: (_props, styles) => styles.toolbarFilterList,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   margin: theme.spacing(1, 1, 0.5),
   padding: theme.spacing(0, 1),
@@ -60,6 +61,8 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const classes = useUtilityClasses(rootProps);
+    const filterButtonId = useId();
+    const filterPanelId = useId();
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
@@ -93,7 +96,10 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
                 <li key={index}>
                   {`${lookup[item.field!].headerName || item.field}
                   ${getOperatorLabel(item)}
-                  ${item.value ? getFilterItemValue(item) : ''}`}
+                  ${
+                    // implicit check for null and undefined
+                    item.value != null ? getFilterItemValue(item) : ''
+                  }`}
                 </li>
               )),
             }))}
@@ -105,9 +111,13 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const toggleFilter = (event: React.MouseEvent<HTMLButtonElement>) => {
       const { open, openedPanelValue } = preferencePanel;
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
-        apiRef.current.hideFilterPanel();
+        apiRef.current.hidePreferences();
       } else {
-        apiRef.current.showFilterPanel();
+        apiRef.current.showPreferences(
+          GridPreferencePanelsValue.filters,
+          filterPanelId,
+          filterButtonId,
+        );
       }
       buttonProps.onClick?.(event);
     };
@@ -117,6 +127,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       return null;
     }
 
+    const isOpen = preferencePanel.open && preferencePanel.panelId === filterPanelId;
     return (
       <rootProps.slots.baseTooltip
         title={tooltipContentNode}
@@ -126,8 +137,12 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       >
         <rootProps.slots.baseButton
           ref={ref}
+          id={filterButtonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
+          aria-controls={isOpen ? filterPanelId : undefined}
+          aria-expanded={isOpen}
+          aria-haspopup
           startIcon={
             <Badge badgeContent={activeFilters.length} color="primary">
               <rootProps.slots.openFilterButtonIcon />
@@ -153,7 +168,9 @@ GridToolbarFilterButton.propTypes = {
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps: PropTypes.object,
+  componentsProps: PropTypes.shape({
+    button: PropTypes.object,
+  }),
 } as any;
 
 export { GridToolbarFilterButton };

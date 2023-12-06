@@ -1,10 +1,11 @@
-import { GridRowId, GridTreeNode, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import { GridRowId, GridTreeNode, GRID_ROOT_GROUP_ID, GridRowTreeConfig } from '@mui/x-data-grid';
 import { buildRootGroup, GridRowTreeCreationValue } from '@mui/x-data-grid/internals';
 import { RowTreeBuilderNode, GridTreePathDuplicateHandler } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
 import { DataGridProProps } from '../../models/dataGridProProps';
 
 interface CreateRowTreeParams {
+  previousTree: GridRowTreeConfig | null;
   nodes: RowTreeBuilderNode[];
   defaultGroupingExpansionDepth: number;
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'];
@@ -28,6 +29,7 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
 
     insertDataRowInTree({
       tree,
+      previousTree: params.previousTree,
       id: node.id,
       path: node.path,
       onDuplicatePath: params.onDuplicatePath,

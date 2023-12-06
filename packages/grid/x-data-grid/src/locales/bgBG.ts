@@ -72,6 +72,33 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterOperatorIsNotEmpty: 'не е празен',
   filterOperatorIsAnyOf: 'е някой от',
   // filterOperatorContainsAnyOf: 'contains any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Съдържа',
+  headerFilterOperatorEquals: 'Равнo',
+  headerFilterOperatorStartsWith: 'Започва с',
+  headerFilterOperatorEndsWith: 'Завършва с',
+  headerFilterOperatorIs: 'Равно е на',
+  headerFilterOperatorNot: 'Не се равнява на',
+  headerFilterOperatorAfter: 'След',
+  headerFilterOperatorOnOrAfter: 'След (включително)',
+  headerFilterOperatorBefore: 'Преди',
+  headerFilterOperatorOnOrBefore: 'Преди (включително)',
+  headerFilterOperatorIsEmpty: 'Празен',
+  headerFilterOperatorIsNotEmpty: 'Не е празен',
+  headerFilterOperatorIsAnyOf: 'Всичко от',
+  'headerFilterOperator=': 'Равно',
+  'headerFilterOperator!=': 'Различно',
+  'headerFilterOperator>': 'По-голямо от',
+  'headerFilterOperator>=': 'По-голямо или равно на',
+  'headerFilterOperator<': 'По-малко от',
+  'headerFilterOperator<=': 'По-малко или равно на',
 
   // Filter values text
   filterValueAny: 'всякакви',
@@ -136,7 +163,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Спри групиране по ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Превключване на панела с детайли',
   expandDetailPanel: 'Разгъване',
   collapseDetailPanel: 'Свиване',
 
@@ -144,12 +171,12 @@ const bgBGGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Подредба на редове',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Агрегиране',
+  aggregationFunctionLabelSum: 'сума',
+  aggregationFunctionLabelAvg: 'срст',
+  aggregationFunctionLabelMin: 'мин',
+  aggregationFunctionLabelMax: 'макс',
+  aggregationFunctionLabelSize: 'размер',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

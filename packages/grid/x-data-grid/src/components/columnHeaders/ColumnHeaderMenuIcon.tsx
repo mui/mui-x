@@ -47,22 +47,27 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
 
   return (
     <div className={classes.root}>
-      <rootProps.slots.baseIconButton
-        ref={iconButtonRef}
-        tabIndex={-1}
-        className={classes.button}
-        aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+      <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('columnMenuLabel')}
-        size="small"
-        onClick={handleMenuIconClick}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        aria-controls={columnMenuId}
-        id={columnMenuButtonId}
-        {...rootProps.slotProps?.baseIconButton}
+        enterDelay={1000}
+        {...rootProps.slotProps?.baseTooltip}
       >
-        <rootProps.slots.columnMenuIcon fontSize="small" />
-      </rootProps.slots.baseIconButton>
+        <rootProps.slots.baseIconButton
+          ref={iconButtonRef}
+          tabIndex={-1}
+          className={classes.button}
+          aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+          size="small"
+          onClick={handleMenuIconClick}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-controls={open ? columnMenuId : undefined}
+          id={columnMenuButtonId}
+          {...rootProps.slotProps?.baseIconButton}
+        >
+          <rootProps.slots.columnMenuIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
+      </rootProps.slots.baseTooltip>
     </div>
   );
 });

@@ -18,7 +18,13 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+      <GridRoot
+        className={props.className}
+        style={props.style}
+        sx={props.sx}
+        ref={ref}
+        {...props.forwardedProps}
+      >
         <GridHeader />
         <GridBody VirtualScrollerComponent={DataGridVirtualScroller} />
         <GridFooterPlaceholder />
@@ -30,10 +36,17 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
 interface DataGridComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): JSX.Element;
+  ): React.JSX.Element;
   propTypes?: any;
 }
 
+/**
+ * Demos:
+ * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
+ */
 export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
 
 DataGridRaw.propTypes = {
@@ -79,6 +92,11 @@ DataGridRaw.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: PropTypes.string,
+  /**
    * Number of extra columns to be rendered before/after the visible slice.
    * @default 3
    */
@@ -117,16 +135,6 @@ DataGridRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overridable components.
-   * @deprecated Use `slots` instead.
-   */
-  components: PropTypes.object,
-  /**
-   * Overridable components props dynamically passed to the component at rendering.
-   * @deprecated Use the `slotProps` prop instead.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * Set the density of the grid.
    * @default "standard"
    */
@@ -152,6 +160,12 @@ DataGridRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: PropTypes.bool,
+  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -171,9 +185,15 @@ DataGridRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    ariaV7: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: PropTypes.number,
   /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
@@ -193,9 +213,15 @@ DataGridRaw.propTypes = {
       }),
     ).isRequired,
     logicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterExcludeHiddenColumns: PropTypes.bool,
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps: PropTypes.object,
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -205,7 +231,7 @@ DataGridRaw.propTypes = {
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent: PropTypes.func,
   /**
@@ -253,6 +279,24 @@ DataGridRaw.propTypes = {
    * @default false
    */
   hideFooterSelectedRowCount: PropTypes.bool,
+  /**
+   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * @default false
+   */
+  ignoreDiacritics: PropTypes.bool,
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default false
+   */
+  ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
   /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -345,6 +389,11 @@ DataGridRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
+  /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy: PropTypes.func,
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -515,7 +564,15 @@ DataGridRaw.propTypes = {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
+  pageSizeOptions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+    ]).isRequired,
+  ),
   pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(
@@ -570,6 +627,13 @@ DataGridRaw.propTypes = {
    * Controls the modes of the rows.
    */
   rowModesModel: PropTypes.object,
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: PropTypes.number,
   /**
    * Set of rows of type [[GridRowsProp]].
    */

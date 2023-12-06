@@ -2,7 +2,11 @@ import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { GridColumnNode, isLeaf } from '../../../models/gridColumnGrouping';
+import {
+  GridColumnGroupingModel,
+  GridColumnNode,
+  isLeaf,
+} from '../../../models/gridColumnGrouping';
 import {
   gridColumnGroupsLookupSelector,
   gridColumnGroupsUnwrappedModelSelector,
@@ -13,12 +17,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { getColumnGroupsHeaderStructure, unwrapGroupingColumnModel } from './gridColumnGroupsUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
-import {
-  gridColumnFieldsSelector,
-  // GridColumnsState,
-  gridVisibleColumnFieldsSelector,
-} from '../columns';
-import { useGridSelector } from '../../utils/useGridSelector';
+import { gridColumnFieldsSelector, gridVisibleColumnFieldsSelector } from '../columns';
 
 const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
   let groupLookup: GridColumnGroupLookup = {};
@@ -64,6 +63,8 @@ export const columnGroupsStateInitializer: GridStateInitializer<
   const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
     columnFields,
     unwrappedGroupingModel,
+    // @ts-expect-error Move this part to `Pro` package
+    apiRef.current.state.pinnedColumns ?? {},
   );
   const maxDepth =
     visibleColumnFields.length === 0
@@ -123,9 +124,13 @@ export const useGridColumnGrouping = (
     apiRef.current.setState((state) => {
       const orderedFields = state.columns?.orderedFields ?? [];
 
+      // @ts-expect-error Move this logic to `Pro` package
+      const pinnedColumns = state.pinnedColumns ?? {};
+
       const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
         orderedFields as string[],
         unwrappedGroupingModel,
+        pinnedColumns,
       );
       return {
         ...state,
@@ -137,46 +142,56 @@ export const useGridColumnGrouping = (
     });
   }, [apiRef, props.columnGroupingModel]);
 
-  useGridApiEventHandler(apiRef, 'columnIndexChange', handleColumnIndexChange);
+  const updateColumnGroupingState = React.useCallback(
+    (columnGroupingModel: GridColumnGroupingModel | undefined) => {
+      if (!props.experimentalFeatures?.columnGrouping) {
+        return;
+      }
+      // @ts-expect-error Move this logic to `Pro` package
+      const pinnedColumns = apiRef.current.getPinnedColumns?.() ?? {};
+      const columnFields = gridColumnFieldsSelector(apiRef);
+      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
+      const groupLookup = createGroupLookup(columnGroupingModel ?? []);
+      const unwrappedGroupingModel = unwrapGroupingColumnModel(columnGroupingModel ?? []);
+      const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
+        columnFields,
+        unwrappedGroupingModel,
+        pinnedColumns,
+      );
+      const maxDepth =
+        visibleColumnFields.length === 0
+          ? 0
+          : Math.max(
+              ...visibleColumnFields.map((field) => unwrappedGroupingModel[field]?.length ?? 0),
+            );
 
-  const columnFields = useGridSelector(apiRef, gridColumnFieldsSelector);
-  const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
+      apiRef.current.setState((state) => {
+        return {
+          ...state,
+          columnGrouping: {
+            lookup: groupLookup,
+            unwrappedGroupingModel,
+            headerStructure: columnGroupsHeaderStructure,
+            maxDepth,
+          },
+        };
+      });
+    },
+    [apiRef, props.experimentalFeatures?.columnGrouping],
+  );
+
+  useGridApiEventHandler(apiRef, 'columnIndexChange', handleColumnIndexChange);
+  useGridApiEventHandler(apiRef, 'columnsChange', () => {
+    updateColumnGroupingState(props.columnGroupingModel);
+  });
+  useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
+    updateColumnGroupingState(props.columnGroupingModel);
+  });
+
   /**
    * EFFECTS
    */
   React.useEffect(() => {
-    if (!props.experimentalFeatures?.columnGrouping) {
-      return;
-    }
-    const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
-    const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
-    const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
-      columnFields,
-      unwrappedGroupingModel,
-    );
-    const maxDepth =
-      visibleColumnFields.length === 0
-        ? 0
-        : Math.max(
-            ...visibleColumnFields.map((field) => unwrappedGroupingModel[field]?.length ?? 0),
-          );
-
-    apiRef.current.setState((state) => {
-      return {
-        ...state,
-        columnGrouping: {
-          lookup: groupLookup,
-          unwrappedGroupingModel,
-          headerStructure: columnGroupsHeaderStructure,
-          maxDepth,
-        },
-      };
-    });
-  }, [
-    apiRef,
-    columnFields,
-    visibleColumnFields,
-    props.columnGroupingModel,
-    props.experimentalFeatures?.columnGrouping,
-  ]);
+    updateColumnGroupingState(props.columnGroupingModel);
+  }, [updateColumnGroupingState, props.columnGroupingModel]);
 };

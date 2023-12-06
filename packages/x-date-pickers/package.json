@@ -1,9 +1,9 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "6.0.3",
+  "version": "7.0.0-alpha.3",
   "description": "The community edition of the date picker components (MUI X).",
   "author": "MUI Team",
-  "main": "./src/index.js",
+  "main": "src/index.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -11,7 +11,7 @@
   "homepage": "https://mui.com/x/react-date-pickers/",
   "funding": {
     "type": "opencollective",
-    "url": "https://opencollective.com/mui"
+    "url": "https://opencollective.com/mui-org"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -21,6 +21,7 @@
     "react",
     "react-component",
     "mui",
+    "mui-x",
     "material-ui",
     "material design",
     "datepicker",
@@ -44,47 +45,43 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.21.0",
-    "@date-io/core": "^2.16.0",
-    "@date-io/date-fns": "^2.16.0",
-    "@date-io/date-fns-jalali": "^2.16.0",
-    "@date-io/dayjs": "^2.16.0",
-    "@date-io/hijri": "^2.16.1",
-    "@date-io/jalaali": "^2.16.1",
-    "@date-io/luxon": "^2.16.1",
-    "@date-io/moment": "^2.16.1",
-    "@mui/utils": "^5.11.13",
-    "@types/react-transition-group": "^4.4.5",
-    "clsx": "^1.2.1",
+    "@babel/runtime": "^7.23.4",
+    "@mui/base": "^5.0.0-beta.24",
+    "@mui/system": "^5.14.18",
+    "@mui/utils": "^5.14.18",
+    "@types/react-transition-group": "^4.4.9",
+    "clsx": "^2.0.0",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.4.1",
-    "@mui/system": "^5.4.1",
+    "@mui/material": "^5.8.6",
     "date-fns": "^2.25.0",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.10.7",
     "luxon": "^3.0.2",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
-    "moment-jalaali": "^0.7.4 || ^0.8.0 || ^0.9.0",
-    "react": "^17.0.2 || ^18.0.0",
-    "react-dom": "^17.0.2 || ^18.0.0"
+    "moment-jalaali": "^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   },
   "peerDependenciesMeta": {
-    "date-fns": {
-      "optional": true
-    },
-    "dayjs": {
-      "optional": true
-    },
     "@emotion/react": {
       "optional": true
     },
     "@emotion/styled": {
+      "optional": true
+    },
+    "date-fns": {
+      "optional": true
+    },
+    "date-fns-jalali": {
+      "optional": true
+    },
+    "dayjs": {
       "optional": true
     },
     "luxon": {
@@ -98,20 +95,18 @@
     },
     "moment-jalaali": {
       "optional": true
-    },
-    "date-fns-jalali": {
-      "optional": true
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.2.0",
-    "date-fns": "^2.29.3",
+    "@types/luxon": "^3.3.5",
+    "@types/moment-jalaali": "^0.7.9",
+    "date-fns": "^2.30.0",
     "date-fns-jalali": "^2.13.0-0",
-    "dayjs": "^1.11.7",
-    "luxon": "^3.2.0",
+    "dayjs": "^1.11.10",
+    "luxon": "^3.4.4",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
-    "moment-jalaali": "^0.9.6"
+    "moment-jalaali": "^0.10.0"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

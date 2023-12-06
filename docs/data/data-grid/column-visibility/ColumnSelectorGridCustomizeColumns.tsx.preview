@@ -1,0 +1,13 @@
+<DataGridPremium
+  apiRef={apiRef}
+  {...data}
+  initialState={initialState}
+  slots={{
+    toolbar: GridToolbar,
+  }}
+  slotProps={{
+    columnsPanel: {
+      getTogglableColumns,
+    },
+  }}
+/>

@@ -10,7 +10,7 @@ export default function HelperText() {
         label="Helper text example"
         slotProps={{
           textField: {
-            helperText: 'MM / DD / YYYY',
+            helperText: 'MM/DD/YYYY',
           },
         }}
       />

@@ -1,18 +1,14 @@
-# @mui/x-data-grid-premium
+# MUI X Data Grid Premium
 
 This package is the Premium plan edition of the data grid component.
-It's part of MUI X, an open core extension of MUI, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
 
 ## Installation
 
 Install the package in your project directory with:
 
-```sh
-// with npm
+```bash
 npm install @mui/x-data-grid-premium
-
-// with yarn
-yarn add @mui/x-data-grid-premium
 ```
 
 This component has the following peer dependencies that you will need to install as well.
@@ -20,12 +16,11 @@ This component has the following peer dependencies that you will need to install
 ```json
 "peerDependencies": {
   "@mui/material": "^5.4.1",
-  "@mui/system": "^5.4.1",
-  "react": "^17.0.2 || ^18.0.0",
-  "react-dom": "^17.0.2 || ^18.0.0"
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
 },
 ```
 
 ## Documentation
 
-[The documentation](https://mui.com/x/react-data-grid/)
+Visit [https://mui.com/x/react-data-grid/](https://mui.com/x/react-data-grid/) to view the full documentation.

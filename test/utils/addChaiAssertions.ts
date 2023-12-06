@@ -7,7 +7,7 @@ declare global {
       /**
        * Matcher with useful error messages if the dates don't match.
        */
-      toEqualDateTime(expected: Date): void;
+      toEqualDateTime(expected: any): void;
     }
   }
 }
@@ -20,8 +20,15 @@ chai.use((chaiAPI, utils) => {
     // Luxon dates don't have a `toISOString` function, we need to convert to the JS date first
     const cleanActualDate =
       typeof actualDate.toJSDate === 'function' ? actualDate.toJSDate() : actualDate;
-    const cleanExpectedDate =
-      typeof expectedDate.toJSDate === 'function' ? expectedDate.toJSDate() : expectedDate;
+
+    let cleanExpectedDate;
+    if (typeof expectedDate === 'string') {
+      cleanExpectedDate = new Date(expectedDate);
+    } else if (typeof expectedDate.toJSDate === 'function') {
+      cleanExpectedDate = expectedDate.toJSDate();
+    } else {
+      cleanExpectedDate = expectedDate;
+    }
 
     const assertion = new chai.Assertion(cleanActualDate.toISOString(), message);
     // TODO: Investigate if `as any` can be removed after https://github.com/DefinitelyTyped/DefinitelyTyped/issues/48634 is resolved.

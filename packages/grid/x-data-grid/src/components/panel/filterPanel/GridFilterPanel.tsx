@@ -44,12 +44,12 @@ export interface GridFilterPanelProps
     | 'filterColumns'
   >;
 
-  /*
+  /**
    * If `true`, the `Add filter` button will not be displayed.
    * @default false
    */
   disableAddFilterButton?: boolean;
-  /*
+  /**
    * If `true`, the `Remove all` button will be disabled
    * @default false
    */
@@ -74,6 +74,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
     const lastFilterRef = React.useRef<any>(null);
+    const placeholderFilter = React.useRef<GridFilterItem | null>(null);
 
     const {
       logicOperators = [GridLogicOperator.And, GridLogicOperator.Or],
@@ -86,12 +87,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       ...other
     } = props;
 
-    const applyFilter = React.useCallback(
-      (item: GridFilterItem) => {
-        apiRef.current.upsertFilterItem(item);
-      },
-      [apiRef],
-    );
+    const applyFilter = apiRef.current.upsertFilterItem;
 
     const applyFilterLogicOperator = React.useCallback(
       (operator: GridLogicOperator) => {
@@ -160,9 +156,11 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
         return filterModel.items;
       }
 
-      const defaultFilter = getDefaultFilter();
+      if (!placeholderFilter.current) {
+        placeholderFilter.current = getDefaultFilter();
+      }
 
-      return defaultFilter ? [defaultFilter] : [];
+      return placeholderFilter.current ? [placeholderFilter.current] : [];
     }, [filterModel.items, getDefaultFilter]);
 
     const hasMultipleFilters = items.length > 1;
@@ -232,8 +230,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
           ))}
         </GridPanelContent>
         {!rootProps.disableMultipleColumnsFiltering &&
-        !disableAddFilterButton &&
-        !disableRemoveAllButton ? (
+        !(disableAddFilterButton && disableRemoveAllButton) ? (
           <GridPanelFooter>
             {!disableAddFilterButton ? (
               <rootProps.slots.baseButton
@@ -277,7 +274,15 @@ GridFilterPanel.propTypes = {
    * If not specified, the order is derived from the `columns` prop.
    */
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
+  /**
+   * If `true`, the `Add filter` button will not be displayed.
+   * @default false
+   */
   disableAddFilterButton: PropTypes.bool,
+  /**
+   * If `true`, the `Remove all` button will be disabled
+   * @default false
+   */
   disableRemoveAllButton: PropTypes.bool,
   /**
    * Props passed to each filter form.
@@ -312,4 +317,11 @@ GridFilterPanel.propTypes = {
   ]),
 } as any;
 
-export { GridFilterPanel };
+/**
+ * Demos:
+ * - [Filtering - overview](https://mui.com/x/react-data-grid/filtering/)
+ *
+ * API:
+ * - [GridFilterPanel API](https://mui.com/x/api/data-grid/grid-filter-panel/)
+ */
+export { GridFilterPanel, getGridFilter };

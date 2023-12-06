@@ -33,6 +33,10 @@ export interface GridClasses {
    */
   autoHeight: string;
   /**
+   * Styles applied to the root element while it is being autosized.
+   */
+  autosizing: string;
+  /**
    * Styles applied to the icon of the boolean cell.
    */
   booleanCell: string;
@@ -76,6 +80,10 @@ export interface GridClasses {
    * Styles applied to the cell element if it is at the right edge of a cell selection range.
    */
   'cell--rangeRight': string;
+  /**
+   * Styles applied to the cell element if it is in a cell selection range.
+   */
+  'cell--selectionMode': string;
   /**
    * Styles applied to the cell element.
    */
@@ -313,6 +321,10 @@ export interface GridClasses {
    */
   iconSeparator: string;
   /**
+   * Styles applied to the column header filter row.
+   */
+  headerFilterRow: string;
+  /**
    * Styles applied to the main container element.
    */
   main: string;
@@ -540,7 +552,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeader--alignLeft',
   'aggregationColumnHeader--alignCenter',
   'aggregationColumnHeader--alignRight',
+  'aggregationColumnHeaderLabel',
   'autoHeight',
+  'autosizing',
   'booleanCell',
   'cell--editable',
   'cell--editing',
@@ -552,6 +566,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--rangeBottom',
   'cell--rangeLeft',
   'cell--rangeRight',
+  'cell--selectionMode',
   'cell',
   'cellContent',
   'cellCheckbox',
@@ -608,6 +623,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'filterFormValueInput',
   'filterIcon',
   'footerContainer',
+  'headerFilterRow',
   'iconButtonContainer',
   'iconSeparator',
   'main',
@@ -617,6 +633,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'menuOpen',
   'menuList',
   'overlay',
+  'overlayWrapper',
+  'overlayWrapperInner',
   'root',
   'root--densityStandard',
   'root--densityComfortable',

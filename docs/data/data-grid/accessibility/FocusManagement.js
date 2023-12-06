@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -13,13 +12,6 @@ function CorrectRenderLink(props) {
     </Link>
   );
 }
-
-CorrectRenderLink.propTypes = {
-  /**
-   * the tabIndex value.
-   */
-  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
-};
 
 function WrongRenderLink() {
   return <Link href="/#tab-sequence">more info</Link>;

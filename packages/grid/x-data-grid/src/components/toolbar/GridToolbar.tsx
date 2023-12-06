@@ -30,8 +30,8 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function 
   props,
   ref,
 ) {
-  // TODO v6: think about where export option should be passed.
-  // from componentProps={{ toolbarExport: { ...exportOption} }} seems to be more appropriate
+  // TODO v7: think about where export option should be passed.
+  // from slotProps={{ toolbarExport: { ...exportOption } }} seems to be more appropriate
   const {
     className,
     csvOptions,

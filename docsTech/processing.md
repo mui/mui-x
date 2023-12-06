@@ -352,7 +352,9 @@ const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'prefer
 useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
 ```
 
-> ⚠ This behavior should probably be improved to be a strategy processing to avoid having each processor check the value
+:::warning
+This behavior should probably be improved to be a strategy for processing to avoid having each processor check the value.
+:::
 
 ## Strategy-processing
 

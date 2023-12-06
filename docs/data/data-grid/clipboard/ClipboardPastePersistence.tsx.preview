@@ -1,0 +1,15 @@
+<div style={{ marginBottom: 8 }}>
+  <Button onClick={() => sessionStorage.removeItem('clipboardImportRows')}>
+    Clear session storage
+  </Button>
+</div>
+<div style={{ height: 400 }}>
+  <DataGridPremium
+    {...data}
+    disableRowSelectionOnClick
+    checkboxSelection
+    cellSelection
+    processRowUpdate={processRowUpdate}
+    ignoreValueFormatterDuringExport
+  />
+</div>

@@ -6,7 +6,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { isLandscape, classes } = ownerState;
@@ -70,9 +70,20 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-const PickersLayout = function PickersLayout<TValue, TDate, TView extends DateOrTimeView>(
-  inProps: PickersLayoutProps<TValue, TDate, TView>,
-) {
+/**
+ * Demos:
+ *
+ * - [Custom layout](https://mui.com/x/react-date-pickers/custom-layout/)
+ *
+ * API:
+ *
+ * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
+ */
+const PickersLayout = function PickersLayout<
+  TValue,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+>(inProps: PickersLayoutProps<TValue, TDate, TView>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
@@ -116,18 +127,6 @@ PickersLayout.propTypes = {
   children: PropTypes.node,
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
@@ -138,6 +137,7 @@ PickersLayout.propTypes = {
   onClose: PropTypes.func.isRequired,
   onDismiss: PropTypes.func.isRequired,
   onOpen: PropTypes.func.isRequired,
+  onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
   /**
@@ -161,9 +161,9 @@ PickersLayout.propTypes = {
     PropTypes.object,
   ]),
   value: PropTypes.any,
-  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,
   wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;

@@ -170,8 +170,8 @@ const VirtualScrollerPinnedRows = styled('div', {
   const boxShadowColor = getBoxShadowColor(theme);
   return {
     position: 'sticky',
-    // should be above the detail panel
-    zIndex: 3,
+    // should be above the no rows overlay
+    zIndex: 4,
     backgroundColor: (theme.vars || theme).palette.background.default,
     ...(theme.vars
       ? { backgroundImage: theme.vars.overlays?.[2] }
@@ -236,15 +236,24 @@ const DataGridProVirtualScroller = React.forwardRef<
     [],
   );
 
+  // Create a lookup for faster check if the row is expanded
+  const expandedRowIdsLookup = React.useMemo(() => {
+    const lookup: Set<GridRowId> = new Set();
+    expandedRowIds.forEach((id: GridRowId) => {
+      lookup.add(id);
+    });
+    return lookup;
+  }, [expandedRowIds]);
+
   const getRowProps = React.useCallback(
     (id: GridRowId) => {
-      if (!expandedRowIds.includes(id)) {
+      if (!expandedRowIdsLookup.has(id)) {
         return null;
       }
       const height = detailPanelsHeights[id];
       return { style: { marginBottom: height } };
     },
-    [detailPanelsHeights, expandedRowIds],
+    [detailPanelsHeights, expandedRowIdsLookup],
   );
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
@@ -305,52 +314,39 @@ const DataGridProVirtualScroller = React.forwardRef<
         }
       : null;
 
-  const getDetailPanels = () => {
-    const panels: React.ReactNode[] = [];
-
-    if (rootProps.getDetailPanelContent == null) {
-      return panels;
-    }
-
+  const getDetailPanel = (rowId: GridRowId): React.ReactNode => {
     const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
-    const uniqueExpandedRowIds = Array.from(new Set([...expandedRowIds]).values());
+    const content = detailPanelsContent[rowId];
 
-    for (let i = 0; i < uniqueExpandedRowIds.length; i += 1) {
-      const id = uniqueExpandedRowIds[i];
-      const content = detailPanelsContent[id];
+    // Check if the id exists in the current page
+    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
+    const exists = rowIndex !== undefined;
 
-      // Check if the id exists in the current page
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
-      const exists = rowIndex !== undefined;
+    if (React.isValidElement(content) && exists) {
+      const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(rowId);
+      const height = hasAutoHeight ? 'auto' : detailPanelsHeights[rowId];
 
-      if (React.isValidElement(content) && exists) {
-        const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(id);
-        const height = hasAutoHeight ? 'auto' : detailPanelsHeights[id];
+      const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
+      const spacingTop = sizes?.spacingTop || 0;
+      const top =
+        rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(rowId) + spacingTop;
 
-        const sizes = apiRef.current.unstable_getRowInternalSizes(id);
-        const spacingTop = sizes?.spacingTop || 0;
-        const top =
-          rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id) + spacingTop;
-
-        panels.push(
-          <GridDetailPanel
-            key={id}
-            rowId={id}
-            style={{ top }}
-            height={height}
-            className={classes.detailPanel}
-          >
-            {content}
-          </GridDetailPanel>,
-        );
-      }
+      return (
+        <GridDetailPanel
+          key={rowId}
+          rowId={rowId}
+          style={{ top }}
+          height={height}
+          className={classes.detailPanel}
+        >
+          {content}
+        </GridDetailPanel>
+      );
     }
-
-    return panels;
+    return null;
   };
 
-  const detailPanels = getDetailPanels();
-
+  const detailPanels: React.ReactNode[] = [];
   const topPinnedRows = getRows({ renderContext, rows: topPinnedRowsData, position: 'center' });
 
   const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
@@ -359,6 +355,19 @@ const DataGridProVirtualScroller = React.forwardRef<
     renderContext,
     rowIndexOffset: topPinnedRowsData.length,
     position: 'center',
+    onRowRender: (rowId: GridRowId) => {
+      if (rootProps.getDetailPanelContent == null) {
+        return;
+      }
+      if (!expandedRowIdsLookup.has(rowId)) {
+        return;
+      }
+
+      const detailPanel = getDetailPanel(rowId);
+      if (detailPanel) {
+        detailPanels.push(detailPanel);
+      }
+    },
   });
 
   const bottomPinnedRows = getRows({

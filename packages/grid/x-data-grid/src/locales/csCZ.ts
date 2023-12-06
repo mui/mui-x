@@ -5,11 +5,11 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const csCZGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žádné záznamy',
-  noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
+  noResultsOverlayLabel: 'Nenašly se žadné výsledky.',
 
   // Density selector toolbar button text
-  toolbarDensity: 'Hustota',
-  toolbarDensityLabel: 'Hustota',
+  toolbarDensity: 'Zobrazení',
+  toolbarDensityLabel: 'Zobrazení',
   toolbarDensityCompact: 'Kompaktní',
   toolbarDensityStandard: 'Standartní',
   toolbarDensityComfortable: 'Komfortní',
@@ -34,8 +34,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   },
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Vyhledávat…',
-  toolbarQuickFilterLabel: 'Vyhledat',
+  toolbarQuickFilterPlaceholder: 'Hledat…',
+  toolbarQuickFilterLabel: 'Hledat',
   toolbarQuickFilterDeleteIconLabel: 'Vymazat',
 
   // Export selector toolbar button text
@@ -67,19 +67,46 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Filter operators text
   filterOperatorContains: 'obsahuje',
   filterOperatorEquals: 'rovná se',
-  filterOperatorStartsWith: 'začíná s',
+  filterOperatorStartsWith: 'začíná na',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
   filterOperatorNot: 'není',
   // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'je po',
-  filterOperatorOnOrAfter: 'je na nebo po',
+  filterOperatorOnOrAfter: 'je po včetně',
   filterOperatorBefore: 'je před',
-  filterOperatorOnOrBefore: 'je na nebo dříve',
+  filterOperatorOnOrBefore: 'je před včetně',
   filterOperatorIsEmpty: 'je prázdný',
   filterOperatorIsNotEmpty: 'není prázdný',
   filterOperatorIsAnyOf: 'je jeden z',
   // filterOperatorContainsAnyOf: 'contains any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Obsahuje',
+  headerFilterOperatorEquals: 'Rovná se',
+  headerFilterOperatorStartsWith: 'Začíná na',
+  headerFilterOperatorEndsWith: 'Končí na',
+  headerFilterOperatorIs: 'Je',
+  headerFilterOperatorNot: 'Není',
+  headerFilterOperatorAfter: 'Je po',
+  headerFilterOperatorOnOrAfter: 'Je po včetně',
+  headerFilterOperatorBefore: 'Je před',
+  headerFilterOperatorOnOrBefore: 'Je před včetně',
+  headerFilterOperatorIsEmpty: 'Je prázdný',
+  headerFilterOperatorIsNotEmpty: 'Není prázdný',
+  headerFilterOperatorIsAnyOf: 'Je jeden z',
+  'headerFilterOperator=': 'Rovná se',
+  'headerFilterOperator!=': 'Nerovná se',
+  'headerFilterOperator>': 'Větší než',
+  'headerFilterOperator>=': 'Větší než nebo rovno',
+  'headerFilterOperator<': 'Menší než',
+  'headerFilterOperator<=': 'Menší než nebo rovno',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',
@@ -149,8 +176,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'více',
 
   // Column pinning text
-  pinToLeft: 'Připnout na levo',
-  pinToRight: 'Připnout na pravo',
+  pinToLeft: 'Připnout vlevo',
+  pinToRight: 'Připnout vpravo',
   unpin: 'Odepnout',
 
   // Tree Data

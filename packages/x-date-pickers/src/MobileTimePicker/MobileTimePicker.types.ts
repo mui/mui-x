@@ -10,39 +10,31 @@ import {
 } from '../TimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { TimeView } from '../models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface MobileTimePickerSlotsComponent<TDate>
-  extends BaseTimePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate, TimeView>, 'Field'> {}
+export interface MobileTimePickerSlotsComponent<
+  TDate,
+  TView extends TimeViewWithMeridiem = TimeView,
+> extends BaseTimePickerSlotsComponent<TDate>,
+    MakeOptional<UseMobilePickerSlotsComponent<TDate, TView>, 'field'> {}
 
-export interface MobileTimePickerSlotsComponentsProps<TDate>
-  extends BaseTimePickerSlotsComponentsProps,
-    ExportedUseMobilePickerSlotsComponentsProps<TDate, TimeView> {}
+export interface MobileTimePickerSlotsComponentsProps<
+  TDate,
+  TView extends TimeViewWithMeridiem = TimeView,
+> extends BaseTimePickerSlotsComponentsProps,
+    ExportedUseMobilePickerSlotsComponentsProps<TDate, TView> {}
 
-export interface MobileTimePickerProps<TDate>
-  extends BaseTimePickerProps<TDate>,
+export interface MobileTimePickerProps<TDate, TView extends TimeViewWithMeridiem = TimeView>
+  extends BaseTimePickerProps<TDate, TView>,
     MobileOnlyPickerProps<TDate> {
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: MobileTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: MobileTimePickerSlotsComponentsProps<TDate>;
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<MobileTimePickerSlotsComponent<TDate>>;
+  slots?: MobileTimePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: MobileTimePickerSlotsComponentsProps<TDate, TView>;
 }

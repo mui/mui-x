@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
-import { GridAutoSizer } from '../GridAutoSizer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
   gridColumnPositionsSelector,
@@ -33,15 +32,15 @@ interface GridBodyProps {
   VirtualScrollerComponent: React.JSXElementConstructor<
     React.HTMLAttributes<HTMLDivElement> & {
       ref: React.Ref<HTMLDivElement>;
-      disableVirtualization: boolean;
     }
   >;
 }
 
 function GridBody(props: GridBodyProps) {
-  const { children, VirtualScrollerComponent, ColumnHeadersProps } = props;
+  const { VirtualScrollerComponent, ColumnHeadersProps, children } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
+  const rootRef = React.useRef<HTMLDivElement>(null);
 
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
@@ -76,30 +75,36 @@ function GridBody(props: GridBodyProps) {
     cellTabIndexState === null
   );
 
-  const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
-    rootProps.disableVirtualization,
-  );
+  useEnhancedEffect(() => {
+    apiRef.current.computeSizeAndPublishResizeEvent();
 
-  const disableVirtualization = React.useCallback(() => {
-    setIsVirtualizationDisabled(true);
-  }, []);
+    const elementToObserve = rootRef.current;
+    if (typeof ResizeObserver === 'undefined') {
+      return () => {};
+    }
 
-  const enableVirtualization = React.useCallback(() => {
-    setIsVirtualizationDisabled(false);
-  }, []);
+    let animationFrame: number;
+    const observer = new ResizeObserver(() => {
+      // See https://github.com/mui/mui-x/issues/8733
+      animationFrame = requestAnimationFrame(() => {
+        apiRef.current.computeSizeAndPublishResizeEvent();
+      });
+    });
 
-  React.useEffect(() => {
-    setIsVirtualizationDisabled(rootProps.disableVirtualization);
-  }, [rootProps.disableVirtualization]);
+    if (elementToObserve) {
+      observer.observe(elementToObserve);
+    }
 
-  // The `useGridApiMethod` hook can't be used here, because it only installs the
-  // method if it doesn't exist yet. Once installed, it's never updated again.
-  // This break the methods above, since their closure comes from the first time
-  // they were installed. Which means that calling `setIsVirtualizationDisabled`
-  // will trigger a re-render, but it won't update the state. That can be solved
-  // by migrating the virtualization status to the global state.
-  apiRef.current.unstable_disableVirtualization = disableVirtualization;
-  apiRef.current.unstable_enableVirtualization = enableVirtualization;
+    return () => {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
+      if (elementToObserve) {
+        observer.unobserve(elementToObserve);
+      }
+    };
+  }, [apiRef]);
 
   const columnHeadersRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
@@ -109,17 +114,13 @@ function GridBody(props: GridBodyProps) {
     columnHeadersContainerElementRef: columnsContainerRef,
     columnHeadersElementRef: columnHeadersRef,
     virtualScrollerRef,
+    mainElementRef: rootRef,
   });
 
-  const handleResize = React.useCallback(
-    (size: ElementSize) => {
-      apiRef.current.publishEvent('resize', size);
-    },
-    [apiRef],
-  );
+  const hasDimensions = !!apiRef.current.getRootDimensions();
 
   return (
-    <GridMainContainer>
+    <GridMainContainer ref={rootRef}>
       <rootProps.slots.columnHeaders
         ref={columnsContainerRef}
         innerRef={columnHeadersRef}
@@ -139,16 +140,17 @@ function GridBody(props: GridBodyProps) {
         hasOtherElementInTabSequence={hasOtherElementInTabSequence}
         {...ColumnHeadersProps}
       />
-      <GridAutoSizer
-        nonce={rootProps.nonce}
-        disableHeight={rootProps.autoHeight}
-        onResize={handleResize}
-      >
+      {hasDimensions && (
         <VirtualScrollerComponent
+          // The content is only rendered after dimensions are computed because
+          // the lazy-loading hook is listening to `renderedRowsIntervalChange`,
+          // but only does something if the dimensions are also available.
+          // If this event is published while dimensions haven't been computed,
+          // the `onFetchRows` prop won't be called during mount.
           ref={virtualScrollerRef}
-          disableVirtualization={isVirtualizationDisabled}
         />
-      </GridAutoSizer>
+      )}
+
       {children}
     </GridMainContainer>
   );

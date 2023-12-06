@@ -1,10 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: '小时',
   minutes: '分钟',
   seconds: '秒',
+  meridiem: '子午线',
 };
 
 const zhCNPickers: Partial<PickersLocaleText<any>> = {
@@ -29,25 +31,28 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: '今天',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: '选择日期',
+  dateTimePickerToolbarTitle: '选择日期和时间',
+  timePickerToolbarTitle: '选择时间',
+  dateRangePickerToolbarTitle: '选择时间范围',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${views[view]}. ${
+    `选择 ${views[view]}. ${
       time === null ? '未选择时间' : `已选择${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours}小时`,
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
 
+  // Digital clock labels
+  selectViewText: (view) => `选择 ${views[view]}`,
+
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: '周数',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `第${weekNumber}周`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -58,20 +63,21 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `选择时间，已选择${utils.format(value, 'fullTime')}`
       : '选择时间',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: '选择时间',
   dateTableLabel: '选择日期',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const zhCN = getPickersLocalization(zhCNPickers);

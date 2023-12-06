@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
+import { GridCellEditStopReasons } from '../../models/params/gridEditCellParams';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -120,7 +121,13 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       return;
     }
     if (reason === 'backdropClick' || isEscapeKey(event.key)) {
-      apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
+      const params = apiRef.current.getCellParams(id, field);
+      apiRef.current.publishEvent('cellEditStop', {
+        ...params,
+        reason: isEscapeKey(event.key)
+          ? GridCellEditStopReasons.escapeKeyDown
+          : GridCellEditStopReasons.cellFocusOut,
+      });
     }
   };
 

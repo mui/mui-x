@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
 import {
   randomInt,
   randomUserName,
@@ -23,7 +23,7 @@ const lines = [
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
 
-const columns = [
+const columns: GridColDef[] = [
   { field: 'id' },
   { field: 'username', width: 150 },
   { field: 'age', width: 80, type: 'number' },

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGridPro,
   useGridApiContext,
@@ -130,25 +129,14 @@ function ViewListItem(props) {
   );
 }
 
-ViewListItem.propTypes = {
-  onDelete: PropTypes.func.isRequired,
-  onSelect: PropTypes.func.isRequired,
-  selected: PropTypes.bool.isRequired,
-  view: PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    value: PropTypes.object.isRequired,
-  }).isRequired,
-  viewId: PropTypes.string.isRequired,
-};
-
 function NewViewListButton(props) {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = (event) => {
     onSubmit();
     setIsAddingView(false);
-    e.preventDefault();
+    event.preventDefault();
   };
 
   return (
@@ -188,13 +176,6 @@ function NewViewListButton(props) {
     </React.Fragment>
   );
 }
-
-NewViewListButton.propTypes = {
-  isValid: PropTypes.bool.isRequired,
-  label: PropTypes.string.isRequired,
-  onLabelChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-};
 
 function CustomToolbar() {
   const apiRef = useGridApiContext();

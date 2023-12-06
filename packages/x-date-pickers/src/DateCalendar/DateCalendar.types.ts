@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { SlotComponentProps } from '@mui/base/utils';
 import {
+  PickersCalendarHeader,
+  PickersCalendarHeaderProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
-} from './PickersCalendarHeader';
+} from '../PickersCalendarHeader';
 import {
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
@@ -16,35 +19,40 @@ import {
   YearValidationProps,
   MonthValidationProps,
   DayValidationProps,
-} from '../internals/hooks/validation/models';
-import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue';
+} from '../internals/models/validation';
+import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue.types';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView } from '../models';
+import { DateView, TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types';
 
 export interface DateCalendarSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
-    DayCalendarSlotsComponent<TDate> {}
+    DayCalendarSlotsComponent<TDate> {
+  /**
+   * Custom component for calendar header.
+   * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
+   * @default PickersCalendarHeader
+   */
+  calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
+}
 
 export interface DateCalendarSlotsComponentsProps<TDate>
   extends PickersCalendarHeaderSlotsComponentsProps<TDate>,
-    DayCalendarSlotsComponentsProps<TDate> {}
+    DayCalendarSlotsComponentsProps<TDate> {
+  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps<TDate>>;
+}
 
 export interface ExportedDateCalendarProps<TDate>
-  extends ExportedDayCalendarProps,
+  extends ExportedDayCalendarProps<TDate>,
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
     BaseDateValidationProps<TDate>,
     DayValidationProps<TDate>,
     YearValidationProps<TDate>,
-    MonthValidationProps<TDate> {
-  /**
-   * Default calendar month displayed when `value={null}`.
-   */
-  defaultCalendarMonth?: TDate;
+    MonthValidationProps<TDate>,
+    TimezoneProps {
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -56,8 +64,8 @@ export interface ExportedDateCalendarProps<TDate>
    */
   readOnly?: boolean;
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations?: boolean;
   /**
@@ -82,8 +90,7 @@ export interface ExportedDateCalendarProps<TDate>
 
 export interface DateCalendarProps<TDate>
   extends ExportedDateCalendarProps<TDate>,
-    ExportedUseViewsOptions<DateView>,
-    SlotsAndSlotProps<DateCalendarSlotsComponent<TDate>, DateCalendarSlotsComponentsProps<TDate>> {
+    ExportedUseViewsOptions<DateView> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -94,6 +101,11 @@ export interface DateCalendarProps<TDate>
    * Used when the component is not controlled.
    */
   defaultValue?: TDate | null;
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate?: TDate;
   /**
    * Callback fired when the value changes.
    * @template TDate
@@ -107,6 +119,16 @@ export interface DateCalendarProps<TDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: DateCalendarSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DateCalendarSlotsComponentsProps<TDate>;
 }
 
 export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<

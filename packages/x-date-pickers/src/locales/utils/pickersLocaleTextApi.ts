@@ -1,5 +1,5 @@
-import { MuiPickersAdapter } from '../../internals/models';
-import { DateView, TimeView } from '../../models';
+import { TimeViewWithMeridiem } from '../../internals/models';
+import { DateView, TimeView, MuiPickersAdapter, FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
   /**
@@ -56,23 +56,35 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;
 
+  // Digital clock labels
+  selectViewText: (view: TimeViewWithMeridiem) => string;
+
   // Open picker labels
   openDatePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
   openTimePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+
+  // Clear button label
+  fieldClearLabel: string;
 
   // Table labels
   timeTableLabel: string;
   dateTableLabel: string;
 
   // Field section placeholders
-  fieldYearPlaceholder: (params: { digitAmount: number }) => string;
-  fieldMonthPlaceholder: (params: { contentType: 'letter' | 'digit' }) => string;
-  fieldDayPlaceholder: () => string;
-  fieldWeekDayPlaceholder: (params: { contentType: 'letter' | 'digit' }) => string;
-  fieldHoursPlaceholder: () => string;
-  fieldMinutesPlaceholder: () => string;
-  fieldSecondsPlaceholder: () => string;
-  fieldMeridiemPlaceholder: () => string;
+  fieldYearPlaceholder: (params: { digitAmount: number; format: string }) => string;
+  fieldMonthPlaceholder: (params: {
+    contentType: FieldSectionContentType;
+    format: string;
+  }) => string;
+  fieldDayPlaceholder: (params: { format: string }) => string;
+  fieldWeekDayPlaceholder: (params: {
+    contentType: FieldSectionContentType;
+    format: string;
+  }) => string;
+  fieldHoursPlaceholder: (params: { format: string }) => string;
+  fieldMinutesPlaceholder: (params: { format: string }) => string;
+  fieldSecondsPlaceholder: (params: { format: string }) => string;
+  fieldMeridiemPlaceholder: (params: { format: string }) => string;
 }
 
 export interface PickersLocaleText<TDate>

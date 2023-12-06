@@ -288,17 +288,16 @@ export const useGridDetailPanel = (
   const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
     (initialValue, row) => {
       if (!expandedRowIds || expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
-        return { ...initialValue, detail: 0 };
+        initialValue.detail = 0;
+        return initialValue;
       }
 
       updateCachesIfNeeded();
 
       const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef);
 
-      return {
-        ...initialValue,
-        detail: heightCache[row.id] ?? 0, // Fallback to zero because the cache might not be ready yet (e.g. page was changed)
-      };
+      initialValue.detail = heightCache[row.id] ?? 0; // Fallback to zero because the cache might not be ready yet (e.g. page was changed)
+      return initialValue;
     },
     [apiRef, expandedRowIds, updateCachesIfNeeded],
   );

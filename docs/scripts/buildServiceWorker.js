@@ -8,7 +8,7 @@ async function prepend(file, string) {
 }
 
 async function run() {
-  const swDest = path.join(__dirname, '../export/sw.js');
+  const swDest = path.join(__dirname, '../export/x/sw.js');
   const swSrc = path.join(__dirname, '../src/sw.js');
 
   await fse.copy(swSrc, swDest);

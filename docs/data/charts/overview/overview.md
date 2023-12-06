@@ -1,48 +1,37 @@
 ---
-product: charts
-title: Charts - Overview
+title: React Chart library
+githubLabel: 'component: charts'
+packageName: '@mui/x-charts'
 ---
 
-# Charts - Overview
+# Charts
 
-<p class="description">This page groups general topics that are common to multiple charts.</p>
+<p class="description">A fast and extendable library of react chart components for data visualization.</p>
 
-> ⚠️ This is an upcoming library. Please upvote 👍 features you would like to see first.
-> And comments if you have specific needs to be solved by them.
+{{"component": "modules/components/ComponentLinkHeader.js", "design": false}}
 
-:::info
-💡 If you do not see the charts you want in the menu, we may have forget it.
-Please open an issue to ask for it, explaining which need it solves.
-:::
+## Overview
 
-## Display charts
+The `@mui/x-charts` is an MIT library for rendering charts relying on [D3.js](https://d3js.org/) for data manipulation and SVG for rendering.
+And, like other MUI X components, charts are production-ready components that integrate smoothly into your app.
 
-Charts can be rendered in two ways.
-With a single component or by composing sub components.
+With a high level of customization, MUI X Charts provides on three levels of customization layers: **single components** with great defaults, extensive **configuration props**, and **subcomponents** for flexible composition.
+Additionally, you can also use all the MUI System tools, such as the theme override or the `sx` prop.
 
-### Single charts
+## Using the documentation
 
-For common use case, single component is the recommended way.
+The MUI X Charts documentation has a slightly different structure than other MUI components.
+Instead of having a long page for each, the pages are divided in two:
 
-You have to provide the `series` props.
-The `width` and `height` if the component is not responsive.
+1. General description of the built-in features the component provides.
+2. A set of examples demonstrating the component with customizations.
 
-{{"demo": "SimpleCharts.js", "bg": "inline"}}
+### All MUI X Charts components
 
-### Multiple charts
+{{"component": "modules/components/ChartComponentsGrid.js"}}
 
-To combine different charts, like lines with bars, you can use composition with `<ChartContainer />` and `<CartesianContextProvider />` wrappers.
+### Supported features
 
-Inside those wrappers, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<ScatterPlot />`)
+The features that are shared across multiple Charts components, such as axes and legends, are also documented on separate pages.
 
-{{"demo": "Combining.js", "bg": "inline"}}
-
-## Axis management
-
-### Multiple axis scales
-
-### Axis customization
-
-## Zoom management
-
-## Data selection
+{{"component": "modules/components/ChartFeaturesGrid.js"}}

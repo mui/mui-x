@@ -4,18 +4,6 @@
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -29,15 +17,33 @@
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "onAccept": { "type": { "name": "func" } },
-    "onChange": { "type": { "name": "func" } },
+    "onAccept": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
+    },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
+    },
     "onClose": {
       "type": { "name": "func" },
       "deprecated": true,
       "deprecationInfo": "Please avoid using as it will be removed in next major version."
     },
-    "onError": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      }
+    },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
     "openTo": {
       "type": {
         "name": "enum",
@@ -47,19 +53,34 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "shouldDisableClock": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+    "reduceAnimations": {
+      "type": { "name": "bool" },
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
+    },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "value": { "type": { "name": "any" } },
     "view": {
@@ -78,25 +99,65 @@
       }
     }
   },
-  "slots": {
-    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "Layout": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
-  },
+  "slots": [
+    {
+      "class": null,
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar"
+    },
+    {
+      "class": null,
+      "name": "layout",
+      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
+    },
+    {
+      "class": null,
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft"
+    },
+    {
+      "class": null,
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight"
+    },
+    {
+      "class": null,
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts"
+    },
+    {
+      "class": null,
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "TimePickerToolbar"
+    }
+  ],
   "name": "StaticTimePicker",
+  "imports": [
+    "import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';",
+    "import { StaticTimePicker } from '@mui/x-date-pickers';",
+    "import { StaticTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticTimePicker" },
   "spread": false,
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers/src/StaticTimePicker/StaticTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "StaticTimePicker" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "StaticTimePicker" }
-  ]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
 }

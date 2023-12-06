@@ -296,10 +296,11 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           column.filterOperators!.find((operator) => operator.value === item.operator) ||
           column.filterOperators![0];
 
-        // Erase filter value if the input component is modified
+        // Erase filter value if the input component or filtered column type is modified
         const eraseItemValue =
           !newOperator.InputComponent ||
-          newOperator.InputComponent !== currentOperator?.InputComponent;
+          newOperator.InputComponent !== currentOperator?.InputComponent ||
+          column.type !== currentColumn!.type;
 
         applyFilterChanges({
           ...item,
@@ -651,4 +652,11 @@ GridFilterForm.propTypes = {
   valueInputProps: PropTypes.any,
 } as any;
 
+/**
+ * Demos:
+ * - [Filtering - overview](https://mui.com/x/react-data-grid/filtering/)
+ *
+ * API:
+ * - [GridFilterForm API](https://mui.com/x/api/data-grid/grid-filter-form/)
+ */
 export { GridFilterForm };

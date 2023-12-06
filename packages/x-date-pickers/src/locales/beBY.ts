@@ -1,14 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   // maps TimeView to its translation
   hours: 'гадзіны',
   minutes: 'хвіліны',
   seconds: 'секунды',
-  // maps PickersToolbar["viewType"] to its translation
-  date: 'календара',
-  time: 'часу',
+  meridiem: 'мерыдыем',
 };
 
 const beBYPickers: Partial<PickersLocaleText<any>> = {
@@ -49,6 +48,9 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} хвілін`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Абярыце ${views[view]}`,
+
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Нумар тыдня',
   calendarWeekNumberHeaderText: '#',
@@ -64,6 +66,7 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Абраць час, абрыны час  ${utils.format(value, 'fullTime')}`
       : 'Абраць час',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'абраць час',

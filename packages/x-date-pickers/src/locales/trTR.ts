@@ -1,5 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'saat',
+  minutes: 'dakika',
+  seconds: 'saniye',
+  meridiem: 'öğleden sonra',
+};
 
 const trTRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -32,18 +40,21 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${view} seç.  ${
+    `${timeViews[view]} seç.  ${
       time === null ? 'Zaman seçilmedi' : `Seçilen zaman: ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} saat`,
   minutesClockNumberText: (minutes) => `${minutes} dakika`,
   secondsClockNumberText: (seconds) => `${seconds} saniye`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Seç ${timeViews[view]}`,
+
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Hafta numarası',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Hafta ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -54,6 +65,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Saat seçin, seçilen saat: ${utils.format(value, 'fullTime')}`
       : 'Saat seç',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'saat seç',
@@ -63,7 +75,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'AAA' : 'AA'),
   fieldDayPlaceholder: () => 'GG',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'HHH' : 'HH'),
   fieldHoursPlaceholder: () => 'ss',
   fieldMinutesPlaceholder: () => 'dd',
   fieldSecondsPlaceholder: () => 'ss',

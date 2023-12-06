@@ -1,20 +1,18 @@
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { userEvent } from '@mui/monorepo/test/utils';
+import { userEvent } from '@mui-internal/test-utils';
 import {
   adapterToUse,
-  buildFieldInteractions,
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
   getTextbox,
-} from 'test/utils/pickers-utils';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+  describeValidation,
+  describeValue,
+  formatFullTimeValue,
+} from 'test/utils/pickers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 describe('<TimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: TimeField });
 
   describeValidation(TimeField, () => ({
     render,
@@ -26,7 +24,7 @@ describe('<TimeField /> - Describes', () => {
   describeValue(TimeField, () => ({
     render,
     componentFamily: 'field',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
@@ -36,15 +34,14 @@ describe('<TimeField /> - Describes', () => {
         expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
       const expectedValueStr = expectedValue
-        ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+        ? formatFullTimeValue(adapterToUse, expectedValue)
         : '';
-      expectInputValue(input, expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value) => {
+    setNewValue: (value, { selectSection }) => {
       const newValue = adapterToUse.addHours(value, 1);
-
+      selectSection('hours');
       const input = getTextbox();
-      clickOnInput(input, 1); // Update the hour
       userEvent.keyPress(input, { key: 'ArrowUp' });
 
       return newValue;

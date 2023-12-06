@@ -47,7 +47,7 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Xóa tất cả',
   filterPanelDeleteIconLabel: 'Xóa',
   filterPanelLogicOperator: 'Toán tử logic',
   filterPanelOperator: 'Toán tử',
@@ -71,8 +71,35 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'bằng hoặc trước',
   filterOperatorIsEmpty: 'Rỗng',
   filterOperatorIsNotEmpty: 'Khác rỗng',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'Bất kỳ',
   // filterOperatorContainsAnyOf: 'contains any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Chứa',
+  headerFilterOperatorEquals: 'Bằng',
+  headerFilterOperatorStartsWith: 'Bắt đầu với',
+  headerFilterOperatorEndsWith: 'Kết thúc với',
+  headerFilterOperatorIs: 'là',
+  headerFilterOperatorNot: 'Không là',
+  headerFilterOperatorAfter: 'Sau',
+  headerFilterOperatorOnOrAfter: 'Đang hoặc sau',
+  headerFilterOperatorBefore: 'Trước',
+  headerFilterOperatorOnOrBefore: 'Đang hoặc trước',
+  headerFilterOperatorIsEmpty: 'Rỗng',
+  headerFilterOperatorIsNotEmpty: 'Khác rỗng',
+  headerFilterOperatorIsAnyOf: 'Bất kỳ',
+  'headerFilterOperator=': 'Bằng',
+  'headerFilterOperator!=': 'Khác',
+  'headerFilterOperator>': 'Lớn hơn',
+  'headerFilterOperator>=': 'Lớn hơn hoặc bằng',
+  'headerFilterOperator<': 'Nhỏ hơn',
+  'headerFilterOperator<=': 'Nhỏ hơn hoặc bằng',
 
   // Filter values text
   filterValueAny: 'bất kỳ giá trị nào',
@@ -82,7 +109,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Danh mục',
   columnMenuShowColumns: 'Danh sách cột',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Quản lý cột',
   columnMenuFilter: 'Bộ lọc',
   columnMenuHideColumn: 'Ẩn cột',
   columnMenuUnsort: 'Bỏ sắp xếp',
@@ -144,12 +171,12 @@ const viVNGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Sắp xếp hàng',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Tổng hợp',
+  aggregationFunctionLabelSum: 'Tổng',
+  aggregationFunctionLabelAvg: 'Trung bình',
+  aggregationFunctionLabelMin: 'Tối thiểu',
+  aggregationFunctionLabelMax: 'Tối đa',
+  aggregationFunctionLabelSize: 'Kích cỡ',
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);

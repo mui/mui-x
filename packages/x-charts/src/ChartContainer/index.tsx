@@ -1,24 +1,74 @@
 import * as React from 'react';
-import { DrawingProvider } from '../context/DrawingProvider';
+import useForkRef from '@mui/utils/useForkRef';
+import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
   SeriesContextProvider,
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
-import { LayoutConfig } from '../models/layout';
-import Surface from '../Surface';
+import { InteractionProvider } from '../context/InteractionProvider';
+import { useReducedMotion } from '../hooks/useReducedMotion';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
+import {
+  CartesianContextProvider,
+  CartesianContextProviderProps,
+} from '../context/CartesianContextProvider';
+import { HighlightProvider } from '../context/HighlightProvider';
 
-type ChartContainerProps = LayoutConfig & SeriesContextProviderProps;
+export type ChartContainerProps = Omit<
+  ChartsSurfaceProps &
+    SeriesContextProviderProps &
+    Omit<DrawingProviderProps, 'svgRef'> &
+    CartesianContextProviderProps,
+  'children'
+> & {
+  children?: React.ReactNode;
+};
 
-export function ChartContainer(props: ChartContainerProps) {
-  const { width, height, series, margin, children } = props;
+export const ChartContainer = React.forwardRef(function ChartContainer(
+  props: ChartContainerProps,
+  ref,
+) {
+  const {
+    width,
+    height,
+    series,
+    margin,
+    xAxis,
+    yAxis,
+    colors,
+    dataset,
+    sx,
+    title,
+    desc,
+    disableAxisListener,
+    children,
+  } = props;
+  const svgRef = React.useRef<SVGSVGElement>(null);
+  const handleRef = useForkRef(ref, svgRef);
+
+  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin}>
-      <SeriesContextProvider series={series}>
-        <Surface width={width} height={height}>
-          {children}
-        </Surface>
+    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
+      <SeriesContextProvider series={series} colors={colors} dataset={dataset}>
+        <CartesianContextProvider xAxis={xAxis} yAxis={yAxis} dataset={dataset}>
+          <InteractionProvider>
+            <HighlightProvider>
+              <ChartsSurface
+                width={width}
+                height={height}
+                ref={handleRef}
+                sx={sx}
+                title={title}
+                desc={desc}
+                disableAxisListener={disableAxisListener}
+              >
+                {children}
+              </ChartsSurface>
+            </HighlightProvider>
+          </InteractionProvider>
+        </CartesianContextProvider>
       </SeriesContextProvider>
     </DrawingProvider>
   );
-}
+});

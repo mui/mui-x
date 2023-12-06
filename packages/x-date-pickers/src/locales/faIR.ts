@@ -1,5 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'ساعت ها',
+  minutes: 'دقیقه ها',
+  seconds: 'ثانیه ها',
+  meridiem: 'بعد از ظهر',
+};
 
 const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -32,7 +40,7 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
+    ` را انتخاب کنید ${timeViews[view]}. ${
       time === null
         ? 'هیچ ساعتی انتخاب نشده است'
         : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`
@@ -40,6 +48,9 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} ساعت ها`,
   minutesClockNumberText: (minutes) => `${minutes} دقیقه ها`,
   secondsClockNumberText: (seconds) => `${seconds} ثانیه ها`,
+
+  // Digital clock labels
+  selectViewText: (view) => ` را انتخاب کنید ${timeViews[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'عدد هفته',
@@ -56,6 +67,7 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${utils.format(value, 'fullTime')} می باشد`
       : 'ساعت را انتخاب کنید',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'انتخاب تاریخ',

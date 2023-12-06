@@ -1,0 +1,11 @@
+<DataGridPremium
+  {...data}
+  initialState={initialState}
+  disableRowSelectionOnClick
+  ignoreValueFormatterDuringExport
+  cellSelection
+  clipboardCopyCellDelimiter={','}
+  splitClipboardPastedText={(text) =>
+    text.split('\n').map((row) => row.split(','))
+  }
+/>

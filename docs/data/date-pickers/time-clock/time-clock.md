@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Time Clock component
 components: TimeClock
 githubLabel: 'component: TimePicker'
@@ -14,11 +14,19 @@ packageName: '@mui/x-date-pickers'
 
 {{"demo": "BasicTimeClock.js"}}
 
-## Uncontrolled vs. Controlled
+## Uncontrolled vs. controlled value
 
-The component can be uncontrolled or controlled.
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "TimeClockValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
 
 ## Form props
 
@@ -38,10 +46,14 @@ Views will appear in the order they're included in the `views` array.
 
 ## 12h/24h format
 
-By default, the component uses the hour format of the locale's time setting, i.e. the 12-hour or 24-hour format.
+The component uses the hour format of the locale's time setting, i.e. the 12-hour or 24-hour format.
 
 You can force a specific format using the `ampm` prop.
 
-You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#12h-24h-format).
+You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#meridiem-12h-24h-format).
 
 {{"demo": "TimeClockAmPm.js"}}
+
+## Validation
+
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).

@@ -6,12 +6,12 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
 import { DateView } from '../models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
+import { resolveDateFormat } from '../internals/utils/date-utils';
 
 export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, DateView> {
   classes?: Partial<DatePickerToolbarClasses>;
@@ -51,8 +51,18 @@ const DatePickerToolbarTitle = styled(Typography, {
 
 type DatePickerToolbarComponent = (<TDate>(
   props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [DatePickerToolbar API](https://mui.com/x/api/date-pickers/date-picker-toolbar/)
+ */
 const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
   inProps: DatePickerToolbarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -76,24 +86,9 @@ const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
       return toolbarPlaceholder;
     }
 
-    if (toolbarFormat) {
-      return utils.formatByString(value, toolbarFormat);
-    }
+    const formatFromViews = resolveDateFormat(utils, { format: toolbarFormat, views }, true);
 
-    if (isYearOnlyView(views as DateView[])) {
-      return utils.format(value, 'year');
-    }
-
-    if (isYearAndMonthViews(views as DateView[])) {
-      return utils.format(value, 'month');
-    }
-
-    // Little localization hack (Google is doing the same for android native pickers):
-    // For english localization it is convenient to include weekday into the date "Mon, Jun 1".
-    // For other locales using strings like "June 1", without weekday.
-    return /en/.test(utils.getCurrentLocaleCode())
-      ? utils.format(value, 'normalDateWithWeekday')
-      : utils.format(value, 'normalDate');
+    return utils.formatByString(value, formatFromViews);
   }, [value, toolbarFormat, toolbarPlaceholder, utils, views]);
 
   const ownerState = props;
@@ -164,9 +159,7 @@ DatePickerToolbar.propTypes = {
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;
 
 export { DatePickerToolbar };

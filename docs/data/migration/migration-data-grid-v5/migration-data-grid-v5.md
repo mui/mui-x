@@ -1,3 +1,7 @@
+---
+productId: x-data-grid
+---
+
 # Migration from v5 to v6
 
 <!-- #default-branch-switch -->
@@ -25,10 +29,12 @@ Described below are the steps needed to migrate from v5 to v6.
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/data-grid/preset-safe` targeting only Data Grid or `v6.0.0/preset-safe` to target Date and Time pickers as well.
 
-```sh
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
+
+```bash
 // Data Grid specific
 npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
-// Target Date and Time pickers as well
+// Target Date and Time Pickers as well
 npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
@@ -37,7 +43,7 @@ Apart from the removed methods and exports that require manual intervention, aro
 :::
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v600) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -67,7 +73,7 @@ These changes were done for consistency, improve stability and make room for new
 Below are described the steps you need to make to migrate from v5 to v6.
 
 :::warning
-The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/en/blog/release/v12.22.12).
+The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x reached end-of-life status](https://nodejs.org/en/blog/release/v12.22.12) in 2022.
 :::
 
 ### ✅ Renamed props
@@ -83,6 +89,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `showCellRightBorder`      | `showCellVerticalBorder`      |
   | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
   | `headerHeight`             | `columnHeaderHeight`          |
+
+- The corresponding type for `rowSelectionModel` (previously `selectionModel`) was renamed from `GridSelectionModel` to `GridRowSelectionModel`.
 
 ### Removed props
 
@@ -175,7 +183,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
         return;
       }
       // Check if the target is inside a Portal
-      if (!event.currentTarget.contains(event.target)) {
+      if (
+        (event.target as any).nodeType === 1 &&
+        !event.currentTarget.contains(event.target)
+      ) {
         event.defaultMuiPrevented = true;
       }
     }}
@@ -292,7 +303,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### Pagination
 
-- The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed. Use `paginationModel` and `onPaginationModelChange` instead.
+- The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed. Use `paginationModel` and [`onPaginationModelChange`](/x/react-data-grid/pagination/#controlled-pagination-model) instead.
 
   ```diff
    <DataGrid
@@ -301,18 +312,18 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   -  onPageChange={handlePageChange}
   -  onPageSizeChange={handlePageSizeChange}
   +  paginationModel={{ page, pageSize }}
-  +  onPaginationModelChange={handlePaginationModelChange}
+  +  onPaginationModelChange={(paginationModel) => handlePaginationModelChange(paginationModel)}
    />
   ```
 
-- The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
+- The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use [`initialState.pagination.paginationModel`](/x/react-data-grid/pagination/#initializing-the-pagination-model) instead.
 
   ```diff
   -initialState={{ pagination: { page: 1, pageSize: 10 } }}
   +initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
   ```
 
-- ✅ The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
+- ✅ The `rowsPerPageOptions` prop was renamed to [`pageSizeOptions`](/x/react-data-grid/pagination/#page-size-options).
 
   ```diff
   -<DataGrid rowsPerPageOptions={[10, 20, 50]} />
@@ -412,7 +423,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
    />
   ```
 - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
-- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#server-side-persistence) section about the topic.
 - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
 - The `GridEditRowsModel` type was removed.
 - The following API methods were removed:
@@ -458,7 +469,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
   ```diff
   -renderCell: (params: GridRenderCellParams<number>) => {
-  +renderCell: (params: GridRenderCellParams<any, any, number>) => {
+  +renderCell: (params: GridRenderCellParams<any, number>) => {
   ```
 
 - The `GridErrorOverlay` component was removed.
@@ -487,7 +498,7 @@ To smooth the transition, data grid support both the `components` props which ar
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
 ```
 

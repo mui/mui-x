@@ -1,14 +1,14 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Time Range Field components
 components: MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Date Time Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Date Time Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The Date Time Range Field let the user select a range of dates with an explicit starting and ending time with the keyboard.</p>
+<p class="description">The Date Time Range Field lets the user select a range of dates with an explicit starting and ending time with the keyboard.</p>
 
 ## Basic usage
 
@@ -21,8 +21,16 @@ or two inputs using `MultiInputDateTimeRangeField` as show below.
 
 {{"demo": "BasicDateTimeRangeField.js"}}
 
-## Uncontrolled vs. Controlled
+## Uncontrolled vs. controlled value
 
-The component can be uncontrolled or controlled.
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateTimeRangeFieldValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::

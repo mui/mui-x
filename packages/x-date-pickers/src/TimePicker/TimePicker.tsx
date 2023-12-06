@@ -2,15 +2,26 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
+import { refType } from '@mui/utils';
 import { DesktopTimePicker } from '../DesktopTimePicker';
-import { MobileTimePicker } from '../MobileTimePicker';
+import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
 import { TimePickerProps } from './TimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type TimePickerComponent = (<TDate>(
   props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)
+ */
 const TimePicker = React.forwardRef(function TimePicker<TDate>(
   inProps: TimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -26,7 +37,7 @@ const TimePicker = React.forwardRef(function TimePicker<TDate>(
     return <DesktopTimePicker ref={ref} {...other} />;
   }
 
-  return <MobileTimePicker ref={ref} {...other} />;
+  return <MobileTimePicker ref={ref} {...(other as MobileTimePickerProps<TDate>)} />;
 }) as TimePickerComponent;
 
 TimePicker.propTypes = {
@@ -60,18 +71,6 @@ TimePicker.propTypes = {
    * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value.
    * Used when the component is not controlled.
@@ -114,14 +113,15 @@ TimePicker.propTypes = {
    */
   format: PropTypes.string,
   /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
+  /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */
@@ -201,12 +201,22 @@ TimePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  openTo: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
+  /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
+   */
+  reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -235,20 +245,18 @@ TimePicker.propTypes = {
     }),
   ]),
   /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
-  /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * If `true`, disabled digital clock items will not be rendered.
+   * @default false
+   */
+  skipDisabled: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -268,6 +276,30 @@ TimePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * Amount of time options below or at which the single column time renderer is used.
+   * @default 24
+   */
+  thresholdToRenderTimeInASingleColumn: PropTypes.number,
+  /**
+   * The time steps between two time unit options.
+   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * @default{ hours: 1, minutes: 5, seconds: 5 }
+   */
+  timeSteps: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
+  }),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
+  /**
    * The selected value.
    * Used when the component is controlled.
    */
@@ -277,7 +309,7 @@ TimePicker.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -285,6 +317,7 @@ TimePicker.propTypes = {
    */
   viewRenderers: PropTypes.shape({
     hours: PropTypes.func,
+    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     seconds: PropTypes.func,
   }),

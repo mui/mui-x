@@ -1,304 +1,159 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
-import { deepmerge } from '@mui/utils';
-import { blue, grey } from '@mui/material/colors';
 import {
-  Experimental_CssVarsProvider as CssVarsProvider,
-  experimental_extendTheme as extendMuiTheme,
-  useTheme,
-  useColorScheme,
+  useTheme as useMaterialTheme,
+  useColorScheme as useMaterialColorScheme,
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
-import { extendTheme as extendJoyTheme, styled } from '@mui/joy/styles';
-import { useSlotProps } from '@mui/base/utils';
+import {
+  extendTheme as extendJoyTheme,
+  useColorScheme,
+  CssVarsProvider,
+  THEME_ID,
+} from '@mui/joy/styles';
 import Input from '@mui/joy/Input';
-import Stack from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-import Typography from '@mui/joy/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 
-const muiTheme = extendMuiTheme();
+import { useClearableField } from '@mui/x-date-pickers/hooks';
 
-const joyTheme = extendJoyTheme({
-  cssVarPrefix: 'mui',
-  colorSchemes: {
-    light: {
-      palette: {
-        primary: {
-          ...blue,
-          solidColor: 'var(--mui-palette-primary-contrastText)',
-          solidBg: 'var(--mui-palette-primary-main)',
-          solidHoverBg: 'var(--mui-palette-primary-dark)',
-          plainColor: 'var(--mui-palette-primary-main)',
-          plainHoverBg:
-            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))',
-          plainActiveBg: 'rgba(var(--mui-palette-primary-mainChannel) / 0.3)',
-          outlinedBorder: 'rgba(var(--mui-palette-primary-mainChannel) / 0.5)',
-          outlinedColor: 'var(--mui-palette-primary-main)',
-          outlinedHoverBg:
-            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))',
-          outlinedHoverBorder: 'var(--mui-palette-primary-main)',
-          outlinedActiveBg: 'rgba(var(--mui-palette-primary-mainChannel) / 0.3)',
-        },
-        neutral: {
-          ...grey,
-        },
-        divider: 'var(--mui-palette-divider)',
-        text: {
-          tertiary: 'rgba(0 0 0 / 0.56)',
-        },
-      },
-    },
-    dark: {
-      palette: {
-        primary: {
-          ...blue,
-          solidColor: 'var(--mui-palette-primary-contrastText)',
-          solidBg: 'var(--mui-palette-primary-main)',
-          solidHoverBg: 'var(--mui-palette-primary-dark)',
-          plainColor: 'var(--mui-palette-primary-main)',
-          plainHoverBg:
-            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))',
-          plainActiveBg: 'rgba(var(--mui-palette-primary-mainChannel) / 0.3)',
-          outlinedBorder: 'rgba(var(--mui-palette-primary-mainChannel) / 0.5)',
-          outlinedColor: 'var(--mui-palette-primary-main)',
-          outlinedHoverBg:
-            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))',
-          outlinedHoverBorder: 'var(--mui-palette-primary-main)',
-          outlinedActiveBg: 'rgba(var(--mui-palette-primary-mainChannel) / 0.3)',
-        },
-        neutral: {
-          ...grey,
-        },
-        divider: 'var(--mui-palette-divider)',
-        text: {
-          tertiary: 'rgba(255 255 255 / 0.5)',
-        },
-      },
-    },
-  },
-  fontFamily: {
-    display: '"Roboto","Helvetica","Arial",sans-serif',
-    body: '"Roboto","Helvetica","Arial",sans-serif',
-  },
-  shadow: {
-    xs: `var(--mui-shadowRing), ${muiTheme.shadows[1]}`,
-    sm: `var(--mui-shadowRing), ${muiTheme.shadows[2]}`,
-    md: `var(--mui-shadowRing), ${muiTheme.shadows[4]}`,
-    lg: `var(--mui-shadowRing), ${muiTheme.shadows[8]}`,
-    xl: `var(--mui-shadowRing), ${muiTheme.shadows[12]}`,
-  },
-});
+const joyTheme = extendJoyTheme();
 
-const mergedTheme = {
-  ...joyTheme,
-  ...muiTheme,
-  colorSchemes: deepmerge(joyTheme.colorSchemes, muiTheme.colorSchemes),
-  typography: {
-    ...joyTheme.typography,
-    ...muiTheme.typography,
-  },
-  zIndex: {
-    ...joyTheme.zIndex,
-    ...muiTheme.zIndex,
-  },
-};
-
-mergedTheme.generateCssVars = (colorScheme) => ({
-  css: {
-    ...joyTheme.generateCssVars(colorScheme).css,
-    ...muiTheme.generateCssVars(colorScheme).css,
-  },
-  vars: deepmerge(
-    joyTheme.generateCssVars(colorScheme).vars,
-    muiTheme.generateCssVars(colorScheme).vars,
-  ),
-});
-mergedTheme.unstable_sxConfig = {
-  ...muiTheme.unstable_sxConfig,
-  ...joyTheme.unstable_sxConfig,
-};
-
-const JoyField = React.forwardRef((props, inputRef) => {
+const JoyField = React.forwardRef((props, ref) => {
   const {
     disabled,
     id,
     label,
     InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
+    formControlSx,
+    endDecorator,
+    startDecorator,
+    slotProps,
     ...other
   } = props;
 
   return (
-    <FormControl disabled={disabled} id={id} sx={{ flexGrow: 1 }} ref={containerRef}>
+    <FormControl
+      disabled={disabled}
+      id={id}
+      sx={[...(Array.isArray(formControlSx) ? formControlSx : [formControlSx])]}
+      ref={ref}
+    >
       <FormLabel>{label}</FormLabel>
       <Input
+        ref={ref}
         disabled={disabled}
-        slotProps={{ input: { ref: inputRef } }}
-        startDecorator={startAdornment}
-        endDecorator={endAdornment}
+        startDecorator={
+          <React.Fragment>
+            {startAdornment}
+            {startDecorator}
+          </React.Fragment>
+        }
+        endDecorator={
+          <React.Fragment>
+            {endAdornment}
+            {endDecorator}
+          </React.Fragment>
+        }
+        slotProps={{
+          ...slotProps,
+          root: { ...slotProps?.root, ref: containerRef },
+        }}
         {...other}
       />
     </FormControl>
   );
 });
 
-const MultiInputJoyDateRangeFieldRoot = styled(
-  React.forwardRef((props, ref) => (
-    <Stack ref={ref} spacing={2} direction="row" alignItems="center" {...props} />
-  )),
-  {
-    name: 'MuiMultiInputDateRangeField',
-    slot: 'Root',
-    overridesResolver: (props, styles) => styles.root,
-  },
-)({});
-
-const MultiInputJoyDateRangeFieldSeparator = styled(
-  (props) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
-  {
-    name: 'MuiMultiInputDateRangeField',
-    slot: 'Separator',
-    overridesResolver: (props, styles) => styles.separator,
-  },
-)({ marginTop: '25px' });
-
-const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
-  const {
-    slotProps,
-    value,
-    defaultValue,
-    format,
-    onChange,
-    readOnly,
-    disabled,
-    onError,
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
-    className,
-  } = props;
-
-  const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
-    elementType: null,
-    externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'start' },
-  });
-
-  const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
-    elementType: null,
-    externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'end' },
-  });
-
-  const { startDate, endDate } = useMultiInputDateRangeField({
-    sharedProps: {
-      value,
-      defaultValue,
-      format,
-      onChange,
-      readOnly,
-      disabled,
-      onError,
-      shouldDisableDate,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-    },
-    startTextFieldProps,
-    endTextFieldProps,
-    startInputRef,
-    endInputRef,
-  });
-
-  return (
-    <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
-      <JoyField {...startDate} />
-      <MultiInputJoyDateRangeFieldSeparator />
-      <JoyField {...endDate} />
-    </MultiInputJoyDateRangeFieldRoot>
-  );
-});
-
-function JoyDateRangePicker(props) {
-  return (
-    <DateRangePicker slots={{ field: JoyMultiInputDateRangeField }} {...props} />
-  );
-}
-
-function JoyDateField(props) {
+const JoyDateField = React.forwardRef((props, ref) => {
   const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
 
-  const response = useDateField({
+  const {
+    onClear,
+    clearable,
+    ref: inputRef,
+    ...fieldProps
+  } = useDateField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
-  return <JoyField {...response} />;
-}
+  /* If you don't need a clear button, you can skip the use of this hook */
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
+    useClearableField({
+      onClear,
+      clearable,
+      fieldProps,
+      InputProps: fieldProps.InputProps,
+      slots,
+      slotProps,
+    });
 
-JoyDateField.propTypes = {
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.object])
-        .isRequired,
-    }),
-  ]),
-  slotProps: PropTypes.object,
-  slots: PropTypes.object,
-};
+  return (
+    <JoyField
+      ref={ref}
+      slotProps={{
+        input: {
+          ref: inputRef,
+        },
+      }}
+      {...processedFieldProps}
+      InputProps={ProcessedInputProps}
+    />
+  );
+});
 
-function JoyDatePicker(props) {
-  return <DatePicker slots={{ field: JoyDateField, ...props.slots }} {...props} />;
-}
+const JoyDatePicker = React.forwardRef((props, ref) => {
+  return (
+    <DatePicker
+      ref={ref}
+      {...props}
+      slots={{ field: JoyDateField, ...props.slots }}
+      slotProps={{
+        ...props.slotProps,
+        field: {
+          ...props.slotProps?.field,
+          formControlSx: {
+            flexDirection: 'row',
+          },
+        },
+      }}
+    />
+  );
+});
 
 /**
- * This component is for syncing the MUI docs's mode with this demo.
+ * This component is for syncing the theme mode of this demo with the MUI docs mode.
  * You might not need this component in your project.
  */
-
-JoyDatePicker.propTypes = {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.any,
-};
-
 function SyncThemeMode({ mode }) {
   const { setMode } = useColorScheme();
+  const { setMode: setMaterialMode } = useMaterialColorScheme();
   React.useEffect(() => {
     setMode(mode);
-  }, [mode, setMode]);
+    setMaterialMode(mode);
+  }, [mode, setMode, setMaterialMode]);
   return null;
 }
 
 export default function PickerWithJoyField() {
-  const {
-    palette: { mode },
-  } = useTheme();
+  const materialTheme = useMaterialTheme();
   return (
-    <CssVarsProvider theme={mergedTheme}>
-      <SyncThemeMode mode={mode} />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Stack spacing={2} sx={{ width: 400 }}>
-          <JoyDatePicker />
-          <JoyDateRangePicker />
-        </Stack>
-      </LocalizationProvider>
-    </CssVarsProvider>
+    <MaterialCssVarsProvider>
+      <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
+        <SyncThemeMode mode={materialTheme.palette.mode} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <JoyDatePicker
+            slotProps={{
+              field: { clearable: true },
+            }}
+          />
+        </LocalizationProvider>
+      </CssVarsProvider>
+    </MaterialCssVarsProvider>
   );
 }

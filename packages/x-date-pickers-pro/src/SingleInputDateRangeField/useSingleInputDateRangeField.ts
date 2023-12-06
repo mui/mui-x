@@ -3,14 +3,15 @@ import {
   useDefaultDates,
   applyDefaultDate,
   useField,
+  splitFieldInternalAndForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseSingleInputDateRangeFieldDefaultizedProps,
   UseSingleInputDateRangeFieldParams,
   UseSingleInputDateRangeFieldProps,
 } from './SingleInputDateRangeField.types';
-import { rangeValueManager, rangeFieldValueManager } from '../internal/utils/valueManagers';
-import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
+import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 
 export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputDateRangeFieldProps<TDate>,
@@ -29,46 +30,20 @@ export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends
 };
 
 export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
-  props,
+  props: inProps,
   inputRef,
 }: UseSingleInputDateRangeFieldParams<TDate, TChildProps>) => {
-  const {
-    value,
-    defaultValue,
-    format,
-    onChange,
-    readOnly,
-    onError,
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
-    unstableFieldRef,
-    ...other
-  } = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(props);
+  const props = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(inProps);
+
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
+    typeof props,
+    keyof UseSingleInputDateRangeFieldProps<any>
+  >(props, 'date');
 
   return useField({
     inputRef,
-    forwardedProps: other as Omit<TChildProps, keyof UseSingleInputDateRangeFieldProps<TDate>>,
-    internalProps: {
-      value,
-      defaultValue,
-      format,
-      onChange,
-      readOnly,
-      onError,
-      shouldDisableDate,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-      unstableFieldRef,
-    },
+    forwardedProps,
+    internalProps,
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,
     validator: validateDateRange,

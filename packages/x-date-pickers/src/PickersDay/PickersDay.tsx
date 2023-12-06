@@ -109,15 +109,16 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
     classes,
   } = ownerState;
 
+  const isHiddenDaySpacingFiller = outsideCurrentMonth && !showDaysOutsideCurrentMonth;
   const slots = {
     root: [
       'root',
-      selected && 'selected',
+      selected && !isHiddenDaySpacingFiller && 'selected',
       disabled && 'disabled',
       !disableMargin && 'dayWithMargin',
       !disableHighlightToday && today && 'today',
       outsideCurrentMonth && showDaysOutsideCurrentMonth && 'dayOutsideMonth',
-      outsideCurrentMonth && !showDaysOutsideCurrentMonth && 'hiddenDaySpacingFiller',
+      isHiddenDaySpacingFiller && 'hiddenDaySpacingFiller',
     ],
     hiddenDaySpacingFiller: ['hiddenDaySpacingFiller'],
   };
@@ -133,6 +134,9 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   padding: 0,
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
+  transition: theme.transitions.create('background-color', {
+    duration: theme.transitions.duration.short,
+  }),
   color: (theme.vars || theme).palette.text.primary,
   '@media (pointer: fine)': {
     '&:hover': {
@@ -154,16 +158,16 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
-    transition: theme.transitions.create('background-color', {
-      duration: theme.transitions.duration.short,
-    }),
     '&:hover': {
       willChange: 'background-color',
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
-  [`&.${pickersDayClasses.disabled}`]: {
+  [`&.${pickersDayClasses.disabled}:not(.${pickersDayClasses.selected})`]: {
     color: (theme.vars || theme).palette.text.disabled,
+  },
+  [`&.${pickersDayClasses.disabled}&.${pickersDayClasses.selected}`]: {
+    opacity: 0.6,
   },
   ...(!ownerState.disableMargin && {
     margin: `0 ${DAY_MARGIN}px`,
@@ -219,7 +223,7 @@ const noop = () => {};
 
 type PickersDayComponent = (<TDate>(
   props: PickersDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   inProps: PickersDayProps<TDate>,
@@ -255,6 +259,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     isLastVisibleCell,
     ...other
   } = props;
+
   const ownerState = {
     ...props,
     autoFocus,
@@ -281,7 +286,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     }
   }, [autoFocus, disabled, isAnimating, outsideCurrentMonth]);
 
-  // For day outside of current month, move focus from mouseDown to mouseUp
+  // For a day outside the current month, move the focus from mouseDown to mouseUp
   // Goal: have the onClick ends before sliding to the new month
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
     onMouseDown(event);
@@ -364,6 +369,7 @@ PickersDayRaw.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * The date to show.
    */
@@ -489,11 +495,9 @@ PickersDayRaw.propTypes = {
 } as any;
 
 /**
- *
  * Demos:
  *
- * - [Date Picker](https://mui.com/x/react-date-pickers/date-picker/)
- *
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
  * API:
  *
  * - [PickersDay API](https://mui.com/x/api/date-pickers/pickers-day/)

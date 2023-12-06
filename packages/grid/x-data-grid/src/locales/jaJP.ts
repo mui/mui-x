@@ -46,7 +46,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'すべて削除',
   filterPanelDeleteIconLabel: '削除',
   filterPanelLogicOperator: '論理演算子',
   filterPanelOperator: '演算子',
@@ -72,6 +72,33 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorIsNotEmpty: '...空でない',
   filterOperatorIsAnyOf: '...のいずれか',
   // filterOperatorContainsAnyOf: 'contains any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: '含む',
+  headerFilterOperatorEquals: '等しい',
+  headerFilterOperatorStartsWith: 'で始まる',
+  headerFilterOperatorEndsWith: 'で終わる',
+  headerFilterOperatorIs: 'である',
+  headerFilterOperatorNot: 'ではない',
+  headerFilterOperatorAfter: '...より後ろ',
+  headerFilterOperatorOnOrAfter: '...以降',
+  headerFilterOperatorBefore: '...より前',
+  headerFilterOperatorOnOrBefore: '...以前',
+  headerFilterOperatorIsEmpty: '空白',
+  headerFilterOperatorIsNotEmpty: '空白ではない',
+  headerFilterOperatorIsAnyOf: 'いずれか',
+  'headerFilterOperator=': '等しい',
+  'headerFilterOperator!=': '等しくない',
+  'headerFilterOperator>': 'より大きい',
+  'headerFilterOperator>=': '以上',
+  'headerFilterOperator<': '未満',
+  'headerFilterOperator<=': '以下',
 
   // Filter values text
   filterValueAny: 'いずれか',

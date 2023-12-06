@@ -1,10 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 import {
   dateCalendarClasses,
-  dayPickerClasses,
-  pickersCalendarHeaderClasses,
+  dayCalendarClasses,
   pickersSlideTransitionClasses,
 } from '../DateCalendar';
+import { pickersCalendarHeaderClasses } from '../PickersCalendarHeader';
 import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
   clockClasses,
@@ -14,14 +14,15 @@ import {
 } from '../TimeClock';
 import { datePickerToolbarClasses } from '../DatePicker';
 import { dateTimePickerToolbarClasses } from '../DateTimePicker';
-import {
-  pickersArrowSwitcherClasses,
-  pickersPopperClasses,
-  pickersToolbarClasses,
-} from '../internals';
+import { pickersArrowSwitcherClasses, pickersPopperClasses } from '../internals';
 import { pickersDayClasses } from '../PickersDay';
 import { timePickerToolbarClasses } from '../TimePicker';
 import { pickersMonthClasses } from '../MonthCalendar';
+import { digitalClockClasses } from '../DigitalClock';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '../MultiSectionDigitalClock';
 
 createTheme({
   components: {
@@ -44,6 +45,13 @@ createTheme({
         },
       },
     },
+    MuiDateField: {
+      defaultProps: {
+        className: 'class',
+        // @ts-expect-error invalid MuiDateField prop
+        someRandomProp: true,
+      },
+    },
     MuiDayCalendarSkeleton: {
       defaultProps: {
         className: 'class',
@@ -58,6 +66,63 @@ createTheme({
           },
         },
         // @ts-expect-error invalid MuiDayCalendarSkeleton class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+    MuiDigitalClock: {
+      defaultProps: {
+        timeStep: 42,
+        // @ts-expect-error invalid MuiDigitalClock prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${digitalClockClasses.item}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiDigitalClock class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+    MuiMultiSectionDigitalClock: {
+      defaultProps: {
+        timeSteps: { minutes: 42 },
+        // @ts-expect-error invalid MuiMultiSectionDigitalClock prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`&.${multiSectionDigitalClockClasses.root}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiMultiSectionDigitalClock class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+    MuiMultiSectionDigitalClockSection: {
+      defaultProps: {
+        className: 'class',
+        // @ts-expect-error invalid MuiMultiSectionDigitalClockSection prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${multiSectionDigitalClockSectionClasses.item}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiMultiSectionDigitalClockSection class key
         content: {
           backgroundColor: 'blue',
         },
@@ -118,6 +183,13 @@ createTheme({
         content: {
           backgroundColor: 'blue',
         },
+      },
+    },
+    MuiDateTimeField: {
+      defaultProps: {
+        className: 'class',
+        // @ts-expect-error invalid MuiDateTimeField prop
+        someRandomProp: true,
       },
     },
     MuiDatePickerToolbar: {
@@ -183,7 +255,7 @@ createTheme({
       styleOverrides: {
         header: {
           backgroundColor: 'red',
-          [`.${dayPickerClasses.weekContainer}`]: {
+          [`.${dayCalendarClasses.weekContainer}`]: {
             backgroundColor: 'green',
           },
         },
@@ -348,9 +420,6 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${pickersToolbarClasses.penIconButton}`]: {
-            backgroundColor: 'green',
-          },
         },
         // @ts-expect-error invalid MuiPickersToolbar class key
         contentWrapper: {
@@ -442,6 +511,13 @@ createTheme({
         content: {
           backgroundColor: 'blue',
         },
+      },
+    },
+    MuiTimeField: {
+      defaultProps: {
+        className: 'class',
+        // @ts-expect-error invalid MuiTimeField prop
+        someRandomProp: true,
       },
     },
     MuiTimePickerToolbar: {

@@ -4,4 +4,5 @@ export type {
   UseDateTimeFieldProps,
   UseDateTimeFieldComponentProps,
   DateTimeFieldProps,
+  UseDateTimeFieldDefaultizedProps,
 } from './DateTimeField.types';

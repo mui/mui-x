@@ -1,7 +1,7 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Picker component
-components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, DateCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Picker
 
-<p class="description">The Date Picker component let the user select a date.</p>
+<p class="description">The Date Picker component lets users select a date.</p>
 
 ## Basic usage
 
@@ -25,11 +25,19 @@ Check-out their documentation page for more information:
 - [Date Field](/x/react-date-pickers/date-field/)
 - [Date Calendar](/x/react-date-pickers/date-calendar/)
 
-## Uncontrolled vs. Controlled
+## Uncontrolled vs. controlled value
 
-The component can be uncontrolled or controlled.
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DatePickerValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
 
 ## Available components
 
@@ -88,11 +96,21 @@ You can force a specific orientation using the `orientation` prop:
 
 {{"demo": "StaticDatePickerLandscape.js", "bg": true}}
 
+:::info
+You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
+:::
+
 ## Helper text
 
 You can show a helper text with the date format accepted:
 
 {{"demo": "HelperText.js"}}
+
+## Clearing the value
+
+You can enable the clearable behavior:
+
+{{"demo": "ClearableProp.js"}}
 
 ## Validation
 
@@ -100,4 +118,10 @@ You can find the documentation in the [Validation page](/x/react-date-pickers/va
 
 ## Localization
 
-You can find the documentation about localization in the [Date localization](/x/react-date-pickers/adapters-locale/) and [Component localization](/x/react-date-pickers/localization/).
+You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).
+
+## Customization
+
+You can check out multiple examples of how to customize the date pickers and their subcomponents.
+
+{{"demo": "CustomizationExamplesNoSnap.js", "hideToolbar": true, "bg": "inline"}}

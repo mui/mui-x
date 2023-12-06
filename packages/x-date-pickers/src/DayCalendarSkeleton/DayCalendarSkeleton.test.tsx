@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { describeConformance } from '@mui/monorepo/test/utils';
+import { describeConformance } from '@mui-internal/test-utils';
 import {
   DayCalendarSkeleton,
   dayCalendarSkeletonClasses as classes,
 } from '@mui/x-date-pickers/DayCalendarSkeleton';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer } from 'test/utils/pickers';
 
 describe('<DayCalendarSkeleton />', () => {
   const { render } = createPickerRenderer();

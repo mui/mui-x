@@ -51,6 +51,7 @@ export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
+export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
@@ -65,15 +66,17 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
-export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
+export type { UsePickerResponse, UsePickerParams, UsePickerProps } from './hooks/usePicker';
 export type {
   UsePickerValueNonStaticProps,
   PickerValueManager,
   PickerSelectionState,
-} from './hooks/usePicker/usePickerValue';
+} from './hooks/usePicker/usePickerValue.types';
 export type {
   UsePickerViewsNonStaticProps,
   PickerViewRendererLookup,
@@ -93,24 +96,8 @@ export {
   useNow,
 } from './hooks/useUtils';
 export type { ExportedUseViewsOptions } from './hooks/useViews';
-export type {
-  BaseDateValidationProps,
-  BaseTimeValidationProps,
-  TimeValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-  DayValidationProps,
-} from './hooks/validation/models';
-export { useValidation } from './hooks/validation/useValidation';
-export type {
-  ValidationCommonProps,
-  ValidationProps,
-  Validator,
-  InferError,
-} from './hooks/validation/useValidation';
-export { validateDate } from './hooks/validation/useDateValidation';
-export { validateTime } from './hooks/validation/useTimeValidation';
-export { validateDateTime } from './hooks/validation/useDateTimeValidation';
+export { useValidation } from './hooks/useValidation';
+export type { ValidationProps, Validator, InferError } from './hooks/useValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
@@ -120,29 +107,38 @@ export type {
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
-export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { WrapperVariant } from './models/common';
+export type {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  TimeValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
+  DayValidationProps,
+  DateTimeValidationProps,
+} from './models/validation';
 
-export { applyDefaultDate, replaceInvalidDateByNull, areDatesEqual } from './utils/date-utils';
+export {
+  applyDefaultDate,
+  replaceInvalidDateByNull,
+  areDatesEqual,
+  getTodayDate,
+} from './utils/date-utils';
+export { splitFieldInternalAndForwardedProps } from './utils/fields';
+export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
   onSpaceOrEnter,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
-export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
-export { extractValidationProps } from './utils/validation';
-export { buildDeprecatedPropsWarning } from './utils/warning';
-export { uncapitalizeObjectKeys } from './utils/slots-migration';
-export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';
-
-export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';
-export type {
-  ExportedCalendarHeaderProps,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
-} from '../DateCalendar/PickersCalendarHeader';
+export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
+export { extractValidationProps } from './utils/validation/extractValidationProps';
+export { validateDate } from './utils/validation/validateDate';
+export { validateDateTime } from './utils/validation/validateDateTime';
+export { validateTime } from './utils/validation/validateTime';
+export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {

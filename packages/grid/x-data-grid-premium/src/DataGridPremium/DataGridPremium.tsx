@@ -33,7 +33,13 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+      <GridRoot
+        className={props.className}
+        style={props.style}
+        sx={props.sx}
+        ref={ref}
+        {...props.forwardedProps}
+      >
         <GridHeader />
         <GridBody
           VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -50,10 +56,17 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 interface DataGridPremiumComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): JSX.Element;
+  ): React.JSX.Element;
   propTypes?: any;
 }
 
+/**
+ * Demos:
+ * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)
+ */
 export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremiumComponent;
 
 DataGridPremiumRaw.propTypes = {
@@ -102,9 +115,33 @@ DataGridPremiumRaw.propTypes = {
    */
   autoPageSize: PropTypes.bool,
   /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: PropTypes.bool,
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions: PropTypes.shape({
+    columns: PropTypes.arrayOf(PropTypes.string),
+    expand: PropTypes.bool,
+    includeHeaders: PropTypes.bool,
+    includeOutliers: PropTypes.bool,
+    outliersFactor: PropTypes.number,
+  }),
+  /**
    * Controls the modes of the cells.
    */
   cellModesModel: PropTypes.object,
+  /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  cellSelection: PropTypes.bool,
+  /**
+   * Set the cell selection model of the grid.
+   */
+  cellSelectionModel: PropTypes.object,
   /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
@@ -127,6 +164,11 @@ DataGridPremiumRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: PropTypes.string,
   /**
    * Number of extra columns to be rendered before/after the visible slice.
    * @default 3
@@ -153,16 +195,6 @@ DataGridPremiumRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overridable components.
-   * @deprecated Use the `slots` prop instead.
-   */
-  components: PropTypes.object,
-  /**
-   * Overridable components props dynamically passed to the component at rendering.
-   * @deprecated Use the `slotProps` prop instead.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
    * @default 0
@@ -185,6 +217,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableAggregation: PropTypes.bool,
   /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: PropTypes.bool,
+  /**
    * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
    */
@@ -194,6 +231,11 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   disableChildrenSorting: PropTypes.bool,
+  /**
+   * If `true`, the clipboard paste is disabled.
+   * @default false
+   */
+  disableClipboardPaste: PropTypes.bool,
   /**
    * If `true`, column filters are disabled.
    * @default false
@@ -229,6 +271,12 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   disableDensitySelector: PropTypes.bool,
+  /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: PropTypes.bool,
   /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
@@ -269,10 +317,16 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    ariaV7: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: PropTypes.number,
   /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
@@ -299,9 +353,15 @@ DataGridPremiumRaw.propTypes = {
       }),
     ).isRequired,
     logicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterExcludeHiddenColumns: PropTypes.bool,
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps: PropTypes.object,
   /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
@@ -318,7 +378,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent: PropTypes.func,
   /**
@@ -372,6 +432,11 @@ DataGridPremiumRaw.propTypes = {
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  headerFilters: PropTypes.bool,
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */
@@ -399,6 +464,24 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   hideFooterSelectedRowCount: PropTypes.bool,
+  /**
+   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * @default false
+   */
+  ignoreDiacritics: PropTypes.bool,
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default false
+   */
+  ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
   /**
    * The initial state of the DataGridPremium.
    * The data in it is set in the state on initialization but isn't controlled.
@@ -510,6 +593,25 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
+  /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellSelectionModelChange: PropTypes.func,
+  /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy: PropTypes.func,
+  /**
+   * Callback fired when the clipboard paste operation ends.
+   */
+  onClipboardPasteEnd: PropTypes.func,
+  /**
+   * Callback fired when the clipboard paste operation starts.
+   */
+  onClipboardPasteStart: PropTypes.func,
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -738,7 +840,15 @@ DataGridPremiumRaw.propTypes = {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
+  pageSizeOptions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+    ]).isRequired,
+  ),
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -809,6 +919,13 @@ DataGridPremiumRaw.propTypes = {
    * Controls the modes of the rows.
    */
   rowModesModel: PropTypes.object,
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: PropTypes.number,
   /**
    * If `true`, the reordering of rows is enabled.
    * @default false
@@ -897,6 +1014,13 @@ DataGridPremiumRaw.propTypes = {
     }),
   ),
   /**
+   * The function is used to split the pasted text into rows and cells.
+   * @param {string} text The text pasted from the clipboard.
+   * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
+   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
+   */
+  splitClipboardPastedText: PropTypes.func,
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -915,19 +1039,4 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
-  /**
-   * If `true`, the cell selection mode is enabled.
-   * @default false
-   */
-  unstable_cellSelection: PropTypes.bool,
-  /**
-   * Set the cell selection model of the grid.
-   */
-  unstable_cellSelectionModel: PropTypes.object,
-  /**
-   * Callback fired when the selection state of one or multiple cells changes.
-   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  unstable_onCellSelectionModelChange: PropTypes.func,
 } as any;

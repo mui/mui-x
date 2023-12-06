@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
 import { unstable_useId as useId } from '@mui/utils';
 import { isSingleSelectColDef } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -137,7 +136,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       getOptionLabel={getOptionLabel}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => (
-          <Chip
+          <rootProps.slots.baseChip
             variant="outlined"
             size="small"
             label={getOptionLabel(option)}

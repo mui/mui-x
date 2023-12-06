@@ -9,37 +9,43 @@ import {
   BaseTimePickerSlotsComponentsProps,
 } from '../TimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
+import { TimeViewWithMeridiem } from '../internals/models';
+import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
+import { DigitalClockSlotsComponent, DigitalClockSlotsComponentsProps } from '../DigitalClock';
+import {
+  MultiSectionDigitalClockSlotsComponent,
+  MultiSectionDigitalClockSlotsComponentsProps,
+} from '../MultiSectionDigitalClock';
 import { TimeView } from '../models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface DesktopTimePickerSlotsComponent<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopPickerSlotsComponent<TDate, TimeView>, 'Field' | 'OpenPickerIcon'> {}
+    MakeOptional<
+      UseDesktopPickerSlotsComponent<TDate, TimeViewWithMeridiem>,
+      'field' | 'openPickerIcon'
+    >,
+    DigitalClockSlotsComponent,
+    MultiSectionDigitalClockSlotsComponent {}
 
 export interface DesktopTimePickerSlotsComponentsProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, TimeView> {}
+    ExportedUseDesktopPickerSlotsComponentsProps<TDate, TimeViewWithMeridiem>,
+    DigitalClockSlotsComponentsProps,
+    MultiSectionDigitalClockSlotsComponentsProps {}
 
 export interface DesktopTimePickerProps<TDate>
-  extends BaseTimePickerProps<TDate>,
-    DesktopOnlyPickerProps<TDate> {
+  extends BaseTimePickerProps<TDate, TimeViewWithMeridiem>,
+    DesktopOnlyPickerProps<TDate>,
+    DesktopOnlyTimePickerProps<TDate> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
+   * Available views.
    */
-  components?: DesktopTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DesktopTimePickerSlotsComponentsProps<TDate>;
+  views?: readonly TimeView[];
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DesktopTimePickerSlotsComponent<TDate>>;
+  slots?: DesktopTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

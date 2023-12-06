@@ -2,7 +2,7 @@
 title: Data Grid - Master detail
 ---
 
-# Data Grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Expand your rows to display additional information.</p>
 
@@ -41,7 +41,7 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 
 :::warning
 Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
-The grid depends on the referential value of these props to cache their values and optimize the rendering.
+The Data Grid depends on the referential value of these props to cache their values and optimize the rendering.
 
 ```tsx
 const getDetailPanelContent = React.useCallback(() => { ... }, []);
@@ -156,6 +156,12 @@ The following demo shows how this can be achieved.
 Notice that the toggle column is pinned to make sure that it will always be visible when the data grid is scrolled horizontally.
 
 {{"demo": "FullWidthDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Recipes
+
+More examples of how to customize the detail panel:
+
+- [One expanded detail panel at a time](/x/react-data-grid/row-recipes/#one-expanded-detail-panel-at-a-time)
 
 ## apiRef
 

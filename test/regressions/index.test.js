@@ -2,7 +2,7 @@ import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import * as playwright from 'playwright';
+import { chromium } from '@playwright/test';
 
 function sleep(timeoutMS) {
   return new Promise((resolve) => {
@@ -14,7 +14,7 @@ async function main() {
   const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
 
-  const browser = await playwright.chromium.launch({
+  const browser = await chromium.launch({
     args: ['--font-render-hinting=none'],
     // otherwise the loaded google Roboto font isn't applied
     headless: false,
@@ -101,23 +101,9 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
-        const pathsToNotWaitForFlagCDN = [
-          '/docs-data-grid-filtering/ServerFilterGrid', // No content rendered
-          '/docs-data-grid-filtering/CustomMultiValueOperator', // No content rendered
-          '/docs-data-grid-filtering/QuickFilteringInitialize', // No content rendered
-          '/docs-data-grid-sorting/ExtendedSortComparator', // No flag column
-          '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
-          '/docs-data-grid-sorting/ServerSortingGrid', // No flag column
-        ];
-
-        if (
-          /^\/docs-data-grid-(filtering|sorting)/.test(pathURL) &&
-          !pathsToNotWaitForFlagCDN.includes(pathURL)
-        ) {
-          // Wait for the flags to load
-          await page.waitForResponse((response) =>
-            response.url().startsWith('https://flagcdn.com'),
-          );
+        if (/^\docs-charts-.*/.test(pathURL)) {
+          // Run one tick of the clock to get the final animation state
+          await sleep(10);
         }
 
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
@@ -125,6 +111,22 @@ async function main() {
 
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
+        );
+
+        // Wait for the flags to load
+        await page.waitForFunction(
+          () => {
+            const images = Array.from(document.querySelectorAll('img'));
+            return images.every((img) => {
+              if (!img.complete && img.loading === 'lazy') {
+                // Force lazy-loaded images to load
+                img.setAttribute('loading', 'eager');
+              }
+              return img.complete;
+            });
+          },
+          undefined,
+          { timeout: 1000 },
         );
 
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
@@ -193,7 +195,7 @@ async function main() {
 
       return new Promise((resolve, reject) => {
         // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,81 -vframes 1 ${screenshotPath}`;
+        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,85 -vframes 1 ${screenshotPath}`;
         const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
 
         ffmpeg.on('close', (code) => {

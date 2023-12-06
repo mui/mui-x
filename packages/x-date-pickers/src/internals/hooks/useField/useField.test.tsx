@@ -8,6 +8,8 @@ const COMMON_PROPERTIES = {
   type: 'year',
   modified: false,
   format: 'YYYY',
+  hasLeadingZerosInFormat: true,
+  maxLength: 4,
 } as const;
 
 describe('useField utility functions', () => {
@@ -15,7 +17,7 @@ describe('useField utility functions', () => {
     it('should not add invisible space when target = "non-input"', () => {
       expect(
         getSectionVisibleValue(
-          { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZeros: true },
+          { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZerosInInput: true },
           'non-input',
         ),
       ).to.equal('1');
@@ -24,7 +26,7 @@ describe('useField utility functions', () => {
     it('should add invisible space when target = "input-ltr" and the value is a single digit with non-trailing zeroes', () => {
       expect(
         getSectionVisibleValue(
-          { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZeros: false },
+          { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZerosInInput: false },
           'input-ltr',
         ),
       ).to.equal('1\u200e');
@@ -33,7 +35,7 @@ describe('useField utility functions', () => {
     it('should add invisible space and RTL boundaries when target = "input-rtl" and the value is a single digit with non-trailing zeroes', () => {
       expect(
         getSectionVisibleValue(
-          { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZeros: false },
+          { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZerosInInput: false },
           'input-rtl',
         ),
       ).to.equal('\u20681\u200e\u2069');
@@ -42,7 +44,7 @@ describe('useField utility functions', () => {
     it('should add RTL boundaries when target = "input-rtl"', () => {
       expect(
         getSectionVisibleValue(
-          { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZeros: true },
+          { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZerosInInput: true },
           'input-rtl',
         ),
       ).to.equal('\u20681\u2069');

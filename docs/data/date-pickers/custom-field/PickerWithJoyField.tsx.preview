@@ -1,9 +1,12 @@
-<CssVarsProvider theme={mergedTheme}>
-  <SyncThemeMode mode={mode} />
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <Stack spacing={2} sx={{ width: 400 }}>
-      <JoyDatePicker />
-      <JoyDateRangePicker />
-    </Stack>
-  </LocalizationProvider>
-</CssVarsProvider>
+<MaterialCssVarsProvider>
+  <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
+    <SyncThemeMode mode={materialTheme.palette.mode} />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <JoyDatePicker
+        slotProps={{
+          field: { clearable: true },
+        }}
+      />
+    </LocalizationProvider>
+  </CssVarsProvider>
+</MaterialCssVarsProvider>

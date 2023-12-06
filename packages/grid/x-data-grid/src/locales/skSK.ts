@@ -54,7 +54,7 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Odstrániť všetky',
   filterPanelDeleteIconLabel: 'Odstrániť',
   filterPanelLogicOperator: 'Logický operátor',
   filterPanelOperator: 'Operátory',
@@ -80,6 +80,33 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterOperatorIsNotEmpty: 'nie je prázdny',
   filterOperatorIsAnyOf: 'je jeden z',
   // filterOperatorContainsAnyOf: 'contains any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Obsahuje',
+  headerFilterOperatorEquals: 'Rovná sa',
+  headerFilterOperatorStartsWith: 'Začína s',
+  headerFilterOperatorEndsWith: 'Končí na',
+  headerFilterOperatorIs: 'Je',
+  headerFilterOperatorNot: 'Nie je',
+  headerFilterOperatorAfter: 'Je po',
+  headerFilterOperatorOnOrAfter: 'Je na alebo po',
+  headerFilterOperatorBefore: 'Je pred',
+  headerFilterOperatorOnOrBefore: 'Je na alebo skôr',
+  headerFilterOperatorIsEmpty: 'Je prázdny',
+  headerFilterOperatorIsNotEmpty: 'Nie je prázdny',
+  headerFilterOperatorIsAnyOf: 'Je jeden z',
+  'headerFilterOperator=': 'Rovná sa',
+  'headerFilterOperator!=': 'Nerovná sa',
+  'headerFilterOperator>': 'Väčší ako',
+  'headerFilterOperator>=': 'Väčší ako alebo rovný',
+  'headerFilterOperator<': 'Menší ako',
+  'headerFilterOperator<=': 'Menší ako alebo rovný',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',
@@ -89,7 +116,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Zobraziť stĺpce',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Spravovať stĺpce',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skryť',
   columnMenuUnsort: 'Zrušiť filtre',

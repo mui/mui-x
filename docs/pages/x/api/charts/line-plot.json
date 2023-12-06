@@ -1,0 +1,22 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [
+    {
+      "class": null,
+      "name": "line",
+      "description": "The component that renders the root.",
+      "default": "LineElementPath"
+    }
+  ],
+  "name": "LinePlot",
+  "imports": [
+    "import { LinePlot } from '@mui/x-charts/LineChart';",
+    "import { LinePlot } from '@mui/x-charts';"
+  ],
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiLinePlot" },
+  "filename": "/packages/x-charts/src/LineChart/LinePlot.tsx",
+  "demos": "<ul></ul>"
+}

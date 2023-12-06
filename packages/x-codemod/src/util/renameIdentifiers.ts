@@ -129,7 +129,7 @@ export default function renameIdentifiers({
 }: RenameIdentifiersArgs) {
   root
     .find(j.Identifier)
-    .filter((path) => !!identifiers[path.node.name])
+    .filter((path) => identifiers.hasOwnProperty(path.node.name))
     .replaceWith((path) => {
       if (!preRequisiteUsages || !preRequisiteUsages[path.node.name]) {
         return j.importSpecifier(j.identifier(identifiers[path.node.name]));

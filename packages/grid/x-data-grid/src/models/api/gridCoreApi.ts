@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { GridEventPublisher, GridEventListener, GridEvents } from '../events';
+import { Store } from '../../utils/Store';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridApiCaches } from '../gridApiCaches';
 import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
+import type { DataGridProcessedProps } from '../props/DataGridProps';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
@@ -36,12 +38,18 @@ export interface GridCoreApi {
    * Unique identifier for each component instance in a page.
    * @ignore - do not document.
    */
-  instanceId: number;
+  instanceId: { id: number };
+  /**
+   * The pub/sub store containing a reference to the public state.
+   * @ignore - do not document.
+   */
+  store: Store<GridApiCommon['state']>;
 }
 
 export interface GridCorePrivateApi<
   GridPublicApi extends GridApiCommon,
   GridPrivateApi extends GridPrivateApiCommon,
+  GridProps extends DataGridProcessedProps,
 > {
   /**
    * The caches used by hooks and state initializers.
@@ -60,6 +68,10 @@ export interface GridCorePrivateApi<
    * The React ref of the grid virtual scroller container element.
    */
   virtualScrollerRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid main container div element.
+   */
+  mainElementRef?: React.RefObject<HTMLDivElement>;
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'
@@ -78,9 +90,18 @@ export interface GridCorePrivateApi<
    */
   getPublicApi: () => GridPublicApi;
   /**
+   * Allows to access the root props outside of the React component.
+   * Do not use in React components - use the `useGridRootProps` hook instead.
+   */
+  rootProps: GridProps;
+  /**
    * The React ref of the grid column container virtualized div element.
    */
   columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid header filter row element.
+   */
+  headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * The React ref of the grid column headers container element.
    */

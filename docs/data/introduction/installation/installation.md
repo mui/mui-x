@@ -2,7 +2,7 @@
 
 <p class="description">Install the necessary packages to start building with MUI X components.</p>
 
-MUI X packages are available through the free MIT-licensed Community Plan, or the commercially-licensed Pro and Premium Plans.
+MUI X packages are available through the free MIT-licensed Community plan, or the commercially-licensed Pro and Premium plans.
 See [the licensing page](/x/introduction/licensing/) for complete details.
 
 ## Peer dependencies
@@ -11,12 +11,6 @@ MUI X components have a peer dependency on `@mui/material`: the installation [in
 
 ## Components
 
-Note that you only need to install the packages corresponding to the components you're using—e.g. data grid users don't need to install date and time pickers.
+Note that you only need to install the packages corresponding to the components you're using—e.g., Data Grid users don't need to install the Date and Time Pickers.
 
-### Data Grid
-
-The installation [instructions](/x/react-data-grid/getting-started/#installation).
-
-### Date and Time Pickers
-
-The installation [instructions](/x/react-date-pickers/getting-started/#installation).
+{{"component": "modules/components/InstallationGrid.js"}}

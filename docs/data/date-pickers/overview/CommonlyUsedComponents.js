@@ -1,5 +1,5 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import Stack from '@mui/material/Stack';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
@@ -9,6 +9,18 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+
+const ProSpan = styled('span')({
+  display: 'inline-block',
+  height: '1em',
+  width: '1em',
+  verticalAlign: 'middle',
+  marginLeft: '0.3em',
+  marginBottom: '0.08em',
+  backgroundSize: 'contain',
+  backgroundRepeat: 'no-repeat',
+  backgroundImage: 'url(https://mui.com/static/x/pro.svg)',
+});
 
 function Label({ componentName, valueType, isProOnly }) {
   const content = (
@@ -21,8 +33,11 @@ function Label({ componentName, valueType, isProOnly }) {
     return (
       <Stack direction="row" spacing={0.5} component="span">
         <Tooltip title="Included on Pro package">
-          <a href="/x/introduction/licensing/#pro-plan">
-            <span className="plan-pro" />
+          <a
+            href="https://mui.com/x/introduction/licensing/#pro-plan"
+            aria-label="Included on Pro package"
+          >
+            <ProSpan />
           </a>
         </Tooltip>
         {content}
@@ -32,12 +47,6 @@ function Label({ componentName, valueType, isProOnly }) {
 
   return content;
 }
-
-Label.propTypes = {
-  componentName: PropTypes.string.isRequired,
-  isProOnly: PropTypes.bool,
-  valueType: PropTypes.string.isRequired,
-};
 
 export default function CommonlyUsedComponents() {
   return (
@@ -71,7 +80,12 @@ export default function CommonlyUsedComponents() {
           }
           component="DateRangePicker"
         >
-          <DateRangePicker />
+          <DateRangePicker
+            localeText={{
+              start: '',
+              end: '',
+            }}
+          />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

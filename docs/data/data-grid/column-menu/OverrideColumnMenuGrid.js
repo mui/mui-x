@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -17,7 +16,6 @@ function CustomFilterItem(props) {
     },
     [apiRef, colDef.field, onClick],
   );
-
   return (
     <MenuItem onClick={handleClick}>
       <ListItemIcon>
@@ -27,11 +25,6 @@ function CustomFilterItem(props) {
     </MenuItem>
   );
 }
-
-CustomFilterItem.propTypes = {
-  colDef: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
 
 function CustomColumnMenu(props) {
   return (

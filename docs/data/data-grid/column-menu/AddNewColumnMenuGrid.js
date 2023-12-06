@@ -24,7 +24,7 @@ function CustomColumnMenu(props) {
       {...props}
       slots={{
         // Add new item
-        ColumnMenuUserItem: CustomUserItem,
+        columnMenuUserItem: CustomUserItem,
       }}
       slotProps={{
         columnMenuUserItem: {

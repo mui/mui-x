@@ -1,11 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
-const timeViews = {
+const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: '時間',
   minutes: '分',
   seconds: '秒',
+  meridiem: 'メリディム',
 };
 
 const jaJPPickers: Partial<PickersLocaleText<any>> = {
@@ -48,6 +50,9 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,
 
+  // Digital clock labels
+  selectViewText: (view) => `を選択 ${timeViews[view]}`,
+
   // Calendar labels
   calendarWeekNumberHeaderLabel: '週番号',
   calendarWeekNumberHeaderText: '#',
@@ -63,6 +68,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `時間を選択してください。選択した時間は ${utils.format(value, 'fullTime')} です`
       : '時間を選択してください',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: '時間を選択',
@@ -72,7 +78,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',

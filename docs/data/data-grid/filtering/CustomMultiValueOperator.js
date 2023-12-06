@@ -1,19 +1,16 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, useGridRootProps } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import SyncIcon from '@mui/icons-material/Sync';
 
-const SUBMIT_FILTER_STROKE_TIME = 500;
-
 function InputNumberInterval(props) {
+  const rootProps = useGridRootProps();
   const { item, applyValue, focusElementRef = null } = props;
 
   const filterTimeout = React.useRef();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
-
   const [applying, setIsApplying] = React.useState(false);
 
   React.useEffect(() => {
@@ -35,7 +32,7 @@ function InputNumberInterval(props) {
     filterTimeout.current = setTimeout(() => {
       setIsApplying(false);
       applyValue({ ...item, value: [lowerBound, upperBound] });
-    }, SUBMIT_FILTER_STROKE_TIME);
+    }, rootProps.filterDebounceMs);
   };
 
   const handleUpperFilterChange = (event) => {
@@ -82,36 +79,6 @@ function InputNumberInterval(props) {
   );
 }
 
-InputNumberInterval.propTypes = {
-  applyValue: PropTypes.func.isRequired,
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
-  item: PropTypes.shape({
-    /**
-     * The column from which we want to filter the rows.
-     */
-    field: PropTypes.string.isRequired,
-    /**
-     * Must be unique.
-     * Only useful when the model contains several items.
-     */
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    /**
-     * The name of the operator we want to apply.
-     */
-    operator: PropTypes.string.isRequired,
-    /**
-     * The filtering value.
-     * The operator filtering function will decide for each row if the row values is correct compared to this value.
-     */
-    value: PropTypes.any,
-  }).isRequired,
-};
-
 const quantityOnlyOperators = [
   {
     label: 'Between',
@@ -123,8 +90,7 @@ const quantityOnlyOperators = [
       if (filterItem.value[0] == null || filterItem.value[1] == null) {
         return null;
       }
-
-      return ({ value }) => {
+      return (value) => {
         return (
           value !== null &&
           filterItem.value[0] <= value &&

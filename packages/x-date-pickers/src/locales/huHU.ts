@@ -1,11 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
-const timeViews = {
+const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'Óra',
   minutes: 'Perc',
   seconds: 'Másodperc',
+  meridiem: 'Délután',
 };
 
 const huHUPickers: Partial<PickersLocaleText<any>> = {
@@ -48,6 +50,9 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes.toLowerCase()}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds.toLowerCase()}`,
 
+  // Digital clock labels
+  selectViewText: (view) => `${timeViews[view]} kiválasztása`,
+
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Hét',
   calendarWeekNumberHeaderText: '#',
@@ -63,6 +68,7 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Válasszon időt, a kiválasztott idő: ${utils.format(value, 'fullTime')}`
       : 'Válasszon időt',
+  fieldClearLabel: 'Tartalom ürítése',
 
   // Table labels
   timeTableLabel: 'válasszon időt',

@@ -1,23 +1,34 @@
 import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
-import { DateOrTimeView, TimeView } from '../models';
+import { TimeView } from '../models';
+import { DigitalClock, DigitalClockProps } from '../DigitalClock';
+import { BaseClockProps } from '../internals/models/props/clock';
+import {
+  MultiSectionDigitalClock,
+  MultiSectionDigitalClockProps,
+} from '../MultiSectionDigitalClock';
+import { isTimeView } from '../internals/utils/time-utils';
+import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimePickerProps } from '../TimePicker/TimePicker.types';
 
-const isTimePickerView = (view: unknown): view is TimeView =>
-  view === 'hours' || view === 'minutes' || view === 'seconds';
-
-export interface TimeViewRendererProps<TDate, TView extends DateOrTimeView>
-  extends Omit<TimeClockProps<TDate>, 'views' | 'openTo' | 'view' | 'onViewChange'> {
+export type TimeViewRendererProps<
+  TView extends TimeViewWithMeridiem,
+  TComponentProps extends BaseClockProps<any, any>,
+> = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> & {
   view: TView;
   onViewChange?: (view: TView) => void;
   views: readonly TView[];
-}
+};
 
 export const renderTimeViewClock = <TDate extends unknown>({
   view,
   onViewChange,
+  focusedView,
+  onFocusedViewChange,
   views,
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -26,12 +37,9 @@ export const renderTimeViewClock = <TDate extends unknown>({
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
   ampmInClock,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -40,13 +48,17 @@ export const renderTimeViewClock = <TDate extends unknown>({
   autoFocus,
   showViewSwitcher,
   disableIgnoringDatePartForTimeValidation,
-}: TimeViewRendererProps<TDate, any>) => (
+  timezone,
+}: TimeViewRendererProps<TimeView, TimeClockProps<TDate, TimeView>>) => (
   <TimeClock<TDate>
-    view={view as TimeView}
+    view={view}
     onViewChange={onViewChange}
-    views={views.filter(isTimePickerView)}
+    focusedView={focusedView && isTimeView(focusedView) ? focusedView : null}
+    onFocusedViewChange={onFocusedViewChange}
+    views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}
@@ -55,12 +67,9 @@ export const renderTimeViewClock = <TDate extends unknown>({
     minTime={minTime}
     maxTime={maxTime}
     shouldDisableTime={shouldDisableTime}
-    shouldDisableClock={shouldDisableClock}
     minutesStep={minutesStep}
     ampm={ampm}
     ampmInClock={ampmInClock}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     readOnly={readOnly}
@@ -69,5 +78,133 @@ export const renderTimeViewClock = <TDate extends unknown>({
     autoFocus={autoFocus}
     showViewSwitcher={showViewSwitcher}
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
+    timezone={timezone}
+  />
+);
+
+export const renderDigitalClockTimeView = <TDate extends unknown>({
+  view,
+  onViewChange,
+  focusedView,
+  onFocusedViewChange,
+  views,
+  value,
+  defaultValue,
+  referenceDate,
+  onChange,
+  className,
+  classes,
+  disableFuture,
+  disablePast,
+  minTime,
+  maxTime,
+  shouldDisableTime,
+  minutesStep,
+  ampm,
+  slots,
+  slotProps,
+  readOnly,
+  disabled,
+  sx,
+  autoFocus,
+  disableIgnoringDatePartForTimeValidation,
+  timeSteps,
+  skipDisabled,
+  timezone,
+}: TimeViewRendererProps<
+  Extract<TimeView, 'hours'>,
+  Omit<DigitalClockProps<TDate>, 'timeStep'> & Pick<TimePickerProps<TDate>, 'timeSteps'>
+>) => (
+  <DigitalClock<TDate>
+    view={view}
+    onViewChange={onViewChange}
+    focusedView={focusedView}
+    onFocusedViewChange={onFocusedViewChange}
+    views={views.filter(isTimeView)}
+    value={value}
+    defaultValue={defaultValue}
+    referenceDate={referenceDate}
+    onChange={onChange}
+    className={className}
+    classes={classes}
+    disableFuture={disableFuture}
+    disablePast={disablePast}
+    minTime={minTime}
+    maxTime={maxTime}
+    shouldDisableTime={shouldDisableTime}
+    minutesStep={minutesStep}
+    ampm={ampm}
+    slots={slots}
+    slotProps={slotProps}
+    readOnly={readOnly}
+    disabled={disabled}
+    sx={sx}
+    autoFocus={autoFocus}
+    disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
+    timeStep={timeSteps?.minutes}
+    skipDisabled={skipDisabled}
+    timezone={timezone}
+  />
+);
+
+export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
+  view,
+  onViewChange,
+  focusedView,
+  onFocusedViewChange,
+  views,
+  value,
+  defaultValue,
+  referenceDate,
+  onChange,
+  className,
+  classes,
+  disableFuture,
+  disablePast,
+  minTime,
+  maxTime,
+  shouldDisableTime,
+  minutesStep,
+  ampm,
+  slots,
+  slotProps,
+  readOnly,
+  disabled,
+  sx,
+  autoFocus,
+  disableIgnoringDatePartForTimeValidation,
+  timeSteps,
+  skipDisabled,
+  timezone,
+}: TimeViewRendererProps<TimeViewWithMeridiem, MultiSectionDigitalClockProps<TDate>>) => (
+  <MultiSectionDigitalClock<TDate>
+    view={view}
+    onViewChange={onViewChange}
+    focusedView={focusedView}
+    onFocusedViewChange={onFocusedViewChange}
+    views={views.filter(isTimeView)}
+    value={value}
+    defaultValue={defaultValue}
+    referenceDate={referenceDate}
+    onChange={onChange}
+    className={className}
+    classes={classes}
+    disableFuture={disableFuture}
+    disablePast={disablePast}
+    minTime={minTime}
+    maxTime={maxTime}
+    shouldDisableTime={shouldDisableTime}
+    minutesStep={minutesStep}
+    ampm={ampm}
+    slots={slots}
+    slotProps={slotProps}
+    readOnly={readOnly}
+    disabled={disabled}
+    sx={sx}
+    autoFocus={autoFocus}
+    disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
+    timeSteps={timeSteps}
+    skipDisabled={skipDisabled}
+    timezone={timezone}
   />
 );

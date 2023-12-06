@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   DataGridPro,
   gridClasses,
@@ -7,9 +8,17 @@ import {
   GridApi,
   GridRowsProp,
   DataGridProProps,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  waitFor,
+} from '@mui-internal/test-utils';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -754,5 +763,125 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     expect(getRowById(0)!).to.have.class(className);
     expect(getRowById(1)!).to.have.class(className);
+  });
+
+  it('should support cell editing', async function test() {
+    if (isJSDOM) {
+      // flaky in JSDOM
+      this.skip();
+    }
+    const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
+    const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
+    render(
+      <div style={{ width: 400, height: 400 }}>
+        <DataGridPro
+          rows={[
+            { id: 1, name: 'Jack' },
+            { id: 2, name: 'Theo' },
+            { id: 4, name: 'Cory' },
+            { id: 5, name: 'Woody' },
+          ]}
+          columns={columns}
+          pinnedRows={{
+            top: [{ id: 3, name: 'Joe' }],
+          }}
+          processRowUpdate={processRowUpdate}
+        />
+      </div>,
+    );
+
+    const cell = getCell(0, 1);
+    fireEvent.doubleClick(cell);
+
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Marcus' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    await waitFor(() => {
+      expect(cell.textContent).to.equal('Marcus');
+    });
+    expect(processRowUpdate.callCount).to.equal(1);
+    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+  });
+
+  it('should support row editing', async function test() {
+    if (isJSDOM) {
+      // flaky in JSDOM
+      this.skip();
+    }
+    const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
+    const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
+    render(
+      <div style={{ width: 400, height: 400 }}>
+        <DataGridPro
+          rows={[
+            { id: 1, name: 'Jack' },
+            { id: 2, name: 'Theo' },
+            { id: 4, name: 'Cory' },
+            { id: 5, name: 'Woody' },
+          ]}
+          columns={columns}
+          pinnedRows={{
+            top: [{ id: 3, name: 'Joe' }],
+          }}
+          editMode="row"
+          processRowUpdate={processRowUpdate}
+        />
+      </div>,
+    );
+
+    const cell = getCell(0, 1);
+    fireEvent.doubleClick(cell);
+
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Marcus' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    await waitFor(() => {
+      expect(cell.textContent).to.equal('Marcus');
+    });
+    expect(processRowUpdate.callCount).to.equal(1);
+    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+  });
+
+  it('should support `updateRows`', async () => {
+    const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
+    let apiRef!: React.MutableRefObject<GridApi>;
+    function TestCase() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 400, height: 400 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={[
+              { id: 1, name: 'Jack' },
+              { id: 2, name: 'Theo' },
+              { id: 5, name: 'Woody' },
+            ]}
+            columns={columns}
+            pinnedRows={{
+              top: [{ id: 3, name: 'Joe' }],
+              bottom: [{ id: 4, name: 'Cory' }],
+            }}
+          />
+        </div>
+      );
+    }
+    render(<TestCase />);
+
+    expect(getCell(0, 1).textContent).to.equal('Joe');
+    expect(getCell(4, 1).textContent).to.equal('Cory');
+
+    act(() =>
+      apiRef.current.updateRows([
+        { id: 3, name: 'Marcus' },
+        { id: 4, name: 'Tom' },
+      ]),
+    );
+
+    await waitFor(() => {
+      expect(getCell(0, 1).textContent).to.equal('Marcus');
+      expect(getCell(4, 1).textContent).to.equal('Tom');
+    });
   });
 });

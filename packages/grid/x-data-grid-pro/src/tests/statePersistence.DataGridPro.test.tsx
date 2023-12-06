@@ -10,13 +10,13 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
-} from '../../../../../test/utils/helperFn';
+} from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -71,13 +71,15 @@ const FULL_INITIAL_STATE: GridInitialState = {
   preferencePanel: {
     open: true,
     openedPanelValue: GridPreferencePanelsValue.filters,
+    panelId: undefined,
+    labelId: undefined,
   },
   sorting: {
     sortModel: [{ field: 'id', sort: 'desc' }],
   },
 };
 
-describe('<DataGridPro /> - State Persistence', () => {
+describe('<DataGridPro /> - State persistence', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;

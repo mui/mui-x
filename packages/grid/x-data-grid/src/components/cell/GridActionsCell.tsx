@@ -17,15 +17,14 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-interface GridActionsCellProps
-  extends Omit<GridRenderCellParams, 'value' | 'formattedValue' | 'api'> {
-  value?: GridRenderCellParams['value'];
-  formattedValue?: GridRenderCellParams['formattedValue'];
+interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
+  api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
 }
 
 function GridActionsCell(props: GridActionsCellProps) {
   const {
+    api,
     colDef,
     id,
     hasFocus,
@@ -98,11 +97,13 @@ function GridActionsCell(props: GridActionsCellProps) {
       focus() {
         // If ignoreCallToFocus is true, then one of the buttons was clicked and the focus is already set
         if (!ignoreCallToFocus.current) {
-          setFocusedButtonIndex(0);
+          // find the first focusable button and pass the index to the state
+          const focusableButtonIndex = options.findIndex((o) => !o.props.disabled);
+          setFocusedButtonIndex(focusableButtonIndex);
         }
       },
     }),
-    [],
+    [options],
   );
 
   React.useEffect(() => {
@@ -142,19 +143,26 @@ function GridActionsCell(props: GridActionsCellProps) {
       return;
     }
 
+    const getNewIndex = (index: number, direction: 'left' | 'right'): number => {
+      if (index < 0 || index > options.length) {
+        return index;
+      }
+
+      // for rtl mode we need to reverse the direction
+      const rtlMod = theme.direction === 'rtl' ? -1 : 1;
+      const indexMod = (direction === 'left' ? -1 : 1) * rtlMod;
+
+      // if the button that should receive focus is disabled go one more step
+      return options[index + indexMod]?.props.disabled
+        ? getNewIndex(index + indexMod, direction)
+        : index + indexMod;
+    };
+
     let newIndex: number = focusedButtonIndex;
     if (event.key === 'ArrowRight') {
-      if (theme.direction === 'rtl') {
-        newIndex -= 1;
-      } else {
-        newIndex += 1;
-      }
+      newIndex = getNewIndex(focusedButtonIndex, 'right');
     } else if (event.key === 'ArrowLeft') {
-      if (theme.direction === 'rtl') {
-        newIndex += 1;
-      } else {
-        newIndex -= 1;
-      }
+      newIndex = getNewIndex(focusedButtonIndex, 'left');
     }
 
     if (newIndex < 0 || newIndex >= numberOfButtons) {
@@ -200,9 +208,9 @@ function GridActionsCell(props: GridActionsCellProps) {
           ref={buttonRef}
           id={buttonId}
           aria-label={apiRef.current.getLocaleText('actionsCellMore')}
-          aria-controls={menuId}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-controls={open ? menuId : undefined}
           role="menuitem"
           size="small"
           onClick={showMenu}
@@ -216,11 +224,11 @@ function GridActionsCell(props: GridActionsCellProps) {
 
       {menuButtons.length > 0 && (
         <GridMenu
-          onClickAway={hideMenu}
-          onClick={hideMenu}
           open={open}
           target={buttonRef.current}
           position={position}
+          onClose={hideMenu}
+          onClick={hideMenu}
         >
           <MenuList
             id={menuId}
@@ -243,6 +251,7 @@ GridActionsCell.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  api: PropTypes.object,
   /**
    * The mode of the cell.
    */
@@ -268,6 +277,9 @@ GridActionsCell.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
   formattedValue: PropTypes.any,
   /**
    * If true, the cell is the active element.
@@ -307,6 +319,10 @@ GridActionsCell.propTypes = {
    * the tabIndex value.
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
   value: PropTypes.any,
 } as any;
 

@@ -11,9 +11,9 @@ import {
   renderEditMultipleSelectCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
+import { act, createRenderer, fireEvent, screen, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, spyApi } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
 
 /**
@@ -38,7 +38,7 @@ const generateDate = (
   return rawDate.getTime();
 };
 
-describe('<DataGridPro /> - Edit Components', () => {
+describe('<DataGridPro /> - Edit components', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -62,7 +62,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should call setEditCellValue with debounce', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -148,7 +148,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should call setEditCellValue with debounce', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -231,7 +231,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should call setEditCellValue with the value converted to Date', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -251,7 +251,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should call setEditCellValue with null when entered an empty value', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -281,7 +281,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should handle correctly dates with partial years', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue') as SinonSpy<
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue') as SinonSpy<
         [GridEditCellValueParams & { value: Date }]
       >;
 
@@ -352,7 +352,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should call setEditCellValue with the value converted to Date', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -372,7 +372,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should call setEditCellValue with null when entered an empty value', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -402,7 +402,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should handle correctly dates with partial years', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue') as SinonSpy<
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue') as SinonSpy<
         [GridEditCellValueParams & { value: Date }]
       >;
 
@@ -469,7 +469,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should call setEditCellValue with the correct value when valueOptions is an array of strings', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -496,7 +496,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         },
       ];
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -519,7 +519,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         },
       ];
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -570,10 +570,28 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      await Promise.resolve();
+      await act(() => Promise.resolve());
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
+    });
+
+    it('should call onCellEditStop', async () => {
+      const onCellEditStop = spy();
+
+      render(
+        <div>
+          <TestCase onCellEditStop={onCellEditStop} />
+          <div id="outside-grid" />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      userEvent.mousePress(document.getElementById('outside-grid')!);
+      await act(() => Promise.resolve());
+
+      expect(onCellEditStop.callCount).to.equal(1);
     });
 
     it('should not open the suggestions when Enter is pressed', async () => {
@@ -592,7 +610,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       userEvent.mousePress(screen.queryAllByRole('option')[1]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
-      fireEvent.keyDown(screen.getByRole('button', { name: 'Adidas' }), { key: 'Enter' });
+      fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Enter' });
       expect(screen.queryByRole('listbox')).to.equal(null);
 
       resolveCallback!();
@@ -760,7 +778,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
     it('should call setEditCellValue', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);

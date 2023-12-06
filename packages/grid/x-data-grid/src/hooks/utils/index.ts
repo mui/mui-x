@@ -1,6 +1,6 @@
 export * from './useGridApiEventHandler';
 export * from './useGridApiMethod';
 export * from './useGridLogger';
-export * from './useGridSelector';
+export { useGridSelector } from './useGridSelector';
 export * from './useGridNativeEventListener';
 export * from './useFirstRender';

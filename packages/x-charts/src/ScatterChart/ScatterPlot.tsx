@@ -1,11 +1,42 @@
 import * as React from 'react';
-import { Scatter } from './Scatter';
+import PropTypes from 'prop-types';
+import { Scatter, ScatterProps } from './Scatter';
 import { SeriesContext } from '../context/SeriesContextProvider';
-import { ScatterSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 
-export function ScatterPlot() {
+export interface ScatterPlotSlots {
+  scatter?: React.JSXElementConstructor<ScatterProps>;
+}
+
+export interface ScatterPlotSlotProps {
+  scatter?: Partial<ScatterProps>;
+}
+
+export interface ScatterPlotProps {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: ScatterPlotSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: ScatterPlotSlotProps;
+}
+
+/**
+ * Demos:
+ *
+ * - [Scatter](https://mui.com/x/react-charts/scatter/)
+ * - [Scatter demonstration](https://mui.com/x/react-charts/scatter-demo/)
+ *
+ * API:
+ *
+ * - [ScatterPlot API](https://mui.com/x/api/charts/scatter-plot/)
+ */
+function ScatterPlot(props: ScatterPlotProps) {
+  const { slots, slotProps } = props;
   const seriesData = React.useContext(SeriesContext).scatter;
   const axisData = React.useContext(CartesianContext);
 
@@ -13,40 +44,50 @@ export function ScatterPlot() {
     return null;
   }
   const { series, seriesOrder } = seriesData;
-  const { xAxis, yAxis } = axisData;
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+  const defaultXAxisId = xAxisIds[0];
+  const defaultYAxisId = yAxisIds[0];
 
-  const seriesPerAxis: { [key: string]: ScatterSeriesType[] } = {};
-
-  seriesOrder.forEach((seriesId) => {
-    const xAxisKey = series[seriesId].xAxisKey;
-    const yAxisKey = series[seriesId].yAxisKey;
-
-    const key = `${xAxisKey}-${yAxisKey}`;
-
-    if (seriesPerAxis[key] === undefined) {
-      seriesPerAxis[key] = [series[seriesId]];
-    } else {
-      seriesPerAxis[key].push(series[seriesId]);
-    }
-  });
+  const ScatterItems = slots?.scatter ?? Scatter;
 
   return (
     <React.Fragment>
       {seriesOrder.map((seriesId) => {
-        const { id, xAxisKey, yAxisKey, markerSize, data } = series[seriesId];
+        const { id, xAxisKey, yAxisKey, markerSize, color } = series[seriesId];
 
-        const xScale = xAxis[xAxisKey ?? DEFAULT_X_AXIS_KEY].scale;
-        const yScale = yAxis[yAxisKey ?? DEFAULT_Y_AXIS_KEY].scale;
+        const xScale = xAxis[xAxisKey ?? defaultXAxisId].scale;
+        const yScale = yAxis[yAxisKey ?? defaultYAxisId].scale;
         return (
-          <Scatter
+          <ScatterItems
             key={id}
             xScale={xScale}
             yScale={yScale}
-            markerSize={markerSize ?? 2}
-            data={data}
+            color={color}
+            markerSize={markerSize ?? 4}
+            series={series[seriesId]}
+            {...slotProps?.scatter}
           />
         );
       })}
     </React.Fragment>
   );
 }
+
+ScatterPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { ScatterPlot };

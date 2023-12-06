@@ -1,79 +1,246 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
+import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
-import { BarSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { isBandScale } from '../hooks/useScale';
+import { BarElement, BarElementProps } from './BarElement';
+import { isBandScaleConfig } from '../models/axis';
+import { FormatterResult } from '../models/seriesType/config';
+import { HighlightScope } from '../context/HighlightProvider';
+import { BarSeriesType } from '../models';
 
-export function BarPlot() {
-  const seriesData = React.useContext(SeriesContext).bar;
+/**
+ * Solution of the equations
+ * W = barWidth * N + offset * (N-1)
+ * offset / (offset + barWidth) = r
+ * @param bandWidth The width available to place bars.
+ * @param numberOfGroups The number of bars to place in that space.
+ * @param gapRatio The ratio of the gap between bars over the bar width.
+ * @returns The bar width and the offset between bars.
+ */
+function getBandSize({
+  bandWidth: W,
+  numberOfGroups: N,
+  gapRatio: r,
+}: {
+  bandWidth: number;
+  numberOfGroups: number;
+  gapRatio: number;
+}) {
+  if (r === 0) {
+    return {
+      barWidth: W / N,
+      offset: 0,
+    };
+  }
+  const barWidth = W / (N + (N - 1) * r);
+  const offset = r * barWidth;
+  return {
+    barWidth,
+    offset,
+  };
+}
+
+export interface BarPlotSlots {
+  bar?: React.JSXElementConstructor<BarElementProps>;
+}
+
+export interface BarPlotSlotProps {
+  bar?: Partial<BarElementProps>;
+}
+
+export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
+  /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation?: boolean;
+}
+
+interface CompletedBarData {
+  bottom: number;
+  top: number;
+  seriesId: string;
+  dataIndex: number;
+  layout: BarSeriesType['layout'];
+  x: number;
+  y: number;
+  xOrigin: number;
+  yOrigin: number;
+  height: number;
+  width: number;
+  color: string;
+  highlightScope?: Partial<HighlightScope>;
+}
+
+const useCompletedData = (): CompletedBarData[] => {
+  const seriesData =
+    React.useContext(SeriesContext).bar ??
+    ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
   const axisData = React.useContext(CartesianContext);
 
-  if (seriesData === undefined) {
-    return null;
-  }
-  const { series, seriesOrder, stackingGroups } = seriesData;
-  const { xAxis, yAxis } = axisData;
+  const { series, stackingGroups } = seriesData;
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+  const defaultXAxisId = xAxisIds[0];
+  const defaultYAxisId = yAxisIds[0];
 
-  const seriesPerAxis: { [key: string]: BarSeriesType[] } = {};
+  const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
+    return groupIds.flatMap((seriesId) => {
+      const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
+      const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;
 
-  seriesOrder.forEach((seriesId) => {
-    const xAxisKey = series[seriesId].xAxisKey; // ?? DEFAULT_X_AXIS_KEY;
-    const yAxisKey = series[seriesId].yAxisKey; // ?? DEFAULT_Y_AXIS_KEY;
+      const xAxisConfig = xAxis[xAxisKey];
+      const yAxisConfig = yAxis[yAxisKey];
 
-    const key = `${xAxisKey}-${yAxisKey}`;
-
-    if (seriesPerAxis[key] === undefined) {
-      seriesPerAxis[key] = [series[seriesId]];
-    } else {
-      seriesPerAxis[key].push(series[seriesId]);
-    }
-  });
-
-  return (
-    <React.Fragment>
-      {Object.keys(seriesPerAxis).flatMap((key) => {
-        const [xAxisKey, yAxisKey] = key.split('-');
-
-        const xScale = xAxis[xAxisKey].scale;
-        const yScale = yAxis[yAxisKey].scale;
-
-        if (!isBandScale(xScale)) {
+      const verticalLayout = series[seriesId].layout === 'vertical';
+      let baseScaleConfig;
+      if (verticalLayout) {
+        if (!isBandScaleConfig(xAxisConfig)) {
           throw new Error(
-            `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series ${stackingGroups}`,
+            `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
           );
         }
-
         if (xAxis[xAxisKey].data === undefined) {
           throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
         }
+        baseScaleConfig = xAxisConfig;
+      } else {
+        if (!isBandScaleConfig(yAxisConfig)) {
+          throw new Error(
+            `Axis with id "${yAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
+          );
+        }
 
-        // Currently assuming all bars are vertical
-        const bandWidth = xScale.bandwidth();
-        const barWidth = (0.9 * bandWidth) / stackingGroups.length;
-        const offset = 0.05 * bandWidth;
+        if (yAxis[yAxisKey].data === undefined) {
+          throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
+        }
+        baseScaleConfig = yAxisConfig;
+      }
 
-        return stackingGroups.flatMap((groupIds, groupIndex) => {
-          return groupIds.flatMap((seriesId) => {
-            // @ts-ignore TODO: fix when adding a correct API for customisation
-            const { stackedData, color } = series[seriesId];
+      const xScale = xAxisConfig.scale;
+      const yScale = yAxisConfig.scale;
 
-            return stackedData.map(([baseline, value], dataIndex: number) => {
-              return (
-                <rect
-                  key={`${seriesId}-${dataIndex}`}
-                  // @ts-ignore I don't get why this warning
-                  x={xScale(xAxis[xAxisKey].data[dataIndex]) + groupIndex * barWidth + offset}
-                  y={yScale(value)}
-                  height={yScale(baseline) - yScale(value)}
-                  width={barWidth}
-                  fill={color}
-                  rx="5px"
-                />
-              );
-            });
-          });
-        });
-      })}
+      const bandWidth = baseScaleConfig.scale.bandwidth();
+
+      const { barWidth, offset } = getBandSize({
+        bandWidth,
+        numberOfGroups: stackingGroups.length,
+        gapRatio: baseScaleConfig.barGapRatio,
+      });
+      const barOffset = groupIndex * (barWidth + offset);
+
+      const { stackedData, color } = series[seriesId];
+
+      return stackedData.map((values, dataIndex: number) => {
+        const bottom = Math.min(...values);
+        const top = Math.max(...values);
+
+        return {
+          bottom,
+          top,
+          seriesId,
+          dataIndex,
+          layout: series[seriesId].layout,
+          x: verticalLayout
+            ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
+            : xScale(bottom)!,
+          y: verticalLayout ? yScale(top)! : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
+          xOrigin: xScale(0)!,
+          yOrigin: yScale(0)!,
+          height: verticalLayout ? Math.abs(yScale(bottom)! - yScale(top)!) : barWidth,
+          width: verticalLayout ? barWidth : Math.abs(xScale(bottom)! - xScale(top)!),
+          color,
+          highlightScope: series[seriesId].highlightScope,
+        };
+      });
+    });
+  });
+
+  return data;
+};
+
+const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: CompletedBarData) => ({
+  ...(layout === 'vertical'
+    ? {
+        y: yOrigin,
+        x,
+        height: 0,
+        width,
+      }
+    : {
+        y,
+        x: xOrigin,
+        height,
+        width: 0,
+      }),
+});
+
+const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
+  y,
+  x,
+  height,
+  width,
+});
+
+/**
+ * Demos:
+ *
+ * - [Bars](https://mui.com/x/react-charts/bars/)
+ * - [Bar demonstration](https://mui.com/x/react-charts/bar-demo/)
+ * - [Stacking](https://mui.com/x/react-charts/stacking/)
+ *
+ * API:
+ *
+ * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
+ */
+function BarPlot(props: BarPlotProps) {
+  const completedData = useCompletedData();
+  const { skipAnimation, ...other } = props;
+
+  const transition = useTransition(completedData, {
+    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
+    from: getOutStyle,
+    leave: getOutStyle,
+    enter: getInStyle,
+    update: getInStyle,
+    immediate: skipAnimation,
+  });
+  return (
+    <React.Fragment>
+      {transition((style, { seriesId, dataIndex, color, highlightScope }) => (
+        <BarElement
+          id={seriesId}
+          dataIndex={dataIndex}
+          highlightScope={highlightScope}
+          color={color}
+          {...other}
+          style={style}
+        />
+      ))}
     </React.Fragment>
   );
 }
+
+BarPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { BarPlot };

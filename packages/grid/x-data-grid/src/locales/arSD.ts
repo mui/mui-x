@@ -47,7 +47,7 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'إضافة مرشِح',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'حذف الكل',
   filterPanelDeleteIconLabel: 'حذف',
   filterPanelLogicOperator: 'عامل منطقي',
   filterPanelOperator: 'عامل',
@@ -73,6 +73,33 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterOperatorIsNotEmpty: 'غير خالي',
   filterOperatorIsAnyOf: 'أي من',
   // filterOperatorContainsAnyOf: 'contains any of',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'يحتوي على',
+  headerFilterOperatorEquals: 'يساوي',
+  headerFilterOperatorStartsWith: 'يبدأ ب',
+  headerFilterOperatorEndsWith: 'ينتهي ب',
+  headerFilterOperatorIs: 'هو',
+  headerFilterOperatorNot: 'هو ليس',
+  headerFilterOperatorAfter: 'يقع بعد',
+  headerFilterOperatorOnOrAfter: 'هو على او بعد',
+  headerFilterOperatorBefore: 'يقع قبل',
+  headerFilterOperatorOnOrBefore: 'هو على او بعد',
+  headerFilterOperatorIsEmpty: 'هو فارغ',
+  headerFilterOperatorIsNotEmpty: 'هو ليس فارغ',
+  headerFilterOperatorIsAnyOf: 'هو أي من',
+  'headerFilterOperator=': 'يساوي',
+  'headerFilterOperator!=': 'لا يساوي',
+  'headerFilterOperator>': 'أكبر من',
+  'headerFilterOperator>=': 'أكبر من او يساوي',
+  'headerFilterOperator<': 'اصغر من',
+  'headerFilterOperator<=': 'اصغر من او يساوي',
 
   // Filter values text
   filterValueAny: 'أي',
@@ -82,7 +109,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'القائمة',
   columnMenuShowColumns: 'إظهار الأعمدة',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'إدارة الأعمدة',
   columnMenuFilter: 'المرشِح',
   columnMenuHideColumn: 'إخفاء',
   columnMenuUnsort: 'الغاء الفرز',

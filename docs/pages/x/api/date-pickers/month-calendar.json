@@ -1,6 +1,6 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
@@ -13,24 +13,47 @@
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
     },
-    "onChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: TDate) => void", "describedArgs": ["value"] }
+    },
     "readOnly": { "type": { "name": "bool" } },
-    "shouldDisableMonth": { "type": { "name": "func" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`."
+    },
+    "shouldDisableMonth": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(month: TDate) => boolean",
+        "describedArgs": ["month"],
+        "returned": "boolean"
+      }
+    },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "value": { "type": { "name": "any" } }
   },
-  "slots": {},
+  "slots": [],
   "name": "MonthCalendar",
+  "imports": [
+    "import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';",
+    "import { MonthCalendar } from '@mui/x-date-pickers';",
+    "import { MonthCalendar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMonthCalendar" },
+  "spread": true,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MonthCalendar" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "MonthCalendar" }
-  ]
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
 }

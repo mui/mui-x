@@ -45,6 +45,14 @@ export interface GridRowEventLookup {
    */
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   /**
+   * @ignore - do not document.
+   */
+  rowMouseOut: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
+   * @ignore - do not document.
+   */
+  rowMouseOver: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
    * Fired when the user starts dragging a row. It's mapped to the `dragstart` DOM event.
    * @ignore - do not document.
    */
@@ -176,6 +184,14 @@ export interface GridColumnHeaderEventLookup {
     event: React.DragEvent<HTMLElement>;
   };
   /**
+   * Fired when a `dblclick` DOM event happens in the column header separator.
+   * @ignore - do not document.
+   */
+  columnSeparatorDoubleClick: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
    * Fired when a `mousedown` DOM event happens in the column header separator.
    * @ignore - do not document.
    */
@@ -189,6 +205,41 @@ export interface GridColumnHeaderEventLookup {
    */
   columnIndexChange: {
     params: GridColumnOrderChangeParams;
+  };
+}
+
+export interface GridHeaderFilterEventLookup {
+  /**
+   * Fired when a column header filter is clicked
+   * @ignore - do not document.
+   */
+  headerFilterClick: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a key is pressed in a column header filter. It's mapped to the `keydown` DOM event.
+   * @ignore - do not document.
+   */
+  headerFilterKeyDown: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a mouse is pressed in a column header filter. It's mapped to the `mousedown` DOM event.
+   * @ignore - do not document.
+   */
+  headerFilterMouseDown: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column header filter is blurred.
+   * @ignore - do not document.
+   */
+  headerFilterBlur: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
   };
 }
 
@@ -322,6 +373,7 @@ export interface GridControlledStateReasonLookup {
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,
+    GridHeaderFilterEventLookup,
     GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
@@ -405,7 +457,6 @@ export interface GridEventLookup
   sortedRowsSet: {};
   /**
    * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
-   * @ignore - do not document.
    */
   rowExpansionChange: { params: GridGroupNode };
   /**
@@ -497,16 +548,22 @@ export interface GridEventLookup
 
   // Selection
   /**
-   * Fired when the value of the selection checkbox of the header is changed
+   * Fired when the value of the selection checkbox of the header is changed.
    */
   headerSelectionCheckboxChange: { params: GridHeaderSelectionCheckboxParams };
   /**
-   * Fired when the value of the selection checkbox of a row is changed
+   * Fired when the value of the selection checkbox of a row is changed.
    */
   rowSelectionCheckboxChange: {
     params: GridRowSelectionCheckboxParams;
     event: React.ChangeEvent<HTMLElement>;
   };
+
+  // Clipboard
+  /**
+   * Fired when the data is copied to the clipboard.
+   */
+  clipboardCopy: { params: string };
 
   // PreferencePanel
   /**

@@ -11,6 +11,7 @@ import type { InputLabelProps } from '@mui/material/InputLabel';
 import { PopperProps } from '@mui/material/Popper';
 import { TablePaginationProps } from '@mui/material/TablePagination';
 import { AutocompleteProps } from '@mui/material/Autocomplete';
+import { ChipProps } from '@mui/material/Chip';
 import { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -22,6 +23,7 @@ import { GridPanelProps } from '../components/panel/GridPanel';
 import type { GridRowProps } from '../components/GridRow';
 import type { GridCellProps } from '../components/cell/GridCell';
 import { ValueOptions } from './colDef';
+import type { GridRowCountProps } from '../components';
 
 // Overrides for module augmentation
 export interface BaseCheckboxPropsOverrides {}
@@ -36,6 +38,7 @@ export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
+export interface BaseChipPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -43,12 +46,12 @@ export interface ColumnMenuPropsOverrides {}
 export interface ColumnsPanelPropsOverrides {}
 export interface FilterPanelPropsOverrides {}
 export interface FooterPropsOverrides {}
+export interface FooterRowCountOverrides {}
 export interface PaginationPropsOverrides {}
 export interface LoadingOverlayPropsOverrides {}
 export interface NoResultsOverlayPropsOverrides {}
 export interface NoRowsOverlayPropsOverrides {}
 export interface PanelPropsOverrides {}
-export interface PreferencesPanelPropsOverrides {}
 export interface RowPropsOverrides {}
 
 type SlotProps<Props, Overrides> = Partial<Props & Overrides>;
@@ -75,6 +78,7 @@ export interface GridSlotsComponentsProps {
     { native: boolean; value: any; children?: React.ReactNode },
     BaseSelectOptionPropsOverrides
   >;
+  baseChip?: SlotProps<ChipProps, BaseChipPropsOverrides>;
   cell?: SlotProps<GridCellProps, CellPropsOverrides>;
   columnHeaderFilterIconButton?: SlotProps<
     ColumnHeaderFilterIconButtonProps,
@@ -84,15 +88,12 @@ export interface GridSlotsComponentsProps {
   columnsPanel?: SlotProps<GridColumnsPanelProps, ColumnsPanelPropsOverrides>;
   filterPanel?: SlotProps<GridFilterPanelProps, FilterPanelPropsOverrides>;
   footer?: SlotProps<GridFooterContainerProps, FooterPropsOverrides>;
+  footerRowCount?: SlotProps<GridRowCountProps, FooterRowCountOverrides>;
   loadingOverlay?: SlotProps<GridOverlayProps, LoadingOverlayPropsOverrides>;
   noResultsOverlay?: SlotProps<GridOverlayProps, NoResultsOverlayPropsOverrides>;
   noRowsOverlay?: SlotProps<GridOverlayProps, NoRowsOverlayPropsOverrides>;
   pagination?: SlotProps<TablePaginationProps, PaginationPropsOverrides>;
   panel?: SlotProps<GridPanelProps, PanelPropsOverrides>;
-  preferencesPanel?: SlotProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    PreferencesPanelPropsOverrides
-  >;
   row?: SlotProps<GridRowProps, RowPropsOverrides>;
   toolbar?: SlotProps<GridToolbarProps, ToolbarPropsOverrides>;
 }

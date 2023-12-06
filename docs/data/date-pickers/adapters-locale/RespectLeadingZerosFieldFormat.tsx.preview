@@ -1,0 +1,12 @@
+<DateField
+  label="Date Field"
+  format="M/D/YYYY"
+  defaultValue={dayjs('2022-04-17')}
+  shouldRespectLeadingZeros
+/>
+<DatePicker
+  label="Date Picker"
+  format="M/D/YYYY"
+  defaultValue={dayjs('2022-04-17')}
+  slotProps={{ field: { shouldRespectLeadingZeros: true } }}
+/>

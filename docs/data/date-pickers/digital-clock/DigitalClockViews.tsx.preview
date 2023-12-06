@@ -1,0 +1,9 @@
+<DemoItem label={'"hours", "minutes" and "seconds"'}>
+  <MultiSectionDigitalClock views={['hours', 'minutes', 'seconds']} />
+</DemoItem>
+<DemoItem label={'"hours"'}>
+  <MultiSectionDigitalClock views={['hours']} />
+</DemoItem>
+<DemoItem label={'"minutes" and "seconds"'}>
+  <MultiSectionDigitalClock views={['minutes', 'seconds']} />
+</DemoItem>

@@ -9,6 +9,11 @@
     },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
     {
+      "name": "ignoreDiacritics",
+      "description": "Returns the value of the <code>ignoreDiacritics</code> prop.",
+      "type": "DataGridProcessedProps['ignoreDiacritics']"
+    },
+    {
       "name": "setFilterLogicOperator",
       "description": "Changes the GridLogicOperator used to connect the filters.",
       "type": "(operator: GridLogicOperator) => void"
@@ -20,13 +25,13 @@
     },
     {
       "name": "setQuickFilterValues",
-      "description": "Set the quick filter values ot the one given by <code>values</code>",
+      "description": "Set the quick filter values to the one given by <code>values</code>",
       "type": "(values: any[]) => void"
     },
     {
       "name": "showFilterPanel",
       "description": "Shows the filter panel. If <code>targetColumnField</code> is given, a filter for this field is also added.",
-      "type": "(targetColumnField?: string) => void"
+      "type": "(targetColumnField?: string, panelId?: string, labelId?: string) => void"
     },
     {
       "name": "upsertFilterItem",
