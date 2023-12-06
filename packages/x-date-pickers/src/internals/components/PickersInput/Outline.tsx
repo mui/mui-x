@@ -5,6 +5,7 @@ interface OutlineProps extends React.HTMLAttributes<HTMLFieldSetElement> {
   notched: boolean;
   shrink: boolean;
   label: React.ReactNode;
+  ownerState: any;
 }
 
 interface OutlineOwnerState extends OutlineProps {
@@ -93,7 +94,7 @@ export default function Outline(props: OutlineProps) {
     withLabel,
   };
   return (
-    <OutlineRoot aria-hidden className={className} ownerState={ownerState} {...other}>
+    <OutlineRoot aria-hidden className={className} {...other} ownerState={ownerState}>
       <OutlineLegend ownerState={ownerState}>
         {/* Use the nominal use case of the legend, avoid rendering artefacts. */}
         {withLabel ? (

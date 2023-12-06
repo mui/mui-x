@@ -10,7 +10,7 @@ import visuallyHidden from '@mui/utils/visuallyHidden';
 import { pickersInputClasses, getPickersInputUtilityClass } from './pickersInputClasses';
 import { PickersInputProps } from './PickersInput.types';
 
-const PickersInputRoot = styled(Box, {
+export const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -27,7 +27,7 @@ const PickersInputRoot = styled(Box, {
   }),
 }));
 
-const PickersInputSectionsContainer = styled('div', {
+export const PickersInputSectionsContainer = styled('div', {
   name: 'MuiPickersInput',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,

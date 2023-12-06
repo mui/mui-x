@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useFormControl } from '@mui/material/FormControl';
+import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -10,12 +10,12 @@ import {
   getPickersOutlinedInputUtilityClass,
 } from './pickersInputClasses';
 import Outline from './Outline';
-import { PickersInputProps, PickersOutlinedInputProps } from './PickersInput.types';
-import { InputWrapper, PickersInput, SectionsContainer } from './PickersInput';
+import { PickersOutlinedInputProps } from './PickersInput.types';
+import { PickersInputRoot, PickersInput, PickersInputSectionsContainer } from './PickersInput';
 import { formControlState } from './pickersInputUtiles';
 
-const OutlinedSectionsWrapper = styled(InputWrapper, {
-  name: 'MuiPickersOutliedInput',
+const OutlinedInputRoot = styled(PickersInputRoot, {
+  name: 'MuiPickersOutlinedInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
@@ -39,7 +39,7 @@ const OutlinedSectionsWrapper = styled(InputWrapper, {
     },
     [`&.${pickersOutlinedInputClasses.focused} .${pickersOutlinedInputClasses.notchedOutline}`]: {
       borderStyle: 'solid',
-      borderColor: (theme.vars || theme).palette[ownerState.color].main,
+      borderColor: (theme.vars || theme).palette[ownerState.color as string].main,
       borderWidth: 2,
     },
     [`&.${pickersOutlinedInputClasses.disabled}`]: {
@@ -58,10 +58,10 @@ const OutlinedSectionsWrapper = styled(InputWrapper, {
   };
 });
 
-const OutlinedSectionsContainer = styled(SectionsContainer, {
+const OutlinedPickersInputSectionsContainer = styled(PickersInputSectionsContainer, {
   name: 'MuiPickersOutlinedInput',
-  slot: 'Input',
-  overridesResolver: (props, styles) => styles.input,
+  slot: 'SectionsContainer',
+  overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
   padding: '16.5px 0',
   ...(ownerState.size === 'small' && {
@@ -89,7 +89,7 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
       disabled && 'disabled',
       error && 'error',
       fullWidth && 'fullWidth',
-      `color${capitalize(color)}`,
+      `color${color ? capitalize(color as string) : ''}`,
       size === 'small' && 'inputSizeSmall',
       Boolean(startAdornment) && 'adornedStart',
       Boolean(endAdornment) && 'adornedEnd',
@@ -104,14 +104,9 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
   return composeClasses(slots, getPickersOutlinedInputUtilityClass, classes);
 };
 
-interface OwnerStateType extends PickersInputProps {
-  color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-  disabled?: boolean;
-  error?: boolean;
-  fullWidth?: boolean;
-  size?: 'small' | 'medium';
-  adornedStart?: boolean;
-}
+interface OwnerStateType
+  extends FormControlState,
+    Omit<PickersOutlinedInputProps, keyof FormControlState> {}
 
 export const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
   props: PickersOutlinedInputProps,
@@ -138,22 +133,18 @@ export const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInp
   const ownerState = {
     ...props,
     ...ownerStateProp,
+    ...fcs,
     color: fcs.color || 'primary',
-    disabled: fcs.disabled,
-    error: fcs.error,
-    focused: fcs.focused,
-    fullWidth: fcs.fullWidth,
-    size: fcs.size,
   };
   const classes = useUtilityClasses(ownerState);
 
   return (
     <PickersInput
-      slots={{ root: OutlinedSectionsWrapper, input: OutlinedSectionsContainer }}
+      slots={{ root: OutlinedInputRoot, input: OutlinedPickersInputSectionsContainer }}
       renderSuffix={(state) => (
         <Outline
-          shrink={notched || state.adornedStart || state.focused || state.filled}
-          notched={notched || state.adornedStart || state.focused || state.filled}
+          shrink={Boolean(notched || state.adornedStart || state.focused || state.filled)}
+          notched={Boolean(notched || state.adornedStart || state.focused || state.filled)}
           className={classes.notchedOutline}
           label={
             label != null && label !== '' && fcs.required ? (

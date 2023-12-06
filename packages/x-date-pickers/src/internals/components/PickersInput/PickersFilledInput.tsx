@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useFormControl } from '@mui/material/FormControl';
+import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -10,11 +10,12 @@ import {
   getPickersFilledInputUtilityClass,
 } from './pickersInputClasses';
 import { PickersFilledInputProps } from './PickersInput.types';
-import { InputWrapper, PickersInput, SectionsContainer } from './PickersInput';
+import { PickersInputRoot, PickersInput, PickersInputSectionsContainer } from './PickersInput';
+
 import { formControlState } from './pickersInputUtiles';
 
-const FilledSectionsWrapper = styled(InputWrapper, {
-  name: 'MuiPickersOutliedInput',
+const FilledInputRoot = styled(PickersInputRoot, {
+  name: 'MuiPickersFilledInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
@@ -109,10 +110,10 @@ const FilledSectionsWrapper = styled(InputWrapper, {
   };
 });
 
-const FilledSectionsContainer = styled(SectionsContainer, {
+const FilledSectionsContainer = styled(PickersInputSectionsContainer, {
   name: 'MuiPickersFilledInput',
-  slot: 'Input',
-  overridesResolver: (props, styles) => styles.input,
+  slot: 'sectionsContainer',
+  overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
   paddingTop: 25,
   paddingRight: 12,
@@ -160,7 +161,7 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
       disabled && 'disabled',
       error && 'error',
       fullWidth && 'fullWidth',
-      `color${capitalize(color)}`,
+      `color${capitalize(color as string)}`,
       size === 'small' && 'inputSizeSmall',
       Boolean(startAdornment) && 'adornedStart',
       Boolean(endAdornment) && 'adornedEnd',
@@ -175,14 +176,9 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
   return composeClasses(slots, getPickersFilledInputUtilityClass, classes);
 };
 
-interface OwnerStateType extends PickersFilledInputProps {
-  color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-  disabled?: boolean;
-  error?: boolean;
-  fullWidth?: boolean;
-  size?: 'small' | 'medium';
-  adornedStart?: boolean;
-}
+interface OwnerStateType
+  extends FormControlState,
+    Omit<PickersFilledInputProps, keyof FormControlState> {}
 
 export const PickersFilledInput = React.forwardRef(function PickersFilledInput(
   props: PickersFilledInputProps,
@@ -209,18 +205,14 @@ export const PickersFilledInput = React.forwardRef(function PickersFilledInput(
   const ownerState = {
     ...props,
     ...ownerStateProp,
+    ...fcs,
     color: fcs.color || 'primary',
-    disabled: fcs.disabled,
-    error: fcs.error,
-    focused: fcs.focused,
-    fullWidth: fcs.fullWidth,
-    size: fcs.size,
   };
   const classes = useUtilityClasses(ownerState);
 
   return (
     <PickersInput
-      slots={{ root: FilledSectionsWrapper, input: FilledSectionsContainer }}
+      slots={{ root: FilledInputRoot, input: FilledSectionsContainer }}
       {...other}
       label={label}
       classes={classes}

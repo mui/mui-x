@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useFormControl } from '@mui/material/FormControl';
+import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -9,12 +9,12 @@ import {
   pickersStandardInputClasses,
   getPickersStandardInputUtilityClass,
 } from './pickersInputClasses';
-import { PickersInputProps, PickersStandardInputProps } from './PickersInput.types';
-import { InputWrapper, PickersInput } from './PickersInput';
+import { PickersStandardInputProps } from './PickersInput.types';
+import { PickersInputRoot, PickersInput } from './PickersInput';
 import { formControlState } from './pickersInputUtiles';
 
-const StandardSectionsWrapper = styled(InputWrapper, {
-  name: 'MuiPickersOutliedInput',
+const StandardInputRoot = styled(PickersInputRoot, {
+  name: 'MuiPickersStandardInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
@@ -30,7 +30,7 @@ const StandardSectionsWrapper = styled(InputWrapper, {
     ...(!ownerState.disableUnderline && {
       '&:after': {
         background: 'red',
-        borderBottom: `2px solid ${(theme.vars || theme).palette[ownerState.color].main}`,
+        borderBottom: `2px solid ${(theme.vars || theme).palette[ownerState.color as string].main}`,
         left: 0,
         bottom: 0,
         // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
@@ -102,7 +102,7 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
       disabled && 'disabled',
       error && 'error',
       fullWidth && 'fullWidth',
-      `color${capitalize(color)}`,
+      `color${capitalize(color as string)}`,
       size === 'small' && 'inputSizeSmall',
       Boolean(startAdornment) && 'adornedStart',
       Boolean(endAdornment) && 'adornedEnd',
@@ -117,15 +117,9 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
   return composeClasses(slots, getPickersStandardInputUtilityClass, classes);
 };
 
-interface OwnerStateType extends PickersInputProps {
-  color: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-  disabled?: boolean;
-  error?: boolean;
-  fullWidth?: boolean;
-  size?: 'small' | 'medium';
-  adornedStart?: boolean;
-  disableUnderline?: boolean;
-}
+interface OwnerStateType
+  extends FormControlState,
+    Omit<PickersStandardInputProps, keyof FormControlState> {}
 
 export const PickersStandardInput = React.forwardRef(function PickersStandardInput(
   props: PickersStandardInputProps,
@@ -152,18 +146,14 @@ export const PickersStandardInput = React.forwardRef(function PickersStandardInp
   const ownerState = {
     ...props,
     ...ownerStateProp,
+    ...fcs,
     color: fcs.color || 'primary',
-    disabled: fcs.disabled,
-    error: fcs.error,
-    focused: fcs.focused,
-    fullWidth: fcs.fullWidth,
-    size: fcs.size,
   };
   const classes = useUtilityClasses(ownerState);
 
   return (
     <PickersInput
-      slots={{ root: StandardSectionsWrapper }}
+      slots={{ root: StandardInputRoot }}
       {...other}
       label={label}
       classes={classes}
