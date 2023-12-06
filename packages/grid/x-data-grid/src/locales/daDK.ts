@@ -64,7 +64,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'ender med',
   filterOperatorIs: 'er lig med',
   filterOperatorNot: 'er ikke lig med',
-  filterOperatorNotContains: "indeholder ikke",
+  filterOperatorNotContains: 'indeholder ikke',
   filterOperatorAfter: 'efter',
   filterOperatorOnOrAfter: 'på eller efter',
   filterOperatorBefore: 'før',
