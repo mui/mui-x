@@ -161,7 +161,6 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       selectedSections,
       onSelectedSectionsChange,
       className,
-      shouldUseV6TextField,
     } = props;
 
     const startTextFieldProps = useSlotProps({
@@ -195,7 +194,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
-        shouldUseV6TextField,
+        shouldUseV6TextField: true,
       },
       startTextFieldProps,
       endTextFieldProps,
@@ -218,9 +217,6 @@ const JoyDateRangePicker = React.forwardRef(
         ref={ref}
         {...props}
         slots={{ ...props?.slots, field: JoyMultiInputDateRangeField }}
-        slotProps={{
-          field: { shouldUseV6TextField: true },
-        }}
       />
     );
   },

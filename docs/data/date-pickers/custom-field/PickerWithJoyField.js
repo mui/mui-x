@@ -73,7 +73,10 @@ const JoyField = React.forwardRef((props, ref) => {
 const JoyDateField = React.forwardRef((props, ref) => {
   const { slots, slotProps, ...textFieldProps } = props;
 
-  const fieldResponse = useDateField(textFieldProps);
+  const fieldResponse = useDateField({
+    ...textFieldProps,
+    shouldUseV6TextField: true,
+  });
 
   /* If you don't need a clear button, you can skip the use of this hook */
   const processedFieldProps = useClearableField({
@@ -98,7 +101,6 @@ const JoyDatePicker = React.forwardRef((props, ref) => {
           formControlSx: {
             flexDirection: 'row',
           },
-          shouldUseV6TextField: true,
         },
       }}
     />
