@@ -62,7 +62,12 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     '@media (prefers-reduced-motion: no-preference)': {
       scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
     },
-    '&:hover': {
+    '@media (pointer: fine)': {
+      '&:hover': {
+        overflowY: 'auto',
+      },
+    },
+    '@media (pointer: none), (pointer: coarse)': {
       overflowY: 'auto',
     },
     '&:not(:first-of-type)': {
@@ -201,6 +206,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               aria-disabled={readOnly}
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
+              className={classes.item}
               {...slotProps?.digitalClockSectionItem}
             >
               {option.label}
