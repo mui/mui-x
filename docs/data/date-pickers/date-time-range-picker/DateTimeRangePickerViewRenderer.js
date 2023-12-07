@@ -15,9 +15,8 @@ export default function DateTimeRangePickerViewRenderer() {
         <DemoItem label="With digital clock" component="DateTimeRangePicker">
           <DateTimeRangePicker
             views={['day', 'hours']}
-            viewRenderers={{
-              hours: renderDigitalClockTimeView,
-            }}
+            timeSteps={{ minutes: 20 }}
+            viewRenderers={{ hours: renderDigitalClockTimeView }}
           />
         </DemoItem>
         <DemoItem label="With analog clock" component="DateTimeRangePicker">
@@ -25,6 +24,7 @@ export default function DateTimeRangePickerViewRenderer() {
             viewRenderers={{
               hours: renderTimeViewClock,
               minutes: renderTimeViewClock,
+              seconds: renderTimeViewClock,
             }}
           />
         </DemoItem>
