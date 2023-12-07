@@ -233,7 +233,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const baseFormControlProps = rootProps.slotProps?.baseFormControl || {};
 
     const baseSelectProps = rootProps.slotProps?.baseSelect || {};
-    const isBaseSelectNative = baseSelectProps.native ?? true;
+    const isBaseSelectNative = baseSelectProps.native ?? false;
 
     const baseInputLabelProps = rootProps.slotProps?.baseInputLabel || {};
     const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};

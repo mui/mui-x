@@ -85,7 +85,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const labelId = useId();
   const rootProps = useGridRootProps();
 
-  const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? true;
+  const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? false;
 
   let resolvedColumn: GridSingleSelectColDef | null = null;
   if (item.field) {
