@@ -137,3 +137,18 @@ export function getRow(rowIndex: number): HTMLElement {
   }
   return row;
 }
+
+/**
+ * Returns the hidden `input` element of the Material UI Select component
+ */
+export const getSelectInput = (combobox: Element) => {
+  if (!combobox) {
+    return null;
+  }
+  const comboboxParent = combobox.parentElement;
+  if (!comboboxParent) {
+    return null;
+  }
+  const input = comboboxParent.querySelector('input');
+  return input;
+};
