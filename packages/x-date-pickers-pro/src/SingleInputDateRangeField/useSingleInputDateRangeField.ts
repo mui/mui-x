@@ -1,50 +1,28 @@
 import {
-  useUtils,
-  useDefaultDates,
-  applyDefaultDate,
   useField,
   splitFieldInternalAndForwardedProps,
+  useDefaultizedDateField,
 } from '@mui/x-date-pickers/internals';
-import {
-  UseSingleInputDateRangeFieldComponentProps,
-  UseSingleInputDateRangeFieldDefaultizedProps,
-  UseSingleInputDateRangeFieldProps,
-} from './SingleInputDateRangeField.types';
+import { UseSingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
-
-export const useDefaultizedDateRangeFieldProps = <
-  TDate,
-  TUseV6TextField extends boolean,
-  AdditionalProps extends {},
->(
-  props: UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>,
-): UseSingleInputDateRangeFieldDefaultizedProps<TDate, TUseV6TextField, AdditionalProps> => {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? utils.formats.keyboardDate,
-    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
-  } as any;
-};
 
 export const useSingleInputDateRangeField = <
   TDate,
   TUseV6TextField extends boolean,
-  TChildProps extends {},
+  TAllProps extends UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>,
 >(
-  inProps: UseSingleInputDateRangeFieldComponentProps<TDate, TUseV6TextField, TChildProps>,
+  inProps: TAllProps,
 ) => {
-  const props = useDefaultizedDateRangeFieldProps<TDate, TUseV6TextField, TChildProps>(inProps);
+  const props = useDefaultizedDateField<
+    TDate,
+    UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>,
+    TAllProps
+  >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseSingleInputDateRangeFieldProps<any, any>
+    keyof UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>
   >(props, 'date');
 
   return useField({

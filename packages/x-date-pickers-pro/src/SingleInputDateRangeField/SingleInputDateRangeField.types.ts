@@ -7,42 +7,29 @@ import {
   FieldSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { ExportedUseClearableFieldProps } from '@mui/x-date-pickers/hooks';
-import { UseDateRangeFieldDefaultizedProps, UseDateRangeFieldProps } from '../internals/models';
+import { UseDateRangeFieldProps } from '../internals/models';
 
 export interface UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField extends boolean>
   extends UseDateRangeFieldProps<TDate, TUseV6TextField>,
     ExportedUseClearableFieldProps {}
 
-export type UseSingleInputDateRangeFieldDefaultizedProps<
-  TDate,
-  TUseV6TextField extends boolean,
-  AdditionalProps extends {},
-> = UseDateRangeFieldDefaultizedProps<TDate, TUseV6TextField> &
-  Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;
-
-export type UseSingleInputDateRangeFieldComponentProps<
-  TDate,
-  TUseV6TextField extends boolean,
-  TChildProps extends {},
-> = Omit<TChildProps, keyof UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>> &
-  UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>;
-
 export type SingleInputDateRangeFieldProps<
   TDate,
   TUseV6TextField extends boolean = false,
   TChildProps extends {} = FieldsTextFieldProps,
-> = UseSingleInputDateRangeFieldComponentProps<TDate, TUseV6TextField, TChildProps> & {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: SingleInputDateRangeFieldSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: SingleInputDateRangeFieldSlotsComponentsProps<TDate, TUseV6TextField>;
-};
+> = Omit<TChildProps, keyof UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>> &
+  UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField> & {
+    /**
+     * Overridable component slots.
+     * @default {}
+     */
+    slots?: SingleInputDateRangeFieldSlotsComponent;
+    /**
+     * The props used for each component slot.
+     * @default {}
+     */
+    slotProps?: SingleInputDateRangeFieldSlotsComponentsProps<TDate, TUseV6TextField>;
+  };
 
 export interface SingleInputDateRangeFieldSlotsComponent extends FieldSlotsComponents {
   /**

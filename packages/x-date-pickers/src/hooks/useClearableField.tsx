@@ -5,7 +5,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { ClearIcon } from '../icons';
-import { FieldSlotsComponents, FieldSlotsComponentsProps, useLocaleText } from '../internals';
+import {
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
+} from '../internals/hooks/useField/useField.types';
+import { useLocaleText } from '../internals/hooks/useUtils';
 
 export interface ExportedUseClearableFieldProps {
   clearable?: boolean;

@@ -2,8 +2,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useTimeField as useTimeField,
   UseTimeFieldComponentProps,
-  UseTimeFieldProps,
-  UseTimeFieldDefaultizedProps,
 } from '@mui/x-date-pickers/TimeField';
 import {
   useLocalizationContext,
@@ -12,6 +10,7 @@ import {
   FieldChangeHandlerContext,
   UseFieldResponse,
   useControlledValueWithTimezone,
+  useDefaultizedTimeField,
 } from '@mui/x-date-pickers/internals';
 import { TimeValidationError } from '@mui/x-date-pickers/models';
 import { DateRange } from '../../models/range';
@@ -20,12 +19,14 @@ import {
   TimeRangeComponentValidationProps,
 } from '../../utils/validation/validateTimeRange';
 import { TimeRangeValidationError } from '../../../models';
-import type { UseMultiInputTimeRangeFieldParams } from '../../../MultiInputTimeRangeField/MultiInputTimeRangeField.types';
+import type {
+  UseMultiInputTimeRangeFieldParams,
+  UseMultiInputTimeRangeFieldProps,
+} from '../../../MultiInputTimeRangeField/MultiInputTimeRangeField.types';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
-import { useDefaultizedTimeRangeFieldProps } from '../../../SingleInputTimeRangeField/useSingleInputTimeRangeField';
 
 export const useMultiInputTimeRangeField = <
   TDate,
@@ -42,10 +43,10 @@ export const useMultiInputTimeRangeField = <
   TUseV6TextField,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TUseV6TextField, TTextFieldSlotProps> => {
-  const sharedProps = useDefaultizedTimeRangeFieldProps<
+  const sharedProps = useDefaultizedTimeField<
     TDate,
-    TUseV6TextField,
-    UseTimeFieldProps<TDate, TUseV6TextField>
+    UseMultiInputTimeRangeFieldProps<TDate, TUseV6TextField>,
+    typeof inSharedProps
   >(inSharedProps);
   const adapter = useLocalizationContext<TDate>();
 
@@ -53,13 +54,15 @@ export const useMultiInputTimeRangeField = <
     value: valueProp,
     defaultValue,
     format,
+    formatDensity,
     shouldRespectLeadingZeros,
-    timezone: timezoneProp,
     onChange,
     disabled,
     readOnly,
     selectedSections,
     onSelectedSectionsChange,
+    timezone: timezoneProp,
+    shouldUseV6TextField,
     autoFocus,
   } = sharedProps;
 
@@ -115,34 +118,29 @@ export const useMultiInputTimeRangeField = <
     unstableEndFieldRef,
   });
 
-  const startFieldProps: UseTimeFieldComponentProps<
-    TDate,
-    TUseV6TextField,
-    UseTimeFieldDefaultizedProps<TTextFieldSlotProps, TUseV6TextField>
-  > = {
+  const startFieldProps: UseTimeFieldComponentProps<TDate, TUseV6TextField, typeof sharedProps> = {
     error: !!validationError[0],
     ...startTextFieldProps,
     ...selectedSectionsResponse.start,
-    format,
-    shouldRespectLeadingZeros,
     disabled,
     readOnly,
+    format,
+    formatDensity,
+    shouldRespectLeadingZeros,
     timezone,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
+    shouldUseV6TextField,
     autoFocus, // Do not add on end field.
   };
 
-  const endFieldProps: UseTimeFieldComponentProps<
-    TDate,
-    TUseV6TextField,
-    UseTimeFieldDefaultizedProps<TTextFieldSlotProps, TUseV6TextField>
-  > = {
+  const endFieldProps: UseTimeFieldComponentProps<TDate, TUseV6TextField, typeof sharedProps> = {
     error: !!validationError[1],
     ...endTextFieldProps,
     ...selectedSectionsResponse.end,
     format,
+    formatDensity,
     shouldRespectLeadingZeros,
     disabled,
     readOnly,
@@ -150,17 +148,16 @@ export const useMultiInputTimeRangeField = <
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
+    shouldUseV6TextField,
   };
 
-  const startDateResponse = useTimeField(startFieldProps) as UseFieldResponse<
-    TUseV6TextField,
-    TTextFieldSlotProps
-  >;
+  const startDateResponse = useTimeField<TDate, TUseV6TextField, typeof startFieldProps>(
+    startFieldProps,
+  ) as UseFieldResponse<TUseV6TextField, TTextFieldSlotProps>;
 
-  const endDateResponse = useTimeField(endFieldProps) as UseFieldResponse<
-    TUseV6TextField,
-    TTextFieldSlotProps
-  >;
+  const endDateResponse = useTimeField<TDate, TUseV6TextField, typeof endFieldProps>(
+    endFieldProps,
+  ) as UseFieldResponse<TUseV6TextField, TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

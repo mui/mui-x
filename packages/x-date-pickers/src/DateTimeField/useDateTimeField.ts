@@ -3,24 +3,35 @@ import {
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
-import {
-  UseDateTimeFieldProps,
-  UseDateTimeFieldDefaultizedProps,
-  UseDateTimeFieldComponentProps,
-} from './DateTimeField.types';
+import { UseDateTimeFieldProps } from './DateTimeField.types';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
 import { FieldSection } from '../models';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  DateTimeValidationProps,
+  TimeValidationProps,
+} from '../internals/models/validation';
+import { DefaultizedProps } from '../internals/models/helpers';
 
-const useDefaultizedDateTimeField = <
+interface UseDefaultizedDateTimeFieldBaseProps<TDate>
+  extends BaseDateValidationProps<TDate>,
+    BaseTimeValidationProps {
+  format?: string;
+}
+
+export const useDefaultizedDateTimeField = <
   TDate,
-  TUseV6TextField extends boolean,
-  AdditionalProps extends {},
+  TKnownProps extends UseDefaultizedDateTimeFieldBaseProps<TDate> &
+    DateTimeValidationProps<TDate> &
+    TimeValidationProps<TDate> & { ampm?: boolean },
+  TAllProps extends {},
 >(
-  props: UseDateTimeFieldProps<TDate, TUseV6TextField>,
-): AdditionalProps & UseDateTimeFieldDefaultizedProps<TDate, TUseV6TextField> => {
+  props: TKnownProps & TAllProps,
+): TAllProps & DefaultizedProps<TKnownProps, keyof UseDefaultizedDateTimeFieldBaseProps<TDate>> => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -39,13 +50,21 @@ const useDefaultizedDateTimeField = <
     maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
     minTime: props.minDateTime ?? props.minTime,
     maxTime: props.maxDateTime ?? props.maxTime,
-  } as any;
+  };
 };
 
-export const useDateTimeField = <TDate, TUseV6TextField extends boolean, TChildProps extends {}>(
-  inProps: UseDateTimeFieldComponentProps<TDate, TUseV6TextField, TChildProps>,
+export const useDateTimeField = <
+  TDate,
+  TUseV6TextField extends boolean,
+  TAllProps extends UseDateTimeFieldProps<TDate, TUseV6TextField>,
+>(
+  inProps: TAllProps,
 ) => {
-  const props = useDefaultizedDateTimeField<TDate, TUseV6TextField, TChildProps>(inProps);
+  const props = useDefaultizedDateTimeField<
+    TDate,
+    UseDateTimeFieldProps<TDate, TUseV6TextField>,
+    TAllProps
+  >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,

@@ -1,6 +1,5 @@
 import {
   BaseDateValidationProps,
-  DefaultizedProps,
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
@@ -50,11 +49,3 @@ export interface UseDateRangeFieldProps<TDate, TUseV6TextField extends boolean>
     DayRangeValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
     BaseRangeProps {}
-
-export type UseDateRangeFieldDefaultizedProps<
-  TDate,
-  TUseV6TextField extends boolean,
-> = DefaultizedProps<
-  UseDateRangeFieldProps<TDate, TUseV6TextField>,
-  keyof BaseDateValidationProps<TDate> | 'format'
->;
