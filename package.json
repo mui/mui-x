@@ -96,7 +96,7 @@
     "@types/chai-dom": "^1.11.3",
     "@types/enzyme": "^3.10.12",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^18.18.13",
+    "@types/node": "^18.19.3",
     "@types/prettier": "^2.7.3",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
@@ -187,6 +187,6 @@
   "dependencies": {},
   "resolutions": {
     "**/react-is": "^18.2.0",
-    "**/@types/node": "^18.18.13"
+    "**/@types/node": "^18.19.3"
   }
 }
