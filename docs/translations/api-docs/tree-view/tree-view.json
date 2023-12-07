@@ -36,6 +36,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "defaultFocusedNodeId": {
+      "description": "Focused node id. Used when the item&#39;s focus is controlled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "defaultParentIcon": {
       "description": "The default icon displayed next to a parent node. This is applied to all parent nodes and can be overridden by the TreeItem <code>icon</code> prop.",
       "deprecated": "",
@@ -58,6 +63,11 @@
     },
     "expanded": {
       "description": "Expanded node ids. Used when the item&#39;s expansion is controlled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "focusedNodeId": {
+      "description": "Focused node id. Used when the item&#39;s focus is controlled.",
       "deprecated": "",
       "typeDescriptions": {}
     },

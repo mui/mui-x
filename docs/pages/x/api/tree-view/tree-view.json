@@ -10,6 +10,7 @@
       "default": "[]"
     },
     "defaultExpandIcon": { "type": { "name": "node" } },
+    "defaultFocusedNodeId": { "type": { "name": "string" }, "default": "undefined" },
     "defaultParentIcon": { "type": { "name": "node" } },
     "defaultSelected": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" },
@@ -18,6 +19,7 @@
     "disabledItemsFocusable": { "type": { "name": "bool" } },
     "disableSelection": { "type": { "name": "bool" } },
     "expanded": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "focusedNodeId": { "type": { "name": "string" } },
     "id": { "type": { "name": "string" } },
     "multiSelect": { "type": { "name": "bool" } },
     "onNodeFocus": {

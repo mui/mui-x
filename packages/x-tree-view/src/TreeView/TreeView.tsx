@@ -69,6 +69,8 @@ const TreeView = React.forwardRef(function TreeView<
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
+    focusedNodeId,
+    defaultFocusedNodeId,
     // Component implementation
     children,
     ...other
@@ -82,6 +84,8 @@ const TreeView = React.forwardRef(function TreeView<
     onNodeFocus,
     disableSelection,
     defaultSelected,
+    focusedNodeId,
+    defaultFocusedNodeId,
     selected,
     multiSelect,
     onNodeSelect,
@@ -149,6 +153,12 @@ TreeView.propTypes = {
    */
   defaultExpandIcon: PropTypes.node,
   /**
+   * Focused node id.
+   * Used when the item's focus is controlled.
+   * @default undefined
+   */
+  defaultFocusedNodeId: PropTypes.string,
+  /**
    * The default icon displayed next to a parent node. This is applied to all
    * parent nodes and can be overridden by the TreeItem `icon` prop.
    */
@@ -177,6 +187,11 @@ TreeView.propTypes = {
    * Used when the item's expansion is controlled.
    */
   expanded: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * Focused node id.
+   * Used when the item's focus is controlled.
+   */
+  focusedNodeId: PropTypes.string,
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
