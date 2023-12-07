@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 16.18.4
 
-_Dec 7, 2023_
+_Dec 8, 2023_
 
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
