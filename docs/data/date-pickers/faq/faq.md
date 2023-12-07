@@ -17,12 +17,16 @@ The `<DemoContainer />` is an internal component used together with the `<DemoIt
 
 This helps avoid the repeated use of layout components, such as `<Box />` or `<Stack />`, while keeping the code minimal and clear, and allowing readers to focus on what is important - the demo itself.
 
+:::warn
+You should never use these components in your application.
+:::
+
 ## Why isn't the KeyboardDatePicker supported anymore?
 
 The `KeyboardDatePicker` component is no longer supported.
 
-All versions of the date and time pickers implement keyboard input for accessibility and also allow editing through the UI. Depending on your use-case, you may only need keyboard editing, in which case you can use the date and time field components.
+All versions of the date and time pickers implement keyboard input for accessibility and also allow editing through the UI. Depending on your use case, you may only need keyboard editing, in which case you can use the date and time field components.
 
-For instance, `DatePicker` allows for editing both via input and a calendar, while `DateField` only allows for editing via input. You can read more about the different types of components on the [base concepts page](/x/react-date-pickers/base-concepts/#other-components)
+For instance, `DatePicker` allows for editing both via input and a calendar, while `DateField` only allows for editing via input. You can read more about the different types of components on the [base concepts page](/x/react-date-pickers/base-concepts/#other-components).
 
 For more information about the fields, you can refer to the [field components page](/x/react-date-pickers/fields/).
