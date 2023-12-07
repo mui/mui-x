@@ -116,7 +116,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
           const pointY = voronoiRef.current.delauney.points[2 * closestPointIndex + 1];
           const dist2 = (pointX - svgPoint.x) ** 2 + (pointY - svgPoint.y) ** 2;
           if (dist2 > voronoiMaxRadius ** 2) {
-            // The closest point is to far to be considered.
+            // The closest point is too far to be considered.
             dispatch({ type: 'leaveItem', data: { type: 'scatter', seriesId, dataIndex } });
             return;
           }

@@ -49,7 +49,7 @@ type InteractionState = {
    */
   axis: AxisInteractionData;
   /**
-   * Set to `true` when `VoronoiHandler is active.
+   * Set to `true` when `VoronoiHandler` is active.
    * Used to prevent collision with mouseEnter events.
    */
   useVoronoiInteraction: boolean;
