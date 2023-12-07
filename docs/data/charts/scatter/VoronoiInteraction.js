@@ -35,9 +35,9 @@ const data = [
 ];
 
 export default function VoronoiInteraction() {
-  const [voronoiMaxRadius, setVoronoiMaxRadius] = React.useState(50);
+  const [voronoiMaxRadius, setVoronoiMaxRadius] = React.useState(25);
   const [disableVoronoi, setDisableVoronoi] = React.useState(false);
-  const [undefinedRadius, setUndefinedRadius] = React.useState(false);
+  const [undefinedRadius, setUndefinedRadius] = React.useState(true);
 
   const handleMaxRadiusChange = (event, newValue) => {
     if (typeof newValue !== 'number') {
