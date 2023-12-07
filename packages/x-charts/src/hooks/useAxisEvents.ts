@@ -4,6 +4,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
+import { getSVGPoint } from '../internals/utils';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;
@@ -95,25 +96,21 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
     };
 
     const handleMouseMove = (event: MouseEvent) => {
-      // Get mouse coordinate in global SVG space
-      const pt = svgRef.current!.createSVGPoint();
-      pt.x = event.clientX;
-      pt.y = event.clientY;
-      const svgPt = pt.matrixTransform(svgRef.current!.getScreenCTM()!.inverse());
+      const svgPoint = getSVGPoint(svgRef.current!, event);
 
       mousePosition.current = {
-        x: svgPt.x,
-        y: svgPt.y,
+        x: svgPoint.x,
+        y: svgPoint.y,
       };
 
-      const outsideX = svgPt.x < left || svgPt.x > left + width;
-      const outsideY = svgPt.y < top || svgPt.y > top + height;
+      const outsideX = svgPoint.x < left || svgPoint.x > left + width;
+      const outsideY = svgPoint.y < top || svgPoint.y > top + height;
       if (outsideX || outsideY) {
         dispatch({ type: 'exitChart' });
         return;
       }
-      const newStateX = getUpdate(xAxis[usedXAxis], svgPt.x);
-      const newStateY = getUpdate(yAxis[usedYAxis], svgPt.y);
+      const newStateX = getUpdate(xAxis[usedXAxis], svgPoint.x);
+      const newStateY = getUpdate(yAxis[usedYAxis], svgPoint.y);
 
       dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
     };

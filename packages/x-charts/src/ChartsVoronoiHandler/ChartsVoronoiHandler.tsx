@@ -7,6 +7,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
+import { getSVGPoint } from '../internals/utils';
 
 export type ChartsVoronoiHandlerProps = {
   /**
@@ -80,13 +81,10 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     // TODO: A perf optimisation of voronoi could be to use the last point as the intial point for the next search.
     const handleMouseMove = (event: MouseEvent) => {
       // Get mouse coordinate in global SVG space
-      const pt = svgRef.current!.createSVGPoint();
-      pt.x = event.clientX;
-      pt.y = event.clientY;
-      const svgPt = pt.matrixTransform(svgRef.current!.getScreenCTM()!.inverse());
+      const svgPoint = getSVGPoint(svgRef.current!, event);
 
-      const outsideX = svgPt.x < left || svgPt.x > left + width;
-      const outsideY = svgPt.y < top || svgPt.y > top + height;
+      const outsideX = svgPoint.x < left || svgPoint.x > left + width;
+      const outsideY = svgPoint.y < top || svgPoint.y > top + height;
       if (outsideX || outsideY) {
         dispatch({ type: 'exitChart' });
         return;
@@ -96,7 +94,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         return;
       }
 
-      const closestPointIndex = voronoiRef.current.delauney?.find(svgPt.x, svgPt.y);
+      const closestPointIndex = voronoiRef.current.delauney?.find(svgPoint.x, svgPoint.y);
       if (closestPointIndex !== undefined) {
         const seriesId = Object.keys(voronoiRef.current).find((id) => {
           if (id === 'delauney') {
@@ -116,7 +114,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         if (voronoiMaxRadius !== undefined) {
           const pointX = voronoiRef.current.delauney.points[2 * closestPointIndex];
           const pointY = voronoiRef.current.delauney.points[2 * closestPointIndex + 1];
-          const dist2 = (pointX - svgPt.x) ** 2 + (pointY - svgPt.y) ** 2;
+          const dist2 = (pointX - svgPoint.x) ** 2 + (pointY - svgPoint.y) ** 2;
           if (dist2 > voronoiMaxRadius ** 2) {
             // The closest point is to far to be considered.
             dispatch({ type: 'leaveItem', data: { type: 'scatter', seriesId, dataIndex } });
