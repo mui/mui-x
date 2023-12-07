@@ -151,7 +151,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   return (
     <SingleSelectOperatorContainer>
-      <rootProps.slots.baseFormControl>
+      <rootProps.slots.baseFormControl fullWidth>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
