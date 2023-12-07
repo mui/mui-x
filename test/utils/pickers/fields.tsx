@@ -3,9 +3,9 @@ import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createRenderer, screen, userEvent, act, fireEvent } from '@mui-internal/test-utils';
 import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
+import { pickersSectionsListClasses } from '@mui/x-date-pickers/PickersSectionsList';
 import { pickersInputClasses } from '@mui/x-date-pickers/internals/components/PickersTextField/pickersTextFieldClasses';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
-import { pickersSectionsListClasses } from '@mui/x-date-pickers';
 
 export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
 

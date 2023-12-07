@@ -28,7 +28,6 @@ import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-b
 import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
 import { XTypeScriptProject, XTypeScriptProjects } from '../createXTypeScriptProjects';
 import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
-import { InterfaceNode } from 'typescript-to-proptypes';
 
 type CoreReactApiProps = CoreReactApi['propsTable'][string];
 
@@ -98,7 +97,7 @@ function extractSlots(options: {
     return {};
   }
 
-  const propType = rawSlots.propType as InterfaceNode | UnionType;
+  const propType = rawSlots.propType as InterfaceType | UnionType;
   const propInterface =
     propType.type === 'InterfaceNode'
       ? propType
