@@ -9,7 +9,7 @@ packageName: '@mui/x-date-pickers'
 
 <p class="description">Can't find what you are looking for? The FAQ section has answers to some of the most frequent questions and challenges.</p>
 
-If you still have trouble, you can get in touch with through the [support page](/x/introduction/support/).
+If you still have trouble, you can refer to the [support page](/x/introduction/support/).
 
 ## What is the DemoContainer and DemoItem?
 
@@ -21,9 +21,9 @@ This helps avoid the repeated use of layout components, such as `<Box />` or `<S
 You should never use these components in your application.
 :::
 
-## Why isn't the KeyboardDatePicker supported anymore?
+## Why is the KeyboardDatePicker not supported anymore?
 
-The `KeyboardDatePicker` component is no longer supported.
+It has been replaced with the `DatePicker` component, please refer to the [migration documentation](/material-ui/guides/pickers-migration/#imports) for more information.
 
 All versions of the date and time pickers implement keyboard input for accessibility and also allow editing through the UI. Depending on your use case, you may only need keyboard editing, in which case you can use the date and time field components.
 
