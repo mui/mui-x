@@ -6,8 +6,8 @@ import {
   StaticOnlyPickerProps,
 } from '@mui/x-date-pickers/internals';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
+  ExportedPickersLayoutSlots,
+  ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRange } from '../../models/range';
@@ -15,12 +15,12 @@ import { UseRangePositionProps } from '../useRangePosition';
 import { RangeFieldSection } from '../../models/fields';
 
 export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {}
+  extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView> {}
 
 export interface UseStaticRangePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
+> extends ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
 

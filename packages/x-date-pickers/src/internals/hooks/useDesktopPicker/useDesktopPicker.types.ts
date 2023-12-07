@@ -15,9 +15,9 @@ import {
 import { UsePickerParams, UsePickerProps } from '../usePicker';
 import { BaseSingleInputFieldProps, FieldSection, MuiPickersAdapter } from '../../../models';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
-  PickersLayoutSlotsComponentsProps,
+  ExportedPickersLayoutSlots,
+  ExportedPickersLayoutSlotProps,
+  PickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
@@ -29,7 +29,7 @@ export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeV
       PickersPopperSlotsComponent,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
-    ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView>,
+    ExportedPickersLayoutSlots<TDate | null, TDate, TView>,
     FieldSlotsComponents {
   /**
    * Component used to enter the date with the keyboard.
@@ -61,13 +61,13 @@ export interface UseDesktopPickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
 > extends ExportedUseDesktopPickerSlotsComponentsProps<TDate, TView>,
-    Pick<PickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>, 'toolbar'> {}
+    Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface ExportedUseDesktopPickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
 > extends PickersPopperSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>,
+    ExportedPickersLayoutSlotProps<TDate | null, TDate, TView>,
     FieldSlotsComponentsProps {
   field?: SlotComponentProps<
     React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,

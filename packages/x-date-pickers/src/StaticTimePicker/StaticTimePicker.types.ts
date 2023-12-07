@@ -11,11 +11,11 @@ import {
 import { MakeOptional } from '../internals';
 import { TimeView } from '../models';
 
-export interface StaticTimePickerSlotsComponent<TDate>
+export interface StaticTimePickerSlots<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
     UseStaticPickerSlotsComponent<TDate, TimeView> {}
 
-export interface StaticTimePickerSlotsComponentsProps<TDate>
+export interface StaticTimePickerSlotProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,
     UseStaticPickerSlotsComponentsProps<TDate, TimeView> {}
 
@@ -26,10 +26,10 @@ export interface StaticTimePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: StaticTimePickerSlotsComponent<TDate>;
+  slots?: StaticTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: StaticTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: StaticTimePickerSlotProps<TDate>;
 }

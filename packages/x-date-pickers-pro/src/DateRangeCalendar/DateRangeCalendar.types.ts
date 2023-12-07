@@ -6,8 +6,8 @@ import { TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
+  PickersCalendarHeaderSlots,
+  PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   BaseDateValidationProps,
@@ -31,7 +31,7 @@ export type DateRangePosition = 'start' | 'end';
 export interface DateRangeCalendarSlotsComponent<TDate>
   extends PickersArrowSwitcherSlotsComponent,
     Omit<DayCalendarSlotsComponent<TDate>, 'day'>,
-    PickersCalendarHeaderSlotsComponent {
+    PickersCalendarHeaderSlots {
   /**
    * Custom component for calendar header.
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
@@ -49,7 +49,7 @@ export interface DateRangeCalendarSlotsComponent<TDate>
 export interface DateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
     Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'>,
-    PickersCalendarHeaderSlotsComponentsProps<TDate> {
+    PickersCalendarHeaderSlotProps<TDate> {
   calendarHeader?: SlotComponentProps<
     typeof PickersCalendarHeader,
     {},

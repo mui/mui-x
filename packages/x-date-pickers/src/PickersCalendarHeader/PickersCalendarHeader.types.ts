@@ -12,7 +12,7 @@ import { DateView } from '../models/views';
 import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
 import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
-export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
+export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlotsComponent {
   /**
    * Button displayed to switch between different calendar views.
    * @default IconButton
@@ -30,7 +30,7 @@ export interface PickersCalendarHeaderComponentsPropsOverrides {}
 
 export type PickersCalendarHeaderOwnerState<TDate> = PickersCalendarHeaderProps<TDate>;
 
-export interface PickersCalendarHeaderSlotsComponentsProps<TDate>
+export interface PickersCalendarHeaderSlotProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps {
   switchViewButton?: SlotComponentProps<
     typeof IconButton,
@@ -52,12 +52,12 @@ export interface PickersCalendarHeaderProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: PickersCalendarHeaderSlotsComponent;
+  slots?: PickersCalendarHeaderSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
+  slotProps?: PickersCalendarHeaderSlotProps<TDate>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly DateView[];

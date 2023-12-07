@@ -11,11 +11,11 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { DateView } from '../models';
 
-export interface DesktopDatePickerSlotsComponent<TDate>
+export interface DesktopDatePickerSlots<TDate>
   extends BaseDatePickerSlotsComponent<TDate>,
     MakeOptional<UseDesktopPickerSlotsComponent<TDate, DateView>, 'field' | 'openPickerIcon'> {}
 
-export interface DesktopDatePickerSlotsComponentsProps<TDate>
+export interface DesktopDatePickerSlotProps<TDate>
   extends BaseDatePickerSlotsComponentsProps<TDate>,
     ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateView> {}
 
@@ -31,10 +31,10 @@ export interface DesktopDatePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDatePickerSlotsComponent<TDate>;
+  slots?: DesktopDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDatePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopDatePickerSlotProps<TDate>;
 }

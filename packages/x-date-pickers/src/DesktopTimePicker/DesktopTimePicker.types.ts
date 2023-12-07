@@ -11,27 +11,27 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
-import { DigitalClockSlotsComponent, DigitalClockSlotsComponentsProps } from '../DigitalClock';
+import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
 import {
-  MultiSectionDigitalClockSlotsComponent,
-  MultiSectionDigitalClockSlotsComponentsProps,
+  MultiSectionDigitalClockSlots,
+  MultiSectionDigitalClockSlotProps,
 } from '../MultiSectionDigitalClock';
 import { TimeView } from '../models';
 
-export interface DesktopTimePickerSlotsComponent<TDate>
+export interface DesktopTimePickerSlots<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
     MakeOptional<
       UseDesktopPickerSlotsComponent<TDate, TimeViewWithMeridiem>,
       'field' | 'openPickerIcon'
     >,
-    DigitalClockSlotsComponent,
-    MultiSectionDigitalClockSlotsComponent {}
+    DigitalClockSlots,
+    MultiSectionDigitalClockSlots {}
 
-export interface DesktopTimePickerSlotsComponentsProps<TDate>
+export interface DesktopTimePickerSlotProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,
     ExportedUseDesktopPickerSlotsComponentsProps<TDate, TimeViewWithMeridiem>,
-    DigitalClockSlotsComponentsProps,
-    MultiSectionDigitalClockSlotsComponentsProps {}
+    DigitalClockSlotProps,
+    MultiSectionDigitalClockSlotProps {}
 
 export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate, TimeViewWithMeridiem>,
@@ -45,10 +45,10 @@ export interface DesktopTimePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopTimePickerSlotsComponent<TDate>;
+  slots?: DesktopTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopTimePickerSlotProps<TDate>;
 }

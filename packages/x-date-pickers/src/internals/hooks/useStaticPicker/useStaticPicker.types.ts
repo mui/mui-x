@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
+  ExportedPickersLayoutSlots,
+  ExportedPickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
@@ -10,12 +10,12 @@ import { FieldSection } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 export interface UseStaticPickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {}
+  extends ExportedPickersLayoutSlots<TDate | null, TDate, TView> {}
 
 export interface UseStaticPickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {}
+> extends ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**

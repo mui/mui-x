@@ -1,6 +1,6 @@
 export { StaticDatePicker } from './StaticDatePicker';
 export type {
   StaticDatePickerProps,
-  StaticDatePickerSlotsComponent,
-  StaticDatePickerSlotsComponentsProps,
+  StaticDatePickerSlots,
+  StaticDatePickerSlotProps,
 } from './StaticDatePicker.types';

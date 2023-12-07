@@ -10,8 +10,8 @@ import {
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
+  ExportedPickersLayoutSlots,
+  ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
@@ -23,14 +23,14 @@ import {
 
 export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
+    ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotsComponent {}
 
 export interface UseMobileRangePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
 > extends PickersModalDialogSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
+    ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotsComponentsProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
 }

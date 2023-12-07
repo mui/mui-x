@@ -15,9 +15,9 @@ export interface ExportedTimeClockProps<TDate> extends ExportedBaseClockProps<TD
   ampmInClock?: boolean;
 }
 
-export interface TimeClockSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
+export interface TimeClockSlots extends PickersArrowSwitcherSlotsComponent {}
 
-export interface TimeClockSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps {}
+export interface TimeClockSlotProps extends PickersArrowSwitcherSlotsComponentsProps {}
 
 export interface TimeClockProps<TDate, TView extends TimeViewWithMeridiem = TimeView>
   extends ExportedTimeClockProps<TDate>,
@@ -30,11 +30,11 @@ export interface TimeClockProps<TDate, TView extends TimeViewWithMeridiem = Time
    * Overridable component slots.
    * @default {}
    */
-  slots?: TimeClockSlotsComponent;
+  slots?: TimeClockSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimeClockSlotsComponentsProps;
+  slotProps?: TimeClockSlotProps;
   showViewSwitcher?: boolean;
 }
