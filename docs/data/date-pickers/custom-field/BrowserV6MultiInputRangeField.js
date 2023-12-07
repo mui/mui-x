@@ -118,12 +118,12 @@ const BrowserDateRangePicker = React.forwardRef((props, ref) => {
     <DateRangePicker
       ref={ref}
       {...props}
-      slots={{ ...props?.slots, field: BrowserMultiInputDateRangeField }}
+      slots={{ ...props.slots, field: BrowserMultiInputDateRangeField }}
     />
   );
 });
 
-export default function RangePickerWithBrowserField() {
+export default function BrowserV6MultiInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserDateRangePicker />

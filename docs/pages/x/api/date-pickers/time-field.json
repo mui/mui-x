@@ -2,7 +2,6 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
-    "clearable": { "type": { "name": "bool" } },
     "color": {
       "type": {
         "name": "enum",
@@ -49,7 +48,6 @@
         "describedArgs": ["value", "context"]
       }
     },
-    "onClear": { "type": { "name": "func" } },
     "onError": {
       "type": { "name": "func" },
       "signature": {

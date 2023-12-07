@@ -105,19 +105,19 @@ const BrowserSingleInputDateRangePicker = React.forwardRef((props, ref) => {
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
-      slots={{ field: BrowserSingleInputDateRangeField }}
+      slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
       slotProps={{
-        ...props?.slotProps,
+        ...props.slotProps,
         field: {
           onAdornmentClick: toggleOpen,
-          ...props?.slotProps?.field,
+          ...props.slotProps?.field,
         },
       }}
     />
   );
 });
 
-export default function RangePickerWithSingleInputBrowserField() {
+export default function BrowserV6SingleInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserSingleInputDateRangePicker

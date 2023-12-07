@@ -17,6 +17,7 @@ import {
   FieldSelectedSections,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
+import { pickersSectionsListClasses } from '../../../PickersSectionsList';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -730,7 +731,7 @@ export const getSectionDOMElementFromSectionIndex = (
   index: number,
 ) => {
   return sectionsContainerRef.current!.querySelector<HTMLSpanElement>(
-    `span[data-sectionindex="${index}"] .content`,
+    `[data-sectionindex="${index}"] .${pickersSectionsListClasses.sectionContent}`,
   )!;
 };
 

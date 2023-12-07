@@ -62,12 +62,12 @@ const BrowserDatePicker = React.forwardRef((props, ref) => {
     <DatePicker
       ref={ref}
       {...props}
-      slots={{ field: BrowserDateField, ...props.slots }}
+      slots={{ ...props.slots, field: BrowserDateField }}
     />
   );
 });
 
-export default function PickerWithBrowserField() {
+export default function BrowserV6Field() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserDatePicker

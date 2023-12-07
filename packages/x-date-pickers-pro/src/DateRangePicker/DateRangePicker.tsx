@@ -7,8 +7,8 @@ import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
 
-type DatePickerComponent = (<TDate>(
-  props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: DateRangePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -21,10 +21,10 @@ type DatePickerComponent = (<TDate>(
  *
  * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
-const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
-  inProps: DateRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DateRangePicker = React.forwardRef(function DateRangePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: DateRangePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
 
   const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
@@ -293,7 +293,7 @@ DateRangePicker.propTypes = {
   /**
    * @defauilt false
    */
-  shouldUseV6TextField: PropTypes.bool,
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

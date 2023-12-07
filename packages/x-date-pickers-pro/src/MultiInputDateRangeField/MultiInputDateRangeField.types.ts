@@ -12,23 +12,35 @@ import { MultiInputRangeFieldClasses } from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate,
+  TUseV6TextField extends boolean,
   TTextFieldSlotProps extends {},
-> = UseMultiInputRangeFieldParams<UseMultiInputDateRangeFieldProps<TDate>, TTextFieldSlotProps>;
+> = UseMultiInputRangeFieldParams<
+  UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField>,
+  TTextFieldSlotProps
+>;
 
-export interface UseMultiInputDateRangeFieldProps<TDate>
-  extends Omit<UseDateRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'> {
+export interface UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField extends boolean>
+  extends Omit<
+    UseDateRangeFieldProps<TDate, TUseV6TextField>,
+    'unstableFieldRef' | 'clearable' | 'onClear'
+  > {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
 
-export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseMultiInputDateRangeFieldProps<TDate>
-> &
-  UseMultiInputDateRangeFieldProps<TDate>;
+export type UseMultiInputDateRangeFieldComponentProps<
+  TDate,
+  TUseV6TextField extends boolean,
+  TChildProps extends {},
+> = Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField>> &
+  UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField>;
 
-export interface MultiInputDateRangeFieldProps<TDate>
-  extends UseMultiInputDateRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
+export interface MultiInputDateRangeFieldProps<TDate, TUseV6TextField extends boolean = false>
+  extends UseMultiInputDateRangeFieldComponentProps<
+    TDate,
+    TUseV6TextField,
+    Omit<StackProps, 'position'>
+  > {
   autoFocus?: boolean;
   /**
    * Override or extend the styles applied to the component.
@@ -43,10 +55,8 @@ export interface MultiInputDateRangeFieldProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate, TUseV6TextField>;
 }
-
-export type MultiInputDateRangeFieldOwnerState<TDate> = MultiInputDateRangeFieldProps<TDate>;
 
 export interface MultiInputDateRangeFieldSlotsComponent {
   /**
@@ -68,12 +78,23 @@ export interface MultiInputDateRangeFieldSlotsComponent {
   separator?: React.ElementType;
 }
 
-export interface MultiInputDateRangeFieldSlotsComponentsProps<TDate> {
-  root?: SlotComponentProps<typeof Stack, {}, MultiInputDateRangeFieldOwnerState<TDate>>;
+export interface MultiInputDateRangeFieldSlotsComponentsProps<
+  TDate,
+  TUseV6TextField extends boolean,
+> {
+  root?: SlotComponentProps<
+    typeof Stack,
+    {},
+    MultiInputDateRangeFieldProps<TDate, TUseV6TextField>
+  >;
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    MultiInputDateRangeFieldOwnerState<TDate> & { position: RangePosition }
+    MultiInputDateRangeFieldProps<TDate, TUseV6TextField> & { position: RangePosition }
   >;
-  separator?: SlotComponentProps<typeof Typography, {}, MultiInputDateRangeFieldOwnerState<TDate>>;
+  separator?: SlotComponentProps<
+    typeof Typography,
+    {},
+    MultiInputDateRangeFieldProps<TDate, TUseV6TextField>
+  >;
 }

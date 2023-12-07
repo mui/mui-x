@@ -18,24 +18,28 @@ import {
 } from '../MultiSectionDigitalClock';
 import { DigitalClockSlotsComponent, DigitalClockSlotsComponentsProps } from '../DigitalClock';
 
-export interface DesktopDateTimePickerSlotsComponent<TDate>
+export interface DesktopDateTimePickerSlotsComponent<TDate, TUseV6TextField extends boolean>
   extends BaseDateTimePickerSlotsComponent<TDate>,
     MakeOptional<
-      UseDesktopPickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem>,
+      UseDesktopPickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField>,
       'field' | 'openPickerIcon'
     >,
     DigitalClockSlotsComponent,
     MultiSectionDigitalClockSlotsComponent {}
 
-export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
+export interface DesktopDateTimePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
   extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateOrTimeViewWithMeridiem>,
+    ExportedUseDesktopPickerSlotsComponentsProps<
+      TDate,
+      DateOrTimeViewWithMeridiem,
+      TUseV6TextField
+    >,
     DigitalClockSlotsComponentsProps,
     MultiSectionDigitalClockSlotsComponentsProps {}
 
-export interface DesktopDateTimePickerProps<TDate>
+export interface DesktopDateTimePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
-    DesktopOnlyPickerProps<TDate>,
+    DesktopOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate> {
   /**
    * Available views.
@@ -50,10 +54,10 @@ export interface DesktopDateTimePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateTimePickerSlotsComponent<TDate>;
+  slots?: DesktopDateTimePickerSlotsComponent<TDate, TUseV6TextField>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopDateTimePickerSlotsComponentsProps<TDate, TUseV6TextField>;
 }

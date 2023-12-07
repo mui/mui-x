@@ -1,7 +1,6 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "clearable": { "type": { "name": "bool" } },
     "color": {
       "type": {
         "name": "enum",
@@ -46,7 +45,6 @@
         "describedArgs": ["value", "context"]
       }
     },
-    "onClear": { "type": { "name": "func" } },
     "onError": {
       "type": { "name": "func" },
       "signature": {

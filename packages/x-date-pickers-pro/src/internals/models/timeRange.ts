@@ -10,9 +10,15 @@ import { TimeRangeValidationError } from '../../models';
 import { BaseRangeProps } from './dateRange';
 import { RangeFieldSection } from './fields';
 
-export interface UseTimeRangeFieldProps<TDate>
+export interface UseTimeRangeFieldProps<TDate, TUseV6TextField extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<DateRange<TDate>, TDate, RangeFieldSection, TimeRangeValidationError>,
+      UseFieldInternalProps<
+        DateRange<TDate>,
+        TDate,
+        RangeFieldSection,
+        TUseV6TextField,
+        TimeRangeValidationError
+      >,
       'format'
     >,
     TimeValidationProps<TDate>,
@@ -25,7 +31,10 @@ export interface UseTimeRangeFieldProps<TDate>
   ampm?: boolean;
 }
 
-export type UseTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
-  UseTimeRangeFieldProps<TDate>,
+export type UseTimeRangeFieldDefaultizedProps<
+  TDate,
+  TUseV6TextField extends boolean,
+> = DefaultizedProps<
+  UseTimeRangeFieldProps<TDate, TUseV6TextField>,
   keyof BaseTimeValidationProps | 'format'
 >;

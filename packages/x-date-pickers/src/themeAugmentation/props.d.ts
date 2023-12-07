@@ -53,9 +53,9 @@ export interface PickersComponentsPropsList {
   MuiClockNumber: ClockNumberProps;
   MuiClockPointer: ClockPointerProps;
   MuiDateCalendar: DateCalendarProps<unknown>;
-  MuiDateField: DateFieldProps<unknown>;
+  MuiDateField: DateFieldProps<unknown, any>;
   MuiDatePickerToolbar: DatePickerToolbarProps<unknown>;
-  MuiDateTimeField: DateTimeFieldProps<unknown>;
+  MuiDateTimeField: DateTimeFieldProps<unknown, any>;
   MuiDateTimePickerTabs: DateTimePickerTabsProps;
   MuiDateTimePickerToolbar: DateTimePickerToolbarProps<unknown>;
   MuiDayCalendar: DayCalendarProps<unknown>;
@@ -78,7 +78,7 @@ export interface PickersComponentsPropsList {
   MuiPickersLayout: PickersLayoutProps<unknown, unknown, DateOrTimeView>;
   MuiPickersYear: ExportedPickersYearProps;
   MuiTimeClock: TimeClockProps<unknown>;
-  MuiTimeField: TimeFieldProps<unknown>;
+  MuiTimeField: TimeFieldProps<unknown, any>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearCalendar: YearCalendarProps<unknown>;
 

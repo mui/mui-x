@@ -18,7 +18,7 @@ export const usePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
-  TExternalProps extends UsePickerProps<TValue, TDate, TView, TSection, any, any, any>,
+  TExternalProps extends UsePickerProps<TValue, TDate, TView, any, any, any>,
   TAdditionalProps extends {},
 >({
   props,

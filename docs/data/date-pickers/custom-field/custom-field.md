@@ -78,25 +78,29 @@ TODO
 
 ### Using Joy `Input`
 
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+
 :::warning
 This approach will be removed in the next major (v8).
 
 Learn more on how to use Joy UI with the new `PickersTextField` component on [this section](/x/react-date-pickers/custom-field/#using-pickerstextfield)
 :::
 
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
 
-{{"demo": "PickerWithJoyField.js", "defaultCodeOpen": false}}
+{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
 
-{{"demo": "RangePickerWithSingleInputJoyField.js", "defaultCodeOpen": false}}
-
-{{"demo": "RangePickerWithJoyField.js", "defaultCodeOpen": false}}
+{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
 
 ## Usage with another input
 
 ### Using `PickersTextField`
 
-TODO
+:::warning
+WORK IN PROGRESS, buggy demo
+:::
+
+{{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
 
 ### Using the browser input
 
@@ -106,11 +110,11 @@ This approach will be removed in the next major (v8)
 Learn more on how to use a custom design system with the new `PickersTextField` component on [this section](/x/react-date-pickers/custom-field/#using-pickerstextfield-2)
 :::
 
-{{"demo": "PickerWithBrowserField.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserV6Field.js", "defaultCodeOpen": false}}
 
-{{"demo": "RangePickerWithSingleInputBrowserField.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserV6SingleInputRangeField.js", "defaultCodeOpen": false}}
 
-{{"demo": "RangePickerWithBrowserField.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserV6MultiInputRangeField.js", "defaultCodeOpen": false}}
 
 :::warning
 You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.

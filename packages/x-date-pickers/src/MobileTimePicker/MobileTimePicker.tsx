@@ -15,8 +15,9 @@ import { extractValidationProps } from '../internals/utils/validation/extractVal
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 
-type MobileTimePickerComponent = (<TDate>(
-  props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: MobileTimePickerProps<TDate, TimeView, TUseV6TextField> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,8 +30,11 @@ type MobileTimePickerComponent = (<TDate>(
  *
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
-const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
-  inProps: MobileTimePickerProps<TDate>,
+const MobileTimePicker = React.forwardRef(function MobileTimePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(
+  inProps: MobileTimePickerProps<TDate, TimeView, TUseV6TextField>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
@@ -40,7 +44,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeView,
-    MobileTimePickerProps<TDate>
+    MobileTimePickerProps<TDate, TimeView, TUseV6TextField>
   >(inProps, 'MuiMobileTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
@@ -76,7 +80,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, TimeView, typeof props>({
+  const { renderPicker } = useMobilePicker<TDate, TimeView, TUseV6TextField, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
@@ -293,7 +297,7 @@ MobileTimePicker.propTypes = {
   /**
    * @defauilt false
    */
-  shouldUseV6TextField: PropTypes.bool,
+  shouldUseV6TextField: PropTypes.any,
   /**
    * The props used for each component slot.
    * @default {}

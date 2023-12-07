@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import Box from '@mui/material/Box';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
@@ -10,6 +9,7 @@ import visuallyHidden from '@mui/utils/visuallyHidden';
 import { pickersInputClasses, getPickersInputUtilityClass } from './pickersTextFieldClasses';
 import Outline from './Outline';
 import { PickersInputProps } from './PickersInput.types';
+import { PickersSectionsList } from '../../../PickersSectionsList';
 
 const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',
@@ -102,7 +102,7 @@ const PickersInputSection = styled('span', {
   flexGrow: 1,
 }));
 
-const PickersInputContent = styled('span', {
+const PickersInputSectionContent = styled('span', {
   name: 'MuiPickersInput',
   slot: 'SectionContent',
   overridesResolver: (props, styles) => styles.content,
@@ -111,6 +111,7 @@ const PickersInputContent = styled('span', {
   lineHeight: '1.4375em', // 23px
   letterSpacing: 'inherit',
   width: 'fit-content',
+  outline: 'none',
 }));
 
 const PickersInputSeparator = styled('span', {
@@ -264,46 +265,33 @@ export const PickersInput = React.forwardRef(function PickersInput(
       ref={handleRootRef}
     >
       {startAdornment}
-      <PickersInputSectionsContainer
-        ownerState={ownerState}
+      <PickersSectionsList
+        elements={elements}
+        sectionsContainerRef={sectionsContainerRef}
         className={classes.sectionsContainer}
         contentEditable={contentEditable}
-        suppressContentEditableWarning
         onFocus={handleInputFocus}
         onBlur={muiFormControl.onBlur}
         tabIndex={tabIndex}
-        ref={sectionsContainerRef}
-      >
-        {contentEditable ? (
-          elements
-            .map(
-              ({ content, before, after }) =>
-                `${before.children}${content.children}${after.children}`,
-            )
-            .join('')
-        ) : (
-          <React.Fragment>
-            {elements.map(({ container, content, before, after }, elementIndex) => (
-              <PickersInputSection key={elementIndex} {...container}>
-                <PickersInputSeparator
-                  {...before}
-                  className={clsx(pickersInputClasses.sectionBefore, before?.className)}
-                />
-                <PickersInputContent
-                  {...content}
-                  suppressContentEditableWarning
-                  className={clsx(pickersInputClasses.sectionContent, content?.className)}
-                  {...{ ownerState }}
-                />
-                <PickersInputSeparator
-                  {...after}
-                  className={clsx(pickersInputClasses.sectionAfter, after?.className)}
-                />
-              </PickersInputSection>
-            ))}
-          </React.Fragment>
-        )}
-      </PickersInputSectionsContainer>
+        slots={{
+          root: PickersInputSectionsContainer,
+          section: PickersInputSection,
+          sectionContent: PickersInputSectionContent,
+          sectionSeparator: PickersInputSeparator,
+        }}
+        slotProps={{
+          root: {
+            ownerState,
+          } as any,
+          sectionContent: { className: pickersInputClasses.sectionContent },
+          sectionSeparator: ({ position }) => ({
+            className:
+              position === 'before'
+                ? pickersInputClasses.sectionBefore
+                : pickersInputClasses.sectionAfter,
+          }),
+        }}
+      />
       {endAdornment}
       <NotchedOutlineRoot
         shrink={muiFormControl.adornedStart || muiFormControl.focused || muiFormControl.filled}

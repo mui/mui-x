@@ -11,17 +11,20 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { DateView } from '../models';
 
-export interface DesktopDatePickerSlotsComponent<TDate>
+export interface DesktopDatePickerSlotsComponent<TDate, TUseV6TextField extends boolean>
   extends BaseDatePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopPickerSlotsComponent<TDate, DateView>, 'field' | 'openPickerIcon'> {}
+    MakeOptional<
+      UseDesktopPickerSlotsComponent<TDate, DateView, TUseV6TextField>,
+      'field' | 'openPickerIcon'
+    > {}
 
-export interface DesktopDatePickerSlotsComponentsProps<TDate>
+export interface DesktopDatePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
   extends BaseDatePickerSlotsComponentsProps<TDate>,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateView> {}
+    ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateView, TUseV6TextField> {}
 
-export interface DesktopDatePickerProps<TDate>
+export interface DesktopDatePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDatePickerProps<TDate>,
-    DesktopOnlyPickerProps<TDate> {
+    DesktopOnlyPickerProps {
   /**
    * Years rendered per row.
    * @default 4
@@ -31,10 +34,10 @@ export interface DesktopDatePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDatePickerSlotsComponent<TDate>;
+  slots?: DesktopDatePickerSlotsComponent<TDate, TUseV6TextField>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDatePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopDatePickerSlotsComponentsProps<TDate, TUseV6TextField>;
 }

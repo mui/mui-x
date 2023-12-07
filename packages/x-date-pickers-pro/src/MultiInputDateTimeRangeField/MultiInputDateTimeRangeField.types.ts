@@ -4,10 +4,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import {
-  UseDateTimeRangeFieldDefaultizedProps,
-  UseDateTimeRangeFieldProps,
-} from '../internals/models/dateTimeRange';
+import { UseDateTimeRangeFieldProps } from '../internals/models/dateTimeRange';
 import { RangePosition } from '../internals/models/range';
 import { RangeFieldSection } from '../internals/models/fields';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
@@ -15,23 +12,35 @@ import { MultiInputRangeFieldClasses } from '../models';
 
 export type UseMultiInputDateTimeRangeFieldParams<
   TDate,
+  TUseV6TextField extends boolean,
   TTextFieldSlotProps extends {},
-> = UseMultiInputRangeFieldParams<UseMultiInputDateTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
+> = UseMultiInputRangeFieldParams<
+  UseMultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField>,
+  TTextFieldSlotProps
+>;
 
-export interface UseMultiInputDateTimeRangeFieldProps<TDate>
-  extends Omit<UseDateTimeRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'> {
+export interface UseMultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField extends boolean>
+  extends Omit<
+    UseDateTimeRangeFieldProps<TDate, TUseV6TextField>,
+    'unstableFieldRef' | 'clearable' | 'onClear'
+  > {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
 
-export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseMultiInputDateTimeRangeFieldProps<TDate>
-> &
-  UseMultiInputDateTimeRangeFieldProps<TDate>;
+export type UseMultiInputDateTimeRangeFieldComponentProps<
+  TDate,
+  TUseV6TextField extends boolean,
+  TChildProps extends {},
+> = Omit<TChildProps, keyof UseMultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField>> &
+  UseMultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField>;
 
-export interface MultiInputDateTimeRangeFieldProps<TDate>
-  extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
+export interface MultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField extends boolean = false>
+  extends UseMultiInputDateTimeRangeFieldComponentProps<
+    TDate,
+    TUseV6TextField,
+    Omit<StackProps, 'position'>
+  > {
   autoFocus?: boolean;
   /**
    * Override or extend the styles applied to the component.
@@ -46,11 +55,8 @@ export interface MultiInputDateTimeRangeFieldProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate, TUseV6TextField>;
 }
-
-export type MultiInputDateTimeRangeFieldOwnerState<TDate> =
-  MultiInputDateTimeRangeFieldProps<TDate>;
 
 export interface MultiInputDateTimeRangeFieldSlotsComponent {
   /**
@@ -72,22 +78,23 @@ export interface MultiInputDateTimeRangeFieldSlotsComponent {
   separator?: React.ElementType;
 }
 
-export interface MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate> {
-  root?: SlotComponentProps<typeof Stack, {}, MultiInputDateTimeRangeFieldOwnerState<TDate>>;
+export interface MultiInputDateTimeRangeFieldSlotsComponentsProps<
+  TDate,
+  TUseV6TextField extends boolean,
+> {
+  root?: SlotComponentProps<
+    typeof Stack,
+    {},
+    MultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField>
+  >;
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    MultiInputDateTimeRangeFieldOwnerState<TDate> & { position: RangePosition }
+    MultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField> & { position: RangePosition }
   >;
   separator?: SlotComponentProps<
     typeof Typography,
     {},
-    MultiInputDateTimeRangeFieldOwnerState<TDate>
+    MultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField>
   >;
 }
-
-export type UseMultiInputDateTimeRangeFieldDefaultizedProps<
-  TDate,
-  AdditionalProps extends {},
-> = UseDateTimeRangeFieldDefaultizedProps<TDate> &
-  Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;

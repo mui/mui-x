@@ -11,12 +11,13 @@ import { DateRange } from './range';
 import { DateTimeRangeValidationError } from '../../models';
 import { RangeFieldSection } from './fields';
 
-export interface UseDateTimeRangeFieldProps<TDate>
+export interface UseDateTimeRangeFieldProps<TDate, TUseV6TextField extends boolean>
   extends MakeOptional<
       UseFieldInternalProps<
         DateRange<TDate>,
         TDate,
         RangeFieldSection,
+        TUseV6TextField,
         DateTimeRangeValidationError
       >,
       'format'
@@ -33,7 +34,10 @@ export interface UseDateTimeRangeFieldProps<TDate>
   ampm?: boolean;
 }
 
-export type UseDateTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
-  UseDateTimeRangeFieldProps<TDate>,
+export type UseDateTimeRangeFieldDefaultizedProps<
+  TDate,
+  TUseV6TextField extends boolean,
+> = DefaultizedProps<
+  UseDateTimeRangeFieldProps<TDate, TUseV6TextField>,
   keyof BaseDateValidationProps<TDate> | 'format' | 'disableIgnoringDatePartForTimeValidation'
 >;

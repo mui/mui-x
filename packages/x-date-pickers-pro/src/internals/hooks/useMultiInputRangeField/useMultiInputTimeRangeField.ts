@@ -7,7 +7,6 @@ import {
 } from '@mui/x-date-pickers/TimeField';
 import {
   useLocalizationContext,
-  useUtils,
   useValidation,
   FieldChangeHandler,
   FieldChangeHandlerContext,
@@ -21,33 +20,18 @@ import {
   TimeRangeComponentValidationProps,
 } from '../../utils/validation/validateTimeRange';
 import { TimeRangeValidationError } from '../../../models';
-import type {
-  UseMultiInputTimeRangeFieldDefaultizedProps,
-  UseMultiInputTimeRangeFieldParams,
-  UseMultiInputTimeRangeFieldProps,
-} from '../../../MultiInputTimeRangeField/MultiInputTimeRangeField.types';
+import type { UseMultiInputTimeRangeFieldParams } from '../../../MultiInputTimeRangeField/MultiInputTimeRangeField.types';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
+import { useDefaultizedTimeRangeFieldProps } from '../../../SingleInputTimeRangeField/useSingleInputTimeRangeField';
 
-export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
-  props: UseMultiInputTimeRangeFieldProps<TDate>,
-): UseMultiInputTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
-  const utils = useUtils<TDate>();
-
-  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? defaultFormat,
-  } as any;
-};
-
-export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {}>({
+export const useMultiInputTimeRangeField = <
+  TDate,
+  TUseV6TextField extends boolean,
+  TTextFieldSlotProps extends {},
+>({
   sharedProps: inSharedProps,
   startTextFieldProps,
   unstableStartFieldRef,
@@ -55,11 +39,14 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
   unstableEndFieldRef,
 }: UseMultiInputTimeRangeFieldParams<
   TDate,
+  TUseV6TextField,
   TTextFieldSlotProps
->): UseMultiInputRangeFieldResponse<TTextFieldSlotProps> => {
-  const sharedProps = useDefaultizedTimeRangeFieldProps<TDate, UseTimeFieldProps<TDate>>(
-    inSharedProps,
-  );
+>): UseMultiInputRangeFieldResponse<TUseV6TextField, TTextFieldSlotProps> => {
+  const sharedProps = useDefaultizedTimeRangeFieldProps<
+    TDate,
+    TUseV6TextField,
+    UseTimeFieldProps<TDate, TUseV6TextField>
+  >(inSharedProps);
   const adapter = useLocalizationContext<TDate>();
 
   const {
@@ -130,7 +117,8 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
 
   const startFieldProps: UseTimeFieldComponentProps<
     TDate,
-    UseTimeFieldDefaultizedProps<TTextFieldSlotProps>
+    TUseV6TextField,
+    UseTimeFieldDefaultizedProps<TTextFieldSlotProps, TUseV6TextField>
   > = {
     error: !!validationError[0],
     ...startTextFieldProps,
@@ -148,7 +136,8 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
 
   const endFieldProps: UseTimeFieldComponentProps<
     TDate,
-    UseTimeFieldDefaultizedProps<TTextFieldSlotProps>
+    TUseV6TextField,
+    UseTimeFieldDefaultizedProps<TTextFieldSlotProps, TUseV6TextField>
   > = {
     error: !!validationError[1],
     ...endTextFieldProps,
@@ -164,11 +153,14 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
   };
 
   const startDateResponse = useTimeField(startFieldProps) as UseFieldResponse<
-    TTextFieldSlotProps,
-    any
+    TUseV6TextField,
+    TTextFieldSlotProps
   >;
 
-  const endDateResponse = useTimeField(endFieldProps) as UseFieldResponse<TTextFieldSlotProps, any>;
+  const endDateResponse = useTimeField(endFieldProps) as UseFieldResponse<
+    TUseV6TextField,
+    TTextFieldSlotProps
+  >;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

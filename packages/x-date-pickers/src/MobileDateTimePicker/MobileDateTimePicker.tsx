@@ -16,8 +16,9 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 
-type MobileDateTimePickerComponent = (<TDate>(
-  props: MobileDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: MobileDateTimePickerProps<TDate, DateOrTimeView, TUseV6TextField> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -30,8 +31,11 @@ type MobileDateTimePickerComponent = (<TDate>(
  *
  * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
  */
-const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDate>(
-  inProps: MobileDateTimePickerProps<TDate>,
+const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(
+  inProps: MobileDateTimePickerProps<TDate, DateOrTimeView, TUseV6TextField>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
@@ -41,7 +45,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DateOrTimeView,
-    MobileDateTimePickerProps<TDate>
+    MobileDateTimePickerProps<TDate, DateOrTimeView, TUseV6TextField>
   >(inProps, 'MuiMobileDateTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
@@ -84,7 +88,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, typeof props>({
+  const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, TUseV6TextField, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
@@ -392,7 +396,7 @@ MobileDateTimePicker.propTypes = {
   /**
    * @defauilt false
    */
-  shouldUseV6TextField: PropTypes.bool,
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

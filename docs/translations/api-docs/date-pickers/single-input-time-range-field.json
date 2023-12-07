@@ -11,11 +11,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "clearable": {
-      "description": "If <code>true</code>, a clear button will be shown in the field allowing value clearing.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "color": {
       "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>.",
       "deprecated": "",
@@ -139,11 +134,6 @@
         "value": "The new value.",
         "context": "The context containing the validation result of the current value."
       }
-    },
-    "onClear": {
-      "description": "Callback fired when the clear button is clicked.",
-      "deprecated": "",
-      "typeDescriptions": {}
     },
     "onError": {
       "description": "Callback fired when the error associated to the current value changes.",

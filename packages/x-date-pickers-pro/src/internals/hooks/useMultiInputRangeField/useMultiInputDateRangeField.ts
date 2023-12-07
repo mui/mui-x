@@ -27,7 +27,11 @@ import { DateRangeValidationError } from '../../../models';
 import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 
-export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {}>({
+export const useMultiInputDateRangeField = <
+  TDate,
+  TUseV6TextField extends boolean,
+  TTextFieldSlotProps extends {},
+>({
   sharedProps: inSharedProps,
   startTextFieldProps,
   unstableStartFieldRef,
@@ -35,11 +39,14 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
   unstableEndFieldRef,
 }: UseMultiInputDateRangeFieldParams<
   TDate,
+  TUseV6TextField,
   TTextFieldSlotProps
->): UseMultiInputRangeFieldResponse<TTextFieldSlotProps> => {
-  const sharedProps = useDefaultizedDateRangeFieldProps<TDate, UseDateFieldProps<TDate>>(
-    inSharedProps,
-  );
+>): UseMultiInputRangeFieldResponse<TUseV6TextField, TTextFieldSlotProps> => {
+  const sharedProps = useDefaultizedDateRangeFieldProps<
+    TDate,
+    TUseV6TextField,
+    UseDateFieldProps<TDate, TUseV6TextField>
+  >(inSharedProps);
   const adapter = useLocalizationContext<TDate>();
 
   const {
@@ -112,7 +119,8 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
 
   const startFieldProps: UseDateFieldComponentProps<
     TDate,
-    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
+    TUseV6TextField,
+    UseDateFieldDefaultizedProps<TTextFieldSlotProps, TUseV6TextField>
   > = {
     error: !!validationError[0],
     ...startTextFieldProps,
@@ -132,7 +140,8 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
 
   const endFieldProps: UseDateFieldComponentProps<
     TDate,
-    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
+    TUseV6TextField,
+    UseDateFieldDefaultizedProps<TTextFieldSlotProps, TUseV6TextField>
   > = {
     error: !!validationError[1],
     ...endTextFieldProps,
@@ -150,11 +159,14 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
   };
 
   const startDateResponse = useDateField(startFieldProps) as UseFieldResponse<
-    TTextFieldSlotProps,
-    any
+    TUseV6TextField,
+    TTextFieldSlotProps
   >;
 
-  const endDateResponse = useDateField(endFieldProps) as UseFieldResponse<TTextFieldSlotProps, any>;
+  const endDateResponse = useDateField(endFieldProps) as UseFieldResponse<
+    TUseV6TextField,
+    TTextFieldSlotProps
+  >;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

@@ -22,12 +22,13 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
 export const useMobilePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
+  TUseV6TextField extends boolean,
+  TExternalProps extends UseMobilePickerProps<TDate, TView, TUseV6TextField, any, TExternalProps>,
 >({
   props,
   getOpenDialogAriaText,
   ...pickerParams
-}: UseMobilePickerParams<TDate, TView, TExternalProps>) => {
+}: UseMobilePickerParams<TDate, TView, TUseV6TextField, TExternalProps>) => {
   const {
     slots,
     slotProps: innerSlotProps,
@@ -72,6 +73,7 @@ export const useMobilePicker = <
     TDate | null,
     TDate,
     FieldSection,
+    TUseV6TextField,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -109,6 +111,7 @@ export const useMobilePicker = <
     TDate | null,
     TDate,
     FieldSection,
+    TUseV6TextField,
     unknown
   >['slots'] = {
     textField: slots.textField,

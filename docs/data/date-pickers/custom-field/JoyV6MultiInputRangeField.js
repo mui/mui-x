@@ -188,7 +188,7 @@ function SyncThemeMode({ mode }) {
   return null;
 }
 
-export default function RangePickerWithJoyField() {
+export default function JoyV6MultiInputRangeField() {
   const materialTheme = useMaterialTheme();
   return (
     <MaterialCssVarsProvider>

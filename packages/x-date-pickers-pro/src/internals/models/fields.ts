@@ -33,8 +33,13 @@ export interface MultiInputFieldSlotRootProps {
  * Props the multi input field can receive when used inside a picker.
  * Only contains what the MUI component are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
-export interface BaseMultiInputFieldProps<TValue, TDate, TSection extends FieldSection, TError>
-  extends BaseFieldProps<TValue, TDate, TSection, TError> {
+export interface BaseMultiInputFieldProps<
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TUseV6TextField extends boolean,
+  TError,
+> extends BaseFieldProps<TValue, TDate, TSection, TUseV6TextField, TError> {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   slots?: {

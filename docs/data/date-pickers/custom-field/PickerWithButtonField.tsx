@@ -12,11 +12,12 @@ import {
 } from '@mui/x-date-pickers/models';
 
 interface ButtonFieldProps
-  extends UseDateFieldProps<Dayjs>,
+  extends UseDateFieldProps<Dayjs, false>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
+      false,
       DateValidationError
     > {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,8 +54,8 @@ function ButtonDatePicker(
 
   return (
     <DatePicker
-      slots={{ field: ButtonField, ...props.slots }}
-      slotProps={{ field: { setOpen } as any }}
+      slots={{ ...props.slots, field: ButtonField }}
+      slotProps={{ ...props.slotProps, field: { setOpen } as any }}
       {...props}
       open={open}
       onClose={() => setOpen(false)}

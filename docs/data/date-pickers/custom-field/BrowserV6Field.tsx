@@ -70,11 +70,12 @@ const BrowserField = React.forwardRef(
 ) as BrowserFieldComponent;
 
 interface BrowserDateFieldProps
-  extends UseDateFieldProps<Dayjs>,
+  extends UseDateFieldProps<Dayjs, true>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
+      true,
       DateValidationError
     > {}
 
@@ -82,7 +83,7 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, typeof textFieldProps>({
+    const fieldResponse = useDateField<Dayjs, true, typeof textFieldProps>({
       ...textFieldProps,
       shouldUseV6TextField: true,
     });
@@ -99,18 +100,18 @@ const BrowserDateField = React.forwardRef(
 );
 
 const BrowserDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps<Dayjs, true>, ref: React.Ref<HTMLDivElement>) => {
     return (
-      <DatePicker
+      <DatePicker<Dayjs, true>
         ref={ref}
         {...props}
-        slots={{ field: BrowserDateField, ...props.slots }}
+        slots={{ ...props.slots, field: BrowserDateField }}
       />
     );
   },
 );
 
-export default function PickerWithBrowserField() {
+export default function BrowserV6Field() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserDatePicker

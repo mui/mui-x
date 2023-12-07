@@ -14,7 +14,6 @@ import {
   PickersPopper,
   InferError,
   ExportedBaseToolbarProps,
-  BaseFieldProps,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
@@ -25,7 +24,7 @@ import {
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
-import { RangeFieldSection } from '../../models/fields';
+import { BaseMultiInputFieldProps, RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -33,11 +32,18 @@ const releaseInfo = getReleaseInfo();
 export const useDesktopRangePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+  TUseV6TextField extends boolean,
+  TExternalProps extends UseDesktopRangePickerProps<
+    TDate,
+    TView,
+    TUseV6TextField,
+    any,
+    TExternalProps
+  >,
 >({
   props,
   ...pickerParams
-}: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
+}: UseDesktopRangePickerParams<TDate, TView, TUseV6TextField, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -113,10 +119,11 @@ export const useDesktopRangePicker = <
   };
 
   const Field = slots.field;
-  const fieldProps: BaseFieldProps<
+  const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
+    TUseV6TextField,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -143,6 +150,7 @@ export const useDesktopRangePicker = <
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,
     TView,
+    TUseV6TextField,
     InferError<TExternalProps>
   >({
     wrapperVariant: 'desktop',

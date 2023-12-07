@@ -13,9 +13,13 @@ import {
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 
-export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
-  props: UseSingleInputDateTimeRangeFieldProps<TDate>,
-): UseSingleInputDateTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
+export const useDefaultizedDateTimeRangeFieldProps = <
+  TDate,
+  TUseV6TextField extends boolean,
+  AdditionalProps extends {},
+>(
+  props: UseSingleInputDateTimeRangeFieldProps<TDate, TUseV6TextField>,
+): UseSingleInputDateTimeRangeFieldDefaultizedProps<TDate, TUseV6TextField, AdditionalProps> => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -37,14 +41,18 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
   } as any;
 };
 
-export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
-  inProps: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps>,
+export const useSingleInputDateTimeRangeField = <
+  TDate,
+  TUseV6TextField extends boolean,
+  TChildProps extends {},
+>(
+  inProps: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TUseV6TextField, TChildProps>,
 ) => {
-  const props = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inProps);
+  const props = useDefaultizedDateTimeRangeFieldProps<TDate, TUseV6TextField, TChildProps>(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseSingleInputDateTimeRangeFieldProps<any>
+    keyof UseSingleInputDateTimeRangeFieldProps<any, any>
   >(props, 'date-time');
 
   return useField({

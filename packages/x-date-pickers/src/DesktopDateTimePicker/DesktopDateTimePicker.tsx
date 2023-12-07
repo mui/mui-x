@@ -21,8 +21,8 @@ import {
 } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
 
-type DesktopDateTimePickerComponent = (<TDate>(
-  props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: DesktopDateTimePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -35,10 +35,10 @@ type DesktopDateTimePickerComponent = (<TDate>(
  *
  * - [DesktopDateTimePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-picker/)
  */
-const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TDate>(
-  inProps: DesktopDateTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
+  TDate,
+  TUseV6TextField extends boolean,
+>(inProps: DesktopDateTimePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -46,7 +46,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DateOrTimeViewWithMeridiem,
-    DesktopDateTimePickerProps<TDate>
+    DesktopDateTimePickerProps<TDate, TUseV6TextField>
   >(inProps, 'MuiDesktopDateTimePicker');
 
   const {
@@ -124,7 +124,12 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, DateOrTimeViewWithMeridiem, typeof props>({
+  const { renderPicker } = useDesktopPicker<
+    TDate,
+    DateOrTimeViewWithMeridiem,
+    TUseV6TextField,
+    typeof props
+  >({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
@@ -432,7 +437,7 @@ DesktopDateTimePicker.propTypes = {
   /**
    * @defauilt false
    */
-  shouldUseV6TextField: PropTypes.bool,
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

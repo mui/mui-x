@@ -31,15 +31,16 @@ export interface UseDesktopRangePickerSlotsComponent<
 export interface UseDesktopRangePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TUseV6TextField extends boolean,
 > extends PickersPopperSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponentsProps<TDate> {
+    RangePickerFieldSlotsComponentsProps<TDate, TUseV6TextField> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface DesktopRangeOnlyPickerProps<TDate>
+export interface DesktopRangeOnlyPickerProps
   extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null, RangeFieldSection>,
+    UsePickerValueNonStaticProps,
     UsePickerViewsNonStaticProps,
     BaseRangeNonStaticPickerProps,
     UseRangePositionProps {
@@ -53,9 +54,10 @@ export interface DesktopRangeOnlyPickerProps<TDate>
 export interface UseDesktopRangePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TUseV6TextField extends boolean,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
-> extends DesktopRangeOnlyPickerProps<TDate>,
+> extends DesktopRangeOnlyPickerProps,
     BasePickerProps<
       DateRange<TDate>,
       TDate,
@@ -73,7 +75,7 @@ export interface UseDesktopRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView, TUseV6TextField>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps
@@ -82,7 +84,14 @@ export interface DesktopRangePickerAdditionalViewProps
 export interface UseDesktopRangePickerParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+  TUseV6TextField extends boolean,
+  TExternalProps extends UseDesktopRangePickerProps<
+    TDate,
+    TView,
+    TUseV6TextField,
+    any,
+    TExternalProps
+  >,
 > extends Pick<
     UsePickerParams<
       DateRange<TDate>,

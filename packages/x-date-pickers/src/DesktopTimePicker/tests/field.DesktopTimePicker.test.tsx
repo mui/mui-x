@@ -25,7 +25,7 @@ describe('<DesktopTimePicker /> - Field', () => {
   });
 
   it('should adapt the default field format based on the props of the picker', () => {
-    const testFormat = (props: DesktopTimePickerProps<any>, expectedFormat: string) => {
+    const testFormat = (props: DesktopTimePickerProps<any, any>, expectedFormat: string) => {
       // Test with v7 input
       const v7Response = renderWithProps(props, { componentFamily: 'picker' });
       expectFieldValueV7(v7Response.getSectionsContainer(), expectedFormat);

@@ -342,7 +342,7 @@ DateTimePicker.propTypes = {
   /**
    * @defauilt false
    */
-  shouldUseV6TextField: PropTypes.bool,
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

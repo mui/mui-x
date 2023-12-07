@@ -15,8 +15,8 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type DesktopDatePickerComponent = (<TDate>(
-  props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDatePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: DesktopDatePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,18 +29,18 @@ type DesktopDatePickerComponent = (<TDate>(
  *
  * - [DesktopDatePicker API](https://mui.com/x/api/date-pickers/desktop-date-picker/)
  */
-const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
-  inProps: DesktopDatePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: DesktopDatePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePickerDefaultizedProps<TDate, DesktopDatePickerProps<TDate>>(
-    inProps,
-    'MuiDesktopDatePicker',
-  );
+  const defaultizedProps = useDatePickerDefaultizedProps<
+    TDate,
+    DesktopDatePickerProps<TDate, TUseV6TextField>
+  >(inProps, 'MuiDesktopDatePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
     day: renderDateViewCalendar,
@@ -74,7 +74,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, DateView, typeof props>({
+  const { renderPicker } = useDesktopPicker<TDate, DateView, TUseV6TextField, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
@@ -336,7 +336,7 @@ DesktopDatePicker.propTypes = {
   /**
    * @defauilt false
    */
-  shouldUseV6TextField: PropTypes.bool,
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

@@ -17,14 +17,15 @@ import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
 import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
-import { PickersInputElement } from '../../components/PickersTextField/PickersInput.types';
+import { PickersSectionElement } from '../../../PickersSectionsList';
 
 export interface UseFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TUseV6TextField extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps & UseFieldForwardedProps<TUseV6TextField>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any>,
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
@@ -39,8 +40,13 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError>
-  extends TimezoneProps {
+export interface UseFieldInternalProps<
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TUseV6TextField extends boolean,
+  TError,
+> extends TimezoneProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -123,6 +129,25 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
   /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
+   * @defauilt false
+   */
+  shouldUseV6TextField?: TUseV6TextField;
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   * @default false
+   */
+  autoFocus?: boolean;
+}
+
+export interface UseFieldCommonForwardedProps {
+  onKeyDown?: React.KeyboardEventHandler;
+  error?: boolean;
+  /**
    * Callback fired when the clear button is clicked.
    */
   onClear?: React.MouseEventHandler;
@@ -131,63 +156,59 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * @default false
    */
   clearable?: boolean;
-  /**
-   * If `true`, the component is disabled.
-   * @default false
-   */
   disabled?: boolean;
-  /**
-   * @defauilt false
-   */
-  shouldUseV6TextField?: boolean;
-  /**
-   * If `true`, the `input` element is focused during the first mount.
-   * @default false
-   */
-  autoFocus?: boolean;
+  readOnly?: boolean;
 }
 
-export interface UseFieldForwardedProps {
-  onKeyDown?: React.KeyboardEventHandler;
-  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+export type UseFieldForwardedProps<TUseV6TextField extends boolean> = TUseV6TextField extends true
+  ? UseFieldV6ForwardedProps
+  : UseFieldV7ForwardedProps;
+
+export interface UseFieldV6ForwardedProps {
+  onBlur?: () => void;
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;
-  onBlur?: () => void;
-  error?: boolean;
-  onClear?: React.MouseEventHandler;
-  clearable?: boolean;
-  disabled?: boolean;
-  focused?: boolean;
-  /**
-   * Only used for v7 TextField implementation.
-   */
-  sectionsContainerRef?: React.Ref<HTMLInputElement>;
+  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
+interface UseFieldV6AdditionalProps {
+  textField: 'v6';
+  placeholder: string;
+  autoComplete: 'off';
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+}
+
+export interface UseFieldV7ForwardedProps {
+  focused?: boolean;
+  autoFocus?: boolean;
+  sectionsContainerRef?: React.Ref<HTMLDivElement>;
+  onBlur?: () => void;
+  onClick?: React.MouseEventHandler;
+  onFocus?: () => void;
+  onInput?: React.FormEventHandler<HTMLDivElement>;
+  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+}
+
+interface UseFieldV7AdditionalProps {
+  textField: 'v7';
+  elements: PickersSectionElement[];
+  tabIndex: number | undefined;
+  contentEditable: boolean;
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  areAllSectionsEmpty: boolean;
+}
+
 export type UseFieldResponse<
-  TForwardedProps extends UseFieldForwardedProps,
-  TTextField extends 'v6' | 'v7',
-> = Omit<TForwardedProps, keyof UseFieldForwardedProps> &
-  Required<Omit<UseFieldForwardedProps, 'inputRef' | 'sectionsContainerRef' | 'focused'>> & {
-    error: boolean;
-    readOnly: boolean;
-  } & (TTextField extends 'v6'
-    ? {
-        textField: 'v6';
-        inputRef: React.Ref<HTMLInputElement>;
-        autoFocus?: boolean;
-        focused?: boolean;
-      }
-    : {
-        textField: 'v7';
-        sectionsContainerRef: React.Ref<HTMLDivElement>;
-        value: string;
-        onChange: React.ChangeEventHandler<HTMLInputElement>;
-        elements: PickersInputElement[];
-        focused: boolean;
-        areAllSectionsEmpty: boolean;
-      });
+  TUseV6TextField extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps,
+> = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
+  Required<UseFieldCommonForwardedProps> &
+  (TUseV6TextField extends true
+    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
+    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>);
 
 export type FieldSectionValueBoundaries<TDate, SectionType extends FieldSectionType> = {
   minimum: number;
@@ -430,13 +451,42 @@ export interface UseFieldTextFieldInteractions {
   isFieldFocused: () => boolean;
 }
 
-export interface UseFieldTextFieldParams<
+export type UseFieldTextField<TUseV6TextField extends boolean> = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
-> extends UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
+  TForwardedProps extends TUseV6TextField extends true
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any> & {
+    minutesStep?: number;
+  },
+>(
+  params: UseFieldTextFieldParams<
+    TValue,
+    TDate,
+    TSection,
+    TUseV6TextField,
+    TForwardedProps,
+    TInternalProps
+  >,
+) => {
+  interactions: UseFieldTextFieldInteractions;
+  returnedValue: TUseV6TextField extends true
+    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
+    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>;
+};
+
+interface UseFieldTextFieldParams<
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TUseV6TextField extends boolean,
+  TForwardedProps extends TUseV6TextField extends true
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any>,
+> extends UseFieldParams<TValue, TDate, TSection, TUseV6TextField, TForwardedProps, TInternalProps>,
     UseFieldStateResponse<TValue, TDate, TSection>,
     UseFieldCharacterEditingResponse {
   areAllSectionsEmpty: boolean;

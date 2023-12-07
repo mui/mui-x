@@ -2,12 +2,7 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import {
-  UseFieldForwardedProps,
-  UseFieldInternalProps,
-  UseFieldTextFieldParams,
-  UseFieldTextFieldInteractions,
-} from './useField.types';
+import { UseFieldTextFieldInteractions, UseFieldTextField } from './useField.types';
 import { FieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid } from './useField.utils';
@@ -72,22 +67,14 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   return newSections;
 };
 
-export const useFieldV6TextField = <
-  TValue,
-  TDate,
-  TSection extends FieldSection,
-  TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
->(
-  params: UseFieldTextFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
-) => {
+export const useFieldV6TextField: UseFieldTextField<true> = (params) => {
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const {
-    internalProps: { readOnly, autoFocus },
-    forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp, focused },
+    internalProps: { readOnly },
+    forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp },
     parsedSelectedSections,
     activeSectionIndex,
     state,
@@ -406,18 +393,19 @@ export const useFieldV6TextField = <
   return {
     interactions,
     returnedValue: {
+      // Forwarded
+      onBlur: handleContainerBlur,
+      onClick: handleInputClick,
+      onFocus: handleInputFocus,
+      onPaste: handleInputPaste,
+      inputRef: handleRef,
+
+      // Additional
       textField: 'v6' as const,
       placeholder,
       autoComplete: 'off',
       value: shouldShowPlaceholder ? '' : valueStr,
       onChange: handleInputChange,
-      onFocus: handleInputFocus,
-      onClick: handleInputClick,
-      onPaste: handleInputPaste,
-      onBlur: handleContainerBlur,
-      inputRef: handleRef,
-      autoFocus,
-      focused,
     },
   };
 };

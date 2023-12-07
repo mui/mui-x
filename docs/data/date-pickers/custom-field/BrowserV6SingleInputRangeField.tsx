@@ -74,6 +74,7 @@ const BrowserField = React.forwardRef(
 interface BrowserSingleInputDateRangeFieldProps
   extends SingleInputDateRangeFieldProps<
     Dayjs,
+    true,
     Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>
   > {
   onAdornmentClick?: () => void;
@@ -108,9 +109,11 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       ),
     };
 
-    const fieldResponse = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>(
-      { ...textFieldProps, shouldUseV6TextField: true },
-    );
+    const fieldResponse = useSingleInputDateRangeField<
+      Dayjs,
+      true,
+      typeof textFieldProps
+    >({ ...textFieldProps, shouldUseV6TextField: true });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
@@ -150,12 +153,12 @@ const BrowserSingleInputDateRangePicker = React.forwardRef(
         open={isOpen}
         onClose={handleClose}
         onOpen={handleOpen}
-        slots={{ field: BrowserSingleInputDateRangeField }}
+        slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
         slotProps={{
-          ...props?.slotProps,
+          ...props.slotProps,
           field: {
             onAdornmentClick: toggleOpen,
-            ...props?.slotProps?.field,
+            ...props.slotProps?.field,
           } as any,
         }}
       />
@@ -163,7 +166,7 @@ const BrowserSingleInputDateRangePicker = React.forwardRef(
   },
 );
 
-export default function RangePickerWithSingleInputBrowserField() {
+export default function BrowserV6SingleInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserSingleInputDateRangePicker

@@ -12,8 +12,8 @@ import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 import { DateRange } from '../internals/models';
 
-type MobileDateRangePickerComponent = (<TDate>(
-  props: MobileDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: MobileDateRangePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -26,14 +26,14 @@ type MobileDateRangePickerComponent = (<TDate>(
  *
  * - [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)
  */
-const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TDate>(
-  inProps: MobileDateRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
+  TDate,
+  TUseV6TextField extends boolean,
+>(inProps: MobileDateRangePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
-    MobileDateRangePickerProps<TDate>
+    MobileDateRangePickerProps<TDate, TUseV6TextField>
   >(inProps, 'MuiMobileDateRangePicker');
 
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
@@ -65,7 +65,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
     },
   };
 
-  const { renderPicker } = useMobileRangePicker<TDate, 'day', typeof props>({
+  const { renderPicker } = useMobileRangePicker<TDate, 'day', TUseV6TextField, typeof props>({
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
@@ -323,7 +323,7 @@ MobileDateRangePicker.propTypes = {
   /**
    * @defauilt false
    */
-  shouldUseV6TextField: PropTypes.bool,
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

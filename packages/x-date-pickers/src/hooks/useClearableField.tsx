@@ -7,9 +7,12 @@ import { Theme } from '@mui/material/styles';
 import { ClearIcon } from '../icons';
 import { FieldSlotsComponents, FieldSlotsComponentsProps, useLocaleText } from '../internals';
 
-interface UseClearableFieldProps {
-  clearable: boolean;
-  onClear: React.MouseEventHandler<HTMLButtonElement>;
+export interface ExportedUseClearableFieldProps {
+  clearable?: boolean;
+  onClear?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+interface UseClearableFieldProps extends ExportedUseClearableFieldProps {
   InputProps?: { endAdornment?: React.ReactNode };
   sx?: SxProps<Theme>;
 }

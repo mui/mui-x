@@ -32,11 +32,18 @@ const releaseInfo = getReleaseInfo();
 export const useMobileRangePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
+  TUseV6TextField extends boolean,
+  TExternalProps extends UseMobileRangePickerProps<
+    TDate,
+    TView,
+    TUseV6TextField,
+    any,
+    TExternalProps
+  >,
 >({
   props,
   ...pickerParams
-}: UseMobileRangePickerParams<TDate, TView, TExternalProps>) => {
+}: UseMobileRangePickerParams<TDate, TView, TUseV6TextField, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -100,6 +107,7 @@ export const useMobileRangePicker = <
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
+    TUseV6TextField,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -126,6 +134,7 @@ export const useMobileRangePicker = <
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,
     TView,
+    TUseV6TextField,
     InferError<TExternalProps>
   >({
     wrapperVariant: 'mobile',

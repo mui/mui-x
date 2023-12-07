@@ -8,8 +8,8 @@ import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
 import { TimePickerProps } from './TimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
-type TimePickerComponent = (<TDate>(
-  props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type TimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: TimePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -22,10 +22,10 @@ type TimePickerComponent = (<TDate>(
  *
  * - [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)
  */
-const TimePicker = React.forwardRef(function TimePicker<TDate>(
-  inProps: TimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const TimePicker = React.forwardRef(function TimePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: TimePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
 
   const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
@@ -251,7 +251,7 @@ TimePicker.propTypes = {
   /**
    * @defauilt false
    */
-  shouldUseV6TextField: PropTypes.bool,
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, disabled digital clock items will not be rendered.
    * @default false

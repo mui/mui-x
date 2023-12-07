@@ -7,36 +7,22 @@ import {
   getSectionIndexFromDOMElement,
   parseSelectedSections,
 } from './useField.utils';
-import {
-  UseFieldForwardedProps,
-  UseFieldInternalProps,
-  UseFieldTextFieldInteractions,
-  UseFieldTextFieldParams,
-} from './useField.types';
-import { PickersInputElement } from '../../components/PickersTextField/PickersInput.types';
-import { FieldSection } from '../../../models';
+import { UseFieldTextField, UseFieldTextFieldInteractions } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
+import { PickersSectionElement } from '../../../PickersSectionsList';
 
-const noop = () => {};
-
-export const useFieldV7TextField = <
-  TValue,
-  TDate,
-  TSection extends FieldSection,
-  TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
->(
-  params: UseFieldTextFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
-) => {
+export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   const {
-    internalProps: { readOnly, disabled, autoFocus },
+    internalProps: { readOnly, disabled },
     forwardedProps: {
       sectionsContainerRef: inSectionsContainerRef,
-      onPaste,
       onBlur,
+      onClick,
       onFocus,
-      onClick = noop,
+      onInput,
+      onPaste,
       focused: focusedProp,
+      autoFocus = false,
     },
     fieldValueManager,
     applyCharacterEditing,
@@ -210,6 +196,8 @@ export const useFieldV7TextField = <
   });
 
   const handleContainerInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
+    onInput?.(event);
+
     if (!sectionsContainerRef.current || parsedSelectedSections !== 'all') {
       return;
     }
@@ -392,7 +380,7 @@ export const useFieldV7TextField = <
   }, [parsedSelectedSections, focused]);
 
   const isContainerEditable = parsedSelectedSections === 'all';
-  const elements = React.useMemo<PickersInputElement[]>(() => {
+  const elements = React.useMemo<PickersSectionElement[]>(() => {
     return state.sections.map((section, index) => {
       return {
         container: {
@@ -401,7 +389,6 @@ export const useFieldV7TextField = <
         } as React.HTMLAttributes<HTMLSpanElement>,
         content: {
           tabIndex: isContainerEditable ? undefined : 0,
-          className: 'content',
           contentEditable: !isContainerEditable && !disabled && !readOnly,
           role: 'spinbutton',
           'aria-label': section.placeholder,
@@ -412,17 +399,12 @@ export const useFieldV7TextField = <
           onDragOver: handleInputContentDragOver,
           onMouseUp: handleInputContentMouseUp,
           inputMode: section.contentType === 'letter' ? 'text' : 'numeric',
-          style: { outline: 'none' },
         },
         before: {
-          className: 'before',
           children: section.startSeparator,
-          style: { whiteSpace: 'pre' },
         },
         after: {
-          className: 'after',
           children: section.endSeparator,
-          style: { whiteSpace: 'pre' },
         },
       };
     });
@@ -460,20 +442,24 @@ export const useFieldV7TextField = <
   return {
     interactions,
     returnedValue: {
-      textField: 'v7' as const,
+      // Forwarded
+      autoFocus,
+      focused: focusedProp ?? focused,
+      sectionsContainerRef: handleSectionsContainerRef,
+      onBlur: handleContainerBlur,
       onClick: handleContainerClick,
+      onFocus: handleContainerFocus,
       onInput: handleContainerInput,
       onPaste: handleContainerPaste,
-      onFocus: handleContainerFocus,
-      onBlur: handleContainerBlur,
-      // TODO: Try to set to undefined when there is a section selected.
+
+      // Additional
+      textField: 'v7' as const,
+      elements,
+      // TODO v7: Try to set to undefined when there is a section selected.
       tabIndex: 0,
       contentEditable: isContainerEditable,
-      elements,
-      sectionsContainerRef: handleSectionsContainerRef,
       value: valueStr,
       onChange: handleValueStrChange,
-      focused: focusedProp ?? focused,
       areAllSectionsEmpty,
     },
   };

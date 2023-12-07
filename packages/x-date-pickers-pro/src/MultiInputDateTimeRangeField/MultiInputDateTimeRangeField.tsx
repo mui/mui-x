@@ -28,7 +28,7 @@ export const multiInputDateTimeRangeFieldClasses: MultiInputRangeFieldClasses =
 export const getMultiInputDateTimeRangeFieldUtilityClass = (slot: string) =>
   generateUtilityClass('MuiMultiInputDateTimeRangeField', slot);
 
-const useUtilityClasses = (ownerState: MultiInputDateTimeRangeFieldProps<any>) => {
+const useUtilityClasses = (ownerState: MultiInputDateTimeRangeFieldProps<any, any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -58,8 +58,9 @@ const MultiInputDateTimeRangeFieldSeparator = styled(
   },
 )({});
 
-type MultiInputDateTimeRangeFieldComponent = (<TDate>(
-  props: MultiInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MultiInputDateTimeRangeFieldComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: MultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -72,8 +73,11 @@ type MultiInputDateTimeRangeFieldComponent = (<TDate>(
  *
  * - [MultiInputDateTimeRangeField API](https://mui.com/x/api/multi-input-date-time-range-field/)
  */
-const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<TDate>(
-  inProps: MultiInputDateTimeRangeFieldProps<TDate>,
+const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(
+  inProps: MultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -85,7 +89,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     splitFieldInternalAndForwardedProps<
       typeof themeProps,
       keyof Omit<
-        UseDateTimeRangeFieldProps<any>,
+        UseDateTimeRangeFieldProps<any, any>,
         'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
       >
     >(themeProps, 'date-time');
@@ -136,7 +140,11 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     className: classes.separator,
   });
 
-  const fieldResponse = useMultiInputDateTimeRangeField<TDate, FieldsTextFieldProps>({
+  const fieldResponse = useMultiInputDateTimeRangeField<
+    TDate,
+    TUseV6TextField,
+    FieldsTextFieldProps
+  >({
     sharedProps: { ...dateTimeFieldInternalProps, disabled },
     startTextFieldProps,
     endTextFieldProps,

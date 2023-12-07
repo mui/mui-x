@@ -1,7 +1,6 @@
 import * as React from 'react';
 import createDescribe from '@mui-internal/test-utils/createDescribe';
 import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
-import { FieldSection } from '@mui/x-date-pickers/models';
 import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
@@ -26,7 +25,7 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
 
   function WrappedElementToTest(
     props: BasePickerInputProps<TValue, any, any, any> &
-      UsePickerValueNonStaticProps<TValue, FieldSection> & { hook?: any },
+      UsePickerValueNonStaticProps & { hook?: any },
   ) {
     const { hook, ...other } = props;
     const hookResult = hook?.(props);

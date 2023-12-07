@@ -11,10 +11,15 @@ import {
 import { validateTime } from '../internals/utils/validation/validateTime';
 import { useUtils } from '../internals/hooks/useUtils';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
+import { FieldSection } from '../models';
 
-const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
-  props: UseTimeFieldProps<TDate>,
-): AdditionalProps & UseTimeFieldDefaultizedProps<TDate> => {
+const useDefaultizedTimeField = <
+  TDate,
+  TUseV6TextField extends boolean,
+  AdditionalProps extends {},
+>(
+  props: UseTimeFieldProps<TDate, TUseV6TextField>,
+): AdditionalProps & UseTimeFieldDefaultizedProps<TDate, TUseV6TextField> => {
   const utils = useUtils<TDate>();
 
   const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
@@ -28,17 +33,24 @@ const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
   } as any;
 };
 
-export const useTimeField = <TDate, TChildProps extends {}>(
-  inProps: UseTimeFieldComponentProps<TDate, TChildProps>,
+export const useTimeField = <TDate, TUseV6TextField extends boolean, TChildProps extends {}>(
+  inProps: UseTimeFieldComponentProps<TDate, TUseV6TextField, TChildProps>,
 ) => {
-  const props = useDefaultizedTimeField<TDate, TChildProps>(inProps);
+  const props = useDefaultizedTimeField<TDate, TUseV6TextField, TChildProps>(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseTimeFieldProps<any>
+    keyof UseTimeFieldProps<any, TUseV6TextField>
   >(props, 'time');
 
-  return useField({
+  return useField<
+    TDate | null,
+    TDate,
+    FieldSection,
+    TUseV6TextField,
+    typeof forwardedProps,
+    typeof internalProps
+  >({
     forwardedProps,
     internalProps,
     valueManager: singleItemValueManager,

@@ -3,23 +3,31 @@ import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from '@mui/x-date-pickers/internals';
+import { ExportedUseClearableFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseTimeRangeFieldDefaultizedProps, UseTimeRangeFieldProps } from '../internals/models';
 
-export interface UseSingleInputTimeRangeFieldProps<TDate> extends UseTimeRangeFieldProps<TDate> {}
+export interface UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField extends boolean>
+  extends UseTimeRangeFieldProps<TDate, TUseV6TextField>,
+    ExportedUseClearableFieldProps {}
 
 export type UseSingleInputTimeRangeFieldDefaultizedProps<
   TDate,
+  TUseV6TextField extends boolean,
   AdditionalProps extends {},
-> = UseTimeRangeFieldDefaultizedProps<TDate> & AdditionalProps;
+> = UseTimeRangeFieldDefaultizedProps<TDate, TUseV6TextField> & AdditionalProps;
 
-export type UseSingleInputTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseSingleInputTimeRangeFieldProps<TDate>
-> &
-  UseSingleInputTimeRangeFieldProps<TDate>;
+export type UseSingleInputTimeRangeFieldComponentProps<
+  TDate,
+  TUseV6TextField extends boolean,
+  TChildProps extends {},
+> = Omit<TChildProps, keyof UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField>> &
+  UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField>;
 
-export interface SingleInputTimeRangeFieldProps<TDate>
-  extends UseSingleInputTimeRangeFieldComponentProps<TDate, FieldsTextFieldProps> {
+export type SingleInputTimeRangeFieldProps<
+  TDate,
+  TUseV6TextField extends boolean = false,
+  TChildProps extends {} = FieldsTextFieldProps,
+> = UseSingleInputTimeRangeFieldComponentProps<TDate, TUseV6TextField, TChildProps> & {
   /**
    * Overridable component slots.
    * @default {}
@@ -29,10 +37,8 @@ export interface SingleInputTimeRangeFieldProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate>;
-}
-
-export type SingleInputTimeRangeFieldOwnerState<TDate> = SingleInputTimeRangeFieldProps<TDate>;
+  slotProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate, TUseV6TextField>;
+};
 
 export interface SingleInputTimeRangeFieldSlotsComponent extends FieldSlotsComponents {
   /**
@@ -43,7 +49,13 @@ export interface SingleInputTimeRangeFieldSlotsComponent extends FieldSlotsCompo
   textField?: React.ElementType;
 }
 
-export interface SingleInputTimeRangeFieldSlotsComponentsProps<TDate>
-  extends FieldSlotsComponentsProps {
-  textField?: SlotComponentProps<typeof TextField, {}, SingleInputTimeRangeFieldOwnerState<TDate>>;
+export interface SingleInputTimeRangeFieldSlotsComponentsProps<
+  TDate,
+  TUseV6TextField extends boolean,
+> extends FieldSlotsComponentsProps {
+  textField?: SlotComponentProps<
+    typeof TextField,
+    {},
+    SingleInputTimeRangeFieldProps<TDate, TUseV6TextField>
+  >;
 }

@@ -23,12 +23,13 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
 export const useDesktopPicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
+  TUseV6TextField extends boolean,
+  TExternalProps extends UseDesktopPickerProps<TDate, TView, TUseV6TextField, any, TExternalProps>,
 >({
   props,
   getOpenDialogAriaText,
   ...pickerParams
-}: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
+}: UseDesktopPickerParams<TDate, TView, TUseV6TextField, TExternalProps>) => {
   const {
     slots,
     slotProps: innerSlotProps,
@@ -103,6 +104,7 @@ export const useDesktopPicker = <
     TDate | null,
     TDate,
     FieldSection,
+    TUseV6TextField,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -147,6 +149,7 @@ export const useDesktopPicker = <
     TDate | null,
     TDate,
     FieldSection,
+    TUseV6TextField,
     unknown
   >['slots'] = {
     textField: slots.textField,

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { BaseFieldProps } from '../internals/models/fields';
+import type { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
 
 export type FieldSectionType =
   | 'year'
@@ -113,8 +114,14 @@ export type FieldSelectedSections = number | FieldSectionType | null | 'all';
  * Props the single input field can receive when used inside a picker.
  * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
-export interface BaseSingleInputFieldProps<TValue, TDate, TSection extends FieldSection, TError>
-  extends BaseFieldProps<TValue, TDate, TSection, TError> {
+export interface BaseSingleInputFieldProps<
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TUseV6TextField extends boolean,
+  TError,
+> extends BaseFieldProps<TValue, TDate, TSection, TUseV6TextField, TError>,
+    ExportedUseClearableFieldProps {
   label?: React.ReactNode;
   id?: string;
   inputRef?: React.Ref<HTMLInputElement>;
@@ -135,6 +142,4 @@ export interface BaseSingleInputFieldProps<TValue, TDate, TSection extends Field
   };
   slots?: {};
   slotProps?: {};
-  clearable?: boolean;
-  onClear?: React.MouseEventHandler;
 }

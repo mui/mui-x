@@ -10,8 +10,8 @@ import { useClearableField } from '../hooks';
 import { PickersTextField } from '../internals/components/PickersTextField';
 import { useConvertFieldResponseIntoMuiTextFieldProps } from '../internals/hooks/useConvertFieldResponseIntoMuiTextFieldProps';
 
-type DateFieldComponent = (<TDate>(
-  props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DateFieldComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: DateFieldProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,10 +24,10 @@ type DateFieldComponent = (<TDate>(
  *
  * - [DateField API](https://mui.com/x/api/date-pickers/date-field/)
  */
-const DateField = React.forwardRef(function DateField<TDate>(
-  inProps: DateFieldProps<TDate>,
-  inRef: React.Ref<HTMLDivElement>,
-) {
+const DateField = React.forwardRef(function DateField<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: DateFieldProps<TDate, TUseV6TextField>, inRef: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiDateField',
@@ -39,7 +39,7 @@ const DateField = React.forwardRef(function DateField<TDate>(
 
   const TextField =
     slots?.textField ?? (inProps.shouldUseV6TextField ? MuiTextField : PickersTextField);
-  const textFieldProps: DateFieldProps<TDate> = useSlotProps({
+  const textFieldProps: DateFieldProps<TDate, TUseV6TextField> = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -53,7 +53,7 @@ const DateField = React.forwardRef(function DateField<TDate>(
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const fieldResponse = useDateField<TDate, typeof textFieldProps>(textFieldProps);
+  const fieldResponse = useDateField<TDate, TUseV6TextField, typeof textFieldProps>(textFieldProps);
   const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
@@ -76,10 +76,6 @@ DateField.propTypes = {
    */
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
-  /**
-   * If `true`, a clear button will be shown in the field allowing value clearing.
-   * @default false
-   */
   clearable: PropTypes.bool,
   /**
    * The color of the component.
@@ -197,9 +193,6 @@ DateField.propTypes = {
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
-  /**
-   * Callback fired when the clear button is clicked.
-   */
   onClear: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.

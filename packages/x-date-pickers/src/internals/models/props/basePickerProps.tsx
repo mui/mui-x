@@ -54,8 +54,8 @@ export interface BasePickerInputProps<
  */
 export interface BaseNonStaticPickerProps
   extends Pick<
-    UseFieldInternalProps<any, any, any, any>,
-    'formatDensity' | 'shouldUseV6TextField'
+    UseFieldInternalProps<any, any, any, any, any>,
+    'formatDensity' | 'shouldUseV6TextField' | 'selectedSections' | 'onSelectedSectionsChange'
   > {
   /**
    * Format of the date when rendered in the input(s).

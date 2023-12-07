@@ -10,17 +10,17 @@ import {
   MobileDateTimePickerSlotsComponentsProps,
 } from '../MobileDateTimePicker';
 
-export interface DateTimePickerSlotsComponents<TDate>
-  extends DesktopDateTimePickerSlotsComponent<TDate>,
-    MobileDateTimePickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem> {}
+export interface DateTimePickerSlotsComponents<TDate, TUseV6TextField extends boolean>
+  extends DesktopDateTimePickerSlotsComponent<TDate, TUseV6TextField>,
+    MobileDateTimePickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField> {}
 
-export interface DateTimePickerSlotsComponentsProps<TDate>
-  extends DesktopDateTimePickerSlotsComponentsProps<TDate>,
-    MobileDateTimePickerSlotsComponentsProps<TDate, DateOrTimeViewWithMeridiem> {}
+export interface DateTimePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
+  extends DesktopDateTimePickerSlotsComponentsProps<TDate, TUseV6TextField>,
+    MobileDateTimePickerSlotsComponentsProps<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField> {}
 
-export interface DateTimePickerProps<TDate>
-  extends DesktopDateTimePickerProps<TDate>,
-    Omit<MobileDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>, 'views'> {
+export interface DateTimePickerProps<TDate, TUseV6TextField extends boolean = false>
+  extends DesktopDateTimePickerProps<TDate, TUseV6TextField>,
+    Omit<MobileDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -36,10 +36,10 @@ export interface DateTimePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateTimePickerSlotsComponents<TDate>;
+  slots?: DateTimePickerSlotsComponents<TDate, TUseV6TextField>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: DateTimePickerSlotsComponentsProps<TDate, TUseV6TextField>;
 }

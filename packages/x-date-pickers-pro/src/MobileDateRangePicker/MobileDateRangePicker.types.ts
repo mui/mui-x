@@ -14,13 +14,13 @@ export interface MobileDateRangePickerSlotsComponent<TDate>
   extends BaseDateRangePickerSlotsComponent<TDate>,
     MakeOptional<UseMobileRangePickerSlotsComponent<TDate, 'day'>, 'field'> {}
 
-export interface MobileDateRangePickerSlotsComponentsProps<TDate>
+export interface MobileDateRangePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
   extends BaseDateRangePickerSlotsComponentsProps<TDate>,
-    UseMobileRangePickerSlotsComponentsProps<TDate, 'day'> {}
+    UseMobileRangePickerSlotsComponentsProps<TDate, 'day', TUseV6TextField> {}
 
-export interface MobileDateRangePickerProps<TDate>
+export interface MobileDateRangePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDateRangePickerProps<TDate>,
-    MobileRangeOnlyPickerProps<TDate> {
+    MobileRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
    * @default 2
@@ -35,5 +35,5 @@ export interface MobileDateRangePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: MobileDateRangePickerSlotsComponentsProps<TDate, TUseV6TextField>;
 }

@@ -36,16 +36,25 @@ export interface BaseRangeProps {
   disabled?: boolean;
 }
 
-export interface UseDateRangeFieldProps<TDate>
+export interface UseDateRangeFieldProps<TDate, TUseV6TextField extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<DateRange<TDate>, TDate, RangeFieldSection, DateRangeValidationError>,
+      UseFieldInternalProps<
+        DateRange<TDate>,
+        TDate,
+        RangeFieldSection,
+        TUseV6TextField,
+        DateRangeValidationError
+      >,
       'format'
     >,
     DayRangeValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
     BaseRangeProps {}
 
-export type UseDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
-  UseDateRangeFieldProps<TDate>,
+export type UseDateRangeFieldDefaultizedProps<
+  TDate,
+  TUseV6TextField extends boolean,
+> = DefaultizedProps<
+  UseDateRangeFieldProps<TDate, TUseV6TextField>,
   keyof BaseDateValidationProps<TDate> | 'format'
 >;

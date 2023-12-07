@@ -64,7 +64,6 @@ export type {
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldResponse,
-  UseFieldForwardedProps,
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,

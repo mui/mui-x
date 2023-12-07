@@ -3,13 +3,13 @@ import useControlled from '@mui/utils/useControlled';
 import { useTheme } from '@mui/material/styles';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
 import {
-  UseFieldForwardedProps,
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldState,
   FieldParsedSelectedSections,
   FieldChangeHandlerContext,
   FieldSectionsValueBoundaries,
+  UseFieldForwardedProps,
 } from './useField.types';
 import {
   mergeDateIntoReferenceDate,
@@ -61,10 +61,11 @@ export const useFieldState = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TUseV6TextField extends boolean,
+  TForwardedProps extends UseFieldForwardedProps<TUseV6TextField>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any, any>,
 >(
-  params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
+  params: UseFieldParams<TValue, TDate, TSection, TUseV6TextField, TForwardedProps, TInternalProps>,
 ): UseFieldStateResponse<TValue, TDate, TSection> => {
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();

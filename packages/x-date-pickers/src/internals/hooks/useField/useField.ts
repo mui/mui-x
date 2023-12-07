@@ -7,9 +7,11 @@ import { useUtils } from '../useUtils';
 import {
   UseFieldParams,
   UseFieldResponse,
-  UseFieldForwardedProps,
+  UseFieldCommonForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
+  UseFieldTextField,
+  UseFieldForwardedProps,
 } from './useField.types';
 import { adjustSectionValue, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
@@ -22,30 +24,20 @@ export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any> & { minutesStep?: number },
+  TUseV6TextField extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps & UseFieldForwardedProps<TUseV6TextField>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any> & {
+    minutesStep?: number;
+  },
 >(
-  params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
-): UseFieldResponse<TForwardedProps, any> => {
+  params: UseFieldParams<TValue, TDate, TSection, TUseV6TextField, TForwardedProps, TInternalProps>,
+): UseFieldResponse<TUseV6TextField, TForwardedProps> => {
   const utils = useUtils<TDate>();
 
   const {
     internalProps,
-    internalProps: {
-      readOnly = false,
-      unstableFieldRef,
-      minutesStep,
-      shouldUseV6TextField = false,
-    },
-    forwardedProps: {
-      onKeyDown,
-      onPaste,
-      error,
-      clearable,
-      onClear,
-      disabled = false,
-      ...otherForwardedProps
-    },
+    internalProps: { unstableFieldRef, minutesStep, shouldUseV6TextField = false },
+    forwardedProps: { onKeyDown, error, clearable, onClear, disabled = false, readOnly = false },
     fieldValueManager,
     valueManager,
     validator,
@@ -84,7 +76,9 @@ export const useField = <
     valueManager.emptyValue,
   );
 
-  const useFieldTextField = shouldUseV6TextField ? useFieldV6TextField : useFieldV7TextField;
+  const useFieldTextField = (
+    shouldUseV6TextField ? useFieldV6TextField : useFieldV7TextField
+  ) as UseFieldTextField<TUseV6TextField>;
 
   const sectionOrder = React.useMemo(
     () => getSectionOrder(state.sections, isRTL && shouldUseV6TextField),
@@ -255,17 +249,21 @@ export const useField = <
     onClear?.(event, ...(args as []));
     clearValue();
     setSelectedSections(sectionOrder.startIndex);
-    // TODO: Add back the v6 focus
+    // TODO v7: Add back the v6 focus
   });
 
-  return {
-    ...(otherForwardedProps as Omit<TForwardedProps, keyof UseFieldForwardedProps>),
-    ...returnedValue,
+  const commonForwardedProps: Required<UseFieldCommonForwardedProps> = {
     disabled,
     readOnly,
     onKeyDown: handleContainerKeyDown,
     onClear: handleClearValue,
     error: inputError,
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
+  };
+
+  return {
+    ...params.forwardedProps,
+    ...commonForwardedProps,
+    ...returnedValue,
   };
 };

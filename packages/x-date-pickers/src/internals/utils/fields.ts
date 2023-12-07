@@ -13,8 +13,6 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'formatDensity',
   'onChange',
   'timezone',
-  'readOnly',
-  'autoFocus',
   'onError',
   'shouldRespectLeadingZeros',
   'selectedSections',

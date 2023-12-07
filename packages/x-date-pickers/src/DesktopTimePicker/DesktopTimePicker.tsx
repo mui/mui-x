@@ -22,8 +22,8 @@ import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
 import { TimeView } from '../models/views';
 
-type DesktopTimePickerComponent = (<TDate>(
-  props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: DesktopTimePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -36,10 +36,10 @@ type DesktopTimePickerComponent = (<TDate>(
  *
  * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
-const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
-  inProps: DesktopTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: DesktopTimePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -47,7 +47,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeViewWithMeridiem,
-    DesktopTimePickerProps<TDate>
+    DesktopTimePickerProps<TDate, TUseV6TextField>
   >(inProps, 'MuiDesktopTimePicker');
 
   const {
@@ -113,7 +113,12 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, TimeViewWithMeridiem, typeof props>({
+  const { renderPicker } = useDesktopPicker<
+    TDate,
+    TimeViewWithMeridiem,
+    TUseV6TextField,
+    typeof props
+  >({
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
@@ -330,7 +335,7 @@ DesktopTimePicker.propTypes = {
   /**
    * @defauilt false
    */
-  shouldUseV6TextField: PropTypes.bool,
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, disabled digital clock items will not be rendered.
    * @default false
