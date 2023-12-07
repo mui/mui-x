@@ -81,7 +81,7 @@ TODO
 :::warning
 This approach will be removed in the next major (v8).
 
-Learn more on how to use Joy UI with the new `PickersTextField` component on [this section](/x/react-date-pickers/custom-field/#styling-the-pickerstextfield-component)
+Learn more on how to use Joy UI with the new `PickersTextField` component on [this section](/x/react-date-pickers/custom-field/#using-pickerstextfield)
 :::
 
 You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
