@@ -10,11 +10,11 @@ import {
   BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface StaticDateRangePickerSlotsComponent<TDate>
+export interface StaticDateRangePickerSlots<TDate>
   extends BaseDateRangePickerSlots<TDate>,
     UseStaticRangePickerSlots<TDate, 'day'> {}
 
-export interface StaticDateRangePickerSlotsComponentsProps<TDate>
+export interface StaticDateRangePickerSlotProps<TDate>
   extends BaseDateRangePickerSlotProps<TDate>,
     UseStaticRangePickerSlotProps<TDate, 'day'> {}
 
@@ -25,10 +25,10 @@ export interface StaticDateRangePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: StaticDateRangePickerSlotsComponent<TDate>;
+  slots?: StaticDateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: StaticDateRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: StaticDateRangePickerSlotProps<TDate>;
 }
