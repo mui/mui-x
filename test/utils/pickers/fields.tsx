@@ -5,6 +5,7 @@ import { createRenderer, screen, userEvent, act, fireEvent } from '@mui-internal
 import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersInputClasses } from '@mui/x-date-pickers/internals/components/PickersTextField/pickersTextFieldClasses';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
+import { pickersSectionsListClasses } from '@mui/x-date-pickers';
 
 export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
 
@@ -146,7 +147,7 @@ export const buildFieldInteractions = <P extends {}>({
 
     const getSection = (sectionIndex: number) =>
       getSectionsContainer().querySelector<HTMLSpanElement>(
-        `span[data-sectionindex="${sectionIndex}"] .content`,
+        `span[data-sectionindex="${sectionIndex}"] .${pickersSectionsListClasses.sectionContent}`,
       )!;
 
     const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {

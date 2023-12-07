@@ -165,11 +165,12 @@ export type UseFieldForwardedProps<TUseV6TextField extends boolean> = TUseV6Text
   : UseFieldV7ForwardedProps;
 
 export interface UseFieldV6ForwardedProps {
+  readOnly?: boolean;
+  inputRef?: React.Ref<HTMLInputElement>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
-  inputRef?: React.Ref<HTMLInputElement>;
 }
 
 interface UseFieldV6AdditionalProps {
@@ -183,6 +184,7 @@ interface UseFieldV6AdditionalProps {
 export interface UseFieldV7ForwardedProps {
   focused?: boolean;
   autoFocus?: boolean;
+  readOnly?: boolean;
   sectionsContainerRef?: React.Ref<HTMLDivElement>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;

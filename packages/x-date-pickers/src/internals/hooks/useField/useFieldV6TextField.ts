@@ -73,8 +73,7 @@ export const useFieldV6TextField: UseFieldTextField<true> = (params) => {
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const {
-    internalProps: { readOnly },
-    forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp },
+    forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp, readOnly = false },
     parsedSelectedSections,
     activeSectionIndex,
     state,
@@ -394,6 +393,7 @@ export const useFieldV6TextField: UseFieldTextField<true> = (params) => {
     interactions,
     returnedValue: {
       // Forwarded
+      readOnly,
       onBlur: handleContainerBlur,
       onClick: handleInputClick,
       onFocus: handleInputFocus,
