@@ -383,7 +383,7 @@ Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
 
 - [charts] Add reference links to area + bar chart components (#10652) @michelengelen
 - [charts] Add reference links to line chart + sparkline components (#10650) @michelengelen
-- [charts] Add reference links to pie + scatter chart components  (#10653) @michelengelen
+- [charts] Add reference links to pie + scatter chart components (#10653) @michelengelen
 - [charts] Render only when `width` and `height` are resolved (#10714) @alexfauquette
 - [charts] Support animation on `BarChart` (#9926) @alexfauquette
 - [charts] Use new text component to avoid tick label overflow on x-axis (#10648) @alexfauquette
@@ -459,6 +459,7 @@ It adds line break support and avoids overlapping text in the legend.
 This comes with some breaking changes.
 
 - The DOM structure is modified. An intermediary `<tspan />` element has been added. This can impact how your style is applied.
+
   ```diff
   - <text>The label</text>
   + <text><tspan>The label</tspan></text>
