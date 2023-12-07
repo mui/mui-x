@@ -1,23 +1,23 @@
 import {
   BaseDateTimePickerProps,
-  BaseDateTimePickerSlotsComponent,
-  BaseDateTimePickerSlotsComponentsProps,
+  BaseDateTimePickerSlots,
+  BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import {
   StaticOnlyPickerProps,
-  UseStaticPickerSlotsComponent,
-  UseStaticPickerSlotsComponentsProps,
+  UseStaticPickerSlots,
+  UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
 import { MakeOptional } from '../internals';
 import { DateOrTimeView } from '../models';
 
 export interface StaticDateTimePickerSlots<TDate>
-  extends BaseDateTimePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent<TDate, DateOrTimeView> {}
+  extends BaseDateTimePickerSlots<TDate>,
+    UseStaticPickerSlots<TDate, DateOrTimeView> {}
 
 export interface StaticDateTimePickerSlotProps<TDate>
-  extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    UseStaticPickerSlotsComponentsProps<TDate, DateOrTimeView> {}
+  extends BaseDateTimePickerSlotProps<TDate>,
+    UseStaticPickerSlotProps<TDate, DateOrTimeView> {}
 
 export interface StaticDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate, DateOrTimeView>,

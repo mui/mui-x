@@ -8,11 +8,7 @@ import {
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '../PickersCalendarHeader';
-import {
-  DayCalendarSlotsComponent,
-  DayCalendarSlotsComponentsProps,
-  ExportedDayCalendarProps,
-} from './DayCalendar';
+import { DayCalendarSlots, DayCalendarSlotProps, ExportedDayCalendarProps } from './DayCalendar';
 import { DateCalendarClasses } from './dateCalendarClasses';
 import {
   BaseDateValidationProps,
@@ -29,7 +25,7 @@ import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types
 
 export interface DateCalendarSlots<TDate>
   extends PickersCalendarHeaderSlots,
-    DayCalendarSlotsComponent<TDate> {
+    DayCalendarSlots<TDate> {
   /**
    * Custom component for calendar header.
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
@@ -40,7 +36,7 @@ export interface DateCalendarSlots<TDate>
 
 export interface DateCalendarSlotProps<TDate>
   extends PickersCalendarHeaderSlotProps<TDate>,
-    DayCalendarSlotsComponentsProps<TDate> {
+    DayCalendarSlotProps<TDate> {
   calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps<TDate>>;
 }
 

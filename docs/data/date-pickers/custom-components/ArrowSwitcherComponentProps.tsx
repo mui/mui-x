@@ -7,10 +7,7 @@ import Box from '@mui/material/Box';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import {
-  TimeClock,
-  TimeClockSlotProps,
-} from '@mui/x-date-pickers/TimeClock';
+import { TimeClock, TimeClockSlotProps } from '@mui/x-date-pickers/TimeClock';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 
 const slotProps: TimeClockSlotProps = {

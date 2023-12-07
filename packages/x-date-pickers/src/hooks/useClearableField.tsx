@@ -4,8 +4,8 @@ import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { ClearIcon } from '../icons';
 import {
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
+  FieldSlots,
+  FieldSlotProps,
   FieldsTextFieldProps,
   useLocaleText,
 } from '../internals';
@@ -13,8 +13,8 @@ import {
 type UseClearableFieldProps<
   TFieldProps extends FieldsTextFieldProps,
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
-  TFieldSlots extends FieldSlotsComponents,
-  TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
+  TFieldSlots extends FieldSlots,
+  TFieldSlotsComponentsProps extends FieldSlotProps,
 > = {
   clearable: boolean;
   fieldProps: TFieldProps;
@@ -27,8 +27,8 @@ type UseClearableFieldProps<
 export const useClearableField = <
   TFieldProps extends FieldsTextFieldProps,
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
-  TFieldSlotsComponents extends FieldSlotsComponents,
-  TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
+  TFieldSlotsComponents extends FieldSlots,
+  TFieldSlotsComponentsProps extends FieldSlotProps,
 >({
   clearable,
   fieldProps: forwardedFieldProps,

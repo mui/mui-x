@@ -85,7 +85,7 @@ export default function Outline(props: OutlineProps) {
           <span>{label}</span>
         ) : (
           // notranslate needed while Google Translate will not fix zero-width space issue
-          <span className="notranslate">&#8203;</span>
+          <span className="notranslate">​</span>
         )}
       </OutlineLegend>
     </OutlineRoot>

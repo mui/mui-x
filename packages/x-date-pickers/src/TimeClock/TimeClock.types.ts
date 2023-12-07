@@ -1,7 +1,7 @@
 import { TimeClockClasses } from './timeClockClasses';
 import {
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
+  PickersArrowSwitcherSlots,
+  PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeView } from '../models';
@@ -15,9 +15,9 @@ export interface ExportedTimeClockProps<TDate> extends ExportedBaseClockProps<TD
   ampmInClock?: boolean;
 }
 
-export interface TimeClockSlots extends PickersArrowSwitcherSlotsComponent {}
+export interface TimeClockSlots extends PickersArrowSwitcherSlots {}
 
-export interface TimeClockSlotProps extends PickersArrowSwitcherSlotsComponentsProps {}
+export interface TimeClockSlotProps extends PickersArrowSwitcherSlotProps {}
 
 export interface TimeClockProps<TDate, TView extends TimeViewWithMeridiem = TimeView>
   extends ExportedTimeClockProps<TDate>,

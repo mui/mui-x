@@ -9,13 +9,11 @@ import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { FieldSection } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
-export interface UseStaticPickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
+export interface UseStaticPickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedPickersLayoutSlots<TDate | null, TDate, TView> {}
 
-export interface UseStaticPickerSlotsComponentsProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {}
+export interface UseStaticPickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -46,12 +44,12 @@ export interface UseStaticPickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: UseStaticPickerSlotsComponent<TDate | null, TView>;
+  slots?: UseStaticPickerSlots<TDate | null, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseStaticPickerSlotProps<TDate, TView>;
 }
 
 export interface UseStaticPickerParams<

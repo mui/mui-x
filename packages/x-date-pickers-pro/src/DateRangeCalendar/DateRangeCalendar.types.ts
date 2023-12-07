@@ -13,10 +13,10 @@ import {
   BaseDateValidationProps,
   DefaultizedProps,
   ExportedDayCalendarProps,
-  DayCalendarSlotsComponent,
-  DayCalendarSlotsComponentsProps,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
+  DayCalendarSlots,
+  DayCalendarSlotProps,
+  PickersArrowSwitcherSlots,
+  PickersArrowSwitcherSlotProps,
   PickerSelectionState,
   DayCalendarProps,
   ExportedUseViewsOptions,
@@ -28,9 +28,9 @@ import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 
 export type DateRangePosition = 'start' | 'end';
 
-export interface DateRangeCalendarSlotsComponent<TDate>
-  extends PickersArrowSwitcherSlotsComponent,
-    Omit<DayCalendarSlotsComponent<TDate>, 'day'>,
+export interface DateRangeCalendarSlots<TDate>
+  extends PickersArrowSwitcherSlots,
+    Omit<DayCalendarSlots<TDate>, 'day'>,
     PickersCalendarHeaderSlots {
   /**
    * Custom component for calendar header.
@@ -46,9 +46,9 @@ export interface DateRangeCalendarSlotsComponent<TDate>
   day?: React.ElementType<DateRangePickerDayProps<TDate>>;
 }
 
-export interface DateRangeCalendarSlotsComponentsProps<TDate>
-  extends PickersArrowSwitcherSlotsComponentsProps,
-    Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'>,
+export interface DateRangeCalendarSlotProps<TDate>
+  extends PickersArrowSwitcherSlotProps,
+    Omit<DayCalendarSlotProps<TDate>, 'day'>,
     PickersCalendarHeaderSlotProps<TDate> {
   calendarHeader?: SlotComponentProps<
     typeof PickersCalendarHeader,
@@ -147,12 +147,12 @@ export interface DateRangeCalendarProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateRangeCalendarSlotsComponent<TDate>;
+  slots?: DateRangeCalendarSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+  slotProps?: DateRangeCalendarSlotProps<TDate>;
 }
 
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {

@@ -1,23 +1,23 @@
 import {
-  UseMobilePickerSlotsComponent,
+  UseMobilePickerSlots,
   MobileOnlyPickerProps,
-  ExportedUseMobilePickerSlotsComponentsProps,
+  ExportedUseMobilePickerSlotProps,
 } from '../internals/hooks/useMobilePicker';
 import {
   BaseDatePickerProps,
-  BaseDatePickerSlotsComponent,
-  BaseDatePickerSlotsComponentsProps,
+  BaseDatePickerSlots,
+  BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { DateView } from '../models';
 
 export interface MobileDatePickerSlots<TDate>
-  extends BaseDatePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate, DateView>, 'field'> {}
+  extends BaseDatePickerSlots<TDate>,
+    MakeOptional<UseMobilePickerSlots<TDate, DateView>, 'field'> {}
 
 export interface MobileDatePickerSlotProps<TDate>
-  extends BaseDatePickerSlotsComponentsProps<TDate>,
-    ExportedUseMobilePickerSlotsComponentsProps<TDate, DateView> {}
+  extends BaseDatePickerSlotProps<TDate>,
+    ExportedUseMobilePickerSlotProps<TDate, DateView> {}
 
 export interface MobileDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,

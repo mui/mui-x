@@ -1,8 +1,8 @@
 import {
   UsePickerParams,
   BasePickerProps,
-  PickersPopperSlotsComponent,
-  PickersPopperSlotsComponentsProps,
+  PickersPopperSlots,
+  PickersPopperSlotProps,
   ExportedBaseToolbarProps,
   UsePickerViewsProps,
   BaseNonStaticPickerProps,
@@ -17,23 +17,19 @@ import {
 import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
-  RangePickerFieldSlotsComponent,
-  RangePickerFieldSlotsComponentsProps,
+  RangePickerFieldSlots,
+  RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
 
-export interface UseDesktopRangePickerSlotsComponent<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends PickersPopperSlotsComponent,
+export interface UseDesktopRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends PickersPopperSlots,
     ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponent {}
+    RangePickerFieldSlots {}
 
-export interface UseDesktopRangePickerSlotsComponentsProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends PickersPopperSlotsComponentsProps,
+export interface UseDesktopRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends PickersPopperSlotProps,
     ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponentsProps<TDate> {
+    RangePickerFieldSlotProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -67,12 +63,12 @@ export interface UseDesktopRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopRangePickerSlotsComponent<TDate, TView>;
+  slots: UseDesktopRangePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps

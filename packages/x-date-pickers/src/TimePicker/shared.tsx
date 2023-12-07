@@ -18,7 +18,7 @@ import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlots {
+export interface BaseTimePickerSlots<TDate> extends TimeClockSlots {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
@@ -26,7 +26,7 @@ export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlots {
   toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
 }
 
-export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotProps {
+export interface BaseTimePickerSlotProps extends TimeClockSlotProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
@@ -42,12 +42,12 @@ export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem>
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseTimePickerSlotsComponent<TDate>;
+  slots?: BaseTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseTimePickerSlotsComponentsProps;
+  slotProps?: BaseTimePickerSlotProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.

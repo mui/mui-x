@@ -1,23 +1,23 @@
 import {
   BaseDatePickerProps,
-  BaseDatePickerSlotsComponent,
-  BaseDatePickerSlotsComponentsProps,
+  BaseDatePickerSlots,
+  BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import {
   StaticOnlyPickerProps,
-  UseStaticPickerSlotsComponent,
-  UseStaticPickerSlotsComponentsProps,
+  UseStaticPickerSlots,
+  UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
 import { MakeOptional } from '../internals';
 import { DateView } from '../models';
 
 export interface StaticDatePickerSlots<TDate>
-  extends BaseDatePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent<TDate, DateView> {}
+  extends BaseDatePickerSlots<TDate>,
+    UseStaticPickerSlots<TDate, DateView> {}
 
 export interface StaticDatePickerSlotProps<TDate>
-  extends BaseDatePickerSlotsComponentsProps<TDate>,
-    UseStaticPickerSlotsComponentsProps<TDate, DateView> {}
+  extends BaseDatePickerSlotProps<TDate>,
+    UseStaticPickerSlotProps<TDate, DateView> {}
 
 export interface StaticDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,

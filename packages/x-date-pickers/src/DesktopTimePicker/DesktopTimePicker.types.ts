@@ -1,12 +1,12 @@
 import {
-  UseDesktopPickerSlotsComponent,
-  ExportedUseDesktopPickerSlotsComponentsProps,
+  UseDesktopPickerSlots,
+  ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
   BaseTimePickerProps,
-  BaseTimePickerSlotsComponent,
-  BaseTimePickerSlotsComponentsProps,
+  BaseTimePickerSlots,
+  BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { TimeViewWithMeridiem } from '../internals/models';
@@ -19,17 +19,14 @@ import {
 import { TimeView } from '../models';
 
 export interface DesktopTimePickerSlots<TDate>
-  extends BaseTimePickerSlotsComponent<TDate>,
-    MakeOptional<
-      UseDesktopPickerSlotsComponent<TDate, TimeViewWithMeridiem>,
-      'field' | 'openPickerIcon'
-    >,
+  extends BaseTimePickerSlots<TDate>,
+    MakeOptional<UseDesktopPickerSlots<TDate, TimeViewWithMeridiem>, 'field' | 'openPickerIcon'>,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
 export interface DesktopTimePickerSlotProps<TDate>
-  extends BaseTimePickerSlotsComponentsProps,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, TimeViewWithMeridiem>,
+  extends BaseTimePickerSlotProps,
+    ExportedUseDesktopPickerSlotProps<TDate, TimeViewWithMeridiem>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 

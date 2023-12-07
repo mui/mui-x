@@ -1,12 +1,12 @@
 import {
-  UseDesktopPickerSlotsComponent,
-  ExportedUseDesktopPickerSlotsComponentsProps,
+  UseDesktopPickerSlots,
+  ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
   BaseDateTimePickerProps,
-  BaseDateTimePickerSlotsComponent,
-  BaseDateTimePickerSlotsComponentsProps,
+  BaseDateTimePickerSlots,
+  BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { DateOrTimeView } from '../models';
@@ -19,17 +19,17 @@ import {
 import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
 
 export interface DesktopDateTimePickerSlots<TDate>
-  extends BaseDateTimePickerSlotsComponent<TDate>,
+  extends BaseDateTimePickerSlots<TDate>,
     MakeOptional<
-      UseDesktopPickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem>,
+      UseDesktopPickerSlots<TDate, DateOrTimeViewWithMeridiem>,
       'field' | 'openPickerIcon'
     >,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
 export interface DesktopDateTimePickerSlotProps<TDate>
-  extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateOrTimeViewWithMeridiem>,
+  extends BaseDateTimePickerSlotProps<TDate>,
+    ExportedUseDesktopPickerSlotProps<TDate, DateOrTimeViewWithMeridiem>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 

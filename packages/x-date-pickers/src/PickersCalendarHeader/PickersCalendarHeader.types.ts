@@ -4,15 +4,15 @@ import SvgIcon from '@mui/material/SvgIcon';
 import { SxProps, Theme } from '@mui/material/styles';
 import {
   ExportedPickersArrowSwitcherProps,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
+  PickersArrowSwitcherSlots,
+  PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
 import { DateView } from '../models/views';
 import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
 import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
-export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlotsComponent {
+export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
   /**
    * Button displayed to switch between different calendar views.
    * @default IconButton
@@ -30,8 +30,7 @@ export interface PickersCalendarHeaderComponentsPropsOverrides {}
 
 export type PickersCalendarHeaderOwnerState<TDate> = PickersCalendarHeaderProps<TDate>;
 
-export interface PickersCalendarHeaderSlotProps<TDate>
-  extends PickersArrowSwitcherSlotsComponentsProps {
+export interface PickersCalendarHeaderSlotProps<TDate> extends PickersArrowSwitcherSlotProps {
   switchViewButton?: SlotComponentProps<
     typeof IconButton,
     PickersCalendarHeaderComponentsPropsOverrides,

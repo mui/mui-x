@@ -21,7 +21,7 @@ import {
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 
-export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlots<TDate> {
+export interface BaseDatePickerSlots<TDate> extends DateCalendarSlots<TDate> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DatePickerToolbar
@@ -29,7 +29,7 @@ export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlots<T
   toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDatePickerSlotsComponentsProps<TDate> extends DateCalendarSlotProps<TDate> {
+export interface BaseDatePickerSlotProps<TDate> extends DateCalendarSlotProps<TDate> {
   toolbar?: ExportedDatePickerToolbarProps;
 }
 
@@ -40,12 +40,12 @@ export interface BaseDatePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseDatePickerSlotsComponent<TDate>;
+  slots?: BaseDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseDatePickerSlotsComponentsProps<TDate>;
+  slotProps?: BaseDatePickerSlotProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.

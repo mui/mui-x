@@ -1,22 +1,22 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
 import {
   StaticRangeOnlyPickerProps,
-  UseStaticRangePickerSlotsComponent,
-  UseStaticRangePickerSlotsComponentsProps,
+  UseStaticRangePickerSlots,
+  UseStaticRangePickerSlotProps,
 } from '../internals/hooks/useStaticRangePicker';
 import {
   BaseDateRangePickerProps,
-  BaseDateRangePickerSlotsComponent,
-  BaseDateRangePickerSlotsComponentsProps,
+  BaseDateRangePickerSlots,
+  BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
 export interface StaticDateRangePickerSlotsComponent<TDate>
-  extends BaseDateRangePickerSlotsComponent<TDate>,
-    UseStaticRangePickerSlotsComponent<TDate, 'day'> {}
+  extends BaseDateRangePickerSlots<TDate>,
+    UseStaticRangePickerSlots<TDate, 'day'> {}
 
 export interface StaticDateRangePickerSlotsComponentsProps<TDate>
-  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
-    UseStaticRangePickerSlotsComponentsProps<TDate, 'day'> {}
+  extends BaseDateRangePickerSlotProps<TDate>,
+    UseStaticRangePickerSlotProps<TDate, 'day'> {}
 
 export interface StaticDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,

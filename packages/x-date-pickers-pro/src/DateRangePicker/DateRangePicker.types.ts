@@ -1,21 +1,21 @@
 import {
   DesktopDateRangePickerProps,
-  DesktopDateRangePickerSlotsComponent,
-  DesktopDateRangePickerSlotsComponentsProps,
+  DesktopDateRangePickerSlots,
+  DesktopDateRangePickerSlotProps,
 } from '../DesktopDateRangePicker';
 import {
   MobileDateRangePickerProps,
-  MobileDateRangePickerSlotsComponent,
-  MobileDateRangePickerSlotsComponentsProps,
+  MobileDateRangePickerSlots,
+  MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
 
 export interface DateRangePickerSlotsComponents<TDate>
-  extends DesktopDateRangePickerSlotsComponent<TDate>,
-    MobileDateRangePickerSlotsComponent<TDate> {}
+  extends DesktopDateRangePickerSlots<TDate>,
+    MobileDateRangePickerSlots<TDate> {}
 
 export interface DateRangePickerSlotsComponentsProps<TDate>
-  extends DesktopDateRangePickerSlotsComponentsProps<TDate>,
-    MobileDateRangePickerSlotsComponentsProps<TDate> {}
+  extends DesktopDateRangePickerSlotProps<TDate>,
+    MobileDateRangePickerSlotProps<TDate> {}
 
 export interface DateRangePickerProps<TDate>
   extends DesktopDateRangePickerProps<TDate>,

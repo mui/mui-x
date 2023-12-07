@@ -9,12 +9,12 @@ export interface ExportedPickersArrowSwitcherProps {
    * Overridable component slots.
    * @default {}
    */
-  slots?: PickersArrowSwitcherSlotsComponent;
+  slots?: PickersArrowSwitcherSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PickersArrowSwitcherSlotsComponentsProps;
+  slotProps?: PickersArrowSwitcherSlotProps;
   classes?: Partial<PickersArrowSwitcherClasses>;
   /**
    * Format used to display the date.
@@ -41,7 +41,7 @@ export type PickersArrowSwitcherOwnerState = PickersArrowSwitcherProps;
 
 export interface PickersArrowSwitcherComponentsPropsOverrides {}
 
-export interface PickersArrowSwitcherSlotsComponent {
+export interface PickersArrowSwitcherSlots {
   /**
    * Button allowing to switch to the left view.
    * @default IconButton
@@ -68,7 +68,7 @@ export interface PickersArrowSwitcherButtonSlotOwnerState extends PickersArrowSw
   hidden?: boolean;
 }
 
-export interface PickersArrowSwitcherSlotsComponentsProps {
+export interface PickersArrowSwitcherSlotProps {
   previousIconButton?: SlotComponentProps<
     typeof IconButton,
     PickersArrowSwitcherComponentsPropsOverrides,
