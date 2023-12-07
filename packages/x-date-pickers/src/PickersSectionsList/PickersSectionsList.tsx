@@ -57,9 +57,6 @@ interface PickersSectionProps extends Pick<PickersSectionsListProps, 'slots' | '
   sectionContentClassName: string;
 }
 
-/**
- * @ignore - internal component.
- */
 function PickersSection(props: PickersSectionProps) {
   const { slots, slotProps, element, sectionContentClassName } = props;
 
@@ -105,10 +102,6 @@ function PickersSection(props: PickersSectionProps) {
     </Section>
   );
 }
-
-/**
- * @ignore - internal component.
- */
 
 PickersSection.propTypes = {
   // ----------------------------- Warning --------------------------------

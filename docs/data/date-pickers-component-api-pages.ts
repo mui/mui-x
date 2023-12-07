@@ -64,6 +64,7 @@ export default [
   { pathname: '/x/api/date-pickers/pickers-calendar-header', title: 'PickersCalendarHeader' },
   { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
   { pathname: '/x/api/date-pickers/pickers-layout', title: 'PickersLayout' },
+  { pathname: '/x/api/date-pickers/pickers-sections-list', title: 'PickersSectionsList' },
   { pathname: '/x/api/date-pickers/pickers-shortcuts', title: 'PickersShortcuts' },
   {
     pathname: '/x/api/date-pickers/single-input-date-range-field',

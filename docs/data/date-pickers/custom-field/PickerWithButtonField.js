@@ -34,8 +34,8 @@ function ButtonDatePicker(props) {
 
   return (
     <DatePicker
-      slots={{ field: ButtonField, ...props.slots }}
-      slotProps={{ field: { setOpen } }}
+      slots={{ ...props.slots, field: ButtonField }}
+      slotProps={{ ...props.slotProps, field: { setOpen } }}
       {...props}
       open={open}
       onClose={() => setOpen(false)}

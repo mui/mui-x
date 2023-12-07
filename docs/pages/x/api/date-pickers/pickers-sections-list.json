@@ -1,0 +1,25 @@
+{
+  "props": {
+    "slots": { "type": { "name": "object" }, "required": true },
+    "slotProps": { "type": { "name": "object" } }
+  },
+  "slots": [
+    { "class": null, "name": "root", "description": "" },
+    { "class": null, "name": "section", "description": "" },
+    { "class": null, "name": "sectionContent", "description": "" },
+    { "class": null, "name": "sectionSeparator", "description": "" }
+  ],
+  "name": "PickersSectionsList",
+  "imports": [
+    "import { PickersSectionsList } from '@mui/x-date-pickers/PickersSectionsList';",
+    "import { PickersSectionsList } from '@mui/x-date-pickers';",
+    "import { PickersSectionsList } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": {
+    "classes": ["sectionContent"],
+    "globalClasses": {},
+    "name": "MuiPickersSectionsList"
+  },
+  "filename": "/packages/x-date-pickers/src/PickersSectionsList/PickersSectionsList.tsx",
+  "demos": "<ul></ul>"
+}
