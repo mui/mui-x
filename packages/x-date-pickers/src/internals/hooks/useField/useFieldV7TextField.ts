@@ -36,6 +36,7 @@ export const useFieldV7TextField = <
       onBlur,
       onFocus,
       onClick = noop,
+      focused: focusedProp,
     },
     fieldValueManager,
     applyCharacterEditing,
@@ -472,7 +473,7 @@ export const useFieldV7TextField = <
       sectionsContainerRef: handleSectionsContainerRef,
       value: valueStr,
       onChange: handleValueStrChange,
-      focused,
+      focused: focusedProp ?? focused,
       areAllSectionsEmpty,
     },
   };

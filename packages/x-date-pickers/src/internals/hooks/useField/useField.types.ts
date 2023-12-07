@@ -157,6 +157,7 @@ export interface UseFieldForwardedProps {
   onClear?: React.MouseEventHandler;
   clearable?: boolean;
   disabled?: boolean;
+  focused?: boolean;
   /**
    * Only used for v7 TextField implementation.
    */
@@ -168,7 +169,7 @@ export type UseFieldResponse<
   TForwardedProps extends UseFieldForwardedProps,
   TTextField extends 'v6' | 'v7',
 > = Omit<TForwardedProps, keyof UseFieldForwardedProps> &
-  Required<Omit<UseFieldForwardedProps, 'inputRef' | 'sectionsContainerRef'>> & {
+  Required<Omit<UseFieldForwardedProps, 'inputRef' | 'sectionsContainerRef' | 'focused'>> & {
     error: boolean;
     readOnly: boolean;
   } & (TTextField extends 'v6'
@@ -176,6 +177,7 @@ export type UseFieldResponse<
         textField: 'v6';
         inputRef: React.Ref<HTMLInputElement>;
         autoFocus?: boolean;
+        focused?: boolean;
       }
     : {
         textField: 'v7';

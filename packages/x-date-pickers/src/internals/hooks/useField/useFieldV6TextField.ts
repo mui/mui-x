@@ -87,7 +87,7 @@ export const useFieldV6TextField = <
 
   const {
     internalProps: { readOnly, autoFocus },
-    forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp },
+    forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp, focused },
     parsedSelectedSections,
     activeSectionIndex,
     state,
@@ -417,6 +417,7 @@ export const useFieldV6TextField = <
       onBlur: handleContainerBlur,
       inputRef: handleRef,
       autoFocus,
+      focused,
     },
   };
 };
