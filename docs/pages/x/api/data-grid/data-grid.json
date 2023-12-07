@@ -469,6 +469,12 @@
     },
     {
       "class": null,
+      "name": "baseMultipleSelect",
+      "description": "The custom MultipleSelect component used in the grid.",
+      "default": "Autocomplete"
+    },
+    {
+      "class": null,
       "name": "basePopper",
       "description": "The custom Popper component used in the grid.",
       "default": "Popper"
@@ -478,12 +484,6 @@
       "name": "baseSelect",
       "description": "The custom Select component used in the grid.",
       "default": "Select"
-    },
-    {
-      "class": null,
-      "name": "baseMultipleSelect",
-      "description": "The custom Autocomplete component used in the grid.",
-      "default": "Autocomplete"
     },
     {
       "class": null,

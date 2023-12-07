@@ -291,8 +291,6 @@
   { "name": "GridFilterForm", "kind": "Variable" },
   { "name": "GridFilterFormProps", "kind": "Interface" },
   { "name": "GridFilterInitialState", "kind": "Interface" },
-  { "name": "GridFilterInputBoolean", "kind": "Function" },
-  { "name": "GridFilterInputBooleanProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputDate", "kind": "Function" },
   { "name": "GridFilterInputDateProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputMultipleMultipleSelect", "kind": "Function" },
