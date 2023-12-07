@@ -190,7 +190,7 @@ ScatterChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * If true, the interaction will not use voronoi cell and fall back on hover events.
+   * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
    */
   disableVoronoi: PropTypes.bool,
