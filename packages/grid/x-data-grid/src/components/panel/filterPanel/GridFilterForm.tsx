@@ -240,9 +240,10 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
-    const filteredColumns = React.useMemo(() => {
+    const { filteredColumns, selectedField } = React.useMemo(() => {
+      let itemField: string | undefined = item.field;
       if (filterColumns === undefined || typeof filterColumns !== 'function') {
-        return filterableColumns;
+        return { filteredColumns: filterableColumns, selectedField: itemField };
       }
 
       const filteredFields = filterColumns({
@@ -251,7 +252,16 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         currentFilters: filterModel?.items || [],
       });
 
-      return filterableColumns.filter((column) => filteredFields.includes(column.field));
+      return {
+        filteredColumns: filterableColumns.filter((column) => {
+          const isFieldIncluded = filteredFields.includes(column.field);
+          if (column.field === item.field && !isFieldIncluded) {
+            itemField = undefined;
+          }
+          return isFieldIncluded;
+        }),
+        selectedField: itemField,
+      };
     }, [filterColumns, filterModel?.items, filterableColumns, item.field]);
 
     const sortedFilteredColumns = React.useMemo(() => {
@@ -421,7 +431,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             inputProps={{
               'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
             }}
-            value={multiFilterOperator}
+            value={multiFilterOperator || ''}
             onChange={changeLogicOperator}
             disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
             native={isBaseSelectNative}
@@ -462,7 +472,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             labelId={columnSelectLabelId}
             id={columnSelectId}
             label={apiRef.current.getLocaleText('filterPanelColumns')}
-            value={item.field || ''}
+            value={selectedField || ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
             {...rootProps.slotProps?.baseSelect}
