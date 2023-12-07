@@ -3,12 +3,7 @@ import { useSlotProps } from '@mui/base/utils';
 import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { ClearIcon } from '../icons';
-import {
-  FieldSlots,
-  FieldSlotProps,
-  FieldsTextFieldProps,
-  useLocaleText,
-} from '../internals';
+import { FieldSlots, FieldSlotProps, FieldsTextFieldProps, useLocaleText } from '../internals';
 
 type UseClearableFieldProps<
   TFieldProps extends FieldsTextFieldProps,
