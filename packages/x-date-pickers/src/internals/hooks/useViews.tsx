@@ -78,6 +78,7 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
   setValueAndGoToNextView: (
     value: TValue,
     currentViewSelectionState?: PickerSelectionState,
+    selectedView?: TView,
   ) => void;
   setValueAndGoToView: (value: TValue, newView: TView | null, selectedView: TView) => void;
 }
@@ -190,7 +191,7 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
       const globalSelectionState =
         isSelectionFinishedOnCurrentView && hasMoreViews ? 'partial' : currentViewSelectionState;
 
-      onChange(value, globalSelectionState);
+      onChange(value, globalSelectionState, selectedView);
       if (isSelectionFinishedOnCurrentView) {
         goToNextView();
       }
