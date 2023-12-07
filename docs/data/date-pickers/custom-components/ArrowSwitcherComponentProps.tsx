@@ -9,11 +9,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import {
   TimeClock,
-  TimeClockSlotsComponentsProps,
+  TimeClockSlotProps,
 } from '@mui/x-date-pickers/TimeClock';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 
-const slotProps: TimeClockSlotsComponentsProps = {
+const slotProps: TimeClockSlotProps = {
   leftArrowIcon: { fontSize: 'large' },
   rightArrowIcon: { fontSize: 'large' },
   previousIconButton: {
