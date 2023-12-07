@@ -300,7 +300,6 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
                 selected={markSelected && view === 'hours'}
                 value={value ? formatHours(value) : '--'}
               />
-
               <DateTimePickerToolbarSeparator
                 variant={isDesktop ? 'h5' : 'h3'}
                 value=":"

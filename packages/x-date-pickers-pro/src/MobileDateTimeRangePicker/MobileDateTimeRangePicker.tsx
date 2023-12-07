@@ -400,7 +400,7 @@ MobileDateTimeRangePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'seconds']),
+  openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'seconds']),
   /**
    * The position in the currently edited date range.
    * Used when the component position is controlled.
@@ -553,9 +553,7 @@ MobileDateTimeRangePicker.propTypes = {
   /**
    * Available views.
    */
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'seconds']).isRequired,
-  ),
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'hours', 'minutes', 'seconds']).isRequired),
 } as any;
 
 export { MobileDateTimeRangePicker };
