@@ -14,7 +14,7 @@ const useUtilityClasses = () => {
 const Element = styled('div')({
   position: 'sticky',
   zIndex: 2,
-  bottom: 0,
+  bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
 });
 
 export function GridBottomContainer(props: React.HTMLAttributes<HTMLDivElement>) {

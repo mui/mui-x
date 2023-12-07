@@ -12,7 +12,6 @@ import {
 import {
   GridBaseColumnHeaders,
   GridColumnHeadersInner,
-  GridColumnHeadersFiller,
   GridPinnedColumnFields,
   UseGridColumnHeadersProps,
 } from '@mui/x-data-grid/internals';
@@ -77,7 +76,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     },
     [`&.${gridClasses['pinnedColumnHeaders--right']}`]: {
       right: 0,
-      width: 'var(--DataGrid-rightPinnedWidth)',
+
       '& > [role="row"] > [role="columnheader"]:first-of-type': {
         ...(ownerState.showCellVerticalBorder && {
           borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
@@ -155,7 +154,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       columnMenuState,
       columnVisibility,
       columnGroupsHeaderStructure,
-      minColumnIndex: visiblePinnedColumns.left.length,
     });
 
     const ownerState = {
@@ -217,7 +215,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
               },
               { disableReorder: true },
             )}
-
             {getColumnFilters({
               position: GridPinnedColumnPosition.LEFT,
               renderContext: leftRenderContext,
@@ -227,7 +224,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
           </GridColumnHeadersPinnedColumnHeaders>
         )}
 
-        <GridColumnHeadersFiller />
         <GridScrollArea scrollDirection="left" />
         <GridColumnHeadersInner isDragging={isDragging} {...innerProps}>
           {getColumnGroupHeaders({
@@ -273,7 +269,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
               },
               { disableReorder: true, separatorSide: GridColumnHeaderSeparatorSides.Left },
             )}
-
             {getColumnFilters({
               position: GridPinnedColumnPosition.RIGHT,
               renderContext: rightRenderContext,

@@ -7,7 +7,6 @@ import {
   getDataGridUtilityClass,
   GridFilterItem,
 } from '@mui/x-data-grid';
-import { styled } from '@mui/system';
 import {
   useGridColumnHeaders as useGridColumnHeadersCommunity,
   UseGridColumnHeadersProps,
@@ -15,6 +14,7 @@ import {
   useGridPrivateApiContext,
   getGridFilter,
   GridStateColDef,
+  GridColumnHeaderRow,
 } from '@mui/x-data-grid/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -32,14 +32,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     return composeClasses(slots, getDataGridUtilityClass, classes);
   }, [classes]);
 };
-
-const GridHeaderFilterRow = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'HeaderFilterRow',
-  overridesResolver: (props, styles) => styles.headerFilterRow,
-})<{ ownerState: OwnerState }>(() => ({
-  display: 'flex',
-}));
 
 const filterItemsCache: Record<GridStateColDef['field'], GridFilterItem> = Object.create(null);
 
@@ -95,13 +87,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       return null;
     }
 
-    const columnsToRender = getColumnsToRender(params);
-
-    if (columnsToRender == null) {
-      return null;
-    }
-
-    const { renderedColumns, firstColumnToRender } = columnsToRender;
+    const { renderedColumns, firstColumnToRender } = getColumnsToRender(params);
 
     const filters: React.JSX.Element[] = [];
     for (let i = 0; i < renderedColumns.length; i += 1) {
@@ -120,10 +106,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           ? colDef.headerClassName({ field: colDef.field, colDef })
           : colDef.headerClassName;
 
-      // TODO: Support for `isAnyOf` operator
-      const filterOperators =
-        colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
-
       const item = getFilterItem(colDef);
 
       filters.push(
@@ -137,7 +119,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           tabIndex={tabIndex}
           headerFilterMenuRef={headerFilterMenuRef}
           headerClassName={headerClassName}
-          filterOperators={filterOperators}
           data-field={colDef.field}
           item={item}
           {...rootProps.slotProps?.headerFilterCell}
@@ -147,16 +128,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return (
-      <GridHeaderFilterRow
+      <GridColumnHeaderRow
         ref={headerFiltersRef}
-        ownerState={rootProps}
+        ownerState={params}
         className={classes.headerFilterRow}
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 2}
       >
         {filters}
-        {otherProps.getFiller(params)}
-      </GridHeaderFilterRow>
+        {otherProps.getFiller(params, true)}
+      </GridColumnHeaderRow>
     );
   };
 

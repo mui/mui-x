@@ -90,6 +90,11 @@ export interface GridDimensionsApi {
 
 export interface GridDimensionsPrivateApi {
   /**
+   * Recalculates the grid layout. This should be called when an operation has changed the size
+   * of the content of the grid.
+   */
+  updateDimensions: () => void;
+  /**
    * Returns the amount of rows that are currently visible in the viewport
    * @returns {number} The amount of rows visible in the viewport
    */

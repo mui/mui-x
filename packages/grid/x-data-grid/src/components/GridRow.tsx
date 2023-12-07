@@ -30,6 +30,7 @@ import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/column
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 import { randomNumberBetween } from '../utils/utils';
 import { PinnedPosition } from './cell/GridCell';
+import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   rowId: GridRowId;
@@ -102,9 +103,13 @@ function EmptyCell({ width }: { width: number }) {
     return null;
   }
 
-  const style = { width };
-
-  return <div className={`${gridClasses.cell}`} style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
+  return (
+    <div
+      role="presentation"
+      className={clsx(gridClasses.cell, gridClasses.cellEmpty)}
+      style={{ '--width': `${width}px` } as React.CSSProperties}
+    />
+  );
 }
 
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
@@ -459,6 +464,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     );
   });
 
+  const middleColumnsLength =
+    visibleColumns.length - pinnedColumns.left.length - pinnedColumns.right.length;
+
   const cells = [] as React.ReactNode[];
   for (let i = 0; i < renderedColumns.length; i += 1) {
     const column = renderedColumns[i];
@@ -473,10 +481,15 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     }
 
-    cells.push(getCell(column, i, indexRelativeToAllColumns, renderedColumns.length));
+    cells.push(
+      getCell(
+        column,
+        i + pinnedColumns.left.length,
+        indexRelativeToAllColumns,
+        middleColumnsLength,
+      ),
+    );
   }
-
-  const emptyCellWidth = dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth;
 
   const eventHandlers = row
     ? {
@@ -488,6 +501,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         onMouseOver: publish('rowMouseOver', onMouseOver),
       }
     : null;
+
+  const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+  const expandedWidth =
+    dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth - scrollbarWidth;
+  const emptyCellWidth = Math.max(scrollbarWidth, expandedWidth);
 
   return (
     <div
@@ -507,6 +525,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
       {rightCells.length > 0 && <div role="presentation" style={{ flex: '1' }} />}
       {rightCells}
+      <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />
     </div>
   );
 });

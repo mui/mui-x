@@ -11,7 +11,6 @@ export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
-export { GridColumnHeadersFiller } from '../components/GridColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
@@ -26,7 +25,7 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 export { unwrapPrivateAPI } from '../hooks/core/useGridApiInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
-export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export * from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
@@ -153,6 +152,7 @@ export {
 } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export * from '../utils/utils';
+export * from '../utils/fastMemo';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';

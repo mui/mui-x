@@ -20,9 +20,9 @@ const Element = styled('div')({
     position: 'absolute',
     zIndex: 3,
     bottom: 0,
-    right: 0,
+    left: 0,
     height: 1,
-    width: '100%',
+    width: 'var(--DataGrid-rowWidth)',
     backgroundColor: 'var(--DataGrid-rowBorderColor)',
   },
 });

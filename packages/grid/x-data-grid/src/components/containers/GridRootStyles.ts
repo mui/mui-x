@@ -432,8 +432,9 @@ export const GridRootStyles = styled('div', {
     [`& .${c.cell}`]: {
       display: 'flex',
       alignItems: 'center',
-      width: 'var(--width)',
       height: 'var(--height)',
+      minWidth: 'var(--width)',
+      maxWidth: 'var(--width)',
 
       '--width': '0px',
       '--height': '0px',
@@ -453,9 +454,8 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
     },
-    [`& .${c.cellContent}`]: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
+    [`& .${c.cellEmpty}`]: {
+      padding: 0,
     },
     [`& .${c.cell}.${c['cell--selectionMode']}`]: {
       cursor: 'default',
@@ -469,6 +469,10 @@ export const GridRootStyles = styled('div', {
         outline: `solid ${(t.vars || t).palette.primary.main} 1px`,
         outlineOffset: '-1px',
       },
+    },
+    [`& .${c.cellContent}`]: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     },
     [`& .${c['row--editing']}`]: {
       boxShadow: t.shadows[2],
@@ -588,15 +592,6 @@ export const GridRootStyles = styled('div', {
       [`& .${c.rowReorderCellPlaceholder}`]: {
         display: 'flex',
       },
-    },
-    [`& .${c['row--lastVisible']}`]: {
-      minHeight: 'unset !important',
-      maxHeight: 'unset !important',
-    },
-    [`& .${c['row--lastVisible']} .${c.cell}`]: {
-      width: 'var(--width)',
-      height: 'calc(var(--height) + var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
-      paddingBottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
     },
     [`& .${c.treeDataGroupingCell}`]: {
       display: 'flex',

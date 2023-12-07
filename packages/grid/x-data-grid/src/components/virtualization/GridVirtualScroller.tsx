@@ -2,8 +2,11 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridDimensions, gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { GridOverlays } from '../base/GridOverlays';
 import { GridHeaders } from '../GridHeaders';
@@ -11,16 +14,17 @@ import { GridMainContainer as Container } from './GridMainContainer';
 import { GridTopContainer as TopContainer } from './GridTopContainer';
 import { GridBottomContainer as BottomContainer } from './GridBottomContainer';
 import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerContent';
-import { GridVirtualScrollerFiller as Filler } from './GridVirtualScrollerFiller';
+import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerFiller';
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
 
 type OwnerState = DataGridProcessedProps;
 
-const useUtilityClasses = (ownerState: OwnerState) => {
+const useUtilityClasses = (ownerState: OwnerState, dimensions: GridDimensions) => {
   const { classes } = ownerState;
 
   const slots = {
+    root: ['main', dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight'],
     scroller: ['virtualScroller'],
   };
 
@@ -53,8 +57,10 @@ export interface GridVirtualScrollerProps {
 }
 
 function GridVirtualScroller(props: GridVirtualScrollerProps) {
+  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const classes = useUtilityClasses(rootProps, dimensions);
 
   const virtualScroller = useGridVirtualScroller();
   const {
@@ -67,7 +73,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   } = virtualScroller;
 
   return (
-    <Container {...getContainerProps()}>
+    <Container className={classes.root} {...getContainerProps()}>
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
         <TopContainer>
           <GridHeaders />
@@ -82,7 +88,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           </RenderZone>
         </Content>
 
-        <Filler />
+        <SpaceFiller />
 
         <BottomContainer>
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />

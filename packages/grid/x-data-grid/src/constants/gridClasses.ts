@@ -105,6 +105,10 @@ export interface GridClasses {
    */
   cellCheckbox: string;
   /**
+   * Styles applied to the empty cell element.
+   */
+  cellEmpty: string;
+  /**
    * Styles applied to the skeleton cell element.
    */
   cellSkeleton: string;
@@ -344,6 +348,10 @@ export interface GridClasses {
    * Styles applied to the main container element.
    */
   main: string;
+  /**
+   * Styles applied to the main container element when it has right pinned columns.
+   */
+  'main--hasPinnedRight': string;
   /**
    * Styles applied to the menu element.
    */
@@ -612,6 +620,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell',
   'cellContent',
   'cellCheckbox',
+  'cellEmpty',
   'cellSkeleton',
   'checkboxInput',
   'columnHeader--alignCenter',
@@ -671,6 +680,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'iconButtonContainer',
   'iconSeparator',
   'main',
+  'main--hasPinnedRight',
   'menu',
   'menuIcon',
   'menuIconButton',

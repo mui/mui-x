@@ -49,7 +49,7 @@ export type GridCellProps = {
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
-  isNotVisible?: boolean;
+  isNotVisible: boolean;
   editCellState: GridEditCellProps<any> | null;
   pinnedOffset: number;
   pinnedPosition: PinnedPosition;
@@ -98,10 +98,10 @@ type OwnerState = Pick<GridCellProps, 'align' | 'pinnedPosition'> & {
   showRightBorder: boolean;
   showLeftShadow: boolean;
   showRightShadow: boolean;
-  isEditable?: boolean;
-  isSelected?: boolean;
-  isSelectionMode?: boolean;
-  classes?: DataGridProcessedProps['classes'];
+  isEditable: boolean;
+  isSelected: boolean;
+  isSelectionMode: boolean;
+  classes: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -122,8 +122,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: [
       'cell',
       `cell--text${capitalize(align)}`,
-      isEditable && 'cell--editable',
       isSelected && 'selected',
+      isEditable && 'cell--editable',
       showLeftBorder && 'cell--withLeftBorder',
       showRightBorder && 'cell--withRightBorder',
       showLeftShadow && 'cell--withLeftShadow',
@@ -211,7 +211,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }),
   );
 
-  const { cellMode, hasFocus, isEditable, value, formattedValue } = cellParamsWithAPI;
+  const { cellMode, hasFocus, isEditable = false, value, formattedValue } = cellParamsWithAPI;
 
   const canManageOwnFocus =
     column.type === 'actions' &&
@@ -247,15 +247,16 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
 
-  const isFirstCell = sectionIndex === 0;
-  const isLastCell = sectionIndex === sectionLength - 1;
+  const isSectionFirstCell = sectionIndex === 0;
+  const isSectionLastCell = sectionIndex === sectionLength - 1;
 
   const showLeftBorder =
     rootProps.showCellVerticalBorder && pinnedPosition === PinnedPosition.RIGHT;
   const showRightBorder =
-    rootProps.showCellVerticalBorder && !(isLastCell && pinnedPosition !== PinnedPosition.LEFT);
-  const showLeftShadow = pinnedPosition === PinnedPosition.RIGHT && isFirstCell;
-  const showRightShadow = pinnedPosition === PinnedPosition.LEFT && isLastCell;
+    rootProps.showCellVerticalBorder &&
+    !(isSectionLastCell && pinnedPosition !== PinnedPosition.LEFT);
+  const showLeftShadow = pinnedPosition === PinnedPosition.RIGHT && isSectionFirstCell;
+  const showRightShadow = pinnedPosition === PinnedPosition.LEFT && isSectionLastCell;
   const ownerState = {
     align,
     showLeftBorder,
@@ -332,7 +333,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
 
     if (pinnedPosition === PinnedPosition.RIGHT) {
-      cellStyle.right = pinnedOffset;
+      cellStyle.right = `calc(${pinnedOffset}px + var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))`;
     }
 
     return cellStyle;

@@ -6,7 +6,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { styled } from '@mui/system';
-import { getTotalHeaderHeight, useTimeout } from '@mui/x-data-grid/internals';
+import { getTotalHeaderHeight, fastMemo, useTimeout } from '@mui/x-data-grid/internals';
 import {
   GridEventListener,
   GridScrollParams,
@@ -67,8 +67,6 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
   const timeout = useTimeout();
-  const [dragging, setDragging] = React.useState<boolean>(false);
-  const [canScrollMore, setCanScrollMore] = React.useState<boolean>(true);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
 
@@ -76,6 +74,26 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     left: 0,
     top: 0,
   });
+
+  const getCanScrollMore = () => {
+    if (scrollDirection === 'left') {
+      // Only render if the user has not reached yet the start of the list
+      return scrollPosition.current.left > 0;
+    }
+
+    if (scrollDirection === 'right') {
+      const dimensions = apiRef.current.getRootDimensions();
+
+      // Only render if the user has not reached yet the end of the list
+      const maxScrollLeft = columnsTotalWidth - dimensions.viewportInnerSize.width;
+      return scrollPosition.current.left < maxScrollLeft;
+    }
+
+    return false;
+  };
+
+  const [dragging, setDragging] = React.useState<boolean>(false);
+  const [canScrollMore, setCanScrollMore] = React.useState<boolean>(getCanScrollMore);
 
   const rootProps = useGridRootProps();
   const ownerState = { ...rootProps, scrollDirection };
@@ -87,22 +105,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     (newScrollPosition) => {
       scrollPosition.current = newScrollPosition;
 
-      const dimensions = apiRef.current.getRootDimensions();
-
-      setCanScrollMore(() => {
-        if (scrollDirection === 'left') {
-          // Only render if the user has not reached yet the start of the list
-          return scrollPosition.current.left > 0;
-        }
-
-        if (scrollDirection === 'right') {
-          // Only render if the user has not reached yet the end of the list
-          const maxScrollLeft = columnsTotalWidth - dimensions.viewportInnerSize.width;
-          return scrollPosition.current.left < maxScrollLeft;
-        }
-
-        return false;
-      });
+      setCanScrollMore(getCanScrollMore);
     },
     [apiRef, columnsTotalWidth, scrollDirection],
   );
@@ -170,6 +173,6 @@ GridScrollAreaRaw.propTypes = {
   scrollDirection: PropTypes.oneOf(['left', 'right']).isRequired,
 } as any;
 
-const GridScrollArea = React.memo(GridScrollAreaRaw);
+const GridScrollArea = fastMemo(GridScrollAreaRaw);
 
 export { GridScrollArea };

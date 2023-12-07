@@ -223,7 +223,10 @@ export function useGridDimensions(
       }
     }
 
-    const rowWidth = Math.max(viewportOuterSize.width, columnsTotalWidth);
+    const rowWidth = Math.max(
+      viewportOuterSize.width,
+      columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
+    );
 
     const minimumSize = {
       width: contentSize.width,
@@ -280,6 +283,7 @@ export function useGridDimensions(
   };
 
   const apiPrivate: GridDimensionsPrivateApi = {
+    updateDimensions,
     getViewportPageSize,
   };
 

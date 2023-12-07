@@ -232,7 +232,9 @@ export const useGridColumnPinning = (
       }
 
       const otherSide =
-        side === GridPinnedColumnPosition.RIGHT ? GridPinnedColumnPosition.LEFT : GridPinnedColumnPosition.RIGHT;
+        side === GridPinnedColumnPosition.RIGHT
+          ? GridPinnedColumnPosition.LEFT
+          : GridPinnedColumnPosition.RIGHT;
 
       const newPinnedColumns = {
         [side]: [...(pinnedColumns[side] || []), field],

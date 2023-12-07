@@ -34,39 +34,6 @@ import {
   gridVirtualizationColumnEnabledSelector,
 } from './gridVirtualizationSelectors';
 
-// Uses binary search to avoid looping through all possible positions
-export function binarySearch(
-  offset: number,
-  positions: number[],
-  sliceStart = 0,
-  sliceEnd = positions.length,
-): number {
-  if (positions.length <= 0) {
-    return -1;
-  }
-
-  if (sliceStart >= sliceEnd) {
-    return sliceStart;
-  }
-
-  const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
-  const itemOffset = positions[pivot];
-  return offset <= itemOffset
-    ? binarySearch(offset, positions, sliceStart, pivot)
-    : binarySearch(offset, positions, pivot + 1, sliceEnd);
-}
-
-function exponentialSearch(offset: number, positions: number[], index: number): number {
-  let interval = 1;
-
-  while (index < positions.length && Math.abs(positions[index]) < offset) {
-    index += interval;
-    interval *= 2;
-  }
-
-  return binarySearch(offset, positions, Math.floor(index / 2), Math.min(index, positions.length));
-}
-
 export const getIndexesToRender = ({
   firstIndex,
   lastIndex,
@@ -128,7 +95,6 @@ export const useGridVirtualScroller = () => {
   const innerSize = dimensions.viewportInnerSize;
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
-  const hasTopPinnedRows = pinnedRows.top.length > 0;
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
@@ -151,15 +117,16 @@ export const useGridVirtualScroller = () => {
 
   useResizeObserver(mainRef, () => apiRef.current.resize());
 
+  const previousContext = React.useRef(EMPTY_RENDER_CONTEXT);
+  const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
+  const previousColumnContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const [renderContext, setRenderContext] = React.useState(EMPTY_RENDER_CONTEXT);
-  const [realRenderContext, setRealRenderContext] = React.useState(EMPTY_RENDER_CONTEXT);
-  const prevRenderContext = React.useRef(renderContext);
   const scrollPosition = React.useRef({ top: 0, left: 0 }).current;
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
   const getRenderedColumns = useLazyRef(createGetRenderedColumns).current;
 
-  const getRenderContext = () => realRenderContext;
+  const getRenderContext = () => renderContext;
 
   const indexOfRowWithFocusedCell = React.useMemo<number>(() => {
     if (cellFocus !== null) {
@@ -246,7 +213,10 @@ export const useGridVirtualScroller = () => {
       }
 
       if (!hasRowWithAutoHeight) {
-        firstColumnIndex = binarySearch(realLeft, columnPositions);
+        firstColumnIndex = binarySearch(realLeft, columnPositions, {
+          atStart: true,
+          lastPosition: dimensions.columnsTotalWidth,
+        });
         lastColumnIndex = binarySearch(realLeft + innerSize.width, columnPositions);
       }
     }
@@ -317,66 +287,65 @@ export const useGridVirtualScroller = () => {
     ],
   );
 
-  const updateRenderZonePosition = React.useCallback(
-    (nextRenderContext: GridRenderContext) => {
-      const direction = theme.direction === 'ltr' ? 1 : -1;
+  React.useEffect(() => {
+    const direction = theme.direction === 'ltr' ? 1 : -1;
 
-      const top = gridRowsMetaSelector(apiRef.current.state).positions[
-        nextRenderContext.firstRowIndex
-      ];
-      const left =
-        direction * columnPositions[nextRenderContext.firstColumnIndex] -
-        columnPositions[pinnedColumns.left.length];
+    const top = gridRowsMetaSelector(apiRef.current.state).positions[renderContext.firstRowIndex];
+    const left =
+      direction * columnPositions[renderContext.firstColumnIndex] -
+      columnPositions[pinnedColumns.left.length];
 
-      gridRootRef.current!.style.setProperty('--DataGrid-offsetTop', `${top}px`);
-      gridRootRef.current!.style.setProperty('--DataGrid-offsetLeft', `${left}px`);
-    },
-    [apiRef, gridRootRef, theme.direction, columnPositions, pinnedColumns.left.length],
-  );
+    gridRootRef.current?.style.setProperty('--DataGrid-offsetTop', `${top}px`);
+    gridRootRef.current?.style.setProperty('--DataGrid-offsetLeft', `${left}px`);
+  }, [
+    apiRef,
+    gridRootRef,
+    theme.direction,
+    columnPositions,
+    pinnedColumns.left.length,
+    renderContext,
+  ]);
 
   const updateRenderContext = React.useCallback(
-    (nextRenderContext: GridRenderContext) => {
-      if (areRenderContextsEqual(nextRenderContext, prevRenderContext.current)) {
+    (requestedRenderContext: GridRenderContext) => {
+      if (areRenderContextsEqual(requestedRenderContext, previousContext.current)) {
         return;
       }
 
-      const nextRealRenderContext = computeRealRenderContext(nextRenderContext);
-
-      setRenderContext(nextRenderContext);
-      setRealRenderContext(nextRealRenderContext);
-
-      updateRenderZonePosition(nextRealRenderContext);
-
       const didRowsIntervalChange =
-        nextRenderContext.firstRowIndex !== prevRenderContext.current.firstRowIndex ||
-        nextRenderContext.lastRowIndex !== prevRenderContext.current.lastRowIndex;
+        requestedRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
+        requestedRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
 
       const didColumnsIntervalChange =
-        nextRenderContext.firstColumnIndex !== prevRenderContext.current.firstColumnIndex ||
-        nextRenderContext.lastColumnIndex !== prevRenderContext.current.lastColumnIndex;
+        requestedRenderContext.firstColumnIndex !==
+          previousColumnContext.current.firstColumnIndex ||
+        requestedRenderContext.lastColumnIndex !== previousColumnContext.current.lastColumnIndex;
+
+      if (!didRowsIntervalChange && !didColumnsIntervalChange) {
+        return;
+      }
+
+      const nextRenderContext = computeRealRenderContext(requestedRenderContext);
 
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if the dimensions are also available.
       // So we wait until we have valid dimensions before publishing the first event.
       if (dimensions.isReady && didRowsIntervalChange) {
-        apiRef.current.publishEvent('renderedRowsIntervalChange', nextRealRenderContext);
+        previousRowContext.current = requestedRenderContext;
+        apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
       }
 
       // The column headers only need to re-render when the columns change, not when the rows
       // change, so we expose an event specifically for that.
       if (dimensions.isReady && didColumnsIntervalChange) {
-        apiRef.current.publishEvent('renderedColumnsIntervalChange', nextRealRenderContext);
+        previousColumnContext.current = requestedRenderContext;
+        apiRef.current.publishEvent('renderedColumnsIntervalChange', nextRenderContext);
       }
 
-      prevRenderContext.current = nextRenderContext;
+      previousContext.current = requestedRenderContext;
+      setRenderContext(nextRenderContext);
     },
-    [
-      apiRef,
-      prevRenderContext,
-      dimensions.isReady,
-      updateRenderZonePosition,
-      computeRealRenderContext,
-    ],
+    [apiRef, dimensions.isReady, computeRealRenderContext],
   );
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
@@ -385,7 +354,7 @@ export const useGridVirtualScroller = () => {
     scrollPosition.left = scrollLeft;
 
     // On iOS and macOS, negative offsets are possible when swiping past the start
-    if (!prevRenderContext.current || scrollTop < 0) {
+    if (scrollTop < 0) {
       return;
     }
     if (theme.direction === 'ltr') {
@@ -400,20 +369,20 @@ export const useGridVirtualScroller = () => {
     }
 
     // When virtualization is disabled, the context never changes during scroll
-    const nextRenderContext = enabled ? computeRenderContext() : prevRenderContext.current;
+    const nextRenderContext = enabled ? computeRenderContext() : previousContext.current;
 
     const topRowsScrolledSincePreviousRender = Math.abs(
-      nextRenderContext.firstRowIndex - prevRenderContext.current.firstRowIndex,
+      nextRenderContext.firstRowIndex - previousContext.current.firstRowIndex,
     );
     const bottomRowsScrolledSincePreviousRender = Math.abs(
-      nextRenderContext.lastRowIndex - prevRenderContext.current.lastRowIndex,
+      nextRenderContext.lastRowIndex - previousContext.current.lastRowIndex,
     );
 
     const topColumnsScrolledSincePreviousRender = Math.abs(
-      nextRenderContext.firstColumnIndex - prevRenderContext.current.firstColumnIndex,
+      nextRenderContext.firstColumnIndex - previousContext.current.firstColumnIndex,
     );
     const bottomColumnsScrolledSincePreviousRender = Math.abs(
-      nextRenderContext.lastColumnIndex - prevRenderContext.current.lastColumnIndex,
+      nextRenderContext.lastColumnIndex - previousContext.current.lastColumnIndex,
     );
 
     const shouldSetState =
@@ -428,7 +397,7 @@ export const useGridVirtualScroller = () => {
       {
         top: scrollTop,
         left: scrollLeft,
-        renderContext: shouldSetState ? nextRenderContext : prevRenderContext.current,
+        renderContext: shouldSetState ? nextRenderContext : previousContext.current,
       },
       event,
     );
@@ -459,9 +428,6 @@ export const useGridVirtualScroller = () => {
       position?: GridPinnedRowsPosition;
     } = {},
   ) => {
-    const isFirstSection =
-      (!hasTopPinnedRows && params.position === undefined) ||
-      (hasTopPinnedRows && params.position === 'top');
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
       (hasBottomPinnedRows && params.position === 'bottom');
@@ -486,10 +452,10 @@ export const useGridVirtualScroller = () => {
       return [];
     }
 
-    const firstRowToRender = realRenderContext.firstRowIndex;
-    const lastRowToRender = realRenderContext.lastRowIndex;
-    const firstColumnToRender = realRenderContext.firstColumnIndex;
-    const lastColumnToRender = realRenderContext.lastColumnIndex;
+    const firstRowToRender = renderContext.firstRowIndex;
+    const lastRowToRender = renderContext.lastRowIndex;
+    const firstColumnToRender = renderContext.firstColumnIndex;
+    const lastColumnToRender = renderContext.lastColumnIndex;
 
     if (!params.rows && !currentPage.range) {
       return [];
@@ -803,5 +769,60 @@ function createGetRenderedColumns() {
         renderedColumns,
       };
     },
+  );
+}
+
+type SearchOptions = {
+  atStart: boolean;
+  lastPosition: number;
+};
+
+// Uses binary search to avoid looping through all possible positions
+function binarySearch(
+  offset: number,
+  positions: number[],
+  options: SearchOptions | undefined = undefined,
+  sliceStart = 0,
+  sliceEnd = positions.length,
+): number {
+  if (positions.length <= 0) {
+    return -1;
+  }
+
+  if (sliceStart >= sliceEnd) {
+    return sliceStart;
+  }
+
+  const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
+  const position = positions[pivot];
+
+  let isBefore: boolean;
+  if (options?.atStart) {
+    const width =
+      (pivot === positions.length - 1 ? options.lastPosition : positions[pivot + 1]) - position;
+    isBefore = offset - width < position;
+  } else {
+    isBefore = offset <= position;
+  }
+
+  return isBefore
+    ? binarySearch(offset, positions, options, sliceStart, pivot)
+    : binarySearch(offset, positions, options, pivot + 1, sliceEnd);
+}
+
+function exponentialSearch(offset: number, positions: number[], index: number): number {
+  let interval = 1;
+
+  while (index < positions.length && Math.abs(positions[index]) < offset) {
+    index += interval;
+    interval *= 2;
+  }
+
+  return binarySearch(
+    offset,
+    positions,
+    undefined,
+    Math.floor(index / 2),
+    Math.min(index, positions.length),
   );
 }

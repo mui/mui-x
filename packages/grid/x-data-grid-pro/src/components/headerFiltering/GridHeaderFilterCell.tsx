@@ -15,6 +15,7 @@ import {
   getDataGridUtilityClass,
 } from '@mui/x-data-grid';
 import {
+  fastMemo,
   GridStateColDef,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
@@ -32,7 +33,6 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   sortIndex?: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
-  filterOperators?: GridFilterOperator[];
   width: number;
   colDef: GridColDef;
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
@@ -70,7 +70,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       colIndex,
       height,
       hasFocus,
-      filterOperators,
       width,
       headerClassName,
       colDef,
@@ -92,6 +91,9 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
     const isMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
 
+    // TODO: Support for `isAnyOf` operator
+    const filterOperators =
+      colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
     const currentOperator = filterOperators![0];
 
     const InputComponent = colDef.filterable ? currentOperator!.InputComponent : null;
@@ -342,4 +344,6 @@ GridHeaderFilterCell.propTypes = {
   width: PropTypes.number.isRequired,
 } as any;
 
-export { GridHeaderFilterCell };
+const Memoized = fastMemo(GridHeaderFilterCell);
+
+export { Memoized as GridHeaderFilterCell };

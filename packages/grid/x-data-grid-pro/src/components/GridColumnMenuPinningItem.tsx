@@ -53,7 +53,9 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
 
   if (side) {
     const otherSide =
-      side === GridPinnedColumnPosition.RIGHT ? GridPinnedColumnPosition.LEFT : GridPinnedColumnPosition.RIGHT;
+      side === GridPinnedColumnPosition.RIGHT
+        ? GridPinnedColumnPosition.LEFT
+        : GridPinnedColumnPosition.RIGHT;
     const label = otherSide === GridPinnedColumnPosition.RIGHT ? 'pinToRight' : 'pinToLeft';
     const Icon =
       side === GridPinnedColumnPosition.RIGHT
