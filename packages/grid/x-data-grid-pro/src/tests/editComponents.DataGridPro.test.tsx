@@ -633,7 +633,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should call setEditCellValue with the correct value when valueOptions is an array of strings', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -669,7 +669,7 @@ describe('<DataGridPro /> - Edit components', () => {
         },
       ];
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -701,7 +701,7 @@ describe('<DataGridPro /> - Edit components', () => {
         },
       ];
       render(<TestCase />);
-      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -745,11 +745,13 @@ describe('<DataGridPro /> - Edit components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
 
-      expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
+      const popper = screen.queryByRole('tooltip');
+      expect(popper).not.to.equal(null);
+      expect(popper!.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
       await act(() =>
         apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: ['Adidas'] }),
       );
-      expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
+      expect(popper!.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
     });
 
     it('should call onValueChange if defined', async () => {

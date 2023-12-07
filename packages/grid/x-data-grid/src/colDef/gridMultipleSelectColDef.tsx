@@ -1,19 +1,13 @@
-import {
-  defaultGetOptionLabel,
-  defaultGetOptionValue,
-  isArrayOfObjects,
-} from './gridSelectColDefUtils';
-import { GRID_STRING_COL_DEF } from './gridStringColDef';
+import { isArrayOfObjects } from './gridSelectColDefUtils';
+import { GRID_SINGLE_SELECT_COL_DEF } from './gridSingleSelectColDef';
 import { GridMultipleSelectColDef, ValueOptions } from '../models/colDef/gridColDef';
 import { renderEditMultipleSelectCell } from '../components/cell/GridEditMultipleSelectCell';
 import { getGridMultipleSelectOperators } from './gridMultipleSelectOperators';
 import { isMultipleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 
 export const GRID_MULTIPLE_SELECT_COL_DEF: Omit<GridMultipleSelectColDef, 'field'> = {
-  ...GRID_STRING_COL_DEF,
+  ...GRID_SINGLE_SELECT_COL_DEF,
   type: 'multipleSelect',
-  getOptionLabel: defaultGetOptionLabel,
-  getOptionValue: defaultGetOptionValue,
   valueFormatter(params) {
     const { id, field, value, api } = params;
     const colDef = params.api.getColumn(field);

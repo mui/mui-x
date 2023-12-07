@@ -87,7 +87,7 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseTextField: MUITextField,
   baseFormControl: MUIFormControl,
   baseSelect: MUISelect,
-  BaseMultipleSelect: MUIAutocomplete,
+  baseMultipleSelect: MUIAutocomplete,
   baseSwitch: MUISwitch,
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,

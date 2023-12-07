@@ -169,9 +169,11 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
       if (!resolvedValueOptions) {
         return;
       }
+
       if (value == null) {
         return;
       }
+
       if (!Array.isArray(value)) {
         return;
       }
