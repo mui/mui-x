@@ -765,7 +765,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      await Promise.resolve();
+      await act(() => Promise.resolve());
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.deep.equal(['Nike', 'Adidas']);
