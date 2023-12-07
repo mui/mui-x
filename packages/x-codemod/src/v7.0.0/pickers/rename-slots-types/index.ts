@@ -56,7 +56,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     trailingComma: true,
   };
 
-  const matchingImports = root.find(j.ImportDeclaration); //.filter((path) => !!matchImport(path));
+  const matchingImports = root.find(j.ImportDeclaration).filter((path) => !!matchImport(path));
 
   // Rename the import specifiers
   // - import { dayPickerClasses } from '@mui/x-date-pickers'
