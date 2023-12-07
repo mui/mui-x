@@ -105,7 +105,7 @@
     "openTo": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
@@ -187,7 +187,7 @@
     "views": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
       }
     }
   },
