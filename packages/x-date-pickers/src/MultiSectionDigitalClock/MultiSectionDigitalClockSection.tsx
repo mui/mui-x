@@ -209,8 +209,8 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               aria-disabled={readOnly}
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
-              className={classes.item}
               tabIndex={tabIndex}
+              className={classes.item}
               {...slotProps?.digitalClockSectionItem}
             >
               {option.label}
