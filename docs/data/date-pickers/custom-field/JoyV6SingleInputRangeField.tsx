@@ -104,21 +104,21 @@ const JoySingleInputDateRangeField = React.forwardRef(
   (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
 
-    const textFieldProps: SingleInputDateRangeFieldProps<
-      Dayjs,
-      true,
-      JoyFieldProps & { inputRef: React.Ref<HTMLInputElement> }
-    > = useSlotProps({
+    const textFieldProps: JoySingleInputDateRangeFieldProps = useSlotProps({
       elementType: FormControl,
       externalSlotProps: slotProps?.textField,
       externalForwardedProps: other,
+      additionalProps: {
+        shouldUseV6TextField: true,
+      },
       ownerState: props as any,
     });
 
-    const fieldResponse = useSingleInputDateRangeField<Dayjs, true, JoyFieldProps>({
-      ...textFieldProps,
-      shouldUseV6TextField: true,
-    });
+    const fieldResponse = useSingleInputDateRangeField<
+      Dayjs,
+      true,
+      JoySingleInputDateRangeFieldProps
+    >(textFieldProps);
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({

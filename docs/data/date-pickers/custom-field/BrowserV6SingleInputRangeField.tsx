@@ -88,15 +88,17 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
   (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
 
-    const {
-      inputRef: externalInputRef,
-      ...textFieldProps
-    }: SingleInputDateRangeFieldProps<Dayjs> = useSlotProps({
-      elementType: 'input',
-      externalSlotProps: slotProps?.textField,
-      externalForwardedProps: other,
-      ownerState: props as any,
-    });
+    const textFieldProps: SingleInputDateRangeFieldProps<Dayjs, true> = useSlotProps(
+      {
+        elementType: 'input',
+        externalSlotProps: slotProps?.textField,
+        externalForwardedProps: other,
+        additionalProps: {
+          shouldUseV6TextField: true,
+        },
+        ownerState: props as any,
+      },
+    );
 
     textFieldProps.InputProps = {
       ...textFieldProps.InputProps,
@@ -113,7 +115,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       Dayjs,
       true,
       typeof textFieldProps
-    >({ ...textFieldProps, shouldUseV6TextField: true });
+    >(textFieldProps);
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({

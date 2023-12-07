@@ -8,8 +8,8 @@ import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTi
 import { DateTimePickerProps } from './DateTimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
-type DateTimePickerComponent = (<TDate>(
-  props: DateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DateTimePickerComponent = (<TDate, TUseV6TextField extends boolean>(
+  props: DateTimePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -22,10 +22,10 @@ type DateTimePickerComponent = (<TDate>(
  *
  * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
  */
-const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(
-  inProps: DateTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DateTimePicker = React.forwardRef(function DateTimePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: DateTimePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePicker' });
 
   const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
