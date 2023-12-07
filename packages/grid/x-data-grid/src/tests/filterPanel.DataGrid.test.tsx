@@ -10,16 +10,16 @@ import {
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getSelectByName } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
-  fireEvent.change(screen.getByRole('combobox', { name: 'Columns' }), {
+  fireEvent.change(getSelectByName('Columns'), {
     target: { value: columnValue },
   });
 }
 
 function setOperatorValue(operator: string) {
-  fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
+  fireEvent.change(getSelectByName('Operator'), {
     target: { value: operator },
   });
 }
@@ -175,17 +175,13 @@ describe('<DataGrid /> - Filter panel', () => {
       />,
     );
     expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Puma');
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
-      'equals',
-    );
+    expect(getSelectByName('Operator').value).to.equal('equals');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     setColumnValue('slogan');
 
     expect(getColumnValues(0)).to.deep.equal([]);
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
-      'equals',
-    );
+    expect(getSelectByName('Operator').value).to.equal('equals');
     expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Puma');
   });
 
@@ -212,17 +208,13 @@ describe('<DataGrid /> - Filter panel', () => {
       />,
     );
     expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Pu');
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
-      'contains',
-    );
+    expect(getSelectByName('Operator').value).to.equal('contains');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     setColumnValue('slogan');
 
     expect(getColumnValues(0)).to.deep.equal([]);
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
-      'from',
-    );
+    expect(getSelectByName('Operator').value).to.equal('from');
     expect(screen.getByTestId<HTMLInputElement>('customInput').value).to.equal('');
   });
 
@@ -252,9 +244,7 @@ describe('<DataGrid /> - Filter panel', () => {
       />,
     );
     expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Pu');
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
-      'contains',
-    );
+    expect(getSelectByName('Operator').value).to.equal('contains');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     expect(onFilterModelChange.callCount).to.equal(0);
@@ -264,9 +254,7 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
 
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
-      'isEmpty',
-    );
+    expect(getSelectByName('Operator').value).to.equal('isEmpty');
   });
 
   it('should reset filter value if not available in the new valueOptions', () => {
@@ -508,12 +496,8 @@ describe('<DataGrid /> - Filter panel', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
     // check that the filter is still in the model
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Columns' }).value).to.equal(
-      'brand',
-    );
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
-      'isEmpty',
-    );
+    expect(getSelectByName('Columns').value).to.equal('brand');
+    expect(getSelectByName('Operator').value).to.equal('isEmpty');
   });
 
   // See https://github.com/mui/mui-x/issues/7901#issuecomment-1427058922
@@ -537,11 +521,7 @@ describe('<DataGrid /> - Filter panel', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
     // check that the filter is changed to default one (`is`)
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Columns' }).value).to.equal(
-      'country',
-    );
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
-      'is',
-    );
+    expect(getSelectByName('Columns').value).to.equal('country');
+    expect(getSelectByName('Operator').value).to.equal('is');
   });
 });
