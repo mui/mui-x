@@ -72,8 +72,8 @@ export const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
   overridesResolver: (props, styles) => styles.columnHeaderRow,
-})<{ ownerState?: GetHeadersParams; leftOverflow?: number }>(
-  ({ ownerState: { position } = {}, leftOverflow = 0 }) => ({
+})<{ ownerState: { params?: GetHeadersParams; leftOverflow?: number } }>(
+  ({ ownerState: { params: { position } = {}, leftOverflow = 0 } }) => ({
     display: 'flex',
     height: 'var(--DataGrid-headerHeight)',
     transform:
@@ -225,7 +225,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       <GridColumnHeaderRow
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 1}
-        ownerState={params}
+        ownerState={{ params }}
       >
         {columns}
         {getFiller(params)}
@@ -333,8 +333,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           key={depthIndex}
           role="row"
           aria-rowindex={depthIndex + 1}
-          ownerState={params}
-          leftOverflow={depthInfo.leftOverflow}
+          ownerState={{
+            params,
+            leftOverflow: depthInfo.leftOverflow,
+          }}
         >
           {depthInfo.elements.map(
             ({ groupId, width, fields, colIndex, hasFocus, tabIndex }, groupIndex) => {
