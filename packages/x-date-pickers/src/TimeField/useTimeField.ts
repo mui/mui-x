@@ -5,35 +5,9 @@ import {
 import { useField } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
 import { validateTime } from '../internals/utils/validation/validateTime';
-import { useUtils } from '../internals/hooks/useUtils';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
 import { FieldSection } from '../models';
-import { BaseTimeValidationProps } from '../internals/models/validation';
-import { DefaultizedProps } from '../internals/models/helpers';
-
-interface UseDefaultizedTimeFieldBaseProps extends BaseTimeValidationProps {
-  format?: string;
-}
-
-export const useDefaultizedTimeField = <
-  TDate,
-  TKnownProps extends UseDefaultizedTimeFieldBaseProps & { ampm?: boolean },
-  TAllProps extends {},
->(
-  props: TKnownProps & TAllProps,
-): TAllProps & DefaultizedProps<TKnownProps, keyof UseDefaultizedTimeFieldBaseProps> => {
-  const utils = useUtils<TDate>();
-
-  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? defaultFormat,
-  };
-};
+import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
 
 export const useTimeField = <
   TDate,

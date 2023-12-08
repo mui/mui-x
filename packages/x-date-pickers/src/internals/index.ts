@@ -134,6 +134,11 @@ export {
   onSpaceOrEnter,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
+export {
+  useDefaultizedDateField,
+  useDefaultizedTimeField,
+  useDefaultizedDateTimeField,
+} from './hooks/defaultizedFieldProps';
 export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
 export { extractValidationProps } from './utils/validation/extractValidationProps';
 export { validateDate } from './utils/validation/validateDate';
@@ -151,7 +156,3 @@ export type {
 
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
-
-export { useDefaultizedDateField } from '../DateField/useDateField';
-export { useDefaultizedTimeField } from '../TimeField/useTimeField';
-export { useDefaultizedDateTimeField } from '../DateTimeField/useDateTimeField';
