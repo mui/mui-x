@@ -154,13 +154,6 @@ export const useGridVirtualScroller = () => {
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
       }
 
-      // The column headers only need to re-render when the columns change, not when the rows
-      // change, so we expose an event specifically for that.
-      if (dimensions.isReady && didColumnsIntervalChange) {
-        previousColumnContext.current = nextRenderContext;
-        apiRef.current.publishEvent('renderedColumnsIntervalChange', nextRenderContext);
-      }
-
       previousContext.current = nextRenderContext;
       setRenderContext(nextRenderContext);
     },

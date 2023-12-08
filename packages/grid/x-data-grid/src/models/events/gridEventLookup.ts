@@ -463,10 +463,6 @@ export interface GridEventLookup
    * Fired when the rendered rows index interval changes. Called with a [[GridRenderContext]] object.
    */
   renderedRowsIntervalChange: { params: GridRenderContext };
-  /**
-   * Fired when the rendered columns index interval changes. Called with a [[GridRenderContext]] object.
-   */
-  renderedColumnsIntervalChange: { params: GridRenderContext };
 
   // Edit
   /**
