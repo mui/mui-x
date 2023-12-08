@@ -1,19 +1,13 @@
 import * as React from 'react';
 import { BoxProps } from '@mui/material/Box';
-
-export interface PickersInputElement {
-  container: React.HTMLAttributes<HTMLSpanElement>;
-  content: React.HTMLAttributes<HTMLSpanElement>;
-  before: React.HTMLAttributes<HTMLSpanElement>;
-  after: React.HTMLAttributes<HTMLSpanElement>;
-}
+import { PickersSectionElement } from '../../../PickersSectionsList';
 
 export interface PickersInputPropsUsedByField {
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.
    */
-  elements: PickersInputElement[];
+  elements: PickersSectionElement[];
   /**
    * Is `true` if the current values equals the empty value.
    * For a single item value, it means that `value === null`
