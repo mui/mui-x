@@ -9,21 +9,21 @@ type UseClearableFieldProps<
   TFieldProps extends FieldsTextFieldProps,
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
   TFieldSlots extends FieldSlots,
-  TFieldSlotsComponentsProps extends FieldSlotProps,
+  TFieldSlotProps extends FieldSlotProps,
 > = {
   clearable: boolean;
   fieldProps: TFieldProps;
   InputProps: TInputProps;
   onClear: React.MouseEventHandler<HTMLButtonElement>;
   slots?: { [K in keyof TFieldSlots as Uncapitalize<K & string>]: TFieldSlots[K] };
-  slotProps?: TFieldSlotsComponentsProps;
+  slotProps?: TFieldSlotProps;
 };
 
 export const useClearableField = <
   TFieldProps extends FieldsTextFieldProps,
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
-  TFieldSlotsComponents extends FieldSlots,
-  TFieldSlotsComponentsProps extends FieldSlotProps,
+  TFieldSlots extends FieldSlots,
+  TFieldSlotProps extends FieldSlotProps,
 >({
   clearable,
   fieldProps: forwardedFieldProps,
@@ -34,8 +34,8 @@ export const useClearableField = <
 }: UseClearableFieldProps<
   TFieldProps,
   TInputProps,
-  TFieldSlotsComponents,
-  TFieldSlotsComponentsProps
+  TFieldSlots,
+  TFieldSlotProps
 >) => {
   const localeText = useLocaleText();
 
