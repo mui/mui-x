@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { DatePicker, dayPickerClasses } from '@mui/x-date-pickers';
-import { DateRangePicker } from '@mui/x-date-pickers-pro';
+import { DateRangePicker, DateRangePickerSlotsComponentsProps } from '@mui/x-date-pickers-pro';
 import TextField from '@mui/material/TextField';
 
 const className = dayPickerClasses.root;
@@ -11,7 +12,7 @@ const className = dayPickerClasses.root;
         sx: {
           width: 50,
         },
-      },
+      } as DateRangePickerSlotsComponentsProps<any>,
     }}
     components={{
       Layout: test,
