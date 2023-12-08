@@ -731,7 +731,7 @@ export const getSectionDOMElementFromSectionIndex = (
   index: number,
 ) => {
   return sectionListRef.current!.querySelector<HTMLSpanElement>(
-    `[data-sectionindex="${index}"] .${pickersSectionListClasses.sectionContent}`,
+    `${pickersSectionListClasses.section}[data-sectionindex="${index}"] .${pickersSectionListClasses.sectionContent}`,
   )!;
 };
 

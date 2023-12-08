@@ -147,7 +147,7 @@ export const buildFieldInteractions = <P extends {}>({
 
     const getSection = (sectionIndex: number) =>
       getSectionsContainer().querySelector<HTMLSpanElement>(
-        `span[data-sectionindex="${sectionIndex}"] .${pickersSectionListClasses.sectionContent}`,
+        `${pickersSectionListClasses.section}[data-sectionindex="${sectionIndex}"] .${pickersSectionListClasses.sectionContent}`,
       )!;
 
     const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
