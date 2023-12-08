@@ -47,7 +47,7 @@ export interface ExportedUseMobilePickerSlotProps<TDate, TView extends DateOrTim
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
-export interface UseMobilePickerSlotsComponentsProps<
+export interface UseMobilePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
 > extends ExportedUseMobilePickerSlotProps<TDate, TView>,
@@ -75,7 +75,7 @@ export interface UseMobilePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobilePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseMobilePickerSlotProps<TDate, TView>;
 }
 
 export interface UseMobilePickerParams<

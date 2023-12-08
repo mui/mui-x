@@ -39,7 +39,7 @@ export interface PickersArrowSwitcherProps
 
 export type PickersArrowSwitcherOwnerState = PickersArrowSwitcherProps;
 
-export interface PickersArrowSwitcherComponentsPropsOverrides {}
+export interface PickersArrowSwitcherSlotPropsOverrides {}
 
 export interface PickersArrowSwitcherSlots {
   /**
@@ -71,22 +71,22 @@ export interface PickersArrowSwitcherButtonSlotOwnerState extends PickersArrowSw
 export interface PickersArrowSwitcherSlotProps {
   previousIconButton?: SlotComponentProps<
     typeof IconButton,
-    PickersArrowSwitcherComponentsPropsOverrides,
+    PickersArrowSwitcherSlotPropsOverrides,
     PickersArrowSwitcherButtonSlotOwnerState
   >;
   nextIconButton?: SlotComponentProps<
     typeof IconButton,
-    PickersArrowSwitcherComponentsPropsOverrides,
+    PickersArrowSwitcherSlotPropsOverrides,
     PickersArrowSwitcherButtonSlotOwnerState
   >;
   leftArrowIcon?: SlotComponentProps<
     typeof SvgIcon,
-    PickersArrowSwitcherComponentsPropsOverrides,
+    PickersArrowSwitcherSlotPropsOverrides,
     undefined
   >;
   rightArrowIcon?: SlotComponentProps<
     typeof SvgIcon,
-    PickersArrowSwitcherComponentsPropsOverrides,
+    PickersArrowSwitcherSlotPropsOverrides,
     undefined
   >;
 }
