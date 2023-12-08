@@ -45,13 +45,13 @@ const PickersCalendarHeaderRoot = styled('div', {
 }>({
   display: 'flex',
   alignItems: 'center',
-  marginTop: 16,
-  marginBottom: 8,
+  marginTop: 12,
+  marginBottom: 4,
   paddingLeft: 24,
   paddingRight: 12,
   // prevent jumping in safari
-  maxHeight: 30,
-  minHeight: 30,
+  maxHeight: 40,
+  minHeight: 40,
 });
 
 const PickersCalendarHeaderLabelContainer = styled('div', {

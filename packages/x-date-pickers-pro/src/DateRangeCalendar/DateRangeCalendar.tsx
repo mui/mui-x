@@ -78,7 +78,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 }));
 
 const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
-  padding: '16px 16px 8px 16px',
+  padding: '12px 16px 4px 16px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
