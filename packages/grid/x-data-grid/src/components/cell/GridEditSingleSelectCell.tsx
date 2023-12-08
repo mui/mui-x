@@ -7,7 +7,7 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
-import { GridSingleSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
+import { ValueOptions } from '../../models/colDef/gridColDef';
 import {
   getValueFromValueOptions,
   isSingleSelectColDef,
@@ -16,8 +16,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 export interface GridEditSingleSelectCellProps
   extends GridRenderEditCellParams,
-    Omit<SelectProps, 'id' | 'tabIndex' | 'value'>,
-    Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> {
+    Omit<SelectProps, 'id' | 'tabIndex' | 'value'> {
   /**
    * Callback called when the value is changed by the user.
    * @param {SelectChangeEvent<any>} event The event source of the callback.
@@ -56,8 +55,6 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     error,
     onValueChange,
     initialOpen = rootProps.editMode === GridEditModes.Cell,
-    getOptionLabel: getOptionLabelProp,
-    getOptionValue: getOptionValueProp,
     ...other
   } = props;
 
@@ -91,8 +88,8 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     return null;
   }
 
-  const getOptionValue = getOptionValueProp || colDef.getOptionValue!;
-  const getOptionLabel = getOptionLabelProp || colDef.getOptionLabel!;
+  const getOptionValue = colDef.getOptionValue!;
+  const getOptionLabel = colDef.getOptionLabel!;
 
   const handleChange: SelectProps['onChange'] = async (event) => {
     if (!isSingleSelectColDef(colDef) || !valueOptions) {
@@ -204,18 +201,6 @@ GridEditSingleSelectCell.propTypes = {
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: PropTypes.any,
-  /**
-   * Used to determine the label displayed for a given value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The text to be displayed.
-   */
-  getOptionLabel: PropTypes.func,
-  /**
-   * Used to determine the value used for a value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The value to be used.
-   */
-  getOptionValue: PropTypes.func,
   /**
    * If true, the cell is the active element.
    */

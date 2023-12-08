@@ -21,7 +21,6 @@ export interface GridFilterInputMultipleSingleSelectProps
       | 'color'
       | 'getOptionLabel'
     >,
-    Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'>,
     GridFilterInputValueProps {
   type?: 'singleSelect';
 }
@@ -40,8 +39,6 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     helperText,
     size,
     variant = 'standard',
-    getOptionLabel: getOptionLabelProp,
-    getOptionValue: getOptionValueProp,
     ...other
   } = props;
   const TextFieldProps = {
@@ -63,8 +60,8 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
   }
 
-  const getOptionValue = getOptionValueProp || resolvedColumn?.getOptionValue!;
-  const getOptionLabel = getOptionLabelProp || resolvedColumn?.getOptionLabel!;
+  const getOptionValue = resolvedColumn?.getOptionValue!;
+  const getOptionLabel = resolvedColumn?.getOptionLabel!;
 
   const isOptionEqualToValue = React.useCallback(
     (option: ValueOptions, value: ValueOptions) => getOptionValue(option) === getOptionValue(value),
@@ -177,18 +174,6 @@ GridFilterInputMultipleSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Used to determine the label displayed for a given value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The text to be displayed.
-   */
-  getOptionLabel: PropTypes.func,
-  /**
-   * Used to determine the value used for a value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The value to be used.
-   */
-  getOptionValue: PropTypes.func,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

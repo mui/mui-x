@@ -52,8 +52,7 @@ const SingleSelectOperatorContainer = styled('div')({
 });
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
-  TextFieldProps &
-  Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> & {
+  TextFieldProps & {
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -70,8 +69,6 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     type,
     apiRef,
     focusElementRef,
-    getOptionLabel: getOptionLabelProp,
-    getOptionValue: getOptionValueProp,
     placeholder,
     tabIndex,
     label: labelProp,
@@ -95,8 +92,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     }
   }
 
-  const getOptionValue = getOptionValueProp || resolvedColumn?.getOptionValue!;
-  const getOptionLabel = getOptionLabelProp || resolvedColumn?.getOptionLabel!;
+  const getOptionValue = resolvedColumn?.getOptionValue!;
+  const getOptionLabel = resolvedColumn?.getOptionLabel!;
 
   const currentValueOptions = React.useMemo(() => {
     if (!resolvedColumn) {
@@ -192,18 +189,6 @@ GridFilterInputSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Used to determine the label displayed for a given value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The text to be displayed.
-   */
-  getOptionLabel: PropTypes.func,
-  /**
-   * Used to determine the value used for a value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The value to be used.
-   */
-  getOptionValue: PropTypes.func,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)
