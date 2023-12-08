@@ -9,7 +9,7 @@ import visuallyHidden from '@mui/utils/visuallyHidden';
 import { pickersInputClasses, getPickersInputUtilityClass } from './pickersTextFieldClasses';
 import Outline from './Outline';
 import { PickersInputProps } from './PickersInput.types';
-import { PickersSectionList } from '../../../PickersSectionList';
+import { Unstable_PickersSectionList as PickersSectionList } from '../../../PickersSectionList';
 
 const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',

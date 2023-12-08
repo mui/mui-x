@@ -1,4 +1,4 @@
-export { PickersSectionList } from './PickersSectionList';
+export { PickersSectionList as Unstable_PickersSectionList } from './PickersSectionList';
 export type { PickersSectionListProps, PickersSectionElement } from './PickersSectionList';
 export {
   getPickersSectionListUtilityClass,
