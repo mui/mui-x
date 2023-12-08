@@ -103,6 +103,19 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
+### ✅ Rename slots types
+
+The slot interfaces got renamed to match with `@mui/base` naming convention.
+Suffix `SlotsComponent` is replaced by `Slots` and `SlotsComponentsProps` is replaced by `SlotProps`.
+Here is an example on the `DateCalendar` typing.
+
+```diff
+- DateCalendarSlotsComponent
++ DateCalendarSlots
+- DateCalendarSlotsComponentsProps
++ DateCalendarSlotProps
+```
+
 ### Add new parameters to the `shortcuts` slot `onChange` callback
 
 :::warning
