@@ -65,7 +65,6 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
     <rootProps.slots.baseIconButton
       tabIndex={-1}
       aria-label={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
-      title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
       {...rootProps.slotProps?.baseIconButton}
     >
