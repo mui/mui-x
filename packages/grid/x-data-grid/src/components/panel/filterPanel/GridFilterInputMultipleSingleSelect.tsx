@@ -69,15 +69,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   );
 
   const resolvedValueOptions = React.useMemo(() => {
-    if (!resolvedColumn?.valueOptions) {
-      return [];
-    }
-
-    if (typeof resolvedColumn.valueOptions === 'function') {
-      return resolvedColumn.valueOptions({ field: resolvedColumn.field });
-    }
-
-    return resolvedColumn.valueOptions;
+    return getValueOptions(resolvedColumn!) || [];
   }, [resolvedColumn]);
 
   const resolvedFormattedValueOptions = React.useMemo(() => {

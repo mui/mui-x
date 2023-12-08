@@ -7,9 +7,9 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
-import { ValueOptions } from '../../models/colDef/gridColDef';
 import {
   getValueFromValueOptions,
+  getValueOptions,
   isSingleSelectColDef,
 } from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -77,13 +77,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     return null;
   }
 
-  let valueOptions: Array<ValueOptions> | undefined;
-  if (typeof colDef?.valueOptions === 'function') {
-    valueOptions = colDef?.valueOptions({ id, row, field });
-  } else {
-    valueOptions = colDef?.valueOptions;
-  }
-
+  const valueOptions = getValueOptions(colDef);
   if (!valueOptions) {
     return null;
   }

@@ -8,6 +8,15 @@ export function isSingleSelectColDef(colDef: GridColDef | null): colDef is GridS
   return colDef?.type === 'singleSelect';
 }
 
+export function getValueOptions(column: GridSingleSelectColDef) {
+  if (!column) {
+    return undefined;
+  }
+  return typeof column.valueOptions === 'function'
+    ? column.valueOptions({ field: column.field })
+    : column.valueOptions;
+}
+
 export function getValueFromValueOptions(
   value: string,
   valueOptions: any[] | undefined,

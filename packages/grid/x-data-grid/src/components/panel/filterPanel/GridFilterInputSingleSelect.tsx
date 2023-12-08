@@ -7,7 +7,11 @@ import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { getValueFromValueOptions, isSingleSelectColDef } from './filterPanelUtils';
+import {
+  getValueFromValueOptions,
+  getValueOptions,
+  isSingleSelectColDef,
+} from './filterPanelUtils';
 import type { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';
 
 const renderSingleSelectOptions = ({
@@ -96,12 +100,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const getOptionLabel = resolvedColumn?.getOptionLabel!;
 
   const currentValueOptions = React.useMemo(() => {
-    if (!resolvedColumn) {
-      return undefined;
-    }
-    return typeof resolvedColumn.valueOptions === 'function'
-      ? resolvedColumn.valueOptions({ field: resolvedColumn.field })
-      : resolvedColumn.valueOptions;
+    return getValueOptions(resolvedColumn!);
   }, [resolvedColumn]);
 
   const onFilterChange = React.useCallback(
