@@ -24,15 +24,19 @@ export interface DayRangeValidationProps<TDate> {
   shouldDisableDate?: (day: TDate, position: 'start' | 'end') => boolean;
 }
 
-export type UseDateRangeFieldProps<TDate, TUseV6TextField extends boolean> = MakeOptional<
-  UseFieldInternalProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    TUseV6TextField,
-    DateRangeValidationError
-  >,
-  'format'
-> &
-  DayRangeValidationProps<TDate> &
-  BaseDateValidationProps<TDate>;
+export interface UseDateRangeFieldProps<TDate, TUseV6TextField extends boolean>
+  extends MakeOptional<
+      Omit<
+        UseFieldInternalProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TUseV6TextField,
+          DateRangeValidationError
+        >,
+        'unstableFieldRef'
+      >,
+      'format'
+    >,
+    DayRangeValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {}

@@ -392,6 +392,7 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
           contentEditable: !isContainerEditable && !disabled && !readOnly,
           role: 'spinbutton',
           'aria-label': section.placeholder,
+          'aria-disabled': disabled,
           children: section.value || section.placeholder,
           onInput: handleInputContentInput,
           onPaste: handleInputContentPaste,

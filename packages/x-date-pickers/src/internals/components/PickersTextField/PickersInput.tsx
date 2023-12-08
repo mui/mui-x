@@ -46,6 +46,8 @@ const PickersInputRoot = styled(Box, {
       borderWidth: 2,
     },
     [`&.${pickersInputClasses.disabled}`]: {
+      pointerEvents: 'none',
+
       [`& .${pickersInputClasses.notchedOutline}`]: {
         borderColor: (theme.vars || theme).palette.action.disabled,
       },
