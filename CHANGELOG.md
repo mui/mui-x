@@ -3,12 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 16.18.4
+## 6.18.4
 
 _Dec 8, 2023_
 
-We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
+- 📚 Add [Pickers FAQ page](https://mui.com/x/react-date-pickers/faq/)
+- 🌍 Improve Danish (da-DK) locale on Data Grid
 - 🐞 Bugfixes
 
 ### Data Grid
