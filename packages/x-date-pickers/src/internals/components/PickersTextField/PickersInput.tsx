@@ -209,7 +209,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
 
     inputProps,
     inputRef,
-    sectionsContainerRef,
+    sectionListRef,
     ...other
   } = props;
 
@@ -268,7 +268,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
     >
       {startAdornment}
       <PickersSectionList
-        ref={sectionsContainerRef}
+        ref={sectionListRef}
         elements={elements}
         contentEditable={contentEditable}
         tabIndex={tabIndex}
