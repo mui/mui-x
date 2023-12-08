@@ -17,7 +17,7 @@ import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
 import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
-import { PickersSectionElement } from '../../../PickersSectionList';
+import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 
 export interface UseFieldParams<
   TValue,
@@ -183,7 +183,7 @@ interface UseFieldV6AdditionalProps {
 export interface UseFieldV7ForwardedProps {
   focused?: boolean;
   autoFocus?: boolean;
-  sectionListRef?: React.Ref<HTMLDivElement>;
+  sectionRef?: React.Ref<PickersSectionListRef>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;

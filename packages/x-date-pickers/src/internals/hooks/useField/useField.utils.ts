@@ -718,23 +718,6 @@ export const getSectionOrder = (
   return { neighbors, startIndex: rtl2ltr[0], endIndex: rtl2ltr[sections.length - 1] };
 };
 
-export const getSectionIndexFromDOMElement = (element: Element | null | undefined) => {
-  const sectionIndex = Number(
-    (element == null ? null : element.parentElement)?.dataset.sectionindex ?? '-1',
-  );
-
-  return sectionIndex === -1 ? null : sectionIndex;
-};
-
-export const getSectionDOMElementFromSectionIndex = (
-  sectionListRef: React.RefObject<HTMLDivElement>,
-  index: number,
-) => {
-  return sectionListRef.current!.querySelector<HTMLSpanElement>(
-    `${pickersSectionListClasses.section}[data-sectionindex="${index}"] .${pickersSectionListClasses.sectionContent}`,
-  )!;
-};
-
 export const parseSelectedSections = (
   selectedSections: FieldSelectedSections,
   sections: FieldSection[],

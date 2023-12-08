@@ -16,12 +16,16 @@ import {
   FieldSection,
 } from '@mui/x-date-pickers-pro';
 import {
-  PickersSectionList,
-  PickersSectionElement,
+  Unstable_PickersSectionList as PickersSectionList,
+  PickersSectionListProps,
 } from '@mui/x-date-pickers/PickersSectionList';
 
 interface BrowserFieldProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'contentEditable'>,
+    Pick<
+      PickersSectionListProps,
+      'elements' | 'sectionRef' | 'contentEditable' | 'tabIndex'
+    > {
   label?: React.ReactNode;
   inputRef?: React.Ref<any>;
   InputProps?: {
@@ -34,8 +38,6 @@ interface BrowserFieldProps
   ownerState?: any;
   sx?: any;
   textField: 'v6' | 'v7';
-  sectionListRef?: React.Ref<HTMLDivElement>;
-  elements: PickersSectionElement[];
 }
 
 type BrowserFieldComponent = ((
@@ -59,7 +61,7 @@ const BrowserField = React.forwardRef(
       elements,
       onClick,
       onInput,
-      sectionListRef,
+      sectionRef,
 
       contentEditable,
       onFocus,
@@ -80,7 +82,7 @@ const BrowserField = React.forwardRef(
         {startAdornment}
         <PickersSectionList
           elements={elements}
-          sectionListRef={sectionListRef}
+          sectionRef={sectionRef}
           contentEditable={contentEditable}
           onFocus={onFocus}
           onBlur={onBlur}

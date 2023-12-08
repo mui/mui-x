@@ -3,7 +3,10 @@ import { BoxProps } from '@mui/material/Box';
 import { PickersSectionListProps } from '../../../PickersSectionList';
 
 export interface PickersInputPropsUsedByField
-  extends Pick<PickersSectionListProps, 'elements' | 'contentEditable' | 'tabIndex'> {
+  extends Pick<
+    PickersSectionListProps,
+    'elements' | 'sectionRef' | 'contentEditable' | 'tabIndex'
+  > {
   /**
    * Is `true` if the current values equals the empty value.
    * For a single item value, it means that `value === null`
@@ -29,8 +32,6 @@ export interface PickersInputPropsUsedByField
 
   inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
   inputRef?: React.Ref<HTMLInputElement>;
-
-  sectionListRef?: React.Ref<HTMLDivElement>;
 }
 
 export interface PickersInputOtherProps extends Omit<BoxProps, keyof PickersInputPropsUsedByField> {

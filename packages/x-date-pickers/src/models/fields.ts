@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { BaseFieldProps } from '../internals/models/fields';
 import type { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
+import { PickersSectionListRef } from '../PickersSectionList';
 
 export type FieldSectionType =
   | 'year'
@@ -128,7 +129,7 @@ export interface BaseSingleInputFieldProps<
   /**
    * Only used for v7 TextField implementation.
    */
-  sectionListRef?: React.Ref<HTMLDivElement>;
+  sectionRef?: React.Ref<PickersSectionListRef>;
   onKeyDown?: React.KeyboardEventHandler;
   onBlur?: React.FocusEventHandler;
   focused?: boolean;
