@@ -278,7 +278,7 @@ const postProcessSections = <TDate>({
 export const buildSectionsFromFormat = <TDate>(params: BuildSectionsFromFormatParams<TDate>) => {
   let expandedFormat = expandFormat(params);
   if (params.isRTL && !params.shouldUseV6TextField) {
-    expandedFormat = expandedFormat.split(' ').toReversed().join(' ');
+    expandedFormat = expandedFormat.split(' ').reverse().join(' ');
   }
 
   const escapedParts = getEscapedPartsFromFormat({ ...params, expandedFormat });
