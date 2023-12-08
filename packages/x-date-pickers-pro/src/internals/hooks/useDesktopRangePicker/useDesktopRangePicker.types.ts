@@ -8,8 +8,8 @@ import {
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
@@ -31,11 +31,16 @@ export interface UseDesktopRangePickerSlotsComponent<
 export interface UseDesktopRangePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends PickersPopperSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponentsProps<TDate> {
+> extends ExportedUseDesktopRangePickerSlotsComponentsProps<TDate, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
+
+export interface ExportedUseDesktopRangePickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersPopperSlotsComponentsProps,
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
+    RangePickerFieldSlotsComponentsProps<TDate> {}
 
 export interface DesktopRangeOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
@@ -94,4 +99,9 @@ export interface UseDesktopRangePickerParams<
     'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
+  /**
+   * If `true`, the popper will always be aligned on the currently focused input.
+   * This is helpful when the view only renders information about one of the dates.
+   */
+  shouldMovePopperToFocusedInput: boolean;
 }

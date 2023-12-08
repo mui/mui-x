@@ -26,6 +26,10 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   start: 'شروع',
   end: 'پایان',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'لغو',
   clearButtonLabel: 'پاک کردن',
@@ -37,6 +41,7 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'تاریخ و ساعت را انتخاب کنید',
   timePickerToolbarTitle: 'ساعت را انتخاب کنید',
   dateRangePickerToolbarTitle: 'محدوده تاریخ را انتخاب کنید',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

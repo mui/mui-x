@@ -27,6 +27,10 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   start: 'Kezdő dátum',
   end: 'Záró dátum',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Mégse',
   clearButtonLabel: 'Törlés',
@@ -38,6 +42,7 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Dátum és idő kiválasztása',
   timePickerToolbarTitle: 'Idő kiválasztása',
   dateRangePickerToolbarTitle: 'Dátumhatárok kiválasztása',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

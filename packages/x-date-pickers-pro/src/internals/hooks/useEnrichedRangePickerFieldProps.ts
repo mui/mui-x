@@ -6,7 +6,6 @@ import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
@@ -16,6 +15,7 @@ import {
   WrapperVariant,
   UsePickerProps,
   getActiveElement,
+  DateOrTimeViewWithMeridiem,
   FieldSlotsComponents,
   FieldSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
@@ -97,6 +97,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   pickerSlots: RangePickerFieldSlotsComponent | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
+  anchorRefEndDate?: React.Ref<HTMLDivElement>;
 }
 
 const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
@@ -114,6 +115,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   pickerSlots,
   fieldProps,
   anchorRef,
+  anchorRefEndDate,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -215,7 +217,12 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeEndSelection }),
           ...(wrapperVariant === 'mobile' && { readOnly: true }),
         };
-        InputProps = resolvedComponentProps?.InputProps;
+        if (anchorRefEndDate) {
+          InputProps = {
+            ...resolvedComponentProps?.InputProps,
+            ref: anchorRefEndDate,
+          };
+        }
       }
 
       return {

@@ -27,6 +27,10 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   start: 'Бастау',
   end: 'Cоңы',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Бас тарту',
   clearButtonLabel: 'Тазарту',
@@ -38,6 +42,7 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Күн мен уақытты таңдау',
   timePickerToolbarTitle: 'Уақытты таңдау',
   dateRangePickerToolbarTitle: 'Кезеңді таңдаңыз',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

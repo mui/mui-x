@@ -26,6 +26,10 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   start: 'תחילה',
   end: 'סיום',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'ביטול',
   clearButtonLabel: 'ניקוי',
@@ -37,6 +41,7 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'בחירת תאריך ושעה',
   timePickerToolbarTitle: 'בחירת שעה',
   dateRangePickerToolbarTitle: 'בחירת טווח תאריכים',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

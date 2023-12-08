@@ -14,8 +14,8 @@ import {
   InferError,
   ExportedBaseToolbarProps,
   BaseFieldProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -35,6 +35,7 @@ export const useDesktopRangePicker = <
   TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
+  shouldMovePopperToFocusedInput,
   ...pickerParams
 }: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
@@ -59,6 +60,7 @@ export const useDesktopRangePicker = <
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
+  const anchorRefEndDate = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
 
   const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
@@ -149,6 +151,7 @@ export const useDesktopRangePicker = <
     pickerSlots: slots,
     fieldProps,
     anchorRef,
+    anchorRefEndDate,
   });
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
@@ -168,7 +171,11 @@ export const useDesktopRangePicker = <
         role="tooltip"
         placement="bottom-start"
         containerRef={popperRef}
-        anchorEl={anchorRef.current}
+        anchorEl={
+          shouldMovePopperToFocusedInput && rangePosition === 'end'
+            ? anchorRefEndDate.current
+            : anchorRef.current
+        }
         onBlur={handleBlur}
         {...actions}
         open={open}

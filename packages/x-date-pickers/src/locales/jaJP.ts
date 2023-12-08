@@ -27,6 +27,10 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   start: '開始',
   end: '終了',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'キャンセル',
   clearButtonLabel: 'クリア',
@@ -38,6 +42,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: '日時を選択',
   timePickerToolbarTitle: '時間を選択',
   dateRangePickerToolbarTitle: '日付の範囲を選択',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

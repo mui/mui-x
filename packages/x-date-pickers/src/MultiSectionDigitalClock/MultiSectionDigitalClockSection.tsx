@@ -56,8 +56,8 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   ({ theme, ownerState }) => ({
     maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
     width: 56,
-    padding: 0,
     overflow: 'hidden',
+    padding: 0,
     '@media (prefers-reduced-motion: no-preference)': {
       scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
     },
@@ -85,7 +85,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Item',
   overridesResolver: (_, styles) => styles.item,
-})(({ theme }) => ({
+})<{ ownerState: MultiSectionDigitalClockSectionProps<any> }>(({ theme, ownerState }) => ({
   padding: 8,
   margin: '2px 4px',
   width: MULTI_SECTION_CLOCK_SECTION_WIDTH,
@@ -209,6 +209,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               aria-disabled={readOnly}
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
+              ownerState={ownerState}
               tabIndex={tabIndex}
               className={classes.item}
               {...slotProps?.digitalClockSectionItem}

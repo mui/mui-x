@@ -26,6 +26,10 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   start: 'Empezar',
   end: 'Terminar',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Cancelar',
   clearButtonLabel: 'Limpiar',
@@ -37,6 +41,7 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Seleccionar fecha y hora',
   timePickerToolbarTitle: 'Seleccionar hora',
   dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

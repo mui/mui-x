@@ -26,6 +26,10 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   start: '시작',
   end: '종료',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: '취소',
   clearButtonLabel: '초기화',
@@ -37,6 +41,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: '날짜 & 시간 선택하기',
   timePickerToolbarTitle: '시간 선택하기',
   dateRangePickerToolbarTitle: '날짜 범위 선택하기',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

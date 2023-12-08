@@ -27,6 +27,10 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   start: 'Start',
   end: 'Slut',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Annuller',
   clearButtonLabel: 'Ryd',
@@ -38,6 +42,7 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Vælg dato & tidspunkt',
   timePickerToolbarTitle: 'Vælg tidspunkt',
   dateRangePickerToolbarTitle: 'Vælg datointerval',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

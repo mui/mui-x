@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
 export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeViewWithMeridiem>

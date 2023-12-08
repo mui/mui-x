@@ -24,6 +24,10 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   start: '開始',
   end: '結束',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: '取消',
   clearButtonLabel: '清除',
@@ -35,6 +39,7 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: '選擇日期和時間',
   timePickerToolbarTitle: '選擇時間',
   dateRangePickerToolbarTitle: '選擇時間範圍',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

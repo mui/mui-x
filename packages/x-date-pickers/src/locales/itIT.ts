@@ -26,6 +26,10 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   start: 'Inizio',
   end: 'Fine',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Cancellare',
   clearButtonLabel: 'Sgomberare',
@@ -37,6 +41,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Seleziona data e orario',
   timePickerToolbarTitle: 'Seleziona orario',
   dateRangePickerToolbarTitle: 'Seleziona intervallo di date',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

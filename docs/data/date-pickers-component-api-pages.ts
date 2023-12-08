@@ -30,6 +30,11 @@ export default [
   },
   { pathname: '/x/api/date-pickers/desktop-date-time-picker', title: 'DesktopDateTimePicker' },
   { pathname: '/x/api/date-pickers/desktop-time-picker', title: 'DesktopTimePicker' },
+  {
+    pathname: '/x/api/date-pickers/desktop-time-range-picker',
+    title: 'DesktopTimeRangePicker',
+    plan: 'pro',
+  },
   { pathname: '/x/api/date-pickers/digital-clock', title: 'DigitalClock' },
   { pathname: '/x/api/date-pickers/localization-provider', title: 'LocalizationProvider' },
   { pathname: '/x/api/date-pickers/mobile-date-picker', title: 'MobileDatePicker' },
@@ -40,6 +45,11 @@ export default [
   },
   { pathname: '/x/api/date-pickers/mobile-date-time-picker', title: 'MobileDateTimePicker' },
   { pathname: '/x/api/date-pickers/mobile-time-picker', title: 'MobileTimePicker' },
+  {
+    pathname: '/x/api/date-pickers/mobile-time-range-picker',
+    title: 'MobileTimeRangePicker',
+    plan: 'pro',
+  },
   { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
   {
     pathname: '/x/api/date-pickers/multi-input-date-range-field',
@@ -92,5 +102,11 @@ export default [
   { pathname: '/x/api/date-pickers/time-field', title: 'TimeField' },
   { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
   { pathname: '/x/api/date-pickers/time-picker-toolbar', title: 'TimePickerToolbar' },
+  { pathname: '/x/api/date-pickers/time-range-picker', title: 'TimeRangePicker', plan: 'pro' },
+  {
+    pathname: '/x/api/date-pickers/time-range-picker-toolbar',
+    title: 'TimeRangePickerToolbar',
+    plan: 'pro',
+  },
   { pathname: '/x/api/date-pickers/year-calendar', title: 'YearCalendar' },
 ] as MuiPage[];

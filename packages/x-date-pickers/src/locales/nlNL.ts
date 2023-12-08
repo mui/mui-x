@@ -26,6 +26,10 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   start: 'Start',
   end: 'Einde',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Annuleren',
   clearButtonLabel: 'Resetten',
@@ -37,6 +41,7 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Selecteer datum & tijd',
   timePickerToolbarTitle: 'Selecteer tijd',
   dateRangePickerToolbarTitle: 'Selecteer datumbereik',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

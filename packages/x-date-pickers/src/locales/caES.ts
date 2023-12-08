@@ -26,6 +26,10 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   start: 'Començar',
   end: 'Terminar',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Cancel·lar',
   clearButtonLabel: 'Netejar',
@@ -37,6 +41,7 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Seleccionar data i hora',
   timePickerToolbarTitle: 'Seleccionar hora',
   dateRangePickerToolbarTitle: 'Seleccionar rang de dates',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

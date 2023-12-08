@@ -27,6 +27,10 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   start: 'Начало',
   end: 'Конец',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Отмена',
   clearButtonLabel: 'Очистить',
@@ -38,6 +42,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Выбрать дату и время',
   timePickerToolbarTitle: 'Выбрать время',
   dateRangePickerToolbarTitle: 'Выбрать период',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

@@ -26,6 +26,10 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   start: 'Bắt đầu',
   end: 'Kết thúc',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Hủy',
   clearButtonLabel: 'Xóa',
@@ -37,6 +41,7 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Chọn ngày và giờ',
   timePickerToolbarTitle: 'Chọn giờ',
   dateRangePickerToolbarTitle: 'Chọn khoảng ngày',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

@@ -27,6 +27,10 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   start: 'Začátek',
   end: 'Konec',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Zrušit',
   clearButtonLabel: 'Vymazat',
@@ -38,6 +42,7 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Vyberte datum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
   dateRangePickerToolbarTitle: 'Vyberete rozmezí dat',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

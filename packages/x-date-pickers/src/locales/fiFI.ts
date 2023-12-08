@@ -26,6 +26,10 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   start: 'Alku',
   end: 'Loppu',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Peruuta',
   clearButtonLabel: 'Tyhjennä',
@@ -37,6 +41,7 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Valitse päivä ja aika',
   timePickerToolbarTitle: 'Valitse aika',
   dateRangePickerToolbarTitle: 'Valitse aikaväli',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

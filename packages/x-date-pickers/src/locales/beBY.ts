@@ -27,6 +27,10 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   start: 'Пачатак',
   end: 'Канец',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Адмена',
   clearButtonLabel: 'Ачысціць',
@@ -38,6 +42,7 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Абраць дату і час',
   timePickerToolbarTitle: 'Абраць час',
   dateRangePickerToolbarTitle: 'Абраць каляндарны перыяд',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
