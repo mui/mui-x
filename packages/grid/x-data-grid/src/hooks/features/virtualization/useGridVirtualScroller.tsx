@@ -132,10 +132,6 @@ export const useGridVirtualScroller = () => {
         nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
         nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
 
-      const didColumnsIntervalChange =
-        nextRenderContext.firstColumnIndex !== previousColumnContext.current.firstColumnIndex ||
-        nextRenderContext.lastColumnIndex !== previousColumnContext.current.lastColumnIndex;
-
       apiRef.current.setState((state) => {
         return {
           ...state,

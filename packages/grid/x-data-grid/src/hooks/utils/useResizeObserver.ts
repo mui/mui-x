@@ -10,6 +10,9 @@ export function useResizeObserver(
   fn: (entries: ResizeObserverEntry[]) => void,
   enabled?: boolean,
 ) {
+  const fnRef = React.useRef(null as unknown as typeof fn);
+  fnRef.current = fn;
+
   useEnhancedEffect(() => {
     if (enabled === false || typeof ResizeObserver === 'undefined') {
       return noop;
@@ -24,10 +27,10 @@ export function useResizeObserver(
       // In prod, we want the task to run in the same frame as to avoid tear.
       if (isDevEnvironment) {
         frameID = requestAnimationFrame(() => {
-          fn(entries);
+          fnRef.current(entries);
         });
       } else {
-        fn(entries);
+        fnRef.current(entries);
       }
     });
 
@@ -42,6 +45,5 @@ export function useResizeObserver(
 
       observer.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled]);
+  }, [ref, enabled]);
 }
