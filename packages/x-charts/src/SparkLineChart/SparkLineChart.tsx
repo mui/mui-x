@@ -173,7 +173,12 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
       }
     >
       {plotType === 'bar' && (
-        <BarPlot slots={slots} slotProps={slotProps} sx={{ shapeRendering: 'auto' }} />
+        <BarPlot
+          skipAnimation
+          slots={slots}
+          slotProps={slotProps}
+          sx={{ shapeRendering: 'auto' }}
+        />
       )}
 
       {plotType === 'line' && (

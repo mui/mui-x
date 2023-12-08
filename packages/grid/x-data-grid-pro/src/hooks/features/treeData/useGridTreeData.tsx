@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useGridApiEventHandler, GridEventListener } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
+import { GRID_TREE_DATA_GROUPING_FIELD } from './gridTreeDataGroupColDef';
 
 export const useGridTreeData = (apiRef: React.MutableRefObject<GridApiPro>) => {
   /**
@@ -9,7 +10,11 @@ export const useGridTreeData = (apiRef: React.MutableRefObject<GridApiPro>) => {
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ' && !event.shiftKey) {
+      if (
+        cellParams.colDef.field === GRID_TREE_DATA_GROUPING_FIELD &&
+        event.key === ' ' &&
+        !event.shiftKey
+      ) {
         if (params.rowNode.type !== 'group') {
           return;
         }

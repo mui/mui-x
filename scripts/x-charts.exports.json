@@ -77,6 +77,8 @@
   { "name": "ChartsTooltipProps", "kind": "TypeAlias" },
   { "name": "ChartsTooltipSlotProps", "kind": "Interface" },
   { "name": "ChartsTooltipSlots", "kind": "Interface" },
+  { "name": "ChartsVoronoiHandler", "kind": "Function" },
+  { "name": "ChartsVoronoiHandlerProps", "kind": "TypeAlias" },
   { "name": "ChartsXAxis", "kind": "Function" },
   { "name": "ChartsXAxisProps", "kind": "Interface" },
   { "name": "ChartsYAxis", "kind": "Function" },

@@ -28,6 +28,13 @@ type InteractionActions<T extends ChartSeriesType = ChartSeriesType> =
       data: ItemInteractionData<T>;
     }
   | {
+      type: 'exitChart';
+    }
+  | {
+      type: 'updateVoronoiUsage';
+      useVoronoiInteraction: boolean;
+    }
+  | {
       type: 'updateAxis';
       data: AxisInteractionData;
     };
@@ -41,12 +48,18 @@ type InteractionState = {
    * The x- and y-axes currently interacting.
    */
   axis: AxisInteractionData;
+  /**
+   * Set to `true` when `VoronoiHandler` is active.
+   * Used to prevent collision with mouseEnter events.
+   */
+  useVoronoiInteraction: boolean;
   dispatch: React.Dispatch<InteractionActions>;
 };
 
 export const InteractionContext = React.createContext<InteractionState>({
   item: null,
   axis: { x: null, y: null },
+  useVoronoiInteraction: false,
   dispatch: () => null,
 });
 
@@ -57,6 +70,15 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
   switch (action.type) {
     case 'enterItem':
       return { ...prevState, item: action.data };
+
+    case 'exitChart':
+      if (prevState.item === null && prevState.axis.x === null && prevState.axis.y === null) {
+        return prevState;
+      }
+      return { ...prevState, axis: { x: null, y: null }, item: null };
+
+    case 'updateVoronoiUsage':
+      return { ...prevState, useVoronoiInteraction: action.useVoronoiInteraction };
 
     case 'leaveItem':
       if (
@@ -71,6 +93,9 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
       return { ...prevState, item: null };
 
     case 'updateAxis':
+      if (action.data.x === prevState.axis.x && action.data.y === prevState.axis.y) {
+        return prevState;
+      }
       return { ...prevState, axis: action.data };
 
     default:
@@ -82,6 +107,7 @@ export function InteractionProvider({ children }: InteractionProviderProps) {
   const [data, dispatch] = React.useReducer(dataReducer, {
     item: null,
     axis: { x: null, y: null },
+    useVoronoiInteraction: false,
   });
 
   const value = React.useMemo(
