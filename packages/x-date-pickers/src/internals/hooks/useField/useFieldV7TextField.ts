@@ -13,7 +13,7 @@ import { PickersSectionElement } from '../../../PickersSectionsList';
 
 export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   const {
-    internalProps: { disabled },
+    internalProps: { disabled, readOnly = false },
     forwardedProps: {
       sectionsContainerRef: inSectionsContainerRef,
       onBlur,
@@ -23,7 +23,6 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
       onPaste,
       focused: focusedProp,
       autoFocus = false,
-      readOnly = false,
     },
     fieldValueManager,
     applyCharacterEditing,

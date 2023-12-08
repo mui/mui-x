@@ -84,19 +84,14 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     name: 'MuiMultiInputTimeRangeField',
   });
 
-  const { internalProps: timeFieldInternalProps, forwardedProps } =
-    splitFieldInternalAndForwardedProps<
-      typeof themeProps,
-      keyof Omit<
-        UseTimeRangeFieldProps<any, any>,
-        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
-      >
-    >(themeProps, 'time');
+  const { internalProps, forwardedProps } = splitFieldInternalAndForwardedProps<
+    typeof themeProps,
+    keyof Omit<UseTimeRangeFieldProps<any, any>, 'clearable' | 'onClear'>
+  >(themeProps, 'time');
 
   const {
     slots,
     slotProps,
-    disabled,
     unstableStartFieldRef,
     unstableEndFieldRef,
     className,
@@ -141,7 +136,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   });
 
   const fieldResponse = useMultiInputTimeRangeField<TDate, TUseV6TextField, FieldsTextFieldProps>({
-    sharedProps: { ...timeFieldInternalProps, disabled },
+    sharedProps: internalProps,
     startTextFieldProps,
     endTextFieldProps,
     unstableStartFieldRef,

@@ -86,16 +86,12 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
 
   const { internalProps, forwardedProps } = splitFieldInternalAndForwardedProps<
     typeof themeProps,
-    keyof Omit<
-      UseDateRangeFieldProps<any, any>,
-      'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
-    >
+    keyof Omit<UseDateRangeFieldProps<any, any>, 'clearable' | 'onClear'>
   >(themeProps, 'date');
 
   const {
     slots,
     slotProps,
-    disabled,
     unstableStartFieldRef,
     unstableEndFieldRef,
     className,
@@ -139,7 +135,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   });
 
   const fieldResponse = useMultiInputDateRangeField<TDate, TUseV6TextField, FieldsTextFieldProps>({
-    sharedProps: { ...internalProps, disabled },
+    sharedProps: internalProps,
     startTextFieldProps,
     endTextFieldProps,
     unstableStartFieldRef,

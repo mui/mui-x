@@ -19,6 +19,8 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'onSelectedSectionsChange',
   'unstableFieldRef',
   'shouldUseV6TextField',
+  'disabled',
+  'readOnly',
 ] as const;
 
 export const splitFieldInternalAndForwardedProps = <

@@ -129,11 +129,6 @@ export interface UseFieldInternalProps<
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
   /**
-   * If `true`, the component is disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
    * @defauilt false
    */
   shouldUseV6TextField?: TUseV6TextField;
@@ -142,7 +137,15 @@ export interface UseFieldInternalProps<
    * @default false
    */
   autoFocus?: boolean;
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
 }
+
+export interface UseFieldCommonAdditionalProps
+  extends Required<Pick<UseFieldInternalProps<any, any, any, any, any>, 'disabled' | 'readOnly'>> {}
 
 export interface UseFieldCommonForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
@@ -156,16 +159,12 @@ export interface UseFieldCommonForwardedProps {
    * @default false
    */
   clearable?: boolean;
-  disabled?: boolean;
-  readOnly?: boolean;
 }
 
-export type UseFieldForwardedProps<TUseV6TextField extends boolean> = TUseV6TextField extends true
-  ? UseFieldV6ForwardedProps
-  : UseFieldV7ForwardedProps;
+export type UseFieldForwardedProps<TUseV6TextField extends boolean> = UseFieldCommonForwardedProps &
+  (TUseV6TextField extends true ? UseFieldV6ForwardedProps : UseFieldV7ForwardedProps);
 
 export interface UseFieldV6ForwardedProps {
-  readOnly?: boolean;
   inputRef?: React.Ref<HTMLInputElement>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
@@ -184,7 +183,6 @@ interface UseFieldV6AdditionalProps {
 export interface UseFieldV7ForwardedProps {
   focused?: boolean;
   autoFocus?: boolean;
-  readOnly?: boolean;
   sectionsContainerRef?: React.Ref<HTMLDivElement>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
@@ -208,6 +206,7 @@ export type UseFieldResponse<
   TForwardedProps extends UseFieldCommonForwardedProps,
 > = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
   Required<UseFieldCommonForwardedProps> &
+  UseFieldCommonAdditionalProps &
   (TUseV6TextField extends true
     ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
     : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>);

@@ -85,19 +85,14 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     name: 'MuiMultiInputDateTimeRangeField',
   });
 
-  const { internalProps: dateTimeFieldInternalProps, forwardedProps } =
-    splitFieldInternalAndForwardedProps<
-      typeof themeProps,
-      keyof Omit<
-        UseDateTimeRangeFieldProps<any, any>,
-        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
-      >
-    >(themeProps, 'date-time');
+  const { internalProps, forwardedProps } = splitFieldInternalAndForwardedProps<
+    typeof themeProps,
+    keyof Omit<UseDateTimeRangeFieldProps<any, any>, 'clearable' | 'onClear'>
+  >(themeProps, 'date-time');
 
   const {
     slots,
     slotProps,
-    disabled,
     unstableStartFieldRef,
     unstableEndFieldRef,
     className,
@@ -145,7 +140,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     TUseV6TextField,
     FieldsTextFieldProps
   >({
-    sharedProps: { ...dateTimeFieldInternalProps, disabled },
+    sharedProps: internalProps,
     startTextFieldProps,
     endTextFieldProps,
     unstableStartFieldRef,

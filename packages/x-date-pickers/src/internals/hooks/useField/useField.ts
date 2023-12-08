@@ -12,6 +12,7 @@ import {
   AvailableAdjustKeyCode,
   UseFieldTextField,
   UseFieldForwardedProps,
+  UseFieldCommonAdditionalProps,
 } from './useField.types';
 import { adjustSectionValue, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
@@ -36,8 +37,14 @@ export const useField = <
 
   const {
     internalProps,
-    internalProps: { unstableFieldRef, minutesStep, shouldUseV6TextField = false },
-    forwardedProps: { onKeyDown, error, clearable, onClear, disabled = false, readOnly = false },
+    internalProps: {
+      unstableFieldRef,
+      minutesStep,
+      shouldUseV6TextField = false,
+      disabled = false,
+      readOnly = false,
+    },
+    forwardedProps: { onKeyDown, error, clearable, onClear },
     fieldValueManager,
     valueManager,
     validator,
@@ -253,17 +260,21 @@ export const useField = <
   });
 
   const commonForwardedProps: Required<UseFieldCommonForwardedProps> = {
-    disabled,
-    readOnly,
     onKeyDown: handleContainerKeyDown,
     onClear: handleClearValue,
     error: inputError,
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const commonAdditionalProps: UseFieldCommonAdditionalProps = {
+    disabled,
+    readOnly,
+  };
+
   return {
     ...params.forwardedProps,
     ...commonForwardedProps,
+    ...commonAdditionalProps,
     ...returnedValue,
   };
 };
