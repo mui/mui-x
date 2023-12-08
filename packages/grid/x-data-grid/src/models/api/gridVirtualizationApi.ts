@@ -19,4 +19,9 @@ export interface GridVirtualizationPrivateApi {
    * @returns {GridRenderContext} The `GridRenderContext`.
    */
   getRenderContext: () => GridRenderContext;
+  /**
+   * Update grid rendering context.
+   * @returns {GridRenderContext} The `GridRenderContext`.
+   */
+  updateRenderContext?: () => void;
 }

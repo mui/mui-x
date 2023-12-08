@@ -3,13 +3,15 @@ import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../../utils';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
-import { useGridRootProps } from '../../utils/useGridRootProps';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import { gridDimensionsSelector } from '../dimensions';
-import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
+import {
+  gridRenderContextColumnsSelector,
+  gridVirtualizationColumnEnabledSelector,
+} from '../virtualization';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -23,7 +25,6 @@ import {
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
 import { gridClasses } from '../../../constants/gridClasses';
 
@@ -110,15 +111,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
   const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
 
-  const rootProps = useGridRootProps();
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const [renderContext, setRenderContext] = React.useState(() => apiRef.current.getRenderContext());
-
+  const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const visiblePinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
-
-  useGridApiEventHandler(apiRef, 'renderedColumnsIntervalChange', setRenderContext);
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
@@ -150,15 +147,13 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
   const getColumnsToRender = (params?: GetHeadersParams) => {
     const {
-      renderContext: nextRenderContext = renderContext,
+      renderContext: currentContext = renderContext,
       // TODO: `minFirstColumn` is not used anymore, could be refactored out.
       maxLastColumn = visibleColumns.length,
     } = params || {};
 
-    const firstColumnToRender = !hasVirtualization ? 0 : nextRenderContext.firstColumnIndex;
-    const lastColumnToRender = !hasVirtualization
-      ? maxLastColumn
-      : nextRenderContext.lastColumnIndex;
+    const firstColumnToRender = !hasVirtualization ? 0 : currentContext.firstColumnIndex;
+    const lastColumnToRender = !hasVirtualization ? maxLastColumn : currentContext.lastColumnIndex;
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     return {
@@ -175,12 +170,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       (visiblePinnedColumns.right.length === 0 && params?.position === undefined);
 
     return (
-      <>
+      <React.Fragment>
         {params?.position === undefined && <SpaceFiller className={gridClasses.columnHeader} />}
         {hasScrollbarFiller && (
           <ScrollbarFiller header borderTop={borderTop} pinnedRight={isPinnedRight} />
         )}
-      </>
+      </React.Fragment>
     );
   };
 

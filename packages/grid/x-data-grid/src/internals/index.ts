@@ -31,10 +31,6 @@ export {
   gridHeaderFilteringMenuSelector,
 } from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
 export type { GridSlotsComponentsProps } from '../models/gridSlotsComponentsProps';
-export type {
-  UseGridColumnHeadersProps,
-  GetHeadersParams,
-} from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,
@@ -158,7 +154,7 @@ export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
 export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-export * from '../hooks/utils/useOnMount';
+export * from '../hooks/utils';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';

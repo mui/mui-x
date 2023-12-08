@@ -525,9 +525,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     render(<TestCase />);
 
     expect(getRowById(0)?.clientHeight).to.equal(100);
-    expect(getRowById(1)?.clientHeight).to.equal(
-      20 + apiRef.current.state.dimensions.scrollbarSize,
-    );
+    expect(getRowById(1)?.clientHeight).to.equal(20);
   });
 
   it('should always update on `rowHeight` change', async function test() {
@@ -553,19 +551,18 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     const { setProps } = render(<TestCase />);
     await microtasks();
-    const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
 
     expect(getRowById(0)!.offsetHeight).to.equal(defaultRowHeight);
     expect(grid('pinnedRows--top')!.offsetHeight).to.equal(defaultRowHeight);
-    expect(getRowById(1)!.clientHeight).to.equal(defaultRowHeight + scrollbarSize);
-    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(defaultRowHeight + scrollbarSize);
+    expect(getRowById(1)!.clientHeight).to.equal(defaultRowHeight);
+    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(defaultRowHeight);
 
     setProps({ rowHeight: 36 });
 
     expect(getRowById(0)?.clientHeight).to.equal(36);
     expect(grid('pinnedRows--top')!.offsetHeight).to.equal(36);
-    expect(getRowById(1)?.clientHeight).to.equal(36 + scrollbarSize);
-    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(36 + scrollbarSize);
+    expect(getRowById(1)?.clientHeight).to.equal(36);
+    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(36);
   });
 
   it('should work with `autoHeight`', function test() {

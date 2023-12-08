@@ -16,6 +16,8 @@ import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   $,
+  grid,
+  gridVar,
   getColumnHeaderCell,
   getColumnValues,
   getCell,
@@ -728,7 +730,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
         const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
         expect(scrollbarSize).not.to.equal(0);
-        expect($('.MuiDataGrid-main')!.clientHeight).to.equal(
+        expect(grid('main')!.clientHeight).to.equal(
           scrollbarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
         );
       });
@@ -792,9 +794,8 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       }
       render(<TestCase />);
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       // It should not have a horizontal scrollbar
-      expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
+      expect(gridVar('--DataGrid-hasScrollX')).to.equal('0');
     });
 
     it('should have a horizontal scrollbar when there are more columns to show and no rows', function test() {
@@ -807,8 +808,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           <DataGrid columns={[{ field: 'brand' }, { field: 'year' }]} rows={[]} />
         </div>,
       );
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).not.to.equal(0);
+      expect(gridVar('--DataGrid-hasScrollX')).to.equal('1');
     });
 
     it('should not place the overlay on top of the horizontal scrollbar when rows=[]', () => {

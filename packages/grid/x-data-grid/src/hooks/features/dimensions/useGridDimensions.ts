@@ -177,10 +177,6 @@ export function useGridDimensions(
       hasScrollY = false;
       hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootDimensionsRef.current.width);
 
-      if (hasScrollX) {
-        contentSize.height += scrollbarSize;
-      }
-
       viewportOuterSize = {
         width: rootDimensionsRef.current.width,
         height: topContainerHeight + bottomContainerHeight + contentSize.height,
@@ -263,6 +259,8 @@ export function useGridDimensions(
     ) {
       apiRef.current.publishEvent('viewportInnerSizeChange', newFullDimensions.viewportInnerSize);
     }
+
+    apiRef.current.updateRenderContext?.();
   }, [
     apiRef,
     setDimensions,

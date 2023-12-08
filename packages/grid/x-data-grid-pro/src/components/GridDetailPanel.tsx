@@ -45,7 +45,7 @@ function GridDetailPanel(props: GridDetailPanelProps) {
       // Fallback for IE
       apiRef.current.storeDetailPanelHeight(rowId, ref.current!.clientHeight);
     }
-  }, [apiRef, height, rowId]);
+  }, [apiRef, hasAutoHeight, rowId]);
 
   useResizeObserver(
     ref,

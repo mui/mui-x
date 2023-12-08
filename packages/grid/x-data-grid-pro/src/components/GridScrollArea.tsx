@@ -101,42 +101,36 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
-  const handleScrolling = React.useCallback<GridEventListener<'scrollPositionChange'>>(
-    (newScrollPosition) => {
-      scrollPosition.current = newScrollPosition;
+  const handleScrolling: GridEventListener<'scrollPositionChange'> = (newScrollPosition) => {
+    scrollPosition.current = newScrollPosition;
 
-      setCanScrollMore(getCanScrollMore);
-    },
-    [apiRef, columnsTotalWidth, scrollDirection],
-  );
+    setCanScrollMore(getCanScrollMore);
+  };
 
-  const handleDragOver = React.useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => {
-      let offset: number;
+  const handleDragOver = useEventCallback((event: React.DragEvent<HTMLDivElement>) => {
+    let offset: number;
 
-      // Prevents showing the forbidden cursor
-      event.preventDefault();
+    // Prevents showing the forbidden cursor
+    event.preventDefault();
 
-      if (scrollDirection === 'left') {
-        offset = event.clientX - rootRef.current!.getBoundingClientRect().right;
-      } else if (scrollDirection === 'right') {
-        offset = Math.max(1, event.clientX - rootRef.current!.getBoundingClientRect().left);
-      } else {
-        throw new Error('MUI: Wrong drag direction');
-      }
+    if (scrollDirection === 'left') {
+      offset = event.clientX - rootRef.current!.getBoundingClientRect().right;
+    } else if (scrollDirection === 'right') {
+      offset = Math.max(1, event.clientX - rootRef.current!.getBoundingClientRect().left);
+    } else {
+      throw new Error('MUI: Wrong drag direction');
+    }
 
-      offset = (offset - CLIFF) * SLOP + CLIFF;
+    offset = (offset - CLIFF) * SLOP + CLIFF;
 
-      // Avoid freeze and inertia.
-      timeout.start(0, () => {
-        apiRef.current.scroll({
-          left: scrollPosition.current.left + offset,
-          top: scrollPosition.current.top,
-        });
+    // Avoid freeze and inertia.
+    timeout.start(0, () => {
+      apiRef.current.scroll({
+        left: scrollPosition.current.left + offset,
+        top: scrollPosition.current.top,
       });
-    },
-    [scrollDirection, apiRef, timeout],
-  );
+    });
+  });
 
   const handleColumnHeaderDragStart = useEventCallback(() => {
     setDragging(true);

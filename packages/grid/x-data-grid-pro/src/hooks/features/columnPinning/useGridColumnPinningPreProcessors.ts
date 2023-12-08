@@ -1,11 +1,14 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import {
   GridPinnedColumnFields,
   GridPipeProcessor,
   gridPinnedColumnsSelector,
   useGridRegisterPipeProcessor,
+  updatePinnedColumns,
   eslintUseValue,
 } from '@mui/x-data-grid/internals';
+import { GridColumnsState } from '@mui/x-data-grid';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
@@ -13,6 +16,7 @@ export const useGridColumnPinningPreProcessors = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
+  const theme = useTheme();
   const { disableColumnPinning } = props;
 
   let pinnedColumns: GridPinnedColumnFields | null;
@@ -27,6 +31,8 @@ export const useGridColumnPinningPreProcessors = (
   const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       eslintUseValue(pinnedColumns);
+
+      columnsState = updatePinnedColumns(columnsState as GridColumnsState, theme);
 
       if (columnsState.orderedFields.length === 0 || disableColumnPinning) {
         return columnsState;
@@ -118,7 +124,7 @@ export const useGridColumnPinningPreProcessors = (
         orderedFields: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       };
     },
-    [apiRef, disableColumnPinning, pinnedColumns],
+    [apiRef, disableColumnPinning, pinnedColumns, theme],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);

@@ -410,8 +410,6 @@ export const createColumnsState = ({
     });
   }
 
-  columnsState = updatePinnedColumns(columnsState as GridColumnsState, theme);
-
   const columnsStateWithPreProcessing = apiRef.current.unstable_applyPipeProcessors(
     'hydrateColumns',
     columnsState,

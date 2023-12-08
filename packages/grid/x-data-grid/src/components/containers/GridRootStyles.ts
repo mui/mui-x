@@ -164,9 +164,9 @@ export const GridRootStyles = styled('div', {
         t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
       );
 
-  const pinnedHoverBackground = merge(pinnedBackground, hoverBackground, hoverOpacity);
-  const pinnedSelectedBackground = merge(pinnedBackground, selectedBackground, selectedOpacity);
-  const pinnedSelectedHoverBackground = merge(
+  const pinnedHoverBackground = blend(pinnedBackground, hoverBackground, hoverOpacity);
+  const pinnedSelectedBackground = blend(pinnedBackground, selectedBackground, selectedOpacity);
+  const pinnedSelectedHoverBackground = blend(
     pinnedSelectedBackground,
     hoverBackground,
     hoverOpacity,
@@ -619,14 +619,14 @@ export const GridRootStyles = styled('div', {
 });
 
 /**
- * Merge a transparent overlay color with a background color, resulting in a single
+ * Blend a transparent overlay color with a background color, resulting in a single
  * RGB color. The color space is gamma-corrected with a standard value of 2.2.
  */
-function merge(background: string, overlay: string, opacity: number) {
+function blend(background: string, overlay: string, opacity: number) {
   const GAMMA = 2.2;
 
   const f = (b: number, o: number) =>
-    ~~((b ** (1 / GAMMA) * (1 - opacity) + o ** (1 / GAMMA) * opacity) ** GAMMA);
+    Math.round((b ** (1 / GAMMA) * (1 - opacity) + o ** (1 / GAMMA) * opacity) ** GAMMA);
 
   const backgroundColor = decomposeColor(background);
   const overlayColor = decomposeColor(overlay);

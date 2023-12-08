@@ -127,16 +127,18 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelHeight={() => 'auto'}
       />,
     );
-    const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent')!;
+    const virtualScrollerContent = grid('virtualScrollerContent')!;
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
 
     await waitFor(() => {
       expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
     });
 
-    expect(virtualScrollerContent).toHaveInlineStyle({
-      width: 'auto',
-      height: `${rowHeight + 100}px`,
+    await waitFor(() => {
+      expect(virtualScrollerContent).toHaveInlineStyle({
+        width: 'auto',
+        height: `${rowHeight + 100}px`,
+      });
     });
 
     const detailPanels = $$('.MuiDataGrid-detailPanel');

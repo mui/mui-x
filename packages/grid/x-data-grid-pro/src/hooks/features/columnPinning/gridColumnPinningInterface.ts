@@ -40,5 +40,3 @@ export interface GridColumnPinningInternalCache {
    */
   orderedFieldsBeforePinningColumns: string[] | null;
 }
-
-export { GridPinnedColumnPosition };
