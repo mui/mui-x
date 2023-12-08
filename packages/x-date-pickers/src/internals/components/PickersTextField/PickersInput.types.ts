@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { BoxProps } from '@mui/material/Box';
-import { PickersSectionElement } from '../../../PickersSectionsList';
+import { PickersSectionListProps } from '../../../PickersSectionList';
 
-export interface PickersInputPropsUsedByField {
-  /**
-   * The elements to render.
-   * Each element contains the prop to edit a section of the value.
-   */
-  elements: PickersSectionElement[];
+export interface PickersInputPropsUsedByField
+  extends Pick<PickersSectionListProps, 'elements' | 'contentEditable' | 'tabIndex'> {
   /**
    * Is `true` if the current values equals the empty value.
    * For a single item value, it means that `value === null`
@@ -22,9 +18,6 @@ export interface PickersInputPropsUsedByField {
 
   endAdornment?: React.ReactNode;
   startAdornment?: React.ReactNode;
-
-  tabIndex: number | undefined;
-  contentEditable: boolean;
 
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
