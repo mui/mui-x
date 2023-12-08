@@ -27,6 +27,10 @@ const BrowserField = React.forwardRef((props, ref) => {
     onClick,
     onInput,
     sectionsContainerRef,
+    contentEditable,
+    onFocus,
+    onBlur,
+    tabIndex,
     ...other
   } = props;
 
@@ -43,6 +47,10 @@ const BrowserField = React.forwardRef((props, ref) => {
       <PickersSectionsList
         elements={elements}
         sectionsContainerRef={sectionsContainerRef}
+        contentEditable={contentEditable}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        tabIndex={tabIndex}
         slots={{
           root: 'div',
           section: 'span',
