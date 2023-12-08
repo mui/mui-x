@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { GridRowId } from '@mui/x-data-grid';
+import { useResizeObserver } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -37,21 +38,18 @@ function GridDetailPanel(props: GridDetailPanelProps) {
   const ref = React.useRef<HTMLDivElement>();
   const rootProps = useGridRootProps();
   const ownerState = rootProps;
+  const hasAutoHeight = height === 'auto';
 
   React.useLayoutEffect(() => {
-    if (height === 'auto' && typeof ResizeObserver === 'undefined') {
+    if (hasAutoHeight && typeof ResizeObserver === 'undefined') {
       // Fallback for IE
       apiRef.current.storeDetailPanelHeight(rowId, ref.current!.clientHeight);
     }
   }, [apiRef, height, rowId]);
 
-  React.useLayoutEffect(() => {
-    const hasFixedHeight = height !== 'auto';
-    if (hasFixedHeight || typeof ResizeObserver === 'undefined') {
-      return undefined;
-    }
-
-    const resizeObserver = new ResizeObserver((entries) => {
+  useResizeObserver(
+    ref,
+    (entries) => {
       const [entry] = entries;
       const observedHeight =
         entry.borderBoxSize && entry.borderBoxSize.length > 0
@@ -59,12 +57,9 @@ function GridDetailPanel(props: GridDetailPanelProps) {
           : entry.contentRect.height;
 
       apiRef.current.storeDetailPanelHeight(rowId, observedHeight);
-    });
-
-    resizeObserver.observe(ref.current!);
-
-    return () => resizeObserver.disconnect();
-  }, [apiRef, height, rowId]);
+    },
+    hasAutoHeight,
+  );
 
   return (
     <DetailPanel
