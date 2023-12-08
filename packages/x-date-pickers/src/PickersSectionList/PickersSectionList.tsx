@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
-  getPickersSectionsListUtilityClass,
-  PickersSectionsListClasses,
-} from './pickersSectionsListClasses';
+  getPickersSectionListUtilityClass,
+  PickersSectionListClasses,
+} from './pickersSectionListClasses';
 
-interface PickersSectionsListSlotsComponent {
+interface PickersSectionListSlots {
   root: React.ElementType;
   section: React.ElementType;
   sectionSeparator: React.ElementType;
   sectionContent: React.ElementType;
 }
 
-interface PickersSectionsListSlotsComponentsProps {
+interface PickersSectionListSlotProps {
   root?: SlotComponentProps<'div', {}, {}>;
   section?: SlotComponentProps<'span', {}, {}>;
   sectionSeparator?: SlotComponentProps<'span', {}, { position: 'before' | 'after' }>;
@@ -28,31 +28,35 @@ export interface PickersSectionElement {
   after: React.HTMLAttributes<HTMLSpanElement>;
 }
 
-export interface PickersSectionsListProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface PickersSectionListProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Overridable component slots.
    */
-  slots: PickersSectionsListSlotsComponent;
+  slots: PickersSectionListSlots;
   /**
    * The props used for each component slot.
    */
-  slotProps?: PickersSectionsListSlotsComponentsProps;
-  sectionsContainerRef?: React.Ref<HTMLDivElement>;
+  slotProps?: PickersSectionListSlotProps;
+  /**
+   * The elements to render.
+   * Each element contains the prop to edit a section of the value.
+   */
   elements: PickersSectionElement[];
-  classes?: Partial<PickersSectionsListClasses>;
+  classes?: Partial<PickersSectionListClasses>;
+  contentEditable: boolean;
 }
 
-const useUtilityClasses = (ownerState: PickersSectionsListProps) => {
+const useUtilityClasses = (ownerState: PickersSectionListProps) => {
   const { classes } = ownerState;
 
   const slots = {
     sectionContent: ['sectionContent'],
   };
 
-  return composeClasses(slots, getPickersSectionsListUtilityClass, classes);
+  return composeClasses(slots, getPickersSectionListUtilityClass, classes);
 };
 
-interface PickersSectionProps extends Pick<PickersSectionsListProps, 'slots' | 'slotProps'> {
+interface PickersSectionProps extends Pick<PickersSectionListProps, 'slots' | 'slotProps'> {
   element: PickersSectionElement;
   sectionContentClassName: string;
 }
@@ -125,8 +129,15 @@ PickersSection.propTypes = {
   slots: PropTypes.object.isRequired,
 } as any;
 
-function PickersSectionsList(props: PickersSectionsListProps) {
-  const { slots, slotProps, sectionsContainerRef, elements, ...other } = props;
+type PickersSectionListComponent = ((
+  props: PickersSectionListProps & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
+const PickersSectionList = React.forwardRef(function PickersSectionList(
+  props: PickersSectionListProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const { slots, slotProps, elements, ...other } = props;
 
   const classes = useUtilityClasses(props);
 
@@ -136,7 +147,7 @@ function PickersSectionsList(props: PickersSectionsListProps) {
     externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
     additionalProps: {
-      ref: sectionsContainerRef,
+      ref,
       suppressContentEditableWarning: true,
     },
     ownerState: {},
@@ -166,9 +177,9 @@ function PickersSectionsList(props: PickersSectionsListProps) {
       )}
     </Root>
   );
-}
+}) as PickersSectionListComponent;
 
-PickersSectionsList.propTypes = {
+PickersSectionList.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -198,4 +209,4 @@ PickersSectionsList.propTypes = {
   slots: PropTypes.object.isRequired,
 } as any;
 
-export { PickersSectionsList };
+export { PickersSectionList };

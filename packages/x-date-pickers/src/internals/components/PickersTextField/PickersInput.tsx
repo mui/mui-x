@@ -9,7 +9,7 @@ import visuallyHidden from '@mui/utils/visuallyHidden';
 import { pickersInputClasses, getPickersInputUtilityClass } from './pickersTextFieldClasses';
 import Outline from './Outline';
 import { PickersInputProps } from './PickersInput.types';
-import { PickersSectionsList } from '../../../PickersSectionsList';
+import { PickersSectionList } from '../../../PickersSectionList';
 
 const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',
@@ -267,14 +267,14 @@ export const PickersInput = React.forwardRef(function PickersInput(
       ref={handleRootRef}
     >
       {startAdornment}
-      <PickersSectionsList
+      <PickersSectionList
+        ref={sectionsContainerRef}
         elements={elements}
-        sectionsContainerRef={sectionsContainerRef}
-        className={classes.sectionsContainer}
         contentEditable={contentEditable}
+        tabIndex={tabIndex}
+        className={classes.sectionsContainer}
         onFocus={handleInputFocus}
         onBlur={muiFormControl.onBlur}
-        tabIndex={tabIndex}
         slots={{
           root: PickersInputSectionsContainer,
           section: PickersInputSection,
