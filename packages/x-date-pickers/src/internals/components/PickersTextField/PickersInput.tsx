@@ -76,8 +76,8 @@ const PickersInputSectionsContainer = styled('div', {
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
-  outline: 'none',
   flexGrow: 1,
+  outline: 'none',
   ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
   ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
     color: 'currentColor',
