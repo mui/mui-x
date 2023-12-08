@@ -162,8 +162,6 @@ export const useGridVirtualScroller = () => {
 
   const triggerUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-
-    // When virtualization is disabled, the context never changes during scroll
     const nextRenderContext = computeRenderContext(inputs, scrollPosition);
 
     // Since previous render, we have scrolled...
@@ -204,10 +202,7 @@ export const useGridVirtualScroller = () => {
 
   const forceUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-
-    // When virtualization is disabled, the context never changes during scroll
     const nextRenderContext = computeRenderContext(inputs, scrollPosition);
-
     updateRenderContext(nextRenderContext);
 
     prevTotalWidth.current = dimensions.columnsTotalWidth;
