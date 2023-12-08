@@ -185,6 +185,11 @@ PickersSectionList.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  contentEditable: PropTypes.bool.isRequired,
+  /**
+   * The elements to render.
+   * Each element contains the prop to edit a section of the value.
+   */
   elements: PropTypes.arrayOf(
     PropTypes.shape({
       after: PropTypes.object.isRequired,
@@ -193,12 +198,6 @@ PickersSectionList.propTypes = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
-  sectionsContainerRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
   /**
    * The props used for each component slot.
    */
