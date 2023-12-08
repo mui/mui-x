@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.18.4
+
+_Dec 8, 2023_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Add [Pickers FAQ page](https://mui.com/x/react-date-pickers/faq/)
+- 🌍 Improve Danish (da-DK) locale on Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.4`
+
+- [DataGrid] Fix cell slot style override (#11215) @oliviertassinari
+- [l10n] Improve Danish (da-DK) locale (#11346) @goibon
+
+#### `@mui/x-data-grid-pro@6.18.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.4`.
+
+#### `@mui/x-data-grid-premium@6.18.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.4`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.4`
+
+- [pickers] Fix `MultiSectionDigitalClock` issues (#11308) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.4`.
+
+### Docs
+
+- [docs] Fix typo (#11323) @cadam11
+- [docs] Add FAQ page (#11347) @noraleonte
+
 ## 6.18.3
 
 _Dec 4, 2023_
@@ -347,7 +387,7 @@ Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
 
 - [charts] Add reference links to area + bar chart components (#10652) @michelengelen
 - [charts] Add reference links to line chart + sparkline components (#10650) @michelengelen
-- [charts] Add reference links to pie + scatter chart components  (#10653) @michelengelen
+- [charts] Add reference links to pie + scatter chart components (#10653) @michelengelen
 - [charts] Render only when `width` and `height` are resolved (#10714) @alexfauquette
 - [charts] Support animation on `BarChart` (#9926) @alexfauquette
 - [charts] Use new text component to avoid tick label overflow on x-axis (#10648) @alexfauquette
@@ -423,6 +463,7 @@ It adds line break support and avoids overlapping text in the legend.
 This comes with some breaking changes.
 
 - The DOM structure is modified. An intermediary `<tspan />` element has been added. This can impact how your style is applied.
+
   ```diff
   - <text>The label</text>
   + <text><tspan>The label</tspan></text>
