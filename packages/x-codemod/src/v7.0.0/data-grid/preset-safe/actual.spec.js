@@ -38,6 +38,7 @@ export default function App() {
             },
           },
         }}
+        unstable_cellSelection
       />
     </div>
   );
