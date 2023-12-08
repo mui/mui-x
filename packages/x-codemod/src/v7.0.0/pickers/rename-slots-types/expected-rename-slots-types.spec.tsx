@@ -1,4 +1,5 @@
 // @ts-nocheck
+// prettier-ignore
 import {
   DateCalendarSlots,
   DateCalendarSlotProps,
