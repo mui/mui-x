@@ -29,20 +29,24 @@ export const useGridColumnMenu = (
    */
   const showColumnMenu = React.useCallback<GridColumnMenuApi['showColumnMenu']>(
     (field) => {
-      const shouldUpdate = apiRef.current.setState((state) => {
-        if (state.columnMenu.open && state.columnMenu.field === field) {
-          return state;
-        }
-
-        logger.debug('Opening Column Menu');
-
-        return {
-          ...state,
-          columnMenu: { open: true, field },
-        };
-      });
+      const columnMenuState = gridColumnMenuSelector(apiRef.current.state);
+      const newState = { open: true, field };
+      const shouldUpdate =
+        newState.open !== columnMenuState.open || newState.field !== columnMenuState.field;
 
       if (shouldUpdate) {
+        apiRef.current.setState((state) => {
+          if (state.columnMenu.open && state.columnMenu.field === field) {
+            return state;
+          }
+
+          logger.debug('Opening Column Menu');
+
+          return {
+            ...state,
+            columnMenu: { open: true, field },
+          };
+        });
         apiRef.current.hidePreferences();
         apiRef.current.forceUpdate();
       }
@@ -79,20 +83,18 @@ export const useGridColumnMenu = (
       apiRef.current.setColumnHeaderFocus(fieldToFocus);
     }
 
-    const shouldUpdate = apiRef.current.setState((state) => {
-      if (!state.columnMenu.open && state.columnMenu.field === undefined) {
-        return state;
-      }
-
-      logger.debug('Hiding Column Menu');
-
-      return {
-        ...state,
-        columnMenu: { ...state.columnMenu, open: false, field: undefined },
-      };
-    });
+    const newState = { open: false, field: undefined };
+    const shouldUpdate =
+      newState.open !== columnMenuState.open || newState.field !== columnMenuState.field;
 
     if (shouldUpdate) {
+      apiRef.current.setState((state) => {
+        logger.debug('Hiding Column Menu');
+        return {
+          ...state,
+          columnMenu: newState,
+        };
+      });
       apiRef.current.forceUpdate();
     }
   }, [apiRef, logger]);
