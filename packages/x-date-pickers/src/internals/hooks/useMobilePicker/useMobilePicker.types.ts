@@ -47,10 +47,8 @@ export interface ExportedUseMobilePickerSlotProps<TDate, TView extends DateOrTim
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
-export interface UseMobilePickerSlotProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedUseMobilePickerSlotProps<TDate, TView>,
+export interface UseMobilePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends ExportedUseMobilePickerSlotProps<TDate, TView>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps<TDate>

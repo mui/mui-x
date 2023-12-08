@@ -31,12 +31,7 @@ export const useClearableField = <
   onClear,
   slots,
   slotProps,
-}: UseClearableFieldProps<
-  TFieldProps,
-  TInputProps,
-  TFieldSlots,
-  TFieldSlotProps
->) => {
+}: UseClearableFieldProps<TFieldProps, TInputProps, TFieldSlots, TFieldSlotProps>) => {
   const localeText = useLocaleText();
 
   const IconButton = slots?.clearButton ?? MuiIconButton;

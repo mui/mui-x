@@ -54,10 +54,8 @@ export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMe
   openPickerIcon: React.ElementType;
 }
 
-export interface UseDesktopPickerSlotProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedUseDesktopPickerSlotProps<TDate, TView>,
+export interface UseDesktopPickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends ExportedUseDesktopPickerSlotProps<TDate, TView>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface ExportedUseDesktopPickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
