@@ -16,6 +16,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 #### `@mui/x-data-grid@6.18.4`
 
 - [DataGrid] Fix cell slot style override (#11215) @oliviertassinari
+- [l10n] Improve Danish (da-DK) locale (#11346) @goibon
 
 #### `@mui/x-data-grid-pro@6.18.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -38,6 +39,7 @@ Same changes as in `@mui/x-date-pickers@6.18.4`.
 ### Docs
 
 - [docs] Fix typo (#11323) @cadam11
+- [docs] Add FAQ page (#11347) @noraleonte
 
 ## 6.18.3
 
