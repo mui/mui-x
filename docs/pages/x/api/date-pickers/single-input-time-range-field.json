@@ -97,6 +97,9 @@
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
+    "unstableFieldRef": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
+    },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "variant": {
       "type": {

@@ -1,7 +1,6 @@
 import {
   BaseDateValidationProps,
   TimeValidationProps,
-  DefaultizedProps,
   MakeOptional,
   UseFieldInternalProps,
   DateTimeValidationProps,
@@ -35,11 +34,3 @@ export interface UseDateTimeRangeFieldProps<TDate, TUseV6TextField extends boole
    */
   ampm?: boolean;
 }
-
-export type UseDateTimeRangeFieldDefaultizedProps<
-  TDate,
-  TUseV6TextField extends boolean,
-> = DefaultizedProps<
-  UseDateTimeRangeFieldProps<TDate, TUseV6TextField>,
-  keyof BaseDateValidationProps<TDate> | 'format' | 'disableIgnoringDatePartForTimeValidation'
->;

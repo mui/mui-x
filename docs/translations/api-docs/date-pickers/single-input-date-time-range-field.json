@@ -236,6 +236,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "unstableFieldRef": {
+      "description": "The ref object used to imperatively interact with the field.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "value": {
       "description": "The selected value. Used when the component is controlled.",
       "deprecated": "",

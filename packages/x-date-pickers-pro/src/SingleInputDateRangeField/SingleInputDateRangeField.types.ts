@@ -5,13 +5,25 @@ import {
   FieldsTextFieldProps,
   FieldSlotsComponents,
   FieldSlotsComponentsProps,
+  UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { ExportedUseClearableFieldProps } from '@mui/x-date-pickers/hooks';
-import { UseDateRangeFieldProps } from '../internals/models';
+import { DateRange, RangeFieldSection, UseDateRangeFieldProps } from '../internals/models';
+import type { DateRangeValidationError } from '../models';
 
 export interface UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField extends boolean>
   extends UseDateRangeFieldProps<TDate, TUseV6TextField>,
-    ExportedUseClearableFieldProps {}
+    ExportedUseClearableFieldProps,
+    Pick<
+      UseFieldInternalProps<
+        DateRange<TDate>,
+        TDate,
+        RangeFieldSection,
+        TUseV6TextField,
+        DateRangeValidationError
+      >,
+      'unstableFieldRef'
+    > {}
 
 export type SingleInputDateRangeFieldProps<
   TDate,
