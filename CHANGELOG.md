@@ -14,7 +14,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   Users needed to hover the item to highlight the scatter item or show the tooltip.
   Now they can interact with data by triggering the closest element. See the [docs page](https://next.mui.com/x/react-charts/scatter/#interaction) for more info.
 
-- 📚 Add [Pickers FAQ page](https://mui.com/x/react-date-pickers/faq/)
+- 📚 Add [Pickers FAQ page](https://next.mui.com/x/react-date-pickers/faq/)
 - 🎉 The Data Grid Header filters feature is now stable
 - 🌍 Improve Danish (da-DK) locale on Data Grid
 - 🐞 Bugfixes
@@ -24,7 +24,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 #### Breaking changes
 
 - The header filters feature is now stable. `unstable_` prefix is removed from prop `headerFilters` and related exports.
-  From https://github.com/mui/mui-x/pull/11270
+  See [migration docs](https://next.mui.com/x/migration/migration-data-grid-v6/#filtering) for more details.
 
 - The `GridColDef['type']` has been narrowed down to only accept the built-in column types.
   TypeScript users need to use the `GridColDef` interface when defining columns:
@@ -53,7 +53,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 Same changes as in `@mui/x-data-grid@7.0.0-alpha.4`, plus:
 
-- [DataGridPro] Make Header filters feature stable (#11243) @MBilalShafi
+- [DataGridPro] Make header filters feature stable (#11243) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@7.0.0-alpha.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -86,8 +86,6 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.4`.
 
 ### Core
 
-- [core] Ignore the `WhatsNewLayout` demo screenshot (#11312) @cherniavskii
-- [core] Update @mui/monorepo (#11276) @oliviertassinari
 - [docs] General revision of the Charts docs (#11249) @danilo-leal
 
 ## 7.0.0-alpha.3
