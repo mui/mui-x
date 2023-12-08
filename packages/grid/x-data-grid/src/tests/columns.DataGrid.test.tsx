@@ -75,7 +75,7 @@ describe('<DataGrid /> - Columns', () => {
   it('should not persist valueFormatter on column type change', () => {
     const { setProps } = render(
       <TestDataGrid
-        columns={[{ field: 'price', type: 'price', valueFormatter: ({ value }) => `$${value}` }]}
+        columns={[{ field: 'price', type: 'number', valueFormatter: ({ value }) => `$${value}` }]}
         rows={[{ id: 0, price: 1 }]}
       />,
     );

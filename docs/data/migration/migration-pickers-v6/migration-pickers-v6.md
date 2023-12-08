@@ -243,7 +243,7 @@ import { Settings } from 'luxon';
 Settings.defaultWeekSettings = {
   firstDay: 1,
   minimalDays: Info.getMinimumDaysInFirstWeek(),
-  weekend: [6, 7],
+  weekend: Info.getWeekendWeekdays(),
 };
 ```
 

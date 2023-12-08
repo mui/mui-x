@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-const columns = [
+const columns: GridColDef[] = [
   { field: 'id' },
   { field: 'username', width: 150 },
   { field: 'age', width: 80, type: 'number' },

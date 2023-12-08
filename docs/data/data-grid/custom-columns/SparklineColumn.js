@@ -18,6 +18,7 @@ function GridSparklineCell(props) {
 
 const sparklineColumnType = {
   ...GRID_STRING_COL_DEF,
+  type: 'custom',
   resizable: false,
   filterable: false,
   sortable: false,
