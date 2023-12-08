@@ -1,2 +1,2 @@
 export { useClearableField } from './useClearableField';
-export { ExportedUseClearableFieldProps } from './useClearableField';
+export type { ExportedUseClearableFieldProps } from './useClearableField';
