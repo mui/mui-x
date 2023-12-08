@@ -114,16 +114,6 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     [currentValueOptions, getOptionValue, applyValue, item],
   );
 
-  React.useEffect(() => {
-    if (currentValueOptions !== undefined) {
-      // sanitize if valueOptions are provided
-      const itemValue = getValueFromValueOptions(item.value, currentValueOptions, getOptionValue);
-      if (itemValue !== item.value) {
-        applyValue({ ...item, value: itemValue });
-      }
-    }
-  }, [item, currentValueOptions, applyValue, getOptionValue]);
-
   if (!isSingleSelectColDef(resolvedColumn)) {
     return null;
   }

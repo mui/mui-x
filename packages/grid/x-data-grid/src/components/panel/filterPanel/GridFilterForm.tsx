@@ -16,7 +16,12 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
-import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import {
+  GridColDef,
+  GridSingleSelectColDef,
+  GridStateColDef,
+} from '../../../models/colDef/gridColDef';
+import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -307,16 +312,38 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           column.filterOperators![0];
 
         // Erase filter value if the input component or filtered column type is modified
-        const eraseItemValue =
+        const eraseFilterValue =
           !newOperator.InputComponent ||
           newOperator.InputComponent !== currentOperator?.InputComponent ||
           column.type !== currentColumn!.type;
+
+        let filterValue = eraseFilterValue ? undefined : item.value;
+
+        // Check filter value agains the new valueOptions
+        if (column.type === 'singleSelect' && filterValue !== undefined) {
+          const colDef = column as GridSingleSelectColDef;
+          const valueOptions = getValueOptions(colDef);
+          if (Array.isArray(filterValue)) {
+            filterValue = filterValue.filter((val) => {
+              return (
+                // Only keep values that are in the new value options
+                getValueFromValueOptions(val, valueOptions, colDef?.getOptionValue!) !== undefined
+              );
+            });
+          } else if (
+            getValueFromValueOptions(item.value, valueOptions, colDef?.getOptionValue!) ===
+            undefined
+          ) {
+            // Reset the filter value if it is not in the new value options
+            filterValue = undefined;
+          }
+        }
 
         applyFilterChanges({
           ...item,
           field,
           operator: newOperator.value,
-          value: eraseItemValue ? undefined : item.value,
+          value: filterValue,
         });
       },
       [apiRef, applyFilterChanges, item, currentColumn, currentOperator],
