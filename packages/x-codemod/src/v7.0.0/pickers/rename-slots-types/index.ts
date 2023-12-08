@@ -84,6 +84,7 @@ const rename = {
   MultiInputFieldSlotRootProps: 'MultiInputFieldSlotRootProps',
   MultiInputFieldSlotTextFieldProps: 'MultiInputFieldSlotTextFieldProps',
   UseDesktopPickerSlotsComponent: 'UseDesktopPickerSlots',
+  UseDesktopPickerSlotsComponentsProps: 'UseDesktopPickerSlotProps',
   ExportedUseDesktopPickerSlotsComponentsProps: 'ExportedUseDesktopPickerSlotProps',
   BaseDatePickerSlotsComponent: 'BaseDatePickerSlots',
   BaseDatePickerSlotsComponentsProps: 'BaseDatePickerSlotProps',
