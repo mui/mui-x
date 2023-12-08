@@ -126,8 +126,8 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   const matchingImports = root.find(j.ImportDeclaration).filter((path) => !!matchImport(path));
 
   // Rename the import specifiers
-  // - import { dayPickerClasses } from '@mui/x-date-pickers'
-  // + import { dayCalendarClasses } from '@mui/x-date-pickers'
+  // - import { DayCalendarSlotsComponent } from '@mui/x-date-pickers'
+  // + import { DayCalendarSlots } from '@mui/x-date-pickers'
   matchingImports
     .find(j.ImportSpecifier)
     .filter((path) => Object.keys(rename).includes(path.node.imported.name))
@@ -136,8 +136,8 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     );
 
   // Rename the import usage
-  // - dayPickerClasses.root
-  // + dayCalendarClasses.root
+  // - DayCalendarSlotsComponent
+  // + DayCalendarSlots
   root
     .find(j.Identifier)
     .filter((path) => Object.keys(rename).includes(path.node.name))

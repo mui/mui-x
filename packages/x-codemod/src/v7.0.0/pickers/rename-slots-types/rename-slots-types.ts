@@ -8,8 +8,8 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe('v6.0.0/pickers', () => {
-  describe('view-components-rename', () => {
+describe('v7.0.0/pickers', () => {
+  describe('rename-slot-types', () => {
     const actualPath = `./actual-rename-slots-types.spec.tsx`;
     const expectedPath = `./expected-rename-slots-types.spec.tsx`;
 
