@@ -76,8 +76,6 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.4`.
 - [charts] Remove animation on sparkline (#11311) @oliviertassinari
 - [charts] Use voronoi cells to trigger interaction with scatter items (#10981) @alexfauquette
 
-### Tree View / `@mui/x-tree-view@7.0.0-alpha.4`
-
 ### Docs
 
 - [docs] Add FAQ page (#11271) @noraleonte
