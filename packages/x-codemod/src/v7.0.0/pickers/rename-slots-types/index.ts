@@ -102,6 +102,12 @@ const rename = {
   TimeFieldSlotsComponentsProps: 'TimeFieldSlotProps',
   DateFieldSlotsComponent: 'DateFieldSlots',
   DateFieldSlotsComponentsProps: 'DateFieldSlotProps',
+  MultiInputDateRangeFieldSlotsComponent: 'MultiInputDateRangeFieldSlots',
+  MultiInputDateRangeFieldSlotsComponentsProps: 'MultiInputDateRangeFieldSlotProps',
+  MultiInputDateTimeRangeFieldSlotsComponent: 'MultiInputDateTimeRangeFieldSlots',
+  MultiInputDateTimeRangeFieldSlotsComponentsProps: 'MultiInputDateTimeRangeFieldSlotProps',
+  MultiInputTimeRangeFieldSlotsComponent: 'MultiInputTimeRangeFieldSlots',
+  MultiInputTimeRangeFieldSlotsComponentsProps: 'MultiInputTimeRangeFieldSlotProps',
 };
 
 const matchImport = (path: ASTPath<ImportDeclaration>) =>
