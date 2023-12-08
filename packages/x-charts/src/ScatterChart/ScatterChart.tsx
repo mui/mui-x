@@ -22,6 +22,10 @@ import {
 } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import {
+  ChartsVoronoiHandler,
+  ChartsVoronoiHandlerProps,
+} from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -36,10 +40,16 @@ export interface ScatterChartSlotProps
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    ChartsVoronoiHandlerProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * If true, the interaction will not use the Voronoi cell and fall back to hover events.
+   * @default false
+   */
+  disableVoronoi?: boolean;
   /**
    * @deprecated Consider using `slotProps.legend` instead.
    */
@@ -73,6 +83,8 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     series,
     tooltip,
     axisHighlight,
+    voronoiMaxRadius,
+    disableVoronoi,
     legend,
     width,
     height,
@@ -99,6 +111,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
       yAxis={yAxis}
       sx={sx}
     >
+      {!disableVoronoi && <ChartsVoronoiHandler voronoiMaxRadius={voronoiMaxRadius} />}
       <ChartsAxis
         topAxis={topAxis}
         leftAxis={leftAxis}
@@ -176,6 +189,11 @@ ScatterChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  /**
+   * If true, the interaction will not use the Voronoi cell and fall back to hover events.
+   * @default false
+   */
+  disableVoronoi: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    * @default undefined
@@ -285,6 +303,7 @@ ScatterChart.propTypes = {
           y: PropTypes.number.isRequired,
         }),
       ).isRequired,
+      disableHover: PropTypes.bool,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
@@ -362,6 +381,12 @@ ScatterChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
+  /**
+   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * If `undefined`, the radius is assumed to be infinite.
+   * @default undefined
+   */
+  voronoiMaxRadius: PropTypes.number,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    * @default undefined
