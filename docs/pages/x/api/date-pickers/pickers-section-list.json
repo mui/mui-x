@@ -1,5 +1,6 @@
 {
   "props": {
+    "contentEditable": { "type": { "name": "bool" }, "required": true },
     "elements": {
       "type": {
         "name": "arrayOf",
@@ -8,6 +9,7 @@
       "required": true
     },
     "slots": { "type": { "name": "object" }, "required": true },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "slotProps": { "type": { "name": "object" } }
   },
   "slots": [
@@ -22,7 +24,11 @@
     "import { PickersSectionList } from '@mui/x-date-pickers';",
     "import { PickersSectionList } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": ["sectionContent"], "globalClasses": {}, "name": "MuiPickersSectionList" },
+  "styles": {
+    "classes": ["root", "section", "sectionContent"],
+    "globalClasses": {},
+    "name": "MuiPickersSectionList"
+  },
   "filename": "/packages/x-date-pickers/src/PickersSectionList/PickersSectionList.tsx",
   "demos": "<ul></ul>"
 }

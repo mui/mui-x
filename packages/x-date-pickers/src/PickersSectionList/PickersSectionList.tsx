@@ -42,7 +42,14 @@ export interface PickersSectionListProps extends React.HTMLAttributes<HTMLDivEle
    * Each element contains the prop to edit a section of the value.
    */
   elements: PickersSectionElement[];
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersSectionListClasses>;
+  /**
+   * If true, the whole element is editable.
+   * Useful when all the sections are selected.
+   */
   contentEditable: boolean;
 }
 
@@ -50,6 +57,8 @@ const useUtilityClasses = (ownerState: PickersSectionListProps) => {
   const { classes } = ownerState;
 
   const slots = {
+    root: ['root'],
+    section: ['section'],
     sectionContent: ['sectionContent'],
   };
 
@@ -58,17 +67,27 @@ const useUtilityClasses = (ownerState: PickersSectionListProps) => {
 
 interface PickersSectionProps extends Pick<PickersSectionListProps, 'slots' | 'slotProps'> {
   element: PickersSectionElement;
-  sectionContentClassName: string;
+  classes: PickersSectionListClasses;
 }
 
+/**
+ * Demos:
+ *
+ * - [Custom field](https://mui.com/x/react-date-pickers/custom-field/)
+ *
+ * API:
+ *
+ * - [PickersSectionList API](https://mui.com/x/api/date-pickers/pickers-section-list/)
+ */
 function PickersSection(props: PickersSectionProps) {
-  const { slots, slotProps, element, sectionContentClassName } = props;
+  const { slots, slotProps, element, classes } = props;
 
   const Section = slots.section;
   const sectionProps = useSlotProps({
     elementType: Section,
     externalSlotProps: slotProps?.section,
     externalForwardedProps: element.container,
+    className: classes.section,
     ownerState: {},
   });
 
@@ -80,7 +99,7 @@ function PickersSection(props: PickersSectionProps) {
     additionalProps: {
       suppressContentEditableWarning: true,
     },
-    className: sectionContentClassName,
+    className: classes.sectionContent,
     ownerState: {},
   });
 
@@ -150,6 +169,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
       ref,
       suppressContentEditableWarning: true,
     },
+    className: classes.root,
     ownerState: {},
   });
 
@@ -170,7 +190,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
               slots={slots}
               slotProps={slotProps}
               element={element}
-              sectionContentClassName={classes.sectionContent}
+              classes={classes}
             />
           ))}
         </React.Fragment>
@@ -184,7 +204,14 @@ PickersSectionList.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
+  /**
+   * If true, the whole element is editable.
+   * Useful when all the sections are selected.
+   */
   contentEditable: PropTypes.bool.isRequired,
   /**
    * The elements to render.
