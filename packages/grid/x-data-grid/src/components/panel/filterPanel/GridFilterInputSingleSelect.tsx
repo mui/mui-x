@@ -80,7 +80,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     InputLabelProps,
     ...others
   } = props;
-  const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
+  const filterValue = item.value ?? '';
   const id = useId();
   const labelId = useId();
   const rootProps = useGridRootProps();
@@ -113,35 +113,20 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
       // NativeSelect casts the value to a string.
       value = getValueFromValueOptions(value, currentValueOptions, getOptionValue);
-
-      setFilterValueState(String(value));
       applyValue({ ...item, value });
     },
     [currentValueOptions, getOptionValue, applyValue, item],
   );
 
   React.useEffect(() => {
-    let itemValue;
-
     if (currentValueOptions !== undefined) {
       // sanitize if valueOptions are provided
-      itemValue = getValueFromValueOptions(item.value, currentValueOptions, getOptionValue);
+      const itemValue = getValueFromValueOptions(item.value, currentValueOptions, getOptionValue);
       if (itemValue !== item.value) {
         applyValue({ ...item, value: itemValue });
-        return;
       }
-    } else {
-      itemValue = item.value;
     }
-
-    itemValue = itemValue ?? '';
-
-    setFilterValueState(String(itemValue));
   }, [item, currentValueOptions, applyValue, getOptionValue]);
-
-  if (!isSingleSelectColDef(resolvedColumn)) {
-    return null;
-  }
 
   if (!isSingleSelectColDef(resolvedColumn)) {
     return null;
@@ -165,7 +150,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           id={id}
           label={label}
           labelId={labelId}
-          value={filterValueState}
+          value={filterValue}
           onChange={onFilterChange}
           variant="standard"
           type={type || 'text'}
