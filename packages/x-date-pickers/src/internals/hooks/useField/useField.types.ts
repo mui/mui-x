@@ -17,7 +17,7 @@ import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
 import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
-import { PickersSectionElement } from '../../../PickersSectionsList';
+import { PickersSectionElement } from '../../../PickersSectionList';
 
 export interface UseFieldParams<
   TValue,

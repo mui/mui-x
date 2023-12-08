@@ -8,7 +8,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 
-import { PickersSectionsList } from '@mui/x-date-pickers/PickersSectionsList';
+import { PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserField = React.forwardRef((props, ref) => {
   const {
@@ -44,7 +44,7 @@ const BrowserField = React.forwardRef((props, ref) => {
       {...other}
     >
       {startAdornment}
-      <PickersSectionsList
+      <PickersSectionList
         elements={elements}
         sectionsContainerRef={sectionsContainerRef}
         contentEditable={contentEditable}

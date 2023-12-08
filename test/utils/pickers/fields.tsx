@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createRenderer, screen, userEvent, act, fireEvent } from '@mui-internal/test-utils';
 import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
-import { pickersSectionsListClasses } from '@mui/x-date-pickers/PickersSectionsList';
+import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputClasses } from '@mui/x-date-pickers/internals/components/PickersTextField/pickersTextFieldClasses';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
 
@@ -147,7 +147,7 @@ export const buildFieldInteractions = <P extends {}>({
 
     const getSection = (sectionIndex: number) =>
       getSectionsContainer().querySelector<HTMLSpanElement>(
-        `span[data-sectionindex="${sectionIndex}"] .${pickersSectionsListClasses.sectionContent}`,
+        `span[data-sectionindex="${sectionIndex}"] .${pickersSectionListClasses.sectionContent}`,
       )!;
 
     const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {

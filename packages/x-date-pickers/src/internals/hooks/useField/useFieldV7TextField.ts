@@ -9,7 +9,7 @@ import {
 } from './useField.utils';
 import { UseFieldTextField, UseFieldTextFieldInteractions } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
-import { PickersSectionElement } from '../../../PickersSectionsList';
+import { PickersSectionElement } from '../../../PickersSectionList';
 
 export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   const {

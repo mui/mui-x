@@ -16,9 +16,9 @@ import {
   FieldSection,
 } from '@mui/x-date-pickers-pro';
 import {
-  PickersSectionsList,
+  PickersSectionList,
   PickersSectionElement,
-} from '@mui/x-date-pickers/PickersSectionsList';
+} from '@mui/x-date-pickers/PickersSectionList';
 
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -78,7 +78,7 @@ const BrowserField = React.forwardRef(
         {...other}
       >
         {startAdornment}
-        <PickersSectionsList
+        <PickersSectionList
           elements={elements}
           sectionsContainerRef={sectionsContainerRef}
           contentEditable={contentEditable}

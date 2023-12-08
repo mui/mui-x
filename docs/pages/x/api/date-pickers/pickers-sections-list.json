@@ -9,17 +9,17 @@
     { "class": null, "name": "sectionContent", "description": "" },
     { "class": null, "name": "sectionSeparator", "description": "" }
   ],
-  "name": "PickersSectionsList",
+  "name": "PickersSectionList",
   "imports": [
-    "import { PickersSectionsList } from '@mui/x-date-pickers/PickersSectionsList';",
-    "import { PickersSectionsList } from '@mui/x-date-pickers';",
-    "import { PickersSectionsList } from '@mui/x-date-pickers-pro';"
+    "import { PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';",
+    "import { PickersSectionList } from '@mui/x-date-pickers';",
+    "import { PickersSectionList } from '@mui/x-date-pickers-pro';"
   ],
   "styles": {
     "classes": ["sectionContent"],
     "globalClasses": {},
-    "name": "MuiPickersSectionsList"
+    "name": "MuiPickersSectionList"
   },
-  "filename": "/packages/x-date-pickers/src/PickersSectionsList/PickersSectionsList.tsx",
+  "filename": "/packages/x-date-pickers/src/PickersSectionList/PickersSectionList.tsx",
   "demos": "<ul></ul>"
 }
