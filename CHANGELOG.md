@@ -83,9 +83,6 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.4`.
 - [docs] Added params to `onPaginationModelChange` docs (#10191) @JFBenzs
 - [docs] Fix typo (#11324) @cadam11
 - [docs] Improve `DemoContainer` styling coverage (#11315) @LukasTy
-
-### Core
-
 - [docs] General revision of the Charts docs (#11249) @danilo-leal
 
 ## 7.0.0-alpha.3
