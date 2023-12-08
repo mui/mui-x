@@ -15,7 +15,7 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   const {
     internalProps: { disabled, readOnly = false },
     forwardedProps: {
-      sectionsContainerRef: inSectionsContainerRef,
+      sectionListRef: inSectionListRef,
       onBlur,
       onClick,
       onFocus,
@@ -38,15 +38,15 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
     areAllSectionsEmpty,
   } = params;
 
-  const sectionsContainerRef = React.useRef<HTMLDivElement>(null);
-  const handleSectionsContainerRef = useForkRef(inSectionsContainerRef, sectionsContainerRef);
+  const sectionListRef = React.useRef<HTMLDivElement>(null);
+  const handleSectionListRef = useForkRef(inSectionListRef, sectionListRef);
 
   const [focused, setFocused] = React.useState(false);
 
   const interactions = React.useMemo<UseFieldTextFieldInteractions>(
     () => ({
       syncSelectionToDOM: () => {
-        if (!sectionsContainerRef.current) {
+        if (!sectionListRef.current) {
           return;
         }
 
@@ -59,19 +59,19 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
           // If the selection contains an element inside the field, we reset it.
           if (
             selection.rangeCount > 0 &&
-            sectionsContainerRef.current.contains(selection.getRangeAt(0).startContainer)
+            sectionListRef.current.contains(selection.getRangeAt(0).startContainer)
           ) {
             selection.removeAllRanges();
           }
 
           if (focused) {
-            sectionsContainerRef.current.blur();
+            sectionListRef.current.blur();
           }
           return;
         }
 
         // On multi input range pickers we want to update selection range only for the active input
-        if (!sectionsContainerRef.current.contains(getActiveElement(document))) {
+        if (!sectionListRef.current.contains(getActiveElement(document))) {
           return;
         }
 
@@ -79,8 +79,8 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
 
         const target =
           parsedSelectedSections === 'all'
-            ? sectionsContainerRef.current
-            : getSectionDOMElementFromSectionIndex(sectionsContainerRef, parsedSelectedSections);
+            ? sectionListRef.current
+            : getSectionDOMElementFromSectionIndex(sectionListRef, parsedSelectedSections);
 
         range.selectNodeContents(target);
         target.focus();
@@ -91,8 +91,8 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
         const activeElement = getActiveElement(document) as HTMLElement | undefined;
         if (
           !activeElement ||
-          !sectionsContainerRef.current ||
-          !sectionsContainerRef.current.contains(activeElement)
+          !sectionListRef.current ||
+          !sectionListRef.current.contains(activeElement)
         ) {
           return null;
         }
@@ -106,13 +106,10 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
         ) as number;
 
         setFocused(true);
-        getSectionDOMElementFromSectionIndex(
-          sectionsContainerRef,
-          newParsedSelectedSections,
-        ).focus();
+        getSectionDOMElementFromSectionIndex(sectionListRef, newParsedSelectedSections).focus();
       },
       setSelectedSections: (newSelectedSections) => {
-        if (!sectionsContainerRef.current) {
+        if (!sectionListRef.current) {
           return;
         }
 
@@ -127,9 +124,7 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
       },
       isFieldFocused: () => {
         const activeElement = getActiveElement(document);
-        return (
-          !!sectionsContainerRef.current && sectionsContainerRef.current.contains(activeElement)
-        );
+        return !!sectionListRef.current && sectionListRef.current.contains(activeElement);
       },
     }),
     [parsedSelectedSections, setSelectedSections, state.sections, focused],
@@ -140,13 +135,13 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
    * Then we need to imperatively revert it (we can't let React do it because the value did not change in his internal representation).
    */
   const revertDOMSectionChange = useEventCallback((sectionIndex: number) => {
-    if (!sectionsContainerRef.current) {
+    if (!sectionListRef.current) {
       return;
     }
 
     const section = state.sections[sectionIndex];
 
-    getSectionDOMElementFromSectionIndex(sectionsContainerRef, sectionIndex)!.innerHTML =
+    getSectionDOMElementFromSectionIndex(sectionListRef, sectionIndex)!.innerHTML =
       section.value || section.placeholder;
     interactions.syncSelectionToDOM();
   });
@@ -154,7 +149,7 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   const handleContainerClick = useEventCallback((event: React.MouseEvent, ...args) => {
     // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
     // We avoid this by checking if the call of `handleContainerClick` is actually intended, or a side effect.
-    if (event.isDefaultPrevented() || !sectionsContainerRef.current) {
+    if (event.isDefaultPrevented() || !sectionListRef.current) {
       return;
     }
 
@@ -187,7 +182,7 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
       setFocused(true);
       setSelectedSections(sectionOrder.startIndex);
     } else {
-      const hasClickedOnASection = sectionsContainerRef.current.contains(event.target as Node);
+      const hasClickedOnASection = sectionListRef.current.contains(event.target as Node);
 
       if (!hasClickedOnASection) {
         setSelectedSections(sectionOrder.startIndex);
@@ -198,14 +193,14 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   const handleContainerInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
     onInput?.(event);
 
-    if (!sectionsContainerRef.current || parsedSelectedSections !== 'all') {
+    if (!sectionListRef.current || parsedSelectedSections !== 'all') {
       return;
     }
 
     const target = event.target as HTMLSpanElement;
     const keyPressed = target.textContent ?? '';
 
-    sectionsContainerRef.current.innerHTML = state.sections
+    sectionListRef.current.innerHTML = state.sections
       .map(
         (section) =>
           `${section.startSeparator}${section.value || section.placeholder}${section.endSeparator}`,
@@ -256,12 +251,12 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   const handleContainerBlur = useEventCallback((...args) => {
     onBlur?.(...(args as []));
     window.setTimeout(() => {
-      if (!sectionsContainerRef.current) {
+      if (!sectionListRef.current) {
         return;
       }
 
       const activeElement = getActiveElement(document);
-      const shouldBlur = !sectionsContainerRef.current.contains(activeElement);
+      const shouldBlur = !sectionListRef.current.contains(activeElement);
       if (shouldBlur) {
         setFocused(false);
         setSelectedSections(null);
@@ -336,7 +331,7 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
     const sectionIndex = getSectionIndexFromDOMElement(target)!;
     const section = state.sections[sectionIndex];
 
-    if (readOnly || !sectionsContainerRef.current) {
+    if (readOnly || !sectionListRef.current) {
       revertDOMSectionChange(sectionIndex);
       return;
     }
@@ -362,15 +357,15 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   });
 
   useEnhancedEffect(() => {
-    if (!focused || !sectionsContainerRef.current) {
+    if (!focused || !sectionListRef.current) {
       return;
     }
 
     if (parsedSelectedSections === 'all') {
-      sectionsContainerRef.current.focus();
+      sectionListRef.current.focus();
     } else if (typeof parsedSelectedSections === 'number') {
       const domElement = getSectionDOMElementFromSectionIndex(
-        sectionsContainerRef,
+        sectionListRef,
         parsedSelectedSections,
       );
       if (domElement) {
@@ -435,8 +430,8 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   );
 
   React.useEffect(() => {
-    if (autoFocus && sectionsContainerRef.current) {
-      getSectionDOMElementFromSectionIndex(sectionsContainerRef, sectionOrder.startIndex).focus();
+    if (autoFocus && sectionListRef.current) {
+      getSectionDOMElementFromSectionIndex(sectionListRef, sectionOrder.startIndex).focus();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -447,7 +442,7 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
       autoFocus,
       readOnly,
       focused: focusedProp ?? focused,
-      sectionsContainerRef: handleSectionsContainerRef,
+      sectionListRef: handleSectionListRef,
       onBlur: handleContainerBlur,
       onClick: handleContainerClick,
       onFocus: handleContainerFocus,

@@ -183,7 +183,7 @@ interface UseFieldV6AdditionalProps {
 export interface UseFieldV7ForwardedProps {
   focused?: boolean;
   autoFocus?: boolean;
-  sectionsContainerRef?: React.Ref<HTMLDivElement>;
+  sectionListRef?: React.Ref<HTMLDivElement>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;

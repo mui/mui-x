@@ -727,10 +727,10 @@ export const getSectionIndexFromDOMElement = (element: Element | null | undefine
 };
 
 export const getSectionDOMElementFromSectionIndex = (
-  sectionsContainerRef: React.RefObject<HTMLDivElement>,
+  sectionListRef: React.RefObject<HTMLDivElement>,
   index: number,
 ) => {
-  return sectionsContainerRef.current!.querySelector<HTMLSpanElement>(
+  return sectionListRef.current!.querySelector<HTMLSpanElement>(
     `[data-sectionindex="${index}"] .${pickersSectionListClasses.sectionContent}`,
   )!;
 };

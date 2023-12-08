@@ -34,7 +34,7 @@ interface BrowserFieldProps
   ownerState?: any;
   sx?: any;
   textField: 'v6' | 'v7';
-  sectionsContainerRef?: React.Ref<HTMLDivElement>;
+  sectionListRef?: React.Ref<HTMLDivElement>;
   elements: PickersSectionElement[];
 }
 
@@ -59,7 +59,7 @@ const BrowserField = React.forwardRef(
       elements,
       onClick,
       onInput,
-      sectionsContainerRef,
+      sectionListRef,
 
       contentEditable,
       onFocus,
@@ -80,7 +80,7 @@ const BrowserField = React.forwardRef(
         {startAdornment}
         <PickersSectionList
           elements={elements}
-          sectionsContainerRef={sectionsContainerRef}
+          sectionListRef={sectionListRef}
           contentEditable={contentEditable}
           onFocus={onFocus}
           onBlur={onBlur}
