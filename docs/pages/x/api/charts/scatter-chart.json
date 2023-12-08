@@ -12,6 +12,7 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" } },
+    "disableVoronoi": { "type": { "name": "bool" } },
     "height": { "type": { "name": "number" }, "default": "undefined" },
     "leftAxis": {
       "type": {
@@ -43,6 +44,7 @@
       },
       "default": "null"
     },
+    "voronoiMaxRadius": { "type": { "name": "number" }, "default": "undefined" },
     "width": { "type": { "name": "number" }, "default": "undefined" },
     "xAxis": {
       "type": {
