@@ -153,7 +153,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     (otherHandlers: EventHandlers) => (event: React.KeyboardEvent<HTMLUListElement>) => {
       otherHandlers.onKeyDown?.(event);
 
-      let flag = false;
+      let preventDefaultBehavior = false;
       const key = event.key;
 
       // If the tree is empty there will be no focused node
@@ -165,7 +165,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       switch (key) {
         case ' ':
           if (!params.disableSelection && !instance.isNodeDisabled(state.focusedNodeId)) {
-            flag = true;
+            preventDefaultBehavior = true;
             if (params.multiSelect && event.shiftKey) {
               instance.selectRange(event, { end: state.focusedNodeId });
             } else if (params.multiSelect) {
@@ -177,12 +177,16 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           event.stopPropagation();
           break;
         case 'Enter':
+          if (!params.multiSelect && ctrlPressed) {
+            // Don't hijack CTRL+ENTER when not in multi select
+            break;
+          }
           if (!instance.isNodeDisabled(state.focusedNodeId)) {
             if (instance.isNodeExpandable(state.focusedNodeId)) {
               instance.toggleNodeExpansion(event, state.focusedNodeId);
-              flag = true;
+              preventDefaultBehavior = true;
             } else if (!params.disableSelection) {
-              flag = true;
+              preventDefaultBehavior = true;
               if (params.multiSelect) {
                 instance.selectNode(event, state.focusedNodeId, true);
               } else {
@@ -197,27 +201,27 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             selectNextNode(event, state.focusedNodeId);
           }
           instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
-          flag = true;
+          preventDefaultBehavior = true;
           break;
         case 'ArrowUp':
           if (params.multiSelect && event.shiftKey && !params.disableSelection) {
             selectPreviousNode(event, state.focusedNodeId);
           }
           instance.focusNode(event, getPreviousNode(instance, state.focusedNodeId));
-          flag = true;
+          preventDefaultBehavior = true;
           break;
         case 'ArrowRight':
           if (isRtl) {
-            flag = handlePreviousArrow(event);
+            preventDefaultBehavior = handlePreviousArrow(event);
           } else {
-            flag = handleNextArrow(event);
+            preventDefaultBehavior = handleNextArrow(event);
           }
           break;
         case 'ArrowLeft':
           if (isRtl) {
-            flag = handleNextArrow(event);
+            preventDefaultBehavior = handleNextArrow(event);
           } else {
-            flag = handlePreviousArrow(event);
+            preventDefaultBehavior = handlePreviousArrow(event);
           }
           break;
         case 'Home':
@@ -231,7 +235,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             instance.rangeSelectToFirst(event, state.focusedNodeId);
           }
           instance.focusNode(event, getFirstNode(instance));
-          flag = true;
+          preventDefaultBehavior = true;
           break;
         case 'End':
           if (
@@ -244,12 +248,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             instance.rangeSelectToLast(event, state.focusedNodeId);
           }
           instance.focusNode(event, getLastNode(instance));
-          flag = true;
+          preventDefaultBehavior = true;
           break;
         default:
           if (key === '*') {
             instance.expandAllSiblings(event, state.focusedNodeId);
-            flag = true;
+            preventDefaultBehavior = true;
           } else if (
             params.multiSelect &&
             ctrlPressed &&
@@ -260,14 +264,14 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
               start: getFirstNode(instance),
               end: getLastNode(instance),
             });
-            flag = true;
+            preventDefaultBehavior = true;
           } else if (!ctrlPressed && !event.shiftKey && isPrintableCharacter(key)) {
             focusByFirstCharacter(event, state.focusedNodeId, key);
-            flag = true;
+            preventDefaultBehavior = true;
           }
       }
 
-      if (flag) {
+      if (preventDefaultBehavior) {
         event.preventDefault();
         event.stopPropagation();
       }
