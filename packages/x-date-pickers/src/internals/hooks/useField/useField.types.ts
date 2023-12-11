@@ -391,7 +391,7 @@ export type SectionOrdering = {
   endIndex: number;
 };
 
-export interface FieldSlotsComponents {
+export interface FieldSlots {
   /**
    * Icon to display inside the clear button.
    * @default ClearIcon
@@ -404,7 +404,7 @@ export interface FieldSlotsComponents {
   clearButton?: React.ElementType;
 }
 
-export interface FieldSlotsComponentsProps {
+export interface FieldSlotProps {
   clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
   clearButton?: SlotComponentProps<typeof IconButton, {}, {}>;
 }

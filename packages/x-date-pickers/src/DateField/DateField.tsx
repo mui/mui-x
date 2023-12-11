@@ -4,11 +4,7 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import {
-  DateFieldProps,
-  DateFieldSlotsComponent,
-  DateFieldSlotsComponentsProps,
-} from './DateField.types';
+import { DateFieldProps, DateFieldSlots, DateFieldSlotProps } from './DateField.types';
 import { useDateField } from './useDateField';
 import { useClearableField } from '../hooks';
 
@@ -68,8 +64,8 @@ const DateField = React.forwardRef(function DateField<TDate>(
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
-    DateFieldSlotsComponent,
-    DateFieldSlotsComponentsProps<TDate>
+    DateFieldSlots,
+    DateFieldSlotProps<TDate>
   >({
     onClear,
     clearable,

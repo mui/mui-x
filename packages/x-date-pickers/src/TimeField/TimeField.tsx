@@ -4,11 +4,7 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import {
-  TimeFieldProps,
-  TimeFieldSlotsComponent,
-  TimeFieldSlotsComponentsProps,
-} from './TimeField.types';
+import { TimeFieldProps, TimeFieldSlots, TimeFieldSlotProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
 
@@ -68,8 +64,8 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
-    TimeFieldSlotsComponent,
-    TimeFieldSlotsComponentsProps<TDate>
+    TimeFieldSlots,
+    TimeFieldSlotProps<TDate>
   >({
     onClear,
     clearable,

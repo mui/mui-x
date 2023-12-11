@@ -1,19 +1,16 @@
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher/PickersArrowSwitcher';
 export type {
   ExportedPickersArrowSwitcherProps,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
+  PickersArrowSwitcherSlots,
+  PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
-  PickersModalDialogSlotsComponent,
-  PickersModalDialogSlotsComponentsProps,
+  PickersModalDialogSlots,
+  PickersModalDialogSlotProps,
 } from './components/PickersModalDialog';
 export { PickersPopper } from './components/PickersPopper';
-export type {
-  PickersPopperSlotsComponent,
-  PickersPopperSlotsComponentsProps,
-} from './components/PickersPopper';
+export type { PickersPopperSlots, PickersPopperSlotProps } from './components/PickersPopper';
 export { PickersToolbar } from './components/PickersToolbar';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
@@ -66,8 +63,8 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
+  FieldSlots,
+  FieldSlotProps,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
@@ -85,8 +82,8 @@ export type {
 export { useStaticPicker } from './hooks/useStaticPicker';
 export type {
   StaticOnlyPickerProps,
-  UseStaticPickerSlotsComponent,
-  UseStaticPickerSlotsComponentsProps,
+  UseStaticPickerSlots,
+  UseStaticPickerSlotProps,
 } from './hooks/useStaticPicker';
 export {
   useLocalizationContext,
@@ -143,8 +140,8 @@ export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {
   DayCalendarProps,
-  DayCalendarSlotsComponent,
-  DayCalendarSlotsComponentsProps,
+  DayCalendarSlots,
+  DayCalendarSlotProps,
   ExportedDayCalendarProps,
 } from '../DateCalendar/DayCalendar';
 
