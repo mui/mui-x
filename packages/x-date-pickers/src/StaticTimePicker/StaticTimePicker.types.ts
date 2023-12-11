@@ -8,7 +8,7 @@ import {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional } from '../internals';
+import { MakeOptional } from '../internals/models/helpers';
 import { TimeView } from '../models';
 
 export interface StaticTimePickerSlots<TDate>

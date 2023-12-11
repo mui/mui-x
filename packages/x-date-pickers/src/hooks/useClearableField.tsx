@@ -3,7 +3,9 @@ import { useSlotProps } from '@mui/base/utils';
 import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { ClearIcon } from '../icons';
-import { FieldSlots, FieldSlotProps, FieldsTextFieldProps, useLocaleText } from '../internals';
+import { FieldSlots, FieldSlotProps } from '../internals/hooks/useField/useField.types';
+import { useLocaleText } from '../internals/hooks/useUtils';
+import { FieldsTextFieldProps } from '../internals/models';
 
 type UseClearableFieldProps<
   TFieldProps extends FieldsTextFieldProps,
