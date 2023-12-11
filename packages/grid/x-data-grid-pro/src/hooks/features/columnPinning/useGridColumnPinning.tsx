@@ -8,6 +8,7 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
   GridEventListener,
+  GridPinnedColumnPosition,
   gridColumnFieldsSelector,
 } from '@mui/x-data-grid';
 import {
@@ -24,7 +25,7 @@ import {
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridColumnPinningApi, GridPinnedColumnPosition } from './gridColumnPinningInterface';
+import { GridColumnPinningApi } from './gridColumnPinningInterface';
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<

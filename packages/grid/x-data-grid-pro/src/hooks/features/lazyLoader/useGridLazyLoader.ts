@@ -4,6 +4,7 @@ import {
   useGridSelector,
   gridSortModelSelector,
   gridFilterModelSelector,
+  gridRenderContextSelector,
   useGridApiOptionHandler,
   GridEventListener,
   GridRowEntry,
@@ -182,7 +183,7 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
 
-      const renderContext = privateApiRef.current.getRenderContext();
+      const renderContext = gridRenderContextSelector(privateApiRef);
       const fetchRowsParams: GridFetchRowsParams = {
         firstRowToRender: renderContext.firstRowIndex,
         lastRowToRender: renderContext.lastRowIndex,
@@ -211,7 +212,7 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
 
-      const renderContext = privateApiRef.current.getRenderContext();
+      const renderContext = gridRenderContextSelector(privateApiRef);
       const fetchRowsParams: GridFetchRowsParams = {
         firstRowToRender: renderContext.firstRowIndex,
         lastRowToRender: renderContext.lastRowIndex,

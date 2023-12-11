@@ -32,6 +32,7 @@ import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
 import {
+  gridRenderContextSelector,
   gridVirtualizationEnabledSelector,
   gridVirtualizationColumnEnabledSelector,
 } from './gridVirtualizationSelectors';
@@ -80,14 +81,11 @@ export const useGridVirtualScroller = () => {
 
   const previousContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
-  const previousColumnContext = React.useRef(EMPTY_RENDER_CONTEXT);
-  const [renderContext, setRenderContext] = React.useState(EMPTY_RENDER_CONTEXT);
+  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const scrollPosition = React.useRef({ top: 0, left: 0 }).current;
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
   const getRenderedColumns = useLazyRef(createGetRenderedColumns).current;
-
-  const getRenderContext = () => renderContext;
 
   const indexOfRowWithFocusedCell = React.useMemo<number>(() => {
     if (cellFocus !== null) {
@@ -151,7 +149,6 @@ export const useGridVirtualScroller = () => {
       }
 
       previousContext.current = nextRenderContext;
-      setRenderContext(nextRenderContext);
     },
     [apiRef, dimensions.isReady],
   );
@@ -523,7 +520,6 @@ export const useGridVirtualScroller = () => {
   });
 
   apiRef.current.register('private', {
-    getRenderContext,
     updateRenderContext: forceUpdateRenderContext,
   });
 

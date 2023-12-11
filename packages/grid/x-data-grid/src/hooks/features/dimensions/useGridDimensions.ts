@@ -21,6 +21,8 @@ import {
   gridColumnsTotalWidthSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
+import { gridDimensionsSelector } from '../dimensions';
+import { gridRenderContextSelector } from '../virtualization';
 import { gridDensityFactorSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -128,7 +130,7 @@ export function useGridDimensions(
   }, [apiRef]);
 
   const getViewportPageSize = React.useCallback(() => {
-    const dimensions = apiRef.current.getRootDimensions();
+    const dimensions = gridDimensionsSelector(apiRef.current.state);
     if (!dimensions.isReady) {
       return 0;
     }
@@ -141,7 +143,7 @@ export function useGridDimensions(
     // TODO: Use a combination of scrollTop, dimensions.viewportInnerSize.height and rowsMeta.possitions
     // to find out the maximum number of rows that can fit in the visible part of the grid
     if (props.getRowHeight) {
-      const renderContext = apiRef.current.getRenderContext();
+      const renderContext = gridRenderContextSelector(apiRef);
       const viewportPageSize = renderContext.lastRowIndex - renderContext.firstRowIndex;
 
       return Math.min(viewportPageSize - 1, currentPage.rows.length);
