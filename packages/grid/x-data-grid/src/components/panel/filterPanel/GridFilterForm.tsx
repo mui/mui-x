@@ -319,7 +319,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         let filterValue = eraseFilterValue ? undefined : item.value;
 
-        // Check filter value agains the new valueOptions
+        // Check filter value against the new valueOptions
         if (column.type === 'singleSelect' && filterValue !== undefined) {
           const colDef = column as GridSingleSelectColDef;
           const valueOptions = getValueOptions(colDef);
@@ -458,7 +458,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             inputProps={{
               'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
             }}
-            value={multiFilterOperator || ''}
+            value={multiFilterOperator ?? ''}
             onChange={changeLogicOperator}
             disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
             native={isBaseSelectNative}
@@ -499,7 +499,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             labelId={columnSelectLabelId}
             id={columnSelectId}
             label={apiRef.current.getLocaleText('filterPanelColumns')}
-            value={selectedField || ''}
+            value={selectedField ?? ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
             {...rootProps.slotProps?.baseSelect}
