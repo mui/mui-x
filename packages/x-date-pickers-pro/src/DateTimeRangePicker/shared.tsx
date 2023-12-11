@@ -18,12 +18,12 @@ import { applyDefaultViewProps } from '@mui/x-date-pickers/internals/utils/views
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
-  DigitalClockSlotsComponent,
-  DigitalClockSlotsComponentsProps,
+  DigitalClockSlots,
+  DigitalClockSlotProps,
 } from '@mui/x-date-pickers/DigitalClock/DigitalClock.types';
 import {
-  MultiSectionDigitalClockSlotsComponent,
-  MultiSectionDigitalClockSlotsComponentsProps,
+  MultiSectionDigitalClockSlots,
+  MultiSectionDigitalClockSlotProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock/MultiSectionDigitalClock.types';
 import { resolveTimeViewsResponse } from '@mui/x-date-pickers/internals/utils/date-time-utils';
 import { UseViewsOptions } from '@mui/x-date-pickers/internals/hooks/useViews';
@@ -34,8 +34,8 @@ import {
   DateTimeRangePickerViewExternal,
 } from '../internals/models';
 import {
-  DateRangeCalendarSlotsComponent,
-  DateRangeCalendarSlotsComponentsProps,
+  DateRangeCalendarSlots,
+  DateRangeCalendarSlotProps,
   ExportedDateRangeCalendarProps,
 } from '../DateRangeCalendar';
 import {
@@ -51,9 +51,9 @@ import {
 } from './DateTimeRangePickerTabs';
 
 export interface BaseDateTimeRangePickerSlotsComponent<TDate>
-  extends DateRangeCalendarSlotsComponent<TDate>,
-    DigitalClockSlotsComponent,
-    MultiSectionDigitalClockSlotsComponent {
+  extends DateRangeCalendarSlots<TDate>,
+    DigitalClockSlots,
+    MultiSectionDigitalClockSlots {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimeRangePickerTabs
@@ -67,9 +67,9 @@ export interface BaseDateTimeRangePickerSlotsComponent<TDate>
 }
 
 export interface BaseDateTimeRangePickerSlotsComponentsProps<TDate>
-  extends DateRangeCalendarSlotsComponentsProps<TDate>,
-    DigitalClockSlotsComponentsProps,
-    MultiSectionDigitalClockSlotsComponentsProps {
+  extends DateRangeCalendarSlotProps<TDate>,
+    DigitalClockSlotProps,
+    MultiSectionDigitalClockSlotProps {
   /**
    * Props passed down to the tabs component.
    */

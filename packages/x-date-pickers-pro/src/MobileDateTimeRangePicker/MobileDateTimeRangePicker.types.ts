@@ -1,7 +1,7 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
 import {
-  UseMobileRangePickerSlotsComponent,
-  UseMobileRangePickerSlotsComponentsProps,
+  UseMobileRangePickerSlots,
+  UseMobileRangePickerSlotProps,
   MobileRangeOnlyPickerProps,
 } from '../internals/hooks/useMobileRangePicker';
 import {
@@ -13,11 +13,11 @@ import { DateTimeRangePickerView } from '../internals/models';
 
 export interface MobileDateTimeRangePickerSlotsComponent<TDate>
   extends BaseDateTimeRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobileRangePickerSlotsComponent<TDate, DateTimeRangePickerView>, 'field'> {}
+    MakeOptional<UseMobileRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
 
 export interface MobileDateTimeRangePickerSlotsComponentsProps<TDate>
   extends BaseDateTimeRangePickerSlotsComponentsProps<TDate>,
-    Omit<UseMobileRangePickerSlotsComponentsProps<TDate, DateTimeRangePickerView>, 'tabs'> {}
+    Omit<UseMobileRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs'> {}
 
 export interface MobileDateTimeRangePickerProps<TDate>
   extends BaseDateTimeRangePickerProps<TDate>,

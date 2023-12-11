@@ -1,7 +1,7 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
 import {
-  UseDesktopRangePickerSlotsComponent,
-  UseDesktopRangePickerSlotsComponentsProps,
+  UseDesktopRangePickerSlots,
+  UseDesktopRangePickerSlotProps,
   DesktopRangeOnlyPickerProps,
 } from '../internals/hooks/useDesktopRangePicker';
 import {
@@ -13,11 +13,11 @@ import { DateTimeRangePickerView } from '../internals/models';
 
 export interface DesktopDateTimeRangePickerSlotsComponent<TDate>
   extends BaseDateTimeRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, DateTimeRangePickerView>, 'field'> {}
+    MakeOptional<UseDesktopRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
 
 export interface DesktopDateTimeRangePickerSlotsComponentsProps<TDate>
   extends BaseDateTimeRangePickerSlotsComponentsProps<TDate>,
-    Omit<UseDesktopRangePickerSlotsComponentsProps<TDate, DateTimeRangePickerView>, 'tabs'> {}
+    Omit<UseDesktopRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs'> {}
 
 export interface DesktopDateTimeRangePickerProps<TDate>
   extends BaseDateTimeRangePickerProps<TDate>,

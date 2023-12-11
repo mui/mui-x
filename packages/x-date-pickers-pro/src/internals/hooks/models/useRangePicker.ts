@@ -10,23 +10,23 @@ import {
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { ExportedBaseTabsProps } from '@mui/x-date-pickers/internals/models/props/tabs';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
+  ExportedPickersLayoutSlots,
+  ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
-  RangePickerFieldSlotsComponent,
-  RangePickerFieldSlotsComponentsProps,
+  RangePickerFieldSlots,
+  RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
 
 export interface UseRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponent {}
+  extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
+    RangePickerFieldSlots {}
 
 export interface UseRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponentsProps<TDate> {
+  extends ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
+    RangePickerFieldSlotProps<TDate> {
   tabs?: ExportedBaseTabsProps;
   toolbar?: ExportedBaseToolbarProps;
 }
