@@ -1,27 +1,37 @@
 import {
-  PickersModalDialogSlotsComponent,
-  PickersModalDialogSlotsComponentsProps,
+  PickersModalDialogSlots,
+  PickersModalDialogSlotProps,
+  ExportedBaseToolbarProps,
   UsePickerViewsProps,
 } from '@mui/x-date-pickers/internals';
+import {
+  ExportedPickersLayoutSlots,
+  ExportedPickersLayoutSlotProps,
+} from '@mui/x-date-pickers/PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import {
+  RangePickerFieldSlots,
+  RangePickerFieldSlotProps,
+} from '../useEnrichedRangePickerFieldProps';
+import { DateRange } from '../../models/range';
 import {
   RangeOnlyPickerProps,
   RangePickerAdditionalViewProps,
   UseRangePickerParams,
   UseRangePickerProps,
-  UseRangePickerSlotsComponent,
-  UseRangePickerSlotsComponentsProps,
-} from '../models';
+} from '../models/useRangePicker';
 
-export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlotsComponent<TDate, TView>,
-    PickersModalDialogSlotsComponent {}
+export interface UseMobileRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends PickersModalDialogSlots,
+    ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
+    RangePickerFieldSlots {}
 
-export interface UseMobileRangePickerSlotsComponentsProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends UseRangePickerSlotsComponentsProps<TDate, TView>,
-    PickersModalDialogSlotsComponentsProps {}
+export interface UseMobileRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends PickersModalDialogSlotProps,
+    ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
+    RangePickerFieldSlotProps<TDate> {
+  toolbar?: ExportedBaseToolbarProps;
+}
 
 export interface MobileRangeOnlyPickerProps<TDate> extends RangeOnlyPickerProps<TDate> {}
 
@@ -41,12 +51,12 @@ export interface UseMobileRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UseMobileRangePickerSlotsComponent<TDate, TView>;
+  slots: UseMobileRangePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseMobileRangePickerSlotProps<TDate, TView>;
 }
 
 export interface MobileRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}

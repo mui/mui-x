@@ -13,8 +13,8 @@ import {
 import { DateRangeValidationError } from '../models';
 import { DateRange } from '../internals/models';
 import {
-  DateRangeCalendarSlotsComponent,
-  DateRangeCalendarSlotsComponentsProps,
+  DateRangeCalendarSlots,
+  DateRangeCalendarSlotProps,
   ExportedDateRangeCalendarProps,
 } from '../DateRangeCalendar';
 import {
@@ -24,8 +24,7 @@ import {
 } from './DateRangePickerToolbar';
 import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
 
-export interface BaseDateRangePickerSlotsComponent<TDate>
-  extends DateRangeCalendarSlotsComponent<TDate> {
+export interface BaseDateRangePickerSlots<TDate> extends DateRangeCalendarSlots<TDate> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
@@ -33,8 +32,7 @@ export interface BaseDateRangePickerSlotsComponent<TDate>
   toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDateRangePickerSlotsComponentsProps<TDate>
-  extends DateRangeCalendarSlotsComponentsProps<TDate> {
+export interface BaseDateRangePickerSlotProps<TDate> extends DateRangeCalendarSlotProps<TDate> {
   toolbar?: ExportedDateRangePickerToolbarProps;
 }
 
@@ -49,12 +47,12 @@ export interface BaseDateRangePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseDateRangePickerSlotsComponent<TDate>;
+  slots?: BaseDateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseDateRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: BaseDateRangePickerSlotProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.

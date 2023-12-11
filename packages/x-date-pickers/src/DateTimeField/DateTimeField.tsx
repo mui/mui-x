@@ -6,8 +6,8 @@ import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
 import {
   DateTimeFieldProps,
-  DateTimeFieldSlotsComponent,
-  DateTimeFieldSlotsComponentsProps,
+  DateTimeFieldSlots,
+  DateTimeFieldSlotProps,
 } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
 import { useClearableField } from '../hooks';
@@ -70,8 +70,8 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
-    DateTimeFieldSlotsComponent,
-    DateTimeFieldSlotsComponentsProps<TDate>
+    DateTimeFieldSlots,
+    DateTimeFieldSlotProps<TDate>
   >({
     onClear,
     clearable,
@@ -303,6 +303,7 @@ DateTimeField.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',

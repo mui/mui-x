@@ -7,8 +7,8 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { refType } from '@mui/utils';
 import {
   SingleInputDateRangeFieldProps,
-  SingleInputDateRangeFieldSlotsComponentsProps,
-  SingleInputDateRangeFieldSlotsComponent,
+  SingleInputDateRangeFieldSlotProps,
+  SingleInputDateRangeFieldSlots,
 } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 import { FieldType } from '../internals/models';
@@ -70,8 +70,8 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
-    SingleInputDateRangeFieldSlotsComponent,
-    SingleInputDateRangeFieldSlotsComponentsProps<TDate>
+    SingleInputDateRangeFieldSlots,
+    SingleInputDateRangeFieldSlotProps<TDate>
   >({
     onClear,
     clearable,
@@ -273,6 +273,7 @@ SingleInputDateRangeField.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
