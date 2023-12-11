@@ -1,1 +1,2 @@
-export { ChartsTextStyle, ChartsTextProps, ChartsText } from './ChartsText';
+export { ChartsText } from './ChartsText';
+export type { ChartsTextStyle, ChartsTextProps } from './ChartsText';
