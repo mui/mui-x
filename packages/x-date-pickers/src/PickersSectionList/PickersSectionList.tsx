@@ -1,9 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useForkRef from '@mui/utils/useForkRef';
 import {
   getPickersSectionListUtilityClass,
+  pickersSectionListClasses,
   PickersSectionListClasses,
 } from './pickersSectionListClasses';
 
@@ -26,6 +28,13 @@ export interface PickersSectionElement {
   content: React.HTMLAttributes<HTMLSpanElement>;
   before: React.HTMLAttributes<HTMLSpanElement>;
   after: React.HTMLAttributes<HTMLSpanElement>;
+}
+
+export interface PickersSectionListRef {
+  getRoot: () => HTMLElement;
+  getSectionContainer: (sectionIndex: number) => HTMLElement;
+  getSectionContent: (sectionIndex: number) => HTMLElement;
+  getSectionIndexFromDOMElement: (element: Element | null | undefined) => number | null;
 }
 
 export interface PickersSectionListProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -51,6 +60,7 @@ export interface PickersSectionListProps extends React.HTMLAttributes<HTMLDivEle
    * Useful when all the sections are selected.
    */
   contentEditable: boolean;
+  sectionRef: React.Ref<PickersSectionListRef>;
 }
 
 const useUtilityClasses = (ownerState: PickersSectionListProps) => {
@@ -126,28 +136,6 @@ function PickersSection(props: PickersSectionProps) {
   );
 }
 
-PickersSection.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  element: PropTypes.shape({
-    after: PropTypes.object.isRequired,
-    before: PropTypes.object.isRequired,
-    container: PropTypes.object.isRequired,
-    content: PropTypes.object.isRequired,
-  }).isRequired,
-  sectionContentClassName: PropTypes.string.isRequired,
-  /**
-   * The props used for each component slot.
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   */
-  slots: PropTypes.object.isRequired,
-} as any;
-
 type PickersSectionListComponent = ((
   props: PickersSectionListProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
@@ -156,9 +144,72 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
   props: PickersSectionListProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { slots, slotProps, elements, ...other } = props;
+  const { slots, slotProps, elements, sectionRef, ...other } = props;
 
   const classes = useUtilityClasses(props);
+
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const handleRootRef = useForkRef(ref, rootRef);
+
+  React.useImperativeHandle(sectionRef, () => ({
+    getRoot() {
+      if (!rootRef.current) {
+        throw new Error('MUI: Cannot call sectionRef.getRoot before the mount of the component');
+      }
+
+      return rootRef.current;
+    },
+    getSectionContainer(index) {
+      if (!rootRef.current) {
+        throw new Error(
+          'MUI: Cannot call sectionRef.getSectionContainer before the mount of the component',
+        );
+      }
+
+      return rootRef.current.querySelector<HTMLSpanElement>(
+        `.${pickersSectionListClasses.section}[data-sectionindex="${index}"]`,
+      )!;
+    },
+    getSectionContent(index) {
+      if (!rootRef.current) {
+        throw new Error(
+          'MUI: Cannot call sectionRef.getSectionContent before the mount of the component',
+        );
+      }
+
+      return rootRef.current.querySelector<HTMLSpanElement>(
+        `.${pickersSectionListClasses.section}[data-sectionindex="${index}"] .${pickersSectionListClasses.sectionContent}`,
+      )!;
+    },
+    getSectionIndexFromDOMElement(element) {
+      if (!rootRef.current) {
+        throw new Error(
+          'MUI: Cannot call sectionRef.getSectionIndexFromDOMElement before the mount of the component',
+        );
+      }
+
+      if (element == null) {
+        return null;
+      }
+
+      if (!rootRef.current.contains(element)) {
+        return null;
+      }
+
+      let sectionContainer: HTMLSpanElement | null = null;
+      if (element.classList.contains(pickersSectionListClasses.section)) {
+        sectionContainer = element as HTMLSpanElement;
+      } else if (element.classList.contains(pickersSectionListClasses.sectionContent)) {
+        sectionContainer = element.parentElement as HTMLSpanElement;
+      }
+
+      if (sectionContainer == null) {
+        return null;
+      }
+
+      return Number(sectionContainer.dataset.sectionindex);
+    },
+  }));
 
   const Root = slots.root;
   const rootProps: React.HTMLAttributes<HTMLDivElement> = useSlotProps({
@@ -166,7 +217,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
     externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
     additionalProps: {
-      ref,
+      ref: handleRootRef,
       suppressContentEditableWarning: true,
     },
     className: classes.root,
@@ -225,6 +276,17 @@ PickersSectionList.propTypes = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
+  sectionRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getRoot: PropTypes.func.isRequired,
+        getSectionContainer: PropTypes.func.isRequired,
+        getSectionContent: PropTypes.func.isRequired,
+        getSectionIndexFromDOMElement: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
   /**
    * The props used for each component slot.
    */

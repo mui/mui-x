@@ -209,6 +209,7 @@
   { "name": "PickersSectionListClasses", "kind": "Interface" },
   { "name": "PickersSectionListClassKey", "kind": "TypeAlias" },
   { "name": "PickersSectionListProps", "kind": "Interface" },
+  { "name": "PickersSectionListRef", "kind": "Interface" },
   { "name": "PickersShortcuts", "kind": "Function" },
   { "name": "PickersShortcutsItem", "kind": "Interface" },
   { "name": "PickersShortcutsItemContext", "kind": "TypeAlias" },
