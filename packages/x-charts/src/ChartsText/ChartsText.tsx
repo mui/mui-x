@@ -49,7 +49,10 @@ export function getWordsByLines({ style, needsComputation, text }: GetWordsByLin
   }));
 }
 
-export function ChartsText(props: ChartsTextProps) {
+/**
+ * Helper component to manage multiline text in SVG
+ */
+function ChartsText(props: ChartsTextProps) {
   const { x, y, style: styleProps, text, ownerState, ...textProps } = props;
 
   const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
