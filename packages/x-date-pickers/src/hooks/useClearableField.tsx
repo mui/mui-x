@@ -23,7 +23,7 @@ type UseClearableFieldParams<
   TFieldSlotProps extends FieldSlotProps,
 > = {
   props: TFieldProps;
-  slots?: { [K in keyof TFieldSlots as Uncapitalize<K & string>]: TFieldSlots[K] };
+  slots?: TFieldSlots;
   slotProps?: TFieldSlotProps;
 };
 
