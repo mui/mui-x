@@ -137,7 +137,6 @@
   { "name": "ExportedPickersMonthProps", "kind": "Interface" },
   { "name": "ExportedPickersYearProps", "kind": "Interface" },
   { "name": "ExportedSlideTransitionProps", "kind": "Interface" },
-  { "name": "ExportedUseClearableFieldProps", "kind": "Interface" },
   { "name": "faIR", "kind": "Variable" },
   { "name": "FieldFormatTokenMap", "kind": "TypeAlias" },
   { "name": "FieldRef", "kind": "Interface" },
