@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { getStringSize } from '../internals/domUtils';
 
 export type ChartsTextBaseline = 'hanging' | 'central' | 'auto';
@@ -11,8 +12,6 @@ export interface ChartsTextStyle extends React.CSSProperties {
    */
   dominantBaseline?: ChartsTextBaseline;
 }
-
-
 
 export interface ChartsTextProps
   extends Omit<
@@ -42,6 +41,7 @@ interface GetWordsByLinesParams {
    */
   needsComputation?: boolean;
 }
+
 export function getWordsByLines({ style, needsComputation, text }: GetWordsByLinesParams) {
   return text.split('\n').map((subText) => ({
     text: subText,
@@ -109,3 +109,30 @@ function ChartsText(props: ChartsTextProps) {
     </text>
   );
 }
+
+ChartsText.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Height of a text line (in `em`).
+   */
+  lineHeight: PropTypes.number,
+  /**
+   * If `true`, the line width is computed.
+   * @default false
+   */
+  needsComputation: PropTypes.bool,
+  ownerState: PropTypes.any,
+  /**
+   * Style applied to text elements.
+   */
+  style: PropTypes.object,
+  /**
+   * Text displayed.
+   */
+  text: PropTypes.string.isRequired,
+} as any;
+
+export { ChartsText };
