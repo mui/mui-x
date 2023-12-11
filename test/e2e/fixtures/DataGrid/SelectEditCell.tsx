@@ -1,7 +1,12 @@
 import * as React from 'react';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { DataGrid, GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridRenderEditCellParams,
+  useGridApiContext,
+  DataGridProps,
+} from '@mui/x-data-grid';
 
 function SelectEditInputCell(props: GridRenderEditCellParams) {
   const { id, value, field } = props;
@@ -26,7 +31,7 @@ function renderSelectEditInputCell(params) {
   return <SelectEditInputCell {...params} />;
 }
 
-const baselineProps = {
+const baselineProps: DataGridProps = {
   rows: [
     {
       id: 0,

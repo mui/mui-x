@@ -33,7 +33,14 @@ describe('<DataGridPremium /> - Clipboard', () => {
       const basicData = getBasicGridData(rowLength, colLength);
       return {
         ...basicData,
-        columns: basicData.columns.map((column) => ({ ...column, type: 'string', editable: true })),
+        columns: basicData.columns.map(
+          (column) =>
+            ({
+              ...column,
+              type: 'string',
+              editable: true,
+            } as GridColDef),
+        ),
       };
     }, [rowLength, colLength]);
 

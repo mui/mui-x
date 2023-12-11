@@ -90,9 +90,24 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - -->
 
-<!-- ### Columns
+### Columns
 
-- -->
+- The `GridColDef['type']` has been narrowed down to only accept the built-in column types.
+  TypeScript users need to use the `GridColDef` interface when defining columns:
+
+  ```tsx
+  // 🛑 `type` is inferred as `string` and is too wide
+  const columns = [{ type: 'number', field: 'id' }];
+  <DataGrid columns={columns} />;
+
+  // ✅ `type` is `'number'`
+  const columns: GridColDef[] = [{ type: 'number', field: 'id' }];
+  <DataGrid columns={columns} />;
+
+  // ✅ Alternalively, `as const` can be used to narrow down the type
+  const columns = [{ type: 'number' as const, field: 'id' }];
+  <DataGrid columns={columns} />;
+  ```
 
 <!-- ### Rows
 
@@ -179,6 +194,16 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - The Quick Filter now ignores hidden columns by default.
   See [Including hidden columns](/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+
+- The header filters feature is now stable. `unstable_` prefix is removed from prop `headerFilters` and the following exports.
+
+  | Old name                                          | New name                                 |
+  | :------------------------------------------------ | :--------------------------------------- |
+  | `unstable_gridFocusColumnHeaderFilterSelector`    | `gridFocusColumnHeaderFilterSelector`    |
+  | `unstable_gridHeaderFilteringEditFieldSelector`   | `gridHeaderFilteringEditFieldSelector`   |
+  | `unstable_gridHeaderFilteringMenuSelector`        | `gridHeaderFilteringMenuSelector`        |
+  | `unstable_gridHeaderFilteringStateSelector`       | `gridHeaderFilteringStateSelector`       |
+  | `unstable_gridTabIndexColumnHeaderFilterSelector` | `gridTabIndexColumnHeaderFilterSelector` |
 
 <!-- ### Editing
 

@@ -312,7 +312,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   -  onPageChange={handlePageChange}
   -  onPageSizeChange={handlePageSizeChange}
   +  paginationModel={{ page, pageSize }}
-  +  onPaginationModelChange={handlePaginationModelChange}
+  +  onPaginationModelChange={(paginationModel) => handlePaginationModelChange(paginationModel)}
    />
   ```
 

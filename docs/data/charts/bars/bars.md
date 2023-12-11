@@ -38,7 +38,7 @@ It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
 And a value of `-1` will make bars overlap on top of each over.
 
-{{"demo": "BarGapNoSnap.js"}}
+{{"demo": "BarGapNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Stacking
 
@@ -71,11 +71,11 @@ Charts containers already use the `useReducedMotion` from `@react-spring/web` to
 
 ```jsx
 // For a single component chart
-<BarChart  skipAnimation />
+<BarChart skipAnimation />
 
 // For a composed chart
 <ResponsiveChartContainer>
-  <BarPlot  skipAnimation />
+  <BarPlot skipAnimation />
 </ResponsiveChartContainer>
 ```
 

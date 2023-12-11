@@ -432,6 +432,11 @@ DataGridPremiumRaw.propTypes = {
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  headerFilters: PropTypes.bool,
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */
@@ -1034,9 +1039,4 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
-  /**
-   * If `true`, enables the data grid filtering on header feature.
-   * @default false
-   */
-  unstable_headerFilters: PropTypes.bool,
 } as any;

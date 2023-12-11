@@ -7,7 +7,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
-import PickersInput from './PickersInput';
+import { PickersInput } from './PickersInput';
 import { PickersTextFieldProps } from './PickersTextField.types';
 
 const PickersTextFieldRoot = styled(FormControl, {
@@ -38,37 +38,53 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
-    elements,
+    // Props used by FormControl
+    onFocus,
+    onBlur,
     className,
     color = 'primary',
     disabled = false,
     error = false,
-    label,
-    variant = 'outlined',
-    fullWidth = false,
-    valueStr,
-    helperText,
-    valueType,
-    id: idOverride,
-    FormHelperTextProps,
-    InputLabelProps,
-    inputProps,
-    InputProps,
     required = false,
-    focused: focusedProp,
-    ownerState: ownerStateProp,
+    variant = 'outlined',
+
+    // Props used by PickersInput
+    InputProps,
+    inputProps,
+    inputRef,
+    sectionsContainerRef,
+    elements,
+    areAllSectionsEmpty,
+    onClick,
+    onKeyDown,
+    onKeyUp,
+    onPaste,
+    onInput,
+    endAdornment,
+    startAdornment,
+    tabIndex,
+    contentEditable,
+    focused,
+    value,
+    onChange,
+    fullWidth,
+    id: idProp,
+
+    // Props used by FormHelperText
+    helperText,
+    FormHelperTextProps,
+
+    // Props used by InputLabel
+    label,
+    InputLabelProps,
+
     ...other
   } = props;
-
-  const [focused, setFocused] = React.useState(focusedProp);
 
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
 
-  const inputRef = React.useRef<HTMLDivElement>(null);
-  const handleInputRef = useForkRef(inputRef, InputProps?.ref);
-
-  const id = useId(idOverride);
+  const id = useId(idProp);
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
   const inputLabelId = label && id ? `${id}-label` : undefined;
 
@@ -78,50 +94,50 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
     disabled,
     error,
     focused,
+    required,
     variant,
   };
 
   const classes = useUtilityClasses(ownerState);
-
-  // TODO: delete after behavior implementation
-  const onWrapperClick = () => {
-    if (!focused) {
-      setFocused(true);
-      const container = rootRef.current;
-
-      // Find the first input element within the container
-      const firstInput = container?.querySelector<HTMLElement>('.content');
-
-      // Check if the input element exists before focusing it
-      if (firstInput) {
-        firstInput.focus();
-      }
-
-      inputRef.current?.focus();
-    }
-  };
 
   return (
     <PickersTextFieldRoot
       className={clsx(classes.root, className)}
       ref={handleRootRef}
       focused={focused}
+      onFocus={onFocus}
+      onBlur={onBlur}
       disabled={disabled}
       variant={variant}
       error={error}
       color={color}
-      fullWidth={fullWidth}
       required={required}
       ownerState={ownerState}
+      {...other}
     >
       <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
         {label}
       </InputLabel>
       <PickersInput
-        {...{ elements, valueStr, valueType, onWrapperClick, inputProps, label }}
-        {...other}
+        elements={elements}
+        areAllSectionsEmpty={areAllSectionsEmpty}
+        onClick={onClick}
+        onKeyDown={onKeyDown}
+        onInput={onInput}
+        onPaste={onPaste}
+        endAdornment={endAdornment}
+        startAdornment={startAdornment}
+        tabIndex={tabIndex}
+        contentEditable={contentEditable}
+        value={value}
+        onChange={onChange}
+        id={id}
+        fullWidth={fullWidth}
+        inputProps={inputProps}
+        inputRef={inputRef}
+        sectionsContainerRef={sectionsContainerRef}
+        label={label}
         {...InputProps}
-        ref={handleInputRef}
       />
       {helperText && (
         <FormHelperText id={helperTextId} {...FormHelperTextProps}>
