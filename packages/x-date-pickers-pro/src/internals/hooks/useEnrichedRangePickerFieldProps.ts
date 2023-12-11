@@ -16,8 +16,8 @@ import {
   WrapperVariant,
   UsePickerProps,
   getActiveElement,
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
+  FieldSlots,
+  FieldSlotProps,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
@@ -30,7 +30,7 @@ import {
 } from '../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
-export interface RangePickerFieldSlotsComponent extends FieldSlotsComponents {
+export interface RangePickerFieldSlots extends FieldSlots {
   field: React.ElementType;
   /**
    * Element rendered at the root.
@@ -51,7 +51,7 @@ export interface RangePickerFieldSlotsComponent extends FieldSlotsComponents {
   textField?: React.ElementType<TextFieldProps>;
 }
 
-export interface RangePickerFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
+export interface RangePickerFieldSlotProps<TDate> extends FieldSlotProps {
   field?: SlotComponentProps<
     React.ElementType<
       BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, unknown>
@@ -93,8 +93,8 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   inputRef?: React.Ref<HTMLInputElement>;
   label?: React.ReactNode;
   localeText: PickersInputLocaleText<TDate> | undefined;
-  pickerSlotProps: RangePickerFieldSlotsComponentsProps<TDate> | undefined;
-  pickerSlots: RangePickerFieldSlotsComponent | undefined;
+  pickerSlotProps: RangePickerFieldSlotProps<TDate> | undefined;
+  pickerSlots: RangePickerFieldSlots | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
 }

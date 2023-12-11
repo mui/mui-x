@@ -3,6 +3,89 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.4
+
+_Dec 8, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 The scatter charts now use voronoi to trigger items
+
+  Users needed to hover the item to highlight the scatter item or show the tooltip.
+  Now they can interact with data by triggering the closest element. See the [docs page](https://next.mui.com/x/react-charts/scatter/#interaction) for more info.
+
+- 📚 Add [Pickers FAQ page](https://next.mui.com/x/react-date-pickers/faq/)
+- 🎉 The Data Grid Header filters feature is now stable
+- 🌍 Improve Danish (da-DK) locale on Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### Breaking changes
+
+- The header filters feature is now stable. `unstable_` prefix is removed from prop `headerFilters` and related exports.
+  See [migration docs](https://next.mui.com/x/migration/migration-data-grid-v6/#filtering) for more details.
+
+- The `GridColDef['type']` has been narrowed down to only accept the built-in column types.
+  TypeScript users need to use the `GridColDef` interface when defining columns:
+
+  ```tsx
+  // 🛑 `type` is inferred as `string` and is too wide
+  const columns = [{ type: 'number', field: 'id' }];
+  <DataGrid columns={columns} />;
+
+  // ✅ `type` is `'number'`
+  const columns: GridColDef[] = [{ type: 'number', field: 'id' }];
+  <DataGrid columns={columns} />;
+
+  // ✅ Alternalively, `as const` can be used to narrow down the type
+  const columns = [{ type: 'number' as const, field: 'id' }];
+  <DataGrid columns={columns} />;
+  ```
+
+#### `@mui/x-data-grid@7.0.0-alpha.4`
+
+- [DataGrid] Added a guard for reorder cells (#11159) @michelengelen
+- [DataGrid] Narrow down `GridColDef['type']` (#11270) @cherniavskii
+- [l10n] Improve Danish (da-DK) locale (#11304) @goibon
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.4`, plus:
+
+- [DataGridPro] Make header filters feature stable (#11243) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.4`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-alpha.4`
+
+- [fields] Rework `PickersTextField` (#11258) @flaviendelangle
+- [pickers] Fix `MultiSectionDigitalClock` issues (#11305) @LukasTy
+- [pickers] Fix views height consistency (#11337) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.4`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.4`
+
+- [charts] Remove animation on sparkline (#11311) @oliviertassinari
+- [charts] Use voronoi cells to trigger interaction with scatter items (#10981) @alexfauquette
+- [charts] Add `@mui/utils` as a dependency (#11351) @michelengelen
+
+### Docs
+
+- [docs] Add FAQ page (#11271) @noraleonte
+- [docs] Add a doc section on how to override the start of the week with each adapter (#11223) @flaviendelangle
+- [docs] Added params to `onPaginationModelChange` docs (#10191) @JFBenzs
+- [docs] Fix typo (#11324) @cadam11
+- [docs] Improve `DemoContainer` styling coverage (#11315) @LukasTy
+- [docs] General revision of the Charts docs (#11249) @danilo-leal
+
 ## 7.0.0-alpha.3
 
 _Dec 4, 2023_
@@ -865,6 +948,46 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.18.4
+
+_Dec 8, 2023_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Add [Pickers FAQ page](https://mui.com/x/react-date-pickers/faq/)
+- 🌍 Improve Danish (da-DK) locale on Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.4`
+
+- [DataGrid] Fix cell slot style override (#11215) @oliviertassinari
+- [l10n] Improve Danish (da-DK) locale (#11346) @goibon
+
+#### `@mui/x-data-grid-pro@6.18.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.4`.
+
+#### `@mui/x-data-grid-premium@6.18.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.4`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.4`
+
+- [pickers] Fix `MultiSectionDigitalClock` issues (#11308) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.4`.
+
+### Docs
+
+- [docs] Fix typo (#11323) @cadam11
+- [docs] Add FAQ page (#11347) @noraleonte
 
 ## 6.18.3
 
