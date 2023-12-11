@@ -18,8 +18,8 @@ import {
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import type {
-  SingleInputDateRangeFieldSlotsComponent,
-  SingleInputDateRangeFieldSlotsComponentsProps,
+  SingleInputDateRangeFieldSlots,
+  SingleInputDateRangeFieldSlotProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField/SingleInputDateRangeField.types';
 
 interface BrowserFieldProps
@@ -114,8 +114,8 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       useClearableField<
         {},
         typeof textFieldProps.InputProps,
-        SingleInputDateRangeFieldSlotsComponent,
-        SingleInputDateRangeFieldSlotsComponentsProps<Dayjs>
+        SingleInputDateRangeFieldSlots,
+        SingleInputDateRangeFieldSlotProps<Dayjs>
       >({
         onClear,
         clearable,
