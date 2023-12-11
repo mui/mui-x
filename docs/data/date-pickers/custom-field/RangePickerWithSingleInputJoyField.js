@@ -75,30 +75,23 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
     ownerState: props,
   });
 
-  const {
-    onClear,
-    clearable,
-    ref: inputRef,
-    ...fieldProps
-  } = useSingleInputDateRangeField({
+  const fieldResponse = useSingleInputDateRangeField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
   /* If you don't need a clear button, you can skip the use of this hook */
-  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-    useClearableField({
-      onClear,
-      clearable,
-      fieldProps,
-      InputProps: fieldProps.InputProps,
-      slots: { ...slots, clearButton: IconButton },
-      slotProps: { ...slotProps, clearIcon: { color: 'action' } },
-    });
+  const processedFieldProps = useClearableField({
+    props: fieldResponse,
+    slots,
+    slotProps,
+  });
+
+  const { ref: inputRef, ...otherProcessedFieldProps } = processedFieldProps;
 
   return (
     <JoyField
-      {...processedFieldProps}
+      {...otherProcessedFieldProps}
       ref={ref}
       slotProps={{
         input: {
@@ -115,7 +108,6 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
           <DateRangeIcon color="action" />
         </IconButton>
       }
-      InputProps={{ ...ProcessedInputProps }}
     />
   );
 });
@@ -142,11 +134,11 @@ const JoySingleInputDateRangePicker = React.forwardRef((props, ref) => {
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
-      slots={{ field: JoySingleInputDateRangeField }}
+      slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
       slotProps={{
-        ...props?.slotProps,
+        ...props.slotProps,
         field: {
-          ...props?.slotProps?.field,
+          ...props.slotProps?.field,
           onAdornmentClick: toggleOpen,
         },
       }}

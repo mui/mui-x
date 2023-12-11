@@ -28,10 +28,6 @@ import {
   SingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import type {
-  SingleInputDateRangeFieldSlots,
-  SingleInputDateRangeFieldSlotProps,
-} from '@mui/x-date-pickers-pro/SingleInputDateRangeField/SingleInputDateRangeField.types';
 
 const joyTheme = extendJoyTheme();
 
@@ -116,35 +112,25 @@ const JoySingleInputDateRangeField = React.forwardRef(
       ownerState: props as any,
     });
 
-    const {
-      onClear,
-      clearable,
-      ref: inputRef,
-      ...fieldProps
-    } = useSingleInputDateRangeField<Dayjs, JoyFieldProps>({
-      props: textFieldProps,
-      inputRef: externalInputRef,
-    });
+    const fieldResponse = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>(
+      {
+        props: textFieldProps,
+        inputRef: externalInputRef,
+      },
+    );
 
     /* If you don't need a clear button, you can skip the use of this hook */
-    const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-      useClearableField<
-        {},
-        typeof textFieldProps.InputProps,
-        SingleInputDateRangeFieldSlots,
-        SingleInputDateRangeFieldSlotProps<Dayjs>
-      >({
-        onClear,
-        clearable,
-        fieldProps,
-        InputProps: fieldProps.InputProps,
-        slots: { ...slots, clearButton: IconButton },
-        slotProps: { ...slotProps, clearIcon: { color: 'action' } },
-      });
+    const processedFieldProps = useClearableField({
+      props: fieldResponse,
+      slots,
+      slotProps,
+    });
+
+    const { ref: inputRef, ...otherProcessedFieldProps } = processedFieldProps;
 
     return (
       <JoyField
-        {...processedFieldProps}
+        {...otherProcessedFieldProps}
         ref={ref}
         slotProps={{
           input: {
@@ -161,7 +147,6 @@ const JoySingleInputDateRangeField = React.forwardRef(
             <DateRangeIcon color="action" />
           </IconButton>
         }
-        InputProps={{ ...ProcessedInputProps }}
       />
     );
   },
@@ -190,11 +175,11 @@ const JoySingleInputDateRangePicker = React.forwardRef(
         open={isOpen}
         onClose={handleClose}
         onOpen={handleOpen}
-        slots={{ field: JoySingleInputDateRangeField }}
+        slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
         slotProps={{
-          ...props?.slotProps,
+          ...props.slotProps,
           field: {
-            ...props?.slotProps?.field,
+            ...props.slotProps?.field,
             onAdornmentClick: toggleOpen,
           } as any,
         }}

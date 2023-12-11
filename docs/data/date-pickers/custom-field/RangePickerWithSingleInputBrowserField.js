@@ -52,45 +52,39 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ownerState: props,
   });
 
-  const {
-    ref: inputRef,
-    onClear,
-    clearable,
-    ...fieldProps
-  } = useSingleInputDateRangeField({
+  textFieldProps.InputProps = {
+    ...textFieldProps.InputProps,
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton onClick={onAdornmentClick}>
+          <DateRangeIcon />
+        </IconButton>
+      </InputAdornment>
+    ),
+  };
+
+  const fieldResponse = useSingleInputDateRangeField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
   /* If you don't need a clear button, you can skip the use of this hook */
-  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-    useClearableField({
-      onClear,
-      clearable,
-      fieldProps,
-      InputProps: {
-        ...fieldProps.InputProps,
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton onClick={onAdornmentClick}>
-              <DateRangeIcon />
-            </IconButton>
-          </InputAdornment>
-        ),
-      },
-      slots,
-      slotProps,
-    });
+  const processedFieldProps = useClearableField({
+    props: fieldResponse,
+    slots,
+    slotProps,
+  });
+
+  const { ref: inputRef, ...otherProcessedFieldProps } = processedFieldProps;
 
   return (
     <BrowserField
-      {...processedFieldProps}
+      {...otherProcessedFieldProps}
       ref={ref}
       style={{
         minWidth: 300,
       }}
       inputRef={inputRef}
-      InputProps={{ ...ProcessedInputProps }}
     />
   );
 });
@@ -113,12 +107,12 @@ const BrowserSingleInputDateRangePicker = React.forwardRef((props, ref) => {
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
-      slots={{ field: BrowserSingleInputDateRangeField }}
+      slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
       slotProps={{
-        ...props?.slotProps,
+        ...props.slotProps,
         field: {
           onAdornmentClick: toggleOpen,
-          ...props?.slotProps?.field,
+          ...props.slotProps?.field,
         },
       }}
     />
