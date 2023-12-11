@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   AvailableAdjustKeyCode,
   FieldSectionsValueBoundaries,
@@ -17,7 +16,6 @@ import {
   FieldSelectedSections,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
-import { pickersSectionListClasses } from '../../../PickersSectionList';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
   utils: MuiPickersAdapter<TDate>,
