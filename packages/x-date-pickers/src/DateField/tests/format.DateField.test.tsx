@@ -17,7 +17,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     const input = getTextbox();
     expectInputPlaceholder(input, 'Escaped YYYY');
 
-    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    setProps({ value: adapter.date('2019-01-01') });
     expectInputValue(input, 'Escaped 2019');
   });
 
@@ -32,7 +32,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     const input = getTextbox();
     expectInputPlaceholder(input, 'MMMM Escaped YYYY');
 
-    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    setProps({ value: adapter.date('2019-01-01') });
     expectInputValue(input, 'January Escaped 2019');
   });
 
@@ -53,7 +53,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     const input = getTextbox();
     expectInputPlaceholder(input, 'MMMM Escaped [ YYYY');
 
-    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    setProps({ value: adapter.date('2019-01-01') });
     expectInputValue(input, 'January Escaped [ 2019');
   });
 
@@ -69,7 +69,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     const input = getTextbox();
     expectInputPlaceholder(input, 'Escaped MMMM Escaped YYYY');
 
-    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    setProps({ value: adapter.date('2019-01-01') });
     expectInputValue(input, 'Escaped January Escaped 2019');
   });
 
@@ -87,7 +87,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     const input = getTextbox();
     expectInputPlaceholder(input, 'MM / DD / YYYY');
 
-    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    setProps({ value: adapter.date('2019-01-01') });
     expectInputValue(input, '01 / 01 / 2019');
   });
 
@@ -101,7 +101,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     const input = getTextbox();
     expectInputPlaceholder(input, 'MM . DD . YYYY');
 
-    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    setProps({ value: adapter.date('2019-01-01') });
     expectInputValue(input, '01 . 01 . 2019');
   });
 
@@ -115,7 +115,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     const input = getTextbox();
     expectInputPlaceholder(input, 'MM - DD - YYYY');
 
-    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    setProps({ value: adapter.date('2019-01-01') });
     expectInputValue(input, '01 - 01 - 2019');
   });
 });

@@ -44,8 +44,11 @@ const PlaygroundWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('lg')]: { flexWrap: 'wrap-reverse' },
 }));
 
-const PlaygroundDemoArea = styled(Box)(() => ({
+const PlaygroundDemoArea = styled(Box)(({ theme }) => ({
   minWidth: 320,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
 }));
 
 const PlaygroundConfigArea = styled(Box)(({ theme }) => ({
@@ -137,25 +140,30 @@ const RECOMMENDATION_MESSAGES: { [k in 'warning' | 'success']: string } = {
   success: 'This is the recommended styling approach for the selected component.',
 };
 
-function StylingRecommendation({ type = 'success' }: { type?: 'warning' | 'success' }) {
+function StylingRecommendation({
+  type = 'warning',
+  message = '',
+}: {
+  type?: 'warning' | 'success' | 'info';
+  message?: string;
+}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const displayedMessage = type === 'info' ? message : RECOMMENDATION_MESSAGES[type];
+
   if (isMobile) {
     return (
-      <Alert severity={type || 'warning'} sx={{ width: '100%', p: 0.5 }}>
-        {RECOMMENDATION_MESSAGES[type]}
+      <Alert severity={type} sx={{ width: '100%', p: 0.5 }}>
+        {displayedMessage}
       </Alert>
     );
   }
+  const labels = { warning: 'Warning', success: 'Recommended', info: 'Info' };
 
   return (
-    <Tooltip title={RECOMMENDATION_MESSAGES[type]}>
-      {type === 'warning' ? (
-        <Chip color="warning" label="Warning" />
-      ) : (
-        <Chip color="success" label="Recommended" />
-      )}
+    <Tooltip title={displayedMessage}>
+      <Chip color={type} label={labels[type]} />
     </Tooltip>
   );
 }
@@ -285,6 +293,7 @@ const CustomizationPlayground = function CustomizationPlayground({
     handleTokenChange,
     selectedTokens,
     selectedExample,
+    moreInformation,
   } = useCustomizationPlayground({ examples, componentName });
 
   const StyledChild = withStyles(
@@ -309,13 +318,18 @@ const CustomizationPlayground = function CustomizationPlayground({
               value={selectedCustomizationOption}
               options={customizationOptions}
             />
-            {selectedExample && <StylingRecommendation type={selectedExample.type} />}
+            {selectedExample && (
+              <StylingRecommendation
+                type={selectedExample.type}
+                message={selectedExample?.comments}
+              />
+            )}
           </TabsWrapper>{' '}
         </BrandingProvider>
       )}
       <PlaygroundWrapper>
         <PlaygroundDemoArea>
-          <StyledChild sx={{ width: 'fit-content' }}>
+          <StyledChild sx={{ width: 'fit-content', minHeight: '390px' }}>
             {React.Children.map(
               children,
               (child) =>
@@ -331,6 +345,7 @@ const CustomizationPlayground = function CustomizationPlayground({
                 ),
             )}
           </StyledChild>
+          {moreInformation}
         </PlaygroundDemoArea>
         {shouldBeInteractive && (
           <BrandingProvider>

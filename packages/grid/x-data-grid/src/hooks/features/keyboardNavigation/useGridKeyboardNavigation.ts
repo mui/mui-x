@@ -19,10 +19,11 @@ import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {
-  unstable_gridHeaderFilteringEditFieldSelector,
-  unstable_gridHeaderFilteringMenuSelector,
+  gridHeaderFilteringEditFieldSelector,
+  gridHeaderFilteringMenuSelector,
 } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { isEventTargetInPortal } from '../../../utils/domUtils';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -106,7 +107,7 @@ export const useGridKeyboardNavigation = (
 
   const headerFilteringEnabled =
     // @ts-expect-error // TODO move relevant code to the `DataGridPro`
-    props.signature !== 'DataGrid' && props.unstable_headerFilters;
+    props.signature !== 'DataGrid' && props.headerFilters;
 
   /**
    * @param {number} colIndex Index of the column to focus
@@ -314,8 +315,8 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const isEditing = unstable_gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
-      const isHeaderMenuOpen = unstable_gridHeaderFilteringMenuSelector(apiRef) === params.field;
+      const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
+      const isHeaderMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === params.field;
 
       if (isEditing || isHeaderMenuOpen || !isNavigationKey(event.key)) {
         return;
@@ -522,7 +523,7 @@ export const useGridKeyboardNavigation = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       // Ignore portal
-      if (!event.currentTarget.contains(event.target as Element)) {
+      if (isEventTargetInPortal(event)) {
         return;
       }
 
@@ -630,7 +631,11 @@ export const useGridKeyboardNavigation = (
             break;
           }
           const colDef = (params as GridCellParams).colDef;
-          if (colDef && colDef.type === 'treeDataGroup') {
+          if (
+            colDef &&
+            // `GRID_TREE_DATA_GROUPING_FIELD` from the Pro package
+            colDef.field === '__tree_data_group__'
+          ) {
             break;
           }
           if (!event.shiftKey && rowIndexBefore < lastRowIndexInPage) {

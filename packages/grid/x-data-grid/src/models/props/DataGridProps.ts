@@ -360,7 +360,7 @@ export interface DataGridPropsWithDefaultValues {
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
    * @default false
    */
-  unstable_ignoreValueFormatterDuringExport:
+  ignoreValueFormatterDuringExport:
     | boolean
     | {
         csvExport?: boolean;

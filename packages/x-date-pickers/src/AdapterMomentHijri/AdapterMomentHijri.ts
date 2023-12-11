@@ -128,18 +128,15 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = (value?: any) => {
+  public date = <T extends string | null | undefined>(
+    value?: T,
+  ): DateBuilderReturnType<T, Moment> => {
+    type R = DateBuilderReturnType<T, Moment>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
-    return this.moment(value).locale('ar-SA');
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
-    value: T,
-  ): DateBuilderReturnType<T, Moment> => {
-    return <DateBuilderReturnType<T, Moment>>this.date(value);
+    return <R>this.moment(value).locale('ar-SA');
   };
 
   public getTimezone = (): string => {
@@ -216,27 +213,6 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return value.clone().iDate(date);
   };
 
-  public getWeekArray = (value: Moment) => {
-    const start = value.clone().startOf('iMonth').startOf('week');
-
-    const end = value.clone().endOf('iMonth').endOf('week');
-
-    let count = 0;
-    let current = start;
-    const nestedWeeks: Moment[][] = [];
-
-    while (current.isBefore(end)) {
-      const weekNumber = Math.floor(count / 7);
-      nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      nestedWeeks[weekNumber].push(current);
-
-      current = current.clone().add(1, 'day');
-      count += 1;
-    }
-
-    return nestedWeeks;
-  };
-
   public getWeekNumber = (value: Moment) => {
     return value.iWeek();
   };
@@ -251,16 +227,6 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
       throw new Error('max date must be on or before 1499-12-29 H (2076-11-26)');
     }
 
-    const startDate = this.moment(start).startOf('iYear');
-    const endDate = this.moment(end).endOf('iYear');
-    const years: Moment[] = [];
-
-    let current = startDate;
-    while (current.isBefore(endDate)) {
-      years.push(current);
-      current = current.clone().add(1, 'iYear');
-    }
-
-    return years;
+    return super.getYearRange([start, end]);
   };
 }

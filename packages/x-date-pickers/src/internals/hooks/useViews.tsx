@@ -184,7 +184,7 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
       const isSelectionFinishedOnCurrentView = currentViewSelectionState === 'finish';
       const hasMoreViews = selectedView
         ? // handles case like `DateTimePicker`, where a view might return a `finish` selection state
-          // but we it's not the final view given all `views` -> overall selection state should be `partial`.
+          // but when it's not the final view given all `views` -> overall selection state should be `partial`.
           views.indexOf(selectedView) < views.length - 1
         : Boolean(nextView);
       const globalSelectionState =
@@ -214,7 +214,7 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
     setFocusedView: handleFocusedViewChange,
     nextView,
     previousView,
-    // Always return up to date default view instead of the initial one (i.e. defaultView.current)
+    // Always return up-to-date default view instead of the initial one (i.e. defaultView.current)
     defaultView: views.includes(openTo!) ? openTo! : views[0],
     goToNextView,
     setValueAndGoToNextView,

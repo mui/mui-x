@@ -7,7 +7,7 @@ export type {
 
 export { getDateCalendarUtilityClass, dateCalendarClasses } from './dateCalendarClasses';
 export type { DateCalendarClassKey, DateCalendarClasses } from './dateCalendarClasses';
-export { dayPickerClasses } from './dayCalendarClasses';
+export { dayCalendarClasses } from './dayCalendarClasses';
 export type { DayCalendarClassKey, DayCalendarClasses } from './dayCalendarClasses';
 export type { PickersFadeTransitionGroupProps } from './PickersFadeTransitionGroup';
 export { pickersFadeTransitionGroupClasses } from './pickersFadeTransitionGroupClasses';

@@ -80,6 +80,15 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
           return false;
         }
         let shouldExclude = false;
+
+        if (prop.propType.type === 'InterfaceNode') {
+          if (prop.propType.types.some((type) => type[0] === '_lastToId')) {
+            // Try to catch proptypes from react-spring.
+            // Better solution should be to simplify the proptype instead of ignoring it.
+            return false;
+          }
+        }
+
         prop.filenames.forEach((filename) => {
           const definedInNodeModule = /node_modules/.test(filename);
 

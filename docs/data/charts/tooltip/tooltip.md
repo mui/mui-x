@@ -81,10 +81,10 @@ It will remove the header showing the x-axis value from the tooltip.
 
 ## Composition
 
-If you're using composition, by default the axis will be listening for mouse events to get its current x/y values.
+If you're using composition, by default, the axis will be listening for mouse events to get its current x/y values.
 If you don't need it, you can disable those listeners with the `disableAxisListener` prop.
 
-You need those listerne if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#interactions).
+You need those listeners if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#interactions).
 
 ```jsx
 <ChartContainer {...} disableAxisListener>

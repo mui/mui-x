@@ -1,17 +1,12 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { ItemInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
-import {
-  ChartsTooltipTable,
-  ChartsTooltipCell,
-  ChartsTooltipMark,
-  ChartsTooltipPaper,
-  ChartsTooltipRow,
-} from './ChartsTooltipTable';
-import { ChartsTooltipClasses } from './tooltipClasses';
+import { ChartsTooltipClasses } from './chartsTooltipClasses';
+import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
 
 export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
   /**
@@ -29,48 +24,7 @@ export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> 
   sx?: SxProps<Theme>;
 };
 
-export function DefaultChartsItemContent<T extends ChartSeriesType = ChartSeriesType>(
-  props: ChartsItemContentProps<T>,
-) {
-  const { series, itemData, sx, classes } = props;
-
-  if (itemData.dataIndex === undefined) {
-    return null;
-  }
-  const { displayedLabel, color } =
-    series.type === 'pie'
-      ? {
-          color: series.data[itemData.dataIndex].color,
-          displayedLabel: series.data[itemData.dataIndex].label,
-        }
-      : {
-          color: series.color,
-          displayedLabel: series.label,
-        };
-
-  // TODO: Manage to let TS understand series.data and series.valueFormatter are coherent
-  // @ts-ignore
-  const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
-  return (
-    <ChartsTooltipPaper sx={sx} className={classes.root}>
-      <ChartsTooltipTable>
-        <tbody>
-          <ChartsTooltipRow>
-            <ChartsTooltipCell className={classes.markCell}>
-              <ChartsTooltipMark ownerState={{ color }} />
-            </ChartsTooltipCell>
-
-            <ChartsTooltipCell className={classes.labelCell}>{displayedLabel}</ChartsTooltipCell>
-
-            <ChartsTooltipCell className={classes.valueCell}>{formattedValue}</ChartsTooltipCell>
-          </ChartsTooltipRow>
-        </tbody>
-      </ChartsTooltipTable>
-    </ChartsTooltipPaper>
-  );
-}
-
-export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
+function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
   itemData: ItemInteractionData<T>;
   content?: React.ElementType<ChartsItemContentProps<T>>;
   contentProps?: Partial<ChartsItemContentProps<T>>;
@@ -83,7 +37,7 @@ export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
     itemData.seriesId
   ] as ChartSeriesDefaultized<T>;
 
-  const Content = content ?? DefaultChartsItemContent<T>;
+  const Content = content ?? DefaultChartsItemTooltipContent;
   const chartTooltipContentProps = useSlotProps({
     elementType: Content,
     externalSlotProps: contentProps,
@@ -97,3 +51,48 @@ export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
   });
   return <Content {...chartTooltipContentProps} />;
 }
+
+ChartsItemTooltipContent.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object.isRequired,
+  content: PropTypes.elementType,
+  contentProps: PropTypes.shape({
+    classes: PropTypes.object,
+    itemData: PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
+    }),
+    series: PropTypes.shape({
+      color: PropTypes.string,
+      data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      highlightScope: PropTypes.shape({
+        faded: PropTypes.oneOf(['global', 'none', 'series']),
+        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+      }),
+      id: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
+      valueFormatter: PropTypes.func.isRequired,
+    }),
+    sx: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+      PropTypes.func,
+      PropTypes.object,
+    ]),
+  }),
+  itemData: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
+  }).isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { ChartsItemTooltipContent };

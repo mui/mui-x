@@ -204,6 +204,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "ignoreValueFormatterDuringExport": {
+      "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "initialState": {
       "description": "The initial state of the DataGrid. The data in it will be set in the state on initialization but will not be controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins.",
       "deprecated": "",
@@ -626,11 +631,6 @@
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
-    "unstable_ignoreValueFormatterDuringExport": {
-      "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
       "deprecated": "",
       "typeDescriptions": {}
     }
@@ -1246,7 +1246,6 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
-    "preferencesPanel": "PreferencesPanel component rendered inside the Header component.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",

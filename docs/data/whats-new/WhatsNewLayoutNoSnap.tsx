@@ -11,7 +11,48 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 
-const blogs = [
+type Blog = {
+  title: string;
+  announcementDate: string;
+  description: string;
+  url: string;
+  highlightList: { title: string; url: string }[];
+};
+
+const blogs: Blog[] = [
+  {
+    title: 'MUI X v6.18.x',
+    description:
+      'New stable components, polished features, better performance, and more.',
+    announcementDate: 'Monday, Nov 13, 2023',
+    url: 'https://mui.com/blog/mui-x-end-v6-features/',
+    highlightList: [
+      {
+        title: 'Charts - stable version',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#charts',
+      },
+      {
+        title: 'Tree View - stable version',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#tree-view',
+      },
+      {
+        title: 'Clearable date and time fields',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#clearable-field',
+      },
+      {
+        title: 'Customization playgrounds for Date and Time Pickers',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#customization-playgrounds',
+      },
+      {
+        title: 'Data Grid column autosizing',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
+      },
+      {
+        title: 'Sparklines on Data Grid ',
+        url: 'https://mui.com/blog/mui-x-end-v6-features/#sparkline-as-a-column-type',
+      },
+    ],
+  },
   {
     title: 'MUI X v6.11.0',
     description: 'A roundup of all new features since v6.0.0.',
@@ -152,7 +193,7 @@ const blogs = [
   },
 ];
 
-function BlogCard(props) {
+function BlogCard(props: { blog: Blog }) {
   return (
     <Card
       sx={{
@@ -243,7 +284,7 @@ function BlogCard(props) {
   );
 }
 
-export default function WhatsNewLayout() {
+export default function WhatsNewLayoutNoSnap() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
       {blogs.map((blog) => (

@@ -43,7 +43,7 @@ Apart from the removed methods and exports that require manual intervention, aro
 :::
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v600) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -73,7 +73,7 @@ These changes were done for consistency, improve stability and make room for new
 Below are described the steps you need to make to migrate from v5 to v6.
 
 :::warning
-The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/en/blog/release/v12.22.12).
+The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x reached end-of-life status](https://nodejs.org/en/blog/release/v12.22.12) in 2022.
 :::
 
 ### ✅ Renamed props
@@ -183,7 +183,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
         return;
       }
       // Check if the target is inside a Portal
-      if (!event.currentTarget.contains(event.target)) {
+      if (
+        (event.target as any).nodeType === 1 &&
+        !event.currentTarget.contains(event.target)
+      ) {
         event.defaultMuiPrevented = true;
       }
     }}
@@ -309,7 +312,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   -  onPageChange={handlePageChange}
   -  onPageSizeChange={handlePageSizeChange}
   +  paginationModel={{ page, pageSize }}
-  +  onPaginationModelChange={handlePaginationModelChange}
+  +  onPaginationModelChange={(paginationModel) => handlePaginationModelChange(paginationModel)}
    />
   ```
 

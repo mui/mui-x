@@ -89,7 +89,7 @@ export default function CustomHeaderFilterOperatorDataGridPro() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} columns={columns} unstable_headerFilters />
+      <DataGridPro {...data} columns={columns} headerFilters />
     </div>
   );
 }

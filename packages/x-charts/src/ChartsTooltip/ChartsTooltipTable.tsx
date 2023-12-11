@@ -1,6 +1,6 @@
 import Box from '@mui/system/Box';
 import { styled } from '@mui/material/styles';
-import { tooltipClasses } from './tooltipClasses';
+import { chartsTooltipClasses } from './chartsTooltipClasses';
 
 export const ChartsTooltipPaper = styled('div', {
   name: 'MuiChartsTooltip',
@@ -42,10 +42,10 @@ export const ChartsTooltipCell = styled('td', {
   verticalAlign: 'middle',
   color: (theme.vars || theme).palette.text.secondary,
 
-  [`&.${tooltipClasses.labelCell}`]: {
+  [`&.${chartsTooltipClasses.labelCell}`]: {
     paddingLeft: theme.spacing(1),
   },
-  [`&.${tooltipClasses.valueCell}`]: {
+  [`&.${chartsTooltipClasses.valueCell}`]: {
     paddingLeft: theme.spacing(4),
     color: (theme.vars || theme).palette.text.primary,
   },

@@ -286,7 +286,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     }
   }, [autoFocus, disabled, isAnimating, outsideCurrentMonth]);
 
-  // For day outside of current month, move focus from mouseDown to mouseUp
+  // For a day outside the current month, move the focus from mouseDown to mouseUp
   // Goal: have the onClick ends before sliding to the new month
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
     onMouseDown(event);

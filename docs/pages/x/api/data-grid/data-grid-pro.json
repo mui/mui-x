@@ -146,6 +146,7 @@
       }
     },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "headerFilters": { "type": { "name": "bool" } },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
     "hideFooterRowCount": {
@@ -154,6 +155,13 @@
     },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
     "ignoreDiacritics": { "type": { "name": "bool" } },
+    "ignoreValueFormatterDuringExport": {
+      "type": {
+        "name": "union",
+        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
+      },
+      "default": "false"
+    },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -542,15 +550,7 @@
       "additionalInfo": { "sx": true }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
-    "treeData": { "type": { "name": "bool" } },
-    "unstable_headerFilters": { "type": { "name": "bool" } },
-    "unstable_ignoreValueFormatterDuringExport": {
-      "type": {
-        "name": "union",
-        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
-      },
-      "default": "false"
-    }
+    "treeData": { "type": { "name": "bool" } }
   },
   "slots": [
     {
@@ -912,12 +912,6 @@
       "name": "panel",
       "description": "Panel component wrapping the filters and columns panels.",
       "default": "GridPanel"
-    },
-    {
-      "class": null,
-      "name": "preferencesPanel",
-      "description": "PreferencesPanel component rendered inside the Header component.",
-      "default": "GridPreferencesPanel"
     },
     {
       "class": null,

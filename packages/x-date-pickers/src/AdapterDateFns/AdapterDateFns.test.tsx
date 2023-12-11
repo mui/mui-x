@@ -80,7 +80,7 @@ describe('<AdapterDateFns />', () => {
   });
 
   describe('Picker localization', () => {
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       undefined: {
         placeholder: 'MM/DD/YYYY hh:mm aa',

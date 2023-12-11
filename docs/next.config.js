@@ -16,7 +16,6 @@ module.exports = withDocsInfra({
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
-    ENABLE_AD: process.env.ENABLE_AD,
     LIB_VERSION: pkg.version,
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
@@ -105,6 +104,7 @@ module.exports = withDocsInfra({
       },
     };
   },
+  distDir: 'export',
   // Next.js provides a `defaultPathMap` argument, we could simplify the logic.
   // However, we don't in order to prevent any regression in the `findPages()` method.
   exportPathMap: () => {
@@ -149,18 +149,25 @@ module.exports = withDocsInfra({
 
     return map;
   },
-  rewrites: async () => {
-    return [
-      { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
-      { source: '/api/:rest*', destination: '/api-docs/:rest*' },
-    ];
-  },
-  // redirects only take effect in the development, not production (because of `next export`).
-  redirects: async () => [
-    {
-      source: '/',
-      destination: '/x/introduction/',
-      permanent: false,
-    },
-  ],
+  // Used to signal we run yarn build
+  ...(process.env.NODE_ENV === 'production'
+    ? {
+        output: 'export',
+      }
+    : {
+        rewrites: async () => {
+          return [
+            { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
+            { source: '/api/:rest*', destination: '/api-docs/:rest*' },
+          ];
+        },
+        // redirects only take effect in the development, not production (because of `next export`).
+        redirects: async () => [
+          {
+            source: '/',
+            destination: '/x/introduction/',
+            permanent: false,
+          },
+        ],
+      }),
 });

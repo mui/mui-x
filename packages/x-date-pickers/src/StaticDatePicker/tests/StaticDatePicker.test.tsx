@@ -10,16 +10,14 @@ describe('<StaticDatePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
   it('render proper month', () => {
-    render(<StaticDatePicker defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />);
+    render(<StaticDatePicker defaultValue={adapterToUse.date('2019-01-01')} />);
 
     expect(screen.getByText('January 2019')).toBeVisible();
     expect(screen.getAllByMuiTest('day')).to.have.length(31);
   });
 
   it('switches between months', () => {
-    render(
-      <StaticDatePicker reduceAnimations defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />,
-    );
+    render(<StaticDatePicker reduceAnimations defaultValue={adapterToUse.date('2019-01-01')} />);
 
     expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2019');
 
