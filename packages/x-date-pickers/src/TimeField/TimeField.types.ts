@@ -6,7 +6,7 @@ import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { FieldSection, TimeValidationError } from '../models';
-import { FieldSlots, FieldSlotProps } from '../internals';
+import { FieldSlots, FieldSlotProps } from '../internals/hooks/useField/useField.types';
 
 export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseTimeFieldComponentProps<TDate, TChildProps>;

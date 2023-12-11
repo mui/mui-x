@@ -19,13 +19,11 @@ import { PickersLayoutClassKey } from '../PickersLayout';
 import { DatePickerToolbarClassKey } from '../DatePicker';
 import { TimePickerToolbarClassKey } from '../TimePicker';
 import { DateTimePickerToolbarClassKey, DateTimePickerTabsClassKey } from '../DateTimePicker';
-import {
-  PickersArrowSwitcherClassKey,
-  PickersPopperClassKey,
-  PickersToolbarButtonClassKey,
-  PickersToolbarClassKey,
-  PickersToolbarTextClassKey,
-} from '../internals';
+import { PickersArrowSwitcherClassKey } from '../internals/components/PickersArrowSwitcher';
+import { PickersToolbarClassKey } from '../internals/components/pickersToolbarClasses';
+import { PickersPopperClassKey } from '../internals/components/pickersPopperClasses';
+import { PickersToolbarButtonClassKey } from '../internals/components/pickersToolbarButtonClasses';
+import { PickersToolbarTextClassKey } from '../internals/components/pickersToolbarTextClasses';
 import { DigitalClockClassKey } from '../DigitalClock';
 import {
   MultiSectionDigitalClockClassKey,

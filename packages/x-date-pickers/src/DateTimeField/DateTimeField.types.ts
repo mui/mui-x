@@ -14,7 +14,7 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
-import { FieldSlots, FieldSlotProps } from '../internals';
+import { FieldSlots, FieldSlotProps } from '../internals/hooks/useField/useField.types';
 
 export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseDateTimeFieldComponentProps<TDate, TChildProps>;
