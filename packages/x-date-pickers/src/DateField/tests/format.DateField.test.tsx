@@ -131,6 +131,15 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     expectFieldValueV6(input, 'Escaped January Escaped 2019');
   });
 
+  it('should support format with only escaped parts', function test() {
+    const { start: startChar, end: endChar } = adapter.escapedCharacters;
+
+    // For Day.js: "[Escaped] [Escaped]"
+    render(<DateField format={`${startChar}Escaped${endChar} ${startChar}Escaped${endChar}`} />);
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'Escaped Escaped');
+  });
+
   it('should add spaces around `/` when `formatDensity = "spacious"`', () => {
     // Test with v7 input
     const v7Response = renderWithProps({

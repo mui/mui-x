@@ -32,6 +32,7 @@ export interface PickersSectionElement {
 
 export interface PickersSectionListRef {
   getRoot: () => HTMLElement;
+  getSectionContainer: (sectionIndex: number) => HTMLElement;
   getSectionContent: (sectionIndex: number) => HTMLElement;
   getSectionIndexFromDOMElement: (element: Element | null | undefined) => number | null;
 }
@@ -157,6 +158,17 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
       }
 
       return rootRef.current;
+    },
+    getSectionContainer(index) {
+      if (!rootRef.current) {
+        throw new Error(
+          'MUI: Cannot call sectionRef.getSectionContainer before the mount of the component',
+        );
+      }
+
+      return rootRef.current.querySelector<HTMLSpanElement>(
+        `.${pickersSectionListClasses.section}[data-sectionindex="${index}"]`,
+      )!;
     },
     getSectionContent(index) {
       if (!rootRef.current) {

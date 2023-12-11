@@ -49,7 +49,9 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
     // The ...InInput values consider the unicode characters but do include them in their indexes
     const cleanedValue = cleanString(renderedValue);
     const startInInput =
-      positionInInput + renderedValue.indexOf(cleanedValue[0]) + section.startSeparator.length;
+      positionInInput +
+      (cleanedValue === '' ? 0 : renderedValue.indexOf(cleanedValue[0])) +
+      section.startSeparator.length;
     const endInInput = startInInput + cleanedValue.length;
 
     newSections.push({
@@ -130,16 +132,21 @@ export const useFieldV6TextField: UseFieldTextField<true> = (params) => {
           inputRef.current.select();
         } else {
           const selectedSection = sections[parsedSelectedSections];
+          const selectionStart =
+            selectedSection.type === 'empty'
+              ? selectedSection.startInInput - selectedSection.startSeparator.length
+              : selectedSection.startInInput;
+          const selectionEnd =
+            selectedSection.type === 'empty'
+              ? selectedSection.endInInput + selectedSection.endSeparator.length
+              : selectedSection.endInInput;
 
           if (
-            selectedSection.startInInput !== inputRef.current.selectionStart ||
-            selectedSection.endInInput !== inputRef.current.selectionEnd
+            selectionStart !== inputRef.current.selectionStart ||
+            selectionEnd !== inputRef.current.selectionEnd
           ) {
             if (inputRef.current === getActiveElement(document)) {
-              inputRef.current.setSelectionRange(
-                selectedSection.startInInput,
-                selectedSection.endInInput,
-              );
+              inputRef.current.setSelectionRange(selectionStart, selectionEnd);
             }
           }
         }

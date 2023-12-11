@@ -244,6 +244,22 @@ const buildSections = <TDate>(
     sections.push(createSection({ ...params, now, token: currentTokenValue, startSeparator }));
   }
 
+  if (sections.length === 0 && startSeparator.length > 0) {
+    sections.push({
+      type: 'empty',
+      contentType: 'letter',
+      maxLength: null,
+      format: '',
+      value: '',
+      placeholder: '',
+      hasLeadingZerosInFormat: false,
+      hasLeadingZerosInInput: false,
+      startSeparator,
+      endSeparator: '',
+      modified: false,
+    });
+  }
+
   return sections;
 };
 

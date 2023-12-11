@@ -73,10 +73,17 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
 
         const range = new window.Range();
 
-        const target =
-          parsedSelectedSections === 'all'
-            ? sectionRef.current.getRoot()
-            : sectionRef.current.getSectionContent(parsedSelectedSections);
+        let target: HTMLElement;
+        if (parsedSelectedSections === 'all') {
+          target = sectionRef.current.getRoot();
+        } else {
+          const section = state.sections[parsedSelectedSections];
+          if (section.type === 'empty') {
+            target = sectionRef.current.getSectionContainer(parsedSelectedSections);
+          } else {
+            target = sectionRef.current.getSectionContent(parsedSelectedSections);
+          }
+        }
 
         range.selectNodeContents(target);
         target.focus();

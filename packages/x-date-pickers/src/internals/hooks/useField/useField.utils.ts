@@ -532,6 +532,10 @@ export const getSectionsBoundaries = <TDate>(
       minimum: 0,
       maximum: 0,
     }),
+    empty: () => ({
+      minimum: 0,
+      maximum: 0,
+    }),
   };
 };
 
@@ -543,7 +547,7 @@ export const validateSections = <TSection extends FieldSection>(
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceInvalidSection) {
-      const supportedSections: FieldSectionType[] = [];
+      const supportedSections: FieldSectionType[] = ['empty'];
       if (['date', 'date-time'].includes(valueType)) {
         supportedSections.push('weekDay', 'day', 'month', 'year');
       }
@@ -555,7 +559,7 @@ export const validateSections = <TSection extends FieldSection>(
 
       if (invalidSection) {
         console.warn(
-          `MUI: The field component you are using is not compatible with the "${invalidSection.type} date section.`,
+          `MUI: The field component you are using is not compatible with the "${invalidSection.type}" date section.`,
           `The supported date sections are ["${supportedSections.join('", "')}"]\`.`,
         );
         warnedOnceInvalidSection = true;
@@ -636,6 +640,7 @@ const reliableSectionModificationOrder: Record<FieldSectionType, number> = {
   minutes: 6,
   seconds: 7,
   meridiem: 8,
+  empty: 9,
 };
 
 export const mergeDateIntoReferenceDate = <TDate>(
