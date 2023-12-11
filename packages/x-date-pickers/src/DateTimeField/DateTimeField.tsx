@@ -83,6 +83,10 @@ DateTimeField.propTypes = {
    */
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
   clearable: PropTypes.bool,
   /**
    * The color of the component.
@@ -228,6 +232,9 @@ DateTimeField.propTypes = {
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when the clear button is clicked.
+   */
   onClear: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
@@ -264,9 +271,9 @@ DateTimeField.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 3. If `"all"` is provided, all the sections will be selected.
-   * 4. If `null` is provided, no section will be selected.
+   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -283,6 +290,10 @@ DateTimeField.propTypes = {
       'year',
     ]),
     PropTypes.number,
+    PropTypes.shape({
+      endIndex: PropTypes.number.isRequired,
+      startIndex: PropTypes.number.isRequired,
+    }),
   ]),
   /**
    * Disable specific date.
@@ -331,10 +342,6 @@ DateTimeField.propTypes = {
    * @default `false`
    */
   shouldRespectLeadingZeros: PropTypes.bool,
-  /**
-   * @defauilt false
-   */
-  shouldUseV6TextField: PropTypes.bool,
   /**
    * The size of the component.
    */
