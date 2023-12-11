@@ -5,10 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { ClearIcon } from '../icons';
-import {
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-} from '../internals/hooks/useField/useField.types';
+import { FieldSlots, FieldSlotProps } from '../internals/hooks/useField/useField.types';
 import { useLocaleText } from '../internals/hooks/useUtils';
 
 export interface ExportedUseClearableFieldProps {
@@ -23,23 +20,23 @@ interface UseClearableFieldProps extends ExportedUseClearableFieldProps {
 
 type UseClearableFieldParams<
   TFieldProps extends UseClearableFieldProps,
-  TFieldSlots extends FieldSlotsComponents,
-  TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
+  TFieldSlots extends FieldSlots,
+  TFieldSlotProps extends FieldSlotProps,
 > = {
   props: TFieldProps;
   slots?: { [K in keyof TFieldSlots as Uncapitalize<K & string>]: TFieldSlots[K] };
-  slotProps?: TFieldSlotsComponentsProps;
+  slotProps?: TFieldSlotProps;
 };
 
 export const useClearableField = <
   TFieldProps extends UseClearableFieldProps,
-  TFieldSlotsComponents extends FieldSlotsComponents,
-  TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
+  TFieldSlots extends FieldSlots,
+  TFieldSlotProps extends FieldSlotProps,
 >({
   props,
   slots,
   slotProps,
-}: UseClearableFieldParams<TFieldProps, TFieldSlotsComponents, TFieldSlotsComponentsProps>): Omit<
+}: UseClearableFieldParams<TFieldProps, TFieldSlots, TFieldSlotProps>): Omit<
   TFieldProps,
   'clearable' | 'onClear'
 > => {

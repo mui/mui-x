@@ -1,8 +1,8 @@
 import {
   UsePickerParams,
   BasePickerProps,
-  PickersPopperSlotsComponent,
-  PickersPopperSlotsComponentsProps,
+  PickersPopperSlots,
+  PickersPopperSlotProps,
   ExportedBaseToolbarProps,
   UsePickerViewsProps,
   BaseNonStaticPickerProps,
@@ -11,30 +11,28 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
+  ExportedPickersLayoutSlots,
+  ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
-  RangePickerFieldSlotsComponent,
-  RangePickerFieldSlotsComponentsProps,
+  RangePickerFieldSlots,
+  RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
 
-export interface UseDesktopRangePickerSlotsComponent<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends PickersPopperSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponent {}
+export interface UseDesktopRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends PickersPopperSlots,
+    ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
+    RangePickerFieldSlots {}
 
-export interface UseDesktopRangePickerSlotsComponentsProps<
+export interface UseDesktopRangePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TUseV6TextField extends boolean,
-> extends PickersPopperSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponentsProps<TDate, TUseV6TextField> {
+> extends PickersPopperSlotProps,
+    ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
+    RangePickerFieldSlotProps<TDate, TUseV6TextField> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -70,12 +68,12 @@ export interface UseDesktopRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopRangePickerSlotsComponent<TDate, TView>;
+  slots: UseDesktopRangePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView, TUseV6TextField>;
+  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView, TUseV6TextField>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps

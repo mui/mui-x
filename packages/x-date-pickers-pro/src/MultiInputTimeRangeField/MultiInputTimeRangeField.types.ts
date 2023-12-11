@@ -50,15 +50,15 @@ export interface MultiInputTimeRangeFieldProps<TDate, TUseV6TextField extends bo
    * Overridable slots.
    * @default {}
    */
-  slots?: MultiInputTimeRangeFieldSlotsComponent;
+  slots?: MultiInputTimeRangeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputTimeRangeFieldSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: MultiInputTimeRangeFieldSlotProps<TDate, TUseV6TextField>;
 }
 
-export interface MultiInputTimeRangeFieldSlotsComponent {
+export interface MultiInputTimeRangeFieldSlots {
   /**
    * Element rendered at the root.
    * @default MultiInputTimeRangeFieldRoot
@@ -78,10 +78,7 @@ export interface MultiInputTimeRangeFieldSlotsComponent {
   separator?: React.ElementType;
 }
 
-export interface MultiInputTimeRangeFieldSlotsComponentsProps<
-  TDate,
-  TUseV6TextField extends boolean,
-> {
+export interface MultiInputTimeRangeFieldSlotProps<TDate, TUseV6TextField extends boolean> {
   root?: SlotComponentProps<
     typeof Stack,
     {},

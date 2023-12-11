@@ -1,26 +1,26 @@
 import {
-  UseDesktopPickerSlotsComponent,
-  ExportedUseDesktopPickerSlotsComponentsProps,
+  UseDesktopPickerSlots,
+  ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
   BaseDatePickerProps,
-  BaseDatePickerSlotsComponent,
-  BaseDatePickerSlotsComponentsProps,
+  BaseDatePickerSlots,
+  BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { DateView } from '../models';
 
-export interface DesktopDatePickerSlotsComponent<TDate, TUseV6TextField extends boolean>
-  extends BaseDatePickerSlotsComponent<TDate>,
+export interface DesktopDatePickerSlots<TDate, TUseV6TextField extends boolean>
+  extends BaseDatePickerSlots<TDate>,
     MakeOptional<
-      UseDesktopPickerSlotsComponent<TDate, DateView, TUseV6TextField>,
+      UseDesktopPickerSlots<TDate, DateView, TUseV6TextField>,
       'field' | 'openPickerIcon'
     > {}
 
-export interface DesktopDatePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends BaseDatePickerSlotsComponentsProps<TDate>,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateView, TUseV6TextField> {}
+export interface DesktopDatePickerSlotProps<TDate, TUseV6TextField extends boolean>
+  extends BaseDatePickerSlotProps<TDate>,
+    ExportedUseDesktopPickerSlotProps<TDate, DateView, TUseV6TextField> {}
 
 export interface DesktopDatePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDatePickerProps<TDate>,
@@ -34,10 +34,10 @@ export interface DesktopDatePickerProps<TDate, TUseV6TextField extends boolean =
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDatePickerSlotsComponent<TDate, TUseV6TextField>;
+  slots?: DesktopDatePickerSlots<TDate, TUseV6TextField>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDatePickerSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: DesktopDatePickerSlotProps<TDate, TUseV6TextField>;
 }

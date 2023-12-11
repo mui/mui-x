@@ -1,30 +1,30 @@
 import {
-  UseMobilePickerSlotsComponent,
-  ExportedUseMobilePickerSlotsComponentsProps,
+  UseMobilePickerSlots,
+  ExportedUseMobilePickerSlotProps,
   MobileOnlyPickerProps,
 } from '../internals/hooks/useMobilePicker';
 import {
   BaseDateTimePickerProps,
-  BaseDateTimePickerSlotsComponent,
-  BaseDateTimePickerSlotsComponentsProps,
+  BaseDateTimePickerSlots,
+  BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { DateOrTimeView } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
-export interface MobileDateTimePickerSlotsComponent<
+export interface MobileDateTimePickerSlots<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TUseV6TextField extends boolean,
-> extends BaseDateTimePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate, TView, TUseV6TextField>, 'field'> {}
+> extends BaseDateTimePickerSlots<TDate>,
+    MakeOptional<UseMobilePickerSlots<TDate, TView, TUseV6TextField>, 'field'> {}
 
-export interface MobileDateTimePickerSlotsComponentsProps<
+export interface MobileDateTimePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TUseV6TextField extends boolean,
-> extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    ExportedUseMobilePickerSlotsComponentsProps<TDate, TView, TUseV6TextField> {}
+> extends BaseDateTimePickerSlotProps<TDate>,
+    ExportedUseMobilePickerSlotProps<TDate, TView, TUseV6TextField> {}
 
 export interface MobileDateTimePickerProps<
   TDate,
@@ -36,10 +36,10 @@ export interface MobileDateTimePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDateTimePickerSlotsComponent<TDate, TView, TUseV6TextField>;
+  slots?: MobileDateTimePickerSlots<TDate, TView, TUseV6TextField>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateTimePickerSlotsComponentsProps<TDate, TView, TUseV6TextField>;
+  slotProps?: MobileDateTimePickerSlotProps<TDate, TView, TUseV6TextField>;
 }

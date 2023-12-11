@@ -1,22 +1,22 @@
 import {
   DesktopTimePickerProps,
-  DesktopTimePickerSlotsComponent,
-  DesktopTimePickerSlotsComponentsProps,
+  DesktopTimePickerSlots,
+  DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
 import { TimeViewWithMeridiem } from '../internals/models';
 import {
   MobileTimePickerProps,
-  MobileTimePickerSlotsComponent,
-  MobileTimePickerSlotsComponentsProps,
+  MobileTimePickerSlots,
+  MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
 
-export interface TimePickerSlotsComponents<TDate, TUseV6TextField extends boolean>
-  extends DesktopTimePickerSlotsComponent<TDate, TUseV6TextField>,
-    MobileTimePickerSlotsComponent<TDate, TimeViewWithMeridiem, TUseV6TextField> {}
+export interface TimePickerSlots<TDate, TUseV6TextField extends boolean>
+  extends DesktopTimePickerSlots<TDate, TUseV6TextField>,
+    MobileTimePickerSlots<TDate, TimeViewWithMeridiem, TUseV6TextField> {}
 
-export interface TimePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends DesktopTimePickerSlotsComponentsProps<TDate, TUseV6TextField>,
-    MobileTimePickerSlotsComponentsProps<TDate, TimeViewWithMeridiem, TUseV6TextField> {}
+export interface TimePickerSlotProps<TDate, TUseV6TextField extends boolean>
+  extends DesktopTimePickerSlotProps<TDate, TUseV6TextField>,
+    MobileTimePickerSlotProps<TDate, TimeViewWithMeridiem, TUseV6TextField> {}
 
 export interface TimePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends DesktopTimePickerProps<TDate, TUseV6TextField>,
@@ -31,10 +31,10 @@ export interface TimePickerProps<TDate, TUseV6TextField extends boolean = false>
    * Overridable component slots.
    * @default {}
    */
-  slots?: TimePickerSlotsComponents<TDate, TUseV6TextField>;
+  slots?: TimePickerSlots<TDate, TUseV6TextField>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimePickerSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: TimePickerSlotProps<TDate, TUseV6TextField>;
 }

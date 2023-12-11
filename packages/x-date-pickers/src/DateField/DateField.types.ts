@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import {
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-} from '../internals/hooks/useField/useField.types';
+import { FieldSlots, FieldSlotProps } from '../internals/hooks/useField/useField.types';
 import { DateValidationError, FieldSection } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
@@ -47,12 +44,12 @@ export interface DateFieldProps<TDate, TUseV6TextField extends boolean = false>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateFieldSlotsComponent;
+  slots?: DateFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateFieldSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: DateFieldSlotProps<TDate, TUseV6TextField>;
 }
 
 export type DateFieldOwnerState<TDate, TUseV6TextField extends boolean> = DateFieldProps<
@@ -60,7 +57,7 @@ export type DateFieldOwnerState<TDate, TUseV6TextField extends boolean> = DateFi
   TUseV6TextField
 >;
 
-export interface DateFieldSlotsComponent extends FieldSlotsComponents {
+export interface DateFieldSlots extends FieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -69,7 +66,6 @@ export interface DateFieldSlotsComponent extends FieldSlotsComponents {
   textField?: React.ElementType;
 }
 
-export interface DateFieldSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends FieldSlotsComponentsProps {
+export interface DateFieldSlotProps<TDate, TUseV6TextField extends boolean> extends FieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, DateFieldOwnerState<TDate, TUseV6TextField>>;
 }

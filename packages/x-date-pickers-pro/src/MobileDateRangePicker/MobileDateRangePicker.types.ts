@@ -1,22 +1,22 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
 import {
-  UseMobileRangePickerSlotsComponent,
-  UseMobileRangePickerSlotsComponentsProps,
+  UseMobileRangePickerSlots,
+  UseMobileRangePickerSlotProps,
   MobileRangeOnlyPickerProps,
 } from '../internals/hooks/useMobileRangePicker';
 import {
   BaseDateRangePickerProps,
-  BaseDateRangePickerSlotsComponent,
-  BaseDateRangePickerSlotsComponentsProps,
+  BaseDateRangePickerSlots,
+  BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface MobileDateRangePickerSlotsComponent<TDate>
-  extends BaseDateRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobileRangePickerSlotsComponent<TDate, 'day'>, 'field'> {}
+export interface MobileDateRangePickerSlots<TDate>
+  extends BaseDateRangePickerSlots<TDate>,
+    MakeOptional<UseMobileRangePickerSlots<TDate, 'day'>, 'field'> {}
 
-export interface MobileDateRangePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
-    UseMobileRangePickerSlotsComponentsProps<TDate, 'day', TUseV6TextField> {}
+export interface MobileDateRangePickerSlotProps<TDate, TUseV6TextField extends boolean>
+  extends BaseDateRangePickerSlotProps<TDate>,
+    UseMobileRangePickerSlotProps<TDate, 'day', TUseV6TextField> {}
 
 export interface MobileDateRangePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDateRangePickerProps<TDate>,
@@ -30,10 +30,10 @@ export interface MobileDateRangePickerProps<TDate, TUseV6TextField extends boole
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDateRangePickerSlotsComponent<TDate>;
+  slots?: MobileDateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateRangePickerSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: MobileDateRangePickerSlotProps<TDate, TUseV6TextField>;
 }

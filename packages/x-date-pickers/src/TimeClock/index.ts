@@ -1,9 +1,5 @@
 export { TimeClock } from './TimeClock';
-export type {
-  TimeClockProps,
-  TimeClockSlotsComponent,
-  TimeClockSlotsComponentsProps,
-} from './TimeClock.types';
+export type { TimeClockProps, TimeClockSlots, TimeClockSlotProps } from './TimeClock.types';
 
 export { clockClasses } from './clockClasses';
 export type { ClockClasses, ClockClassKey } from './clockClasses';

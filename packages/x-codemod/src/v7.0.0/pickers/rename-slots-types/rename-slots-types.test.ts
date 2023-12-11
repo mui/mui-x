@@ -1,7 +1,7 @@
 import path from 'path';
 import { expect } from 'chai';
 import jscodeshift from 'jscodeshift';
-import transform from './index';
+import transform from '.';
 import readFile from '../../../util/readFile';
 
 function read(fileName) {
@@ -9,32 +9,29 @@ function read(fileName) {
 }
 
 describe('v7.0.0/pickers', () => {
-  describe('preset-safe', () => {
-    it('transforms code as needed', () => {
+  describe('rename-slot-types', () => {
+    const actualPath = `./actual-rename-slots-types.spec.tsx`;
+    const expectedPath = `./expected-rename-slots-types.spec.tsx`;
+
+    it('transforms imports as needed', () => {
       const actual = transform(
-        {
-          source: read('./actual.spec.tsx'),
-          path: require.resolve('./actual.spec.tsx'),
-        },
+        { source: read(actualPath) },
         { jscodeshift: jscodeshift.withParser('tsx') },
         {},
       );
 
-      const expected = read('./expected.spec.tsx');
+      const expected = read(expectedPath);
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
 
-    it('should be idempotent for expression', () => {
+    it('should be idempotent', () => {
       const actual = transform(
-        {
-          source: read('./expected.spec.tsx'),
-          path: require.resolve('./expected.spec.tsx'),
-        },
+        { source: read(expectedPath) },
         { jscodeshift: jscodeshift.withParser('tsx') },
         {},
       );
 
-      const expected = read('./expected.spec.tsx');
+      const expected = read(expectedPath);
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
   });

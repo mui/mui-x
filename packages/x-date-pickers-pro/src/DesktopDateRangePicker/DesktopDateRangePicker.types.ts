@@ -1,22 +1,22 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
 import {
-  UseDesktopRangePickerSlotsComponent,
-  UseDesktopRangePickerSlotsComponentsProps,
+  UseDesktopRangePickerSlots,
+  UseDesktopRangePickerSlotProps,
   DesktopRangeOnlyPickerProps,
 } from '../internals/hooks/useDesktopRangePicker';
 import {
   BaseDateRangePickerProps,
-  BaseDateRangePickerSlotsComponent,
-  BaseDateRangePickerSlotsComponentsProps,
+  BaseDateRangePickerSlots,
+  BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface DesktopDateRangePickerSlotsComponent<TDate>
-  extends BaseDateRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, 'day'>, 'field'> {}
+export interface DesktopDateRangePickerSlots<TDate>
+  extends BaseDateRangePickerSlots<TDate>,
+    MakeOptional<UseDesktopRangePickerSlots<TDate, 'day'>, 'field'> {}
 
-export interface DesktopDateRangePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
-    UseDesktopRangePickerSlotsComponentsProps<TDate, 'day', TUseV6TextField> {}
+export interface DesktopDateRangePickerSlotProps<TDate, TUseV6TextField extends boolean>
+  extends BaseDateRangePickerSlotProps<TDate>,
+    UseDesktopRangePickerSlotProps<TDate, 'day', TUseV6TextField> {}
 
 export interface DesktopDateRangePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDateRangePickerProps<TDate>,
@@ -30,10 +30,10 @@ export interface DesktopDateRangePickerProps<TDate, TUseV6TextField extends bool
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateRangePickerSlotsComponent<TDate>;
+  slots?: DesktopDateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateRangePickerSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: DesktopDateRangePickerSlotProps<TDate, TUseV6TextField>;
 }

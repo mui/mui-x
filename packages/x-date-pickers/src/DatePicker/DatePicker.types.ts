@@ -1,21 +1,21 @@
 import {
   DesktopDatePickerProps,
-  DesktopDatePickerSlotsComponent,
-  DesktopDatePickerSlotsComponentsProps,
+  DesktopDatePickerSlots,
+  DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
 import {
   MobileDatePickerProps,
-  MobileDatePickerSlotsComponent,
-  MobileDatePickerSlotsComponentsProps,
+  MobileDatePickerSlots,
+  MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
 
-export interface DatePickerSlotsComponents<TDate, TUseV6TextField extends boolean>
-  extends DesktopDatePickerSlotsComponent<TDate, TUseV6TextField>,
-    MobileDatePickerSlotsComponent<TDate, TUseV6TextField> {}
+export interface DatePickerSlots<TDate, TUseV6TextField extends boolean>
+  extends DesktopDatePickerSlots<TDate, TUseV6TextField>,
+    MobileDatePickerSlots<TDate, TUseV6TextField> {}
 
-export interface DatePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends DesktopDatePickerSlotsComponentsProps<TDate, TUseV6TextField>,
-    MobileDatePickerSlotsComponentsProps<TDate, TUseV6TextField> {}
+export interface DatePickerSlotProps<TDate, TUseV6TextField extends boolean>
+  extends DesktopDatePickerSlotProps<TDate, TUseV6TextField>,
+    MobileDatePickerSlotProps<TDate, TUseV6TextField> {}
 
 export interface DatePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends DesktopDatePickerProps<TDate, TUseV6TextField>,
@@ -35,10 +35,10 @@ export interface DatePickerProps<TDate, TUseV6TextField extends boolean = false>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DatePickerSlotsComponents<TDate, TUseV6TextField>;
+  slots?: DatePickerSlots<TDate, TUseV6TextField>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DatePickerSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: DatePickerSlotProps<TDate, TUseV6TextField>;
 }

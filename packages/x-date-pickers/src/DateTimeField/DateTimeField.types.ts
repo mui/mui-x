@@ -2,11 +2,7 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { DateTimeValidationError, FieldSection } from '../models';
-import {
-  UseFieldInternalProps,
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-} from '../internals/hooks/useField';
+import { UseFieldInternalProps, FieldSlots, FieldSlotProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
@@ -18,8 +14,8 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
-import { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
 
+import { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
 export interface UseDateTimeFieldProps<TDate, TUseV6TextField extends boolean>
   extends MakeOptional<
       UseFieldInternalProps<
@@ -59,12 +55,12 @@ export interface DateTimeFieldProps<TDate, TUseV6TextField extends boolean = fal
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateTimeFieldSlotsComponent;
+  slots?: DateTimeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimeFieldSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: DateTimeFieldSlotProps<TDate, TUseV6TextField>;
 }
 
 export type DateTimeFieldOwnerState<TDate, TUseV6TextField extends boolean> = DateTimeFieldProps<
@@ -72,7 +68,7 @@ export type DateTimeFieldOwnerState<TDate, TUseV6TextField extends boolean> = Da
   TUseV6TextField
 >;
 
-export interface DateTimeFieldSlotsComponent extends FieldSlotsComponents {
+export interface DateTimeFieldSlots extends FieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -81,8 +77,8 @@ export interface DateTimeFieldSlotsComponent extends FieldSlotsComponents {
   textField?: React.ElementType;
 }
 
-export interface DateTimeFieldSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends FieldSlotsComponentsProps {
+export interface DateTimeFieldSlotProps<TDate, TUseV6TextField extends boolean>
+  extends FieldSlotProps {
   textField?: SlotComponentProps<
     typeof TextField,
     {},

@@ -1,23 +1,23 @@
 import {
-  UseMobilePickerSlotsComponent,
+  UseMobilePickerSlots,
   MobileOnlyPickerProps,
-  ExportedUseMobilePickerSlotsComponentsProps,
+  ExportedUseMobilePickerSlotProps,
 } from '../internals/hooks/useMobilePicker';
 import {
   BaseDatePickerProps,
-  BaseDatePickerSlotsComponent,
-  BaseDatePickerSlotsComponentsProps,
+  BaseDatePickerSlots,
+  BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { DateView } from '../models';
 
-export interface MobileDatePickerSlotsComponent<TDate, TUseV6TextField extends boolean>
-  extends BaseDatePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate, DateView, TUseV6TextField>, 'field'> {}
+export interface MobileDatePickerSlots<TDate, TUseV6TextField extends boolean>
+  extends BaseDatePickerSlots<TDate>,
+    MakeOptional<UseMobilePickerSlots<TDate, DateView, TUseV6TextField>, 'field'> {}
 
-export interface MobileDatePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends BaseDatePickerSlotsComponentsProps<TDate>,
-    ExportedUseMobilePickerSlotsComponentsProps<TDate, DateView, TUseV6TextField> {}
+export interface MobileDatePickerSlotProps<TDate, TUseV6TextField extends boolean>
+  extends BaseDatePickerSlotProps<TDate>,
+    ExportedUseMobilePickerSlotProps<TDate, DateView, TUseV6TextField> {}
 
 export interface MobileDatePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDatePickerProps<TDate>,
@@ -26,10 +26,10 @@ export interface MobileDatePickerProps<TDate, TUseV6TextField extends boolean = 
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDatePickerSlotsComponent<TDate, TUseV6TextField>;
+  slots?: MobileDatePickerSlots<TDate, TUseV6TextField>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDatePickerSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: MobileDatePickerSlotProps<TDate, TUseV6TextField>;
 }

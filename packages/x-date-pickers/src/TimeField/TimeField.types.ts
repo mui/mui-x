@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import {
-  UseFieldInternalProps,
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-} from '../internals/hooks/useField';
+import { UseFieldInternalProps, FieldSlots, FieldSlotProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
@@ -46,12 +42,12 @@ export interface TimeFieldProps<TDate, TUseV6TextField extends boolean = false>
    * Overridable component slots.
    * @default {}
    */
-  slots?: TimeFieldSlotsComponent;
+  slots?: TimeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimeFieldSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: TimeFieldSlotProps<TDate, TUseV6TextField>;
 }
 
 export type TimeFieldOwnerState<TDate, TUseV6TextField extends boolean> = TimeFieldProps<
@@ -59,7 +55,7 @@ export type TimeFieldOwnerState<TDate, TUseV6TextField extends boolean> = TimeFi
   TUseV6TextField
 >;
 
-export interface TimeFieldSlotsComponent extends FieldSlotsComponents {
+export interface TimeFieldSlots extends FieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -68,7 +64,6 @@ export interface TimeFieldSlotsComponent extends FieldSlotsComponents {
   textField?: React.ElementType;
 }
 
-export interface TimeFieldSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends FieldSlotsComponentsProps {
+export interface TimeFieldSlotProps<TDate, TUseV6TextField extends boolean> extends FieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate, TUseV6TextField>>;
 }

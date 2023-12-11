@@ -1,22 +1,22 @@
 import {
   DesktopDateTimePickerProps,
-  DesktopDateTimePickerSlotsComponent,
-  DesktopDateTimePickerSlotsComponentsProps,
+  DesktopDateTimePickerSlots,
+  DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
   MobileDateTimePickerProps,
-  MobileDateTimePickerSlotsComponent,
-  MobileDateTimePickerSlotsComponentsProps,
+  MobileDateTimePickerSlots,
+  MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
 
-export interface DateTimePickerSlotsComponents<TDate, TUseV6TextField extends boolean>
-  extends DesktopDateTimePickerSlotsComponent<TDate, TUseV6TextField>,
-    MobileDateTimePickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField> {}
+export interface DateTimePickerSlots<TDate, TUseV6TextField extends boolean>
+  extends DesktopDateTimePickerSlots<TDate, TUseV6TextField>,
+    MobileDateTimePickerSlots<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField> {}
 
-export interface DateTimePickerSlotsComponentsProps<TDate, TUseV6TextField extends boolean>
-  extends DesktopDateTimePickerSlotsComponentsProps<TDate, TUseV6TextField>,
-    MobileDateTimePickerSlotsComponentsProps<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField> {}
+export interface DateTimePickerSlotProps<TDate, TUseV6TextField extends boolean>
+  extends DesktopDateTimePickerSlotProps<TDate, TUseV6TextField>,
+    MobileDateTimePickerSlotProps<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField> {}
 
 export interface DateTimePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends DesktopDateTimePickerProps<TDate, TUseV6TextField>,
@@ -36,10 +36,10 @@ export interface DateTimePickerProps<TDate, TUseV6TextField extends boolean = fa
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateTimePickerSlotsComponents<TDate, TUseV6TextField>;
+  slots?: DateTimePickerSlots<TDate, TUseV6TextField>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimePickerSlotsComponentsProps<TDate, TUseV6TextField>;
+  slotProps?: DateTimePickerSlotProps<TDate, TUseV6TextField>;
 }
