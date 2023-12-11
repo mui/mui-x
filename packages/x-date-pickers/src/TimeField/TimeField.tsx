@@ -51,12 +51,7 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const { inputRef, ...otherTextFieldProps } = textFieldProps;
-
-  const fieldResponse = useTimeField<TDate, typeof textFieldProps>({
-    inputRef,
-    props: otherTextFieldProps,
-  });
+  const fieldResponse = useTimeField<TDate, typeof textFieldProps>(textFieldProps);
   const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({

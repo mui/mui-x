@@ -32,6 +32,7 @@ const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
+  inputRef?: React.Ref<HTMLInputElement>;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -55,6 +56,7 @@ const JoyField = React.forwardRef(
       endDecorator,
       startDecorator,
       slotProps,
+      inputRef,
       ...other
     } = props;
 
@@ -84,6 +86,7 @@ const JoyField = React.forwardRef(
           slotProps={{
             ...slotProps,
             root: { ...slotProps?.root, ref: containerRef },
+            input: { ...slotProps?.input, ref: inputRef },
           }}
           {...other}
         />
@@ -103,17 +106,9 @@ interface JoyDateFieldProps
 
 const JoyDateField = React.forwardRef(
   (props: JoyDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const {
-      inputRef: externalInputRef,
-      slots,
-      slotProps,
-      ...textFieldProps
-    } = props;
+    const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, typeof textFieldProps>({
-      props: textFieldProps,
-      inputRef: externalInputRef,
-    });
+    const fieldResponse = useDateField<Dayjs, typeof textFieldProps>(textFieldProps);
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
@@ -122,9 +117,7 @@ const JoyDateField = React.forwardRef(
       slotProps,
     });
 
-    const { ref: inputRef, ...otherProcessedFieldProps } = processedFieldProps;
-
-    return <JoyField ref={ref} {...otherProcessedFieldProps} />;
+    return <JoyField {...processedFieldProps} ref={ref} />;
   },
 );
 

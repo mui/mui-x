@@ -8,11 +8,6 @@ import {
   UseDateTimeRangeFieldProps,
 } from '../internals/models';
 
-export interface UseSingleInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  props: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
-
 export interface UseSingleInputDateTimeRangeFieldProps<TDate>
   extends UseDateTimeRangeFieldProps<TDate> {}
 

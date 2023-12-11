@@ -32,6 +32,7 @@ const JoyField = React.forwardRef((props, ref) => {
     endDecorator,
     startDecorator,
     slotProps,
+    inputRef,
     ...other
   } = props;
 
@@ -61,6 +62,7 @@ const JoyField = React.forwardRef((props, ref) => {
         slotProps={{
           ...slotProps,
           root: { ...slotProps?.root, ref: containerRef },
+          input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
       />
@@ -69,12 +71,9 @@ const JoyField = React.forwardRef((props, ref) => {
 });
 
 const JoyDateField = React.forwardRef((props, ref) => {
-  const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
+  const { slots, slotProps, ...textFieldProps } = props;
 
-  const fieldResponse = useDateField({
-    props: textFieldProps,
-    inputRef: externalInputRef,
-  });
+  const fieldResponse = useDateField(textFieldProps);
 
   /* If you don't need a clear button, you can skip the use of this hook */
   const processedFieldProps = useClearableField({
@@ -83,9 +82,7 @@ const JoyDateField = React.forwardRef((props, ref) => {
     slotProps,
   });
 
-  const { ref: inputRef, ...otherProcessedFieldProps } = processedFieldProps;
-
-  return <JoyField ref={ref} {...otherProcessedFieldProps} />;
+  return <JoyField {...processedFieldProps} ref={ref} />;
 });
 
 const JoyDatePicker = React.forwardRef((props, ref) => {

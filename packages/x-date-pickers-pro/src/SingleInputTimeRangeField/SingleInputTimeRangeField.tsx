@@ -51,12 +51,7 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const { inputRef, ...otherTextFieldProps } = textFieldProps;
-
-  const fieldResponse = useSingleInputTimeRangeField<TDate, typeof textFieldProps>({
-    inputRef,
-    props: otherTextFieldProps,
-  });
+  const fieldResponse = useSingleInputTimeRangeField<TDate, typeof textFieldProps>(textFieldProps);
   const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({

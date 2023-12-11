@@ -33,6 +33,7 @@ const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
+  inputRef?: React.Ref<HTMLInputElement>;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -54,6 +55,7 @@ const JoyField = React.forwardRef(
       endDecorator,
       startDecorator,
       slotProps,
+      inputRef,
       ...other
     } = props;
 
@@ -78,6 +80,7 @@ const JoyField = React.forwardRef(
           slotProps={{
             ...slotProps,
             root: { ...slotProps?.root, ref: containerRef },
+            input: { ...slotProps?.input, ref: inputRef },
           }}
           {...other}
         />
@@ -99,10 +102,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
   (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
 
-    const {
-      inputRef: externalInputRef,
-      ...textFieldProps
-    }: SingleInputDateRangeFieldProps<
+    const textFieldProps: SingleInputDateRangeFieldProps<
       Dayjs,
       JoyFieldProps & { inputRef: React.Ref<HTMLInputElement> }
     > = useSlotProps({
@@ -113,10 +113,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
     });
 
     const fieldResponse = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>(
-      {
-        props: textFieldProps,
-        inputRef: externalInputRef,
-      },
+      textFieldProps,
     );
 
     /* If you don't need a clear button, you can skip the use of this hook */
@@ -126,17 +123,10 @@ const JoySingleInputDateRangeField = React.forwardRef(
       slotProps,
     });
 
-    const { ref: inputRef, ...otherProcessedFieldProps } = processedFieldProps;
-
     return (
       <JoyField
-        {...otherProcessedFieldProps}
+        {...processedFieldProps}
         ref={ref}
-        slotProps={{
-          input: {
-            ref: inputRef,
-          },
-        }}
         endDecorator={
           <IconButton
             onClick={onAdornmentClick}

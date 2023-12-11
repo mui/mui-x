@@ -45,7 +45,7 @@ const BrowserField = React.forwardRef((props, ref) => {
 const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, onAdornmentClick, ...other } = props;
 
-  const { inputRef: externalInputRef, ...textFieldProps } = useSlotProps({
+  const textFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -63,10 +63,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ),
   };
 
-  const fieldResponse = useSingleInputDateRangeField({
-    props: textFieldProps,
-    inputRef: externalInputRef,
-  });
+  const fieldResponse = useSingleInputDateRangeField(textFieldProps);
 
   /* If you don't need a clear button, you can skip the use of this hook */
   const processedFieldProps = useClearableField({
@@ -75,16 +72,13 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     slotProps,
   });
 
-  const { ref: inputRef, ...otherProcessedFieldProps } = processedFieldProps;
-
   return (
     <BrowserField
-      {...otherProcessedFieldProps}
+      {...processedFieldProps}
       ref={ref}
       style={{
         minWidth: 300,
       }}
-      inputRef={inputRef}
     />
   );
 });

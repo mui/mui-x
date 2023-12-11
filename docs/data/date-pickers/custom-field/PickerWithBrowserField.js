@@ -39,12 +39,9 @@ const BrowserField = React.forwardRef((props, ref) => {
 });
 
 const BrowserDateField = React.forwardRef((props, ref) => {
-  const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
+  const { slots, slotProps, ...textFieldProps } = props;
 
-  const fieldResponse = useDateField({
-    props: textFieldProps,
-    inputRef: externalInputRef,
-  });
+  const fieldResponse = useDateField(textFieldProps);
 
   /* If you don't need a clear button, you can skip the use of this hook */
   const processedFieldProps = useClearableField({
@@ -53,11 +50,7 @@ const BrowserDateField = React.forwardRef((props, ref) => {
     slotProps,
   });
 
-  const { ref: inputRef, ...otherProcessedFieldProps } = processedFieldProps;
-
-  return (
-    <BrowserField ref={ref} inputRef={inputRef} {...otherProcessedFieldProps} />
-  );
+  return <BrowserField ref={ref} {...processedFieldProps} />;
 });
 
 const BrowserDatePicker = React.forwardRef((props, ref) => {
