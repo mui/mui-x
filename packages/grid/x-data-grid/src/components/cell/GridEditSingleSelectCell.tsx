@@ -77,7 +77,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     return null;
   }
 
-  const valueOptions = getValueOptions(colDef);
+  const valueOptions = getValueOptions(colDef, { id, row });
   if (!valueOptions) {
     return null;
   }

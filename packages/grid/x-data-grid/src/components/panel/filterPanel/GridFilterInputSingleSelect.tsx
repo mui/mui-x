@@ -15,7 +15,7 @@ import {
 import type { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';
 
 const renderSingleSelectOptions = ({
-  column: { valueOptions, field },
+  column,
   OptionComponent,
   getOptionLabel,
   getOptionValue,
@@ -29,10 +29,7 @@ const renderSingleSelectOptions = ({
   isSelectNative: boolean;
   baseSelectOptionProps: GridSlotsComponentsProps['baseSelectOption'];
 }) => {
-  const iterableColumnValues =
-    typeof valueOptions === 'function'
-      ? ['', ...valueOptions({ field })]
-      : ['', ...(valueOptions || [])];
+  const iterableColumnValues = ['', ...(getValueOptions(column) || [])];
 
   return iterableColumnValues.map((option) => {
     const value = getOptionValue(option);
