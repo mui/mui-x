@@ -9,7 +9,7 @@ import useTicks, { TickItemType } from '../hooks/useTicks';
 import { ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps, getWordsByLines } from '../internals/components/ChartsText';
+import { ChartsText, ChartsTextProps, getWordsByLines } from '../ChartsText/ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
 

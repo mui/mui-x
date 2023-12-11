@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getStringSize } from '../domUtils';
+import { getStringSize } from '../internals/domUtils';
 
 export type ChartsTextBaseline = 'hanging' | 'central' | 'auto';
 
@@ -10,6 +10,21 @@ export interface ChartsTextStyle extends React.CSSProperties {
    * @default 'central'
    */
   dominantBaseline?: ChartsTextBaseline;
+}
+
+
+
+export interface ChartsTextProps
+  extends Omit<
+      React.SVGTextElementAttributes<SVGTextElement>,
+      'width' | 'ref' | 'style' | 'dominantBaseline'
+    >,
+    GetWordsByLinesParams {
+  /**
+   * Height of a text line (in `em`).
+   */
+  lineHeight?: number;
+  ownerState?: any;
 }
 
 interface GetWordsByLinesParams {
@@ -27,20 +42,6 @@ interface GetWordsByLinesParams {
    */
   needsComputation?: boolean;
 }
-
-export interface ChartsTextProps
-  extends Omit<
-      React.SVGTextElementAttributes<SVGTextElement>,
-      'width' | 'ref' | 'style' | 'dominantBaseline'
-    >,
-    GetWordsByLinesParams {
-  /**
-   * Height of a text line (in `em`).
-   */
-  lineHeight?: number;
-  ownerState?: any;
-}
-
 export function getWordsByLines({ style, needsComputation, text }: GetWordsByLinesParams) {
   return text.split('\n').map((subText) => ({
     text: subText,
