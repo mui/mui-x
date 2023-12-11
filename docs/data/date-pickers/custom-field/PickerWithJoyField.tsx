@@ -22,8 +22,8 @@ import {
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
 import {
-  DateFieldSlotsComponent,
-  DateFieldSlotsComponentsProps,
+  DateFieldSlots,
+  DateFieldSlotProps,
 } from '@mui/x-date-pickers/DateField/DateField.types';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
@@ -129,8 +129,8 @@ const JoyDateField = React.forwardRef(
       useClearableField<
         {},
         typeof textFieldProps.InputProps,
-        DateFieldSlotsComponent,
-        DateFieldSlotsComponentsProps<Dayjs>
+        DateFieldSlots,
+        DateFieldSlotProps<Dayjs>
       >({
         onClear,
         clearable,

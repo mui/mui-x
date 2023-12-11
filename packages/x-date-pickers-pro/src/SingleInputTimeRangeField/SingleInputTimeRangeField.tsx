@@ -7,8 +7,8 @@ import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
 import {
   SingleInputTimeRangeFieldProps,
-  SingleInputTimeRangeFieldSlotsComponent,
-  SingleInputTimeRangeFieldSlotsComponentsProps,
+  SingleInputTimeRangeFieldSlots,
+  SingleInputTimeRangeFieldSlotProps,
 } from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
@@ -69,8 +69,8 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
-    SingleInputTimeRangeFieldSlotsComponent,
-    SingleInputTimeRangeFieldSlotsComponentsProps<TDate>
+    SingleInputTimeRangeFieldSlots,
+    SingleInputTimeRangeFieldSlotProps<TDate>
   >({
     onClear,
     clearable,

@@ -3,32 +3,27 @@ import { useSlotProps } from '@mui/base/utils';
 import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { ClearIcon } from '../icons';
-import {
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-  FieldsTextFieldProps,
-  useLocaleText,
-} from '../internals';
+import { FieldSlots, FieldSlotProps, FieldsTextFieldProps, useLocaleText } from '../internals';
 
 type UseClearableFieldProps<
   TFieldProps extends FieldsTextFieldProps,
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
-  TFieldSlots extends FieldSlotsComponents,
-  TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
+  TFieldSlots extends FieldSlots,
+  TFieldSlotProps extends FieldSlotProps,
 > = {
   clearable: boolean;
   fieldProps: TFieldProps;
   InputProps: TInputProps;
   onClear: React.MouseEventHandler<HTMLButtonElement>;
   slots?: { [K in keyof TFieldSlots as Uncapitalize<K & string>]: TFieldSlots[K] };
-  slotProps?: TFieldSlotsComponentsProps;
+  slotProps?: TFieldSlotProps;
 };
 
 export const useClearableField = <
   TFieldProps extends FieldsTextFieldProps,
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
-  TFieldSlotsComponents extends FieldSlotsComponents,
-  TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
+  TFieldSlots extends FieldSlots,
+  TFieldSlotProps extends FieldSlotProps,
 >({
   clearable,
   fieldProps: forwardedFieldProps,
@@ -36,12 +31,7 @@ export const useClearableField = <
   onClear,
   slots,
   slotProps,
-}: UseClearableFieldProps<
-  TFieldProps,
-  TInputProps,
-  TFieldSlotsComponents,
-  TFieldSlotsComponentsProps
->) => {
+}: UseClearableFieldProps<TFieldProps, TInputProps, TFieldSlots, TFieldSlotProps>) => {
   const localeText = useLocaleText();
 
   const IconButton = slots?.clearButton ?? MuiIconButton;

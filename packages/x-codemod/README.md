@@ -88,7 +88,8 @@ The list includes these transformers
 
 - [`rename-components-to-slots-pickers`](#rename-components-to-slots-pickers)
 - [`rename-default-calendar-month-to-reference-date`](#rename-default-calendar-month-to-reference-date)
-- [`rename-day-picker-classes`](/rename-day-picker-classes)
+- [`rename-day-picker-classes`](#rename-day-picker-classes)
+- [`rename-slots-types`](#rename-slots-types)
 
 #### `rename-components-to-slots-pickers`
 
@@ -133,6 +134,21 @@ Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
 
 ```bash
 npx @mui/x-codemod v7.0.0/pickers/rename-day-picker-classes <path>
+```
+
+#### `rename-slots-types`
+
+Replace types suffix `SlotsComponent` by `Slots` and `SlotsComponentsProps` by `SlotProps`.
+
+```diff
+- DateCalendarSlotsComponent
++ DateCalendarSlots
+- DateCalendarSlotsComponentsProps
++ DateCalendarSlotProps
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-slots-types <path>
 ```
 
 ### Data grid codemods
