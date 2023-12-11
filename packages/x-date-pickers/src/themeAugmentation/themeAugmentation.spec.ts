@@ -14,7 +14,8 @@ import {
 } from '../TimeClock';
 import { datePickerToolbarClasses } from '../DatePicker';
 import { dateTimePickerToolbarClasses } from '../DateTimePicker';
-import { pickersArrowSwitcherClasses, pickersPopperClasses } from '../internals';
+import { pickersArrowSwitcherClasses } from '../internals/components/PickersArrowSwitcher';
+import { pickersPopperClasses } from '../internals/components/pickersPopperClasses';
 import { pickersDayClasses } from '../PickersDay';
 import { timePickerToolbarClasses } from '../TimePicker';
 import { pickersMonthClasses } from '../MonthCalendar';

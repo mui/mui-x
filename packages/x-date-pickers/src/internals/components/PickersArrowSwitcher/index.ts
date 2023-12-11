@@ -4,3 +4,11 @@ export type {
   PickersArrowSwitcherSlotProps,
   ExportedPickersArrowSwitcherProps,
 } from './PickersArrowSwitcher.types';
+export {
+  pickersArrowSwitcherClasses,
+  getPickersArrowSwitcherUtilityClass,
+} from './pickersArrowSwitcherClasses';
+export type {
+  PickersArrowSwitcherClassKey,
+  PickersArrowSwitcherClasses,
+} from './pickersArrowSwitcherClasses';
