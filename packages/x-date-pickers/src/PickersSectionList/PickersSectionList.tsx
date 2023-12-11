@@ -281,6 +281,7 @@ PickersSectionList.propTypes = {
     PropTypes.shape({
       current: PropTypes.shape({
         getRoot: PropTypes.func.isRequired,
+        getSectionContainer: PropTypes.func.isRequired,
         getSectionContent: PropTypes.func.isRequired,
         getSectionIndexFromDOMElement: PropTypes.func.isRequired,
       }),
