@@ -25,23 +25,19 @@ Since v7 is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from v6 to v7.
 
-<!-- ## Run codemods
+## Run codemods
 
-The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6.
-You can run `v6.0.0/data-grid/preset-safe` targeting only Data Grid or `v6.0.0/preset-safe` to target Date and Time pickers as well.
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
+You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like Date and Time pickers as well.
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```bash
 // Data Grid specific
-npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
-// Target Date and Time Pickers as well
-npx @mui/x-codemod v6.0.0/preset-safe <path>
+npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path>
+// Target other MUI X components as well
+npx @mui/x-codemod v7.0.0/preset-safe <path>
 ```
-
-:::success
-Apart from the removed methods and exports that require manual intervention, around 50% of the DataGrid breaking changes are automatically handled by the `preset-safe` codemod 🎉.
-:::
 
 :::info
 If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
@@ -49,7 +45,7 @@ If you want to run the codemods one by one, check out the codemods included in t
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
 
-If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
+If you have already applied the `v7.0.0/data-grid/preset-safe` (or `v7.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
 
 All other changes must be handled manually.
 
@@ -65,7 +61,7 @@ For example, if a codemod tries to rename a prop, but this prop is hidden with t
 After running the codemods, make sure to test your application and that you don't have any console errors.
 
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
-::: -->
+:::
 
 ## Breaking changes
 
@@ -130,9 +126,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 ### Selection
 
-- The cell selection feature is now stable.
-
-- The `unstable_` prefix has been removed from the cell selection props listed below.
+- ✅ The `unstable_` prefix has been removed from the cell selection props listed below.
 
   | Old name                              | New name                     |
   | :------------------------------------ | :--------------------------- |
