@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { GridColumnMenuItemProps } from '@mui/x-data-grid';
-import { GridPinnedColumnPosition } from '../hooks/features/columnPinning';
+import { GridPinnedColumnPosition, GridColumnMenuItemProps } from '@mui/x-data-grid';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 

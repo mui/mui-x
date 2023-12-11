@@ -6,6 +6,7 @@ import {
   getDataGridUtilityClass,
   gridClasses,
   GridColumnHeaderSeparatorSides,
+  GridPinnedColumnPosition,
   useGridSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '@mui/x-data-grid';
@@ -18,7 +19,6 @@ import {
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridPinnedColumnPosition } from '../hooks/features';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridScrollArea } from './GridScrollArea';
 
