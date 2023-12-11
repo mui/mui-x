@@ -34,11 +34,6 @@
         "string": "The name to display."
       }
     },
-    "defaultCalendarMonth": {
-      "description": "Default calendar month displayed when <code>value={[null, null]}</code>.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "defaultRangePosition": {
       "description": "The initial position in the edited date range. Used when the component is not controlled.",
       "deprecated": "",
@@ -95,7 +90,7 @@
       "typeDescriptions": {}
     },
     "fixedWeekNumber": {
-      "description": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
+      "description": "The day view will show as many weeks as needed after the end of the current month to match this value. Put it to 6 to have a fixed number of weeks in Gregorian calendars",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -211,7 +206,7 @@
       "typeDescriptions": {}
     },
     "renderLoading": {
-      "description": "Component displaying when passed <code>loading</code> true.",
+      "description": "Component rendered on the &quot;day&quot; view when <code>props.loading</code> is true.",
       "deprecated": "",
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
@@ -250,7 +245,7 @@
       "typeDescriptions": {}
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documentation</a> for more details.",
       "deprecated": "",
       "typeDescriptions": {}
     },

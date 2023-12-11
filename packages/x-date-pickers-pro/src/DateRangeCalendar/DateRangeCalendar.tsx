@@ -16,8 +16,8 @@ import {
   BaseDateValidationProps,
   DAY_MARGIN,
   DayCalendar,
-  DayCalendarSlotsComponent,
-  DayCalendarSlotsComponentsProps,
+  DayCalendarSlots,
+  DayCalendarSlotProps,
   useDefaultReduceAnimations,
   PickersArrowSwitcher,
   useCalendarState,
@@ -78,7 +78,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 }));
 
 const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
-  padding: '16px 16px 8px 16px',
+  padding: '12px 16px 4px 16px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -188,7 +188,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     shouldDisableDate,
     reduceAnimations,
     onMonthChange,
-    defaultCalendarMonth,
     rangePosition: rangePositionProp,
     defaultRangePosition: inDefaultRangePosition,
     onRangePositionChange: inOnRangePositionChange,
@@ -324,7 +323,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   } = useCalendarState<TDate>({
     value: value[0] || value[1],
     referenceDate,
-    defaultCalendarMonth,
     disableFuture,
     disablePast,
     disableSwitchToMonthOnDayFocus: true,
@@ -459,7 +457,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const slotsForDayCalendar = {
     day: DateRangePickerDay,
     ...slots,
-  } as DayCalendarSlotsComponent<TDate>;
+  } as DayCalendarSlots<TDate>;
 
   const slotPropsForDayCalendar = {
     ...slotProps,
@@ -504,7 +502,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as DayCalendarSlotsComponentsProps<TDate>;
+  } as DayCalendarSlotProps<TDate>;
 
   const calendarMonths = React.useMemo(
     () => Array.from({ length: calendars }).map((_, index) => index),
@@ -600,7 +598,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             renderLoading={renderLoading}
             slots={slotsForDayCalendar}
             slotProps={slotPropsForDayCalendar}
-            autoFocus={month === focusedMonth}
+            autoFocus={visibleMonths[month] === focusedMonth}
             fixedWeekNumber={fixedWeekNumber}
             displayWeekNumber={displayWeekNumber}
             timezone={timezone}
@@ -642,10 +640,6 @@ DateRangeCalendar.propTypes = {
    * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
-  /**
-   * Default calendar month displayed when `value={[null, null]}`.
-   */
-  defaultCalendarMonth: PropTypes.any,
   /**
    * The initial position in the edited date range.
    * Used when the component is not controlled.
@@ -692,8 +686,8 @@ DateRangeCalendar.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
@@ -750,7 +744,7 @@ DateRangeCalendar.propTypes = {
    */
   referenceDate: PropTypes.any,
   /**
-   * Component displaying when passed `loading` true.
+   * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => "..."
    */
@@ -799,7 +793,7 @@ DateRangeCalendar.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

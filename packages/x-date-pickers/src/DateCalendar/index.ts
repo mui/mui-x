@@ -1,13 +1,13 @@
 export { DateCalendar } from './DateCalendar';
 export type {
   DateCalendarProps,
-  DateCalendarSlotsComponent,
-  DateCalendarSlotsComponentsProps,
+  DateCalendarSlots,
+  DateCalendarSlotProps,
 } from './DateCalendar.types';
 
 export { getDateCalendarUtilityClass, dateCalendarClasses } from './dateCalendarClasses';
 export type { DateCalendarClassKey, DateCalendarClasses } from './dateCalendarClasses';
-export { dayPickerClasses } from './dayCalendarClasses';
+export { dayCalendarClasses } from './dayCalendarClasses';
 export type { DayCalendarClassKey, DayCalendarClasses } from './dayCalendarClasses';
 export type { PickersFadeTransitionGroupProps } from './PickersFadeTransitionGroup';
 export { pickersFadeTransitionGroupClasses } from './pickersFadeTransitionGroupClasses';

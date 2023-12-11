@@ -28,9 +28,9 @@ These changes were done for consistency, improved stability and to make room for
 
 ### Renaming
 
-Some types got renamed for coherence
+Some types got renamed for coherence:
 
-| v6                              | v7                     |
-| :------------------------------ | :--------------------- |
-| ChartsTooltipSlotComponentProps | ChartsTooltipSlotProps |
-| ChartsTooltipSlotsComponent     | ChartsTooltipSlots     |
+| v6                                | v7                       |
+| :-------------------------------- | :----------------------- |
+| `ChartsTooltipSlotComponentProps` | `ChartsTooltipSlotProps` |
+| `ChartsTooltipSlotsComponent`     | `ChartsTooltipSlots`     |

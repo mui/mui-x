@@ -1,23 +1,23 @@
 import {
   BaseDateTimePickerProps,
-  BaseDateTimePickerSlotsComponent,
-  BaseDateTimePickerSlotsComponentsProps,
+  BaseDateTimePickerSlots,
+  BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import {
   StaticOnlyPickerProps,
-  UseStaticPickerSlotsComponent,
-  UseStaticPickerSlotsComponentsProps,
+  UseStaticPickerSlots,
+  UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional } from '../internals';
+import { MakeOptional } from '../internals/models/helpers';
 import { DateOrTimeView } from '../models';
 
-export interface StaticDateTimePickerSlotsComponent<TDate>
-  extends BaseDateTimePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent<TDate, DateOrTimeView> {}
+export interface StaticDateTimePickerSlots<TDate>
+  extends BaseDateTimePickerSlots<TDate>,
+    UseStaticPickerSlots<TDate, DateOrTimeView> {}
 
-export interface StaticDateTimePickerSlotsComponentsProps<TDate>
-  extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    UseStaticPickerSlotsComponentsProps<TDate, DateOrTimeView> {}
+export interface StaticDateTimePickerSlotProps<TDate>
+  extends BaseDateTimePickerSlotProps<TDate>,
+    UseStaticPickerSlotProps<TDate, DateOrTimeView> {}
 
 export interface StaticDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate, DateOrTimeView>,
@@ -26,10 +26,10 @@ export interface StaticDateTimePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: StaticDateTimePickerSlotsComponent<TDate>;
+  slots?: StaticDateTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: StaticDateTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: StaticDateTimePickerSlotProps<TDate>;
 }

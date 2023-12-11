@@ -34,6 +34,10 @@
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },
+    "table": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the table element" },
+    "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
+    "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
     "markCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the markCell element"

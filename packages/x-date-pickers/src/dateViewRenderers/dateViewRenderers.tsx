@@ -39,7 +39,6 @@ export const renderDateViewCalendar = <TDate extends unknown>({
   monthsPerRow,
   onYearChange,
   yearsPerRow,
-  defaultCalendarMonth,
   slots,
   slotProps,
   loading,
@@ -79,7 +78,6 @@ export const renderDateViewCalendar = <TDate extends unknown>({
     monthsPerRow={monthsPerRow}
     onYearChange={onYearChange}
     yearsPerRow={yearsPerRow}
-    defaultCalendarMonth={defaultCalendarMonth}
     slots={slots}
     slotProps={slotProps}
     loading={loading}

@@ -23,7 +23,11 @@ const AGGREGATION_WRAPPABLE_PROPERTIES = [
 type WrappableColumnProperty = (typeof AGGREGATION_WRAPPABLE_PROPERTIES)[number];
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
-  aggregationWrappedColumn: GridBaseColDef;
+  aggregationWrappedProperties: {
+    name: WrappableColumnProperty;
+    originalValue: GridBaseColDef[WrappableColumnProperty];
+    wrappedValue: GridBaseColDef[WrappableColumnProperty];
+  }[];
 }
 
 type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
@@ -216,7 +220,7 @@ export const wrapColumnWithAggregationValue = ({
   let didWrapSomeProperty = false;
   const wrappedColumn: GridColDefWithAggregationWrappers = {
     ...column,
-    aggregationWrappedColumn: column,
+    aggregationWrappedProperties: [],
   };
 
   const wrapColumnProperty = <P extends WrappableColumnProperty>(
@@ -235,6 +239,11 @@ export const wrapColumnWithAggregationValue = ({
     if (wrappedProperty !== originalValue) {
       didWrapSomeProperty = true;
       wrappedColumn[property] = wrappedProperty as any;
+      wrappedColumn.aggregationWrappedProperties.push({
+        name: property,
+        originalValue,
+        wrappedValue: wrappedProperty,
+      });
     }
   };
 
@@ -259,5 +268,19 @@ export const unwrapColumnFromAggregation = ({
 }: {
   column: GridColDef | GridColDefWithAggregationWrappers;
 }) => {
-  return (column as GridColDefWithAggregationWrappers).aggregationWrappedColumn ?? column;
+  if (!(column as GridColDefWithAggregationWrappers).aggregationWrappedProperties) {
+    return column as GridColDef;
+  }
+  const { aggregationWrappedProperties, ...unwrappedColumn } =
+    column as GridColDefWithAggregationWrappers;
+
+  aggregationWrappedProperties.forEach(({ name, originalValue, wrappedValue }) => {
+    // The value changed since we wrapped it
+    if (wrappedValue !== unwrappedColumn[name]) {
+      return;
+    }
+    unwrappedColumn[name] = originalValue as any;
+  });
+
+  return unwrappedColumn;
 };

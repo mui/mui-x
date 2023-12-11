@@ -7,8 +7,8 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { refType } from '@mui/utils';
 import {
   SingleInputDateTimeRangeFieldProps,
-  SingleInputDateTimeRangeFieldSlotsComponent,
-  SingleInputDateTimeRangeFieldSlotsComponentsProps,
+  SingleInputDateTimeRangeFieldSlots,
+  SingleInputDateTimeRangeFieldSlotProps,
 } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 
@@ -70,8 +70,8 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
-    SingleInputDateTimeRangeFieldSlotsComponent,
-    SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate>
+    SingleInputDateTimeRangeFieldSlots,
+    SingleInputDateTimeRangeFieldSlotProps<TDate>
   >({
     onClear,
     clearable,
@@ -306,6 +306,7 @@ SingleInputDateTimeRangeField.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -320,14 +321,6 @@ SingleInputDateTimeRangeField.propTypes = {
       startIndex: PropTypes.number.isRequired,
     }),
   ]),
-  /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific date.
    *
@@ -389,7 +382,7 @@ SingleInputDateTimeRangeField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

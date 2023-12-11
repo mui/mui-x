@@ -21,6 +21,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "disableVoronoi": {
+      "description": "If true, the interaction will not use the Voronoi cell and fall back to hover events.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element.",
       "deprecated": "",
@@ -53,6 +58,11 @@
     },
     "topAxis": {
       "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "voronoiMaxRadius": {
+      "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite.",
       "deprecated": "",
       "typeDescriptions": {}
     },

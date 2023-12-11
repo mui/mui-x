@@ -30,6 +30,8 @@
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
+    "cellSelection": { "type": { "name": "bool" } },
+    "cellSelectionModel": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" } },
     "checkboxSelectionVisibleOnly": {
       "type": { "name": "custom", "description": "bool" },
@@ -77,7 +79,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ ariaV7?: bool, clipboardPaste?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ ariaV7?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
@@ -167,6 +169,7 @@
       }
     },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "headerFilters": { "type": { "name": "bool" } },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
     "hideFooterRowCount": {
@@ -175,6 +178,13 @@
     },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
     "ignoreDiacritics": { "type": { "name": "bool" } },
+    "ignoreValueFormatterDuringExport": {
+      "type": {
+        "name": "union",
+        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
+      },
+      "default": "false"
+    },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -266,6 +276,13 @@
       "signature": {
         "type": "function(cellModesModel: GridCellModesModel, details: GridCallbackDetails) => void",
         "describedArgs": ["cellModesModel", "details"]
+      }
+    },
+    "onCellSelectionModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(cellSelectionModel: GridCellSelectionModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["cellSelectionModel", "details"]
       }
     },
     "onClipboardCopy": {
@@ -583,6 +600,10 @@
         "description": "Array&lt;{ field: string, sort?: 'asc'<br>&#124;&nbsp;'desc' }&gt;"
       }
     },
+    "splitClipboardPastedText": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(text: string) => void", "describedArgs": ["text"] }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -591,28 +612,7 @@
       "additionalInfo": { "sx": true }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
-    "treeData": { "type": { "name": "bool" } },
-    "unstable_cellSelection": { "type": { "name": "bool" } },
-    "unstable_cellSelectionModel": { "type": { "name": "object" } },
-    "unstable_headerFilters": { "type": { "name": "bool" } },
-    "unstable_ignoreValueFormatterDuringExport": {
-      "type": {
-        "name": "union",
-        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
-      },
-      "default": "false"
-    },
-    "unstable_onCellSelectionModelChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(cellSelectionModel: GridCellSelectionModel, details: GridCallbackDetails) => void",
-        "describedArgs": ["cellSelectionModel", "details"]
-      }
-    },
-    "unstable_splitClipboardPastedText": {
-      "type": { "name": "func" },
-      "signature": { "type": "function(text: string) => void", "describedArgs": ["text"] }
-    }
+    "treeData": { "type": { "name": "bool" } }
   },
   "slots": [
     {
@@ -992,12 +992,6 @@
       "name": "panel",
       "description": "Panel component wrapping the filters and columns panels.",
       "default": "GridPanel"
-    },
-    {
-      "class": null,
-      "name": "preferencesPanel",
-      "description": "PreferencesPanel component rendered inside the Header component.",
-      "default": "GridPreferencesPanel"
     },
     {
       "class": null,

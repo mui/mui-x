@@ -222,6 +222,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridFocusColumnHeaderFilterSelector",
+    "returnType": "GridColumnIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFocusColumnHeaderSelector",
     "returnType": "GridColumnIdentifier | null",
     "description": "",
@@ -230,6 +236,24 @@
   {
     "name": "gridFocusStateSelector",
     "returnType": "GridFocusState",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
+    "name": "gridHeaderFilteringEditFieldSelector",
+    "returnType": "string | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridHeaderFilteringMenuSelector",
+    "returnType": "string | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridHeaderFilteringStateSelector",
+    "returnType": "GridHeaderFilteringState",
     "description": "",
     "supportsApiRef": false
   },
@@ -407,6 +431,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridTabIndexColumnHeaderFilterSelector",
+    "returnType": "GridColumnIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridTabIndexColumnHeaderSelector",
     "returnType": "GridColumnIdentifier | null",
     "description": "",
@@ -484,38 +514,8 @@
     "supportsApiRef": true
   },
   {
-    "name": "unstable_gridFocusColumnHeaderFilterSelector",
-    "returnType": "GridColumnIdentifier | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridHeaderFilteringEditFieldSelector",
-    "returnType": "string | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridHeaderFilteringMenuSelector",
-    "returnType": "string | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridHeaderFilteringStateSelector",
-    "returnType": "GridHeaderFilteringState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
     "name": "unstable_gridTabIndexColumnGroupHeaderSelector",
     "returnType": "GridColumnGroupIdentifier | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridTabIndexColumnHeaderFilterSelector",
-    "returnType": "GridColumnIdentifier | null",
     "description": "",
     "supportsApiRef": true
   }

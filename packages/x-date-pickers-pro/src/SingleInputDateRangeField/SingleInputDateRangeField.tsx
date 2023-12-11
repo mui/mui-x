@@ -7,8 +7,8 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { refType } from '@mui/utils';
 import {
   SingleInputDateRangeFieldProps,
-  SingleInputDateRangeFieldSlotsComponentsProps,
-  SingleInputDateRangeFieldSlotsComponent,
+  SingleInputDateRangeFieldSlotProps,
+  SingleInputDateRangeFieldSlots,
 } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 
@@ -69,8 +69,8 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
-    SingleInputDateRangeFieldSlotsComponent,
-    SingleInputDateRangeFieldSlotsComponentsProps<TDate>
+    SingleInputDateRangeFieldSlots,
+    SingleInputDateRangeFieldSlotProps<TDate>
   >({
     onClear,
     clearable,
@@ -272,6 +272,7 @@ SingleInputDateRangeField.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -339,7 +340,7 @@ SingleInputDateRangeField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

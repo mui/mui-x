@@ -57,7 +57,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
   React.useEffect(() => {
     const itemPlusTag = item as ItemPlusTag;
-    if (itemPlusTag.fromInput !== id) {
+    if (itemPlusTag.fromInput !== id || item.value === undefined) {
       setFilterValueState(String(item.value ?? ''));
     }
   }, [id, item]);

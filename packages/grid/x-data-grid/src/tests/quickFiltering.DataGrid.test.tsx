@@ -204,6 +204,26 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
     });
 
+    it('should ignore hidden columns by default', () => {
+      render(
+        <TestCase
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          initialState={{
+            columns: { columnVisibilityModel: { id: false } },
+            filter: { filterModel: { items: [] } },
+          }}
+        />,
+      );
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
+    });
+
     it('should search hidden columns when quickFilterExcludeHiddenColumns=false', () => {
       render(
         <TestCase

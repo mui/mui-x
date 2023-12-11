@@ -15,7 +15,7 @@ import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helper
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Sorting', () => {
-  const baselineProps = {
+  const baselineProps: DataGridProProps = {
     autoHeight: isJSDOM,
     rows: [
       {

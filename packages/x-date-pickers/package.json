@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "7.0.0-alpha.1",
+  "version": "7.0.0-alpha.4",
   "description": "The community edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -21,6 +21,7 @@
     "react",
     "react-component",
     "mui",
+    "mui-x",
     "material-ui",
     "material design",
     "datepicker",
@@ -44,9 +45,10 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.2",
-    "@mui/base": "^5.0.0-beta.24",
-    "@mui/utils": "^5.14.18",
+    "@babel/runtime": "^7.23.5",
+    "@mui/base": "^5.0.0-beta.26",
+    "@mui/system": "^5.14.20",
+    "@mui/utils": "^5.14.20",
     "@types/react-transition-group": "^4.4.9",
     "clsx": "^2.0.0",
     "prop-types": "^15.8.1",
@@ -56,7 +58,6 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.8.6",
-    "@mui/system": "^5.8.0",
     "date-fns": "^2.25.0",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.10.7",
@@ -97,7 +98,7 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.4",
+    "@types/luxon": "^3.3.7",
     "@types/moment-jalaali": "^0.7.9",
     "date-fns": "^2.30.0",
     "date-fns-jalali": "^2.13.0-0",

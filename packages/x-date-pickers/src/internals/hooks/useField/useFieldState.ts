@@ -186,7 +186,11 @@ export const useFieldState = <
     }
 
     if (typeof selectedSections === 'number') {
-      return { startIndex: selectedSections, endIndex: selectedSections };
+      return {
+        startIndex: selectedSections,
+        endIndex: selectedSections,
+        shouldSelectBoundarySelectors: state.sections[selectedSections].type === 'empty',
+      };
     }
 
     if (typeof selectedSections === 'string') {
@@ -194,10 +198,19 @@ export const useFieldState = <
         (section) => section.type === selectedSections,
       );
 
-      return { startIndex: selectedSectionIndex, endIndex: selectedSectionIndex };
+      return {
+        startIndex: selectedSectionIndex,
+        endIndex: selectedSectionIndex,
+        shouldSelectBoundarySelectors: state.sections[selectedSectionIndex].type === 'empty',
+      };
     }
 
-    return selectedSections;
+    return {
+      ...selectedSections,
+      shouldSelectBoundarySelectors:
+        selectedSections.startIndex === selectedSections.endIndex &&
+        state.sections[selectedSections.startIndex].type === 'empty',
+    };
   }, [selectedSections, state.sections]);
 
   const publishValue = ({

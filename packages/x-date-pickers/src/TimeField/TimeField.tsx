@@ -4,11 +4,7 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import {
-  TimeFieldProps,
-  TimeFieldSlotsComponent,
-  TimeFieldSlotsComponentsProps,
-} from './TimeField.types';
+import { TimeFieldProps, TimeFieldSlots, TimeFieldSlotProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
 
@@ -68,8 +64,8 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
-    TimeFieldSlotsComponent,
-    TimeFieldSlotsComponentsProps<TDate>
+    TimeFieldSlots,
+    TimeFieldSlotProps<TDate>
   >({
     onClear,
     clearable,
@@ -286,6 +282,7 @@ TimeField.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -300,14 +297,6 @@ TimeField.propTypes = {
       startIndex: PropTypes.number.isRequired,
     }),
   ]),
-  /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
    * @template TDate
@@ -358,7 +347,7 @@ TimeField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

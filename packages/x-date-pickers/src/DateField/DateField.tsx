@@ -4,11 +4,7 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import {
-  DateFieldProps,
-  DateFieldSlotsComponent,
-  DateFieldSlotsComponentsProps,
-} from './DateField.types';
+import { DateFieldProps, DateFieldSlots, DateFieldSlotProps } from './DateField.types';
 import { useDateField } from './useDateField';
 import { useClearableField } from '../hooks';
 
@@ -68,8 +64,8 @@ const DateField = React.forwardRef(function DateField<TDate>(
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
-    DateFieldSlotsComponent,
-    DateFieldSlotsComponentsProps<TDate>
+    DateFieldSlots,
+    DateFieldSlotProps<TDate>
   >({
     onClear,
     clearable,
@@ -272,6 +268,7 @@ DateField.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -352,7 +349,7 @@ DateField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
