@@ -81,7 +81,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
-- The `getOptionValue` adn `getOptionLabel` props were removed from the following components:
+- The `getOptionValue` and `getOptionLabel` props were removed from the following components:
 
   - `GridEditSingleSelectCell`
   - `GridFilterInputSingleSelect`
@@ -224,6 +224,8 @@ Below are described the steps you need to make to migrate from v6 to v7.
   | `unstable_gridHeaderFilteringMenuSelector`        | `gridHeaderFilteringMenuSelector`        |
   | `unstable_gridHeaderFilteringStateSelector`       | `gridHeaderFilteringStateSelector`       |
   | `unstable_gridTabIndexColumnHeaderFilterSelector` | `gridTabIndexColumnHeaderFilterSelector` |
+
+- The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
 
 <!-- ### Editing
 
