@@ -20,13 +20,12 @@ export interface MobileDateTimeRangePickerSlotProps<TDate>
     Omit<UseMobileRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs'> {}
 
 export interface MobileDateTimeRangePickerProps<TDate>
-  extends BaseDateTimeRangePickerProps<TDate>,
+  extends Omit<
+      BaseDateTimeRangePickerProps<TDate>,
+      // Mobile range picker does not support multiple calendars
+      'calendars'
+    >,
     MobileRangeOnlyPickerProps<TDate> {
-  /**
-   * The number of calendars to render on **Mobile**.
-   * @default 1
-   */
-  calendars?: 1 | 2 | 3;
   /**
    * Overridable component slots.
    * @default {}
