@@ -49,6 +49,7 @@ export const useDesktopRangePicker = <
     timezone,
     label,
     inputRef,
+    name,
     readOnly,
     disabled,
     autoFocus,
@@ -123,7 +124,7 @@ export const useDesktopRangePicker = <
       timezone,
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && { inputRef }),
+      ...(fieldType === 'single-input' && { inputRef, name }),
     },
     ownerState: props,
   });

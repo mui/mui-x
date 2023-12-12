@@ -10,6 +10,7 @@ export default function FormPropsDateTimePickers() {
       <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
         <DateTimePicker label="disabled" disabled />
         <DateTimePicker label="readOnly" readOnly />
+        <DateTimePicker label="name" name="date_time_picker" />
       </DemoContainer>
     </LocalizationProvider>
   );
