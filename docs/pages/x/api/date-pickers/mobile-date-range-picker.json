@@ -48,6 +48,7 @@
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
+    "name": { "type": { "name": "string" } },
     "onAccept": {
       "type": { "name": "func" },
       "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
