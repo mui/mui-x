@@ -1,12 +1,12 @@
 ---
 productId: x-tree-view
-title: Tree View - Customization
+title: Simple Tree View - Customization
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
-# Tree View - Customization
+# Simple Tree View - Customization
 
 <p class="description">Customize the rendering of your Tree View.</p>
 

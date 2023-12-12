@@ -54,7 +54,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     const processItem = (item: TreeViewBaseItem) => {
       const getItemId = params.getItemId;
       const nodeId = getItemId ? getItemId(item) : (item as { id: string }).id;
-      newFirstCharMap[nodeId] = item.label.substring(0, 1).toLowerCase();
+      newFirstCharMap[nodeId] = instance.getNode(nodeId).label!.substring(0, 1).toLowerCase();
       item.children?.forEach(processItem);
     };
 

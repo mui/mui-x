@@ -2,13 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-export default function DisabledJSXItem() {
+export default function MultiSelectTreeView() {
   return (
     <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
-      <TreeView
+      <SimpleTreeView
+        multiSelect
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
       >
@@ -26,12 +27,8 @@ export default function DisabledJSXItem() {
         </TreeItem>
         <TreeItem nodeId="tree-view" label="Tree View">
           <TreeItem nodeId="tree-view-community" label="@mui/x-tree-view" />
-          <TreeItem nodeId="tree-view-pro" label="@mui/x-tree-view-pro" disabled />
         </TreeItem>
-        <TreeItem nodeId="scheduler" label="Scheduler" disabled>
-          <TreeItem nodeId="scheduler-community" label="@mui/x-scheduler" />
-        </TreeItem>
-      </TreeView>
+      </SimpleTreeView>
     </Box>
   );
 }

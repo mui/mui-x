@@ -1,12 +1,12 @@
 ---
 productId: x-tree-view
-title: Tree View - Selection
+title: Simple Tree View - Selection
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
-# Tree View - Selection
+# Simple Tree View - Selection
 
 <p class="description">Handle how the users can select items.</p>
 

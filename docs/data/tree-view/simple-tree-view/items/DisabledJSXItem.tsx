@@ -5,15 +5,14 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-export default function BasicDisabledJSXItems() {
+export default function DisabledJSXItem() {
   return (
-    <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
       <SimpleTreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
       >
         <TreeItem nodeId="grid" label="Data Grid">
-          z
           <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
           <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
           <TreeItem nodeId="grid-premium" label="@mui/x-data-grid-premium" />
@@ -29,7 +28,7 @@ export default function BasicDisabledJSXItems() {
           <TreeItem nodeId="tree-view-community" label="@mui/x-tree-view" />
           <TreeItem nodeId="tree-view-pro" label="@mui/x-tree-view-pro" disabled />
         </TreeItem>
-        <TreeItem nodeId="scheduler" label="Sheduler" disabled>
+        <TreeItem nodeId="scheduler" label="Scheduler" disabled>
           <TreeItem nodeId="scheduler-community" label="@mui/x-scheduler" />
         </TreeItem>
       </SimpleTreeView>
