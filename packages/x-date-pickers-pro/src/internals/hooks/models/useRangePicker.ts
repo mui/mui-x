@@ -20,11 +20,11 @@ import {
   RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
 
-export interface UseRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
+export interface UseRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlots {}
 
-export interface UseRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+export interface UseRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotProps<TDate> {
   tabs?: ExportedBaseTabsProps;

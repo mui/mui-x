@@ -6,17 +6,17 @@ import {
 } from '../internals/hooks/useDesktopRangePicker';
 import {
   BaseDateTimeRangePickerProps,
-  BaseDateTimeRangePickerSlotsComponent,
-  BaseDateTimeRangePickerSlotsComponentsProps,
+  BaseDateTimeRangePickerSlots,
+  BaseDateTimeRangePickerSlotProps,
 } from '../DateTimeRangePicker/shared';
 import { DateTimeRangePickerView } from '../internals/models';
 
-export interface DesktopDateTimeRangePickerSlotsComponent<TDate>
-  extends BaseDateTimeRangePickerSlotsComponent<TDate>,
+export interface DesktopDateTimeRangePickerSlots<TDate>
+  extends BaseDateTimeRangePickerSlots<TDate>,
     MakeOptional<UseDesktopRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
 
-export interface DesktopDateTimeRangePickerSlotsComponentsProps<TDate>
-  extends BaseDateTimeRangePickerSlotsComponentsProps<TDate>,
+export interface DesktopDateTimeRangePickerSlotProps<TDate>
+  extends BaseDateTimeRangePickerSlotProps<TDate>,
     Omit<UseDesktopRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs'> {}
 
 export interface DesktopDateTimeRangePickerProps<TDate>
@@ -31,10 +31,10 @@ export interface DesktopDateTimeRangePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateTimeRangePickerSlotsComponent<TDate>;
+  slots?: DesktopDateTimeRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimeRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopDateTimeRangePickerSlotProps<TDate>;
 }

@@ -6,17 +6,17 @@ import {
 } from '../internals/hooks/useMobileRangePicker';
 import {
   BaseDateTimeRangePickerProps,
-  BaseDateTimeRangePickerSlotsComponent,
-  BaseDateTimeRangePickerSlotsComponentsProps,
+  BaseDateTimeRangePickerSlots,
+  BaseDateTimeRangePickerSlotProps,
 } from '../DateTimeRangePicker/shared';
 import { DateTimeRangePickerView } from '../internals/models';
 
-export interface MobileDateTimeRangePickerSlotsComponent<TDate>
-  extends BaseDateTimeRangePickerSlotsComponent<TDate>,
+export interface MobileDateTimeRangePickerSlots<TDate>
+  extends BaseDateTimeRangePickerSlots<TDate>,
     MakeOptional<UseMobileRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
 
-export interface MobileDateTimeRangePickerSlotsComponentsProps<TDate>
-  extends BaseDateTimeRangePickerSlotsComponentsProps<TDate>,
+export interface MobileDateTimeRangePickerSlotProps<TDate>
+  extends BaseDateTimeRangePickerSlotProps<TDate>,
     Omit<UseMobileRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs'> {}
 
 export interface MobileDateTimeRangePickerProps<TDate>
@@ -31,10 +31,10 @@ export interface MobileDateTimeRangePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDateTimeRangePickerSlotsComponent<TDate>;
+  slots?: MobileDateTimeRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateTimeRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: MobileDateTimeRangePickerSlotProps<TDate>;
 }

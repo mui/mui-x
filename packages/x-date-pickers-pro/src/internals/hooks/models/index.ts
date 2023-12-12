@@ -1,6 +1,6 @@
 export type {
-  UseRangePickerSlotsComponent,
-  UseRangePickerSlotsComponentsProps,
+  UseRangePickerSlots,
+  UseRangePickerSlotProps,
   RangeOnlyPickerProps,
   RangePickerAdditionalViewProps,
   UseRangePickerProps,

@@ -1,37 +1,25 @@
 import {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
-  ExportedBaseToolbarProps,
   UsePickerViewsProps,
 } from '@mui/x-date-pickers/internals';
-import {
-  ExportedPickersLayoutSlots,
-  ExportedPickersLayoutSlotProps,
-} from '@mui/x-date-pickers/PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
-import {
-  RangePickerFieldSlots,
-  RangePickerFieldSlotProps,
-} from '../useEnrichedRangePickerFieldProps';
-import { DateRange } from '../../models/range';
 import {
   RangeOnlyPickerProps,
   RangePickerAdditionalViewProps,
   UseRangePickerParams,
   UseRangePickerProps,
+  UseRangePickerSlotProps,
+  UseRangePickerSlots,
 } from '../models/useRangePicker';
 
 export interface UseMobileRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersModalDialogSlots,
-    ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlots {}
+  extends UseRangePickerSlots<TDate, TView>,
+    PickersModalDialogSlots {}
 
 export interface UseMobileRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersModalDialogSlotProps,
-    ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotProps<TDate> {
-  toolbar?: ExportedBaseToolbarProps;
-}
+  extends UseRangePickerSlotProps<TDate, TView>,
+    PickersModalDialogSlotProps {}
 
 export interface MobileRangeOnlyPickerProps<TDate> extends RangeOnlyPickerProps<TDate> {}
 

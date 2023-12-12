@@ -1,8 +1,8 @@
 export { DateTimeRangePicker } from './DateTimeRangePicker';
 export type {
   DateTimeRangePickerProps,
-  DateTimeRangePickerSlotsComponents,
-  DateTimeRangePickerSlotsComponentsProps,
+  DateTimeRangePickerSlots,
+  DateTimeRangePickerSlotProps,
 } from './DateTimeRangePicker.types';
 
 export { DateTimeRangePickerTabs } from './DateTimeRangePickerTabs';

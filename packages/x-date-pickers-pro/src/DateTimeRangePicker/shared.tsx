@@ -50,7 +50,7 @@ import {
   ExportedDateTimeRangePickerTabsProps,
 } from './DateTimeRangePickerTabs';
 
-export interface BaseDateTimeRangePickerSlotsComponent<TDate>
+export interface BaseDateTimeRangePickerSlots<TDate>
   extends DateRangeCalendarSlots<TDate>,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {
@@ -66,7 +66,7 @@ export interface BaseDateTimeRangePickerSlotsComponent<TDate>
   toolbar?: React.JSXElementConstructor<DateTimeRangePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDateTimeRangePickerSlotsComponentsProps<TDate>
+export interface BaseDateTimeRangePickerSlotProps<TDate>
   extends DateRangeCalendarSlotProps<TDate>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {
@@ -100,12 +100,12 @@ export interface BaseDateTimeRangePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseDateTimeRangePickerSlotsComponent<TDate>;
+  slots?: BaseDateTimeRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseDateTimeRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: BaseDateTimeRangePickerSlotProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
