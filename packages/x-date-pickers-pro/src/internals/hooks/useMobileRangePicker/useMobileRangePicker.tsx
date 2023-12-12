@@ -56,6 +56,7 @@ export const useMobileRangePicker = <
     timezone,
     label,
     inputRef,
+    name,
     readOnly,
     disabled,
     disableOpenPicker,
@@ -121,7 +122,7 @@ export const useMobileRangePicker = <
       selectedSections,
       onSelectedSectionsChange,
       timezone,
-      ...(inputRef ? { inputRef } : {}),
+      ...(inputRef ? { inputRef, name } : {}),
     },
     ownerState: props,
   });

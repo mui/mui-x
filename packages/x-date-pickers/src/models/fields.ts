@@ -126,6 +126,7 @@ export interface BaseSingleInputFieldProps<
     ExportedUseClearableFieldProps {
   label?: React.ReactNode;
   id?: string;
+  name?: string;
   inputRef?: React.Ref<HTMLInputElement>;
   /**
    * Only used for v7 TextField implementation.

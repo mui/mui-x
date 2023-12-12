@@ -25,6 +25,7 @@
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
+    "name": { "type": { "name": "string" } },
     "onAccept": {
       "type": { "name": "func" },
       "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }

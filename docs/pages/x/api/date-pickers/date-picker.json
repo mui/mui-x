@@ -42,6 +42,7 @@
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
     },
+    "name": { "type": { "name": "string" } },
     "onAccept": {
       "type": { "name": "func" },
       "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }

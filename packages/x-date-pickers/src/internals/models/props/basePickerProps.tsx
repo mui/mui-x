@@ -77,4 +77,8 @@ export interface BaseNonRangeNonStaticPickerProps {
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name?: string;
 }
