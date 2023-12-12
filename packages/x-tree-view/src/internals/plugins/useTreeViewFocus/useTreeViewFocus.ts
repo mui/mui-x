@@ -33,15 +33,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
-    models.focusedNodeId.setValue((oldFocusedNodeId) => {
-      if (
-        oldFocusedNodeId === id &&
-        rootRef.current === ownerDocument(rootRef.current).activeElement
-      ) {
-        return instance.getChildrenIds(null)[0];
-      }
-      return oldFocusedNodeId;
-    });
+    if (
+      models.focusedNodeId.value === id &&
+      rootRef.current === ownerDocument(rootRef.current).activeElement
+    ) {
+      const newId = instance.getChildrenIds(null)[0];
+      models.focusedNodeId.setValue(newId);
+    }
   });
 
   const createHandleFocus =
