@@ -9,7 +9,8 @@ export type FieldSectionType =
   | 'hours'
   | 'minutes'
   | 'seconds'
-  | 'meridiem';
+  | 'meridiem'
+  | 'empty';
 
 export type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
 
@@ -130,6 +131,7 @@ export interface BaseSingleInputFieldProps<TValue, TDate, TSection extends Field
   extends BaseFieldProps<TValue, TDate, TSection, TError> {
   label?: React.ReactNode;
   id?: string;
+  name?: string;
   inputRef?: React.Ref<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler;
   onBlur?: React.FocusEventHandler;

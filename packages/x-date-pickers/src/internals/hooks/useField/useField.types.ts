@@ -244,9 +244,8 @@ export type FieldSelectedSectionsIndexes = {
   endIndex: number;
   /**
    * If `true`, the selectors at the very beginning and very end of the input will be selected.
-   * @default false
    */
-  shouldSelectBoundarySelectors?: boolean;
+  shouldSelectBoundarySelectors: boolean;
 };
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
