@@ -9755,10 +9755,10 @@ markdownlint@0.31.1:
     markdown-it "13.0.1"
     markdownlint-micromark "0.1.7"
 
-marked@^5.1.2:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-5.1.2.tgz#62b5ccfc75adf72ca3b64b2879b551d89e77677f"
-  integrity sha512-ahRPGXJpjMjwSOlBoTMZAK7ATXkli5qCPxZ21TG44rx1KEo44bii4ekgTDQPNRQ4Kh7JMb9Ub1PVk1NxRSsorg==
+marked@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-11.1.0.tgz#f2d12323e80ba8a97cc8262fe7e94fcc007476ab"
+  integrity sha512-fvKJWAPEafVj1dwGwcPI5mBB/0pvViL6NlCbNDG1HOIRwwAU/jeMoFxfbRLuirO1wRH7m4yPvBqD/O1wyWvayw==
 
 mdurl@^1.0.1:
   version "1.0.1"
