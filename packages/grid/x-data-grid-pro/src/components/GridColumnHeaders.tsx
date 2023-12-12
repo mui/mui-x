@@ -72,7 +72,6 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     ...(ownerState.side === GridPinnedColumnPosition.RIGHT && { right: 0 }),
     [`&.${gridClasses['pinnedColumnHeaders--left']}`]: {
       left: 0,
-      width: 'var(--DataGrid-leftPinnedWidth)',
     },
     [`&.${gridClasses['pinnedColumnHeaders--right']}`]: {
       right: 0,
