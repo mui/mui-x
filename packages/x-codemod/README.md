@@ -164,6 +164,7 @@ npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-components-to-slots-data-grid`](#rename-components-to-slots-data-grid)
+- [`rename-cell-selection-props`](#rename-cell-selection-props)
 
 #### `rename-components-to-slots-data-grid`
 
@@ -182,6 +183,25 @@ This change only affects Data Grid components.
 
 ```bash
 npx @mui/x-codemod v7.0.0/data-grid/rename-components-to-slots <path>
+```
+
+#### `rename-cell-selection-props`
+
+Rename props related to `cellSelection` feature.
+
+```diff
+ <DataGridPremium
+-  unstable_cellSelection
++  cellSelection
+-  cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
++  cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
+-  unstable_onCellSelectionModelChange={() => {}}
++  onCellSelectionModelChange={() => {}}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/data-grid/rename-cell-selection-props <path>
 ```
 
 ## v6.0.0
