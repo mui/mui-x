@@ -84,7 +84,7 @@ const BrowserDateField = React.forwardRef(
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
-      props: fieldResponse,
+      ...fieldResponse,
       slots,
       slotProps,
     });

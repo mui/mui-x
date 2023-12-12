@@ -48,7 +48,6 @@ export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
-export { useConvertFieldResponseIntoMuiTextFieldProps } from './hooks/useConvertFieldResponseIntoMuiTextFieldProps';
 export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
@@ -64,8 +63,6 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
-  FieldSlots,
-  FieldSlotProps,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
@@ -117,6 +114,7 @@ export type {
   DateTimeValidationProps,
 } from './models/validation';
 
+export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,

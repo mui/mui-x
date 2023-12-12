@@ -7,7 +7,7 @@ import { refType } from '@mui/utils';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
-import { useConvertFieldResponseIntoMuiTextFieldProps } from '../internals/hooks/useConvertFieldResponseIntoMuiTextFieldProps';
+import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
 
 type TimeFieldComponent = (<TDate>(
   props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -52,10 +52,10 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const fieldResponse = useTimeField<TDate, typeof textFieldProps>(textFieldProps);
-  const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
+  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
-    props: convertedFieldResponse,
+    ...convertedFieldResponse,
     slots,
     slotProps,
   });

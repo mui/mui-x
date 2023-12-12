@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { useConvertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
+import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
@@ -52,10 +52,10 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const fieldResponse = useSingleInputTimeRangeField<TDate, typeof textFieldProps>(textFieldProps);
-  const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
+  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
-    props: convertedFieldResponse,
+    ...convertedFieldResponse,
     slots,
     slotProps,
   });

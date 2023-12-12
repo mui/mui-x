@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
 import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
 import { ClearIcon } from '../icons';
-import { FieldSlots, FieldSlotProps } from '../internals/hooks/useField/useField.types';
 import { useLocaleText } from '../internals/hooks/useUtils';
 
 export interface ExportedUseClearableFieldProps {
@@ -12,36 +11,37 @@ export interface ExportedUseClearableFieldProps {
   onClear?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
+export interface UseClearableFieldSlots {
+  /**
+   * Icon to display inside the clear button.
+   * @default ClearIcon
+   */
+  clearIcon?: React.ElementType;
+  /**
+   * Button to clear the value.
+   * @default IconButton
+   */
+  clearButton?: React.ElementType;
+}
+
+export interface UseClearableFieldSlotProps {
+  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
+  clearButton?: SlotComponentProps<typeof MuiIconButton, {}, {}>;
+}
+
 interface UseClearableFieldProps extends ExportedUseClearableFieldProps {
   InputProps?: { endAdornment?: React.ReactNode };
   sx?: SxProps<any>;
+  slots?: UseClearableFieldSlots;
+  slotProps?: UseClearableFieldSlotProps;
 }
 
-type UseClearableFieldParams<
-  TFieldProps extends UseClearableFieldProps,
-  TFieldSlots extends FieldSlots,
-  TFieldSlotProps extends FieldSlotProps,
-> = {
-  props: TFieldProps;
-  slots?: TFieldSlots;
-  slotProps?: TFieldSlotProps;
-};
-
-export const useClearableField = <
-  TFieldProps extends UseClearableFieldProps,
-  TFieldSlots extends FieldSlots,
-  TFieldSlotProps extends FieldSlotProps,
->({
-  props,
-  slots,
-  slotProps,
-}: UseClearableFieldParams<TFieldProps, TFieldSlots, TFieldSlotProps>): Omit<
-  TFieldProps,
-  'clearable' | 'onClear'
-> => {
+export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
+  props: TFieldProps,
+): Omit<TFieldProps, 'clearable' | 'onClear' | 'slots' | 'slotProps'> => {
   const localeText = useLocaleText();
 
-  const { clearable, onClear, InputProps, sx, ...other } = props;
+  const { clearable, onClear, InputProps, sx, slots, slotProps, ...other } = props;
 
   const IconButton = slots?.clearButton ?? MuiIconButton;
   // The spread is here to avoid this bug mui/material-ui#34056

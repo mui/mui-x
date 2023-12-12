@@ -1,11 +1,11 @@
 import { TextFieldProps } from '@mui/material/TextField';
-import { UseFieldResponse } from './useField';
+import { UseFieldResponse } from '../hooks/useField';
 
-export const useConvertFieldResponseIntoMuiTextFieldProps = <
+export const convertFieldResponseIntoMuiTextFieldProps = <
   TFieldResponse extends UseFieldResponse<any>,
 >(
   fieldResponse: TFieldResponse,
-): TFieldResponse['textField'] extends 'v6' ? TextFieldProps : TFieldResponse => {
+): TextFieldProps => {
   const { onPaste, onKeyDown, inputMode, readOnly, InputProps, inputProps, inputRef, ...other } =
     fieldResponse;
 

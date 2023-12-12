@@ -307,24 +307,26 @@ If you are using a multi input range field hook, the same applies to the ref in 
 
 #### Restructure the API of `useClearableField`
 
-The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, and `onClear` parameters.
+The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
 You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
 
 ```diff
   const fieldResponse = useDateField(props);
 
-- const { InputProps, onClear, clearable, ...otherFieldProps } = fieldResponse
+- const { InputProps, onClear, clearable, slots, slotProps, ...otherFieldProps } = fieldResponse
 - const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField({
 -   fieldProps: otherFieldProps,
 -   InputProps,
 -   clearable,
 -   onClear,
+-   slots,
+-   slotProps,
 - });
 -
 -  return <MyCustomTextField {...processedFieldProps} InputProps={ProcessedInputProps} />
 
-+ const processedFieldProps = useClearableField({ props: fieldResponse });
++ const processedFieldProps = useClearableField(fieldResponse);
 +
 + return <MyCustomTextField {...processedFieldProps} />
 ```
@@ -332,21 +334,6 @@ You should now be able to directly pass the returned value from your field hook 
 :::info
 If your custom field is based on one of the examples of the [Custom field](/x/react-date-pickers/custom-field/) page,
 then you can look at the page to see all the examples improved and updated to use the new simplified API.
-:::
-
-:::warning
-If you were passing `slots` or `slotProps` to `useClearableField`, you still need to pass them outside of the `props` parameter:
-
-```ts
-const { slots, slotProps, ...textFieldProps } = props;
-const fieldResponse = useDateField(textFieldProps);
-const processedFieldProps = useClearableField({
-  props: fieldResponse,
-  slots,
-  slotProps,
-});
-```
-
 :::
 
 ## Date management
