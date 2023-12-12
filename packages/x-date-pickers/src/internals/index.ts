@@ -49,7 +49,6 @@ export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
-export { useConvertFieldResponseIntoMuiTextFieldProps } from './hooks/useConvertFieldResponseIntoMuiTextFieldProps';
 export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
