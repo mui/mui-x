@@ -110,6 +110,14 @@ export const useGridRowEditing = (
     [apiRef],
   );
 
+  const hasFieldsWithErrors = React.useCallback(
+    (rowId: GridRowId) => {
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      return Object.values(editingState[rowId]).some((fieldProps) => fieldProps.error);
+    },
+    [apiRef],
+  );
+
   const handleCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
     (params, event) => {
       if (!params.isEditable) {
@@ -160,8 +168,12 @@ export const useGridRowEditing = (
             return;
           }
 
+          if (hasFieldsWithErrors(params.id)) {
+            return;
+          }
+
           const rowParams = apiRef.current.getRowParams(params.id);
-          const newParams = {
+          const newParams: GridRowEditStopParams = {
             ...rowParams,
             field: params.field,
             reason: GridRowEditStopReasons.rowFocusOut,
@@ -170,7 +182,7 @@ export const useGridRowEditing = (
         }
       });
     },
-    [apiRef],
+    [apiRef, hasFieldsWithErrors],
   );
 
   React.useEffect(() => {
@@ -224,6 +236,9 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
+          if (hasFieldsWithErrors(params.id) && reason !== 'escapeKeyDown') {
+            return;
+          }
           const newParams: GridRowEditStopParams = {
             ...apiRef.current.getRowParams(params.id),
             reason,
@@ -266,7 +281,7 @@ export const useGridRowEditing = (
         }
       }
     },
-    [apiRef],
+    [apiRef, hasFieldsWithErrors],
   );
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
@@ -489,11 +504,7 @@ export const useGridRowEditing = (
         return;
       }
 
-      const hasSomeFieldWithError = Object.values(editingState[id]).some(
-        (fieldProps) => fieldProps.error,
-      );
-
-      if (hasSomeFieldWithError) {
+      if (hasFieldsWithErrors(id)) {
         prevRowModesModel.current[id].mode = GridRowModes.Edit;
         // Revert the mode in the rowModesModel prop back to "edit"
         updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
