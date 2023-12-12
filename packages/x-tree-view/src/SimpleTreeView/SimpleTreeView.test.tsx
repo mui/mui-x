@@ -10,13 +10,13 @@ import {
   describeConformance,
 } from '@mui-internal/test-utils';
 import Portal from '@mui/material/Portal';
-import { TreeView, treeViewClasses as classes } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView, simpleTreeViewClasses as classes } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-describe('<TreeView />', () => {
+describe('<SimpleTreeView />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<TreeView />, () => ({
+  describeConformance(<SimpleTreeView />, () => ({
     classes,
     inheritComponent: 'ul',
     render,
@@ -28,9 +28,9 @@ describe('<TreeView />', () => {
   describe('warnings', () => {
     it('should warn when switching from controlled to uncontrolled of the expanded prop', () => {
       const { setProps } = render(
-        <TreeView expanded={[]}>
+        <SimpleTreeView expanded={[]}>
           <TreeItem nodeId="1" label="one" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       expect(() => {
@@ -42,9 +42,9 @@ describe('<TreeView />', () => {
 
     it('should warn when switching from controlled to uncontrolled of the selected prop', () => {
       const { setProps } = render(
-        <TreeView selected={null}>
+        <SimpleTreeView selected={null}>
           <TreeItem nodeId="1" label="one" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       expect(() => {
@@ -56,10 +56,10 @@ describe('<TreeView />', () => {
 
     it('should not crash when shift clicking a clean tree', () => {
       render(
-        <TreeView multiSelect>
+        <SimpleTreeView multiSelect>
           <TreeItem nodeId="one" label="one" />
           <TreeItem nodeId="two" label="two" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       fireEvent.click(screen.getByText('one'), { shiftKey: true });
@@ -67,14 +67,14 @@ describe('<TreeView />', () => {
 
     it('should not crash when selecting multiple items in a deeply nested tree', () => {
       render(
-        <TreeView multiSelect defaultExpanded={['1', '1.1', '2']}>
+        <SimpleTreeView multiSelect defaultExpanded={['1', '1.1', '2']}>
           <TreeItem nodeId="1" label="Item 1">
             <TreeItem nodeId="1.1" label="Item 1.1">
               <TreeItem nodeId="1.1.1" data-testid="item-1.1.1" label="Item 1.1.1" />
             </TreeItem>
           </TreeItem>
           <TreeItem nodeId="2" data-testid="item-2" label="Item 2" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
       fireEvent.click(screen.getByText('Item 1.1.1'));
       fireEvent.click(screen.getByText('Item 2'), { shiftKey: true });
@@ -84,7 +84,7 @@ describe('<TreeView />', () => {
     });
 
     it('should not crash on keydown on an empty tree', () => {
-      render(<TreeView />);
+      render(<SimpleTreeView />);
 
       act(() => {
         screen.getByRole('tree').focus();
@@ -107,11 +107,11 @@ describe('<TreeView />', () => {
               Toggle
             </button>
             {isVisible && (
-              <TreeView>
+              <SimpleTreeView>
                 <TreeItem nodeId="a" label="b">
                   <CustomTreeItem nodeId="a" />
                 </TreeItem>
-              </TreeView>
+              </SimpleTreeView>
             )}
           </React.Fragment>
         );
@@ -135,9 +135,9 @@ describe('<TreeView />', () => {
     const handleKeyDown = spy();
 
     const { getByRole } = render(
-      <TreeView onKeyDown={handleKeyDown}>
+      <SimpleTreeView onKeyDown={handleKeyDown}>
         <TreeItem nodeId="test" label="test" data-testid="test" />
-      </TreeView>,
+      </SimpleTreeView>,
     );
     act(() => {
       getByRole('tree').focus();
@@ -154,9 +154,9 @@ describe('<TreeView />', () => {
     const handleKeyDown = spy();
 
     const { getByRole, getByTestId } = render(
-      <TreeView onKeyDown={handleKeyDown}>
+      <SimpleTreeView onKeyDown={handleKeyDown}>
         <TreeItem nodeId="one" label="test" data-testid="one" />
-      </TreeView>,
+      </SimpleTreeView>,
     );
     act(() => {
       getByRole('tree').focus();
@@ -172,9 +172,9 @@ describe('<TreeView />', () => {
   it('should call onFocus when tree is focused', () => {
     const handleFocus = spy();
     const { getByRole } = render(
-      <TreeView onFocus={handleFocus}>
+      <SimpleTreeView onFocus={handleFocus}>
         <TreeItem nodeId="test" label="test" data-testid="test" />
-      </TreeView>,
+      </SimpleTreeView>,
     );
 
     act(() => {
@@ -187,9 +187,9 @@ describe('<TreeView />', () => {
   it('should call onBlur when tree is blurred', () => {
     const handleBlur = spy();
     const { getByRole } = render(
-      <TreeView onBlur={handleBlur}>
+      <SimpleTreeView onBlur={handleBlur}>
         <TreeItem nodeId="test" label="test" data-testid="test" />
-      </TreeView>,
+      </SimpleTreeView>,
     );
 
     act(() => {
@@ -209,11 +209,11 @@ describe('<TreeView />', () => {
         setExpandedState(nodes);
       };
       return (
-        <TreeView expanded={expandedState} onNodeToggle={handleNodeToggle}>
+        <SimpleTreeView expanded={expandedState} onNodeToggle={handleNodeToggle}>
           <TreeItem nodeId="1" label="one" data-testid="one">
             <TreeItem nodeId="2" label="two" />
           </TreeItem>
-        </TreeView>
+        </SimpleTreeView>
       );
     }
 
@@ -244,10 +244,10 @@ describe('<TreeView />', () => {
         setSelectedState(nodes);
       };
       return (
-        <TreeView selected={selectedState} onNodeSelect={handleNodeSelect}>
+        <SimpleTreeView selected={selectedState} onNodeSelect={handleNodeSelect}>
           <TreeItem nodeId="1" label="one" data-testid="one" />
           <TreeItem nodeId="2" label="two" data-testid="two" />
-        </TreeView>
+        </SimpleTreeView>
       );
     }
 
@@ -274,10 +274,10 @@ describe('<TreeView />', () => {
         setSelectedState(nodes);
       };
       return (
-        <TreeView selected={selectedState} onNodeSelect={handleNodeSelect} multiSelect>
+        <SimpleTreeView selected={selectedState} onNodeSelect={handleNodeSelect} multiSelect>
           <TreeItem nodeId="1" label="one" data-testid="one" />
           <TreeItem nodeId="2" label="two" data-testid="two" />
-        </TreeView>
+        </SimpleTreeView>
       );
     }
 
@@ -302,7 +302,7 @@ describe('<TreeView />', () => {
       const [, setState] = React.useState(1);
 
       return (
-        <TreeView
+        <SimpleTreeView
           onFocus={() => {
             setState(Math.random);
           }}
@@ -311,7 +311,7 @@ describe('<TreeView />', () => {
           <TreeItem nodeId="one" label="one" data-testid="one">
             <TreeItem nodeId="two" label="two" data-testid="two" />
           </TreeItem>
-        </TreeView>
+        </SimpleTreeView>
       );
     }
 
@@ -347,7 +347,7 @@ describe('<TreeView />', () => {
           <button type="button" onClick={() => setState(true)}>
             Hide
           </button>
-          <TreeView>{!hide && <TreeItem nodeId="test" label="test" />}</TreeView>
+          <SimpleTreeView>{!hide && <TreeItem nodeId="test" label="test" />}</SimpleTreeView>
         </React.Fragment>
       );
     }
@@ -362,12 +362,12 @@ describe('<TreeView />', () => {
   it('should work in a portal', () => {
     const { getByRole, getByTestId } = render(
       <Portal>
-        <TreeView id="tree">
+        <SimpleTreeView id="tree">
           <TreeItem nodeId="one" label="one" data-testid="one" />
           <TreeItem nodeId="two" label="two" data-testid="two" />
           <TreeItem nodeId="three" label="three" data-testid="three" />
           <TreeItem nodeId="four" label="four" data-testid="four" />
-        </TreeView>
+        </SimpleTreeView>
       </Portal>,
     );
 
@@ -391,9 +391,9 @@ describe('<TreeView />', () => {
     it('should be called when node is focused', () => {
       const focusSpy = spy();
       const { getByRole } = render(
-        <TreeView onNodeFocus={focusSpy}>
+        <SimpleTreeView onNodeFocus={focusSpy}>
           <TreeItem nodeId="1" label="one" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       // First node receives focus when tree focused
@@ -411,11 +411,11 @@ describe('<TreeView />', () => {
       const handleNodeToggle = spy();
 
       const { getByText } = render(
-        <TreeView onNodeToggle={handleNodeToggle}>
+        <SimpleTreeView onNodeToggle={handleNodeToggle}>
           <TreeItem nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       fireEvent.click(getByText('outer'));
@@ -428,11 +428,11 @@ describe('<TreeView />', () => {
       const handleNodeToggle = spy();
 
       const { getByTestId } = render(
-        <TreeView onNodeToggle={handleNodeToggle}>
+        <SimpleTreeView onNodeToggle={handleNodeToggle}>
           <TreeItem icon={<div data-testid="icon" />} nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       fireEvent.click(getByTestId('icon'));
@@ -447,10 +447,10 @@ describe('<TreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <TreeView selected={'2'} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView selected={'2'} onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1" />
           <TreeItem nodeId="2" label="2" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       act(() => {
@@ -464,10 +464,10 @@ describe('<TreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <TreeView multiSelect selected={['2']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selected={['2']} onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1" />
           <TreeItem nodeId="2" label="2" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       act(() => {
@@ -481,12 +481,12 @@ describe('<TreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <TreeView multiSelect selected={['1.1', '2']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selected={['1.1', '2']} onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
           <TreeItem nodeId="2" label="2" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       act(() => {
@@ -500,12 +500,12 @@ describe('<TreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <TreeView selected="1.1" onNodeFocus={onNodeFocus}>
+        <SimpleTreeView selected="1.1" onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
           <TreeItem nodeId="2" label="2" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       act(() => {
@@ -519,12 +519,12 @@ describe('<TreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <TreeView multiSelect selected={['1.1']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selected={['1.1']} onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
           <TreeItem nodeId="2" label="2" />
-        </TreeView>,
+        </SimpleTreeView>,
       );
 
       act(() => {
@@ -537,19 +537,19 @@ describe('<TreeView />', () => {
 
   describe('Accessibility', () => {
     it('(TreeView) should have the role `tree`', () => {
-      const { getByRole } = render(<TreeView />);
+      const { getByRole } = render(<SimpleTreeView />);
 
       expect(getByRole('tree')).not.to.equal(null);
     });
 
     it('(TreeView) should have the attribute `aria-multiselectable=false if using single select`', () => {
-      const { getByRole } = render(<TreeView />);
+      const { getByRole } = render(<SimpleTreeView />);
 
       expect(getByRole('tree')).to.have.attribute('aria-multiselectable', 'false');
     });
 
     it('(TreeView) should have the attribute `aria-multiselectable=true if using multi select`', () => {
-      const { getByRole } = render(<TreeView multiSelect />);
+      const { getByRole } = render(<SimpleTreeView multiSelect />);
 
       expect(getByRole('tree')).to.have.attribute('aria-multiselectable', 'true');
     });

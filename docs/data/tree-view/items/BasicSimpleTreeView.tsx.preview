@@ -1,4 +1,4 @@
-<TreeView
+<SimpleTreeView
   defaultCollapseIcon={<ExpandMoreIcon />}
   defaultExpandIcon={<ChevronRightIcon />}
 >
@@ -11,4 +11,4 @@
     <TreeItem nodeId="pickers-community" label="@mui/x-date-pickers" />
     <TreeItem nodeId="pickers-pro" label="@mui/x-date-pickers-pro" />
   </TreeItem>
-</TreeView>
+</SimpleTreeView>

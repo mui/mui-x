@@ -2,13 +2,13 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function BasicDisabledJSXItems() {
   return (
     <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
-      <TreeView
+      <SimpleTreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
       >
@@ -32,7 +32,7 @@ export default function BasicDisabledJSXItems() {
         <TreeItem nodeId="scheduler" label="Sheduler" disabled>
           <TreeItem nodeId="scheduler-community" label="@mui/x-scheduler" />
         </TreeItem>
-      </TreeView>
+      </SimpleTreeView>
     </Box>
   );
 }

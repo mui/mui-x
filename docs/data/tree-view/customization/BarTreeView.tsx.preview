@@ -1,4 +1,4 @@
-<TreeView
+<SimpleTreeView
   aria-label="icon expansion"
   defaultCollapseIcon={<ExpandMoreIcon />}
   defaultExpandIcon={<ChevronRightIcon />}
@@ -13,4 +13,4 @@
       <CustomTreeItem nodeId="8" label="index.js" />
     </CustomTreeItem>
   </CustomTreeItem>
-</TreeView>
+</SimpleTreeView>

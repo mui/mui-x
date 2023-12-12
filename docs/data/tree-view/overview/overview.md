@@ -19,12 +19,12 @@ Tree views can be used to represent a file system navigator displaying folders a
 
 The Tree View exists in two versions:
 
-### TreeView
+### SimpleTreeView
 
-The `TreeView` component accepts its items as JSX children.
+The `SimpleTreeView` component accepts its items as JSX children.
 It is designed for simple use-cases where the items are hardcoded.
 
-{{"demo": "BasicTreeView.js"}}
+{{"demo": "BasicSimpleTreeView.js"}}
 
 :::warning
 Most new advanced features won't be available on this component.

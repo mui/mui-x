@@ -72,7 +72,7 @@ const childrenWarning = buildWarning([
  *
  * API:
  *
- * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
+ * - [RichTreeView API](https://mui.com/x/api/tree-view/rich-tree-view/)
  */
 const RichTreeView = React.forwardRef(function RichTreeView<
   R extends {},

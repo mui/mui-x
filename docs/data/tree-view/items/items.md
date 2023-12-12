@@ -10,11 +10,11 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Pass data to your Tree View.</p>
 
-## Usage with `TreeView`
+## Usage with `SimpleTreeView`
 
-The items can be defined as JSX children of the `TreeView` component:
+The items can be defined as JSX children of the `SimpleTreeView` component:
 
-{{"demo": "BasicTreeView.js"}}
+{{"demo": "BasicSimpleTreeView.js"}}
 
 ## Usage with `RichTreeView`
 

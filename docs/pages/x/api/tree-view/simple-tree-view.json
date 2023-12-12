@@ -69,12 +69,15 @@
     }
   },
   "slots": [],
-  "name": "TreeView",
+  "name": "SimpleTreeView",
   "imports": [
-    "import { TreeView } from '@mui/x-tree-view/TreeView';",
-    "import { TreeView } from '@mui/x-tree-view';"
+    "import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';",
+    "import { SimpleTreeView } from '@mui/x-tree-view';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiTreeView" },
-  "filename": "/packages/x-tree-view/src/TreeView/TreeView.tsx",
-  "demos": "<ul><li><a href=\"/x/react-tree-view/\">Tree View</a></li></ul>"
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiSimpleTreeView" },
+  "spread": true,
+  "forwardsRefTo": "HTMLUListElement",
+  "filename": "/packages/x-tree-view/src/SimpleTreeView/SimpleTreeView.tsx",
+  "inheritance": null,
+  "demos": "<ul></ul>"
 }

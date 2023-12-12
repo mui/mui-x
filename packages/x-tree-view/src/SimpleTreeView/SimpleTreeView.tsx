@@ -1,13 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { getTreeViewUtilityClass } from './treeViewClasses';
-import { TreeViewProps } from './TreeView.types';
-import { SimpleTreeView } from '../SimpleTreeView';
+import { useSlotProps } from '@mui/base/utils';
+import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
+import { SimpleTreeViewProps } from './SimpleTreeView.types';
+import { useTreeView } from '../internals/useTreeView';
+import { TreeViewProvider } from '../internals/TreeViewProvider';
+import { SIMPLE_TREE_VIEW_PLUGINS } from './SimpleTreeView.plugins';
+import { buildWarning } from '../internals/utils/warning';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
-  ownerState: TreeViewProps<Multiple>,
+  ownerState: SimpleTreeViewProps<Multiple>,
 ) => {
   const { classes } = ownerState;
 
@@ -15,33 +19,33 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
     root: ['root'],
   };
 
-  return composeClasses(slots, getTreeViewUtilityClass, classes);
+  return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
 };
 
-type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
-  props: TreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
+const TreeViewRoot = styled('ul', {
+  name: 'MuiTreeView',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{ ownerState: SimpleTreeViewProps<any> }>({
+  padding: 0,
+  margin: 0,
+  listStyle: 'none',
+  outline: 0,
+});
+
+type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
+  props: SimpleTreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-let warnedOnce = false;
+const EMPTY_ITEMS: any[] = [];
 
-const warn = () => {
-  if (!warnedOnce) {
-    console.warn(
-      [
-        'MUI: The TreeView component was renamed SimpleTreeView.',
-        'The component with the old naming will be removed in the version v8.0.0.',
-        '',
-        "You should use `import { SimpleTreeView } from '@mui/x-tree-view'`",
-        "or `import { SimpleTreeView } from '@mui/x-tree-view/TreeView'`",
-      ].join('\n'),
-    );
-
-    warnedOnce = true;
-  }
-};
+const itemsPropWarning = buildWarning([
+  'The `SimpleTreeView` component does not support the `items` prop.',
+  'If you want to add items, you need to pass them as JSX children',
+  'Check you the documentation for more details: https://mui.com/x/react-tree-view/items/#usage-with-treeview',
+]);
 
 /**
- * @deprecated Consider using `SimpleTreeView` instead.
  *
  * Demos:
  *
@@ -49,21 +53,82 @@ const warn = () => {
  *
  * API:
  *
- * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
+ * - [SimpleTreeView API](https://mui.com/x/api/tree-view/simple-tree-view/)
  */
-const TreeView = React.forwardRef(function TreeView<
+const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   Multiple extends boolean | undefined = undefined,
->(inProps: TreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
-  warn();
+>(inProps: SimpleTreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
+  const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
+  const ownerState = props as SimpleTreeViewProps<any>;
 
-  const props = useThemeProps({ props: inProps, name: 'MuiTreeView' });
+  const {
+    // Headless implementation
+    disabledItemsFocusable,
+    expanded,
+    defaultExpanded,
+    onNodeToggle,
+    onNodeFocus,
+    disableSelection,
+    defaultSelected,
+    selected,
+    multiSelect,
+    onNodeSelect,
+    id,
+    defaultCollapseIcon,
+    defaultEndIcon,
+    defaultExpandIcon,
+    defaultParentIcon,
+    // Component implementation
+    children,
+    ...other
+  } = props as SimpleTreeViewProps<any>;
+
+  if (process.env.NODE_ENV !== 'production') {
+    if ((props as any).items != null) {
+      itemsPropWarning();
+    }
+  }
+
+  const { getRootProps, contextValue } = useTreeView({
+    disabledItemsFocusable,
+    expanded,
+    defaultExpanded,
+    onNodeToggle,
+    onNodeFocus,
+    disableSelection,
+    defaultSelected,
+    selected,
+    multiSelect,
+    onNodeSelect,
+    id,
+    defaultCollapseIcon,
+    defaultEndIcon,
+    defaultExpandIcon,
+    defaultParentIcon,
+    items: EMPTY_ITEMS,
+    plugins: SIMPLE_TREE_VIEW_PLUGINS,
+    rootRef: ref,
+  });
 
   const classes = useUtilityClasses(props);
 
-  return <SimpleTreeView {...props} ref={ref} classes={classes} />;
-}) as TreeViewComponent;
+  const rootProps = useSlotProps({
+    elementType: TreeViewRoot,
+    externalSlotProps: {},
+    externalForwardedProps: other,
+    className: classes.root,
+    getSlotProps: getRootProps,
+    ownerState,
+  });
 
-TreeView.propTypes = {
+  return (
+    <TreeViewProvider value={contextValue}>
+      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
+    </TreeViewProvider>
+  );
+}) as SimpleTreeViewComponent;
+
+SimpleTreeView.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -191,4 +256,4 @@ TreeView.propTypes = {
   ]),
 } as any;
 
-export { TreeView };
+export { SimpleTreeView };

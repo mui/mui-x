@@ -61,6 +61,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "getItemId": {
+      "description": "Used to determine the string label for a given item.",
+      "deprecated": "",
+      "typeDescriptions": { "item": "The item to check.", "string": "The id of the item." }
+    },
+    "getItemLabel": {
+      "description": "Used to determine the string label for a given item.",
+      "deprecated": "",
+      "typeDescriptions": { "item": "The item to check.", "string": "The label of the item." }
+    },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id.",
       "deprecated": "",
@@ -107,6 +117,6 @@
       "typeDescriptions": {}
     }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "classDescriptions": {},
   "slotDescriptions": {}
 }
