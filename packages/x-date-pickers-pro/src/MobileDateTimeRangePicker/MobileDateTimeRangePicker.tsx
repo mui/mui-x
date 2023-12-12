@@ -189,11 +189,6 @@ MobileDateTimeRangePicker.propTypes = {
    */
   autoFocus: PropTypes.bool,
   /**
-   * The number of calendars to render on **Mobile**.
-   * @default 1
-   */
-  calendars: PropTypes.oneOf([1, 2, 3]),
-  /**
    * Class name applied to the root element.
    */
   className: PropTypes.string,

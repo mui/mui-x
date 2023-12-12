@@ -11,11 +11,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "calendars": {
-      "description": "The number of calendars to render on <strong>Mobile</strong>.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "className": {
       "description": "Class name applied to the root element.",
       "deprecated": "",
