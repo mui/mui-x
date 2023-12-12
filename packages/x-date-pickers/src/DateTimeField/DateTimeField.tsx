@@ -8,7 +8,7 @@ import { DateTimeFieldProps } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../internals/components/PickersTextField';
-import { useConvertFieldResponseIntoMuiTextFieldProps } from '../internals/hooks/useConvertFieldResponseIntoMuiTextFieldProps';
+import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
 
 type DateTimeFieldComponent = (<TDate, TUseV6TextField extends boolean = false>(
   props: DateTimeFieldProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
@@ -56,13 +56,14 @@ const DateTimeField = React.forwardRef(function DateTimeField<
   const fieldResponse = useDateTimeField<TDate, TUseV6TextField, typeof textFieldProps>(
     textFieldProps,
   );
-  const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
+  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
-    props: convertedFieldResponse,
+    ...convertedFieldResponse,
     slots,
     slotProps,
   });
+
   return <TextField {...processedFieldProps} />;
 }) as DateTimeFieldComponent;
 

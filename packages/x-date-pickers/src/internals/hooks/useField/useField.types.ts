@@ -1,7 +1,4 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
-import IconButton from '@mui/material/IconButton';
-import { ClearIcon } from '../../../icons';
 import {
   FieldSectionType,
   FieldSection,
@@ -413,24 +410,6 @@ export type SectionOrdering = {
    */
   endIndex: number;
 };
-
-export interface FieldSlots {
-  /**
-   * Icon to display inside the clear button.
-   * @default ClearIcon
-   */
-  clearIcon?: React.ElementType;
-  /**
-   * Button to clear the value.
-   * @default IconButton
-   */
-  clearButton?: React.ElementType;
-}
-
-export interface FieldSlotProps {
-  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
-  clearButton?: SlotComponentProps<typeof IconButton, {}, {}>;
-}
 
 export interface UseFieldTextFieldInteractions {
   /**

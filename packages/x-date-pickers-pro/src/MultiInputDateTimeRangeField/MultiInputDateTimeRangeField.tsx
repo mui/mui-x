@@ -15,7 +15,7 @@ import {
   splitFieldInternalAndForwardedProps,
   FieldsTextFieldProps,
   PickersTextField,
-  useConvertFieldResponseIntoMuiTextFieldProps,
+  convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
@@ -147,8 +147,8 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     unstableEndFieldRef,
   });
 
-  const startDateProps = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse.startDate);
-  const endDateProps = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse.endDate);
+  const startDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.startDate);
+  const endDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.endDate);
 
   return (
     <Root {...rootProps}>

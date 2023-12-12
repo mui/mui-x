@@ -10,6 +10,7 @@ import {
   FieldRef,
   FieldSelectedSections,
 } from '@mui/x-date-pickers/models';
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
@@ -20,8 +21,6 @@ import {
   WrapperVariant,
   UsePickerProps,
   getActiveElement,
-  FieldSlots,
-  FieldSlotProps,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
@@ -34,7 +33,7 @@ import {
 } from '../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
-export interface RangePickerFieldSlots extends FieldSlots {
+export interface RangePickerFieldSlots extends UseClearableFieldSlots {
   field: React.ElementType;
   /**
    * Element rendered at the root.
@@ -56,7 +55,7 @@ export interface RangePickerFieldSlots extends FieldSlots {
 }
 
 export interface RangePickerFieldSlotProps<TDate, TUseV6TextField extends boolean>
-  extends FieldSlotProps {
+  extends UseClearableFieldSlotProps {
   field?: SlotComponentProps<
     React.ElementType<
       BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TUseV6TextField, unknown>

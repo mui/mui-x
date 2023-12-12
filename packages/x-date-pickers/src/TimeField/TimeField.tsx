@@ -8,7 +8,7 @@ import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../internals/components/PickersTextField';
-import { useConvertFieldResponseIntoMuiTextFieldProps } from '../internals/hooks/useConvertFieldResponseIntoMuiTextFieldProps';
+import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
 
 type TimeFieldComponent = (<TDate, TUseV6TextField extends boolean = false>(
   props: TimeFieldProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
@@ -54,10 +54,10 @@ const TimeField = React.forwardRef(function TimeField<
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const fieldResponse = useTimeField<TDate, TUseV6TextField, typeof textFieldProps>(textFieldProps);
-  const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
+  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
-    props: convertedFieldResponse,
+    ...convertedFieldResponse,
     slots,
     slotProps,
   });

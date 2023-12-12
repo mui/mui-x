@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { DateTimeValidationError, FieldSection } from '../models';
-import { UseFieldInternalProps, FieldSlots, FieldSlotProps } from '../internals/hooks/useField';
+import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
@@ -14,7 +14,11 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
-import { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
+import {
+  ExportedUseClearableFieldProps,
+  UseClearableFieldSlots,
+  UseClearableFieldSlotProps,
+} from '../hooks/useClearableField';
 
 export interface UseDateTimeFieldProps<TDate, TUseV6TextField extends boolean>
   extends MakeOptional<
@@ -68,7 +72,7 @@ export type DateTimeFieldOwnerState<TDate, TUseV6TextField extends boolean> = Da
   TUseV6TextField
 >;
 
-export interface DateTimeFieldSlots extends FieldSlots {
+export interface DateTimeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -78,7 +82,7 @@ export interface DateTimeFieldSlots extends FieldSlots {
 }
 
 export interface DateTimeFieldSlotProps<TDate, TUseV6TextField extends boolean>
-  extends FieldSlotProps {
+  extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<
     typeof TextField,
     {},

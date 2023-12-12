@@ -277,6 +277,8 @@
   { "name": "unstable_useTimeField", "kind": "Variable" },
   { "name": "urPK", "kind": "Variable" },
   { "name": "useClearableField", "kind": "Variable" },
+  { "name": "UseClearableFieldSlotProps", "kind": "Interface" },
+  { "name": "UseClearableFieldSlots", "kind": "Interface" },
   { "name": "UseDateFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseDateFieldProps", "kind": "Interface" },
   { "name": "UseDateTimeFieldComponentProps", "kind": "TypeAlias" },

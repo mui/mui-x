@@ -6,7 +6,7 @@ import { useSlotProps } from '@mui/base/utils';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
   PickersTextField,
-  useConvertFieldResponseIntoMuiTextFieldProps,
+  convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
 import { refType } from '@mui/utils';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
@@ -62,10 +62,10 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
   const fieldResponse = useSingleInputDateRangeField<TDate, TUseV6TextField, typeof textFieldProps>(
     textFieldProps,
   );
-  const convertedFieldResponse = useConvertFieldResponseIntoMuiTextFieldProps(fieldResponse);
+  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
-    props: convertedFieldResponse,
+    ...convertedFieldResponse,
     slots,
     slotProps,
   });
