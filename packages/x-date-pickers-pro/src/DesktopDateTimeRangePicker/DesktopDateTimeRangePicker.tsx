@@ -135,6 +135,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     viewRenderers,
     // force true to correctly handle `renderTimeViewClock` as a renderer
     ampmInClock: true,
+    calendars: defaultizedProps.calendars ?? 1,
     slots: {
       field: MultiInputDateTimeRangeField,
       ...defaultizedProps.slots,

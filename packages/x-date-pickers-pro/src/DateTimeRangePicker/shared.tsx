@@ -90,7 +90,7 @@ export interface BaseDateTimeRangePickerProps<TDate>
       >,
       'orientation' | 'views' | 'openTo'
     >,
-    ExportedDateRangeCalendarProps<TDate>,
+    Omit<ExportedDateRangeCalendarProps<TDate>, 'calendars'>,
     BaseDateValidationProps<TDate>,
     DesktopOnlyTimePickerProps<TDate>,
     Partial<
@@ -174,7 +174,6 @@ export function useDateTimeRangePickerDefaultizedProps<
     thresholdToRenderTimeInASingleColumn,
     views,
     ampm,
-    calendars: themeProps.calendars ?? 1,
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),

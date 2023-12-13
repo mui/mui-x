@@ -19,11 +19,7 @@ export interface MobileDateRangePickerSlotProps<TDate>
     UseMobileRangePickerSlotProps<TDate, 'day'> {}
 
 export interface MobileDateRangePickerProps<TDate>
-  extends Omit<
-      BaseDateRangePickerProps<TDate>,
-      // Mobile range picker does not support multiple calendars
-      'calendars'
-    >,
+  extends BaseDateRangePickerProps<TDate>,
     MobileRangeOnlyPickerProps<TDate> {
   /**
    * Overridable component slots.

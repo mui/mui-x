@@ -44,6 +44,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     views: ['day'] as const,
     openTo: 'day' as const,
