@@ -60,7 +60,7 @@ export interface PickersSectionListProps extends React.HTMLAttributes<HTMLDivEle
    * Useful when all the sections are selected.
    */
   contentEditable: boolean;
-  sectionRef: React.Ref<PickersSectionListRef>;
+  sectionListRef: React.Ref<PickersSectionListRef>;
 }
 
 const useUtilityClasses = (ownerState: PickersSectionListProps) => {
@@ -144,17 +144,19 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
   props: PickersSectionListProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { slots, slotProps, elements, sectionRef, ...other } = props;
+  const { slots, slotProps, elements, sectionListRef, ...other } = props;
 
   const classes = useUtilityClasses(props);
 
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
 
-  React.useImperativeHandle(sectionRef, () => ({
+  React.useImperativeHandle(sectionListRef, () => ({
     getRoot() {
       if (!rootRef.current) {
-        throw new Error('MUI: Cannot call sectionRef.getRoot before the mount of the component');
+        throw new Error(
+          'MUI: Cannot call sectionListRef.getRoot before the mount of the component',
+        );
       }
 
       return rootRef.current;
@@ -162,7 +164,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
     getSectionContainer(index) {
       if (!rootRef.current) {
         throw new Error(
-          'MUI: Cannot call sectionRef.getSectionContainer before the mount of the component',
+          'MUI: Cannot call sectionListRef.getSectionContainer before the mount of the component',
         );
       }
 
@@ -173,7 +175,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
     getSectionContent(index) {
       if (!rootRef.current) {
         throw new Error(
-          'MUI: Cannot call sectionRef.getSectionContent before the mount of the component',
+          'MUI: Cannot call sectionListRef.getSectionContent before the mount of the component',
         );
       }
 
@@ -184,7 +186,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
     getSectionIndexFromDOMElement(element) {
       if (!rootRef.current) {
         throw new Error(
-          'MUI: Cannot call sectionRef.getSectionIndexFromDOMElement before the mount of the component',
+          'MUI: Cannot call sectionListRef.getSectionIndexFromDOMElement before the mount of the component',
         );
       }
 
@@ -276,7 +278,7 @@ PickersSectionList.propTypes = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
-  sectionRef: PropTypes.oneOfType([
+  sectionListRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
       current: PropTypes.shape({

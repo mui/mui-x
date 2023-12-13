@@ -5,7 +5,7 @@ import { PickersSectionListProps } from '../../../PickersSectionList';
 export interface PickersInputPropsUsedByField
   extends Pick<
     PickersSectionListProps,
-    'elements' | 'sectionRef' | 'contentEditable' | 'tabIndex'
+    'elements' | 'sectionListRef' | 'contentEditable' | 'tabIndex'
   > {
   /**
    * Is `true` if the current values equals the empty value.
