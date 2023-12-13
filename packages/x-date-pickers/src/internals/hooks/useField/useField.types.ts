@@ -182,7 +182,7 @@ interface UseFieldV6AdditionalProps
 export interface UseFieldV7ForwardedProps {
   focused?: boolean;
   autoFocus?: boolean;
-  sectionRef?: React.Ref<PickersSectionListRef>;
+  sectionListRef?: React.Ref<PickersSectionListRef>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;

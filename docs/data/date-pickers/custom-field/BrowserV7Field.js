@@ -37,7 +37,7 @@ const BrowserField = React.forwardRef((props, ref) => {
     elements,
     onClick,
     onInput,
-    sectionRef,
+    sectionListRef,
     contentEditable,
     onFocus,
     onBlur,
@@ -58,7 +58,7 @@ const BrowserField = React.forwardRef((props, ref) => {
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
-          sectionRef={sectionRef}
+          sectionListRef={sectionListRef}
           contentEditable={contentEditable}
           onFocus={onFocus}
           onBlur={onBlur}

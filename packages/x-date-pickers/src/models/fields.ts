@@ -131,7 +131,7 @@ export interface BaseSingleInputFieldProps<
   /**
    * Only used for v7 TextField implementation.
    */
-  sectionRef?: React.Ref<PickersSectionListRef>;
+  sectionListRef?: React.Ref<PickersSectionListRef>;
   onKeyDown?: React.KeyboardEventHandler;
   onBlur?: React.FocusEventHandler;
   focused?: boolean;

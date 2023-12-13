@@ -52,7 +52,7 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
     InputProps,
     inputProps,
     inputRef,
-    sectionRef,
+    sectionListRef,
     elements,
     areAllSectionsEmpty,
     onClick,
@@ -136,7 +136,7 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
         fullWidth={fullWidth}
         inputProps={inputProps}
         inputRef={inputRef}
-        sectionRef={sectionRef}
+        sectionListRef={sectionListRef}
         label={label}
         {...InputProps}
       />

@@ -25,7 +25,7 @@ interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'contentEditable'>,
     Pick<
       PickersSectionListProps,
-      'elements' | 'sectionRef' | 'contentEditable' | 'tabIndex'
+      'elements' | 'sectionListRef' | 'contentEditable' | 'tabIndex'
     > {
   label?: React.ReactNode;
   inputRef?: React.Ref<any>;
@@ -72,7 +72,7 @@ const BrowserField = React.forwardRef(
       elements,
       onClick,
       onInput,
-      sectionRef,
+      sectionListRef,
 
       contentEditable,
       onFocus,
@@ -94,7 +94,7 @@ const BrowserField = React.forwardRef(
         <BrowserFieldContent>
           <PickersSectionList
             elements={elements}
-            sectionRef={sectionRef}
+            sectionListRef={sectionListRef}
             contentEditable={contentEditable}
             onFocus={onFocus}
             onBlur={onBlur}

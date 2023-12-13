@@ -31,7 +31,6 @@ const PickersInputRoot = styled(Box, {
     justifyContent: 'flex-start',
     alignItems: 'center',
     position: 'relative',
-    outline: 'none',
     borderRadius: (theme.vars || theme).shape.borderRadius,
     [`&:hover .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
@@ -129,6 +128,7 @@ const PickersInputSectionContent = styled(PickersSectionListSectionContent, {
   lineHeight: '1.4375em', // 23px
   letterSpacing: 'inherit',
   width: 'fit-content',
+  outline: 'none',
 }));
 
 const PickersInputSeparator = styled(PickersSectionListSectionSeparator, {
@@ -222,7 +222,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
 
     inputProps,
     inputRef,
-    sectionRef,
+    sectionListRef,
     ...other
   } = props;
 
@@ -281,7 +281,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
     >
       {startAdornment}
       <PickersSectionList
-        sectionRef={sectionRef}
+        sectionListRef={sectionListRef}
         elements={elements}
         contentEditable={contentEditable}
         tabIndex={tabIndex}
