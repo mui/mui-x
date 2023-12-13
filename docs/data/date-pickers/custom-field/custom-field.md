@@ -55,9 +55,7 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 {{"demo": "FieldFormatDensity.js"}}
 
-## Usage with Material Design
-
-### Using Material `TextField`
+## Usage with Material `TextField` (deprecated)
 
 The legacy field that uses the `TextField` component from `@mui/material` is still available.
 To enable it, you have to pass the `shouldUseV6TextField` prop to any field or picker component:
@@ -65,26 +63,29 @@ To enable it, you have to pass the `shouldUseV6TextField` prop to any field or p
 {{"demo": "PickerWithV6TextField.js"}}
 
 :::warning
-This approach will be removed in the next major (v8)
+This DOM structure will be removed in the next major (v8).
 
-TODO: Insert link to migration guide
+You can check the [presentation of the new DOM structure](/x/react-date-pickers/fields/#v7-one-span-per-section).
 :::
 
 ## Usage with Joy UI
 
-### Using `PickersTextField`
+### Using Joy `PickersTextField`
 
 TODO
 
-### Using Joy `Input`
+### Using Joy `Input` (deprecated)
 
 You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
 
 :::warning
-This approach will be removed in the next major (v8).
+This DOM structure will be removed in the next major (v8).
 
-Learn more on how to use Joy UI with the new `PickersTextField` component on [this section](/x/react-date-pickers/custom-field/#using-pickerstextfield)
-:::
+You can check the following sections:
+
+- [The presentation of the new DOM structure](/x/react-date-pickers/fields/#v7-one-span-per-section)
+- [The guide on how to use Joy UI with the new DOM structure](/x/react-date-pickers/custom-field/#using-pickerstextfield)
+  :::
 
 {{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
 
@@ -92,23 +93,22 @@ Learn more on how to use Joy UI with the new `PickersTextField` component on [th
 
 {{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
 
-## Usage with another input
+## Usage with an unstyled input
 
-### Using `PickersTextField`
-
-:::warning
-WORK IN PROGRESS, buggy demo
-:::
+### Using custom `PickersTextField`
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
 
-### Using the browser input
+### Using the browser input (deprecated)
 
 :::warning
-This approach will be removed in the next major (v8)
+This DOM structure will be removed in the next major (v8).
 
-Learn more on how to use a custom design system with the new `PickersTextField` component on [this section](/x/react-date-pickers/custom-field/#using-pickerstextfield-2)
-:::
+You can check the following sections:
+
+- [The presentation of the new DOM structure](/x/react-date-pickers/fields/#v7-one-span-per-section)
+- [The guide on how to use an unstyled input with the new DOM structure](/x/react-date-pickers/custom-field/#using-pickerstextfield-2)
+  :::
 
 {{"demo": "BrowserV6Field.js", "defaultCodeOpen": false}}
 

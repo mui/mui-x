@@ -108,9 +108,6 @@ const JoySingleInputDateRangeField = React.forwardRef(
       elementType: FormControl,
       externalSlotProps: slotProps?.textField,
       externalForwardedProps: other,
-      additionalProps: {
-        shouldUseV6TextField: true,
-      },
       ownerState: props as any,
     });
 
@@ -118,7 +115,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
       Dayjs,
       true,
       JoySingleInputDateRangeFieldProps
-    >(textFieldProps);
+    >({ ...textFieldProps, shouldUseV6TextField: true });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
