@@ -6,12 +6,7 @@ import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { FieldSection, TimeValidationError } from '../models';
-import { FieldSlots, FieldSlotProps } from '../internals/hooks/useField/useField.types';
-
-export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
-  props: UseTimeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
 
 export interface UseTimeFieldProps<TDate>
   extends MakeOptional<
@@ -54,7 +49,7 @@ export interface TimeFieldProps<TDate>
 
 export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;
 
-export interface TimeFieldSlots extends FieldSlots {
+export interface TimeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -63,6 +58,6 @@ export interface TimeFieldSlots extends FieldSlots {
   textField?: React.ElementType;
 }
 
-export interface TimeFieldSlotProps<TDate> extends FieldSlotProps {
+export interface TimeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate>>;
 }

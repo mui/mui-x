@@ -38,6 +38,7 @@ const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
+  inputRef?: React.Ref<HTMLInputElement>;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -59,6 +60,7 @@ const JoyField = React.forwardRef(
       endDecorator,
       startDecorator,
       slotProps,
+      inputRef,
       ...other
     } = props;
 
@@ -83,6 +85,7 @@ const JoyField = React.forwardRef(
           slotProps={{
             ...slotProps,
             root: { ...slotProps?.root, ref: containerRef },
+            input: { ...slotProps?.input, ref: inputRef },
           }}
           {...other}
         />
@@ -158,22 +161,22 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       className,
     } = props;
 
-    const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
+    const startTextFieldProps = useSlotProps({
       elementType: FormControl,
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'start' },
     }) as MultiInputFieldSlotTextFieldProps;
 
-    const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
+    const endTextFieldProps = useSlotProps({
       elementType: FormControl,
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'end' },
     }) as MultiInputFieldSlotTextFieldProps;
 
-    const {
-      startDate: { ref: startRef, ...startDateProps },
-      endDate: { ref: endRef, ...endDateProps },
-    } = useMultiInputDateRangeField<Dayjs, MultiInputFieldSlotTextFieldProps>({
+    const fieldResponse = useMultiInputDateRangeField<
+      Dayjs,
+      MultiInputFieldSlotTextFieldProps
+    >({
       sharedProps: {
         value,
         defaultValue,
@@ -192,29 +195,13 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       },
       startTextFieldProps,
       endTextFieldProps,
-      startInputRef,
-      endInputRef,
     });
 
     return (
       <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
-        <JoyField
-          {...startDateProps}
-          slotProps={{
-            input: {
-              ref: startRef,
-            },
-          }}
-        />
+        <JoyField {...fieldResponse.startDate} />
         <MultiInputJoyDateRangeFieldSeparator />
-        <JoyField
-          {...endDateProps}
-          slotProps={{
-            input: {
-              ref: endRef,
-            },
-          }}
-        />
+        <JoyField {...fieldResponse.endDate} />
       </MultiInputJoyDateRangeFieldRoot>
     );
   },

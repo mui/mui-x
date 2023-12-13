@@ -63,8 +63,6 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
-  FieldSlots,
-  FieldSlotProps,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
@@ -116,6 +114,7 @@ export type {
   DateTimeValidationProps,
 } from './models/validation';
 
+export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,
