@@ -27,6 +27,8 @@ const PickersInputRoot = styled(Box, {
     position: 'relative',
     outline: 'none',
     borderRadius: (theme.vars || theme).shape.borderRadius,
+    boxSizing: 'border-box', // Prevent padding issue with fullWidth.
+
     [`&:hover .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
     },
@@ -72,13 +74,13 @@ const PickersInputSectionsContainer = styled('div', {
   display: 'flex',
   flexWrap: 'nowrap',
   padding: '16.5px 0',
-  ...(!ownerState.fullWidth && {
-    width: '20ch',
-  }),
+  width: '20ch',
+  flexGrow: 1,
+  overflow: 'hidden',
+
   ...(ownerState.size === 'small' && {
     padding: '8.5px 0',
   }),
-  overflow: 'hidden',
   ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
     color: 'currentColor',
     ...(ownerState.label == null &&
