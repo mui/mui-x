@@ -256,7 +256,10 @@ export const useField = <
     onClear?.(event, ...(args as []));
     clearValue();
     setSelectedSections(sectionOrder.startIndex);
-    // TODO v7: Add back the v6 focus
+
+    if (!interactions.isFieldFocused) {
+      interactions.focusField(0);
+    }
   });
 
   const commonForwardedProps: Required<UseFieldCommonForwardedProps> = {
