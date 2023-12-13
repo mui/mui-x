@@ -22,7 +22,7 @@ jobs:
         with:
           branch: master
           token: ${{ secrets.GITHUB_TOKEN }}
-          inherit_labels: false
+          body: 'Cherry-pick of #{old_pull_request_id}'
           labels: |
             cherry-pick
 env:
