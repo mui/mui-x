@@ -45,6 +45,7 @@ export const useMobileRangePicker = <
     timezone,
     label,
     inputRef,
+    name,
     readOnly,
     disabled,
     disableOpenPicker,
@@ -99,7 +100,7 @@ export const useMobileRangePicker = <
       format,
       formatDensity,
       timezone,
-      ...(fieldType === 'single-input' && { inputRef }),
+      ...(fieldType === 'single-input' && { inputRef, name }),
     },
     ownerState: props,
   });

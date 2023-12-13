@@ -59,22 +59,19 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
     className,
   } = props;
 
-  const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
+  const startTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'start' },
   });
 
-  const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
+  const endTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'end' },
   });
 
-  const {
-    startDate: { ref: startRef, ...startDateProps },
-    endDate: { ref: endRef, ...endDateProps },
-  } = useMultiInputDateRangeField({
+  const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
       value,
       defaultValue,
@@ -93,8 +90,6 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
     },
     startTextFieldProps,
     endTextFieldProps,
-    startInputRef,
-    endInputRef,
   });
 
   return (
@@ -105,9 +100,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       overflow="auto"
       className={className}
     >
-      <BrowserField {...startDateProps} inputRef={startRef} />
+      <BrowserField {...fieldResponse.startDate} />
       <span> — </span>
-      <BrowserField {...endDateProps} inputRef={endRef} />
+      <BrowserField {...fieldResponse.endDate} />
     </Stack>
   );
 });
@@ -117,7 +112,7 @@ const BrowserDateRangePicker = React.forwardRef((props, ref) => {
     <DateRangePicker
       ref={ref}
       {...props}
-      slots={{ ...props?.slots, field: BrowserMultiInputDateRangeField }}
+      slots={{ ...props.slots, field: BrowserMultiInputDateRangeField }}
     />
   );
 });
