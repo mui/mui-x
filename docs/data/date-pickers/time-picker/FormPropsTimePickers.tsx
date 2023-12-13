@@ -10,6 +10,7 @@ export default function FormPropsTimePickers() {
       <DemoContainer components={['TimePicker', 'TimePicker']}>
         <TimePicker label="disabled" disabled />
         <TimePicker label="readOnly" readOnly />
+        <TimePicker label="name" name="time_picker" />
       </DemoContainer>
     </LocalizationProvider>
   );

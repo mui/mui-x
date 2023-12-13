@@ -105,22 +105,22 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
       className,
     } = props;
 
-    const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
+    const startTextFieldProps = useSlotProps({
       elementType: 'input',
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'start' },
     }) as MultiInputFieldSlotTextFieldProps;
 
-    const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
+    const endTextFieldProps = useSlotProps({
       elementType: 'input',
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'end' },
     }) as MultiInputFieldSlotTextFieldProps;
 
-    const {
-      startDate: { ref: startRef, ...startDateProps },
-      endDate: { ref: endRef, ...endDateProps },
-    } = useMultiInputDateRangeField<Dayjs, MultiInputFieldSlotTextFieldProps>({
+    const fieldResponse = useMultiInputDateRangeField<
+      Dayjs,
+      MultiInputFieldSlotTextFieldProps
+    >({
       sharedProps: {
         value,
         defaultValue,
@@ -139,8 +139,6 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
       },
       startTextFieldProps,
       endTextFieldProps,
-      startInputRef,
-      endInputRef,
     });
 
     return (
@@ -151,9 +149,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         overflow="auto"
         className={className}
       >
-        <BrowserField {...startDateProps} inputRef={startRef} />
+        <BrowserField {...fieldResponse.startDate} />
         <span> — </span>
-        <BrowserField {...endDateProps} inputRef={endRef} />
+        <BrowserField {...fieldResponse.endDate} />
       </Stack>
     );
   },
@@ -165,7 +163,7 @@ const BrowserDateRangePicker = React.forwardRef(
       <DateRangePicker
         ref={ref}
         {...props}
-        slots={{ ...props?.slots, field: BrowserMultiInputDateRangeField }}
+        slots={{ ...props.slots, field: BrowserMultiInputDateRangeField }}
       />
     );
   },

@@ -19,7 +19,10 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { FieldSlots, FieldSlotProps } from '../useField';
+import {
+  UseClearableFieldSlots,
+  UseClearableFieldSlotProps,
+} from '../../../hooks/useClearableField';
 
 export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<
@@ -27,7 +30,7 @@ export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMe
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
     ExportedPickersLayoutSlots<TDate | null, TDate, TView>,
-    FieldSlots {
+    UseClearableFieldSlots {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -61,7 +64,7 @@ export interface UseDesktopPickerSlotProps<TDate, TView extends DateOrTimeViewWi
 export interface ExportedUseDesktopPickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends PickersPopperSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView>,
-    FieldSlotProps {
+    UseClearableFieldSlotProps {
   field?: SlotComponentProps<
     React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,
     {},

@@ -6,8 +6,8 @@ import {
   splitFieldInternalAndForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import {
+  UseSingleInputDateTimeRangeFieldComponentProps,
   UseSingleInputDateTimeRangeFieldDefaultizedProps,
-  UseSingleInputDateTimeRangeFieldParams,
   UseSingleInputDateTimeRangeFieldProps,
 } from './SingleInputDateTimeRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
@@ -37,10 +37,9 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
   } as any;
 };
 
-export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>({
-  props: inProps,
-  inputRef,
-}: UseSingleInputDateTimeRangeFieldParams<TDate, TChildProps>) => {
+export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
+  inProps: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps>,
+) => {
   const props = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
@@ -49,7 +48,6 @@ export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
   >(props, 'date-time');
 
   return useField({
-    inputRef,
     forwardedProps,
     internalProps,
     valueManager: rangeValueManager,

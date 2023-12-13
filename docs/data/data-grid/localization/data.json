@@ -227,7 +227,7 @@
     "languageTag": "ur-PK",
     "importName": "urPK",
     "localeName": "Urdu (Pakistan)",
-    "missingKeysCount": 28,
+    "missingKeysCount": 2,
     "totalKeysCount": 121,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/grid/x-data-grid/src/locales/urPK.ts"
   },

@@ -145,6 +145,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "name": {
+      "description": "Name attribute used by the <code>input</code> element in the Field.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
       "deprecated": "",
