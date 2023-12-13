@@ -236,7 +236,7 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
-          if (hasFieldsWithErrors(params.id) && reason !== 'escapeKeyDown') {
+          if (reason !== GridRowEditStopReasons.escapeKeyDown && hasFieldsWithErrors(params.id)) {
             return;
           }
           const newParams: GridRowEditStopParams = {
