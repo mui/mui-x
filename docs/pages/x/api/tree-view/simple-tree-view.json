@@ -1,7 +1,7 @@
 {
   "props": {
     "children": { "type": { "name": "node" } },
-    "classes": { "type": { "name": "any" }, "additionalInfo": { "cssApi": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "defaultCollapseIcon": { "type": { "name": "node" } },
     "defaultEndIcon": { "type": { "name": "node" } },
@@ -74,7 +74,7 @@
     "import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';",
     "import { SimpleTreeView } from '@mui/x-tree-view';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiSimpleTreeView" },
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSimpleTreeView" },
   "spread": true,
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/SimpleTreeView/SimpleTreeView.tsx",

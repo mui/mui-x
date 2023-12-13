@@ -54,7 +54,9 @@ const warn = () => {
 const TreeView = React.forwardRef(function TreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: TreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
-  warn();
+  if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+    warn();
+  }
 
   const props = useThemeProps({ props: inProps, name: 'MuiTreeView' });
 
@@ -75,7 +77,7 @@ TreeView.propTypes = {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes: PropTypes.any,
+  classes: PropTypes.object,
   /**
    * className applied to the root element.
    */

@@ -140,7 +140,7 @@ SimpleTreeView.propTypes = {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes: PropTypes.any,
+  classes: PropTypes.object,
   /**
    * className applied to the root element.
    */
