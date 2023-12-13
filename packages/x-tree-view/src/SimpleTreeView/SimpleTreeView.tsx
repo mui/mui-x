@@ -23,7 +23,7 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
 };
 
 const TreeViewRoot = styled('ul', {
-  name: 'MuiTreeView',
+  name: 'MuiSimpleTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: SimpleTreeViewProps<any> }>({
