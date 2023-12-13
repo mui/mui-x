@@ -21,6 +21,9 @@ const PickersInputRoot = styled(Box, {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
+    ...theme.typography.body1,
+    color: (theme.vars || theme).palette.text.primary,
+
     cursor: 'text',
     padding: '0 14px',
     display: 'flex',
