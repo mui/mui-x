@@ -113,6 +113,7 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
       color={color}
       required={required}
       ownerState={ownerState}
+      fullWidth={fullWidth}
       {...other}
     >
       <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>

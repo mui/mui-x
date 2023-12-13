@@ -20,11 +20,10 @@ const PickersInputRoot = styled(Box, {
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
     cursor: 'text',
-    padding: '16.5px 14px',
+    padding: '0 14px',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: ownerState.fullWidth ? '100%' : '25ch',
     position: 'relative',
     outline: 'none',
     borderRadius: (theme.vars || theme).shape.borderRadius,
@@ -76,8 +75,17 @@ const PickersInputSectionsContainer = styled('div', {
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
-  flexGrow: 1,
   outline: 'none',
+  display: 'flex',
+  flexWrap: 'nowrap',
+  padding: '16.5px 0',
+  ...(!ownerState.fullWidth && {
+    width: '20ch',
+  }),
+  ...(ownerState.size === 'small' && {
+    padding: '8.5px 0',
+  }),
+  overflow: 'hidden',
   ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
   ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
     color: 'currentColor',
@@ -101,7 +109,7 @@ const PickersInputSection = styled('span', {
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
-  flexGrow: 1,
+  display: 'flex',
 }));
 
 const PickersInputSectionContent = styled('span', {
