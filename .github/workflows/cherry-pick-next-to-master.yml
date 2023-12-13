@@ -1,0 +1,29 @@
+on:
+  pull_request:
+    branches:
+      - next
+    types: ['closed']
+
+jobs:
+  cherry_pick_to_master:
+    runs-on: ubuntu-latest
+    name: Cherry pick into master
+    permissions:
+      pull-requests: write
+      contents: write
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'needs cherry-pick') && github.event.pull_request.merged == true }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Cherry pick and create the new PR
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.9
+        with:
+          branch: master
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: 'Cherry-pick of #{old_pull_request_id}'
+          labels: |
+            cherry-pick
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

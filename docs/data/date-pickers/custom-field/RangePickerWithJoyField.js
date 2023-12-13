@@ -34,6 +34,7 @@ const JoyField = React.forwardRef((props, ref) => {
     endDecorator,
     startDecorator,
     slotProps,
+    inputRef,
     ...other
   } = props;
 
@@ -58,6 +59,7 @@ const JoyField = React.forwardRef((props, ref) => {
         slotProps={{
           ...slotProps,
           root: { ...slotProps?.root, ref: containerRef },
+          input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
       />
@@ -118,22 +120,19 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
     className,
   } = props;
 
-  const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
+  const startTextFieldProps = useSlotProps({
     elementType: FormControl,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'start' },
   });
 
-  const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
+  const endTextFieldProps = useSlotProps({
     elementType: FormControl,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'end' },
   });
 
-  const {
-    startDate: { ref: startRef, ...startDateProps },
-    endDate: { ref: endRef, ...endDateProps },
-  } = useMultiInputDateRangeField({
+  const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
       value,
       defaultValue,
@@ -152,29 +151,13 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
     },
     startTextFieldProps,
     endTextFieldProps,
-    startInputRef,
-    endInputRef,
   });
 
   return (
     <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
-      <JoyField
-        {...startDateProps}
-        slotProps={{
-          input: {
-            ref: startRef,
-          },
-        }}
-      />
+      <JoyField {...fieldResponse.startDate} />
       <MultiInputJoyDateRangeFieldSeparator />
-      <JoyField
-        {...endDateProps}
-        slotProps={{
-          input: {
-            ref: endRef,
-          },
-        }}
-      />
+      <JoyField {...fieldResponse.endDate} />
     </MultiInputJoyDateRangeFieldRoot>
   );
 });
