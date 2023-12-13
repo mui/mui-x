@@ -24,11 +24,8 @@ import {
   UseClearableFieldSlotProps,
 } from '../../../hooks/useClearableField';
 
-export interface UseDesktopPickerSlots<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
-> extends Pick<
+export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends Pick<
       PickersPopperSlots,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
@@ -37,13 +34,11 @@ export interface UseDesktopPickerSlots<
   /**
    * Component used to enter the date with the keyboard.
    */
-  field: React.ElementType<
-    BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, TUseV6TextField, any>
-  >;
+  field: React.ElementType;
   /**
    * Form control with an input to render the value inside the default field.
    * Receives the same props as `@mui/material/TextField`.
-   * @default TextField from '@mui/material'
+   * @default PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled.
    */
   textField?: React.ElementType<TextFieldProps>;
   /**
@@ -117,7 +112,7 @@ export interface UseDesktopPickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopPickerSlots<TDate, TView, TUseV6TextField>;
+  slots: UseDesktopPickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

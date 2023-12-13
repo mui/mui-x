@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { BaseFieldProps } from '../internals/models/fields';
 import type { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
 import { PickersSectionListRef } from '../PickersSectionList';
+import type { UseFieldResponse } from '../internals/hooks/useField';
 
 export type FieldSectionType =
   | 'year'
@@ -112,26 +113,10 @@ export interface FieldRef<TSection extends FieldSection> {
 
 export type FieldSelectedSections = number | FieldSectionType | null | 'all';
 
-/**
- * Props the single input field can receive when used inside a picker.
- * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
- */
-export interface BaseSingleInputFieldProps<
-  TValue,
-  TDate,
-  TSection extends FieldSection,
-  TUseV6TextField extends boolean,
-  TError,
-> extends BaseFieldProps<TValue, TDate, TSection, TUseV6TextField, TError>,
-    ExportedUseClearableFieldProps {
+interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableFieldProps {
   label?: React.ReactNode;
   id?: string;
   name?: string;
-  inputRef?: React.Ref<HTMLInputElement>;
-  /**
-   * Only used for v7 TextField implementation.
-   */
-  sectionListRef?: React.Ref<PickersSectionListRef>;
   onKeyDown?: React.KeyboardEventHandler;
   onBlur?: React.FocusEventHandler;
   focused?: boolean;
@@ -146,3 +131,37 @@ export interface BaseSingleInputFieldProps<
   slots?: {};
   slotProps?: {};
 }
+
+interface BaseForwardedV6SingleInputFieldProps {
+  inputRef?: React.Ref<HTMLInputElement>;
+}
+
+interface BaseForwardedV7SingleInputFieldProps {
+  sectionListRef?: React.Ref<PickersSectionListRef>;
+}
+
+type BaseForwardedSingleInputFieldProps<TUseV6TextField extends boolean> =
+  BaseForwardedCommonSingleInputFieldProps &
+    (TUseV6TextField extends true
+      ? BaseForwardedV6SingleInputFieldProps
+      : BaseForwardedV7SingleInputFieldProps);
+
+/**
+ * Props the single input field can receive when used inside a picker.
+ * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
+ */
+export type BaseSingleInputFieldProps<
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TUseV6TextField extends boolean,
+  TError,
+> = BaseFieldProps<TValue, TDate, TSection, TUseV6TextField, TError> &
+  BaseForwardedSingleInputFieldProps<TUseV6TextField>;
+
+/**
+ * Props the text field receives when used with a single input picker.
+ * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
+ */
+export type BaseSingleInputPickersTextFieldProps<TUseV6TextField extends boolean> =
+  UseFieldResponse<TUseV6TextField, BaseForwardedSingleInputFieldProps<TUseV6TextField>>;

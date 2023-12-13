@@ -18,12 +18,9 @@ import {
 } from '../MultiSectionDigitalClock';
 import { TimeView } from '../models';
 
-export interface DesktopTimePickerSlots<TDate, TUseV6TextField extends boolean>
+export interface DesktopTimePickerSlots<TDate>
   extends BaseTimePickerSlots<TDate>,
-    MakeOptional<
-      UseDesktopPickerSlots<TDate, TimeViewWithMeridiem, TUseV6TextField>,
-      'field' | 'openPickerIcon'
-    >,
+    MakeOptional<UseDesktopPickerSlots<TDate, TimeViewWithMeridiem>, 'field' | 'openPickerIcon'>,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
@@ -45,7 +42,7 @@ export interface DesktopTimePickerProps<TDate, TUseV6TextField extends boolean =
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopTimePickerSlots<TDate, TUseV6TextField>;
+  slots?: DesktopTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

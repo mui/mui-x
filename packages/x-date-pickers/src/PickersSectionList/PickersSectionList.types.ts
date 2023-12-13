@@ -30,7 +30,24 @@ export interface PickersSectionListRef {
   getSectionIndexFromDOMElement: (element: Element | null | undefined) => number | null;
 }
 
-export interface PickersSectionListProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ExportedPickersSectionListProps
+  extends Pick<React.HTMLAttributes<HTMLDivElement>, 'tabIndex'> {
+  /**
+   * The elements to render.
+   * Each element contains the prop to edit a section of the value.
+   */
+  elements: PickersSectionElement[];
+  sectionListRef: React.Ref<PickersSectionListRef>;
+  /**
+   * If true, the whole element is editable.
+   * Useful when all the sections are selected.
+   */
+  contentEditable: boolean;
+}
+
+export interface PickersSectionListProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'contentEditable'>,
+    ExportedPickersSectionListProps {
   /**
    * Overridable component slots.
    */
@@ -40,18 +57,7 @@ export interface PickersSectionListProps extends React.HTMLAttributes<HTMLDivEle
    */
   slotProps?: PickersSectionListSlotProps;
   /**
-   * The elements to render.
-   * Each element contains the prop to edit a section of the value.
-   */
-  elements: PickersSectionElement[];
-  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickersSectionListClasses>;
-  /**
-   * If true, the whole element is editable.
-   * Useful when all the sections are selected.
-   */
-  contentEditable: boolean;
-  sectionListRef: React.Ref<PickersSectionListRef>;
 }

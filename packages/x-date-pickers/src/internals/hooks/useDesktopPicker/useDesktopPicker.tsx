@@ -147,13 +147,7 @@ export const useDesktopPicker = <
     };
   }
 
-  const slotsForField: BaseSingleInputFieldProps<
-    TDate | null,
-    TDate,
-    FieldSection,
-    TUseV6TextField,
-    unknown
-  >['slots'] = {
+  const slotsForField = {
     textField: slots.textField,
     clearIcon: slots.clearIcon,
     clearButton: slots.clearButton,

@@ -11,6 +11,7 @@ export type {
   PickersSectionListRef,
   PickersSectionListSlots,
   PickersSectionListSlotProps,
+  ExportedPickersSectionListProps,
 } from './PickersSectionList.types';
 export {
   getPickersSectionListUtilityClass,

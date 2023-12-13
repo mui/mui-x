@@ -100,6 +100,8 @@ You can check the following sections:
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
 
+{{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
+
 ### Using the browser input
 
 :::warning

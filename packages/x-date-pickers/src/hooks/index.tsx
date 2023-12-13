@@ -3,4 +3,5 @@ export type {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
+  UseClearableFieldResponse,
 } from './useClearableField';

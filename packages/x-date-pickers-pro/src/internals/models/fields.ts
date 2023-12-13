@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import { BaseFieldProps, FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
+import { BaseFieldProps } from '@mui/x-date-pickers/internals';
 import { FieldRef, FieldSection } from '@mui/x-date-pickers/models';
 
 export interface RangeFieldSection extends FieldSection {
@@ -11,15 +11,18 @@ export interface RangeFieldSection extends FieldSection {
  * Props the `textField` slot of the multi input field can receive when used inside a picker.
  */
 export interface MultiInputFieldSlotTextFieldProps {
+  label?: React.ReactNode;
+  id?: string;
   inputRef?: React.Ref<HTMLInputElement>;
   disabled?: boolean;
   readOnly?: boolean;
-  id?: string;
-  label?: React.ReactNode;
   onKeyDown?: React.KeyboardEventHandler;
+  onClick?: React.MouseEventHandler;
   onFocus?: React.FocusEventHandler;
   focused?: boolean;
-  InputProps?: Partial<FieldsTextFieldProps['InputProps']>;
+  InputProps?: {
+    ref?: React.Ref<unknown>;
+  };
 }
 
 /**

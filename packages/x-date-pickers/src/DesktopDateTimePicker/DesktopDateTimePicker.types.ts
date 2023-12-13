@@ -18,10 +18,10 @@ import {
 } from '../MultiSectionDigitalClock';
 import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
 
-export interface DesktopDateTimePickerSlots<TDate, TUseV6TextField extends boolean>
+export interface DesktopDateTimePickerSlots<TDate>
   extends BaseDateTimePickerSlots<TDate>,
     MakeOptional<
-      UseDesktopPickerSlots<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField>,
+      UseDesktopPickerSlots<TDate, DateOrTimeViewWithMeridiem>,
       'field' | 'openPickerIcon'
     >,
     DigitalClockSlots,
@@ -50,7 +50,7 @@ export interface DesktopDateTimePickerProps<TDate, TUseV6TextField extends boole
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateTimePickerSlots<TDate, TUseV6TextField>;
+  slots?: DesktopDateTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

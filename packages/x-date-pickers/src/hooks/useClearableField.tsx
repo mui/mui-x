@@ -36,9 +36,14 @@ interface UseClearableFieldProps extends ExportedUseClearableFieldProps {
   slotProps?: UseClearableFieldSlotProps;
 }
 
+export type UseClearableFieldResponse<TFieldProps extends UseClearableFieldProps> = Omit<
+  TFieldProps,
+  'clearable' | 'onClear' | 'slots' | 'slotProps'
+>;
+
 export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
   props: TFieldProps,
-): Omit<TFieldProps, 'clearable' | 'onClear' | 'slots' | 'slotProps'> => {
+): UseClearableResponse<TFieldProps> => {
   const localeText = useLocaleText();
 
   const { clearable, onClear, InputProps, sx, slots, slotProps, ...other } = props;

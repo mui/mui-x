@@ -11,9 +11,9 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { DateView } from '../models';
 
-export interface MobileDatePickerSlots<TDate, TUseV6TextField extends boolean>
+export interface MobileDatePickerSlots<TDate>
   extends BaseDatePickerSlots<TDate>,
-    MakeOptional<UseMobilePickerSlots<TDate, DateView, TUseV6TextField>, 'field'> {}
+    MakeOptional<UseMobilePickerSlots<TDate, DateView>, 'field'> {}
 
 export interface MobileDatePickerSlotProps<TDate, TUseV6TextField extends boolean>
   extends BaseDatePickerSlotProps<TDate>,
@@ -26,7 +26,7 @@ export interface MobileDatePickerProps<TDate, TUseV6TextField extends boolean = 
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDatePickerSlots<TDate, TUseV6TextField>;
+  slots?: MobileDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

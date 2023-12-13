@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import Box from '@mui/system/Box';
+import Box, { BoxProps } from '@mui/system/Box';
 import styled from '@mui/system/styled';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,40 +10,31 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
+  useClearableField,
+  UseClearableFieldResponse,
+} from '@mui/x-date-pickers/hooks';
+import {
+  BaseSingleInputPickersTextFieldProps,
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
 } from '@mui/x-date-pickers-pro';
-import {
-  Unstable_PickersSectionList as PickersSectionList,
-  PickersSectionListProps,
-} from '@mui/x-date-pickers/PickersSectionList';
+import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
-interface BrowserFieldProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'contentEditable'>,
-    Pick<
-      PickersSectionListProps,
-      'elements' | 'sectionListRef' | 'contentEditable' | 'tabIndex'
+interface HeadlessFieldResponse
+  extends BaseSingleInputPickersTextFieldProps<false>,
+    Omit<
+      BoxProps<'div'>,
+      keyof BaseSingleInputPickersTextFieldProps<false> | 'ref'
     > {
-  label?: React.ReactNode;
-  inputRef?: React.Ref<any>;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
-  error?: boolean;
-  focused?: boolean;
-  ownerState?: any;
-  sx?: any;
-  textField: 'v6' | 'v7';
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-type BrowserFieldComponent = ((
-  props: BrowserFieldProps & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { propTypes?: any };
+const BrowserFieldRoot = styled(Box, { name: 'BrowserField', slot: 'Root' })({
+  display: 'flex',
+  alignItems: 'center',
+});
 
 const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(
   {
@@ -55,26 +46,25 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-const BrowserField = React.forwardRef(
-  (props: BrowserFieldProps, ref: React.Ref<HTMLDivElement>) => {
+const BrowserTextField = React.forwardRef(
+  (
+    props: UseClearableFieldResponse<HeadlessFieldResponse>,
+    ref: React.Ref<HTMLDivElement>,
+  ) => {
     const {
       disabled,
-      id,
       label,
-      inputRef,
       InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
       // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
       error,
       focused,
-      ownerState,
-      sx,
       textField,
       elements,
       onClick,
       onInput,
       sectionListRef,
-
       contentEditable,
+      areAllSectionsEmpty,
       onFocus,
       onBlur,
       tabIndex,
@@ -84,12 +74,7 @@ const BrowserField = React.forwardRef(
     const handleRef = useForkRef(containerRef, ref);
 
     return (
-      <Box
-        sx={{ ...(sx || {}), display: 'flex', alignItems: 'center' }}
-        id={id}
-        ref={handleRef}
-        {...other}
-      >
+      <BrowserFieldRoot ref={handleRef} {...other}>
         {startAdornment}
         <BrowserFieldContent>
           <PickersSectionList
@@ -102,10 +87,10 @@ const BrowserField = React.forwardRef(
           />
         </BrowserFieldContent>
         {endAdornment}
-      </Box>
+      </BrowserFieldRoot>
     );
   },
-) as BrowserFieldComponent;
+);
 
 interface BrowserDateFieldProps
   extends UseDateFieldProps<Dayjs, false>,
@@ -121,7 +106,11 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+    const fieldResponse: HeadlessFieldResponse = useDateField<
+      Dayjs,
+      false,
+      typeof textFieldProps
+    >({
       ...textFieldProps,
       shouldUseV6TextField: false,
     });
@@ -133,7 +122,7 @@ const BrowserDateField = React.forwardRef(
       slotProps,
     });
 
-    return <BrowserField ref={ref} {...processedFieldProps} />;
+    return <BrowserTextField ref={ref} {...processedFieldProps} />;
   },
 );
 

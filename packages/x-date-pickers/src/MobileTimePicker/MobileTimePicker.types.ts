@@ -12,12 +12,9 @@ import { MakeOptional } from '../internals/models/helpers';
 import { TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface MobileTimePickerSlots<
-  TDate,
-  TView extends TimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
-> extends BaseTimePickerSlots<TDate>,
-    MakeOptional<UseMobilePickerSlots<TDate, TView, TUseV6TextField>, 'field'> {}
+export interface MobileTimePickerSlots<TDate, TView extends TimeViewWithMeridiem>
+  extends BaseTimePickerSlots<TDate>,
+    MakeOptional<UseMobilePickerSlots<TDate, TView>, 'field'> {}
 
 export interface MobileTimePickerSlotProps<
   TDate,
@@ -36,7 +33,7 @@ export interface MobileTimePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileTimePickerSlots<TDate, TView, TUseV6TextField>;
+  slots?: MobileTimePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

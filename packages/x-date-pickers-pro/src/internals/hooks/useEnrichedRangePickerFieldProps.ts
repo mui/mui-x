@@ -159,9 +159,7 @@ const useMultiInputFieldSlotProps = <
     }
   }, [rangePosition, open, startFieldRef, endFieldRef]);
 
-  const openRangeStartSelection = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
-  ) => {
+  const openRangeStartSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
@@ -169,9 +167,7 @@ const useMultiInputFieldSlotProps = <
     }
   };
 
-  const openRangeEndSelection = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
-  ) => {
+  const openRangeEndSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
@@ -204,10 +200,10 @@ const useMultiInputFieldSlotProps = <
     ...fieldProps.slotProps,
     textField: (ownerState) => {
       const resolvedComponentProps = resolveComponentProps(pickerSlotProps?.textField, ownerState);
-      let inputProps: MultiInputFieldSlotTextFieldProps;
+      let textFieldProps: MultiInputFieldSlotTextFieldProps;
       let InputProps: MultiInputFieldSlotTextFieldProps['InputProps'];
       if (ownerState.position === 'start') {
-        inputProps = {
+        textFieldProps = {
           label: inLocaleText?.start ?? localeText.start,
           onKeyDown: onSpaceOrEnter(openRangeStartSelection),
           onFocus: handleFocusStart,
@@ -224,7 +220,7 @@ const useMultiInputFieldSlotProps = <
           };
         }
       } else {
-        inputProps = {
+        textFieldProps = {
           label: inLocaleText?.end ?? localeText.end,
           onKeyDown: onSpaceOrEnter(openRangeEndSelection),
           onFocus: handleFocusEnd,
@@ -239,7 +235,7 @@ const useMultiInputFieldSlotProps = <
 
       return {
         ...(labelId != null && { id: `${labelId}-${ownerState.position!}` }),
-        ...inputProps,
+        ...textFieldProps,
         ...resolveComponentProps(pickerSlotProps?.textField, ownerState),
         InputProps,
       };
@@ -349,14 +345,14 @@ const useSingleInputFieldSlotProps = <
     }
   };
 
-  const slots: ReturnType['slots'] = {
+  const slots = {
     ...fieldProps.slots,
     textField: pickerSlots?.textField,
     clearButton: pickerSlots?.clearButton,
     clearIcon: pickerSlots?.clearIcon,
   };
 
-  const slotProps: ReturnType['slotProps'] = {
+  const slotProps = {
     ...fieldProps.slotProps,
     textField: pickerSlotProps?.textField,
     clearButton: pickerSlots?.clearButton,
