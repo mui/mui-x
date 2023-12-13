@@ -972,9 +972,9 @@ describe('<DataGridPro /> - Row editing', () => {
         apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
-        await act(() => {
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        });
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
         expect(listener.callCount).to.equal(0);
 
         userEvent.mousePress(getCell(1, 1));
@@ -1035,9 +1035,9 @@ describe('<DataGridPro /> - Row editing', () => {
         apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
-        await act(() => {
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        });
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
         expect(listener.callCount).to.equal(0);
 
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
@@ -1084,9 +1084,9 @@ describe('<DataGridPro /> - Row editing', () => {
         apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
-        await act(() => {
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        });
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
         expect(listener.callCount).to.equal(0);
 
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
