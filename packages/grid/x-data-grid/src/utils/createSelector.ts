@@ -11,8 +11,7 @@ interface CacheContainer {
 
 export interface OutputSelector<State, Result> {
   (apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>): Result;
-  // TODO v6: make instanceId require
-  (state: State, instanceId?: GridCoreApi['instanceId']): Result;
+  (state: State, instanceId: GridCoreApi['instanceId']): Result;
   acceptsApiRef: boolean;
 }
 

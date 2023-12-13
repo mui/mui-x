@@ -78,9 +78,18 @@ Below are described the steps you need to make to migrate from v6 to v7.
 - The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 
-<!-- ### State access
+### State access
 
-- -->
+- Some selectors now require passing `instanceId` as a second argument:
+  ```diff
+  - gridColumnFieldsSelector(apiRef.current.state);
+  + gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
+  ```
+  However, it's preferable to pass the `apiRef` as the first argument instead:
+  ```js
+  gridColumnFieldsSelector(apiRef);
+  ```
+  See [Direct state access](/x/react-data-grid/state/#direct-selector-access) for more info.
 
 <!-- ### Events
 
