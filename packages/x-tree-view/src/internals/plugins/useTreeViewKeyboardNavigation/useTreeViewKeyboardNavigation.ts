@@ -60,7 +60,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     params.items.forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [params.items, params.getItemId]);
+  }, [params.items, params.getItemId, instance]);
 
   populateInstance<UseTreeViewKeyboardNavigationSignature>(instance, {
     updateFirstCharMap,

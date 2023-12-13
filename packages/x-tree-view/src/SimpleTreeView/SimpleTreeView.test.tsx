@@ -21,7 +21,7 @@ describe('<SimpleTreeView />', () => {
     inheritComponent: 'ul',
     render,
     refInstanceof: window.HTMLUListElement,
-    muiName: 'MuiTreeView',
+    muiName: 'MuiSimpleTreeView',
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
