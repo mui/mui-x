@@ -217,6 +217,7 @@ function BlogCard(props: { blog: Blog }) {
         sx={(theme) => ({
           p: 2.5,
           display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
           justifyContent: 'space-between',
           alignItems: 'center',
           gap: 3,
@@ -228,6 +229,18 @@ function BlogCard(props: { blog: Blog }) {
         })}
       >
         <div>
+          <Typography
+            variant="body2"
+            color="text.tertiary"
+            gutterBottom
+            sx={{ display: { xs: 'auto', sm: 'none' } }}
+          >
+            {props.blog.announcementDate.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </Typography>
           <Typography
             component="div"
             color="text.primary"
@@ -245,7 +258,11 @@ function BlogCard(props: { blog: Blog }) {
           size="small"
           variant="outlined"
           href={props.blog.url}
-          sx={{ height: 'fit-content', flexShrink: 0 }}
+          sx={{
+            height: 'fit-content',
+            flexShrink: 0,
+            width: { xs: '100%', sm: 'fit-content' },
+          }}
         >
           Read more
         </Button>
@@ -272,7 +289,10 @@ function BlogCard(props: { blog: Blog }) {
             <Link
               href={item.url}
               variant="body2"
-              sx={{ pl: 1.5, fontWeight: 'medium' }}
+              sx={{
+                pl: 1.5,
+                fontWeight: 'medium',
+              }}
             >
               {item.title}
             </Link>
@@ -289,6 +309,7 @@ export default function ChangeLog() {
       <Timeline
         sx={{
           p: 0,
+          px: { xs: 2, sm: 0 },
           'li:first-child': {
             '& .top-connector': {
               visibility: 'hidden',
@@ -310,6 +331,7 @@ export default function ChangeLog() {
               variant="body2"
               color="text.tertiary"
               sx={{
+                display: { xs: 'none', sm: 'flex' },
                 flex: 'none',
                 px: 0,
                 pt: 3.5,
@@ -355,7 +377,7 @@ export default function ChangeLog() {
                 })}
               />
             </TimelineSeparator>
-            <TimelineContent sx={{ pl: 4, pr: 0, pt: 0, pb: 3 }}>
+            <TimelineContent sx={{ pl: { xs: 2, sm: 4 }, pr: 0, pt: 0, pb: 3 }}>
               <BlogCard blog={blog} />
             </TimelineContent>
           </TimelineItem>
