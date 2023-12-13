@@ -6,21 +6,19 @@ import {
   StaticOnlyPickerProps,
 } from '@mui/x-date-pickers/internals';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
+  ExportedPickersLayoutSlots,
+  ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRange } from '../../models/range';
 import { UseRangePositionProps } from '../useRangePosition';
 import { RangeFieldSection } from '../../models/fields';
 
-export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {}
+export interface UseStaticRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView> {}
 
-export interface UseStaticRangePickerSlotsComponentsProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
+export interface UseStaticRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -37,12 +35,12 @@ export interface UseStaticRangePickerProps<
    * Overridable components.
    * @default {}
    */
-  slots?: UseStaticRangePickerSlotsComponent<TDate, TView>;
+  slots?: UseStaticRangePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseStaticRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseStaticRangePickerSlotProps<TDate, TView>;
 }
 
 export interface UseStaticRangePickerParams<

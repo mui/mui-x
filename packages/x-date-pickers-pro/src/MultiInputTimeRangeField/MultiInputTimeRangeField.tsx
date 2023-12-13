@@ -14,6 +14,7 @@ import {
 import {
   splitFieldInternalAndForwardedProps,
   FieldsTextFieldProps,
+  convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputTimeRangeFieldProps } from './MultiInputTimeRangeField.types';
 import { useMultiInputTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
@@ -138,63 +139,22 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     className: classes.separator,
   });
 
-  const {
-    startDate: {
-      onKeyDown: onStartInputKeyDown,
-      ref: startInputRef,
-      readOnly: startReadOnly,
-      inputMode: startInputMode,
-      ...startDateProps
-    },
-    endDate: {
-      onKeyDown: onEndInputKeyDown,
-      ref: endInputRef,
-      readOnly: endReadOnly,
-      inputMode: endInputMode,
-      ...endDateProps
-    },
-  } = useMultiInputTimeRangeField<TDate, FieldsTextFieldProps>({
+  const fieldResponse = useMultiInputTimeRangeField<TDate, FieldsTextFieldProps>({
     sharedProps: { ...timeFieldInternalProps, disabled },
     startTextFieldProps,
     endTextFieldProps,
-    startInputRef: startTextFieldProps.inputRef,
     unstableStartFieldRef,
-    endInputRef: endTextFieldProps.inputRef,
     unstableEndFieldRef,
   });
 
+  const startDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.startDate);
+  const endDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.endDate);
+
   return (
     <Root {...rootProps}>
-      <TextField
-        fullWidth
-        {...startDateProps}
-        InputProps={{
-          ...startDateProps.InputProps,
-          readOnly: startReadOnly,
-        }}
-        inputProps={{
-          ...startDateProps.inputProps,
-          ref: startInputRef,
-          inputMode: startInputMode,
-          onKeyDown: onStartInputKeyDown,
-        }}
-      />
+      <TextField fullWidth {...startDateProps} />
       <Separator {...separatorProps} />
-      <TextField
-        fullWidth
-        {...endDateProps}
-        InputProps={{
-          ...endDateProps.InputProps,
-          readOnly: endReadOnly,
-        }}
-        inputProps={{
-          ...endDateProps.inputProps,
-          ref: endInputRef,
-          readOnly: endReadOnly,
-          inputMode: endInputMode,
-          onKeyDown: onEndInputKeyDown,
-        }}
-      />
+      <TextField fullWidth {...endDateProps} />
     </Root>
   );
 }) as MultiInputTimeRangeFieldComponent;
@@ -325,6 +285,7 @@ MultiInputTimeRangeField.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',

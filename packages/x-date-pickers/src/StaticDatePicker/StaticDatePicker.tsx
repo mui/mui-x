@@ -4,7 +4,7 @@ import { StaticDatePickerProps } from './StaticDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { validateDate } from '../internals';
+import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';

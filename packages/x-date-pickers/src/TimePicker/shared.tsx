@@ -2,10 +2,7 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
-import {
-  TimeClockSlotsComponent,
-  TimeClockSlotsComponentsProps,
-} from '../TimeClock/TimeClock.types';
+import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
@@ -21,7 +18,7 @@ import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
+export interface BaseTimePickerSlots<TDate> extends TimeClockSlots {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
@@ -29,7 +26,7 @@ export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsCompo
   toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
 }
 
-export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsComponentsProps {
+export interface BaseTimePickerSlotProps extends TimeClockSlotProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
@@ -45,12 +42,12 @@ export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem>
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseTimePickerSlotsComponent<TDate>;
+  slots?: BaseTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseTimePickerSlotsComponentsProps;
+  slotProps?: BaseTimePickerSlotProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
