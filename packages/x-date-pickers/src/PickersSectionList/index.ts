@@ -1,9 +1,17 @@
-export { PickersSectionList as Unstable_PickersSectionList } from './PickersSectionList';
+export {
+  PickersSectionList as Unstable_PickersSectionList,
+  PickersSectionListRoot as Unstable_PickersSectionListRoot,
+  PickersSectionListSection as Unstable_PickersSectionListSection,
+  PickersSectionListSectionSeparator as Unstable_PickersSectionListSectionSeparator,
+  PickersSectionListSectionContent as Unstable_PickersSectionListSectionContent,
+} from './PickersSectionList';
 export type {
   PickersSectionListProps,
   PickersSectionElement,
   PickersSectionListRef,
-} from './PickersSectionList';
+  PickersSectionListSlots,
+  PickersSectionListSlotProps,
+} from './PickersSectionList.types';
 export {
   getPickersSectionListUtilityClass,
   pickersSectionListClasses,

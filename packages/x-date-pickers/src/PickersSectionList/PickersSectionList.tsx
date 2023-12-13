@@ -1,6 +1,7 @@
 import * as React from 'react';
+import styled from '@mui/system/styled';
 import PropTypes from 'prop-types';
-import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
+import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
 import {
@@ -8,60 +9,38 @@ import {
   pickersSectionListClasses,
   PickersSectionListClasses,
 } from './pickersSectionListClasses';
+import { PickersSectionListProps, PickersSectionElement } from './PickersSectionList.types';
 
-interface PickersSectionListSlots {
-  root: React.ElementType;
-  section: React.ElementType;
-  sectionSeparator: React.ElementType;
-  sectionContent: React.ElementType;
-}
+export const PickersSectionListRoot = styled('div', {
+  name: 'MuiPickersSectionList',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({
+  direction: 'ltr /*! @noflip */' as any,
+  outline: 'none',
+});
 
-interface PickersSectionListSlotProps {
-  root?: SlotComponentProps<'div', {}, {}>;
-  section?: SlotComponentProps<'span', {}, {}>;
-  sectionSeparator?: SlotComponentProps<'span', {}, { position: 'before' | 'after' }>;
-  sectionContent?: SlotComponentProps<'span', {}, {}>;
-}
+export const PickersSectionListSection = styled('span', {
+  name: 'MuiPickersSectionList',
+  slot: 'Section',
+  overridesResolver: (props, styles) => styles.section,
+})({});
 
-export interface PickersSectionElement {
-  container: React.HTMLAttributes<HTMLSpanElement>;
-  content: React.HTMLAttributes<HTMLSpanElement>;
-  before: React.HTMLAttributes<HTMLSpanElement>;
-  after: React.HTMLAttributes<HTMLSpanElement>;
-}
+export const PickersSectionListSectionSeparator = styled('span', {
+  name: 'MuiPickersSectionList',
+  slot: 'SectionSeparator',
+  overridesResolver: (props, styles) => styles.sectionSeparator,
+})({
+  whiteSpace: 'pre',
+});
 
-export interface PickersSectionListRef {
-  getRoot: () => HTMLElement;
-  getSectionContainer: (sectionIndex: number) => HTMLElement;
-  getSectionContent: (sectionIndex: number) => HTMLElement;
-  getSectionIndexFromDOMElement: (element: Element | null | undefined) => number | null;
-}
-
-export interface PickersSectionListProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * Overridable component slots.
-   */
-  slots: PickersSectionListSlots;
-  /**
-   * The props used for each component slot.
-   */
-  slotProps?: PickersSectionListSlotProps;
-  /**
-   * The elements to render.
-   * Each element contains the prop to edit a section of the value.
-   */
-  elements: PickersSectionElement[];
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<PickersSectionListClasses>;
-  /**
-   * If true, the whole element is editable.
-   * Useful when all the sections are selected.
-   */
-  contentEditable: boolean;
-  sectionListRef: React.Ref<PickersSectionListRef>;
-}
+export const PickersSectionListSectionContent = styled('span', {
+  name: 'MuiPickersSectionList',
+  slot: 'SectionContent',
+  overridesResolver: (props, styles) => styles.sectionContent,
+})({
+  outline: 'none',
+});
 
 const useUtilityClasses = (ownerState: PickersSectionListProps) => {
   const { classes } = ownerState;
@@ -92,7 +71,7 @@ interface PickersSectionProps extends Pick<PickersSectionListProps, 'slots' | 's
 function PickersSection(props: PickersSectionProps) {
   const { slots, slotProps, element, classes } = props;
 
-  const Section = slots.section;
+  const Section = slots?.section ?? PickersSectionListSection;
   const sectionProps = useSlotProps({
     elementType: Section,
     externalSlotProps: slotProps?.section,
@@ -101,7 +80,7 @@ function PickersSection(props: PickersSectionProps) {
     ownerState: {},
   });
 
-  const SectionContent = slots.sectionContent;
+  const SectionContent = slots?.sectionContent ?? PickersSectionListSectionContent;
   const sectionContentProps = useSlotProps({
     elementType: SectionContent,
     externalSlotProps: slotProps?.sectionContent,
@@ -113,7 +92,7 @@ function PickersSection(props: PickersSectionProps) {
     ownerState: {},
   });
 
-  const SectionSeparator = slots.sectionSeparator;
+  const SectionSeparator = slots?.sectionSeparator ?? PickersSectionListSectionSeparator;
   const sectionSeparatorBeforeProps = useSlotProps({
     elementType: SectionSeparator,
     externalSlotProps: slotProps?.sectionSeparator,
@@ -144,19 +123,17 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
   props: PickersSectionListProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { slots, slotProps, elements, sectionListRef, ...other } = props;
+  const { slots, slotProps, elements, sectionRef, ...other } = props;
 
   const classes = useUtilityClasses(props);
 
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
 
-  React.useImperativeHandle(sectionListRef, () => ({
+  React.useImperativeHandle(sectionRef, () => ({
     getRoot() {
       if (!rootRef.current) {
-        throw new Error(
-          'MUI: Cannot call sectionListRef.getRoot before the mount of the component',
-        );
+        throw new Error('MUI: Cannot call sectionRef.getRoot before the mount of the component');
       }
 
       return rootRef.current;
@@ -164,7 +141,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
     getSectionContainer(index) {
       if (!rootRef.current) {
         throw new Error(
-          'MUI: Cannot call sectionListRef.getSectionContainer before the mount of the component',
+          'MUI: Cannot call sectionRef.getSectionContainer before the mount of the component',
         );
       }
 
@@ -175,7 +152,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
     getSectionContent(index) {
       if (!rootRef.current) {
         throw new Error(
-          'MUI: Cannot call sectionListRef.getSectionContent before the mount of the component',
+          'MUI: Cannot call sectionRef.getSectionContent before the mount of the component',
         );
       }
 
@@ -186,7 +163,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
     getSectionIndexFromDOMElement(element) {
       if (!rootRef.current) {
         throw new Error(
-          'MUI: Cannot call sectionListRef.getSectionIndexFromDOMElement before the mount of the component',
+          'MUI: Cannot call sectionRef.getSectionIndexFromDOMElement before the mount of the component',
         );
       }
 
@@ -213,7 +190,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
     },
   }));
 
-  const Root = slots.root;
+  const Root = slots?.root ?? PickersSectionListRoot;
   const rootProps: React.HTMLAttributes<HTMLDivElement> = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
@@ -278,7 +255,7 @@ PickersSectionList.propTypes = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
-  sectionListRef: PropTypes.oneOfType([
+  sectionRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
       current: PropTypes.shape({
@@ -296,7 +273,7 @@ PickersSectionList.propTypes = {
   /**
    * Overridable component slots.
    */
-  slots: PropTypes.object.isRequired,
+  slots: PropTypes.object,
 } as any;
 
 export { PickersSectionList };

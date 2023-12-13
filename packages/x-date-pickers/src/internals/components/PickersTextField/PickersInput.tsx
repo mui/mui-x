@@ -9,7 +9,13 @@ import visuallyHidden from '@mui/utils/visuallyHidden';
 import { pickersInputClasses, getPickersInputUtilityClass } from './pickersTextFieldClasses';
 import Outline from './Outline';
 import { PickersInputProps } from './PickersInput.types';
-import { Unstable_PickersSectionList as PickersSectionList } from '../../../PickersSectionList';
+import {
+  Unstable_PickersSectionList as PickersSectionList,
+  Unstable_PickersSectionListRoot as PickersSectionListRoot,
+  Unstable_PickersSectionListSection as PickersSectionListSection,
+  Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
+  Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
+} from '../../../PickersSectionList';
 
 const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',
@@ -26,7 +32,6 @@ const PickersInputRoot = styled(Box, {
     alignItems: 'center',
     width: ownerState.fullWidth ? '100%' : '25ch',
     position: 'relative',
-    outline: 'none',
     borderRadius: (theme.vars || theme).shape.borderRadius,
     [`&:hover .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
@@ -67,17 +72,15 @@ const PickersInputRoot = styled(Box, {
   };
 });
 
-const PickersInputSectionsContainer = styled('div', {
+const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
   name: 'MuiPickersInput',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
-  direction: 'ltr /*! @noflip */' as any,
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
   flexGrow: 1,
-  outline: 'none',
   ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
   ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
     color: 'currentColor',
@@ -93,7 +96,7 @@ const PickersInputSectionsContainer = styled('div', {
   }),
 }));
 
-const PickersInputSection = styled('span', {
+const PickersInputSection = styled(PickersSectionListSection, {
   name: 'MuiPickersInput',
   slot: 'Section',
   overridesResolver: (props, styles) => styles.section,
@@ -104,7 +107,7 @@ const PickersInputSection = styled('span', {
   flexGrow: 1,
 }));
 
-const PickersInputSectionContent = styled('span', {
+const PickersInputSectionContent = styled(PickersSectionListSectionContent, {
   name: 'MuiPickersInput',
   slot: 'SectionContent',
   overridesResolver: (props, styles) => styles.content,
@@ -116,13 +119,11 @@ const PickersInputSectionContent = styled('span', {
   outline: 'none',
 }));
 
-const PickersInputSeparator = styled('span', {
+const PickersInputSeparator = styled(PickersSectionListSectionSeparator, {
   name: 'MuiPickersInput',
   slot: 'Separator',
   overridesResolver: (props, styles) => styles.separator,
-})(() => ({
-  whiteSpace: 'pre',
-}));
+})(() => ({}));
 
 const PickersInputInput = styled('input', {
   name: 'MuiPickersInput',
