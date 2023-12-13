@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import Box from '@mui/material/Box';
+import Box from '@mui/system/Box';
+import styled from '@mui/system/styled';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -9,6 +10,16 @@ import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateF
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
+
+const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(
+  {
+    border: '1px solid grey',
+    fontSize: 13.33333,
+    lineHeight: 'normal',
+    padding: '1px 2px',
+    width: '20ch',
+  },
+);
 
 const BrowserField = React.forwardRef((props, ref) => {
   const {
@@ -44,20 +55,16 @@ const BrowserField = React.forwardRef((props, ref) => {
       {...other}
     >
       {startAdornment}
-      <PickersSectionList
-        elements={elements}
-        sectionRef={sectionRef}
-        contentEditable={contentEditable}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        tabIndex={tabIndex}
-        slots={{
-          root: 'div',
-          section: 'span',
-          sectionContent: 'span',
-          sectionSeparator: 'span',
-        }}
-      />
+      <BrowserFieldContent>
+        <PickersSectionList
+          elements={elements}
+          sectionRef={sectionRef}
+          contentEditable={contentEditable}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          tabIndex={tabIndex}
+        />
+      </BrowserFieldContent>
       {endAdornment}
     </Box>
   );

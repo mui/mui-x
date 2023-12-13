@@ -93,9 +93,6 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
         elementType: 'input',
         externalSlotProps: slotProps?.textField,
         externalForwardedProps: other,
-        additionalProps: {
-          shouldUseV6TextField: true,
-        },
         ownerState: props as any,
       },
     );
@@ -115,7 +112,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       Dayjs,
       true,
       typeof textFieldProps
-    >(textFieldProps);
+    >({ ...textFieldProps, shouldUseV6TextField: true });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({

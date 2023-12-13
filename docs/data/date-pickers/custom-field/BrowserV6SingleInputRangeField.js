@@ -50,9 +50,6 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
-    additionalProps: {
-      shouldUseV6TextField: true,
-    },
     ownerState: props,
   });
 
@@ -67,7 +64,10 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ),
   };
 
-  const fieldResponse = useSingleInputDateRangeField(textFieldProps);
+  const fieldResponse = useSingleInputDateRangeField({
+    ...textFieldProps,
+    shouldUseV6TextField: true,
+  });
 
   /* If you don't need a clear button, you can skip the use of this hook */
   const processedFieldProps = useClearableField({
