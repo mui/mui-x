@@ -53,5 +53,5 @@ export interface PickersSectionListProps extends React.HTMLAttributes<HTMLDivEle
    * Useful when all the sections are selected.
    */
   contentEditable: boolean;
-  sectionRef: React.Ref<PickersSectionListRef>;
+  sectionListRef: React.Ref<PickersSectionListRef>;
 }
