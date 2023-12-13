@@ -8,9 +8,9 @@
       },
       "required": true
     },
-    "slots": { "type": { "name": "object" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "slotProps": { "type": { "name": "object" } }
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" } }
   },
   "slots": [
     { "class": null, "name": "root", "description": "" },

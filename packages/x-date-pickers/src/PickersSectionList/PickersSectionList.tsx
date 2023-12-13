@@ -273,7 +273,7 @@ PickersSectionList.propTypes = {
   /**
    * Overridable component slots.
    */
-  slots: PropTypes.object.isRequired,
+  slots: PropTypes.object,
 } as any;
 
 export { PickersSectionList };
