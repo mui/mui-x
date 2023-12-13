@@ -29,6 +29,7 @@ export const gridVirtualizationColumnEnabledSelector = createSelector(
 /**
  * Get the render context
  * @category Virtualization
+ * @ignore - do not document.
  */
 export const gridRenderContextSelector = createSelector(
   gridVirtualizationSelector,
@@ -39,6 +40,7 @@ export const gridRenderContextSelector = createSelector(
  * Get the render context, with only columns filled in.
  * This is cached, so it can be used to only re-render when the column interval changes.
  * @category Virtualization
+ * @ignore - do not document.
  */
 export const gridRenderContextColumnsSelector = createSelectorMemoized(
   (state: GridStateCommunity) => gridRenderContextSelector(state).firstColumnIndex,
