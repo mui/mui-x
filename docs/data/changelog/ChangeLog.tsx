@@ -18,7 +18,7 @@ import BrandingCssVarsProvider from 'docs/src/BrandingCssVarsProvider';
 
 type Blog = {
   title: string;
-  announcementDate: string;
+  announcementDate: Date;
   description: string;
   url: string;
   highlightList: { title: string; url: string }[];
@@ -29,7 +29,7 @@ const blogs: Blog[] = [
     title: 'MUI X v6.18.x',
     description:
       'New stable components, polished features, better performance, and more.',
-    announcementDate: 'Nov 13, 2023',
+    announcementDate: new Date(2023, 10, 13),
     url: 'https://mui.com/blog/mui-x-end-v6-features/',
     highlightList: [
       {
@@ -61,7 +61,7 @@ const blogs: Blog[] = [
   {
     title: 'MUI X v6.11.0',
     description: 'A roundup of all new features since v6.0.0.',
-    announcementDate: 'Aug 14, 2023',
+    announcementDate: new Date(2023, 7, 14),
     url: 'https://mui.com/blog/mui-x-mid-v6-features/',
     highlightList: [
       {
@@ -94,7 +94,7 @@ const blogs: Blog[] = [
     title: 'MUI X v6.0.0',
     description:
       'A new major is available, with many new features and improvements.',
-    announcementDate: 'Mar 06, 2023',
+    announcementDate: new Date(2023, 2, 6),
     url: 'https://mui.com/blog/mui-x-v6/',
     highlightList: [
       {
@@ -131,7 +131,7 @@ const blogs: Blog[] = [
     title: 'Date Pickers v5.0.0',
     description:
       'After some months of polishing in pre-releases, the Date Pickers finally get a stable.',
-    announcementDate: 'Sep 22, 2022',
+    announcementDate: new Date(2022, 8, 22),
     url: 'https://mui.com/blog/date-pickers-stable-v5/',
     highlightList: [
       {
@@ -152,7 +152,7 @@ const blogs: Blog[] = [
     title: 'Data Grid v5.15',
     description:
       'This version brings an amazing set of new supported use cases with the Data Grid Premium.',
-    announcementDate: 'Aug 12, 2022',
+    announcementDate: new Date(2022, 7, 12),
     url: 'https://mui.com/blog/aggregation-functions/',
     highlightList: [
       {
@@ -169,7 +169,7 @@ const blogs: Blog[] = [
     title: 'New Premium plan',
     description:
       'Premium plan announcement, including the most advanced features for data analysis and management.',
-    announcementDate: 'May 12, 2022',
+    announcementDate: new Date(2022, 4, 12),
     url: 'https://mui.com/blog/premium-plan-release/',
     highlightList: [
       { title: 'Row Grouping', url: '/x/react-data-grid/row-grouping/' },
@@ -180,7 +180,7 @@ const blogs: Blog[] = [
     title: 'MUI X v5.0.0',
     description:
       'A new Data Grid virtualization engine, and improvements in several APIs.',
-    announcementDate: 'Nov 22, 2021',
+    announcementDate: new Date(2021, 10, 22),
     url: 'https://mui.com/blog/mui-x-v5/',
     highlightList: [
       {
@@ -319,7 +319,11 @@ export default function ChangeLog() {
                 fontWeight: 'medium',
               }}
             >
-              {blog.announcementDate}
+              {blog.announcementDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })}
             </TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineConnector
