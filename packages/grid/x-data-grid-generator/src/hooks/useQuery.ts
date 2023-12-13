@@ -16,6 +16,7 @@ import {
   getColumnsFromOptions,
   getInitialState,
 } from './useDemoData';
+import { randomInt } from '../services/random-generator';
 
 const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridRowModel) => {
   const params = { id: row.id, row, field, rowNode: {} };
@@ -118,7 +119,7 @@ export const loadServerRows = (
   if (maxDelay < minDelay) {
     throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
   }
-  const delay = Math.random() * (maxDelay - minDelay) + minDelay;
+  const delay = randomInt(minDelay, maxDelay);
 
   const { cursor, page = 0, pageSize } = queryOptions;
 

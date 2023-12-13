@@ -394,6 +394,18 @@ export const useFieldV6TextField: UseFieldTextField<true> = (params) => {
     return () => window.clearTimeout(focusTimeoutRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const inputMode = React.useMemo(() => {
+    if (activeSectionIndex == null) {
+      return 'text';
+    }
+
+    if (state.sections[activeSectionIndex].contentType === 'letter') {
+      return 'text';
+    }
+
+    return 'numeric';
+  }, [activeSectionIndex, state.sections]);
+
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
   const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
 
@@ -411,6 +423,7 @@ export const useFieldV6TextField: UseFieldTextField<true> = (params) => {
       // Additional
       textField: 'v6' as const,
       placeholder,
+      inputMode,
       autoComplete: 'off',
       value: shouldShowPlaceholder ? '' : valueStr,
       onChange: handleInputChange,

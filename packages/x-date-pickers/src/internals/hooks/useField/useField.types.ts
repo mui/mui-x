@@ -188,7 +188,8 @@ export interface UseFieldV7ForwardedProps {
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
 }
 
-interface UseFieldV7AdditionalProps {
+interface UseFieldV7AdditionalProps
+  extends Pick<React.InputHTMLAttributes<HTMLInputElement>, 'inputMode'> {
   textField: 'v7';
   elements: PickersSectionElement[];
   tabIndex: number | undefined;
