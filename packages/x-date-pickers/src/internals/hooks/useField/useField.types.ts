@@ -169,12 +169,14 @@ export interface UseFieldV6ForwardedProps {
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
 }
 
-interface UseFieldV6AdditionalProps {
+interface UseFieldV6AdditionalProps
+  extends Required<
+    Pick<
+      React.InputHTMLAttributes<HTMLInputElement>,
+      'inputMode' | 'placeholder' | 'value' | 'onChange' | 'autoComplete'
+    >
+  > {
   textField: 'v6';
-  placeholder: string;
-  autoComplete: 'off';
-  value: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export interface UseFieldV7ForwardedProps {
@@ -188,8 +190,7 @@ export interface UseFieldV7ForwardedProps {
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
 }
 
-interface UseFieldV7AdditionalProps
-  extends Pick<React.InputHTMLAttributes<HTMLInputElement>, 'inputMode'> {
+interface UseFieldV7AdditionalProps {
   textField: 'v7';
   elements: PickersSectionElement[];
   tabIndex: number | undefined;
