@@ -22,7 +22,7 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
   return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
 };
 
-const TreeViewRoot = styled('ul', {
+export const SimpleTreeViewRoot = styled('ul', {
   name: 'MuiSimpleTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -80,6 +80,8 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     defaultParentIcon,
     // Component implementation
     children,
+    slots,
+    slotProps,
     ...other
   } = props as SimpleTreeViewProps<any>;
 
@@ -112,8 +114,9 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
 
   const classes = useUtilityClasses(props);
 
+  const Root = slots?.root ?? SimpleTreeViewRoot;
   const rootProps = useSlotProps({
-    elementType: TreeViewRoot,
+    elementType: Root,
     externalSlotProps: {},
     externalForwardedProps: other,
     className: classes.root,
@@ -123,7 +126,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
 
   return (
     <TreeViewProvider value={contextValue}>
-      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
+      <Root {...rootProps}>{children}</Root>
     </TreeViewProvider>
   );
 }) as SimpleTreeViewComponent;

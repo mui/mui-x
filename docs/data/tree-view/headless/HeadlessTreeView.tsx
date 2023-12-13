@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
-import { RichTreeViewPropsBase } from '@mui/x-tree-view/RichTreeView';
+import {
+  RichTreeViewPropsBase,
+  RichTreeViewRoot,
+} from '@mui/x-tree-view/RichTreeView';
 import {
   TreeViewPlugin,
   TreeViewPluginSignature,
@@ -72,18 +75,6 @@ useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
   areLogsEnabled: params.areLogsEnabled ?? false,
 });
 
-// This could be exported from the package in the future
-const TreeViewRoot = styled('ul', {
-  name: 'HeadlessTreeView',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeViewProps<any, any> }>({
-  padding: 0,
-  margin: 0,
-  listStyle: 'none',
-  outline: 0,
-});
-
 export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
   extends DefaultTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
@@ -145,7 +136,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
   });
 
   const rootProps = useSlotProps({
-    elementType: TreeViewRoot,
+    elementType: RichTreeViewRoot,
     externalSlotProps: {},
     externalForwardedProps: other,
     getSlotProps: getRootProps,
@@ -154,7 +145,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
 
   return (
     <TreeViewProvider value={contextValue}>
-      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
+      <RichTreeViewRoot {...rootProps}>{children}</RichTreeViewRoot>
     </TreeViewProvider>
   );
 }

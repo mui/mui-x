@@ -23,7 +23,7 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   return composeClasses(slots, getRichTreeViewUtilityClass, classes);
 };
 
-const RichTreeViewRoot = styled('ul', {
+export const RichTreeViewRoot = styled('ul', {
   name: 'MuiRichTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,

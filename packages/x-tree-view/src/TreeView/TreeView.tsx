@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
-import { SimpleTreeView } from '../SimpleTreeView';
+import { SimpleTreeView, SimpleTreeViewRoot } from '../SimpleTreeView';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
@@ -21,6 +21,12 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
 type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
   props: TreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
+
+const TreeViewRoot = styled(SimpleTreeViewRoot, {
+  name: 'MuiTreeView',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
 
 let warnedOnce = false;
 
@@ -62,7 +68,14 @@ const TreeView = React.forwardRef(function TreeView<
 
   const classes = useUtilityClasses(props);
 
-  return <SimpleTreeView {...props} ref={ref} classes={classes} />;
+  return (
+    <SimpleTreeView
+      {...props}
+      ref={ref}
+      classes={classes}
+      slots={{ root: TreeViewRoot, ...props.slots }}
+    />
+  );
 }) as TreeViewComponent;
 
 TreeView.propTypes = {
