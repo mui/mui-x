@@ -372,6 +372,8 @@ You should now be able to directly pass the returned value from your field hook 
 ```
 
 :::info
+// TODO v7: update to a more specific section link when the refactored field components are released?
+
 If your custom field is based on one of the examples of the [Custom field](/x/react-date-pickers/custom-field/) page,
 then you can look at the page to see all the examples improved and updated to use the new simplified API.
 :::
