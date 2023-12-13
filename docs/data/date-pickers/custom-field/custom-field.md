@@ -55,7 +55,7 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 {{"demo": "FieldFormatDensity.js"}}
 
-## Usage with Material `TextField` (deprecated)
+## Usage with Material `TextField`
 
 The legacy field that uses the `TextField` component from `@mui/material` is still available.
 To enable it, you have to pass the `shouldUseV6TextField` prop to any field or picker component:
@@ -74,7 +74,7 @@ You can check the [presentation of the new DOM structure](/x/react-date-pickers/
 
 TODO
 
-### Using Joy `Input` (deprecated)
+### Using Joy `Input`
 
 You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
 
@@ -84,8 +84,9 @@ This DOM structure will be removed in the next major (v8).
 You can check the following sections:
 
 - [The presentation of the new DOM structure](/x/react-date-pickers/fields/#v7-one-span-per-section)
-- [The guide on how to use Joy UI with the new DOM structure](/x/react-date-pickers/custom-field/#using-pickerstextfield)
-  :::
+- [The guide on how to use Joy UI with the new DOM structure](/x/react-date-pickers/custom-field/#using-joy-pickerstextfield)
+
+:::
 
 {{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
 
@@ -99,7 +100,7 @@ You can check the following sections:
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
 
-### Using the browser input (deprecated)
+### Using the browser input
 
 :::warning
 This DOM structure will be removed in the next major (v8).
@@ -107,8 +108,9 @@ This DOM structure will be removed in the next major (v8).
 You can check the following sections:
 
 - [The presentation of the new DOM structure](/x/react-date-pickers/fields/#v7-one-span-per-section)
-- [The guide on how to use an unstyled input with the new DOM structure](/x/react-date-pickers/custom-field/#using-pickerstextfield-2)
-  :::
+- [The guide on how to use an unstyled input with the new DOM structure](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield)
+
+:::
 
 {{"demo": "BrowserV6Field.js", "defaultCodeOpen": false}}
 

@@ -63,6 +63,46 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## New field DOM structure
+
+### Keeping the old DOM structure
+
+The old DOM structure will only be removed in the first v8 release to provide a smoother migration path.
+You can keep using this structure by providing the `shouldUseV6TextField` prop to any picker or field component:
+
+```tsx
+<DatePicker shouldUseV6TextField />
+```
+
+If you want to apply this as a default throughout your entire application, you can pass it to the theme.
+Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#theme-default-props) for more information.
+
+```ts
+const theme = createTheme({
+  components: {
+    // Do the same for any other component you are using in your application.
+    MuiDatePicker: {
+      defaultProps: {
+        shouldUseV6TextField: true,
+      },
+    },
+    MuiTimePicker: {
+      defaultProps: {
+        shouldUseV6TextField: true,
+      },
+    },
+  },
+});
+```
+
+### Migrating to the new DOM structure
+
+### Usage with `slotProps.textField` and `slotProps.field`
+
+### Usage with custom `slots.textField`
+
+### Usage with custom `slots.field`
+
 ## Component slots
 
 ### Rename `components` to `slots`

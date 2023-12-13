@@ -439,6 +439,22 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
   );
 
   React.useEffect(() => {
+    if (sectionRef.current == null) {
+      throw new Error(
+        [
+          'MUI: The `sectionRef` prop has not been initialized by `PickersSectionList`',
+          'You probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.',
+          '',
+          'If you want to keep using an `<input />` HTML element for the editing, please pass `shouldUseV6TextField` to your picker or field component:',
+          '',
+          '<DatePicker shouldUseV6TextField slots={{ textField: MyCustomTextField }} />',
+          '',
+          'Warning: This DOM structure based on an `<input />` HTML element will be removed in the next major (v8).',
+          'Learn more about the new DOM structure on the MUI documentation: https://next.mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
+        ].join('\n'),
+      );
+    }
+
     if (autoFocus && sectionRef.current) {
       sectionRef.current.getSectionContent(sectionOrder.startIndex).focus();
     }
