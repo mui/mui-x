@@ -10,7 +10,7 @@ _Dec 14, 2023_
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 💫 New recipe added for the data grid
-- 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the Data Grid
+- 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the data grid
 - 🐞 Bugfixes
 
 ### Data Grid
@@ -26,7 +26,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Make `instanceId` required for state selectors (#11395) @cherniavskii
 - [DataGrid] Recipe for grouped rows autosizing (#11401) @michelengelen
 - [l10n] Improve Swedish (sv-SE) locale (#11373) @fredrikcarlbom
-- [l10n] Improve Urdu (ur-PK) locale for data grid (#11400) @MBilalShafi
+- [l10n] Improve Urdu (ur-PK) locale (#11400) @MBilalShafi
 
 #### `@mui/x-data-grid-pro@7.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -40,8 +40,8 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 
 #### Breaking changes
 
-- The slot interfaces got renamed to match with mui/base naming.
-Sufix `SlotsComponent` is replaced by `Slots` and `SlotsComponentsProps` is replaced by `SlotProps`.
+- The slot interfaces got renamed to match with `@mui/base` naming.
+The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
 
 ```diff
 - DateCalendarSlotsComponent
@@ -63,7 +63,7 @@ Sufix `SlotsComponent` is replaced by `Slots` and `SlotsComponentsProps` is repl
 
 Same changes as in `@mui/x-date-pickers@7.0.0-alpha.5`, plus:
 
-- [DateRangePicker] Fix `autoFocus` behavior  (#11273) @kealjones-wk
+- [DateRangePicker] Fix `autoFocus` behavior (#11273) @kealjones-wk
 
 ### Charts / `@mui/x-charts@7.0.0-alpha.5`
 
