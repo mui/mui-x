@@ -8,7 +8,6 @@ import {
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { refType } from '@mui/utils';
 import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { refType } from '@mui/utils';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
@@ -39,7 +38,7 @@ const TimeField = React.forwardRef(function TimeField<
 
   const TextField =
     slots?.textField ?? (inProps.shouldUseV6TextField ? MuiTextField : PickersTextField);
-  const textFieldProps: TimeFieldProps<TDate, TUseV6TextField> = useSlotProps({
+  const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -47,7 +46,7 @@ const TimeField = React.forwardRef(function TimeField<
     additionalProps: {
       ref: inRef,
     },
-  });
+  }) as TimeFieldProps<TDate, TUseV6TextField>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };

@@ -8,7 +8,6 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { refType } from '@mui/utils';
 import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 

@@ -8,7 +8,6 @@ import {
   PickersTextField,
   convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
-import { refType } from '@mui/utils';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 
