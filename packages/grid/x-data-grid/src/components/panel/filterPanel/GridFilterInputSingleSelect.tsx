@@ -33,7 +33,10 @@ const renderSingleSelectOptions = ({
 
   return iterableColumnValues.map((option) => {
     const value = getOptionValue(option);
-    const label = getOptionLabel(option);
+    let label = getOptionLabel(option);
+    if (label === '') {
+      label = ' '; // To force the height of the empty option
+    }
 
     return (
       <OptionComponent {...baseSelectOptionProps} native={isSelectNative} key={value} value={value}>
