@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Dec 14, 2023_
 
-We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the Data Grid
 - 🐞 Bugfixes
@@ -32,13 +32,13 @@ Same changes as in `@mui/x-data-grid-pro@6.18.5`.
 #### `@mui/x-date-pickers@6.18.5`
 
 - [pickers] Fix field types to avoid error on latest `@types/react` version (#11398) @LukasTy
-- [pickers] Support name prop (#11025)  (#11380) @flaviendelangle
+- [pickers] Support name prop (#11380) @gitstart
 
 #### `@mui/x-date-pickers-pro@6.18.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@6.18.5`, plus:
 
-- [DateRangePicker] Fix `autoFocus` behavior  (@kealjones-wk) (#11376) @LukasTy
+- [DateRangePicker] Fix `autoFocus` behavior (#11376) @kealjones-wk
 
 ### Docs
 
