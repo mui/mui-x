@@ -80,7 +80,7 @@ const PickersInputSectionsContainer = styled('div', {
   display: 'flex',
   flexWrap: 'nowrap',
   padding: '16.5px 0',
-  width: '20ch',
+  width: 'calc(20ch + 2px)',
   flexGrow: 1,
   overflow: 'hidden',
   letterSpacing: 'inherit',
