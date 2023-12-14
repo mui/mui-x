@@ -9,8 +9,8 @@ _Dec 14, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 💫 New recipe added for the data grid
-- 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the data grid
+- 💫 New recipe added for the Data Grid
+- 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the Data Grid
 - 🐞 Bugfixes
 
 ### Data Grid
