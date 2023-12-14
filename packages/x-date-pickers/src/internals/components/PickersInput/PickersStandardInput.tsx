@@ -11,7 +11,6 @@ import {
 } from './pickersInputClasses';
 import { PickersStandardInputProps } from './PickersInput.types';
 import { PickersInputRoot, PickersInput } from './PickersInput';
-import { formControlState } from './pickersInputUtiles';
 
 const StandardInputRoot = styled(PickersInputRoot, {
   name: 'MuiPickersStandardInput',
@@ -128,26 +127,12 @@ export const PickersStandardInput = React.forwardRef(function PickersStandardInp
   const { label, autoFocus, ownerState: ownerStateProp, ...other } = props;
 
   const muiFormControl = useFormControl();
-  const fcs = formControlState({
-    props,
-    muiFormControl,
-    states: [
-      'color',
-      'disabled',
-      'error',
-      'focused',
-      'size',
-      'required',
-      'fullWidth',
-      'adornedStart',
-    ],
-  });
 
   const ownerState = {
     ...props,
     ...ownerStateProp,
-    ...fcs,
-    color: fcs.color || 'primary',
+    ...muiFormControl,
+    color: muiFormControl?.color || 'primary',
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -162,4 +147,4 @@ export const PickersStandardInput = React.forwardRef(function PickersStandardInp
   );
 });
 
-(PickersInput as any).muiName = 'StandardInput';
+(PickersInput as any).muiName = 'Input';

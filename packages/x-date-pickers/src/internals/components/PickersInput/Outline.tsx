@@ -13,7 +13,7 @@ interface OutlineOwnerState extends OutlineProps {
 }
 
 const OutlineRoot = styled('fieldset', {
-  name: 'MuiPickersOutliendInput',
+  name: 'MuiPickersOutlinedInput',
   slot: 'NotchedOutline',
   overridesResolver: (props, styles) => styles.notchedOutline,
 })<{ ownerState: OutlineOwnerState }>(({ theme }) => {

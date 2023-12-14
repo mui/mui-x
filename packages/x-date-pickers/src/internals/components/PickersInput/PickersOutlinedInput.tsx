@@ -12,7 +12,6 @@ import {
 import Outline from './Outline';
 import { PickersOutlinedInputProps } from './PickersInput.types';
 import { PickersInputRoot, PickersInput, PickersInputSectionsContainer } from './PickersInput';
-import { formControlState } from './pickersInputUtiles';
 
 const OutlinedInputRoot = styled(PickersInputRoot, {
   name: 'MuiPickersOutlinedInput',
@@ -115,26 +114,12 @@ export const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInp
   const { label, autoFocus, ownerState: ownerStateProp, notched, ...other } = props;
 
   const muiFormControl = useFormControl();
-  const fcs = formControlState({
-    props,
-    muiFormControl,
-    states: [
-      'color',
-      'disabled',
-      'error',
-      'focused',
-      'size',
-      'required',
-      'fullWidth',
-      'adornedStart',
-    ],
-  });
 
   const ownerState = {
     ...props,
     ...ownerStateProp,
-    ...fcs,
-    color: fcs.color || 'primary',
+    ...muiFormControl,
+    color: muiFormControl?.color || 'primary',
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -147,7 +132,7 @@ export const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInp
           notched={Boolean(notched || state.adornedStart || state.focused || state.filled)}
           className={classes.notchedOutline}
           label={
-            label != null && label !== '' && fcs.required ? (
+            label != null && label !== '' && muiFormControl?.required ? (
               <React.Fragment>
                 {label}
                 &thinsp;{'*'}
@@ -167,4 +152,4 @@ export const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInp
   );
 });
 
-(PickersInput as any).muiName = 'OutlinedInput';
+(PickersInput as any).muiName = 'Input';

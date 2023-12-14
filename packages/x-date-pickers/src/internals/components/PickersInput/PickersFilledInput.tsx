@@ -12,8 +12,6 @@ import {
 import { PickersFilledInputProps } from './PickersInput.types';
 import { PickersInputRoot, PickersInput, PickersInputSectionsContainer } from './PickersInput';
 
-import { formControlState } from './pickersInputUtiles';
-
 const FilledInputRoot = styled(PickersInputRoot, {
   name: 'MuiPickersFilledInput',
   slot: 'Root',
@@ -187,26 +185,12 @@ export const PickersFilledInput = React.forwardRef(function PickersFilledInput(
   const { label, autoFocus, ownerState: ownerStateProp, ...other } = props;
 
   const muiFormControl = useFormControl();
-  const fcs = formControlState({
-    props,
-    muiFormControl,
-    states: [
-      'color',
-      'disabled',
-      'error',
-      'focused',
-      'size',
-      'required',
-      'fullWidth',
-      'adornedStart',
-    ],
-  });
 
   const ownerState = {
     ...props,
     ...ownerStateProp,
-    ...fcs,
-    color: fcs.color || 'primary',
+    ...muiFormControl,
+    color: muiFormControl?.color || 'primary',
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -221,4 +205,4 @@ export const PickersFilledInput = React.forwardRef(function PickersFilledInput(
   );
 });
 
-(PickersInput as any).muiName = 'FilledInput';
+(PickersInput as any).muiName = 'Input';

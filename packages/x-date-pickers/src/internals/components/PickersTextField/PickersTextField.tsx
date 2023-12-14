@@ -12,7 +12,7 @@ import { PickersOutlinedInput } from '../PickersInput/PickersOutlinedInput';
 import { PickersFilledInput } from '../PickersInput/PickersFilledInput';
 import { PickersStandardInput } from '../PickersInput/PickersStandardInput';
 
-const variantComponent = {
+const VARIANT_COMPONENT = {
   standard: PickersStandardInput,
   filled: PickersFilledInput,
   outlined: PickersOutlinedInput,
@@ -107,7 +107,7 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
 
   const classes = useUtilityClasses(ownerState);
 
-  const PickersInputComponent = variantComponent[variant];
+  const PickersInputComponent = VARIANT_COMPONENT[variant];
 
   return (
     <PickersTextFieldRoot
