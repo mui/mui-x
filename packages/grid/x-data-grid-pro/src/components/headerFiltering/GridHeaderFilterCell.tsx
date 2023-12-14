@@ -141,8 +141,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             break;
           case 'Enter':
             if (isEditing) {
-              apiRef.current.stopHeaderFilterEditMode();
-              break;
+              if (!event.defaultPrevented) {
+                apiRef.current.stopHeaderFilterEditMode();
+                break;
+              }
             }
             if (event.metaKey || event.ctrlKey) {
               headerFilterMenuRef.current = buttonRef.current;
