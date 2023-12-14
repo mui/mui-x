@@ -4,12 +4,14 @@ import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import styled from '@mui/system/styled';
 import Box from '@mui/system/Box';
-import Stack from '@mui/system/Stack';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-
+import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled(Box, { name: 'BrowserField', slot: 'Root' })({
@@ -27,8 +29,6 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-// This demo uses `BasePickersTextFieldProps` instead of `BaseMultiInputPickersTextFieldProps`,
-// That way you can reuse the same `BrowserTextField` for all your pickers, range or not.
 const BrowserTextField = React.forwardRef((props, ref) => {
   const {
     // Should be ignored
@@ -80,93 +80,88 @@ const BrowserTextField = React.forwardRef((props, ref) => {
   );
 });
 
-const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
-  const {
+const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
+  const { slots, slotProps, onAdornmentClick, ...other } = props;
+
+  const textFieldProps = useSlotProps({
+    elementType: 'input',
+    externalSlotProps: slotProps?.textField,
+    externalForwardedProps: other,
+    ownerState: props,
+  });
+
+  textFieldProps.InputProps = {
+    ...textFieldProps.InputProps,
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton onClick={onAdornmentClick}>
+          <DateRangeIcon />
+        </IconButton>
+      </InputAdornment>
+    ),
+  };
+
+  const fieldResponse = useSingleInputDateRangeField({
+    ...textFieldProps,
+    shouldUseV6TextField: false,
+  });
+
+  /* If you don't need a clear button, you can skip the use of this hook */
+  const processedFieldProps = useClearableField({
+    ...fieldResponse,
+    slots,
     slotProps,
-    value,
-    defaultValue,
-    format,
-    onChange,
-    readOnly,
-    disabled,
-    onError,
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
-    className,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
-  } = props;
-
-  const startTextFieldProps = useSlotProps({
-    elementType: 'input',
-    externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'start' },
-  });
-
-  const endTextFieldProps = useSlotProps({
-    elementType: 'input',
-    externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'end' },
-  });
-
-  const fieldResponse = useMultiInputDateRangeField({
-    sharedProps: {
-      value,
-      defaultValue,
-      format,
-      onChange,
-      readOnly,
-      disabled,
-      onError,
-      shouldDisableDate,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-      shouldUseV6TextField: false,
-    },
-    startTextFieldProps,
-    endTextFieldProps,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
   });
 
   return (
-    <Stack
+    <BrowserTextField
+      {...processedFieldProps}
       ref={ref}
-      spacing={2}
-      direction="row"
-      overflow="auto"
-      className={className}
-    >
-      <BrowserTextField {...fieldResponse.startDate} />
-      <span> — </span>
-      <BrowserTextField {...fieldResponse.endDate} />
-    </Stack>
-  );
-});
-
-const BrowserDateRangePicker = React.forwardRef((props, ref) => {
-  return (
-    <DateRangePicker
-      ref={ref}
-      {...props}
-      slots={{ ...props.slots, field: BrowserMultiInputDateRangeField }}
+      style={{
+        minWidth: 300,
+      }}
     />
   );
 });
 
-export default function BrowserV7MultiInputRangeField() {
+BrowserSingleInputDateRangeField.fieldType = 'single-input';
+
+const BrowserSingleInputDateRangePicker = React.forwardRef((props, ref) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const toggleOpen = () => setIsOpen((currentOpen) => !currentOpen);
+
+  const handleOpen = () => setIsOpen(true);
+
+  const handleClose = () => setIsOpen(false);
+
+  return (
+    <DateRangePicker
+      ref={ref}
+      {...props}
+      open={isOpen}
+      onClose={handleClose}
+      onOpen={handleOpen}
+      slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
+      slotProps={{
+        ...props.slotProps,
+        field: {
+          onAdornmentClick: toggleOpen,
+          ...props.slotProps?.field,
+        },
+      }}
+    />
+  );
+});
+
+export default function BrowserV7SingleInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <BrowserDateRangePicker />
+      <BrowserSingleInputDateRangePicker
+        slotProps={{
+          field: { clearable: true },
+        }}
+      />
     </LocalizationProvider>
   );
 }

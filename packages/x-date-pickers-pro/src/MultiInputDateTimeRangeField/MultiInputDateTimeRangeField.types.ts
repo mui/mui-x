@@ -6,9 +6,8 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { UseDateTimeRangeFieldProps } from '../internals/models/dateTimeRange';
 import { RangePosition } from '../internals/models/range';
-import { RangeFieldSection } from '../internals/models/fields';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { MultiInputRangeFieldClasses } from '../models';
+import { RangeFieldSection, MultiInputRangeFieldClasses } from '../models';
 
 export type UseMultiInputDateTimeRangeFieldParams<
   TDate,

@@ -6,7 +6,7 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../hooks/useClearableField';
-import { DateValidationError, FieldSection } from '../models';
+import { DateValidationError, FieldSection, BuiltInFieldTextFieldProps } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import {
@@ -15,7 +15,6 @@ import {
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/models/validation';
-import { FieldsTextFieldProps } from '../internals/models/fields';
 
 export interface UseDateFieldProps<TDate, TUseV6TextField extends boolean>
   extends MakeOptional<
@@ -41,8 +40,14 @@ export type UseDateFieldComponentProps<
 > = Omit<TChildProps, keyof UseDateFieldProps<TDate, TUseV6TextField>> &
   UseDateFieldProps<TDate, TUseV6TextField>;
 
-export interface DateFieldProps<TDate, TUseV6TextField extends boolean = false>
-  extends UseDateFieldComponentProps<TDate, TUseV6TextField, FieldsTextFieldProps> {
+export type DateFieldProps<
+  TDate,
+  TUseV6TextField extends boolean = false,
+> = UseDateFieldComponentProps<
+  TDate,
+  TUseV6TextField,
+  BuiltInFieldTextFieldProps<TUseV6TextField>
+> & {
   /**
    * Overridable component slots.
    * @default {}
@@ -53,7 +58,7 @@ export interface DateFieldProps<TDate, TUseV6TextField extends boolean = false>
    * @default {}
    */
   slotProps?: DateFieldSlotProps<TDate, TUseV6TextField>;
-}
+};
 
 export type DateFieldOwnerState<TDate, TUseV6TextField extends boolean> = DateFieldProps<
   TDate,

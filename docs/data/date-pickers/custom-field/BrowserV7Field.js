@@ -11,49 +11,53 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
+const BrowserFieldRoot = styled(Box, { name: 'BrowserField', slot: 'Root' })({
+  display: 'flex',
+  alignItems: 'center',
+});
+
 const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(
   {
     border: '1px solid grey',
     fontSize: 13.33333,
     lineHeight: 'normal',
     padding: '1px 2px',
-    width: '20ch',
+    whiteSpace: 'nowrap',
   },
 );
 
-const BrowserField = React.forwardRef((props, ref) => {
+const BrowserTextField = React.forwardRef((props, ref) => {
   const {
-    disabled,
-    id,
-    label,
-    inputRef,
-    InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-    // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
-    error,
-    focused,
-    ownerState,
-    sx,
+    // Should be ignored
     textField,
+    // Should be passed to the PickersSectionList component
     elements,
-    onClick,
-    onInput,
     sectionListRef,
     contentEditable,
     onFocus,
     onBlur,
     tabIndex,
+    onInput,
+    onPaste,
+    onKeyDown,
+    // Can be passed to a hidden <input /> element
+    onChange,
+    value,
+    // Can be used to render a custom label
+    label,
+    // Can be used to style the component
+    areAllSectionsEmpty,
+    disabled,
+    readOnly,
+    InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
+    // The rest can be passed to the root element
     ...other
   } = props;
 
-  const handleRef = useForkRef(containerRef, ref);
+  const handleRef = useForkRef(InputPropsRef, ref);
 
   return (
-    <Box
-      sx={{ ...(sx || {}), display: 'flex', alignItems: 'center' }}
-      id={id}
-      ref={handleRef}
-      {...other}
-    >
+    <BrowserFieldRoot ref={handleRef} {...other}>
       {startAdornment}
       <BrowserFieldContent>
         <PickersSectionList
@@ -63,10 +67,13 @@ const BrowserField = React.forwardRef((props, ref) => {
           onFocus={onFocus}
           onBlur={onBlur}
           tabIndex={tabIndex}
+          onInput={onInput}
+          onPaste={onPaste}
+          onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
       {endAdornment}
-    </Box>
+    </BrowserFieldRoot>
   );
 });
 
@@ -85,7 +92,7 @@ const BrowserDateField = React.forwardRef((props, ref) => {
     slotProps,
   });
 
-  return <BrowserField ref={ref} {...processedFieldProps} />;
+  return <BrowserTextField ref={ref} {...processedFieldProps} />;
 });
 
 const BrowserDatePicker = React.forwardRef((props, ref) => {

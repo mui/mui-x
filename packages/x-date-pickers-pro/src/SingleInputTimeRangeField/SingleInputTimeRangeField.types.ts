@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
 import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
-import { DateRange, RangeFieldSection, UseTimeRangeFieldProps } from '../internals/models';
-import { TimeRangeValidationError } from '../models';
+import { DateRange, UseTimeRangeFieldProps } from '../internals/models';
+import { RangeFieldSection, TimeRangeValidationError } from '../models';
 
 export interface UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField extends boolean>
   extends UseTimeRangeFieldProps<TDate, TUseV6TextField>,
@@ -25,11 +25,10 @@ export interface UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField extend
       'unstableFieldRef'
     > {}
 
-export type SingleInputTimeRangeFieldProps<
-  TDate,
-  TUseV6TextField extends boolean = false,
-  TChildProps extends {} = FieldsTextFieldProps,
-> = Omit<TChildProps, keyof UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField>> &
+export type SingleInputTimeRangeFieldProps<TDate, TUseV6TextField extends boolean = false> = Omit<
+  BuiltInFieldTextFieldProps<TUseV6TextField>,
+  keyof UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField>
+> &
   UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField> & {
     /**
      * Overridable component slots.

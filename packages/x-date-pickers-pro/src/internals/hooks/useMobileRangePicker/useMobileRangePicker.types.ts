@@ -14,7 +14,8 @@ import {
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
-import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
+import { RangeFieldSection } from '../../../models';
+import { DateRange, BaseRangeNonStaticPickerProps } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
   RangePickerFieldSlots,

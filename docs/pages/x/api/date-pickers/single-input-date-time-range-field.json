@@ -2,41 +2,18 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
-    "color": {
-      "type": {
-        "name": "enum",
-        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
-      },
-      "default": "'primary'"
-    },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
-    "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "FormHelperTextProps": { "type": { "name": "object" } },
-    "fullWidth": { "type": { "name": "bool" } },
-    "helperText": { "type": { "name": "node" } },
-    "hiddenLabel": { "type": { "name": "bool" } },
-    "id": { "type": { "name": "string" } },
-    "InputLabelProps": { "type": { "name": "object" } },
-    "inputProps": { "type": { "name": "object" } },
-    "InputProps": { "type": { "name": "object" } },
-    "inputRef": { "type": { "name": "custom", "description": "ref" } },
-    "label": { "type": { "name": "node" } },
-    "margin": {
-      "type": {
-        "name": "enum",
-        "description": "'dense'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'normal'"
-      },
-      "default": "'none'"
-    },
+    "inputProps": { "type": { "name": "any" } },
+    "InputProps": { "type": { "name": "any" } },
     "maxDate": { "type": { "name": "any" } },
     "maxDateTime": { "type": { "name": "any" } },
     "maxTime": { "type": { "name": "any" } },
@@ -44,7 +21,6 @@
     "minDateTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "name": { "type": { "name": "string" } },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
@@ -71,7 +47,6 @@
       "type": { "name": "any" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
-    "required": { "type": { "name": "bool" } },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -95,16 +70,8 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
-    "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
@@ -112,14 +79,7 @@
     "unstableFieldRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "variant": {
-      "type": {
-        "name": "enum",
-        "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'"
-      },
-      "default": "'outlined'"
-    }
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
   "slots": [
     {
@@ -146,11 +106,7 @@
     "import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';",
     "import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root"],
-    "globalClasses": {},
-    "name": "MuiSingleInputDateTimeRangeField"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiSingleInputDateTimeRangeField" },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/SingleInputDateTimeRangeField/SingleInputDateTimeRangeField.tsx",

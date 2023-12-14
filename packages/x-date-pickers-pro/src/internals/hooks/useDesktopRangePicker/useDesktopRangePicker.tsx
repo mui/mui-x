@@ -21,7 +21,7 @@ import {
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
-import { BaseMultiInputFieldProps, RangeFieldSection } from '../../models/fields';
+import { BaseMultiInputFieldProps, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();

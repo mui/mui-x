@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FieldRef } from '@mui/x-date-pickers/models';
 import { UseFieldResponse } from '@mui/x-date-pickers/internals';
-import { RangeFieldSection } from '../../models/fields';
+import { RangeFieldSection } from '../../../models';
 
 export interface UseMultiInputRangeFieldParams<
   TSharedProps extends {},

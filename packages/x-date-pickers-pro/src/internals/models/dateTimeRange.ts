@@ -7,8 +7,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { DayRangeValidationProps } from './dateRange';
 import { DateRange } from './range';
-import { DateTimeRangeValidationError } from '../../models';
-import { RangeFieldSection } from './fields';
+import { DateTimeRangeValidationError, RangeFieldSection } from '../../models';
 
 export interface UseDateTimeRangeFieldProps<TDate, TUseV6TextField extends boolean>
   extends MakeOptional<

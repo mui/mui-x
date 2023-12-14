@@ -10,9 +10,9 @@ import {
   MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
 
-export interface TimePickerSlots<TDate, TUseV6TextField extends boolean>
-  extends DesktopTimePickerSlots<TDate, TUseV6TextField>,
-    MobileTimePickerSlots<TDate, TimeViewWithMeridiem, TUseV6TextField> {}
+export interface TimePickerSlots<TDate>
+  extends DesktopTimePickerSlots<TDate>,
+    MobileTimePickerSlots<TDate, TimeViewWithMeridiem> {}
 
 export interface TimePickerSlotProps<TDate, TUseV6TextField extends boolean>
   extends DesktopTimePickerSlotProps<TDate, TUseV6TextField>,
@@ -31,7 +31,7 @@ export interface TimePickerProps<TDate, TUseV6TextField extends boolean = false>
    * Overridable component slots.
    * @default {}
    */
-  slots?: TimePickerSlots<TDate, TUseV6TextField>;
+  slots?: TimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

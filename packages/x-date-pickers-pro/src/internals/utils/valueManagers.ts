@@ -14,8 +14,8 @@ import type {
   DateRangeValidationError,
   DateTimeRangeValidationError,
   TimeRangeValidationError,
+  RangeFieldSection,
 } from '../../models';
-import { RangeFieldSection } from '../models/fields';
 
 export type RangePickerValueManager<
   TValue = [any, any],

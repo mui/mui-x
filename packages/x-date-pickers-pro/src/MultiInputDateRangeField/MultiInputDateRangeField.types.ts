@@ -7,8 +7,7 @@ import { FieldRef } from '@mui/x-date-pickers/models';
 import { UseDateRangeFieldProps } from '../internals/models/dateRange';
 import { RangePosition } from '../internals/models/range';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { RangeFieldSection } from '../internals/models/fields';
-import { MultiInputRangeFieldClasses } from '../models';
+import { RangeFieldSection, MultiInputRangeFieldClasses } from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate,

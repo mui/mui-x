@@ -4,8 +4,7 @@ import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
-import { FieldsTextFieldProps } from '../internals/models/fields';
-import { FieldSection, TimeValidationError } from '../models';
+import { FieldSection, TimeValidationError, BuiltInFieldTextFieldProps } from '../models';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
@@ -40,8 +39,14 @@ export type UseTimeFieldComponentProps<
 > = Omit<TChildProps, keyof UseTimeFieldProps<TDate, TUseV6TextField>> &
   UseTimeFieldProps<TDate, TUseV6TextField>;
 
-export interface TimeFieldProps<TDate, TUseV6TextField extends boolean = false>
-  extends UseTimeFieldComponentProps<TDate, TUseV6TextField, FieldsTextFieldProps> {
+export type TimeFieldProps<
+  TDate,
+  TUseV6TextField extends boolean = false,
+> = UseTimeFieldComponentProps<
+  TDate,
+  TUseV6TextField,
+  BuiltInFieldTextFieldProps<TUseV6TextField>
+> & {
   /**
    * Overridable component slots.
    * @default {}
@@ -52,7 +57,7 @@ export interface TimeFieldProps<TDate, TUseV6TextField extends boolean = false>
    * @default {}
    */
   slotProps?: TimeFieldSlotProps<TDate, TUseV6TextField>;
-}
+};
 
 export type TimeFieldOwnerState<TDate, TUseV6TextField extends boolean> = TimeFieldProps<
   TDate,

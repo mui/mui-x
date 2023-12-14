@@ -218,6 +218,9 @@ export const PickersInput = React.forwardRef(function PickersInput(
     startAdornment,
     contentEditable,
     tabIndex,
+    onInput,
+    onPaste,
+    onKeyDown,
     fullWidth,
 
     inputProps,
@@ -288,6 +291,9 @@ export const PickersInput = React.forwardRef(function PickersInput(
         className={classes.sectionsContainer}
         onFocus={handleInputFocus}
         onBlur={muiFormControl.onBlur}
+        onInput={onInput}
+        onPaste={onPaste}
+        onKeyDown={onKeyDown}
         slots={{
           root: PickersInputSectionsContainer,
           section: PickersInputSection,

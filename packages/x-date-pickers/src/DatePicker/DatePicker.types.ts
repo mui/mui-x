@@ -9,9 +9,9 @@ import {
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
 
-export interface DatePickerSlots<TDate, TUseV6TextField extends boolean>
-  extends DesktopDatePickerSlots<TDate, TUseV6TextField>,
-    MobileDatePickerSlots<TDate, TUseV6TextField> {}
+export interface DatePickerSlots<TDate>
+  extends DesktopDatePickerSlots<TDate>,
+    MobileDatePickerSlots<TDate> {}
 
 export interface DatePickerSlotProps<TDate, TUseV6TextField extends boolean>
   extends DesktopDatePickerSlotProps<TDate, TUseV6TextField>,
@@ -35,7 +35,7 @@ export interface DatePickerProps<TDate, TUseV6TextField extends boolean = false>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DatePickerSlots<TDate, TUseV6TextField>;
+  slots?: DatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

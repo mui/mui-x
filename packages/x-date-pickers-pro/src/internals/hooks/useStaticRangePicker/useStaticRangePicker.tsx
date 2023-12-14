@@ -11,7 +11,7 @@ import {
 } from './useStaticRangePicker.types';
 import { DateRange } from '../../models/range';
 import { useRangePosition } from '../useRangePosition';
-import { RangeFieldSection } from '../../models/fields';
+import { RangeFieldSection } from '../../../models';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',

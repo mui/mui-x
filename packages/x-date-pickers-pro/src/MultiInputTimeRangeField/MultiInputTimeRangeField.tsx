@@ -11,9 +11,9 @@ import {
   unstable_generateUtilityClass as generateUtilityClass,
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
+import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
 import {
   splitFieldInternalAndForwardedProps,
-  FieldsTextFieldProps,
   PickersTextField,
   convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
@@ -115,17 +115,17 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
 
   const TextField =
     slots?.textField ?? (inProps.shouldUseV6TextField ? MuiTextField : PickersTextField);
-  const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
+  const startTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
-  });
+  }) as BuiltInFieldTextFieldProps<TUseV6TextField>;
 
-  const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
+  const endTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
-  });
+  }) as BuiltInFieldTextFieldProps<TUseV6TextField>;
 
   const Separator = slots?.separator ?? MultiInputTimeRangeFieldSeparator;
   const separatorProps = useSlotProps({
@@ -135,7 +135,11 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     className: classes.separator,
   });
 
-  const fieldResponse = useMultiInputTimeRangeField<TDate, TUseV6TextField, FieldsTextFieldProps>({
+  const fieldResponse = useMultiInputTimeRangeField<
+    TDate,
+    TUseV6TextField,
+    BuiltInFieldTextFieldProps<TUseV6TextField>
+  >({
     sharedProps: internalProps,
     startTextFieldProps,
     endTextFieldProps,

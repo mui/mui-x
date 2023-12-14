@@ -95,7 +95,7 @@ export { useValidation } from './hooks/useValidation';
 export type { ValidationProps, Validator, InferError } from './hooks/useValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
-export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
+export type { BaseFieldProps } from './models/fields';
 export type {
   BasePickerProps,
   BasePickerInputProps,

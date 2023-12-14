@@ -20,17 +20,14 @@ import {
   UsePickerResponse,
   WrapperVariant,
   UsePickerProps,
-  getActiveElement,
 } from '@mui/x-date-pickers/internals';
+import { DateRange, RangePosition, UseDateRangeFieldProps } from '../models';
 import {
   BaseMultiInputFieldProps,
-  DateRange,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-  RangePosition,
-  UseDateRangeFieldProps,
-} from '../models';
+} from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
 export interface RangePickerFieldSlots extends UseClearableFieldSlots {
@@ -304,7 +301,6 @@ const useSingleInputFieldSlotProps = <
     TError
   >;
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, startFieldRef, endFieldRef);
 
   React.useEffect(() => {
@@ -312,11 +308,11 @@ const useSingleInputFieldSlotProps = <
       return;
     }
 
-    inputRef.current?.focus();
-  }, [rangePosition, open]);
+    startFieldRef.current?.focusField(0);
+  }, [rangePosition, open, startFieldRef]);
 
   const updateRangePosition = () => {
-    if (!startFieldRef.current || inputRef.current !== getActiveElement(document)) {
+    if (!startFieldRef.current?.isFieldFocused()) {
       return;
     }
 

@@ -10,26 +10,14 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
-import {
-  useClearableField,
-  UseClearableFieldResponse,
-} from '@mui/x-date-pickers/hooks';
+import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
   BaseSingleInputPickersTextFieldProps,
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
-} from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers/models';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
-
-interface HeadlessFieldResponse
-  extends BaseSingleInputPickersTextFieldProps<false>,
-    Omit<
-      BoxProps<'div'>,
-      keyof BaseSingleInputPickersTextFieldProps<false> | 'ref'
-    > {
-  ref?: React.Ref<HTMLDivElement>;
-}
 
 const BrowserFieldRoot = styled(Box, { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -42,36 +30,50 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
     fontSize: 13.33333,
     lineHeight: 'normal',
     padding: '1px 2px',
-    width: '20ch',
+    whiteSpace: 'nowrap',
   },
 );
 
+interface BrowserTextFieldProps
+  extends BaseSingleInputPickersTextFieldProps<false>,
+    Omit<BoxProps, keyof BaseSingleInputPickersTextFieldProps<false>> {}
+
 const BrowserTextField = React.forwardRef(
-  (
-    props: UseClearableFieldResponse<HeadlessFieldResponse>,
-    ref: React.Ref<HTMLDivElement>,
-  ) => {
+  (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
     const {
-      disabled,
-      label,
-      InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-      // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
-      error,
-      focused,
+      // Should be ignored
       textField,
+
+      // Should be passed to the PickersSectionList component
       elements,
-      onClick,
-      onInput,
       sectionListRef,
       contentEditable,
-      areAllSectionsEmpty,
       onFocus,
       onBlur,
       tabIndex,
+      onInput,
+      onPaste,
+      onKeyDown,
+
+      // Can be passed to a hidden <input /> element
+      onChange,
+      value,
+
+      // Can be used to render a custom label
+      label,
+
+      // Can be used to style the component
+      areAllSectionsEmpty,
+      disabled,
+      readOnly,
+
+      InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
+
+      // The rest can be passed to the root element
       ...other
     } = props;
 
-    const handleRef = useForkRef(containerRef, ref);
+    const handleRef = useForkRef(InputPropsRef, ref);
 
     return (
       <BrowserFieldRoot ref={handleRef} {...other}>
@@ -84,6 +86,9 @@ const BrowserTextField = React.forwardRef(
             onFocus={onFocus}
             onBlur={onBlur}
             tabIndex={tabIndex}
+            onInput={onInput}
+            onPaste={onPaste}
+            onKeyDown={onKeyDown}
           />
         </BrowserFieldContent>
         {endAdornment}
@@ -106,11 +111,7 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse: HeadlessFieldResponse = useDateField<
-      Dayjs,
-      false,
-      typeof textFieldProps
-    >({
+    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
       ...textFieldProps,
       shouldUseV6TextField: false,
     });

@@ -344,7 +344,7 @@
       "class": null,
       "name": "textField",
       "description": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
-      "default": "TextField from '@mui/material'"
+      "default": "PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled."
     },
     {
       "class": null,

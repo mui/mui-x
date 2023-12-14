@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
-import Box from '@mui/material/Box';
 import styled from '@mui/system/styled';
-import Stack from '@mui/material/Stack';
+import Box, { BoxProps } from '@mui/system/Box';
+import Stack from '@mui/system/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
@@ -12,42 +12,20 @@ import {
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { DateRange, UseDateRangeFieldProps } from '@mui/x-date-pickers-pro';
 import {
-  BaseMultiInputFieldProps,
-  DateRange,
-  DateRangeValidationError,
-  UseDateRangeFieldProps,
-  MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-} from '@mui/x-date-pickers-pro';
-import {
-  PickersSectionListProps,
-  Unstable_PickersSectionList as PickersSectionList,
-} from '@mui/x-date-pickers/PickersSectionList';
+  BaseMultiInputFieldProps,
+  BasePickersTextFieldProps,
+  MultiInputFieldSlotTextFieldProps,
+  DateRangeValidationError,
+} from '@mui/x-date-pickers-pro/models';
+import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
-interface BrowserFieldProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'contentEditable'>,
-    Pick<
-      PickersSectionListProps,
-      'elements' | 'sectionListRef' | 'contentEditable' | 'tabIndex'
-    > {
-  label?: React.ReactNode;
-  inputRef?: React.Ref<any>;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
-  error?: boolean;
-  focused?: boolean;
-  ownerState?: any;
-  sx?: any;
-  textField: 'v6' | 'v7';
-}
-
-type BrowserFieldComponent = ((
-  props: BrowserFieldProps & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { propTypes?: any };
+const BrowserFieldRoot = styled(Box, { name: 'BrowserField', slot: 'Root' })({
+  display: 'flex',
+  alignItems: 'center',
+});
 
 const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(
   {
@@ -55,45 +33,55 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
     fontSize: 13.33333,
     lineHeight: 'normal',
     padding: '1px 2px',
-    width: '20ch',
+    whiteSpace: 'nowrap',
   },
 );
 
-const BrowserField = React.forwardRef(
-  (props: BrowserFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const {
-      disabled,
-      id,
-      label,
-      inputRef,
-      InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-      // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
-      error,
-      focused,
-      ownerState,
-      sx,
-      textField,
-      elements,
-      onClick,
-      onInput,
-      sectionListRef,
+interface BrowserTextFieldProps
+  extends BasePickersTextFieldProps<false>,
+    Omit<BoxProps, keyof BasePickersTextFieldProps<false>> {}
 
+// This demo uses `BasePickersTextFieldProps` instead of `BaseMultiInputPickersTextFieldProps`,
+// That way you can reuse the same `BrowserTextField` for all your pickers, range or not.
+const BrowserTextField = React.forwardRef(
+  (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
+    const {
+      // Should be ignored
+      textField,
+
+      // Should be passed to the PickersSectionList component
+      elements,
+      sectionListRef,
       contentEditable,
       onFocus,
       onBlur,
       tabIndex,
+      onInput,
+      onPaste,
+      onKeyDown,
+
+      // Can be passed to a hidden <input /> element
+      onChange,
+      value,
+
+      // Can be used to render a custom label
+      label,
+
+      // Can be used to style the component
+      areAllSectionsEmpty,
+      disabled,
+      readOnly,
+
+      InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
+
+      // The rest can be passed to the root element
       ...other
     } = props;
 
-    const handleRef = useForkRef(containerRef, ref);
+    const handleRef = useForkRef(InputPropsRef, ref);
 
     return (
-      <Box
-        sx={{ ...(sx || {}), display: 'flex', alignItems: 'center' }}
-        id={id}
-        ref={handleRef}
-        {...other}
-      >
+      <BrowserFieldRoot ref={handleRef} {...other}>
         {startAdornment}
         <BrowserFieldContent>
           <PickersSectionList
@@ -103,13 +91,16 @@ const BrowserField = React.forwardRef(
             onFocus={onFocus}
             onBlur={onBlur}
             tabIndex={tabIndex}
+            onInput={onInput}
+            onPaste={onPaste}
+            onKeyDown={onKeyDown}
           />
         </BrowserFieldContent>
         {endAdornment}
-      </Box>
+      </BrowserFieldRoot>
     );
   },
-) as BrowserFieldComponent;
+);
 
 interface BrowserMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs, true>,
@@ -196,9 +187,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         overflow="auto"
         className={className}
       >
-        <BrowserField {...fieldResponse.startDate} />
+        <BrowserTextField {...fieldResponse.startDate} />
         <span> — </span>
-        <BrowserField {...fieldResponse.endDate} />
+        <BrowserTextField {...fieldResponse.endDate} />
       </Stack>
     );
   },

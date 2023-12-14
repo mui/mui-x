@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { DateTimeValidationError, FieldSection } from '../models';
+import { DateTimeValidationError, FieldSection, BuiltInFieldTextFieldProps } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import {
@@ -13,7 +13,6 @@ import {
   TimeValidationProps,
   YearValidationProps,
 } from '../internals/models/validation';
-import { FieldsTextFieldProps } from '../internals/models/fields';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
@@ -53,8 +52,14 @@ export type UseDateTimeFieldComponentProps<
 > = Omit<TChildProps, keyof UseDateTimeFieldProps<TDate, TUseV6TextField>> &
   UseDateTimeFieldProps<TDate, TUseV6TextField>;
 
-export interface DateTimeFieldProps<TDate, TUseV6TextField extends boolean = false>
-  extends UseDateTimeFieldComponentProps<TDate, TUseV6TextField, FieldsTextFieldProps> {
+export type DateTimeFieldProps<
+  TDate,
+  TUseV6TextField extends boolean = false,
+> = UseDateTimeFieldComponentProps<
+  TDate,
+  TUseV6TextField,
+  BuiltInFieldTextFieldProps<TUseV6TextField>
+> & {
   /**
    * Overridable component slots.
    * @default {}
@@ -65,7 +70,7 @@ export interface DateTimeFieldProps<TDate, TUseV6TextField extends boolean = fal
    * @default {}
    */
   slotProps?: DateTimeFieldSlotProps<TDate, TUseV6TextField>;
-}
+};
 
 export type DateTimeFieldOwnerState<TDate, TUseV6TextField extends boolean> = DateTimeFieldProps<
   TDate,

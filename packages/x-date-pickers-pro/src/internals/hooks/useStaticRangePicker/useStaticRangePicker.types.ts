@@ -12,7 +12,7 @@ import {
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRange } from '../../models/range';
 import { UseRangePositionProps } from '../useRangePosition';
-import { RangeFieldSection } from '../../models/fields';
+import { RangeFieldSection } from '../../../models';
 
 export interface UseStaticRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView> {}

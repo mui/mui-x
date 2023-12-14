@@ -202,7 +202,7 @@ interface UseFieldV7AdditionalProps {
 
 export type UseFieldResponse<
   TUseV6TextField extends boolean,
-  TForwardedProps extends UseFieldCommonForwardedProps,
+  TForwardedProps extends UseFieldCommonForwardedProps & { [key: string]: any },
 > = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
   Required<UseFieldCommonForwardedProps> &
   UseFieldCommonAdditionalProps &

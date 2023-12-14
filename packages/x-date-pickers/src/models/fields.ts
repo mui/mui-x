@@ -1,8 +1,13 @@
 import * as React from 'react';
+import { TextFieldProps } from '@mui/material/TextField';
 import type { BaseFieldProps } from '../internals/models/fields';
-import type { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
+import type {
+  ExportedUseClearableFieldProps,
+  UseClearableFieldResponse,
+} from '../hooks/useClearableField';
 import { PickersSectionListRef } from '../PickersSectionList';
 import type { UseFieldResponse } from '../internals/hooks/useField';
+import { PickersInputOtherProps } from '../internals/components/PickersTextField/PickersInput.types';
 
 export type FieldSectionType =
   | 'year'
@@ -148,7 +153,8 @@ type BaseForwardedSingleInputFieldProps<TUseV6TextField extends boolean> =
 
 /**
  * Props the single input field can receive when used inside a picker.
- * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
+ * Only contains what the MUI components are passing to the field,
+ * not what users can pass using the `props.slotProps.field`.
  */
 export type BaseSingleInputFieldProps<
   TValue,
@@ -164,4 +170,29 @@ export type BaseSingleInputFieldProps<
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
  */
 export type BaseSingleInputPickersTextFieldProps<TUseV6TextField extends boolean> =
-  UseFieldResponse<TUseV6TextField, BaseForwardedSingleInputFieldProps<TUseV6TextField>>;
+  UseClearableFieldResponse<
+    UseFieldResponse<TUseV6TextField, BaseForwardedSingleInputFieldProps<TUseV6TextField>>
+  >;
+
+/**
+ * Props the built-in text field component can receive.
+ */
+export type BuiltInFieldTextFieldProps<TUseV6TextField extends boolean> =
+  TUseV6TextField extends true
+    ? Omit<
+        TextFieldProps,
+        | 'autoComplete'
+        | 'error'
+        | 'maxRows'
+        | 'minRows'
+        | 'multiline'
+        | 'placeholder'
+        | 'rows'
+        | 'select'
+        | 'SelectProps'
+        | 'type'
+      >
+    : {
+        InputProps?: PickersInputOtherProps;
+        inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
+      };

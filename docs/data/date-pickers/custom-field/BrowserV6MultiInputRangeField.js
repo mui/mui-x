@@ -3,23 +3,11 @@ import * as React from 'react';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
-import styled from '@mui/system/styled';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers-pro';
-
-const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(
-  {
-    border: '1px solid grey',
-    fontSize: 13.33333,
-    lineHeight: 'normal',
-    padding: '1px 2px',
-    width: '20ch',
-  },
-);
 
 const BrowserField = React.forwardRef((props, ref) => {
   const {
@@ -34,14 +22,6 @@ const BrowserField = React.forwardRef((props, ref) => {
     ownerState,
     sx,
     textField,
-    elements,
-    onClick,
-    onInput,
-    sectionListRef,
-    contentEditable,
-    onFocus,
-    onBlur,
-    tabIndex,
     ...other
   } = props;
 
@@ -49,22 +29,12 @@ const BrowserField = React.forwardRef((props, ref) => {
 
   return (
     <Box
-      sx={{ ...(sx || {}), display: 'flex', alignItems: 'center' }}
+      sx={{ ...(sx || {}), display: 'flex', alignItems: 'center', flexGrow: 1 }}
       id={id}
       ref={handleRef}
-      {...other}
     >
       {startAdornment}
-      <BrowserFieldContent>
-        <PickersSectionList
-          elements={elements}
-          sectionListRef={sectionListRef}
-          contentEditable={contentEditable}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          tabIndex={tabIndex}
-        />
-      </BrowserFieldContent>
+      <input disabled={disabled} ref={inputRef} {...other} />
       {endAdornment}
     </Box>
   );
@@ -120,7 +90,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      shouldUseV6TextField: false,
+      shouldUseV6TextField: true,
     },
     startTextFieldProps,
     endTextFieldProps,
