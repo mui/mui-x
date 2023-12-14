@@ -10,7 +10,7 @@ import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider
 import { ChartsLegendClasses, getLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { LegendParams } from '../models/seriesType/config';
-import { ChartsText, ChartsTextStyle, getWordsByLines } from '../ChartsText/ChartsText';
+import { ChartsText, ChartsTextStyle, getWordsByLines } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 
 export interface ChartsLegendSlots {
