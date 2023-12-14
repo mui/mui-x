@@ -1029,6 +1029,48 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
 
+## 6.18.5
+
+_Dec 14, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.5`
+
+- [l10n] Improve Swedish (sv-SE) locale (#11379) @fredrikcarlbom
+- [l10n] Improve Urdu (ur-PK) locale for data grid (#11409) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@6.18.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.5`.
+
+#### `@mui/x-data-grid-premium@6.18.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.5`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.5`
+
+- [pickers] Fix field types to avoid error on latest `@types/react` version (#11398) @LukasTy
+- [pickers] Support name prop (#11380) @gitstart
+
+#### `@mui/x-date-pickers-pro@6.18.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.5`, plus:
+
+- [DateRangePicker] Fix `autoFocus` behavior (#11376) @kealjones-wk
+
+### Docs
+
+- [docs] Respect GoT books (#11294) @janoma
+- [test] Fix flaky screenshots (#11391) @cherniavskii
+
 ## 6.18.4
 
 _Dec 8, 2023_
