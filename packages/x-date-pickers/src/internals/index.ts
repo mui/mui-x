@@ -102,7 +102,7 @@ export type {
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
-export type { DefaultizedProps, MakeOptional } from './models/helpers';
+export type { DefaultizedProps, MakeOptional, SlotComponentPropsFromProps } from './models/helpers';
 export type { WrapperVariant } from './models/common';
 export type {
   BaseDateValidationProps,

@@ -23,6 +23,7 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../../../hooks/useClearableField';
+import { SlotComponentPropsFromProps } from '../../models/helpers';
 
 export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<
@@ -71,10 +72,8 @@ export interface ExportedUseDesktopPickerSlotProps<
 > extends PickersPopperSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView>,
     UseClearableFieldSlotProps {
-  field?: SlotComponentProps<
-    React.ElementType<
-      BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, TUseV6TextField, unknown>
-    >,
+  field?: SlotComponentPropsFromProps<
+    BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, TUseV6TextField, unknown>,
     {},
     UsePickerProps<TDate | null, TDate, any, any, any, any>
   >;

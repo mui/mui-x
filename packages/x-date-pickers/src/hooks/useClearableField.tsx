@@ -43,7 +43,7 @@ export type UseClearableFieldResponse<TFieldProps extends UseClearableFieldProps
 
 export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
   props: TFieldProps,
-): UseClearableResponse<TFieldProps> => {
+): UseClearableFieldResponse<TFieldProps> => {
   const localeText = useLocaleText();
 
   const { clearable, onClear, InputProps, sx, slots, slotProps, ...other } = props;

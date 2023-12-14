@@ -20,6 +20,7 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { SlotComponentPropsFromProps } from '../../models/helpers';
 
 export interface UseMobilePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends PickersModalDialogSlots,
@@ -42,10 +43,8 @@ export interface ExportedUseMobilePickerSlotProps<
   TUseV6TextField extends boolean,
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {
-  field?: SlotComponentProps<
-    React.ElementType<
-      BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, TUseV6TextField, unknown>
-    >,
+  field?: SlotComponentPropsFromProps<
+    BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, TUseV6TextField, unknown>,
     {},
     UsePickerProps<TDate | null, TDate, any, any, any, any>
   >;

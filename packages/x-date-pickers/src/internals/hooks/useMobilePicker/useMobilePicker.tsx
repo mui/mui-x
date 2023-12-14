@@ -109,13 +109,7 @@ export const useMobilePicker = <
     'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
   };
 
-  const slotsForField: BaseSingleInputFieldProps<
-    TDate | null,
-    TDate,
-    FieldSection,
-    TUseV6TextField,
-    unknown
-  >['slots'] = {
+  const slotsForField = {
     textField: slots.textField,
     ...fieldProps.slots,
   };

@@ -6,6 +6,8 @@ import {
 import { UseSingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
+import { DateRange } from '../internals/models';
+import { RangeFieldSection } from '../models';
 
 export const useSingleInputDateRangeField = <
   TDate,
@@ -25,7 +27,14 @@ export const useSingleInputDateRangeField = <
     keyof UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>
   >(props, 'date');
 
-  return useField({
+  return useField<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    TUseV6TextField,
+    typeof forwardedProps,
+    typeof internalProps
+  >({
     forwardedProps,
     internalProps,
     valueManager: rangeValueManager,

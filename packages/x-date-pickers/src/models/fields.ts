@@ -4,10 +4,12 @@ import type { BaseFieldProps } from '../internals/models/fields';
 import type {
   ExportedUseClearableFieldProps,
   UseClearableFieldResponse,
+  UseClearableFieldSlotProps,
+  UseClearableFieldSlots,
 } from '../hooks/useClearableField';
-import { PickersSectionListRef } from '../PickersSectionList';
+import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
 import type { UseFieldResponse } from '../internals/hooks/useField';
-import { PickersInputOtherProps } from '../internals/components/PickersTextField/PickersInput.types';
+import type { PickersTextFieldProps } from '../internals/components/PickersTextField/PickersTextField.types';
 
 export type FieldSectionType =
   | 'year'
@@ -119,6 +121,7 @@ export interface FieldRef<TSection extends FieldSection> {
 export type FieldSelectedSections = number | FieldSectionType | null | 'all';
 
 interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableFieldProps {
+  ref?: React.Ref<HTMLDivElement>;
   label?: React.ReactNode;
   id?: string;
   name?: string;
@@ -133,8 +136,10 @@ interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableF
   inputProps?: {
     'aria-label'?: string;
   };
-  slots?: {};
-  slotProps?: {};
+  slots?: UseClearableFieldSlots;
+  slotProps?: UseClearableFieldSlotProps & {
+    textField?: {};
+  };
 }
 
 interface BaseForwardedV6SingleInputFieldProps {
@@ -192,7 +197,4 @@ export type BuiltInFieldTextFieldProps<TUseV6TextField extends boolean> =
         | 'SelectProps'
         | 'type'
       >
-    : {
-        InputProps?: PickersInputOtherProps;
-        inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
-      };
+    : Partial<Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>>;

@@ -3,7 +3,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { FieldRef, FieldSelectedSections } from '@mui/x-date-pickers/models';
-import { RangeFieldSection } from '../models';
+import { RangeFieldSection } from '../../models';
 
 interface UseMultiInputFieldSelectedSectionsParams
   extends Pick<

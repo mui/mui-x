@@ -20,6 +20,7 @@ import {
   UsePickerResponse,
   WrapperVariant,
   UsePickerProps,
+  SlotComponentPropsFromProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition, UseDateRangeFieldProps } from '../models';
 import {
@@ -53,16 +54,13 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
 
 export interface RangePickerFieldSlotProps<TDate, TUseV6TextField extends boolean>
   extends UseClearableFieldSlotProps {
-  field?: SlotComponentProps<
-    React.ElementType<
-      BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TUseV6TextField, unknown>
-    >,
+  field?: SlotComponentPropsFromProps<
+    BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TUseV6TextField, unknown>,
     {},
     UsePickerProps<DateRange<TDate>, TDate, any, any, any, any>
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
-
   textField?: SlotComponentProps<
     typeof TextField,
     {},

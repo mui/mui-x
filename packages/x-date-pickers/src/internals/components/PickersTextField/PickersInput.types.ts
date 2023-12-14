@@ -35,7 +35,7 @@ export interface PickersInputPropsUsedByField
 }
 
 export interface PickersInputOtherProps extends Omit<BoxProps, keyof PickersInputPropsUsedByField> {
-  ref?: React.Ref<HTMLDivElement>;
+  ref?: React.Ref<any>;
 }
 
 export interface PickersInputProps extends PickersInputPropsUsedByField, PickersInputOtherProps {}

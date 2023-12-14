@@ -15,8 +15,15 @@ import {
 import {
   unstable_useSingleInputDateRangeField as useSingleInputDateRangeField,
   SingleInputDateRangeFieldProps,
+  UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
+import {
+  DateRangeValidationError,
+  RangeFieldSection,
+} from '@mui/x-date-pickers-pro/models';
+import { DateRange } from '@mui/x-date-pickers-pro';
 
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -72,11 +79,14 @@ const BrowserField = React.forwardRef(
 ) as BrowserFieldComponent;
 
 interface BrowserSingleInputDateRangeFieldProps
-  extends SingleInputDateRangeFieldProps<
-    Dayjs,
-    true,
-    Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>
-  > {
+  extends UseSingleInputDateRangeFieldProps<Dayjs, true>,
+    BaseSingleInputFieldProps<
+      DateRange<Dayjs>,
+      Dayjs,
+      RangeFieldSection,
+      true,
+      DateRangeValidationError
+    > {
   onAdornmentClick?: () => void;
 }
 

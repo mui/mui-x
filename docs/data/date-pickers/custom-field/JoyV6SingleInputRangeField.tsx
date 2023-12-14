@@ -25,9 +25,15 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import {
   unstable_useSingleInputDateRangeField as useSingleInputDateRangeField,
-  SingleInputDateRangeFieldProps,
+  UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers';
+import {
+  DateRange,
+  DateRangeValidationError,
+  RangeFieldSection,
+} from '@mui/x-date-pickers-pro';
 
 const joyTheme = extendJoyTheme();
 
@@ -92,7 +98,14 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoySingleInputDateRangeFieldProps
-  extends SingleInputDateRangeFieldProps<Dayjs, true, InputProps> {
+  extends UseSingleInputDateRangeFieldProps<Dayjs, true>,
+    BaseSingleInputFieldProps<
+      DateRange<Dayjs>,
+      Dayjs,
+      RangeFieldSection,
+      true,
+      DateRangeValidationError
+    > {
   onAdornmentClick?: () => void;
 }
 

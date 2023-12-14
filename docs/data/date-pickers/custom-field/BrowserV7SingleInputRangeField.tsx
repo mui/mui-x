@@ -15,11 +15,17 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import {
   unstable_useSingleInputDateRangeField as useSingleInputDateRangeField,
-  SingleInputDateRangeFieldProps,
+  UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
-import { BasePickersTextFieldProps } from '@mui/x-date-pickers-pro/models';
+import {
+  BasePickersTextFieldProps,
+  DateRangeValidationError,
+  RangeFieldSection,
+} from '@mui/x-date-pickers-pro/models';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers';
+import { DateRange } from '@mui/x-date-pickers-pro';
 
 const BrowserFieldRoot = styled(Box, { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -100,11 +106,14 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserSingleInputDateRangeFieldProps
-  extends SingleInputDateRangeFieldProps<
-    Dayjs,
-    true,
-    Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>
-  > {
+  extends UseSingleInputDateRangeFieldProps<Dayjs, false>,
+    BaseSingleInputFieldProps<
+      DateRange<Dayjs>,
+      Dayjs,
+      RangeFieldSection,
+      false,
+      DateRangeValidationError
+    > {
   onAdornmentClick?: () => void;
 }
 
@@ -116,13 +125,12 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
   (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
 
-    const textFieldProps: SingleInputDateRangeFieldProps<Dayjs, false> =
-      useSlotProps({
-        elementType: 'input',
-        externalSlotProps: slotProps?.textField,
-        externalForwardedProps: other,
-        ownerState: props as any,
-      });
+    const textFieldProps: typeof props = useSlotProps({
+      elementType: 'input',
+      externalSlotProps: slotProps?.textField,
+      externalForwardedProps: other,
+      ownerState: props as any,
+    });
 
     textFieldProps.InputProps = {
       ...textFieldProps.InputProps,
