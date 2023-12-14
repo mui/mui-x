@@ -16,8 +16,8 @@ import {
   BaseDateValidationProps,
   DAY_MARGIN,
   DayCalendar,
-  DayCalendarSlotsComponent,
-  DayCalendarSlotsComponentsProps,
+  DayCalendarSlots,
+  DayCalendarSlotProps,
   useDefaultReduceAnimations,
   PickersArrowSwitcher,
   useCalendarState,
@@ -457,7 +457,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const slotsForDayCalendar = {
     day: DateRangePickerDay,
     ...slots,
-  } as DayCalendarSlotsComponent<TDate>;
+  } as DayCalendarSlots<TDate>;
 
   const slotPropsForDayCalendar = {
     ...slotProps,
@@ -502,7 +502,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as DayCalendarSlotsComponentsProps<TDate>;
+  } as DayCalendarSlotProps<TDate>;
 
   const calendarMonths = React.useMemo(
     () => Array.from({ length: calendars }).map((_, index) => index),
@@ -598,7 +598,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             renderLoading={renderLoading}
             slots={slotsForDayCalendar}
             slotProps={slotPropsForDayCalendar}
-            autoFocus={month === focusedMonth}
+            autoFocus={visibleMonths[month] === focusedMonth}
             fixedWeekNumber={fixedWeekNumber}
             displayWeekNumber={displayWeekNumber}
             timezone={timezone}

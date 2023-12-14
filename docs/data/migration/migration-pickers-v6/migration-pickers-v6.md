@@ -103,6 +103,20 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
+### ✅ Rename slots types
+
+The slot interfaces got renamed to match with `@mui/base` naming convention.
+Suffix `SlotsComponent` is replaced by `Slots` and `SlotsComponentsProps` is replaced by `SlotProps`.
+If you are not relying on the codemod, consider checking all the renamed types in [this file](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/src/v7.0.0/pickers/rename-slots-types/index.ts).
+Here is an example on the `DateCalendar` typing.
+
+```diff
+- DateCalendarSlotsComponent
++ DateCalendarSlots
+- DateCalendarSlotsComponentsProps
++ DateCalendarSlotProps
+```
+
 ### Add new parameters to the `shortcuts` slot `onChange` callback
 
 :::warning
@@ -227,6 +241,100 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 
  return <DateField unstableFieldRef={fieldRef} />;
 ```
+
+### Headless fields
+
+:::success
+The following breaking changes only impact you if you are using hooks like `useDateField` to build a custom UI.
+
+If you are just using the regular field components, then you can safely skip this section.
+:::
+
+#### Move `inputRef` inside the props passed to the hook
+
+The field hooks now only receive the props instead of an object containing both the props and the `inputRef`.
+
+```diff
+- const { inputRef, ...otherProps } = props
+- const fieldResponse = useDateField({ props: otherProps, inputRef });
++ const fieldResponse = useDateField(props);
+```
+
+If you are using a multi input range field hook, the same applies to `startInputRef` and `endInputRef` params
+
+```diff
+- const { inputRef: startInputRef, ...otherStartTextFieldProps } = startTextFieldProps
+- const { inputRef: endInputRef, ...otherEndTextFieldProps } = endTextFieldProps
+
+  const fieldResponse = useMultiInputDateRangeField({
+    sharedProps,
+-   startTextFieldProps: otherStartTextFieldProps,
+-   endTextFieldProps: otherEndTextFieldProps,
+-   startInputRef
+-   endInputRef,
++   startTextFieldProps,
++   endTextFieldProps
+  });
+```
+
+#### Rename the ref returned by the hook to `inputRef`
+
+When used with the v6 TextField approach (where the input is an `<input />` HTML element), the field hooks return a ref that needs to be passed to the `<input />` element.
+This ref was previously named `ref` and has been renamed `inputRef` for extra clarity.
+
+```diff
+  const fieldResponse = useDateField(props);
+
+- return <input ref={fieldResponse.ref} />
++ return <input ref={fieldResponse.inputRef} />
+```
+
+If you are using a multi input range field hook, the same applies to the ref in the `startDate` and `endDate` objects
+
+```diff
+  const fieldResponse = useDateField(props);
+
+  return (
+    <div>
+-     <input ref={fieldResponse.startDate.ref} />
++     <input ref={fieldResponse.startDate.inputRef} />
+      <span>–</span>
+-     <input ref={fieldResponse.endDate.ref} />
++     <input ref={fieldResponse.endDate.inputRef} />
+    </div>
+  )
+```
+
+#### Restructure the API of `useClearableField`
+
+The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
+
+You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
+
+```diff
+  const fieldResponse = useDateField(props);
+
+- const { InputProps, onClear, clearable, slots, slotProps, ...otherFieldProps } = fieldResponse
+- const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField({
+-   fieldProps: otherFieldProps,
+-   InputProps,
+-   clearable,
+-   onClear,
+-   slots,
+-   slotProps,
+- });
+-
+-  return <MyCustomTextField {...processedFieldProps} InputProps={ProcessedInputProps} />
+
++ const processedFieldProps = useClearableField(fieldResponse);
++
++ return <MyCustomTextField {...processedFieldProps} />
+```
+
+:::info
+If your custom field is based on one of the examples of the [Custom field](/x/react-date-pickers/custom-field/) page,
+then you can look at the page to see all the examples improved and updated to use the new simplified API.
+:::
 
 ## Date management
 

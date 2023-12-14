@@ -1,5 +1,5 @@
 {
-  "version": "7.0.0-alpha.4",
+  "version": "7.0.0-alpha.5",
   "private": true,
   "scripts": {
     "start": "yarn && yarn docs:dev",
@@ -86,7 +86,7 @@
     "@mui/material": "^5.14.20",
     "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
     "@mui/utils": "^5.14.20",
-    "@next/eslint-plugin-next": "^14.0.3",
+    "@next/eslint-plugin-next": "^14.0.4",
     "@octokit/plugin-retry": "^6.0.1",
     "@octokit/rest": "^20.0.2",
     "@playwright/test": "1.40.1",
@@ -120,7 +120,7 @@
     "compression-webpack-plugin": "^10.0.0",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
-    "danger": "^11.3.0",
+    "danger": "^11.3.1",
     "enzyme": "^3.11.0",
     "eslint": "^8.55.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -138,7 +138,7 @@
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
     "globby": "^13.2.2",
-    "html-webpack-plugin": "^5.5.3",
+    "html-webpack-plugin": "^5.5.4",
     "jsdom": "^22.1.0",
     "jss": "^10.10.0",
     "jss-plugin-template": "^10.10.0",

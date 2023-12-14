@@ -27,7 +27,7 @@ interface PickersPopperOwnerState extends PickerPopperProps {
   placement: PopperPlacementType;
 }
 
-export interface PickersPopperSlotsComponent {
+export interface PickersPopperSlots {
   /**
    * Custom component for the paper rendered inside the desktop picker's Popper.
    * @default PickersPopperPaper
@@ -50,7 +50,7 @@ export interface PickersPopperSlotsComponent {
   popper?: React.ElementType<MuiPopperProps>;
 }
 
-export interface PickersPopperSlotsComponentsProps {
+export interface PickersPopperSlotProps {
   /**
    * Props passed down to the desktop [Paper](https://mui.com/material-ui/api/paper/) component.
    */
@@ -77,8 +77,8 @@ export interface PickerPopperProps extends UsePickerValueActions {
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
-  slots?: PickersPopperSlotsComponent;
-  slotProps?: PickersPopperSlotsComponentsProps;
+  slots?: PickersPopperSlots;
+  slotProps?: PickersPopperSlotProps;
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
   reduceAnimations?: boolean;
@@ -269,7 +269,7 @@ interface PickersPopperPaperProps {
   paperClasses: string;
   onPaperClick: React.MouseEventHandler<HTMLDivElement>;
   onPaperTouchStart: React.TouchEventHandler<HTMLDivElement>;
-  paperSlotProps?: PickersPopperSlotsComponentsProps['desktopPaper'];
+  paperSlotProps?: PickersPopperSlotProps['desktopPaper'];
 }
 
 const PickersPopperPaperWrapper = React.forwardRef(

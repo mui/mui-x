@@ -5,7 +5,8 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { useLocaleText, useUtils, validateDate } from '../internals';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { CalendarIcon } from '../icons';
@@ -198,6 +199,10 @@ DesktopDatePicker.propTypes = {
    */
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name: PropTypes.string,
+  /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
@@ -299,6 +304,7 @@ DesktopDatePicker.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',

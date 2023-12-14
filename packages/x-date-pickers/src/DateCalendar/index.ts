@@ -1,8 +1,8 @@
 export { DateCalendar } from './DateCalendar';
 export type {
   DateCalendarProps,
-  DateCalendarSlotsComponent,
-  DateCalendarSlotsComponentsProps,
+  DateCalendarSlots,
+  DateCalendarSlotProps,
 } from './DateCalendar.types';
 
 export { getDateCalendarUtilityClass, dateCalendarClasses } from './dateCalendarClasses';

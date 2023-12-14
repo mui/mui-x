@@ -6,12 +6,7 @@ import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { FieldSection, TimeValidationError } from '../models';
-import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../internals';
-
-export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
-  props: UseTimeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
 
 export interface UseTimeFieldProps<TDate>
   extends MakeOptional<
@@ -44,17 +39,17 @@ export interface TimeFieldProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: TimeFieldSlotsComponent;
+  slots?: TimeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimeFieldSlotsComponentsProps<TDate>;
+  slotProps?: TimeFieldSlotProps<TDate>;
 }
 
 export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;
 
-export interface TimeFieldSlotsComponent extends FieldSlotsComponents {
+export interface TimeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -63,6 +58,6 @@ export interface TimeFieldSlotsComponent extends FieldSlotsComponents {
   textField?: React.ElementType;
 }
 
-export interface TimeFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
+export interface TimeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate>>;
 }

@@ -11,8 +11,8 @@ import {
 } from './multiSectionDigitalClockSectionClasses';
 import type {
   MultiSectionDigitalClockOption,
-  MultiSectionDigitalClockSlotsComponent,
-  MultiSectionDigitalClockSlotsComponentsProps,
+  MultiSectionDigitalClockSlots,
+  MultiSectionDigitalClockSlotProps,
 } from './MultiSectionDigitalClock.types';
 import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
@@ -22,8 +22,8 @@ import {
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
   classes?: Partial<MultiSectionDigitalClockSectionClasses>;
-  slots?: MultiSectionDigitalClockSlotsComponent;
-  slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
+  slots?: MultiSectionDigitalClockSlots;
+  slotProps?: MultiSectionDigitalClockSlotProps;
 }
 
 export interface MultiSectionDigitalClockSectionProps<TValue>

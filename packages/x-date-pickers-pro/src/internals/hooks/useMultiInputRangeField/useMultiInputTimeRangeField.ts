@@ -49,10 +49,8 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
 export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {}>({
   sharedProps: inSharedProps,
   startTextFieldProps,
-  startInputRef,
   unstableStartFieldRef,
   endTextFieldProps,
-  endInputRef,
   unstableEndFieldRef,
 }: UseMultiInputTimeRangeFieldParams<
   TDate,
@@ -159,15 +157,9 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     onSelectedSectionsChange,
   };
 
-  const startDateResponse = useTimeField({
-    props: startFieldProps,
-    inputRef: startInputRef,
-  }) as UseFieldResponse<TTextFieldSlotProps>;
+  const startDateResponse = useTimeField(startFieldProps) as UseFieldResponse<TTextFieldSlotProps>;
 
-  const endDateResponse = useTimeField({
-    props: endFieldProps,
-    inputRef: endInputRef,
-  }) as UseFieldResponse<TTextFieldSlotProps>;
+  const endDateResponse = useTimeField(endFieldProps) as UseFieldResponse<TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {
