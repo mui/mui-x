@@ -308,7 +308,7 @@ MultiInputDateRangeField.propTypes = {
    */
   shouldRespectLeadingZeros: PropTypes.bool,
   /**
-   * @defauilt false
+   * @default false
    */
   shouldUseV6TextField: PropTypes.bool,
   /**

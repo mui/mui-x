@@ -1,17 +1,28 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
+    "color": { "type": { "name": "any" }, "default": "'primary'" },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "focused": { "type": { "name": "any" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
+    "FormHelperTextProps": { "type": { "name": "any" } },
+    "fullWidth": { "type": { "name": "any" }, "default": "false" },
+    "helperText": { "type": { "name": "any" } },
+    "hiddenLabel": { "type": { "name": "any" }, "default": "false" },
+    "id": { "type": { "name": "any" } },
+    "InputLabelProps": { "type": { "name": "any" } },
     "inputProps": { "type": { "name": "any" } },
     "InputProps": { "type": { "name": "any" } },
+    "inputRef": { "type": { "name": "any" } },
+    "label": { "type": { "name": "any" } },
+    "margin": { "type": { "name": "any" }, "default": "'none'" },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
     "onChange": {
@@ -40,6 +51,7 @@
       "type": { "name": "any" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
+    "required": { "type": { "name": "any" }, "default": "false" },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -71,8 +83,10 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
+    "size": { "type": { "name": "any" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
+    "sx": { "type": { "name": "any" }, "additionalInfo": { "sx": true } },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
@@ -80,7 +94,8 @@
     "unstableFieldRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
     },
-    "value": { "type": { "name": "any" } }
+    "value": { "type": { "name": "any" } },
+    "variant": { "type": { "name": "any" }, "default": "'outlined'" }
   },
   "slots": [
     {
@@ -108,7 +123,7 @@
     "import { DateField } from '@mui/x-date-pickers';",
     "import { DateField } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateField" },
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateField" },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateField/DateField.tsx",

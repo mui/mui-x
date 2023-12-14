@@ -6,6 +6,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "color": {
+      "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled.",
       "deprecated": "",
@@ -26,6 +31,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "focused": {
+      "description": "If <code>true</code>, the component is displayed in focused state.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "format": {
       "description": "Format of the date when rendered in the input(s).",
       "deprecated": "",
@@ -36,6 +46,36 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "FormHelperTextProps": {
+      "description": "Props applied to the <a href=\"/material-ui/api/form-helper-text/\"><code>FormHelperText</code></a> element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "fullWidth": {
+      "description": "If <code>true</code>, the input will take up the full width of its container.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "helperText": {
+      "description": "The helper text content.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "hiddenLabel": {
+      "description": "If <code>true</code>, the label is hidden. This is used to increase density for a <code>FilledInput</code>. Be sure to add <code>aria-label</code> to the <code>input</code> element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "id": {
+      "description": "The id of the <code>input</code> element. Use this prop to make <code>label</code> and <code>helperText</code> accessible for screen readers.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "InputLabelProps": {
+      "description": "Props applied to the <a href=\"/material-ui/api/input-label/\"><code>InputLabel</code></a> element. Pointer events like <code>onClick</code> are enabled if and only if <code>shrink</code> is <code>true</code>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "inputProps": {
       "description": "<a href=\"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes\">Attributes</a> applied to the <code>input</code> element.",
       "deprecated": "",
@@ -43,6 +83,17 @@
     },
     "InputProps": {
       "description": "Props applied to the Input element. It will be a <a href=\"/material-ui/api/filled-input/\"><code>FilledInput</code></a>, <a href=\"/material-ui/api/outlined-input/\"><code>OutlinedInput</code></a> or <a href=\"/material-ui/api/input/\"><code>Input</code></a> component depending on the <code>variant</code> prop value.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "inputRef": {
+      "description": "Pass a ref to the <code>input</code> element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "label": { "description": "The label content.", "deprecated": "", "typeDescriptions": {} },
+    "margin": {
+      "description": "If <code>dense</code> or <code>normal</code>, will adjust vertical spacing of this and contained components.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -87,6 +138,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "required": {
+      "description": "If <code>true</code>, the label is displayed as required and the <code>input</code> element is required.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "selectedSections": {
       "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally.",
       "deprecated": "",
@@ -121,6 +177,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "size": {
+      "description": "The size of the component.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "slotProps": {
       "description": "The props used for each component slot.",
       "deprecated": "",
@@ -128,6 +189,11 @@
     },
     "slots": {
       "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -145,9 +211,10 @@
       "description": "The selected value. Used when the component is controlled.",
       "deprecated": "",
       "typeDescriptions": {}
-    }
+    },
+    "variant": { "description": "The variant to use.", "deprecated": "", "typeDescriptions": {} }
   },
-  "classDescriptions": {},
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display inside the clear button.",

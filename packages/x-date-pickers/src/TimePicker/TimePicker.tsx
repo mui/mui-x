@@ -254,7 +254,7 @@ TimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * @defauilt false
+   * @default false
    */
   shouldUseV6TextField: PropTypes.any,
   /**

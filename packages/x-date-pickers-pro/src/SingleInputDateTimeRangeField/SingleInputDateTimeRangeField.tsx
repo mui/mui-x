@@ -91,7 +91,16 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default false
    */
   autoFocus: PropTypes.bool,
+  className: PropTypes.any,
   clearable: PropTypes.bool,
+  /**
+   * The color of the component.
+   * It supports both default and custom theme colors, which can be added as shown in the
+   * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
+   * @default 'primary'
+   */
+  color: PropTypes.any,
+  component: PropTypes.elementType,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -117,6 +126,10 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * If `true`, the component is displayed in focused state.
+   */
+  focused: PropTypes.any,
+  /**
    * Format of the date when rendered in the input(s).
    */
   format: PropTypes.string,
@@ -126,6 +139,36 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default "dense"
    */
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
+  /**
+   * Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
+   */
+  FormHelperTextProps: PropTypes.any,
+  /**
+   * If `true`, the input will take up the full width of its container.
+   * @default false
+   */
+  fullWidth: PropTypes.any,
+  /**
+   * The helper text content.
+   */
+  helperText: PropTypes.any,
+  /**
+   * If `true`, the label is hidden.
+   * This is used to increase density for a `FilledInput`.
+   * Be sure to add `aria-label` to the `input` element.
+   * @default false
+   */
+  hiddenLabel: PropTypes.any,
+  /**
+   * The id of the `input` element.
+   * Use this prop to make `label` and `helperText` accessible for screen readers.
+   */
+  id: PropTypes.any,
+  /**
+   * Props applied to the [`InputLabel`](/material-ui/api/input-label/) element.
+   * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
+   */
+  InputLabelProps: PropTypes.any,
   /**
    * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
    */
@@ -137,6 +180,19 @@ SingleInputDateTimeRangeField.propTypes = {
    * component depending on the `variant` prop value.
    */
   InputProps: PropTypes.any,
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef: PropTypes.any,
+  /**
+   * The label content.
+   */
+  label: PropTypes.any,
+  /**
+   * If `dense` or `normal`, will adjust vertical spacing of this and contained components.
+   * @default 'none'
+   */
+  margin: PropTypes.any,
   /**
    * Maximal selectable date.
    */
@@ -168,6 +224,7 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
+  onBlur: PropTypes.any,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -185,6 +242,7 @@ SingleInputDateTimeRangeField.propTypes = {
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
+  onFocus: PropTypes.any,
   /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
@@ -202,6 +260,11 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
   referenceDate: PropTypes.any,
+  /**
+   * If `true`, the label is displayed as required and the `input` element is required.
+   * @default false
+   */
+  required: PropTypes.any,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -261,9 +324,13 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   shouldRespectLeadingZeros: PropTypes.bool,
   /**
-   * @defauilt false
+   * @default false
    */
   shouldUseV6TextField: PropTypes.bool,
+  /**
+   * The size of the component.
+   */
+  size: PropTypes.any,
   /**
    * The props used for each component slot.
    * @default {}
@@ -274,6 +341,11 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  style: PropTypes.any,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
@@ -291,6 +363,11 @@ SingleInputDateTimeRangeField.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * The variant to use.
+   * @default 'outlined'
+   */
+  variant: PropTypes.any,
 } as any;
 
 export { SingleInputDateTimeRangeField };

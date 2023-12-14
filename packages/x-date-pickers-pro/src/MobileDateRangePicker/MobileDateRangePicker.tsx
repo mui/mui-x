@@ -327,7 +327,7 @@ MobileDateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * @defauilt false
+   * @default false
    */
   shouldUseV6TextField: PropTypes.any,
   /**

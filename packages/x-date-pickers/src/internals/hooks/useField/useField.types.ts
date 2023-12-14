@@ -126,7 +126,7 @@ export interface UseFieldInternalProps<
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
   /**
-   * @defauilt false
+   * @default false
    */
   shouldUseV6TextField?: TUseV6TextField;
   /**
