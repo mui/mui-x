@@ -167,6 +167,8 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         if (previousActive.current !== activeItem) {
           previousActive.current = activeItem;
         }
+      }
+      if (!activeItem) {
         return;
       }
       previousActive.current = activeItem;
