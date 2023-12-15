@@ -10,10 +10,7 @@ import {
   BrowserContextOptions,
   BrowserType,
 } from '@playwright/test';
-import {
-  pickersInputClasses,
-  pickersTextFieldClasses,
-} from '@mui/x-date-pickers/internals/components/PickersTextField/pickersTextFieldClasses';
+import { pickersInputClasses, pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {

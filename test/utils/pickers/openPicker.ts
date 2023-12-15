@@ -1,6 +1,6 @@
 import { screen, userEvent } from '@mui-internal/test-utils';
 import { getFieldSectionsContainer } from 'test/utils/pickers/fields';
-import { pickersInputClasses } from '@mui/x-date-pickers/internals/components/PickersTextField/pickersTextFieldClasses';
+import { pickersInputClasses } from '@mui/x-date-pickers/PickersTextField';
 
 export type OpenPickerParams =
   | {
