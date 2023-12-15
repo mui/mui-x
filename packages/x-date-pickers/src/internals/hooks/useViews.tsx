@@ -62,7 +62,7 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridie
 }
 
 export interface ExportedUseViewsOptions<TView extends DateOrTimeViewWithMeridiem>
-  extends MakeOptional<Omit<UseViewsOptions<any, TView>, 'onChange'>, 'openTo' | 'views'> {}
+  extends MakeOptional<UseViewsOptions<any, TView>, 'onChange' | 'openTo' | 'views'> {}
 
 let warnedOnceNotValidView = false;
 
@@ -162,21 +162,21 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
   });
 
   const handleChangeView = useEventCallback((newView: TView) => {
+    // always keep the focused view in sync
+    handleFocusedViewChange(newView, true);
     if (newView === view) {
       return;
     }
     setView(newView);
-    handleFocusedViewChange(newView, true);
-
     if (onViewChange) {
       onViewChange(newView);
     }
   });
+
   const goToNextView = useEventCallback(() => {
     if (nextView) {
       handleChangeView(nextView);
     }
-    handleFocusedViewChange(nextView, true);
   });
 
   const setValueAndGoToNextView = useEventCallback(
@@ -190,8 +190,12 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
       const globalSelectionState =
         isSelectionFinishedOnCurrentView && hasMoreViews ? 'partial' : currentViewSelectionState;
 
-      onChange(value, globalSelectionState);
-      if (isSelectionFinishedOnCurrentView) {
+      onChange(value, globalSelectionState, selectedView);
+      // detect out of order selection
+      if (selectedView && selectedView !== view) {
+        // move to next view after the selected one
+        handleChangeView(views[views.indexOf(selectedView) + 1] ?? null);
+      } else if (isSelectionFinishedOnCurrentView) {
         goToNextView();
       }
     },
