@@ -17,6 +17,8 @@ import {
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
 } from '../PickersSectionList';
 
+const round = (value) => Math.round(value * 1e5) / 1e5;
+
 const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',
   slot: 'Root',
@@ -25,14 +27,17 @@ const PickersInputRoot = styled(Box, {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
+    ...theme.typography.body1,
+    color: (theme.vars || theme).palette.text.primary,
     cursor: 'text',
-    padding: '16.5px 14px',
+    padding: '0 14px',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: ownerState.fullWidth ? '100%' : '25ch',
     position: 'relative',
     borderRadius: (theme.vars || theme).shape.borderRadius,
+    boxSizing: 'border-box', // Prevent padding issue with fullWidth.
+    letterSpacing: `${round(0.15 / 16)}em`,
     [`&:hover .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
     },
@@ -65,10 +70,6 @@ const PickersInputRoot = styled(Box, {
     [`&.${pickersInputClasses.error} .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.error.main,
     },
-
-    ...(ownerState.size === 'small' && {
-      padding: '8.5px 14px',
-    }),
   };
 });
 
@@ -80,7 +81,17 @@ const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
+  display: 'flex',
+  flexWrap: 'nowrap',
+  padding: '16.5px 0',
+  width: '20ch',
   flexGrow: 1,
+  overflow: 'hidden',
+  letterSpacing: 'inherit',
+
+  ...(ownerState.size === 'small' && {
+    padding: '8.5px 0',
+  }),
   ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
   ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
     color: 'currentColor',
@@ -104,7 +115,7 @@ const PickersInputSection = styled(PickersSectionListSection, {
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
-  flexGrow: 1,
+  display: 'flex',
 }));
 
 const PickersInputSectionContent = styled(PickersSectionListSectionContent, {
@@ -116,7 +127,6 @@ const PickersInputSectionContent = styled(PickersSectionListSectionContent, {
   lineHeight: '1.4375em', // 23px
   letterSpacing: 'inherit',
   width: 'fit-content',
-  outline: 'none',
 }));
 
 const PickersInputSeparator = styled(PickersSectionListSectionSeparator, {
