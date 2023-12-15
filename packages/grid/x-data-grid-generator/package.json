@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "7.0.0-alpha.4",
+  "version": "7.0.0-alpha.5",
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -35,7 +35,7 @@
   "dependencies": {
     "@babel/runtime": "^7.23.5",
     "@mui/base": "^5.0.0-beta.26",
-    "@mui/x-data-grid-premium": "7.0.0-alpha.4",
+    "@mui/x-data-grid-premium": "7.0.0-alpha.5",
     "chance": "^1.1.11",
     "clsx": "^2.0.0",
     "lru-cache": "^7.18.3"
