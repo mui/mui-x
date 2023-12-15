@@ -83,6 +83,10 @@ Or increasing the width of the item state indicator to be full-width:
 
 {{"demo": "GmailTreeView.js"}}
 
+### Gmail clone 2
+
+{{"demo": "CustomizedTreeView2.js"}}
+
 ## Disabled tree items
 
 {{"demo": "DisabledTreeItems.js"}}
