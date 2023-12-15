@@ -6,7 +6,7 @@ import { PickersTextField as MuiPickersTextField } from '@mui/x-date-pickers/Pic
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const PickersTextField = React.forwardRef((props, ref) => (
-  <MuiPickersTextField {...props} ref={ref} />
+  <MuiPickersTextField {...props} ref={ref} size="small" />
 ));
 
 export default function MaterialV7Field() {
