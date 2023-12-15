@@ -276,7 +276,7 @@ const useSingleInputFieldSlotProps = <
   label,
   onBlur,
   rangePosition,
-  onRangePositionChange,
+  onRangePositionChange: inOnRangePositionChange,
   startFieldRef,
   endFieldRef,
   pickerSlots,
@@ -298,14 +298,26 @@ const useSingleInputFieldSlotProps = <
     TError
   >;
 
+  const onRangePositionChange = (a) => {
+    // console.log(a)
+    // console.trace();
+    inOnRangePositionChange(a);
+  };
+
   const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, startFieldRef, endFieldRef);
 
   React.useEffect(() => {
-    if (!open) {
+    if (!open || !startFieldRef.current) {
       return;
     }
 
-    startFieldRef.current?.focusField(0);
+    if (startFieldRef.current.isFieldFocused()) {
+      return;
+    }
+
+    const newSelectedSection =
+      rangePosition === 'start' ? 0 : startFieldRef.current.getSections().length / 2;
+    startFieldRef.current?.focusField(newSelectedSection);
   }, [rangePosition, open, startFieldRef]);
 
   const updateRangePosition = () => {
