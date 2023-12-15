@@ -276,7 +276,7 @@ const useSingleInputFieldSlotProps = <
   label,
   onBlur,
   rangePosition,
-  onRangePositionChange: inOnRangePositionChange,
+  onRangePositionChange,
   startFieldRef,
   endFieldRef,
   pickerSlots,
@@ -297,12 +297,6 @@ const useSingleInputFieldSlotProps = <
     TUseV6TextField,
     TError
   >;
-
-  const onRangePositionChange = (a) => {
-    // console.log(a)
-    // console.trace();
-    inOnRangePositionChange(a);
-  };
 
   const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, startFieldRef, endFieldRef);
 
