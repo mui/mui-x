@@ -78,8 +78,8 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
   setValueAndGoToNextView: (
     value: TValue,
     currentViewSelectionState?: PickerSelectionState,
+    selectedView?: TView,
   ) => void;
-  setValueAndGoToView: (value: TValue, newView: TView | null, selectedView: TView) => void;
 }
 
 export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
@@ -193,20 +193,13 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
       onChange(value, globalSelectionState, selectedView);
       // detect out of order selection
       if (selectedView && selectedView !== view) {
-        // move to next view after the selected one
-        handleChangeView(views[views.indexOf(selectedView) + 1] ?? null);
+        const nextViewAfterSelected = views[views.indexOf(selectedView) + 1];
+        if (nextViewAfterSelected) {
+          // move to next view after the selected one
+          handleChangeView(views[views.indexOf(selectedView) + 1]);
+        }
       } else if (isSelectionFinishedOnCurrentView) {
         goToNextView();
-      }
-    },
-  );
-
-  const setValueAndGoToView = useEventCallback(
-    (value: TValue, newView: TView | null, selectedView: TView) => {
-      onChange(value, newView ? 'partial' : 'finish', selectedView);
-      if (newView) {
-        handleChangeView(newView);
-        handleFocusedViewChange(newView, true);
       }
     },
   );
@@ -222,6 +215,5 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
     defaultView: views.includes(openTo!) ? openTo! : views[0],
     goToNextView,
     setValueAndGoToNextView,
-    setValueAndGoToView,
   };
 }
