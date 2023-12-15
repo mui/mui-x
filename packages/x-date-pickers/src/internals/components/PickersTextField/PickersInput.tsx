@@ -84,15 +84,6 @@ const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
   lineHeight: '1.4375em', // 23px
   display: 'flex',
   flexGrow: 1,
-  flexWrap: 'nowrap',
-  padding: '16.5px 0',
-  ...(!ownerState.fullWidth && {
-    minWidth: '20ch',
-  }),
-  ...(ownerState.size === 'small' && {
-    padding: '8.5px 0',
-  }),
-  overflow: 'hidden',
   ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
   ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
     color: 'currentColor',
