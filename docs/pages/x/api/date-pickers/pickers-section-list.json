@@ -1,0 +1,34 @@
+{
+  "props": {
+    "contentEditable": { "type": { "name": "bool" }, "required": true },
+    "elements": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" } }
+  },
+  "slots": [
+    { "class": null, "name": "root", "description": "" },
+    { "class": null, "name": "section", "description": "" },
+    { "class": null, "name": "sectionContent", "description": "" },
+    { "class": null, "name": "sectionSeparator", "description": "" }
+  ],
+  "name": "PickersSectionList",
+  "imports": [
+    "import { PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';",
+    "import { PickersSectionList } from '@mui/x-date-pickers';",
+    "import { PickersSectionList } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": {
+    "classes": ["root", "section", "sectionContent"],
+    "globalClasses": {},
+    "name": "MuiPickersSectionList"
+  },
+  "filename": "/packages/x-date-pickers/src/PickersSectionList/PickersSectionList.tsx",
+  "demos": "<ul></ul>"
+}
