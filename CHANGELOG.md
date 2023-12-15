@@ -129,7 +129,7 @@ The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsP
   + const processedFieldProps = useClearableField(fieldResponse);
   +
   + return <MyCustomTextField {...processedFieldProps} />
-```
+  ```
 
 #### `@mui/x-date-pickers@7.0.0-alpha.5`
 
