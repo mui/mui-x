@@ -522,7 +522,7 @@ async function initializeEnvironment(
           ).to.equal('date');
           await page.getByRole('gridcell', { name: '11' }).click();
 
-          // assert that the tooltip closes after selection is complete
+          // assert that the dialog closes after selection is complete
           // could run into race condition otherwise
           await page.waitForSelector('[role="dialog"]', { state: 'detached' });
           expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
@@ -629,7 +629,7 @@ async function initializeEnvironment(
         await page.keyboard.press('ArrowDown');
         await page.keyboard.press('Enter');
 
-        // assert that the tooltip closes after selection is complete
+        // assert that the dialog closes after selection is complete
         // could run into race condition otherwise
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox').inputValue()).to.equal('04/21/2022 02:05 PM');
