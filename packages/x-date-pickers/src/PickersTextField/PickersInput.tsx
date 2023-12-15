@@ -15,7 +15,7 @@ import {
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
-} from '../../../PickersSectionList';
+} from '../PickersSectionList';
 
 const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',
@@ -26,7 +26,7 @@ const PickersInputRoot = styled(Box, {
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
     cursor: 'text',
-    padding: '0 14px',
+    padding: '16.5px 14px',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',

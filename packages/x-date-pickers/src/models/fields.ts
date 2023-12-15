@@ -9,7 +9,7 @@ import type {
 } from '../hooks/useClearableField';
 import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
 import type { UseFieldResponse } from '../internals/hooks/useField';
-import type { PickersTextFieldProps } from '../internals/components/PickersTextField/PickersTextField.types';
+import type { PickersTextFieldProps } from '../PickersTextField';
 
 export type FieldSectionType =
   | 'year'

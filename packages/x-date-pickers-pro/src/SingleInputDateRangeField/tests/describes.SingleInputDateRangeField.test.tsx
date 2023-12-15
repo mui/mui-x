@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PickersTextField } from '@mui/x-date-pickers/internals';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { describeConformance } from '@mui-internal/test-utils';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { createPickerRenderer, wrapPickerMount, describeRangeValidation } from 'test/utils/pickers';

@@ -65,7 +65,23 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ## New field DOM structure
 
-### Keeping the old DOM structure
+### Use the new DOM structure
+
+#### Usage with `slotProps.textField` and `slotProps.field`
+
+#### Usage with custom `slots.textField`
+
+If you were passing a custom `TextField` component to your fields and pickers, you need to create a new one that is using the new DOM structure.
+
+If your custom `TextField` was only used to add some default props and behaviors to `@mui/material/TextField`, you can have a look at [this section](/x/react-date-pickers/custom-field/#using-material-pickerstextfield).
+
+If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`, you can have a look at [this section](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield).
+
+#### Usage with theme augmentation
+
+#### Usage with custom `slots.field`
+
+### Keep the old DOM structure
 
 The old DOM structure will only be removed in the first v8 release to provide a smoother migration path.
 You can keep using this structure by providing the `shouldUseV6TextField` prop to any picker or field component:
@@ -94,14 +110,6 @@ const theme = createTheme({
   },
 });
 ```
-
-### Migrating to the new DOM structure
-
-### Usage with `slotProps.textField` and `slotProps.field`
-
-### Usage with custom `slots.textField`
-
-### Usage with custom `slots.field`
 
 ## Component slots
 

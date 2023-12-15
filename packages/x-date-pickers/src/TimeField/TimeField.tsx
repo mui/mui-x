@@ -6,7 +6,7 @@ import { useSlotProps } from '@mui/base/utils';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
-import { PickersTextField } from '../internals/components/PickersTextField';
+import { PickersTextField } from '../PickersTextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
 
 type TimeFieldComponent = (<TDate, TUseV6TextField extends boolean = false>(

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
   BaseNonStaticPickerProps,
@@ -38,10 +38,9 @@ export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMe
   field: React.ElementType;
   /**
    * Form control with an input to render the value inside the default field.
-   * Receives the same props as `@mui/material/TextField`.
    * @default PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled.
    */
-  textField?: React.ElementType<TextFieldProps>;
+  textField?: React.ElementType;
   /**
    * Component displayed on the start or end input adornment used to open the picker on desktop.
    * @default InputAdornment

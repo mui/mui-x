@@ -14,9 +14,9 @@ import {
 import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
 import {
   splitFieldInternalAndForwardedProps,
-  PickersTextField,
   convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { MultiInputTimeRangeFieldProps } from './MultiInputTimeRangeField.types';
 import { useMultiInputTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
 import { UseTimeRangeFieldProps } from '../internals/models/timeRange';

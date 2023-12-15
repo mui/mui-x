@@ -55,12 +55,21 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 {{"demo": "FieldFormatDensity.js"}}
 
-## Usage with Material `TextField`
+## Usage with Material UI
+
+### Using Material `PickersTextField`
+
+By default, the fields and pickers are using this component to build their UI.
+You can import it to create custom wrappers:
+
+{{"demo": "MaterialV7Field.js"}}
+
+### Using Material `TextField`
 
 The legacy field that uses the `TextField` component from `@mui/material` is still available.
 To enable it, you have to pass the `shouldUseV6TextField` prop to any field or picker component:
 
-{{"demo": "PickerWithV6TextField.js"}}
+{{"demo": "MaterialV6Field.js"}}
 
 :::warning
 This DOM structure will be removed in the next major (v8).

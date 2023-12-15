@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BoxProps } from '@mui/material/Box';
-import { PickersSectionListProps } from '../../../PickersSectionList';
+import { PickersSectionListProps } from '../PickersSectionList';
 
 export interface PickersInputPropsUsedByField
   extends Pick<

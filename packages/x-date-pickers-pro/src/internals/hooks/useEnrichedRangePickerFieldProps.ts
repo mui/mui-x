@@ -46,10 +46,9 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render a date or time inside the default field.
    * It is rendered twice: once for the start element and once for the end element.
-   * Receives the same props as `@mui/material/TextField`.
-   * @default TextField from '@mui/material'
+   * @default PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled.
    */
-  textField?: React.ElementType<TextFieldProps>;
+  textField?: React.ElementType;
 }
 
 export interface RangePickerFieldSlotProps<TDate, TUseV6TextField extends boolean>

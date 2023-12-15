@@ -31,10 +31,9 @@ export interface UseMobilePickerSlots<TDate, TView extends DateOrTimeViewWithMer
   field: React.ElementType;
   /**
    * Form control with an input to render the value inside the default field.
-   * Receives the same props as `@mui/material/TextField`.
-   * @default TextField from '@mui/material'
+   * @default PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled.
    */
-  textField?: React.ElementType<TextFieldProps>;
+  textField?: React.ElementType;
 }
 
 export interface ExportedUseMobilePickerSlotProps<

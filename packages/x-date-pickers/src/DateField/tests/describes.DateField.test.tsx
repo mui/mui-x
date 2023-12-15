@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { describeConformance } from '@mui-internal/test-utils';
-import { PickersTextField } from '@mui/x-date-pickers/internals';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   createPickerRenderer,

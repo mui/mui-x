@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { screen } from '@mui-internal/test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
-import { pickersInputClasses } from '@mui/x-date-pickers/internals/components/PickersTextField/pickersTextFieldClasses';
+import { pickersInputClasses } from '@mui/x-date-pickers/PickersTextField';
 
 describe('<DateTimePicker />', () => {
   const { render } = createPickerRenderer();
