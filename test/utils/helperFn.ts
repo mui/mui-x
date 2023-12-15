@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { act } from '@mui-internal/test-utils';
+import { act, screen } from '@mui-internal/test-utils';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
 
@@ -136,4 +136,23 @@ export function getRow(rowIndex: number): HTMLElement {
     throw new Error(`Row ${rowIndex} not found`);
   }
   return row;
+}
+
+/**
+ * Returns the hidden `input` element of the Material UI Select component
+ */
+export const getSelectInput = (combobox: Element) => {
+  if (!combobox) {
+    return null;
+  }
+  const comboboxParent = combobox.parentElement;
+  if (!comboboxParent) {
+    return null;
+  }
+  const input = comboboxParent.querySelector('input');
+  return input;
+};
+
+export function getSelectByName(name: string) {
+  return getSelectInput(screen.getByRole('combobox', { name }))!;
 }

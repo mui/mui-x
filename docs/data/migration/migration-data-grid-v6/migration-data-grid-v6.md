@@ -77,6 +77,26 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
+- The `getOptionValue` and `getOptionLabel` props were removed from the following components:
+
+  - `GridEditSingleSelectCell`
+  - `GridFilterInputSingleSelect`
+  - `GridFilterInputMultipleSingleSelect`
+
+  Use the `getOptionValue` and `getOptionLabel` properties on the `singleSelect` column definition instead:
+
+  ```tsx
+  const column: GridColDef = {
+    type: 'singleSelect',
+    field: 'country',
+    valueOptions: [
+      { code: 'BR', name: 'Brazil' },
+      { code: 'FR', name: 'France' },
+    ],
+    getOptionValue: (value: any) => value.code,
+    getOptionLabel: (value: any) => value.name,
+  };
+  ```
 
 ### State access
 
@@ -207,6 +227,8 @@ Below are described the steps you need to make to migrate from v6 to v7.
   | `unstable_gridHeaderFilteringMenuSelector`        | `gridHeaderFilteringMenuSelector`        |
   | `unstable_gridHeaderFilteringStateSelector`       | `gridHeaderFilteringStateSelector`       |
   | `unstable_gridTabIndexColumnHeaderFilterSelector` | `gridTabIndexColumnHeaderFilterSelector` |
+
+- The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
 
 <!-- ### Editing
 
