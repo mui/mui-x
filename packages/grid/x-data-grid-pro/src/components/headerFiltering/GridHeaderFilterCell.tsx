@@ -194,8 +194,8 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const onMouseDown = React.useCallback(
       (event: React.MouseEvent) => {
         if (!hasFocus) {
-          if (inputRef.current && inputRef.current.contains?.(event.target as HTMLElement)) {
-            inputRef.current?.focus();
+          if (inputRef.current?.contains?.(event.target as HTMLElement)) {
+            inputRef.current.focus();
           }
           apiRef.current.setColumnHeaderFilterFocus(colDef.field, event);
         }
