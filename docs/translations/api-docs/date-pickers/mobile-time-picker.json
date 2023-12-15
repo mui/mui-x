@@ -227,7 +227,7 @@
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
-    "textField": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
+    "textField": "Form control with an input to render the value inside the default field.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

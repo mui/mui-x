@@ -277,7 +277,7 @@
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element. Receives the same props as <code>@mui/material/TextField</code>.",
+    "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

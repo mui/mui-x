@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
@@ -33,7 +34,7 @@ const useUtilityClasses = (ownerState: PickersTextFieldProps) => {
 
 type OwnerStateType = Partial<PickersTextFieldProps>;
 
-export const PickersTextField = React.forwardRef(function PickersTextField(
+const PickersTextField = React.forwardRef(function PickersTextField(
   props: PickersTextFieldProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -47,7 +48,6 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
     error = false,
     required = false,
     variant = 'outlined',
-
     // Props used by PickersInput
     InputProps,
     inputProps,
@@ -69,15 +69,12 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
     onChange,
     fullWidth,
     id: idProp,
-
     // Props used by FormHelperText
     helperText,
     FormHelperTextProps,
-
     // Props used by InputLabel
     label,
     InputLabelProps,
-
     ...other
   } = props;
 
@@ -148,3 +145,125 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
     </PickersTextFieldRoot>
   );
 });
+
+PickersTextField.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Is `true` if the current values equals the empty value.
+   * For a single item value, it means that `value === null`
+   * For a range value, it means that `value === [null, null]`
+   */
+  areAllSectionsEmpty: PropTypes.bool.isRequired,
+  className: PropTypes.string,
+  /**
+   * The color of the component.
+   * It supports both default and custom theme colors, which can be added as shown in the
+   * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
+   * @default 'primary'
+   */
+  color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
+  component: PropTypes.elementType,
+  /**
+   * If true, the whole element is editable.
+   * Useful when all the sections are selected.
+   */
+  contentEditable: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  /**
+   * The elements to render.
+   * Each element contains the prop to edit a section of the value.
+   */
+  elements: PropTypes.arrayOf(
+    PropTypes.shape({
+      after: PropTypes.object.isRequired,
+      before: PropTypes.object.isRequired,
+      container: PropTypes.object.isRequired,
+      content: PropTypes.object.isRequired,
+    }),
+  ).isRequired,
+  endAdornment: PropTypes.node,
+  error: PropTypes.bool.isRequired,
+  /**
+   * If `true`, the component is displayed in focused state.
+   */
+  focused: PropTypes.bool,
+  FormHelperTextProps: PropTypes.object,
+  fullWidth: PropTypes.bool,
+  /**
+   * The helper text content.
+   */
+  helperText: PropTypes.node,
+  /**
+   * If `true`, the label is hidden.
+   * This is used to increase density for a `FilledInput`.
+   * Be sure to add `aria-label` to the `input` element.
+   * @default false
+   */
+  hiddenLabel: PropTypes.bool,
+  id: PropTypes.string,
+  InputLabelProps: PropTypes.object,
+  inputProps: PropTypes.object,
+  InputProps: PropTypes.object,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
+  label: PropTypes.node,
+  /**
+   * If `dense` or `normal`, will adjust vertical spacing of this and contained components.
+   * @default 'none'
+   */
+  margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  onBlur: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onFocus: PropTypes.func.isRequired,
+  onInput: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func.isRequired,
+  onPaste: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool,
+  /**
+   * If `true`, the label will indicate that the `input` is required.
+   * @default false
+   */
+  required: PropTypes.bool,
+  sectionListRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getRoot: PropTypes.func.isRequired,
+        getSectionContainer: PropTypes.func.isRequired,
+        getSectionContent: PropTypes.func.isRequired,
+        getSectionIndexFromDOMElement: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
+   * The size of the component.
+   * @default 'medium'
+   */
+  size: PropTypes.oneOf(['medium', 'small']),
+  startAdornment: PropTypes.node,
+  style: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  value: PropTypes.string.isRequired,
+  /**
+   * The variant to use.
+   * @default 'outlined'
+   */
+  variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
+} as any;
+
+export { PickersTextField };
