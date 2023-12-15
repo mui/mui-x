@@ -104,6 +104,7 @@
   { "name": "ExportedPickersLayoutSlotProps", "kind": "Interface" },
   { "name": "ExportedPickersLayoutSlots", "kind": "Interface" },
   { "name": "ExportedPickersMonthProps", "kind": "Interface" },
+  { "name": "ExportedPickersSectionListProps", "kind": "Interface" },
   { "name": "ExportedPickersYearProps", "kind": "Interface" },
   { "name": "ExportedSlideTransitionProps", "kind": "Interface" },
   { "name": "faIR", "kind": "Variable" },
