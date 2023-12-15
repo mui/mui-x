@@ -197,7 +197,7 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
         const nextViewAfterSelected = views[views.indexOf(selectedView) + 1];
         if (nextViewAfterSelected) {
           // move to next view after the selected one
-          handleChangeView(views[views.indexOf(selectedView) + 1]);
+          handleChangeView(nextViewAfterSelected);
         }
       } else if (isSelectionFinishedOnCurrentView) {
         goToNextView();
