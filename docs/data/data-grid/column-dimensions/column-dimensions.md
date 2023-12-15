@@ -113,6 +113,13 @@ Column autosizing is compatible with the [Dynamic row height](/x/react-data-grid
 When autosizing columns with long content, consider setting the `maxWidth` for the column to avoid it becoming too wide.
 :::
 
+### Autosizing with grouped rows [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+When using [row grouping](/x/react-data-grid/row-grouping/) you can utilize the `autosizeColumns` method to adjust the column width of the expanded rows dynamically.
+The demo below shows how you can subscribe to the `rowExpansionChange` event. The provided handler function then calls the `autosizeColumns` method from the gridApi.
+
+{{"demo": "ColumnAutosizingGroupedRows.js", "disableAd": true, "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

@@ -9,10 +9,6 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
-import {
-  DateFieldSlotsComponent,
-  DateFieldSlotsComponentsProps,
-} from '@mui/x-date-pickers/DateField/DateField.types';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
   BaseSingleInputFieldProps,
@@ -82,46 +78,18 @@ interface BrowserDateFieldProps
 
 const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const {
-      inputRef: externalInputRef,
-      slots,
-      slotProps,
-      ...textFieldProps
-    } = props;
+    const { slots, slotProps, ...textFieldProps } = props;
 
-    const {
-      onClear,
-      clearable,
-      ref: inputRef,
-      ...fieldProps
-    } = useDateField<Dayjs, typeof textFieldProps>({
-      props: textFieldProps,
-      inputRef: externalInputRef,
-    });
+    const fieldResponse = useDateField<Dayjs, typeof textFieldProps>(textFieldProps);
 
     /* If you don't need a clear button, you can skip the use of this hook */
-    const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-      useClearableField<
-        {},
-        typeof textFieldProps.InputProps,
-        DateFieldSlotsComponent,
-        DateFieldSlotsComponentsProps<Dayjs>
-      >({
-        onClear,
-        clearable,
-        fieldProps,
-        InputProps: fieldProps.InputProps,
-        slots,
-        slotProps,
-      });
-    return (
-      <BrowserField
-        ref={ref}
-        inputRef={inputRef}
-        {...processedFieldProps}
-        InputProps={ProcessedInputProps}
-      />
-    );
+    const processedFieldProps = useClearableField({
+      ...fieldResponse,
+      slots,
+      slotProps,
+    });
+
+    return <BrowserField ref={ref} {...processedFieldProps} />;
   },
 );
 
@@ -131,7 +99,7 @@ const BrowserDatePicker = React.forwardRef(
       <DatePicker
         ref={ref}
         {...props}
-        slots={{ field: BrowserDateField, ...props.slots }}
+        slots={{ ...props.slots, field: BrowserDateField }}
       />
     );
   },

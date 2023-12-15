@@ -3,6 +3,7 @@ import {
   DataGridPremium,
   GridToolbar,
   GridExceljsProcessInput,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 
 const rows = [
@@ -225,7 +226,7 @@ const rows = [
   },
 ];
 
-const columns = [
+const columns: GridColDef[] = [
   {
     field: 'plan',
     type: 'singleSelect',

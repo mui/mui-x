@@ -41,17 +41,17 @@ export interface MultiInputTimeRangeFieldProps<TDate>
    * Overridable slots.
    * @default {}
    */
-  slots?: MultiInputTimeRangeFieldSlotsComponent;
+  slots?: MultiInputTimeRangeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputTimeRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: MultiInputTimeRangeFieldSlotProps<TDate>;
 }
 
 export type MultiInputTimeRangeFieldOwnerState<TDate> = MultiInputTimeRangeFieldProps<TDate>;
 
-export interface MultiInputTimeRangeFieldSlotsComponent {
+export interface MultiInputTimeRangeFieldSlots {
   /**
    * Element rendered at the root.
    * @default MultiInputTimeRangeFieldRoot
@@ -71,7 +71,7 @@ export interface MultiInputTimeRangeFieldSlotsComponent {
   separator?: React.ElementType;
 }
 
-export interface MultiInputTimeRangeFieldSlotsComponentsProps<TDate> {
+export interface MultiInputTimeRangeFieldSlotProps<TDate> {
   root?: SlotComponentProps<typeof Stack, {}, MultiInputTimeRangeFieldOwnerState<TDate>>;
   textField?: SlotComponentProps<
     typeof TextField,

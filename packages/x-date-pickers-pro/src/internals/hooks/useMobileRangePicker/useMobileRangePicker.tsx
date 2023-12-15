@@ -2,10 +2,7 @@ import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  PickersLayout,
-  PickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout';
+import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   PickersModalDialog,
@@ -48,6 +45,7 @@ export const useMobileRangePicker = <
     timezone,
     label,
     inputRef,
+    name,
     readOnly,
     disabled,
     disableOpenPicker,
@@ -102,7 +100,7 @@ export const useMobileRangePicker = <
       format,
       formatDensity,
       timezone,
-      ...(fieldType === 'single-input' && { inputRef }),
+      ...(fieldType === 'single-input' && { inputRef, name }),
     },
     ownerState: props,
   });
@@ -131,7 +129,7 @@ export const useMobileRangePicker = <
     fieldProps,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...innerSlotProps,
     toolbar: {
       ...innerSlotProps?.toolbar,

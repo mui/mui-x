@@ -8,29 +8,29 @@ import {
   BasePickerProps,
   BaseNonRangeNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
-import {
-  PickersPopperSlotsComponent,
-  PickersPopperSlotsComponentsProps,
-} from '../../components/PickersPopper';
+import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
 import { BaseSingleInputFieldProps, FieldSection, MuiPickersAdapter } from '../../../models';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
-  PickersLayoutSlotsComponentsProps,
+  ExportedPickersLayoutSlots,
+  ExportedPickersLayoutSlotProps,
+  PickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../useField';
+import {
+  UseClearableFieldSlots,
+  UseClearableFieldSlotProps,
+} from '../../../hooks/useClearableField';
 
-export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
+export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<
-      PickersPopperSlotsComponent,
+      PickersPopperSlots,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
-    ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView>,
-    FieldSlotsComponents {
+    ExportedPickersLayoutSlots<TDate | null, TDate, TView>,
+    UseClearableFieldSlots {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -57,18 +57,14 @@ export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeV
   openPickerIcon: React.ElementType;
 }
 
-export interface UseDesktopPickerSlotsComponentsProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedUseDesktopPickerSlotsComponentsProps<TDate, TView>,
-    Pick<PickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>, 'toolbar'> {}
+export interface UseDesktopPickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends ExportedUseDesktopPickerSlotProps<TDate, TView>,
+    Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
-export interface ExportedUseDesktopPickerSlotsComponentsProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends PickersPopperSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>,
-    FieldSlotsComponentsProps {
+export interface ExportedUseDesktopPickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends PickersPopperSlotProps,
+    ExportedPickersLayoutSlotProps<TDate | null, TDate, TView>,
+    UseClearableFieldSlotProps {
   field?: SlotComponentProps<
     React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,
     {},
@@ -106,12 +102,12 @@ export interface UseDesktopPickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopPickerSlotsComponent<TDate, TView>;
+  slots: UseDesktopPickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopPickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseDesktopPickerSlotProps<TDate, TView>;
 }
 
 export interface UseDesktopPickerParams<

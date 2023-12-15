@@ -15,6 +15,7 @@ export default [
   { pathname: '/x/api/charts/charts-legend', title: 'ChartsLegend' },
   { pathname: '/x/api/charts/charts-reference-line', title: 'ChartsReferenceLine' },
   { pathname: '/x/api/charts/charts-tooltip', title: 'ChartsTooltip' },
+  { pathname: '/x/api/charts/charts-voronoi-handler', title: 'ChartsVoronoiHandler' },
   { pathname: '/x/api/charts/charts-x-axis', title: 'ChartsXAxis' },
   { pathname: '/x/api/charts/charts-y-axis', title: 'ChartsYAxis' },
   {

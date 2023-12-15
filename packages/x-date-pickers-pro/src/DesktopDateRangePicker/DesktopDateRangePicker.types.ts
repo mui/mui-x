@@ -1,22 +1,22 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
 import {
-  UseDesktopRangePickerSlotsComponent,
-  UseDesktopRangePickerSlotsComponentsProps,
+  UseDesktopRangePickerSlots,
+  UseDesktopRangePickerSlotProps,
   DesktopRangeOnlyPickerProps,
 } from '../internals/hooks/useDesktopRangePicker';
 import {
   BaseDateRangePickerProps,
-  BaseDateRangePickerSlotsComponent,
-  BaseDateRangePickerSlotsComponentsProps,
+  BaseDateRangePickerSlots,
+  BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface DesktopDateRangePickerSlotsComponent<TDate>
-  extends BaseDateRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, 'day'>, 'field'> {}
+export interface DesktopDateRangePickerSlots<TDate>
+  extends BaseDateRangePickerSlots<TDate>,
+    MakeOptional<UseDesktopRangePickerSlots<TDate, 'day'>, 'field'> {}
 
-export interface DesktopDateRangePickerSlotsComponentsProps<TDate>
-  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
-    UseDesktopRangePickerSlotsComponentsProps<TDate, 'day'> {}
+export interface DesktopDateRangePickerSlotProps<TDate>
+  extends BaseDateRangePickerSlotProps<TDate>,
+    UseDesktopRangePickerSlotProps<TDate, 'day'> {}
 
 export interface DesktopDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,
@@ -30,10 +30,10 @@ export interface DesktopDateRangePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateRangePickerSlotsComponent<TDate>;
+  slots?: DesktopDateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopDateRangePickerSlotProps<TDate>;
 }
