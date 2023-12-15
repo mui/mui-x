@@ -30,14 +30,12 @@ const PickersInputRoot = styled(Box, {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    width: ownerState.fullWidth ? '100%' : '25ch',
     position: 'relative',
     borderRadius: (theme.vars || theme).shape.borderRadius,
     [`&:hover .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
     },
-    ...(ownerState.fullWidth && {
-      width: '100%',
-    }),
 
     // Reset on touch devices, it doesn't add specificity
     '@media (hover: none)': {
@@ -82,7 +80,6 @@ const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
-  display: 'flex',
   flexGrow: 1,
   ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
   ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
@@ -107,7 +104,7 @@ const PickersInputSection = styled(PickersSectionListSection, {
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
-  display: 'flex',
+  flexGrow: 1,
 }));
 
 const PickersInputSectionContent = styled(PickersSectionListSectionContent, {
