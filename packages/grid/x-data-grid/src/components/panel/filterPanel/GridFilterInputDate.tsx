@@ -5,6 +5,7 @@ import { unstable_useId as useId } from '@mui/utils';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridFilterItem } from '../../../models/gridFilterItem';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & {
@@ -16,6 +17,26 @@ export type GridFilterInputDateProps = GridFilterInputValueProps &
      */
     isFilterActive?: boolean;
   };
+
+function convertFilterItemValueToInputValue(
+  itemValue: GridFilterItem['value'],
+  inputType: GridFilterInputDateProps['type'],
+) {
+  let value = itemValue ?? '';
+  if (itemValue instanceof Date) {
+    const dateCopy = new Date(itemValue);
+    // The date picker expects the date to be in the local timezone.
+    // But .toISOString() converts it to UTC with zero offset.
+    // So we need to subtract the timezone offset.
+    dateCopy.setMinutes(dateCopy.getMinutes() - dateCopy.getTimezoneOffset());
+    if (inputType === 'date') {
+      value = dateCopy.toISOString().substring(0, 10);
+    } else if (inputType === 'datetime-local') {
+      value = dateCopy.toISOString().substring(0, 19);
+    }
+  }
+  return value;
+}
 
 function GridFilterInputDate(props: GridFilterInputDateProps) {
   const {
@@ -32,20 +53,22 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     ...other
   } = props;
   const filterTimeout = useTimeout();
-  const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
+  const [filterValueState, setFilterValueState] = React.useState(() =>
+    convertFilterItemValueToInputValue(item.value, type),
+  );
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      filterTimeout.clear();
       const value = event.target.value;
-
-      setFilterValueState(String(value));
+      setFilterValueState(value);
 
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
-        applyValue({ ...item, value });
+        applyValue({ ...item, value: new Date(value) });
         setIsApplying(false);
       });
     },
@@ -53,9 +76,9 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   );
 
   React.useEffect(() => {
-    const itemValue = item.value ?? '';
-    setFilterValueState(String(itemValue));
-  }, [item.value]);
+    const value = convertFilterItemValueToInputValue(item.value, type);
+    setFilterValueState(value);
+  }, [item.value, type]);
 
   return (
     <rootProps.slots.baseTextField
