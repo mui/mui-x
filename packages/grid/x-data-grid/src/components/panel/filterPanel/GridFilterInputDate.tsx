@@ -66,7 +66,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
-        applyValue({ ...item, value: new Date(value) });
+        applyValue({ ...item, value });
         setIsApplying(false);
       });
     },
