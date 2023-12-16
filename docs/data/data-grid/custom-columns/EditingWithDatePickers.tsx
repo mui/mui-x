@@ -102,7 +102,7 @@ function GridFilterDateInput(
 
   return (
     <Component
-      value={item.value || null}
+      value={item.value ? new Date(item.value) : null}
       autoFocus
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       slotProps={{

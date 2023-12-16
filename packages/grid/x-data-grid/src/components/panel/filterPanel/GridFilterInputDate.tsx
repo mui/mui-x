@@ -22,20 +22,18 @@ function convertFilterItemValueToInputValue(
   itemValue: GridFilterItem['value'],
   inputType: GridFilterInputDateProps['type'],
 ) {
-  let value = itemValue ?? '';
-  if (itemValue instanceof Date) {
-    const dateCopy = new Date(itemValue);
-    // The date picker expects the date to be in the local timezone.
-    // But .toISOString() converts it to UTC with zero offset.
-    // So we need to subtract the timezone offset.
-    dateCopy.setMinutes(dateCopy.getMinutes() - dateCopy.getTimezoneOffset());
-    if (inputType === 'date') {
-      value = dateCopy.toISOString().substring(0, 10);
-    } else if (inputType === 'datetime-local') {
-      value = dateCopy.toISOString().substring(0, 19);
-    }
+  const dateCopy = new Date(itemValue ?? '');
+  // The date picker expects the date to be in the local timezone.
+  // But .toISOString() converts it to UTC with zero offset.
+  // So we need to subtract the timezone offset.
+  dateCopy.setMinutes(dateCopy.getMinutes() - dateCopy.getTimezoneOffset());
+  if (inputType === 'date') {
+    return dateCopy.toISOString().substring(0, 10);
   }
-  return value;
+  if (inputType === 'datetime-local') {
+    return dateCopy.toISOString().substring(0, 19);
+  }
+  return dateCopy.toISOString().substring(0, 10);
 }
 
 function GridFilterInputDate(props: GridFilterInputDateProps) {
