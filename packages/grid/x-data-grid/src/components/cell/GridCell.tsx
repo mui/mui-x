@@ -96,8 +96,6 @@ const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
 type OwnerState = Pick<GridCellProps, 'align' | 'pinnedPosition'> & {
   showLeftBorder: boolean;
   showRightBorder: boolean;
-  showLeftShadow: boolean;
-  showRightShadow: boolean;
   isEditable: boolean;
   isSelected: boolean;
   isSelectionMode: boolean;
@@ -109,8 +107,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     align,
     showLeftBorder,
     showRightBorder,
-    showLeftShadow,
-    showRightShadow,
     pinnedPosition,
     isEditable,
     isSelected,
@@ -126,8 +122,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEditable && 'cell--editable',
       showLeftBorder && 'cell--withLeftBorder',
       showRightBorder && 'cell--withRightBorder',
-      showLeftShadow && 'cell--withLeftShadow',
-      showRightShadow && 'cell--withRightShadow',
       pinnedPosition === PinnedPosition.LEFT && 'cell--pinnedLeft',
       pinnedPosition === PinnedPosition.RIGHT && 'cell--pinnedRight',
       isSelectionMode && !isEditable && 'cell--selectionMode',
@@ -247,7 +241,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
 
-  const isSectionFirstCell = sectionIndex === 0;
   const isSectionLastCell = sectionIndex === sectionLength - 1;
 
   const showLeftBorder =
@@ -255,14 +248,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const showRightBorder =
     rootProps.showCellVerticalBorder &&
     !(isSectionLastCell && pinnedPosition !== PinnedPosition.LEFT);
-  const showLeftShadow = pinnedPosition === PinnedPosition.RIGHT && isSectionFirstCell;
-  const showRightShadow = pinnedPosition === PinnedPosition.LEFT && isSectionLastCell;
+
   const ownerState = {
     align,
     showLeftBorder,
     showRightBorder,
-    showLeftShadow,
-    showRightShadow,
     isEditable,
     classes: rootProps.classes,
     pinnedPosition,

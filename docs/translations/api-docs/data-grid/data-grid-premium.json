@@ -1069,6 +1069,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell checkbox element"
     },
+    "cellEmpty": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty cell element"
+    },
     "cellSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the skeleton cell element"
@@ -1318,6 +1322,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the main container element"
     },
+    "main--hasPinnedRight": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the main container element",
+      "conditions": "it has right pinned columns"
+    },
     "menu": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the menu element" },
     "menuIcon": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1501,8 +1510,6 @@
     "cell--withLeftBorder": {
       "description": "Styles applied the cell if `showColumnVerticalBorder={true}`."
     },
-    "cell--withRightShadow": { "description": "Styles applied for column pinning." },
-    "cell--withLeftShadow": { "description": "Styles applied for column pinning." },
     "columnHeader--withRightBorder": {
       "description": "Styles applied the column header if `showColumnVerticalBorder={true}`."
     },

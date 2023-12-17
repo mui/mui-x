@@ -543,14 +543,6 @@ export interface GridClasses {
    */
   'cell--withLeftBorder': string;
   /**
-   * Styles applied for column pinning.
-   */
-  'cell--withRightShadow': string;
-  /**
-   * Styles applied for column pinning.
-   */
-  'cell--withLeftShadow': string;
-  /**
    * Styles applied the column header if `showColumnVerticalBorder={true}`.
    */
   'columnHeader--withRightBorder': string;
@@ -729,8 +721,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'withBorderColor',
   'cell--withRightBorder',
   'cell--withLeftBorder',
-  'cell--withRightShadow',
-  'cell--withLeftShadow',
   'columnHeader--withRightBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',

@@ -525,12 +525,6 @@ export const GridRootStyles = styled('div', {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
     },
-    [`& .${c['cell--withLeftShadow']}`]: {
-      boxShadow: t.shadows[2], // XXX: shadow is wrong here
-    },
-    [`& .${c['cell--withRightShadow']}`]: {
-      boxShadow: t.shadows[2], // XXX: shadow is wrong here
-    },
     [`& .${c['columnHeader--withRightBorder']}`]: {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
