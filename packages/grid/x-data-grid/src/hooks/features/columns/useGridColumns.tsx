@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -26,12 +26,12 @@ import {
   GridColumnsInitialState,
   GridColumnsState,
   GridColumnVisibilityModel,
+  EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   hydrateColumnsWidth,
   createColumnsState,
-  mergeColumnsState,
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
 import { GridPreferencePanelsValue } from '../preferencesPanel';
@@ -40,10 +40,9 @@ import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
-> = (state, props, apiRef, theme) => {
+> = (state, props, apiRef) => {
   const columnsState = createColumnsState({
     apiRef,
-    theme: theme!,
     columnsToUpsert: props.columns,
     initialState: props.initialState?.columns,
     columnVisibilityModel:
@@ -54,6 +53,9 @@ export const columnsStateInitializer: GridStateInitializer<
   return {
     ...state,
     columns: columnsState,
+    // In pro/premium, this part of the state is defined. We give it an empty but defined value
+    // for the community version.
+    pinnedColumns: state.pinnedColumns ?? EMPTY_PINNED_COLUMN_FIELDS,
   };
 };
 
@@ -77,7 +79,6 @@ export function useGridColumns(
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
-  const theme = useTheme();
 
   const previousColumnsProp = React.useRef(props.columns);
 
@@ -94,8 +95,8 @@ export function useGridColumns(
       logger.debug('Updating columns state.');
 
       apiRef.current.setState(mergeColumnsState(columnsState));
-      apiRef.current.forceUpdate();
       apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
+      apiRef.current.forceUpdate();
     },
     [logger, apiRef],
   );
@@ -145,7 +146,6 @@ export function useGridColumns(
           ...state,
           columns: createColumnsState({
             apiRef,
-            theme,
             columnsToUpsert: [],
             initialState: undefined,
             columnVisibilityModel: model,
@@ -155,21 +155,20 @@ export function useGridColumns(
         apiRef.current.forceUpdate();
       }
     },
-    [apiRef, theme],
+    [apiRef],
   );
 
   const updateColumns = React.useCallback<GridColumnApi['updateColumns']>(
     (columns) => {
       const columnsState = createColumnsState({
         apiRef,
-        theme,
         columnsToUpsert: columns,
         initialState: undefined,
         keepOnlyColumnsToUpsert: false,
       });
       setGridColumnsState(columnsState);
     },
-    [apiRef, setGridColumnsState, theme],
+    [apiRef, setGridColumnsState],
   );
 
   const setColumnVisibility = React.useCallback<GridColumnApi['setColumnVisibility']>(
@@ -341,7 +340,6 @@ export function useGridColumns(
 
       const columnsState = createColumnsState({
         apiRef,
-        theme,
         columnsToUpsert: [],
         initialState,
         columnVisibilityModel: columnVisibilityModelToImport,
@@ -355,7 +353,7 @@ export function useGridColumns(
 
       return params;
     },
-    [apiRef, theme],
+    [apiRef],
   );
 
   const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
@@ -414,13 +412,12 @@ export function useGridColumns(
 
     const columnsState = createColumnsState({
       apiRef,
-      theme,
       columnsToUpsert: [],
       initialState: undefined,
       keepOnlyColumnsToUpsert: false,
     });
     setGridColumnsState(columnsState);
-  }, [apiRef, logger, setGridColumnsState, theme]);
+  }, [apiRef, logger, setGridColumnsState]);
 
   useGridRegisterPipeApplier(apiRef, 'hydrateColumns', hydrateColumns);
 
@@ -444,7 +441,6 @@ export function useGridColumns(
 
     const columnsState = createColumnsState({
       apiRef,
-      theme,
       initialState: undefined,
       // If the user provides a model, we don't want to set it in the state here because it has it's dedicated `useEffect` which calls `setColumnVisibilityModel`
       columnsToUpsert: props.columns,
@@ -452,11 +448,19 @@ export function useGridColumns(
     });
     previousColumnsProp.current = props.columns;
     setGridColumnsState(columnsState);
-  }, [logger, apiRef, setGridColumnsState, props.columns, theme]);
+  }, [logger, apiRef, setGridColumnsState, props.columns]);
 
   React.useEffect(() => {
     if (props.columnVisibilityModel !== undefined) {
       apiRef.current.setColumnVisibilityModel(props.columnVisibilityModel);
     }
   }, [apiRef, logger, props.columnVisibilityModel]);
+}
+
+
+function mergeColumnsState(columnsState: GridColumnsState) {
+  return (state: GridStateCommunity): GridStateCommunity => ({
+    ...state,
+    columns: columnsState,
+  });
 }

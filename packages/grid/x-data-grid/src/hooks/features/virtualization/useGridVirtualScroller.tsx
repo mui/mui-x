@@ -38,11 +38,6 @@ import {
 } from './gridVirtualizationSelectors';
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 
-export const EMPTY_PINNED_COLUMNS = {
-  left: [] as GridStateColDef[],
-  right: [] as GridStateColDef[],
-};
-
 export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactNode>());
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;

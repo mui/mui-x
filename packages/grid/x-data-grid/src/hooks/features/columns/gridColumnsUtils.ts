@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
 import {
   GridColumnLookup,
   GridColumnsState,
@@ -7,23 +6,15 @@ import {
   GridColumnVisibilityModel,
   GridColumnRawLookup,
   GridColumnsInitialState,
-  GridColumnPinningState,
-  GridPinnedColumns,
-  GridPinnedColumnFields,
 } from './gridColumnsInterfaces';
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
   GRID_STRING_COL_DEF,
   getGridDefaultColumnTypes,
 } from '../../../colDef';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
-import {
-  gridColumnsStateSelector,
-  gridColumnVisibilityModelSelector,
-  gridVisibleColumnFieldsSelector,
-} from './gridColumnsSelector';
+import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridRowEntry } from '../../../models/gridRows';
@@ -33,21 +24,6 @@ import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridCo
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
-
-export const EMPTY_PINNED_COLUMNS: GridPinnedColumns = {
-  left: [],
-  right: [],
-};
-
-export const EMPTY_PINNED_COLUMN_FIELDS = {
-  left: [] as string[],
-  right: [] as string[],
-};
-
-export const EMPTY_PINNED_COLUMNS_STATE: GridColumnPinningState = {
-  model: {},
-  visible: EMPTY_PINNED_COLUMNS,
-};
 
 const COLUMN_TYPES = getGridDefaultColumnTypes();
 
@@ -314,7 +290,6 @@ function getDefaultColTypeDef(type: GridColDef['type']) {
 
 export const createColumnsState = ({
   apiRef,
-  theme,
   columnsToUpsert,
   initialState,
   columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
@@ -325,10 +300,8 @@ export const createColumnsState = ({
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
   apiRef: React.MutableRefObject<GridApiCommunity>;
-  theme: Theme;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
-  const pinnedColumns = apiRef.current.state.columns?.pinnedColumns ?? EMPTY_PINNED_COLUMNS_STATE;
 
   let columnsState: Omit<GridColumnsRawState, 'lookup'> & {
     lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
@@ -338,7 +311,6 @@ export const createColumnsState = ({
       orderedFields: [],
       lookup: {},
       columnVisibilityModel,
-      pinnedColumns,
     };
   } else {
     const currentState = gridColumnsStateSelector(apiRef.current.state);
@@ -346,7 +318,6 @@ export const createColumnsState = ({
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
       columnVisibilityModel,
-      pinnedColumns,
     };
   }
 
@@ -420,45 +391,11 @@ export const createColumnsState = ({
     initialState,
   );
 
-  return updatePinnedColumns(
-    hydrateColumnsWidth(
-      columnsStateWithPortableColumns,
-      apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
-    ),
-    theme,
+  return hydrateColumnsWidth(
+    columnsStateWithPortableColumns,
+    apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
   );
 };
-
-export function updatePinnedColumns(columnsState: GridColumnsState, theme: Theme) {
-  const model = columnsState.pinnedColumns.model;
-  const visibleColumnFields = gridVisibleColumnFieldsSelector(
-    {
-      columns: columnsState,
-    } as GridStateCommunity,
-    { id: -1 },
-  );
-  const visiblePinnedFields = filterVisibleColumns(
-    model,
-    visibleColumnFields,
-    theme.direction === 'rtl',
-  );
-  const visible = {
-    left: visiblePinnedFields.left.map((field) => columnsState.lookup[field]),
-    right: visiblePinnedFields.right.map((field) => columnsState.lookup[field]),
-  };
-  const pinnedColumns = {
-    model,
-    visible,
-  };
-  return { ...columnsState, pinnedColumns };
-}
-
-export const mergeColumnsState =
-  (columnsState: GridColumnsState) =>
-  (state: GridStateCommunity): GridStateCommunity => ({
-    ...state,
-    columns: columnsState,
-  });
 
 export function getFirstNonSpannedColumnToRender({
   firstColumnToRender,
@@ -528,38 +465,4 @@ export function getTotalHeaderHeight(
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
   return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + 1);
-}
-
-function filterVisibleColumns(
-  pinnedColumns: GridPinnedColumnFields,
-  columns: string[],
-  invert?: boolean,
-) {
-  if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
-    return EMPTY_PINNED_COLUMN_FIELDS;
-  }
-
-  if (pinnedColumns.left?.length === 0 && pinnedColumns.right?.length === 0) {
-    return EMPTY_PINNED_COLUMN_FIELDS;
-  }
-
-  const filter = (newPinnedColumns: string[] | undefined, remainingColumns: string[]) => {
-    if (!Array.isArray(newPinnedColumns)) {
-      return [];
-    }
-    return newPinnedColumns.filter((field) => remainingColumns.includes(field));
-  };
-
-  const leftPinnedColumns = filter(pinnedColumns.left, columns);
-  const columnsWithoutLeftPinnedColumns = columns.filter(
-    // Filter out from the remaining columns those columns already pinned to the left
-    (field) => !leftPinnedColumns.includes(field),
-  );
-  const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
-
-  if (invert) {
-    return { left: rightPinnedColumns, right: leftPinnedColumns };
-  }
-
-  return { left: leftPinnedColumns, right: rightPinnedColumns };
 }

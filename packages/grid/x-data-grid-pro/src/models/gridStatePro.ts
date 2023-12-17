@@ -1,14 +1,14 @@
 import {
   GridInitialState as GridInitialStateCommunity,
   GridState as GridStateCommunity,
+  GridColumnPinningState,
+  GridPinnedColumns,
 } from '@mui/x-data-grid';
 import type {
   GridDetailPanelState,
   GridDetailPanelInitialState,
   GridColumnReorderState,
   GridColumnResizeState,
-  GridColumnPinningState,
-  GridPinnedColumns,
 } from '../hooks';
 
 /**

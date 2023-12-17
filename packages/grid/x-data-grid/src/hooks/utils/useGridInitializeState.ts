@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -15,7 +14,6 @@ export type GridStateInitializer<
   state: DeepPartial<PrivateApi['state']>,
   props: P,
   privateApiRef: React.MutableRefObject<PrivateApi>,
-  theme?: Theme,
 ) => DeepPartial<PrivateApi['state']>;
 
 export const useGridInitializeState = <
@@ -25,7 +23,6 @@ export const useGridInitializeState = <
   initializer: GridStateInitializer<P, PrivateApi>,
   privateApiRef: React.MutableRefObject<PrivateApi>,
   props: P,
-  theme?: Theme,
 ) => {
   const isInitialized = React.useRef(false);
 
@@ -34,7 +31,6 @@ export const useGridInitializeState = <
       privateApiRef.current.state,
       props,
       privateApiRef,
-      theme,
     ) as PrivateApi['state'];
     isInitialized.current = true;
   }

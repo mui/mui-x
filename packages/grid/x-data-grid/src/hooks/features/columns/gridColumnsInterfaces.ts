@@ -18,7 +18,6 @@ export interface GridColumnsState {
   orderedFields: string[];
   lookup: GridColumnLookup;
   columnVisibilityModel: GridColumnVisibilityModel;
-  pinnedColumns: GridColumnPinningState;
 }
 
 export interface GridPinnedColumnFields {
@@ -26,15 +25,12 @@ export interface GridPinnedColumnFields {
   right?: string[];
 }
 
-export interface GridPinnedColumns {
-  left: GridStateColDef[];
-  right: GridStateColDef[];
-}
-
-export type GridColumnPinningState = {
-  model: GridPinnedColumnFields;
-  visible: GridPinnedColumns;
+export const EMPTY_PINNED_COLUMN_FIELDS = {
+  left: [] as string[],
+  right: [] as string[],
 };
+
+export type GridColumnPinningState = GridPinnedColumnFields;
 
 export type GridColumnDimensions = { [key in GridColumnDimensionProperties]?: number };
 

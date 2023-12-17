@@ -1,8 +1,10 @@
+import type { Theme } from '@mui/material/styles';
 import type {
   GridColumnMenuState,
   GridColumnsInitialState,
   GridColumnsState,
   GridColumnsGroupingState,
+  GridColumnPinningState,
   GridDensityState,
   GridDimensionsState,
   GridFilterInitialState,
@@ -28,6 +30,7 @@ import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFi
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
+  theme: Theme;
   dimensions: GridDimensionsState;
   rows: GridRowsState;
   visibleRowsLookup: GridVisibleRowsLookupState;
@@ -38,6 +41,7 @@ export interface GridStateCommunity {
   columns: GridColumnsState;
   columnGrouping: GridColumnsGroupingState;
   columnMenu: GridColumnMenuState;
+  pinnedColumns: GridColumnPinningState;
   sorting: GridSortingState;
   focus: GridFocusState;
   tabIndex: GridTabIndexState;

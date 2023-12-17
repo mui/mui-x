@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import {
   GridPinnedColumnFields,
   GridPipeProcessor,
   gridPinnedColumnsSelector,
   useGridRegisterPipeProcessor,
-  updatePinnedColumns,
   eslintUseValue,
+  gridVisiblePinnedColumnDefinitionsSelector,
 } from '@mui/x-data-grid/internals';
-import { GridColumnsState } from '@mui/x-data-grid';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
@@ -16,7 +14,6 @@ export const useGridColumnPinningPreProcessors = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
-  const theme = useTheme();
   const { disableColumnPinning } = props;
 
   let pinnedColumns: GridPinnedColumnFields | null;
@@ -32,13 +29,23 @@ export const useGridColumnPinningPreProcessors = (
     (columnsState) => {
       eslintUseValue(pinnedColumns);
 
-      columnsState = updatePinnedColumns(columnsState as GridColumnsState, theme);
-
       if (columnsState.orderedFields.length === 0 || disableColumnPinning) {
         return columnsState;
       }
 
-      const visibleColumns = columnsState.pinnedColumns.visible;
+      // HACK: This is a hack needed because the pipe processors aren't pure enough. What
+      // they should be is `gridState -> gridState` transformers, but they only transform a slice
+      // of the state, not the full state. So if they need access to other parts of the state (like
+      // the `state.columns.orderedFields` in this case), they might lag behind because the selectors
+      // are selecting the old state in `apiRef`, not the state being computed in the current pipe processor.
+      const savedState = apiRef.current.state;
+      apiRef.current.state = { ...savedState, columns: columnsState as unknown as any };
+
+      const visibleColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
+
+      apiRef.current.state = savedState;
+      // HACK: Ends here //
+
       const leftPinnedColumns = visibleColumns.left.map((c) => c.field);
       const rightPinnedColumns = visibleColumns.right.map((c) => c.field);
 
@@ -124,7 +131,7 @@ export const useGridColumnPinningPreProcessors = (
         orderedFields: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       };
     },
-    [apiRef, disableColumnPinning, pinnedColumns, theme],
+    [apiRef, disableColumnPinning, pinnedColumns],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);
