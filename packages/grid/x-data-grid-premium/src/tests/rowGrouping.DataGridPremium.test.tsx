@@ -13,6 +13,7 @@ import {
   getColumnHeadersTextContent,
   getColumnValues,
   getCell,
+  getSelectByName,
 } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -2121,7 +2122,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
+        fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2147,7 +2148,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
+        fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2375,7 +2376,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
+        fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2402,7 +2403,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
+        fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {

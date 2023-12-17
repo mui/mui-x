@@ -1,0 +1,12 @@
+{
+  "props": { "voronoiMaxRadius": { "type": { "name": "number" }, "default": "undefined" } },
+  "slots": [],
+  "name": "ChartsVoronoiHandler",
+  "imports": [
+    "import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';",
+    "import { ChartsVoronoiHandler } from '@mui/x-charts';"
+  ],
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsVoronoiHandler" },
+  "filename": "/packages/x-charts/src/ChartsVoronoiHandler/ChartsVoronoiHandler.tsx",
+  "demos": "<ul></ul>"
+}

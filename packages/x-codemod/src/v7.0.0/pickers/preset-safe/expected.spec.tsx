@@ -1,5 +1,7 @@
+// @ts-nocheck
+import * as React from 'react';
 import { DatePicker, dayCalendarClasses } from '@mui/x-date-pickers';
-import { DateRangePicker } from '@mui/x-date-pickers-pro';
+import { DateRangePicker, DateRangePickerSlotProps } from '@mui/x-date-pickers-pro';
 import TextField from '@mui/material/TextField';
 
 const className = dayCalendarClasses.root;
@@ -11,7 +13,7 @@ const className = dayCalendarClasses.root;
         sx: {
           width: 50,
         },
-      },
+      } as DateRangePickerSlotProps<any>,
     }}
     slots={{
       layout: test,

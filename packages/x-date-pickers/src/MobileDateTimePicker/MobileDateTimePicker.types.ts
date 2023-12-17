@@ -1,28 +1,28 @@
 import {
-  UseMobilePickerSlotsComponent,
-  ExportedUseMobilePickerSlotsComponentsProps,
+  UseMobilePickerSlots,
+  ExportedUseMobilePickerSlotProps,
   MobileOnlyPickerProps,
 } from '../internals/hooks/useMobilePicker';
 import {
   BaseDateTimePickerProps,
-  BaseDateTimePickerSlotsComponent,
-  BaseDateTimePickerSlotsComponentsProps,
+  BaseDateTimePickerSlots,
+  BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { DateOrTimeView } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
-export interface MobileDateTimePickerSlotsComponent<
+export interface MobileDateTimePickerSlots<
   TDate,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
-> extends BaseDateTimePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate, TView>, 'field'> {}
+> extends BaseDateTimePickerSlots<TDate>,
+    MakeOptional<UseMobilePickerSlots<TDate, TView>, 'field'> {}
 
-export interface MobileDateTimePickerSlotsComponentsProps<
+export interface MobileDateTimePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
-> extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    ExportedUseMobilePickerSlotsComponentsProps<TDate, TView> {}
+> extends BaseDateTimePickerSlotProps<TDate>,
+    ExportedUseMobilePickerSlotProps<TDate, TView> {}
 
 export interface MobileDateTimePickerProps<
   TDate,
@@ -33,10 +33,10 @@ export interface MobileDateTimePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDateTimePickerSlotsComponent<TDate, TView>;
+  slots?: MobileDateTimePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateTimePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: MobileDateTimePickerSlotProps<TDate, TView>;
 }

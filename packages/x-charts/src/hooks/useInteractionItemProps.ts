@@ -3,10 +3,13 @@ import { InteractionContext } from '../context/InteractionProvider';
 import { HighlighContext, HighlightScope } from '../context/HighlightProvider';
 import { SeriesItemIdentifier } from '../models';
 
-export const useInteractionItemProps = (scope?: Partial<HighlightScope>) => {
+export const useInteractionItemProps = (scope?: Partial<HighlightScope>, skip?: boolean) => {
   const { dispatch: dispatchInteraction } = React.useContext(InteractionContext);
   const { dispatch: dispatchHighlight } = React.useContext(HighlighContext);
 
+  if (skip) {
+    return () => ({});
+  }
   const getInteractionItemProps = (data: SeriesItemIdentifier) => {
     const onMouseEnter = () => {
       dispatchInteraction({

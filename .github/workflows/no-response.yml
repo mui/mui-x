@@ -1,8 +1,10 @@
 name: No Response
 
-# Both `issue_comment` and `scheduled` event types are required for this Action
+# `issues`.`closed`, `issue_comment`.`created`, and `scheduled` event types are required for this Action
 # to work properly.
 on:
+  issues:
+    types: [closed]
   issue_comment:
     types: [created]
   schedule:
@@ -18,7 +20,7 @@ jobs:
       contents: read
       issues: write
     steps:
-      - uses: MBilalShafi/no-response-add-label@6291e5d1a4eaffe530b2ec434991f258641a8599
+      - uses: MBilalShafi/no-response-add-label@629add01d7b6f8e120811f978c42703736098947
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           # Number of days of inactivity before an Issue is closed for lack of response

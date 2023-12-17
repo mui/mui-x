@@ -18,7 +18,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 
 const joyTheme = extendJoyTheme();
@@ -33,6 +32,7 @@ const JoyField = React.forwardRef((props, ref) => {
     endDecorator,
     startDecorator,
     slotProps,
+    inputRef,
     ...other
   } = props;
 
@@ -62,6 +62,7 @@ const JoyField = React.forwardRef((props, ref) => {
         slotProps={{
           ...slotProps,
           root: { ...slotProps?.root, ref: containerRef },
+          input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
       />
@@ -70,41 +71,18 @@ const JoyField = React.forwardRef((props, ref) => {
 });
 
 const JoyDateField = React.forwardRef((props, ref) => {
-  const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
+  const { slots, slotProps, ...textFieldProps } = props;
 
-  const {
-    onClear,
-    clearable,
-    ref: inputRef,
-    ...fieldProps
-  } = useDateField({
-    props: textFieldProps,
-    inputRef: externalInputRef,
-  });
+  const fieldResponse = useDateField(textFieldProps);
 
   /* If you don't need a clear button, you can skip the use of this hook */
-  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-    useClearableField({
-      onClear,
-      clearable,
-      fieldProps,
-      InputProps: fieldProps.InputProps,
-      slots,
-      slotProps,
-    });
+  const processedFieldProps = useClearableField({
+    ...fieldResponse,
+    slots,
+    slotProps,
+  });
 
-  return (
-    <JoyField
-      ref={ref}
-      slotProps={{
-        input: {
-          ref: inputRef,
-        },
-      }}
-      {...processedFieldProps}
-      InputProps={ProcessedInputProps}
-    />
-  );
+  return <JoyField {...processedFieldProps} ref={ref} />;
 });
 
 const JoyDatePicker = React.forwardRef((props, ref) => {
@@ -112,7 +90,7 @@ const JoyDatePicker = React.forwardRef((props, ref) => {
     <DatePicker
       ref={ref}
       {...props}
-      slots={{ field: JoyDateField, ...props.slots }}
+      slots={{ ...props.slots, field: JoyDateField }}
       slotProps={{
         ...props.slotProps,
         field: {
