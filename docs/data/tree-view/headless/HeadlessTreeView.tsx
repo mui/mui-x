@@ -169,7 +169,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
 const ITEMS: TreeViewBaseItem[] = [
   {
     id: '1',
-    label: 'Application',
+    label: 'Applications',
     children: [{ id: '2', label: 'Calendar' }],
   },
   {

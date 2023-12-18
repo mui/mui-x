@@ -120,7 +120,7 @@ function TreeView(inProps) {
 const ITEMS = [
   {
     id: '1',
-    label: 'Application',
+    label: 'Applications',
     children: [{ id: '2', label: 'Calendar' }],
   },
   {
