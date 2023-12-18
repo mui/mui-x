@@ -97,8 +97,11 @@ function extractSlots(options: {
     return {};
   }
 
-  const propType = rawSlots.propType as UnionType;
-  const propInterface = propType.types.find((type) => type.type === 'InterfaceNode');
+  const propType = rawSlots.propType as InterfaceType | UnionType;
+  const propInterface =
+    propType.type === 'InterfaceNode'
+      ? propType
+      : propType.types.find((type) => type.type === 'InterfaceNode');
   if (!propInterface) {
     throw new Error(`The \`slots\` prop in \`${componentName}\` is not an interface.`);
   }

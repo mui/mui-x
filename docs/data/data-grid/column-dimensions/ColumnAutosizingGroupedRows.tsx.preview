@@ -1,0 +1,7 @@
+<DataGridPremium
+  {...data}
+  columns={columns}
+  apiRef={apiRef}
+  initialState={initialState}
+  groupingColDef={{ width: 250 }}
+/>
