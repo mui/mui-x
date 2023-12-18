@@ -8,7 +8,7 @@ import type {
 } from 'd3-scale';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
-import { ChartsTextProps } from '../ChartsText/ChartsText';
+import { ChartsTextProps } from '../ChartsText';
 
 export type D3Scale<
   Domain extends { toString(): string } = number | Date | string,
