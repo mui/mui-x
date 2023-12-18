@@ -60,6 +60,8 @@
       }
     },
     "selected": { "type": { "name": "any" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" } },
     "sx": {
       "type": {
         "name": "union",
@@ -68,7 +70,7 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [],
+  "slots": [{ "class": null, "name": "root", "description": "" }],
   "name": "SimpleTreeView",
   "imports": [
     "import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';",

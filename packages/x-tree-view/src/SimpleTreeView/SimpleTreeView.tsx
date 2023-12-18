@@ -250,6 +250,14 @@ SimpleTreeView.propTypes = {
    */
   selected: PropTypes.any,
   /**
+   * The props used for each component slot.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   */
+  slots: PropTypes.object,
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
