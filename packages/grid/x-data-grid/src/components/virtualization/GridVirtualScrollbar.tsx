@@ -34,16 +34,21 @@ const Scrollbar = styled('div')({
   '& > div': {
     display: 'inline-block',
   },
+  // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
+  // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
+  // to appear and have a real size. We set it to 14px because it seems like an acceptable value and we
+  // don't have a method to find the required size for scrollbars on those platforms.
+  '--size': 'calc(max(var(--DataGrid-scrollbarSize), 14px))',
 });
 
 const ScrollbarVertical = styled(Scrollbar)({
-  width: 'var(--DataGrid-scrollbarSize)',
+  width: 'var(--size)',
   height:
     'calc(var(--DataGrid-hasScrollY) * (100% - var(--DataGrid-topContainerHeight) - var(--DataGrid-bottomContainerHeight) - var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize)))',
   overflowY: 'auto',
   overflowX: 'hidden',
   '& > div': {
-    width: 'var(--DataGrid-scrollbarSize)',
+    width: 'var(--size)',
   },
   top: 'var(--DataGrid-topContainerHeight)',
   right: '0px',
@@ -51,11 +56,11 @@ const ScrollbarVertical = styled(Scrollbar)({
 
 const ScrollbarHorizontal = styled(Scrollbar)({
   width: '100%',
-  height: 'var(--DataGrid-scrollbarSize)',
+  height: 'var(--size)',
   overflowY: 'hidden',
   overflowX: 'auto',
   '& > div': {
-    height: 'var(--DataGrid-scrollbarSize)',
+    height: 'var(--size)',
   },
   bottom: '0px',
 });
