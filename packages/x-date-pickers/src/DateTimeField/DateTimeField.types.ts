@@ -14,12 +14,7 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
-import { FieldSlots, FieldSlotProps } from '../internals/hooks/useField/useField.types';
-
-export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
-  props: UseDateTimeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
 
 export interface UseDateTimeFieldProps<TDate>
   extends MakeOptional<
@@ -67,7 +62,7 @@ export interface DateTimeFieldProps<TDate>
 
 export type DateTimeFieldOwnerState<TDate> = DateTimeFieldProps<TDate>;
 
-export interface DateTimeFieldSlots extends FieldSlots {
+export interface DateTimeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -76,6 +71,6 @@ export interface DateTimeFieldSlots extends FieldSlots {
   textField?: React.ElementType;
 }
 
-export interface DateTimeFieldSlotProps<TDate> extends FieldSlotProps {
+export interface DateTimeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, DateTimeFieldOwnerState<TDate>>;
 }

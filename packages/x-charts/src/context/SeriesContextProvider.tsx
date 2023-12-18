@@ -34,7 +34,7 @@ export type FormattedSeries = { [type in ChartSeriesType]?: FormatterResult<type
 export const SeriesContext = React.createContext<FormattedSeries>({});
 
 const seriesTypeFormatter: {
-  [type in ChartSeriesType]?: (series: any, dataset?: DatasetType<number>) => any;
+  [type in ChartSeriesType]?: (series: any, dataset?: DatasetType) => any;
 } = {
   bar: barSeriesFormatter,
   scatter: scatterSeriesFormatter,
@@ -50,7 +50,7 @@ const seriesTypeFormatter: {
  * @param colors The color palette used to defaultize series colors
  * @returns An object structuring all the series by type.
  */
-const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: DatasetType<number>) => {
+const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: DatasetType) => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: FormatterParams<type> } = {};
   series.forEach((seriesData, seriesIndex: number) => {

@@ -45,7 +45,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const selectId = useId();
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
-  const isSelectNative = baseSelectProps.native ?? true;
+  const isSelectNative = baseSelectProps.native ?? false;
 
   const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 

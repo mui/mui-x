@@ -44,10 +44,10 @@ export const useField = <
   } = useFieldState(params);
 
   const {
-    inputRef: inputRefProp,
     internalProps,
     internalProps: { readOnly = false, unstableFieldRef, minutesStep },
     forwardedProps: {
+      inputRef: inputRefProp,
       onClick,
       onKeyDown,
       onFocus,
@@ -548,7 +548,7 @@ export const useField = <
     onMouseUp: handleInputMouseUp,
     onClear: handleClearValue,
     error: inputError,
-    ref: handleRef,
+    inputRef: handleRef,
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 };

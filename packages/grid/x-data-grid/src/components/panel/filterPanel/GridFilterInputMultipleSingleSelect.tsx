@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import { unstable_useId as useId } from '@mui/utils';
-import { isSingleSelectColDef } from './filterPanelUtils';
+import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
@@ -21,7 +21,6 @@ export interface GridFilterInputMultipleSingleSelectProps
       | 'color'
       | 'getOptionLabel'
     >,
-    Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'>,
     GridFilterInputValueProps {
   type?: 'singleSelect';
 }
@@ -40,8 +39,6 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     helperText,
     size,
     variant = 'standard',
-    getOptionLabel: getOptionLabelProp,
-    getOptionValue: getOptionValueProp,
     ...other
   } = props;
   const TextFieldProps = {
@@ -63,8 +60,8 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
   }
 
-  const getOptionValue = getOptionValueProp || resolvedColumn?.getOptionValue!;
-  const getOptionLabel = getOptionLabelProp || resolvedColumn?.getOptionLabel!;
+  const getOptionValue = resolvedColumn?.getOptionValue!;
+  const getOptionLabel = resolvedColumn?.getOptionLabel!;
 
   const isOptionEqualToValue = React.useCallback(
     (option: ValueOptions, value: ValueOptions) => getOptionValue(option) === getOptionValue(value),
@@ -72,20 +69,8 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   );
 
   const resolvedValueOptions = React.useMemo(() => {
-    if (!resolvedColumn?.valueOptions) {
-      return [];
-    }
-
-    if (typeof resolvedColumn.valueOptions === 'function') {
-      return resolvedColumn.valueOptions({ field: resolvedColumn.field });
-    }
-
-    return resolvedColumn.valueOptions;
+    return getValueOptions(resolvedColumn!) || [];
   }, [resolvedColumn]);
-
-  const resolvedFormattedValueOptions = React.useMemo(() => {
-    return resolvedValueOptions?.map(getOptionValue);
-  }, [resolvedValueOptions, getOptionValue]);
 
   // The value is computed from the item.value and used directly
   // If it was done by a useEffect/useState, the Autocomplete could receive incoherent value and options
@@ -93,27 +78,8 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     if (!Array.isArray(item.value)) {
       return [];
     }
-    if (resolvedValueOptions !== undefined) {
-      const itemValueIndexes = item.value.map((element) => {
-        // Gets the index matching between values and valueOptions
-        return resolvedFormattedValueOptions?.findIndex(
-          (formattedOption) => formattedOption === element,
-        );
-      });
-
-      return itemValueIndexes
-        .filter((index) => index >= 0)
-        .map((index: number) => resolvedValueOptions[index]);
-    }
     return item.value;
-  }, [item.value, resolvedValueOptions, resolvedFormattedValueOptions]);
-
-  React.useEffect(() => {
-    if (!Array.isArray(item.value) || filteredValues.length !== item.value.length) {
-      // Updates the state if the filter value has been cleaned by the component
-      applyValue({ ...item, value: filteredValues.map(getOptionValue) });
-    }
-  }, [item, filteredValues, applyValue, getOptionValue]);
+  }, [item.value]);
 
   const handleChange = React.useCallback<
     NonNullable<AutocompleteProps<ValueOptions, true, false, true>['onChange']>
@@ -177,18 +143,6 @@ GridFilterInputMultipleSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Used to determine the label displayed for a given value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The text to be displayed.
-   */
-  getOptionLabel: PropTypes.func,
-  /**
-   * Used to determine the value used for a value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The value to be used.
-   */
-  getOptionValue: PropTypes.func,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
