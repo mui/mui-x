@@ -9,8 +9,9 @@ import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider
 import { ChartsLegendClasses, getLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { LegendParams } from '../models/seriesType/config';
-import { ChartsText, ChartsTextStyle, getWordsByLines } from '../internals/components/ChartsText';
+import { ChartsText, ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
+import { getWordsByLines } from '../internals/getWordsByLines';
 
 export interface ChartsLegendSlotsComponent {
   legend?: React.JSXElementConstructor<LegendRendererProps>;
