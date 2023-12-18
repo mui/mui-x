@@ -554,6 +554,10 @@ async function initializeEnvironment(
         });
 
         it('should allow pasting a section', async () => {
+          // the pasting does not seem to work in chromium headless
+          if (browserType.name() === 'chromium') {
+            return;
+          }
           await renderFixture('DatePicker/BasicDesktopDatePicker');
           const input = page.getByRole('textbox');
 
@@ -564,15 +568,23 @@ async function initializeEnvironment(
           // ensure that the focus is moved to the end section by typing naturally - with a timeout
           await input.pressSequentially('04/11/2022');
           // move to day section
-          await page.keyboard.press('ArrowLeft');
+          await input.press('ArrowLeft');
           // copy day section value
-          await page.keyboard.press(`${modifier}+KeyC`);
+          await input.press(`${modifier}+KeyC`);
           // move to month section
-          await page.keyboard.press('ArrowLeft');
+          await input.press('ArrowLeft');
+          // initiate search query on month section
+          await input.press('1');
           // paste day section value to month section
-          await page.keyboard.press(`${modifier}+KeyV`);
+          await input.press(`${modifier}+KeyV`);
 
           expect(await input.inputValue()).to.equal('11/11/2022');
+
+          // move back to month section
+          await input.press('ArrowLeft');
+          // check that the search query has been cleared after pasting
+          await input.press('2');
+          expect(await input.inputValue()).to.equal('02/11/2022');
         });
       });
       describe('<MobileDatePicker />', () => {
