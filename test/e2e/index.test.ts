@@ -1,3 +1,4 @@
+import { platform } from 'node:os';
 import { expect } from 'chai';
 import {
   chromium,
@@ -547,9 +548,31 @@ async function initializeEnvironment(
           const input = page.getByRole('textbox');
 
           await input.focus();
-          await input.type('04/11/2022');
+          await input.fill('04/11/2022');
 
           expect(await input.inputValue()).to.equal('04/11/2022');
+        });
+
+        it('should allow pasting a section', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+          const input = page.getByRole('textbox');
+
+          const isMac = platform() === 'darwin';
+          const modifier = isMac ? 'Meta' : 'Control';
+
+          await input.focus();
+          // ensure that the focus is moved to the end section by typing naturally - with a timeout
+          await input.pressSequentially('04/11/2022');
+          // move to day section
+          await page.keyboard.press('ArrowLeft');
+          // copy day section value
+          await page.keyboard.press(`${modifier}+KeyC`);
+          // move to month section
+          await page.keyboard.press('ArrowLeft');
+          // paste day section value to month section
+          await page.keyboard.press(`${modifier}+KeyV`);
+
+          expect(await input.inputValue()).to.equal('11/11/2022');
         });
       });
       describe('<MobileDatePicker />', () => {
