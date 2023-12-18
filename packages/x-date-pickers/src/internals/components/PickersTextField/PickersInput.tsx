@@ -87,10 +87,11 @@ const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
   display: 'flex',
   flexWrap: 'nowrap',
   padding: '16.5px 0',
-  width: 'calc(20ch + 2px)',
   flexGrow: 1,
   overflow: 'hidden',
   letterSpacing: 'inherit',
+  // Chrome behavior
+  width: '182px',
 
   ...(ownerState.size === 'small' && {
     padding: '8.5px 0',
