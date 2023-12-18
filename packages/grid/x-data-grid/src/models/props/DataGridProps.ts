@@ -78,7 +78,6 @@ export type DataGridForcedPropsKey =
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
-  | 'disableMultipleRowSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
   | 'keepColumnPositionIfDraggedOutside'
