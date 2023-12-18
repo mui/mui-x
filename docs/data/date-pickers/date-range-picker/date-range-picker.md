@@ -83,7 +83,8 @@ This prop will be ignored on the mobile picker.
 
 ### Use a single input field
 
-You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing:
+You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
+In such case the Picker component can pass the `name` prop to the input.
 
 {{"demo": "SingleInputDateRangePicker.js"}}
 
