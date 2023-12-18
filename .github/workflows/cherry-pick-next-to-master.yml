@@ -22,7 +22,7 @@ jobs:
         with:
           branch: master
           body: 'Cherry-pick of #{old_pull_request_id}'
-          cherry-pick-branch: cherry-pick-${old_pull_request_id}
+          cherry-pick-branch: ${{ format('cherry-pick-{0}', github.event.number) }} 
           labels: |
             cherry-pick
 env:
