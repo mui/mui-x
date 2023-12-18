@@ -8,8 +8,8 @@ import { MobileDatePicker } from '../MobileDatePicker';
 import { DatePickerProps } from './DatePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
-type DatePickerComponent = (<TDate>(
-  props: DatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: DatePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -22,10 +22,10 @@ type DatePickerComponent = (<TDate>(
  *
  * - [DatePicker API](https://mui.com/x/api/date-pickers/date-picker/)
  */
-const DatePicker = React.forwardRef(function DatePicker<TDate>(
-  inProps: DatePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DatePicker = React.forwardRef(function DatePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: DatePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePicker' });
 
   const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
@@ -254,9 +254,9 @@ DatePicker.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -273,10 +273,6 @@ DatePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -302,6 +298,10 @@ DatePicker.propTypes = {
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
+  /**
+   * @default false
+   */
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

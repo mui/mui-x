@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, MuiRenderResult } from '@mui-internal/test-utils/createRenderer';
 import {
   BuildFieldInteractionsResponse,
+  FieldPressCharacter,
   FieldSectionSelector,
   OpenPickerParams,
 } from 'test/utils/pickers';
@@ -28,6 +29,7 @@ export type DescribeValueOptions<
           value: TValue,
           options: {
             selectSection: FieldSectionSelector;
+            pressKey: FieldPressCharacter;
             isOpened?: boolean;
             applySameValue?: boolean;
             setEndDate?: boolean;
@@ -35,7 +37,10 @@ export type DescribeValueOptions<
         ) => TValue;
       }
     : {
-        setNewValue: (value: TValue, options: { selectSection: FieldSectionSelector }) => TValue;
+        setNewValue: (
+          value: TValue,
+          options: { selectSection: FieldSectionSelector; pressKey: FieldPressCharacter },
+        ) => TValue;
       });
 
 export type DescribeValueTestSuite<TValue, C extends PickerComponentFamily> = (

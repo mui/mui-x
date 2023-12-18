@@ -1,13 +1,11 @@
-import { userEvent } from '@mui-internal/test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-  getTextbox,
+  expectFieldValueV7,
   describeValidation,
   describeValue,
   formatFullTimeValue,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 
@@ -29,20 +27,21 @@ describe('<TimeField /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
+      const fieldRoot = getFieldInputRoot();
+
+      let expectedValueStr: string;
+      if (expectedValue) {
+        expectedValueStr = formatFullTimeValue(adapterToUse, expectedValue);
+      } else {
+        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
       }
-      const expectedValueStr = expectedValue
-        ? formatFullTimeValue(adapterToUse, expectedValue)
-        : '';
-      expectInputValue(input, expectedValueStr);
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection }) => {
+    setNewValue: (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addHours(value, 1);
       selectSection('hours');
-      const input = getTextbox();
-      userEvent.keyPress(input, { key: 'ArrowUp' });
+      pressKey(undefined, 'ArrowUp');
 
       return newValue;
     },

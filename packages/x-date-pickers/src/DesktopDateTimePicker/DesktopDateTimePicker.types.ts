@@ -27,15 +27,15 @@ export interface DesktopDateTimePickerSlots<TDate>
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
-export interface DesktopDateTimePickerSlotProps<TDate>
+export interface DesktopDateTimePickerSlotProps<TDate, TUseV6TextField extends boolean>
   extends BaseDateTimePickerSlotProps<TDate>,
-    ExportedUseDesktopPickerSlotProps<TDate, DateOrTimeViewWithMeridiem>,
+    ExportedUseDesktopPickerSlotProps<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 
-export interface DesktopDateTimePickerProps<TDate>
+export interface DesktopDateTimePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
-    DesktopOnlyPickerProps<TDate>,
+    DesktopOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate> {
   /**
    * Available views.
@@ -55,5 +55,5 @@ export interface DesktopDateTimePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimePickerSlotProps<TDate>;
+  slotProps?: DesktopDateTimePickerSlotProps<TDate, TUseV6TextField>;
 }

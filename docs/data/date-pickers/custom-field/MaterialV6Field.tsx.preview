@@ -1,0 +1,2 @@
+<DateField shouldUseV6TextField />
+<DatePicker shouldUseV6TextField />

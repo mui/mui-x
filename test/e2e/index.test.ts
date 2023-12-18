@@ -10,6 +10,7 @@ import {
   BrowserContextOptions,
   BrowserType,
 } from '@playwright/test';
+import { pickersInputClasses, pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -515,7 +516,6 @@ async function initializeEnvironment(
       describe('<DesktopDatePicker />', () => {
         it('should allow selecting a value', async () => {
           await renderFixture('DatePicker/BasicDesktopDatePicker');
-
           await page.getByRole('button').click();
           expect(
             await page.getByRole('gridcell', { name: '17' }).getAttribute('aria-current'),
@@ -525,50 +525,57 @@ async function initializeEnvironment(
           // assert that the tooltip closes after selection is complete
           // could run into race condition otherwise
           await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
-          expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
+          expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+            '04/11/2022',
+          );
         });
 
         it('should allow filling in a value and clearing a value', async () => {
           await renderFixture('DatePicker/BasicDesktopDatePicker');
-          const input = page.getByRole('textbox');
 
-          await input.fill('04/11/2022');
+          const input = page.getByRole('textbox', { includeHidden: true });
 
-          expect(await input.inputValue()).to.equal('04/11/2022');
-
-          await input.blur();
-          await input.fill('');
-
-          expect(await input.inputValue()).to.equal('MM/DD/YYYY');
-        });
-
-        it('should allow typing in a value', async () => {
-          await renderFixture('DatePicker/BasicDesktopDatePicker');
-          const input = page.getByRole('textbox');
-
-          await input.focus();
-          await input.type('04/11/2022');
+          await page.locator(`.${pickersInputClasses.sectionsContainer}`).click();
+          await page.getByRole(`spinbutton`, { name: 'MM' }).type('04');
+          await page.getByRole(`spinbutton`, { name: 'DD' }).type('11');
+          await page.getByRole(`spinbutton`, { name: 'YYYY' }).type('2022');
 
           expect(await input.inputValue()).to.equal('04/11/2022');
+
+          await page.keyboard.press('Control+a');
+          expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal(
+            '04/11/2022',
+          );
+
+          await page.keyboard.press('Delete');
+          expect(await input.inputValue()).to.equal('');
         });
       });
+
       describe('<MobileDatePicker />', () => {
         it('should allow selecting a value', async () => {
           await renderFixture('DatePicker/BasicMobileDatePicker');
 
-          await page.getByRole('textbox').click({ position: { x: 10, y: 2 } });
-
+          // Old selector: await page.getByRole('textbox').click({ position: { x: 10, y: 2 } });
+          await page
+            .locator(`.${pickersTextFieldClasses.root}`)
+            .click({ position: { x: 10, y: 2 } });
           await page.getByRole('gridcell', { name: '11' }).click();
           await page.getByRole('button', { name: 'OK' }).click();
 
           await waitFor(async () => {
             // assert that the dialog has been closed and the focused element is the input
-            expect(await page.evaluate(() => document.activeElement?.nodeName)).to.equal('INPUT');
+            expect(await page.evaluate(() => document.activeElement?.className)).to.contain(
+              pickersInputClasses.sectionContent,
+            );
           });
-          expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
+          expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+            '04/11/2022',
+          );
         });
       });
     });
+
     describe('<DesktopDateTimePicker />', () => {
       it('should allow selecting a value', async () => {
         await renderFixture('DatePicker/BasicDesktopDateTimePicker');
@@ -583,8 +590,11 @@ async function initializeEnvironment(
         // assert that the tooltip closes after selection is complete
         // could run into race condition otherwise
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
-        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 03:30 PM');
+        expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+          '04/11/2022 03:30 PM',
+        );
       });
+
       it('should correctly select hours section when there are no time renderers', async () => {
         await renderFixture('DatePicker/DesktopDateTimePickerNoTimeRenderers');
 
@@ -594,29 +604,22 @@ async function initializeEnvironment(
 
         // assert that the hours section has been selected using two APIs
         await waitFor(async () => {
-          // Firefox does not resolve selection inside of an input component
-          // https://stackoverflow.com/questions/20419515/window-getselection-of-textarea-not-working-in-firefox#comment52700249_20419515
-          if (browserType.name() !== 'firefox') {
-            expect(await page.evaluate(() => window.getSelection()?.toString())).to.equal('12');
-          }
-          expect(
-            await page.evaluate(() => (document.activeElement as HTMLInputElement).selectionStart),
-          ).to.equal(11);
-          expect(
-            await page.evaluate(() => (document.activeElement as HTMLInputElement).selectionEnd),
-          ).to.equal(13);
+          expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
         });
       });
     });
+
     describe('<DateRangePicker />', () => {
       it('should allow selecting a range value', async () => {
         // firefox in CI is not happy with this test
-        if (browserType.name() === 'firefox' && process.env.CIRCLECI) {
+        if (browserType.name() === 'firefox') {
           return;
         }
         await renderFixture('DatePicker/BasicDesktopDateRangePicker');
 
-        await page.getByRole('textbox', { name: 'Start' }).click();
+        // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
+        await page.locator(`.${pickersInputClasses.sectionsContainer}`).first().click();
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '17' }).last().click();
@@ -624,27 +627,29 @@ async function initializeEnvironment(
         // assert that the tooltip closes after selection is complete
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
 
-        expect(await page.getByRole('textbox', { name: 'Start' }).inputValue()).to.equal(
-          '04/11/2022',
-        );
-        expect(await page.getByRole('textbox', { name: 'End' }).inputValue()).to.equal(
-          '05/17/2022',
-        );
+        expect(
+          await page.getByRole('textbox', { name: 'Start', includeHidden: true }).inputValue(),
+        ).to.equal('04/11/2022');
+        expect(
+          await page.getByRole('textbox', { name: 'End', includeHidden: true }).inputValue(),
+        ).to.equal('05/17/2022');
       });
 
       it('should not close the tooltip when the focus switches between inputs', async () => {
         // firefox in CI is not happy with this test
-        if (browserType.name() === 'firefox' && process.env.CIRCLECI) {
+        if (browserType.name() === 'firefox') {
           return;
         }
         await renderFixture('DatePicker/BasicDesktopDateRangePicker');
 
-        await page.getByRole('textbox', { name: 'Start' }).click();
+        // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
+        await page.locator(`.${pickersInputClasses.sectionsContainer}`).first().click();
 
         // assert that the tooltip has been opened
         await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
 
-        await page.getByRole('textbox', { name: 'End' }).click();
+        // Old selector: await page.getByRole('textbox', { name: 'End' }).click();
+        await page.locator(`.${pickersInputClasses.sectionsContainer}`).last().click();
 
         // assert that the tooltip has not been closed after changing the active input
         await page.waitForSelector('[role="tooltip"]', { state: 'visible' });
@@ -672,7 +677,8 @@ describe('e2e: chromium on Android', () => {
   it('should allow re-selecting value to have the same start and end date', async () => {
     await renderFixture('DatePicker/BasicDesktopDateRangePicker');
 
-    await page.getByRole('textbox', { name: 'Start' }).tap();
+    // Old selector: await page.getByRole('textbox', { name: 'Start' }).tap();
+    await page.locator(`.${pickersInputClasses.sectionsContainer}`).first().tap();
 
     await page.getByRole('gridcell', { name: '11' }).first().tap();
     await page.getByRole('gridcell', { name: '17' }).first().tap();

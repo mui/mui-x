@@ -13,13 +13,13 @@ export interface DateRangePickerSlots<TDate>
   extends DesktopDateRangePickerSlots<TDate>,
     MobileDateRangePickerSlots<TDate> {}
 
-export interface DateRangePickerSlotProps<TDate>
-  extends DesktopDateRangePickerSlotProps<TDate>,
-    MobileDateRangePickerSlotProps<TDate> {}
+export interface DateRangePickerSlotProps<TDate, TUseV6TextField extends boolean>
+  extends DesktopDateRangePickerSlotProps<TDate, TUseV6TextField>,
+    MobileDateRangePickerSlotProps<TDate, TUseV6TextField> {}
 
-export interface DateRangePickerProps<TDate>
-  extends DesktopDateRangePickerProps<TDate>,
-    MobileDateRangePickerProps<TDate> {
+export interface DateRangePickerProps<TDate, TUseV6TextField extends boolean = false>
+  extends DesktopDateRangePickerProps<TDate, TUseV6TextField>,
+    MobileDateRangePickerProps<TDate, TUseV6TextField> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -35,5 +35,5 @@ export interface DateRangePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateRangePickerSlotProps<TDate>;
+  slotProps?: DateRangePickerSlotProps<TDate, TUseV6TextField>;
 }

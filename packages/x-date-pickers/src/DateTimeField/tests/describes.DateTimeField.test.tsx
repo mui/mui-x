@@ -1,16 +1,15 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import { describeConformance, userEvent } from '@mui-internal/test-utils';
+import { describeConformance } from '@mui-internal/test-utils';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
   createPickerRenderer,
   wrapPickerMount,
-  expectInputValue,
-  expectInputPlaceholder,
-  getTextbox,
+  expectFieldValueV7,
   describeValidation,
   describeValue,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Describes', () => {
@@ -25,7 +24,7 @@ describe('<DateTimeField /> - Describes', () => {
 
   describeConformance(<DateTimeField />, () => ({
     classes: {} as any,
-    inheritComponent: TextField,
+    inheritComponent: PickersTextField,
     render,
     muiName: 'MuiDateTimeField',
     wrapMount: wrapPickerMount,
@@ -49,24 +48,25 @@ describe('<DateTimeField /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm');
-      }
-      const expectedValueStr = expectedValue
-        ? adapterToUse.format(
-            expectedValue,
-            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-          )
-        : '';
+      const fieldRoot = getFieldInputRoot();
 
-      expectInputValue(input, expectedValueStr);
+      let expectedValueStr: string;
+      if (expectedValue) {
+        expectedValueStr = adapterToUse.format(
+          expectedValue,
+          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+        );
+      } else {
+        expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
+      }
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection }) => {
+    setNewValue: (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addDays(value, 1);
       selectSection('day');
-      const input = getTextbox();
-      userEvent.keyPress(input, { key: 'ArrowUp' });
+      pressKey(undefined, 'ArrowUp');
+
       return newValue;
     },
   }));

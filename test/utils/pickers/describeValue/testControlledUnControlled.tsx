@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, act, userEvent } from '@mui-internal/test-utils';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import { getExpectedOnChangeCount } from 'test/utils/pickers';
+import {
+  getAllFieldInputRoot,
+  getExpectedOnChangeCount,
+  getFieldInputRoot,
+} from 'test/utils/pickers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
@@ -48,8 +52,11 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
-      const { selectSection } = renderWithProps({ defaultValue: values[0], onChange });
-      const newValue = setNewValue(values[0], { selectSection });
+      const v7Response = renderWithProps({ defaultValue: values[0], onChange });
+      const newValue = setNewValue(values[0], {
+        selectSection: v7Response.selectSection,
+        pressKey: v7Response.pressKey,
+      });
 
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
@@ -78,11 +85,14 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return { value, onChange: handleChange };
       };
 
-      const { selectSection } = renderWithProps(
+      const v7Response = renderWithProps(
         { value: values[0], onChange },
-        useControlledElement,
+        { hook: useControlledElement },
       );
-      const newValue = setNewValue(values[0], { selectSection });
+      const newValue = setNewValue(values[0], {
+        selectSection: v7Response.selectSection,
+        pressKey: v7Response.pressKey,
+      });
 
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
@@ -100,18 +110,25 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       assertRenderedValue(values[1]);
     });
 
-    ['readOnly', 'disabled'].forEach((prop) => {
-      it(`should apply ${prop}="true" prop`, () => {
-        if (!['field', 'picker'].includes(componentFamily)) {
-          return;
-        }
-        const handleChange = spy();
-        render(<ElementToTest value={values[0]} onChange={handleChange} {...{ [prop]: true }} />);
+    it(`should apply disabled="true" prop`, () => {
+      if (!['field', 'picker'].includes(componentFamily)) {
+        return;
+      }
+      render(<ElementToTest value={values[0]} disabled />);
 
-        const textBoxes = screen.getAllByRole('textbox');
-        textBoxes.forEach((textbox) => {
-          expect(textbox).to.have.attribute(prop.toLowerCase());
-        });
+      getAllFieldInputRoot().forEach((fieldRoot) => {
+        expect(fieldRoot).to.have.class('Mui-disabled');
+      });
+    });
+
+    it(`should apply readOnly="true" prop`, () => {
+      if (!['field', 'picker'].includes(componentFamily)) {
+        return;
+      }
+      render(<ElementToTest value={values[0]} readOnly />);
+
+      getAllFieldInputRoot().forEach((fieldInputRoot) => {
+        expect(fieldInputRoot).to.have.class('Mui-readOnly');
       });
     });
 
@@ -119,16 +136,12 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       if (componentFamily !== 'picker' || params.variant !== 'mobile') {
         return;
       }
+
       const handleChange = spy();
 
-      render(<ElementToTest defaultValue={values[0]} onChange={handleChange} />);
-      const input = screen.getAllByRole('textbox')[0];
-      act(() => {
-        input.focus();
-      });
-      clock.runToLast();
-      userEvent.keyPress(input, { key: 'ArrowUp' });
-      clock.runToLast();
+      const v7Response = renderWithProps({ onChange: handleChange });
+      v7Response.selectSection(undefined);
+      userEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
       expect(handleChange.callCount).to.equal(0);
     });
 
@@ -216,11 +229,15 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         }
         render(<ElementToTest slotProps={{ textField: { error: true } }} />);
 
-        const textBoxes = screen.getAllByRole('textbox');
-        textBoxes.forEach((textbox) => {
-          expect(textbox.parentElement).to.have.class(inputBaseClasses.error);
-          expect(textbox).to.have.attribute('aria-invalid', 'true');
-        });
+        const fieldRoot = getFieldInputRoot();
+        expect(fieldRoot).to.have.class(inputBaseClasses.error);
+        expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
+
+        if (params.type === 'date-range' && !params.isSingleInput) {
+          const fieldRootEnd = getFieldInputRoot(1);
+          expect(fieldRootEnd).to.have.class(inputBaseClasses.error);
+          expect(fieldRootEnd).to.have.attribute('aria-invalid', 'true');
+        }
       });
     });
   });

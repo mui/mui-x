@@ -11,34 +11,41 @@ import {
   CssVarsProvider,
   THEME_ID,
 } from '@mui/joy/styles';
+import { useSlotProps } from '@mui/base/utils';
 import Input, { InputProps } from '@mui/joy/Input';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
+import IconButton from '@mui/joy/IconButton';
+import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import {
-  unstable_useDateField as useDateField,
-  UseDateFieldProps,
-} from '@mui/x-date-pickers/DateField';
+  DateRangePicker,
+  DateRangePickerProps,
+} from '@mui/x-date-pickers-pro/DateRangePicker';
+import {
+  unstable_useSingleInputDateRangeField as useSingleInputDateRangeField,
+  UseSingleInputDateRangeFieldProps,
+} from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers';
 import {
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-} from '@mui/x-date-pickers/models';
+  DateRange,
+  DateRangeValidationError,
+  RangeFieldSection,
+} from '@mui/x-date-pickers-pro';
 
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
+  textField?: 'v6' | 'v7';
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
     startAdornment?: React.ReactNode;
   };
-  formControlSx?: InputProps['sx'];
 }
 
 type JoyFieldComponent = ((
@@ -52,21 +59,16 @@ const JoyField = React.forwardRef(
       id,
       label,
       InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-      formControlSx,
       endDecorator,
       startDecorator,
       slotProps,
       inputRef,
+      textField,
       ...other
     } = props;
 
     return (
-      <FormControl
-        disabled={disabled}
-        id={id}
-        sx={[...(Array.isArray(formControlSx) ? formControlSx : [formControlSx])]}
-        ref={ref}
-      >
+      <FormControl disabled={disabled} id={id} sx={{ minWidth: 350 }} ref={ref}>
         <FormLabel>{label}</FormLabel>
         <Input
           ref={ref}
@@ -95,20 +97,38 @@ const JoyField = React.forwardRef(
   },
 ) as JoyFieldComponent;
 
-interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs>,
+interface JoySingleInputDateRangeFieldProps
+  extends UseSingleInputDateRangeFieldProps<Dayjs, true>,
     BaseSingleInputFieldProps<
-      Dayjs | null,
+      DateRange<Dayjs>,
       Dayjs,
-      FieldSection,
-      DateValidationError
-    > {}
+      RangeFieldSection,
+      true,
+      DateRangeValidationError
+    > {
+  onAdornmentClick?: () => void;
+}
 
-const JoyDateField = React.forwardRef(
-  (props: JoyDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, ...textFieldProps } = props;
+type JoySingleInputDateRangeFieldComponent = ((
+  props: JoySingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { fieldType?: string };
 
-    const fieldResponse = useDateField<Dayjs, typeof textFieldProps>(textFieldProps);
+const JoySingleInputDateRangeField = React.forwardRef(
+  (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
+    const { slots, slotProps, onAdornmentClick, ...other } = props;
+
+    const textFieldProps: JoySingleInputDateRangeFieldProps = useSlotProps({
+      elementType: FormControl,
+      externalSlotProps: slotProps?.textField,
+      externalForwardedProps: other,
+      ownerState: props as any,
+    });
+
+    const fieldResponse = useSingleInputDateRangeField<
+      Dayjs,
+      true,
+      JoySingleInputDateRangeFieldProps
+    >({ ...textFieldProps, shouldUseV6TextField: true });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
@@ -117,24 +137,54 @@ const JoyDateField = React.forwardRef(
       slotProps,
     });
 
-    return <JoyField {...processedFieldProps} ref={ref} />;
-  },
-);
-
-const JoyDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
     return (
-      <DatePicker
+      <JoyField
+        {...processedFieldProps}
         ref={ref}
+        endDecorator={
+          <IconButton
+            onClick={onAdornmentClick}
+            variant="plain"
+            color="neutral"
+            sx={{ marginLeft: 2.5 }}
+          >
+            <DateRangeIcon color="action" />
+          </IconButton>
+        }
+      />
+    );
+  },
+) as JoySingleInputDateRangeFieldComponent;
+
+JoySingleInputDateRangeField.fieldType = 'single-input';
+
+const JoySingleInputDateRangePicker = React.forwardRef(
+  (props: DateRangePickerProps<Dayjs, true>, ref: React.Ref<HTMLDivElement>) => {
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    const toggleOpen = (event: React.PointerEvent) => {
+      // allows toggle behavior
+      event.stopPropagation();
+      setIsOpen((currentOpen) => !currentOpen);
+    };
+
+    const handleOpen = () => setIsOpen(true);
+
+    const handleClose = () => setIsOpen(false);
+
+    return (
+      <DateRangePicker
         {...props}
-        slots={{ ...props.slots, field: JoyDateField }}
+        ref={ref}
+        open={isOpen}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
         slotProps={{
           ...props.slotProps,
           field: {
             ...props.slotProps?.field,
-            formControlSx: {
-              flexDirection: 'row',
-            },
+            onAdornmentClick: toggleOpen,
           } as any,
         }}
       />
@@ -156,14 +206,14 @@ function SyncThemeMode({ mode }: { mode: 'light' | 'dark' }) {
   return null;
 }
 
-export default function PickerWithJoyField() {
+export default function JoyV6SingleInputRangeField() {
   const materialTheme = useMaterialTheme();
   return (
     <MaterialCssVarsProvider>
       <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
         <SyncThemeMode mode={materialTheme.palette.mode} />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <JoyDatePicker
+          <JoySingleInputDateRangePicker
             slotProps={{
               field: { clearable: true },
             }}

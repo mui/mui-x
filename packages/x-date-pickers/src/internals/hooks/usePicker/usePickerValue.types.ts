@@ -4,7 +4,6 @@ import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
 import {
   FieldSection,
-  FieldSelectedSections,
   FieldValueType,
   TimezoneProps,
   MuiPickersAdapter,
@@ -247,11 +246,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
 /**
  * Props used to handle the value of non-static pickers.
  */
-export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSection>
-  extends Pick<
-    UseFieldInternalProps<TValue, unknown, TSection, unknown>,
-    'selectedSections' | 'onSelectedSectionsChange'
-  > {
+export interface UsePickerValueNonStaticProps {
   /**
    * If `true`, the popover or modal will close after submitting the full date.
    * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
@@ -277,16 +272,15 @@ export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSect
 /**
  * Props used to handle the value of the pickers.
  */
-export interface UsePickerValueProps<TValue, TSection extends FieldSection, TError>
+export interface UsePickerValueProps<TValue, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
-    UsePickerValueNonStaticProps<TValue, TSection>,
+    UsePickerValueNonStaticProps,
     TimezoneProps {}
 
 export interface UsePickerValueParams<
   TValue,
   TDate,
-  TSection extends FieldSection,
-  TExternalProps extends UsePickerValueProps<TValue, TSection, any>,
+  TExternalProps extends UsePickerValueProps<TValue, any>,
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
@@ -311,10 +305,7 @@ export interface UsePickerValueActions {
 }
 
 export type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
-  Pick<
-    UseFieldInternalProps<TValue, unknown, TSection, TError>,
-    'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
-  >
+  Pick<UseFieldInternalProps<TValue, unknown, TSection, any, TError>, 'value' | 'onChange'>
 >;
 
 /**
@@ -325,7 +316,6 @@ export interface UsePickerValueViewsResponse<TValue> {
   onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   open: boolean;
   onClose: () => void;
-  onSelectedSectionsChange: (newValue: FieldSelectedSections) => void;
 }
 
 /**

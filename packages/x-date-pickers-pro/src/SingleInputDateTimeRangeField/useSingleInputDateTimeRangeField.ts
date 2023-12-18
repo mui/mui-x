@@ -1,53 +1,40 @@
 import {
-  useUtils,
   useField,
-  applyDefaultDate,
-  useDefaultDates,
   splitFieldInternalAndForwardedProps,
+  useDefaultizedDateTimeField,
 } from '@mui/x-date-pickers/internals';
-import {
-  UseSingleInputDateTimeRangeFieldComponentProps,
-  UseSingleInputDateTimeRangeFieldDefaultizedProps,
-  UseSingleInputDateTimeRangeFieldProps,
-} from './SingleInputDateTimeRangeField.types';
+import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
+import { DateRange } from '../internals/models';
+import { RangeFieldSection } from '../models';
 
-export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
-  props: UseSingleInputDateTimeRangeFieldProps<TDate>,
-): UseSingleInputDateTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm
-    ? utils.formats.keyboardDateTime12h
-    : utils.formats.keyboardDateTime24h;
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? defaultFormat,
-    minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
-    minTime: props.minDateTime ?? props.minTime,
-    maxTime: props.maxDateTime ?? props.maxTime,
-    disableIgnoringDatePartForTimeValidation: Boolean(props.minDateTime || props.maxDateTime),
-  } as any;
-};
-
-export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
-  inProps: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps>,
+export const useSingleInputDateTimeRangeField = <
+  TDate,
+  TUseV6TextField extends boolean,
+  TAllProps extends UseSingleInputDateTimeRangeFieldProps<TDate, TUseV6TextField>,
+>(
+  inProps: TAllProps,
 ) => {
-  const props = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inProps);
+  const props = useDefaultizedDateTimeField<
+    TDate,
+    UseSingleInputDateTimeRangeFieldProps<TDate, TUseV6TextField>,
+    TAllProps
+  >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseSingleInputDateTimeRangeFieldProps<any>
+    keyof UseSingleInputDateTimeRangeFieldProps<any, any>
   >(props, 'date-time');
 
-  return useField({
+  return useField<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    TUseV6TextField,
+    typeof forwardedProps,
+    typeof internalProps
+  >({
     forwardedProps,
     internalProps,
     valueManager: rangeValueManager,

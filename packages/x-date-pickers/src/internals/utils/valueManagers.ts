@@ -9,8 +9,8 @@ import type { FieldValueManager } from '../hooks/useField';
 import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
 import { getDefaultReferenceDate } from './getDefaultReferenceDate';
 import {
-  addPositionPropertiesToSections,
-  createDateStrForInputFromSections,
+  createDateStrForV7HiddenInputFromSections,
+  createDateStrForV6InputFromSections,
 } from '../hooks/useField/useField.utils';
 
 export type SingleItemPickerValueManager<
@@ -47,16 +47,17 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
 export const singleItemFieldValueManager: FieldValueManager<any, any, FieldSection> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, date, prevSections, isRTL, getSectionsFromDate) => {
+  getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {
     const shouldReUsePrevDateSections = !utils.isValid(date) && !!prevSections;
 
     if (shouldReUsePrevDateSections) {
       return prevSections;
     }
 
-    return addPositionPropertiesToSections(getSectionsFromDate(date), isRTL);
+    return getSectionsFromDate(date);
   },
-  getValueStrFromSections: createDateStrForInputFromSections,
+  getV7HiddenInputValueFromSections: createDateStrForV7HiddenInputFromSections,
+  getV6InputValueFromSections: createDateStrForV6InputFromSections,
   getActiveDateManager: (utils, state) => ({
     date: state.value,
     referenceDate: state.referenceValue,

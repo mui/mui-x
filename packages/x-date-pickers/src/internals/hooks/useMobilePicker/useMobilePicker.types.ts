@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
   BaseNonStaticPickerProps,
@@ -20,6 +20,7 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { SlotComponentPropsFromProps } from '../../models/helpers';
 
 export interface UseMobilePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends PickersModalDialogSlots,
@@ -27,43 +28,49 @@ export interface UseMobilePickerSlots<TDate, TView extends DateOrTimeViewWithMer
   /**
    * Component used to enter the date with the keyboard.
    */
-  field: React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, any>>;
+  field: React.ElementType;
   /**
    * Form control with an input to render the value inside the default field.
-   * Receives the same props as `@mui/material/TextField`.
-   * @default TextField from '@mui/material'
+   * @default PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled.
    */
-  textField?: React.ElementType<TextFieldProps>;
+  textField?: React.ElementType;
 }
 
-export interface ExportedUseMobilePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersModalDialogSlotProps,
+export interface ExportedUseMobilePickerSlotProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TUseV6TextField extends boolean,
+> extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {
-  field?: SlotComponentProps<
-    React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,
+  field?: SlotComponentPropsFromProps<
+    BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, TUseV6TextField, unknown>,
     {},
-    UsePickerProps<TDate | null, TDate, any, FieldSection, any, any, any>
+    UsePickerProps<TDate | null, TDate, any, any, any, any>
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
-export interface UseMobilePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedUseMobilePickerSlotProps<TDate, TView>,
+export interface UseMobilePickerSlotProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TUseV6TextField extends boolean,
+> extends ExportedUseMobilePickerSlotProps<TDate, TView, TUseV6TextField>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
-export interface MobileOnlyPickerProps<TDate>
+export interface MobileOnlyPickerProps
   extends BaseNonStaticPickerProps,
     BaseNonRangeNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null, FieldSection>,
+    UsePickerValueNonStaticProps,
     UsePickerViewsNonStaticProps {}
 
 export interface UseMobilePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TUseV6TextField extends boolean,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
-    MobileOnlyPickerProps<TDate> {
+    MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -73,13 +80,14 @@ export interface UseMobilePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobilePickerSlotProps<TDate, TView>;
+  slotProps?: UseMobilePickerSlotProps<TDate, TView, TUseV6TextField>;
 }
 
 export interface UseMobilePickerParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
+  TUseV6TextField extends boolean,
+  TExternalProps extends UseMobilePickerProps<TDate, TView, TUseV6TextField, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
     'valueManager' | 'valueType' | 'validator'

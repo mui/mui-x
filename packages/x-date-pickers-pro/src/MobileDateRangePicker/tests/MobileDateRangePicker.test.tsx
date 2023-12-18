@@ -3,7 +3,12 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { screen, userEvent, fireEvent } from '@mui-internal/test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
-import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  openPicker,
+  getFieldSectionsContainer,
+} from 'test/utils/pickers';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
 describe('<MobileDateRangePicker />', () => {
@@ -255,18 +260,10 @@ describe('<MobileDateRangePicker />', () => {
     it('should correctly set focused styles when input is focused', () => {
       render(<MobileDateRangePicker />);
 
-      const firstInput = screen.getAllByRole('textbox')[0];
-      fireEvent.focus(firstInput);
+      const startSectionsContainer = getFieldSectionsContainer();
+      fireEvent.focus(startSectionsContainer);
 
       expect(screen.getByText('Start', { selector: 'label' })).to.have.class('Mui-focused');
-    });
-
-    it('should render "readonly" input elements', () => {
-      render(<MobileDateRangePicker />);
-
-      screen.getAllByRole('textbox').forEach((input) => {
-        expect(input).to.have.attribute('readonly');
-      });
     });
   });
 

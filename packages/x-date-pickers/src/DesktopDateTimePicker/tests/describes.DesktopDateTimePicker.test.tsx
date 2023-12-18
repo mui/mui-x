@@ -2,17 +2,30 @@ import { screen, userEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectInputValue,
-  expectInputPlaceholder,
-  getTextbox,
+  expectFieldValueV7,
   describeValidation,
   describeValue,
   describePicker,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import { expect } from 'chai';
+import * as React from 'react';
 
 describe('<DesktopDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  it('should respect the `localeText` prop', function test() {
+    render(
+      <DesktopDateTimePicker
+        open
+        localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        slotProps={{ actionBar: { actions: ['cancel'] } }}
+      />,
+    );
+
+    expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+  });
 
   describePicker(DesktopDateTimePicker, { render, fieldType: 'single-input', variant: 'desktop' });
 
@@ -34,20 +47,21 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm');
-      }
-      const expectedValueStr = expectedValue
-        ? adapterToUse.format(
-            expectedValue,
-            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-          )
-        : '';
+      const fieldRoot = getFieldInputRoot();
 
-      expectInputValue(input, expectedValueStr);
+      let expectedValueStr: string;
+      if (expectedValue) {
+        expectedValueStr = adapterToUse.format(
+          expectedValue,
+          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+        );
+      } else {
+        expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
+      }
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection }) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
         ? value
         : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
@@ -72,25 +86,22 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
         }
       } else {
         selectSection('day');
-        const input = getTextbox();
-        userEvent.keyPress(input, { key: 'ArrowUp' });
-        // move to the hours section
-        userEvent.keyPress(input, { key: 'ArrowRight' });
-        userEvent.keyPress(input, { key: 'ArrowRight' });
-        userEvent.keyPress(input, { key: 'ArrowUp' });
-        // move to the minutes section
-        userEvent.keyPress(input, { key: 'ArrowRight' });
-        // increment by 5 minutes
-        userEvent.keyPress(input, { key: 'PageUp' });
+        pressKey(undefined, 'ArrowUp');
+
+        selectSection('hours');
+        pressKey(undefined, 'ArrowUp');
+
+        selectSection('minutes');
+        pressKey(undefined, 'PageUp'); // increment by 5 minutes
+
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
-          // move to the meridiem section
-          userEvent.keyPress(input, { key: 'ArrowRight' });
+          selectSection('meridiem');
           const previousHours = adapterToUse.getHours(value);
           const newHours = adapterToUse.getHours(newValue);
           // update meridiem section if it changed
           if ((previousHours < 12 && newHours >= 12) || (previousHours >= 12 && newHours < 12)) {
-            userEvent.keyPress(input, { key: 'ArrowUp' });
+            pressKey(undefined, 'ArrowUp');
           }
         }
       }

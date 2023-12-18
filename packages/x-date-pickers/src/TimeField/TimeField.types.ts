@@ -2,19 +2,29 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
+import { MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
-import { FieldsTextFieldProps } from '../internals/models/fields';
-import { FieldSection, TimeValidationError } from '../models';
-import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
+import { FieldSection, TimeValidationError, BuiltInFieldTextFieldProps } from '../models';
+import {
+  ExportedUseClearableFieldProps,
+  UseClearableFieldSlots,
+  UseClearableFieldSlotProps,
+} from '../hooks/useClearableField';
 
-export interface UseTimeFieldProps<TDate>
+export interface UseTimeFieldProps<TDate, TUseV6TextField extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<TDate | null, TDate, FieldSection, TimeValidationError>,
+      UseFieldInternalProps<
+        TDate | null,
+        TDate,
+        FieldSection,
+        TUseV6TextField,
+        TimeValidationError
+      >,
       'format'
     >,
     TimeValidationProps<TDate>,
-    BaseTimeValidationProps {
+    BaseTimeValidationProps,
+    ExportedUseClearableFieldProps {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
@@ -22,19 +32,21 @@ export interface UseTimeFieldProps<TDate>
   ampm?: boolean;
 }
 
-export type UseTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
-  UseTimeFieldProps<TDate>,
-  keyof BaseTimeValidationProps | 'format'
->;
+export type UseTimeFieldComponentProps<
+  TDate,
+  TUseV6TextField extends boolean,
+  TChildProps extends {},
+> = Omit<TChildProps, keyof UseTimeFieldProps<TDate, TUseV6TextField>> &
+  UseTimeFieldProps<TDate, TUseV6TextField>;
 
-export type UseTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseTimeFieldProps<TDate>
-> &
-  UseTimeFieldProps<TDate>;
-
-export interface TimeFieldProps<TDate>
-  extends UseTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
+export type TimeFieldProps<
+  TDate,
+  TUseV6TextField extends boolean = false,
+> = UseTimeFieldComponentProps<
+  TDate,
+  TUseV6TextField,
+  BuiltInFieldTextFieldProps<TUseV6TextField>
+> & {
   /**
    * Overridable component slots.
    * @default {}
@@ -44,10 +56,13 @@ export interface TimeFieldProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimeFieldSlotProps<TDate>;
-}
+  slotProps?: TimeFieldSlotProps<TDate, TUseV6TextField>;
+};
 
-export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;
+export type TimeFieldOwnerState<TDate, TUseV6TextField extends boolean> = TimeFieldProps<
+  TDate,
+  TUseV6TextField
+>;
 
 export interface TimeFieldSlots extends UseClearableFieldSlots {
   /**
@@ -58,6 +73,7 @@ export interface TimeFieldSlots extends UseClearableFieldSlots {
   textField?: React.ElementType;
 }
 
-export interface TimeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
-  textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate>>;
+export interface TimeFieldSlotProps<TDate, TUseV6TextField extends boolean>
+  extends UseClearableFieldSlotProps {
+  textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate, TUseV6TextField>>;
 }

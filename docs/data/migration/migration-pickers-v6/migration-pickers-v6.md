@@ -63,6 +63,54 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## New field DOM structure
+
+### Use the new DOM structure
+
+#### Usage with `slotProps.textField` and `slotProps.field`
+
+#### Usage with custom `slots.textField`
+
+If you were passing a custom `TextField` component to your fields and pickers, you need to create a new one that is using the new DOM structure.
+
+If your custom `TextField` was only used to add some default props and behaviors to `@mui/material/TextField`, you can have a look at [this section](/x/react-date-pickers/custom-field/#using-material-pickerstextfield).
+
+If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`, you can have a look at [this section](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield).
+
+#### Usage with theme augmentation
+
+#### Usage with custom `slots.field`
+
+### Keep the old DOM structure
+
+The old DOM structure will only be removed in the first v8 release to provide a smoother migration path.
+You can keep using this structure by providing the `shouldUseV6TextField` prop to any picker or field component:
+
+```tsx
+<DatePicker shouldUseV6TextField />
+```
+
+If you want to apply this as a default throughout your entire application, you can pass it to the theme.
+Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#theme-default-props) for more information.
+
+```ts
+const theme = createTheme({
+  components: {
+    // Do the same for any other component you are using in your application.
+    MuiDatePicker: {
+      defaultProps: {
+        shouldUseV6TextField: true,
+      },
+    },
+    MuiTimePicker: {
+      defaultProps: {
+        shouldUseV6TextField: true,
+      },
+    },
+  },
+});
+```
+
 ## Component slots
 
 ### Rename `components` to `slots`
@@ -332,6 +380,8 @@ You should now be able to directly pass the returned value from your field hook 
 ```
 
 :::info
+// TODO v7: update to a more specific section link when the refactored field components are released?
+
 If your custom field is based on one of the examples of the [Custom field](/x/react-date-pickers/custom-field/) page,
 then you can look at the page to see all the examples improved and updated to use the new simplified API.
 :::

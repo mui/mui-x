@@ -8,16 +8,21 @@ import {
   FieldSectionContentType,
   FieldValueType,
   PickersTimezone,
+  FieldRef,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
+import type { UseFieldStateResponse } from './useFieldState';
+import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
+import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 
 export interface UseFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TUseV6TextField extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps & UseFieldForwardedProps<TUseV6TextField>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any>,
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
@@ -32,8 +37,13 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError>
-  extends TimezoneProps {
+export interface UseFieldInternalProps<
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TUseV6TextField extends boolean,
+  TError,
+> extends TimezoneProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -100,9 +110,9 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections?: FieldSelectedSections;
@@ -116,6 +126,28 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
   /**
+   * @default false
+   */
+  shouldUseV6TextField?: TUseV6TextField;
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   * @default false
+   */
+  autoFocus?: boolean;
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
+}
+
+export interface UseFieldCommonAdditionalProps
+  extends Required<Pick<UseFieldInternalProps<any, any, any, any, any>, 'disabled' | 'readOnly'>> {}
+
+export interface UseFieldCommonForwardedProps {
+  onKeyDown?: React.KeyboardEventHandler;
+  error?: boolean;
+  /**
    * Callback fired when the clear button is clicked.
    */
   onClear?: React.MouseEventHandler;
@@ -124,64 +156,59 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * @default false
    */
   clearable?: boolean;
-  /**
-   * If `true`, the component is disabled.
-   * @default false
-   */
-  disabled?: boolean;
 }
 
-export interface FieldRef<TSection extends FieldSection> {
-  /**
-   * Returns the sections of the current value.
-   * @returns {TSection[]} The sections of the current value.
-   */
-  getSections: () => TSection[];
-  /**
-   * Returns the index of the active section (the first focused section).
-   * If no section is active, returns `null`.
-   * @returns {number | null} The index of the active section.
-   */
-  getActiveSectionIndex: () => number | null;
-  /**
-   * Updates the selected sections.
-   * @param {FieldSelectedSections} selectedSections The sections to select.
-   */
-  setSelectedSections: (selectedSections: FieldSelectedSections) => void;
-}
+export type UseFieldForwardedProps<TUseV6TextField extends boolean> = UseFieldCommonForwardedProps &
+  (TUseV6TextField extends true ? UseFieldV6ForwardedProps : UseFieldV7ForwardedProps);
 
-export interface UseFieldForwardedProps {
+export interface UseFieldV6ForwardedProps {
   inputRef?: React.Ref<HTMLInputElement>;
-  onKeyDown?: React.KeyboardEventHandler;
-  onMouseUp?: React.MouseEventHandler;
-  onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
+  onBlur?: () => void;
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;
-  onBlur?: () => void;
-  error?: boolean;
-  onClear?: React.MouseEventHandler;
-  clearable?: boolean;
-  disabled?: boolean;
+  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
 }
 
-export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
-  TForwardedProps,
-  keyof UseFieldForwardedProps
-> &
-  Required<UseFieldForwardedProps> &
-  Pick<React.InputHTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
-    inputRef: React.Ref<HTMLInputElement>;
-    value: string;
-    onChange: React.ChangeEventHandler<HTMLInputElement>;
-    error: boolean;
-    readOnly: boolean;
-    autoComplete: 'off';
-  };
+interface UseFieldV6AdditionalProps
+  extends Required<
+    Pick<
+      React.InputHTMLAttributes<HTMLInputElement>,
+      'inputMode' | 'placeholder' | 'value' | 'onChange' | 'autoComplete'
+    >
+  > {
+  textField: 'v6';
+}
 
-export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSection> = Omit<
-  TSection,
-  'start' | 'end' | 'startInInput' | 'endInInput'
->;
+export interface UseFieldV7ForwardedProps {
+  focused?: boolean;
+  autoFocus?: boolean;
+  sectionListRef?: React.Ref<PickersSectionListRef>;
+  onBlur?: () => void;
+  onClick?: React.MouseEventHandler;
+  onFocus?: () => void;
+  onInput?: React.FormEventHandler<HTMLDivElement>;
+  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+}
+
+interface UseFieldV7AdditionalProps {
+  textField: 'v7';
+  elements: PickersSectionElement[];
+  tabIndex: number | undefined;
+  contentEditable: boolean;
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  areAllSectionsEmpty: boolean;
+}
+
+export type UseFieldResponse<
+  TUseV6TextField extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps & { [key: string]: any },
+> = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
+  Required<UseFieldCommonForwardedProps> &
+  UseFieldCommonAdditionalProps &
+  (TUseV6TextField extends true
+    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
+    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>);
 
 export type FieldSectionValueBoundaries<TDate, SectionType extends FieldSectionType> = {
   minimum: number;
@@ -236,14 +263,7 @@ interface FieldActiveDateManager<TValue, TDate, TSection extends FieldSection> {
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
 }
 
-export type FieldSelectedSectionsIndexes = {
-  startIndex: number;
-  endIndex: number;
-  /**
-   * If `true`, the selectors at the very beginning and very end of the input will be selected.
-   */
-  shouldSelectBoundarySelectors: boolean;
-};
+export type FieldParsedSelectedSections = number | 'all' | null;
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
   /**
@@ -253,16 +273,14 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {TValue} value The current value to generate sections from.
    * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
-   * @param {boolean} isRTL `true` if the direction is "right to left".
-   * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
+   * @param {(date: TDate) => FieldSection[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
    */
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
     value: TValue,
     fallbackSections: TSection[] | null,
-    isRTL: boolean,
-    getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
+    getSectionsFromDate: (date: TDate) => FieldSection[],
   ) => TSection[];
   /**
    * Creates the string value to render in the input based on the current section list.
@@ -271,7 +289,14 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * @param {boolean} isRTL `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (sections: TSection[], isRTL: boolean) => string;
+  getV6InputValueFromSections: (sections: TSection[], isRTL: boolean) => string;
+  /**
+   * Creates the string value to render in the input based on the current section list.
+   * @template TSection
+   * @param {TSection[]} sections The current section list.
+   * @returns {string} The string value to render in the input.
+   */
+  getV7HiddenInputValueFromSections: (sections: TSection[]) => string;
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection
@@ -387,3 +412,65 @@ export type SectionOrdering = {
    */
   endIndex: number;
 };
+
+export interface UseFieldTextFieldInteractions {
+  /**
+   * Select the correct sections in the DOM according to the sections currently selected in state.
+   */
+  syncSelectionToDOM: () => void;
+  /**
+   * Returns the index of the active section (the first focused section).
+   * If no section is active, returns `null`.
+   * @returns {number | null} The index of the active section.
+   */
+  getActiveSectionIndexFromDOM: () => number | null;
+  /**
+   * Focuses the field.
+   * @param {number | FieldSectionType} newSelectedSection The section to select once focused.
+   */
+  focusField: (newSelectedSection?: number | FieldSectionType) => void;
+  setSelectedSections: (newSelectedSections: FieldSelectedSections) => void;
+  isFieldFocused: () => boolean;
+}
+
+export type UseFieldTextField<TUseV6TextField extends boolean> = <
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TForwardedProps extends TUseV6TextField extends true
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any> & {
+    minutesStep?: number;
+  },
+>(
+  params: UseFieldTextFieldParams<
+    TValue,
+    TDate,
+    TSection,
+    TUseV6TextField,
+    TForwardedProps,
+    TInternalProps
+  >,
+) => {
+  interactions: UseFieldTextFieldInteractions;
+  returnedValue: TUseV6TextField extends true
+    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
+    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>;
+};
+
+interface UseFieldTextFieldParams<
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TUseV6TextField extends boolean,
+  TForwardedProps extends TUseV6TextField extends true
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any>,
+> extends UseFieldParams<TValue, TDate, TSection, TUseV6TextField, TForwardedProps, TInternalProps>,
+    UseFieldStateResponse<TValue, TDate, TSection>,
+    UseFieldCharacterEditingResponse {
+  areAllSectionsEmpty: boolean;
+  sectionOrder: SectionOrdering;
+}

@@ -18,19 +18,19 @@ export interface PickersProComponentsPropsList {
   MuiDateRangePickerToolbar: DateRangePickerToolbarProps<unknown>;
 
   // Multi input range fields
-  MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<unknown>;
-  MuiMultiInputDateTimeRangeField: MultiInputDateTimeRangeFieldProps<unknown>;
-  MuiMultiInputTimeRangeField: MultiInputTimeRangeFieldProps<unknown>;
+  MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<unknown, any>;
+  MuiMultiInputDateTimeRangeField: MultiInputDateTimeRangeFieldProps<unknown, any>;
+  MuiMultiInputTimeRangeField: MultiInputTimeRangeFieldProps<unknown, any>;
 
   // Single input range fields
-  MuiSingleInputDateRangeField: SingleInputDateRangeFieldProps<unknown>;
-  MuiSingleInputDateTimeRangeField: SingleInputDateTimeRangeFieldProps<unknown>;
-  MuiSingleInputTimeRangeField: SingleInputTimeRangeFieldProps<unknown>;
+  MuiSingleInputDateRangeField: SingleInputDateRangeFieldProps<unknown, any>;
+  MuiSingleInputDateTimeRangeField: SingleInputDateTimeRangeFieldProps<unknown, any>;
+  MuiSingleInputTimeRangeField: SingleInputTimeRangeFieldProps<unknown, any>;
 
   // Date Range Pickers
-  MuiDateRangePicker: DateRangePickerProps<unknown>;
-  MuiDesktopDateRangePicker: DesktopDateRangePickerProps<unknown>;
-  MuiMobileDateRangePicker: MobileDateRangePickerProps<unknown>;
+  MuiDateRangePicker: DateRangePickerProps<unknown, any>;
+  MuiDesktopDateRangePicker: DesktopDateRangePickerProps<unknown, any>;
+  MuiMobileDateRangePicker: MobileDateRangePickerProps<unknown, any>;
   MuiStaticDateRangePicker: StaticDateRangePickerProps<unknown>;
 }
 

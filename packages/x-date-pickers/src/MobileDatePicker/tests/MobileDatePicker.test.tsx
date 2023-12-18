@@ -8,12 +8,19 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import {
   createPickerRenderer,
   adapterToUse,
-  getTextbox,
-  expectInputValue,
+  expectFieldValueV7,
+  buildFieldInteractions,
+  openPicker,
+  getFieldSectionsContainer,
 } from 'test/utils/pickers';
 
 describe('<MobileDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { renderWithProps } = buildFieldInteractions({
+    render,
+    clock,
+    Component: MobileDatePicker,
+  });
 
   it('allows to change only year', () => {
     const onChangeMock = spy();
@@ -125,12 +132,12 @@ describe('<MobileDatePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking "Choose date"', () => {
+    it('should open when clicking the input', () => {
       const onOpen = spy();
 
       render(<MobileDatePicker onOpen={onOpen} />);
 
-      userEvent.mousePress(screen.getByRole('textbox'));
+      userEvent.mousePress(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -147,7 +154,7 @@ describe('<MobileDatePicker />', () => {
 
       render(<ControlledMobileDatePicker onAccept={onAccept} />);
 
-      userEvent.mousePress(screen.getByRole('textbox'));
+      openPicker({ type: 'date', variant: 'mobile' });
 
       fireEvent.click(screen.getByText('15', { selector: 'button' }));
       fireEvent.click(screen.getByText('OK', { selector: 'button' }));
@@ -156,24 +163,23 @@ describe('<MobileDatePicker />', () => {
     });
 
     it('should update internal state when controlled value is updated', () => {
-      const value = adapterToUse.date('2019-01-01');
-
-      const { setProps } = render(<MobileDatePicker value={value} />);
+      const v7Response = renderWithProps({ value: adapterToUse.date('2019-01-01') });
 
       // Set a date
-      expectInputValue(getTextbox(), '01/01/2019');
+      expectFieldValueV7(v7Response.getSectionsContainer(), '01/01/2019');
 
       // Clean value using external control
-      setProps({ value: null });
-      expectInputValue(getTextbox(), '');
+      v7Response.setProps({ value: null });
+      expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
 
       // Open and Dismiss the picker
-      userEvent.mousePress(screen.getByRole('textbox'));
-      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      openPicker({ type: 'date', variant: 'mobile' });
+      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       clock.runToLast();
 
       // Verify it's still a clean value
-      expectInputValue(getTextbox(), '');
+      expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
     });
   });
 });

@@ -9,6 +9,7 @@ import {
   createPickerRenderer,
   openPicker,
   getClockTouchEvent,
+  getFieldSectionsContainer,
 } from 'test/utils/pickers';
 
 describe('<MobileDateTimePicker />', () => {
@@ -89,12 +90,12 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking "Choose date"', () => {
+    it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      render(<MobileDateTimePicker onOpen={onOpen} defaultValue={null} />);
+      render(<MobileDateTimePicker onOpen={onOpen} />);
 
-      userEvent.mousePress(screen.getByRole('textbox'));
+      userEvent.mousePress(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();

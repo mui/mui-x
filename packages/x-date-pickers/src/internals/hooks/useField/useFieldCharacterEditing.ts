@@ -19,17 +19,22 @@ interface CharacterEditingQuery {
   sectionType: FieldSectionType;
 }
 
-interface ApplyCharacterEditingParams {
+export interface ApplyCharacterEditingParams {
   keyPressed: string;
   sectionIndex: number;
 }
 
-interface UseFieldEditingParams<TDate, TSection extends FieldSection> {
+interface UseFieldCharacterEditingParams<TDate, TSection extends FieldSection> {
   sections: TSection[];
   updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
   setTempAndroidValueStr: (newValue: string | null) => void;
   timezone: PickersTimezone;
+}
+
+export interface UseFieldCharacterEditingResponse {
+  applyCharacterEditing: (params: ApplyCharacterEditingParams) => void;
+  resetCharacterQuery: () => void;
 }
 
 /**
@@ -80,7 +85,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   sectionsValueBoundaries,
   setTempAndroidValueStr,
   timezone,
-}: UseFieldEditingParams<TDate, TSection>) => {
+}: UseFieldCharacterEditingParams<TDate, TSection>): UseFieldCharacterEditingResponse => {
   const utils = useUtils<TDate>();
 
   const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
@@ -349,6 +354,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           'MM',
           activeSection.format,
         );
+
         return {
           ...response,
           sectionValue: formattedValue,
@@ -388,13 +394,14 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     const response = isNumericEditing ? applyNumericEditing(params) : applyLetterEditing(params);
     if (response == null) {
       setTempAndroidValueStr(null);
-    } else {
-      updateSectionValue({
-        activeSection,
-        newSectionValue: response.sectionValue,
-        shouldGoToNextSection: response.shouldGoToNextSection,
-      });
+      return;
     }
+
+    updateSectionValue({
+      activeSection,
+      newSectionValue: response.sectionValue,
+      shouldGoToNextSection: response.shouldGoToNextSection,
+    });
   });
 
   return {

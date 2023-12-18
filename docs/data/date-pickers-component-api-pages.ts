@@ -66,6 +66,7 @@ export default [
   { pathname: '/x/api/date-pickers/pickers-layout', title: 'PickersLayout' },
   { pathname: '/x/api/date-pickers/pickers-section-list', title: 'PickersSectionList' },
   { pathname: '/x/api/date-pickers/pickers-shortcuts', title: 'PickersShortcuts' },
+  { pathname: '/x/api/date-pickers/pickers-text-field', title: 'PickersTextField' },
   {
     pathname: '/x/api/date-pickers/single-input-date-range-field',
     title: 'SingleInputDateRangeField',

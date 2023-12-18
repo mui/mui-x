@@ -22,8 +22,8 @@ import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
 import { TimeView } from '../models/views';
 
-type DesktopTimePickerComponent = (<TDate>(
-  props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: DesktopTimePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -36,10 +36,10 @@ type DesktopTimePickerComponent = (<TDate>(
  *
  * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
-const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
-  inProps: DesktopTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: DesktopTimePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -47,7 +47,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeViewWithMeridiem,
-    DesktopTimePickerProps<TDate>
+    DesktopTimePickerProps<TDate, TUseV6TextField>
   >(inProps, 'MuiDesktopTimePicker');
 
   const {
@@ -113,7 +113,12 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, TimeViewWithMeridiem, typeof props>({
+  const { renderPicker } = useDesktopPicker<
+    TDate,
+    TimeViewWithMeridiem,
+    TUseV6TextField,
+    typeof props
+  >({
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
@@ -304,9 +309,9 @@ DesktopTimePicker.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -323,10 +328,6 @@ DesktopTimePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific time.
@@ -336,6 +337,10 @@ DesktopTimePicker.propTypes = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * @default false
+   */
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, disabled digital clock items will not be rendered.
    * @default false

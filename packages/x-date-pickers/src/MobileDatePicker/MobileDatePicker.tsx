@@ -15,8 +15,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type MobileDatePickerComponent = (<TDate>(
-  props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDatePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: MobileDatePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,18 +29,18 @@ type MobileDatePickerComponent = (<TDate>(
  *
  * - [MobileDatePicker API](https://mui.com/x/api/date-pickers/mobile-date-picker/)
  */
-const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
-  inProps: MobileDatePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const MobileDatePicker = React.forwardRef(function MobileDatePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: MobileDatePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePickerDefaultizedProps<TDate, MobileDatePickerProps<TDate>>(
-    inProps,
-    'MuiMobileDatePicker',
-  );
+  const defaultizedProps = useDatePickerDefaultizedProps<
+    TDate,
+    MobileDatePickerProps<TDate, TUseV6TextField>
+  >(inProps, 'MuiMobileDatePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
     day: renderDateViewCalendar,
@@ -72,7 +72,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, DateView, typeof props>({
+  const { renderPicker } = useMobilePicker<TDate, DateView, TUseV6TextField, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
@@ -292,9 +292,9 @@ MobileDatePicker.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -311,10 +311,6 @@ MobileDatePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -340,6 +336,10 @@ MobileDatePicker.propTypes = {
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
+  /**
+   * @default false
+   */
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

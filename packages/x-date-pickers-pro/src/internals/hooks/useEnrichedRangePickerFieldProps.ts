@@ -1,11 +1,15 @@
 import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
+import {
+  BaseSingleInputFieldProps,
+  FieldRef,
+  FieldSelectedSections,
+} from '@mui/x-date-pickers/models';
 import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
@@ -16,17 +20,15 @@ import {
   UsePickerResponse,
   WrapperVariant,
   UsePickerProps,
-  getActiveElement,
+  SlotComponentPropsFromProps,
 } from '@mui/x-date-pickers/internals';
+import { DateRange, RangePosition, UseDateRangeFieldProps } from '../models';
 import {
   BaseMultiInputFieldProps,
-  DateRange,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-  RangePosition,
-  UseDateRangeFieldProps,
-} from '../models';
+} from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
 export interface RangePickerFieldSlots extends UseClearableFieldSlots {
@@ -44,40 +46,39 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render a date or time inside the default field.
    * It is rendered twice: once for the start element and once for the end element.
-   * Receives the same props as `@mui/material/TextField`.
-   * @default TextField from '@mui/material'
+   * @default PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled.
    */
-  textField?: React.ElementType<TextFieldProps>;
+  textField?: React.ElementType;
 }
 
-export interface RangePickerFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
-  field?: SlotComponentProps<
-    React.ElementType<
-      BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, unknown>
-    >,
+export interface RangePickerFieldSlotProps<TDate, TUseV6TextField extends boolean>
+  extends UseClearableFieldSlotProps {
+  field?: SlotComponentPropsFromProps<
+    BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TUseV6TextField, unknown>,
     {},
-    UsePickerProps<DateRange<TDate>, TDate, any, RangeFieldSection, any, any, any>
+    UsePickerProps<DateRange<TDate>, TDate, any, any, any, any>
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
-
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    UseDateRangeFieldProps<TDate> & { position?: RangePosition }
+    UseDateRangeFieldProps<TDate, TUseV6TextField> & { position?: RangePosition }
   >;
 }
 
 export interface UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TUseV6TextField extends boolean,
   TError,
   FieldProps extends BaseFieldProps<
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
+    TUseV6TextField,
     TError
-  > = BaseFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>,
+  > = BaseFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TUseV6TextField, TError>,
 > extends Pick<
       UsePickerResponse<DateRange<TDate>, TView, RangeFieldSection, any>,
       'open' | 'actions'
@@ -89,16 +90,22 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   labelId?: string;
   disableOpenPicker?: boolean;
   onBlur?: () => void;
-  inputRef?: React.Ref<HTMLInputElement>;
   label?: React.ReactNode;
   localeText: PickersInputLocaleText<TDate> | undefined;
-  pickerSlotProps: RangePickerFieldSlotProps<TDate> | undefined;
+  pickerSlotProps: RangePickerFieldSlotProps<TDate, TUseV6TextField> | undefined;
   pickerSlots: RangePickerFieldSlots | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
+  startFieldRef: React.RefObject<FieldRef<RangeFieldSection>>;
+  endFieldRef: React.RefObject<FieldRef<RangeFieldSection>>;
 }
 
-const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
+const useMultiInputFieldSlotProps = <
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TUseV6TextField extends boolean,
+  TError,
+>({
   wrapperVariant,
   open,
   actions,
@@ -113,17 +120,26 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   pickerSlots,
   fieldProps,
   anchorRef,
+  startFieldRef,
+  endFieldRef,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
+  TUseV6TextField,
   TError,
-  BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>
+  BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TUseV6TextField, TError>
 >) => {
-  type ReturnType = BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>;
+  type ReturnType = BaseMultiInputFieldProps<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    TUseV6TextField,
+    TError
+  >;
 
   const localeText = useLocaleText<TDate>();
-  const startRef = React.useRef<HTMLInputElement>(null);
-  const endRef = React.useRef<HTMLInputElement>(null);
+  const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
+  const handleEndFieldRef = useForkRef(fieldProps.unstableEndFieldRef, endFieldRef);
 
   React.useEffect(() => {
     if (!open) {
@@ -131,15 +147,13 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
     }
 
     if (rangePosition === 'start') {
-      startRef.current?.focus();
+      startFieldRef.current?.focusField();
     } else if (rangePosition === 'end') {
-      endRef.current?.focus();
+      endFieldRef.current?.focusField();
     }
-  }, [rangePosition, open]);
+  }, [rangePosition, open, startFieldRef, endFieldRef]);
 
-  const openRangeStartSelection = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
-  ) => {
+  const openRangeStartSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
@@ -147,9 +161,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
     }
   };
 
-  const openRangeEndSelection = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
-  ) => {
+  const openRangeEndSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
@@ -182,11 +194,10 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
     ...fieldProps.slotProps,
     textField: (ownerState) => {
       const resolvedComponentProps = resolveComponentProps(pickerSlotProps?.textField, ownerState);
-      let inputProps: MultiInputFieldSlotTextFieldProps;
+      let textFieldProps: MultiInputFieldSlotTextFieldProps;
       let InputProps: MultiInputFieldSlotTextFieldProps['InputProps'];
       if (ownerState.position === 'start') {
-        inputProps = {
-          inputRef: startRef,
+        textFieldProps = {
           label: inLocaleText?.start ?? localeText.start,
           onKeyDown: onSpaceOrEnter(openRangeStartSelection),
           onFocus: handleFocusStart,
@@ -203,8 +214,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
           };
         }
       } else {
-        inputProps = {
-          inputRef: endRef,
+        textFieldProps = {
           label: inLocaleText?.end ?? localeText.end,
           onKeyDown: onSpaceOrEnter(openRangeEndSelection),
           onFocus: handleFocusEnd,
@@ -219,7 +229,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
 
       return {
         ...(labelId != null && { id: `${labelId}-${ownerState.position!}` }),
-        ...inputProps,
+        ...textFieldProps,
         ...resolveComponentProps(pickerSlotProps?.textField, ownerState),
         InputProps,
       };
@@ -238,10 +248,12 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   };
 
   /* TODO: remove this when a clearable behavior for multiple input range fields is implemented */
-  const { clearable, onClear, ...restFieldProps } = fieldProps;
+  const { clearable, onClear, ...restFieldProps } = fieldProps as any;
 
   const enrichedFieldProps: ReturnType = {
     ...restFieldProps,
+    unstableStartFieldRef: handleStartFieldRef,
+    unstableEndFieldRef: handleEndFieldRef,
     slots,
     slotProps,
   };
@@ -249,19 +261,24 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   return enrichedFieldProps;
 };
 
-const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
+const useSingleInputFieldSlotProps = <
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TUseV6TextField extends boolean,
+  TError,
+>({
   wrapperVariant,
   open,
   actions,
   readOnly,
-  inputRef: inInputRef,
   labelId,
   disableOpenPicker,
   label,
   onBlur,
   rangePosition,
   onRangePositionChange,
-  singleInputFieldRef,
+  startFieldRef,
+  endFieldRef,
   pickerSlots,
   pickerSlotProps,
   fieldProps,
@@ -269,31 +286,41 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
+  TUseV6TextField,
   TError,
-  BaseSingleInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>
+  BaseSingleInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TUseV6TextField, TError>
 >) => {
-  type ReturnType = BaseSingleInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>;
+  type ReturnType = BaseSingleInputFieldProps<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    TUseV6TextField,
+    TError
+  >;
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const handleInputRef = useForkRef(inInputRef, inputRef);
-
-  const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, singleInputFieldRef);
+  const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, startFieldRef, endFieldRef);
 
   React.useEffect(() => {
-    if (!open) {
+    if (!open || !startFieldRef.current) {
       return;
     }
 
-    inputRef.current?.focus();
-  }, [rangePosition, open]);
+    if (startFieldRef.current.isFieldFocused()) {
+      return;
+    }
+
+    const newSelectedSection =
+      rangePosition === 'start' ? 0 : startFieldRef.current.getSections().length / 2;
+    startFieldRef.current?.focusField(newSelectedSection);
+  }, [rangePosition, open, startFieldRef]);
 
   const updateRangePosition = () => {
-    if (!singleInputFieldRef.current || inputRef.current !== getActiveElement(document)) {
+    if (!startFieldRef.current?.isFieldFocused()) {
       return;
     }
 
-    const sections = singleInputFieldRef.current.getSections();
-    const activeSectionIndex = singleInputFieldRef.current?.getActiveSectionIndex();
+    const sections = startFieldRef.current.getSections();
+    const activeSectionIndex = startFieldRef.current?.getActiveSectionIndex();
     const domRangePosition =
       activeSectionIndex == null || activeSectionIndex < sections.length / 2 ? 'start' : 'end';
 
@@ -303,9 +330,9 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
   };
 
   const handleSelectedSectionsChange = useEventCallback(
-    (selectedSections: FieldSelectedSections) => {
+    (selectedSection: FieldSelectedSections) => {
       setTimeout(updateRangePosition);
-      fieldProps.onSelectedSectionsChange?.(selectedSections);
+      fieldProps.onSelectedSectionsChange?.(selectedSection);
     },
   );
 
@@ -317,14 +344,14 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
     }
   };
 
-  const slots: ReturnType['slots'] = {
+  const slots = {
     ...fieldProps.slots,
     textField: pickerSlots?.textField,
     clearButton: pickerSlots?.clearButton,
     clearIcon: pickerSlots?.clearIcon,
   };
 
-  const slotProps: ReturnType['slotProps'] = {
+  const slotProps = {
     ...fieldProps.slotProps,
     textField: pickerSlotProps?.textField,
     clearButton: pickerSlots?.clearButton,
@@ -337,7 +364,6 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
     slotProps,
     label,
     unstableFieldRef: handleFieldRef,
-    inputRef: handleInputRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
     onSelectedSectionsChange: handleSelectedSectionsChange,
     onBlur,
@@ -359,9 +385,10 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
 export const useEnrichedRangePickerFieldProps = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TUseV6TextField extends boolean,
   TError,
 >(
-  params: UseEnrichedRangePickerFieldPropsParams<TDate, TView, TError>,
+  params: UseEnrichedRangePickerFieldPropsParams<TDate, TView, TUseV6TextField, TError>,
 ) => {
   /* eslint-disable react-hooks/rules-of-hooks */
   if (process.env.NODE_ENV !== 'production') {

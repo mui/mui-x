@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { fireEvent, screen } from '@mui-internal/test-utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
+import { createPickerRenderer, getFieldInputRoot, stubMatchMedia } from 'test/utils/pickers';
 
 describe('<DateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -12,7 +12,7 @@ describe('<DateRangePicker />', () => {
 
   it('should not open mobile picker dialog when clicked on input', () => {
     render(<DateRangePicker />);
-    fireEvent.click(screen.getAllByRole('textbox')[0]);
+    fireEvent.click(getFieldInputRoot());
     clock.runToLast();
 
     expect(screen.queryByRole('tooltip')).not.to.equal(null);
@@ -24,7 +24,7 @@ describe('<DateRangePicker />', () => {
     window.matchMedia = stubMatchMedia(false);
 
     render(<DateRangePicker />);
-    fireEvent.click(screen.getAllByRole('textbox')[0]);
+    fireEvent.click(getFieldInputRoot());
     clock.runToLast();
 
     expect(screen.getByRole('dialog')).not.to.equal(null);

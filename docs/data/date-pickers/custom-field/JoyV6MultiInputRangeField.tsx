@@ -39,6 +39,7 @@ const joyTheme = extendJoyTheme();
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
+  textField?: 'v6' | 'v7';
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -61,6 +62,7 @@ const JoyField = React.forwardRef(
       startDecorator,
       slotProps,
       inputRef,
+      textField,
       ...other
     } = props;
 
@@ -128,11 +130,12 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 )({ marginTop: '25px' });
 
 interface JoyMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs>,
+  extends UseDateRangeFieldProps<Dayjs, true>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
+      true,
       DateRangeValidationError
     > {}
 
@@ -175,6 +178,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useMultiInputDateRangeField<
       Dayjs,
+      true,
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
@@ -192,6 +196,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
+        shouldUseV6TextField: true,
       },
       startTextFieldProps,
       endTextFieldProps,
@@ -233,7 +238,7 @@ function SyncThemeMode({ mode }: { mode: 'light' | 'dark' }) {
   return null;
 }
 
-export default function RangePickerWithJoyField() {
+export default function JoyV6MultiInputRangeField() {
   const materialTheme = useMaterialTheme();
   return (
     <MaterialCssVarsProvider>

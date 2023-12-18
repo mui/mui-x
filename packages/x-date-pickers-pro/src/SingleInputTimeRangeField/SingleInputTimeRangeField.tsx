@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { refType } from '@mui/utils';
 import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
-type DateRangeFieldComponent = (<TDate>(
-  props: SingleInputTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DateRangeFieldComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: SingleInputTimeRangeFieldProps<TDate, TUseV6TextField> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
 
 /**
@@ -23,8 +24,11 @@ type DateRangeFieldComponent = (<TDate>(
  *
  * - [SingleInputTimeRangeField API](https://mui.com/x/api/single-input-time-range-field/)
  */
-const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<TDate>(
-  inProps: SingleInputTimeRangeFieldProps<TDate>,
+const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(
+  inProps: SingleInputTimeRangeFieldProps<TDate, TUseV6TextField>,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -36,8 +40,9 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? MuiTextField;
-  const textFieldProps: SingleInputTimeRangeFieldProps<TDate> = useSlotProps({
+  const TextField =
+    slots?.textField ?? (inProps.shouldUseV6TextField ? MuiTextField : PickersTextField);
+  const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -45,13 +50,15 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     additionalProps: {
       ref: inRef,
     },
-  });
+  }) as SingleInputTimeRangeFieldProps<TDate, TUseV6TextField>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const fieldResponse = useSingleInputTimeRangeField<TDate, typeof textFieldProps>(textFieldProps);
+  const fieldResponse = useSingleInputTimeRangeField<TDate, TUseV6TextField, typeof textFieldProps>(
+    textFieldProps,
+  );
   const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
@@ -80,11 +87,7 @@ SingleInputTimeRangeField.propTypes = {
    * @default false
    */
   autoFocus: PropTypes.bool,
-  className: PropTypes.string,
-  /**
-   * If `true`, a clear button will be shown in the field allowing value clearing.
-   * @default false
-   */
+  className: PropTypes.any,
   clearable: PropTypes.bool,
   /**
    * The color of the component.
@@ -92,7 +95,7 @@ SingleInputTimeRangeField.propTypes = {
    * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
    * @default 'primary'
    */
-  color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
+  color: PropTypes.any,
   component: PropTypes.elementType,
   /**
    * The default value. Use when the component is not controlled.
@@ -121,7 +124,7 @@ SingleInputTimeRangeField.propTypes = {
   /**
    * If `true`, the component is displayed in focused state.
    */
-  focused: PropTypes.bool,
+  focused: PropTypes.any,
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -135,57 +138,57 @@ SingleInputTimeRangeField.propTypes = {
   /**
    * Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
    */
-  FormHelperTextProps: PropTypes.object,
+  FormHelperTextProps: PropTypes.any,
   /**
    * If `true`, the input will take up the full width of its container.
    * @default false
    */
-  fullWidth: PropTypes.bool,
+  fullWidth: PropTypes.any,
   /**
    * The helper text content.
    */
-  helperText: PropTypes.node,
+  helperText: PropTypes.any,
   /**
    * If `true`, the label is hidden.
    * This is used to increase density for a `FilledInput`.
    * Be sure to add `aria-label` to the `input` element.
    * @default false
    */
-  hiddenLabel: PropTypes.bool,
+  hiddenLabel: PropTypes.any,
   /**
    * The id of the `input` element.
    * Use this prop to make `label` and `helperText` accessible for screen readers.
    */
-  id: PropTypes.string,
+  id: PropTypes.any,
   /**
    * Props applied to the [`InputLabel`](/material-ui/api/input-label/) element.
    * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
    */
-  InputLabelProps: PropTypes.object,
+  InputLabelProps: PropTypes.any,
   /**
    * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
    */
-  inputProps: PropTypes.object,
+  inputProps: PropTypes.any,
   /**
    * Props applied to the Input element.
    * It will be a [`FilledInput`](/material-ui/api/filled-input/),
    * [`OutlinedInput`](/material-ui/api/outlined-input/) or [`Input`](/material-ui/api/input/)
    * component depending on the `variant` prop value.
    */
-  InputProps: PropTypes.object,
+  InputProps: PropTypes.any,
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: refType,
+  inputRef: PropTypes.any,
   /**
    * The label content.
    */
-  label: PropTypes.node,
+  label: PropTypes.any,
   /**
    * If `dense` or `normal`, will adjust vertical spacing of this and contained components.
    * @default 'none'
    */
-  margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  margin: PropTypes.any,
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
@@ -201,11 +204,7 @@ SingleInputTimeRangeField.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
-  /**
-   * Name attribute of the `input` element.
-   */
-  name: PropTypes.string,
-  onBlur: PropTypes.func,
+  onBlur: PropTypes.any,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -214,9 +213,6 @@ SingleInputTimeRangeField.propTypes = {
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
-  /**
-   * Callback fired when the clear button is clicked.
-   */
   onClear: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
@@ -226,7 +222,7 @@ SingleInputTimeRangeField.propTypes = {
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
-  onFocus: PropTypes.func,
+  onFocus: PropTypes.any,
   /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
@@ -248,14 +244,14 @@ SingleInputTimeRangeField.propTypes = {
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
    */
-  required: PropTypes.bool,
+  required: PropTypes.any,
   /**
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -272,10 +268,6 @@ SingleInputTimeRangeField.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific time.
@@ -301,9 +293,13 @@ SingleInputTimeRangeField.propTypes = {
    */
   shouldRespectLeadingZeros: PropTypes.bool,
   /**
+   * @default false
+   */
+  shouldUseV6TextField: PropTypes.bool,
+  /**
    * The size of the component.
    */
-  size: PropTypes.oneOf(['medium', 'small']),
+  size: PropTypes.any,
   /**
    * The props used for each component slot.
    * @default {}
@@ -314,15 +310,11 @@ SingleInputTimeRangeField.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
-  style: PropTypes.object,
+  style: PropTypes.any,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  sx: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
@@ -344,7 +336,7 @@ SingleInputTimeRangeField.propTypes = {
    * The variant to use.
    * @default 'outlined'
    */
-  variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
+  variant: PropTypes.any,
 } as any;
 
 export { SingleInputTimeRangeField };

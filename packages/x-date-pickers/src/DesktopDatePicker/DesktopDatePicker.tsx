@@ -16,8 +16,8 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type DesktopDatePickerComponent = (<TDate>(
-  props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDatePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: DesktopDatePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -30,18 +30,18 @@ type DesktopDatePickerComponent = (<TDate>(
  *
  * - [DesktopDatePicker API](https://mui.com/x/api/date-pickers/desktop-date-picker/)
  */
-const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
-  inProps: DesktopDatePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: DesktopDatePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePickerDefaultizedProps<TDate, DesktopDatePickerProps<TDate>>(
-    inProps,
-    'MuiDesktopDatePicker',
-  );
+  const defaultizedProps = useDatePickerDefaultizedProps<
+    TDate,
+    DesktopDatePickerProps<TDate, TUseV6TextField>
+  >(inProps, 'MuiDesktopDatePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
     day: renderDateViewCalendar,
@@ -75,7 +75,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, DateView, typeof props>({
+  const { renderPicker } = useDesktopPicker<TDate, DateView, TUseV6TextField, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
@@ -295,9 +295,9 @@ DesktopDatePicker.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -314,10 +314,6 @@ DesktopDatePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -343,6 +339,10 @@ DesktopDatePicker.propTypes = {
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
+  /**
+   * @default false
+   */
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

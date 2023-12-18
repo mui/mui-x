@@ -12,8 +12,8 @@ import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker'
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 import { DateRange } from '../internals/models';
 
-type DesktopDateRangePickerComponent = (<TDate>(
-  props: DesktopDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: DesktopDateRangePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -26,14 +26,14 @@ type DesktopDateRangePickerComponent = (<TDate>(
  *
  * - [DesktopDateRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-range-picker/)
  */
-const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<TDate>(
-  inProps: DesktopDateRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(inProps: DesktopDateRangePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
-    DesktopDateRangePickerProps<TDate>
+    DesktopDateRangePickerProps<TDate, TUseV6TextField>
   >(inProps, 'MuiDesktopDateRangePicker');
 
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
@@ -65,7 +65,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, 'day', typeof props>({
+  const { renderPicker } = useDesktopRangePicker<TDate, 'day', TUseV6TextField, typeof props>({
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
@@ -295,9 +295,9 @@ DesktopDateRangePicker.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -314,10 +314,6 @@ DesktopDateRangePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -330,6 +326,10 @@ DesktopDateRangePicker.propTypes = {
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
+  /**
+   * @default false
+   */
+  shouldUseV6TextField: PropTypes.any,
   /**
    * If `true`, days outside the current month are rendered:
    *

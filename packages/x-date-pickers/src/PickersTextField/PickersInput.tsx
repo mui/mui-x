@@ -15,7 +15,7 @@ import {
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
-} from '../../../PickersSectionList';
+} from '../PickersSectionList';
 
 const round = (value) => Math.round(value * 1e5) / 1e5;
 

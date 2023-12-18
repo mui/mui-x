@@ -48,6 +48,7 @@ export * from './PickersCalendarHeader';
 
 // Field utilities
 export * from './PickersSectionList';
+export * from './PickersTextField';
 
 export { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from './internals/utils/utils';
 

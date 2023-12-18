@@ -14,13 +14,13 @@ export interface DesktopDateRangePickerSlots<TDate>
   extends BaseDateRangePickerSlots<TDate>,
     MakeOptional<UseDesktopRangePickerSlots<TDate, 'day'>, 'field'> {}
 
-export interface DesktopDateRangePickerSlotProps<TDate>
+export interface DesktopDateRangePickerSlotProps<TDate, TUseV6TextField extends boolean>
   extends BaseDateRangePickerSlotProps<TDate>,
-    UseDesktopRangePickerSlotProps<TDate, 'day'> {}
+    UseDesktopRangePickerSlotProps<TDate, 'day', TUseV6TextField> {}
 
-export interface DesktopDateRangePickerProps<TDate>
+export interface DesktopDateRangePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDateRangePickerProps<TDate>,
-    DesktopRangeOnlyPickerProps<TDate> {
+    DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
    * @default 2
@@ -35,5 +35,5 @@ export interface DesktopDateRangePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateRangePickerSlotProps<TDate>;
+  slotProps?: DesktopDateRangePickerSlotProps<TDate, TUseV6TextField>;
 }

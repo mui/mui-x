@@ -1,43 +1,40 @@
 import {
-  useUtils,
   useField,
   splitFieldInternalAndForwardedProps,
+  useDefaultizedTimeField,
 } from '@mui/x-date-pickers/internals';
-import {
-  UseSingleInputTimeRangeFieldComponentProps,
-  UseSingleInputTimeRangeFieldDefaultizedProps,
-  UseSingleInputTimeRangeFieldProps,
-} from './SingleInputTimeRangeField.types';
+import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
+import { DateRange } from '../internals/models';
+import { RangeFieldSection } from '../models';
 
-export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
-  props: UseSingleInputTimeRangeFieldProps<TDate>,
-): UseSingleInputTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
-  const utils = useUtils<TDate>();
-
-  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? defaultFormat,
-  } as any;
-};
-
-export const useSingleInputTimeRangeField = <TDate, TChildProps extends {}>(
-  inProps: UseSingleInputTimeRangeFieldComponentProps<TDate, TChildProps>,
+export const useSingleInputTimeRangeField = <
+  TDate,
+  TUseV6TextField extends boolean,
+  TAllProps extends UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField>,
+>(
+  inProps: TAllProps,
 ) => {
-  const props = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inProps);
+  const props = useDefaultizedTimeField<
+    TDate,
+    UseSingleInputTimeRangeFieldProps<TDate, TUseV6TextField>,
+    TAllProps
+  >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseSingleInputTimeRangeFieldProps<any>
+    keyof UseSingleInputTimeRangeFieldProps<any, any>
   >(props, 'time');
 
-  return useField({
+  return useField<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    TUseV6TextField,
+    typeof forwardedProps,
+    typeof internalProps
+  >({
     forwardedProps,
     internalProps,
     valueManager: rangeValueManager,

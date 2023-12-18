@@ -125,7 +125,7 @@ describe('<YearCalendar />', () => {
     });
   });
 
-  it('should allows to focus years when it contains valid date', () => {
+  it('should allow to focus years when it contains valid date', () => {
     render(
       <YearCalendar
         // date is chose such as replacing year by 2018 or 2020 makes it out of valid range

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   executeInTheNextEventLoopTick,
@@ -10,7 +11,6 @@ import {
   PickersPopper,
   InferError,
   ExportedBaseToolbarProps,
-  BaseFieldProps,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
@@ -21,7 +21,7 @@ import {
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
-import { RangeFieldSection } from '../../models/fields';
+import { BaseMultiInputFieldProps, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -29,11 +29,18 @@ const releaseInfo = getReleaseInfo();
 export const useDesktopRangePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+  TUseV6TextField extends boolean,
+  TExternalProps extends UseDesktopRangePickerProps<
+    TDate,
+    TView,
+    TUseV6TextField,
+    any,
+    TExternalProps
+  >,
 >({
   props,
   ...pickerParams
-}: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
+}: UseDesktopRangePickerParams<TDate, TView, TUseV6TextField, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -43,6 +50,9 @@ export const useDesktopRangePicker = <
     sx,
     format,
     formatDensity,
+    shouldUseV6TextField,
+    selectedSections,
+    onSelectedSectionsChange,
     timezone,
     label,
     inputRef,
@@ -58,8 +68,14 @@ export const useDesktopRangePicker = <
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
+  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
 
-  const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
+  const fieldType = (slots.field as any).fieldType ?? 'multi-input';
+  const { rangePosition, onRangePositionChange } = useRangePosition(
+    props,
+    fieldType === 'single-input' ? startFieldRef : undefined,
+  );
 
   const {
     open,
@@ -80,6 +96,7 @@ export const useDesktopRangePicker = <
     props,
     wrapperVariant: 'desktop',
     autoFocusView: true,
+    fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
@@ -100,12 +117,11 @@ export const useDesktopRangePicker = <
   };
 
   const Field = slots.field;
-  const fieldType = (Field as any).fieldType ?? 'multi-input';
-
-  const fieldProps: BaseFieldProps<
+  const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
+    TUseV6TextField,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -118,10 +134,13 @@ export const useDesktopRangePicker = <
       sx,
       format,
       formatDensity,
+      shouldUseV6TextField,
+      selectedSections,
+      onSelectedSectionsChange,
       timezone,
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && { inputRef, name }),
+      ...(inputRef ? { inputRef, name } : {}),
     },
     ownerState: props,
   });
@@ -129,6 +148,7 @@ export const useDesktopRangePicker = <
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,
     TView,
+    TUseV6TextField,
     InferError<TExternalProps>
   >({
     wrapperVariant: 'desktop',
@@ -142,11 +162,12 @@ export const useDesktopRangePicker = <
     onBlur: handleBlur,
     rangePosition,
     onRangePositionChange,
-    singleInputFieldRef,
     pickerSlotProps: slotProps,
     pickerSlots: slots,
     fieldProps,
     anchorRef,
+    startFieldRef,
+    endFieldRef,
   });
 
   const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {

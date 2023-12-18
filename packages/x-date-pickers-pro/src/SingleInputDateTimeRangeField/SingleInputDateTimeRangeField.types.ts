@@ -1,43 +1,49 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
-import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
+import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
 import {
-  UseDateTimeRangeFieldDefaultizedProps,
-  UseDateTimeRangeFieldProps,
-} from '../internals/models';
+  ExportedUseClearableFieldProps,
+  UseClearableFieldSlots,
+  UseClearableFieldSlotProps,
+} from '@mui/x-date-pickers/hooks';
+import { DateRange, UseDateTimeRangeFieldProps } from '../internals/models';
+import { RangeFieldSection, DateTimeRangeValidationError } from '../models';
 
-export interface UseSingleInputDateTimeRangeFieldProps<TDate>
-  extends UseDateTimeRangeFieldProps<TDate> {}
+export interface UseSingleInputDateTimeRangeFieldProps<TDate, TUseV6TextField extends boolean>
+  extends UseDateTimeRangeFieldProps<TDate, TUseV6TextField>,
+    ExportedUseClearableFieldProps,
+    Pick<
+      UseFieldInternalProps<
+        DateRange<TDate>,
+        TDate,
+        RangeFieldSection,
+        TUseV6TextField,
+        DateTimeRangeValidationError
+      >,
+      'unstableFieldRef'
+    > {}
 
-export type UseSingleInputDateTimeRangeFieldDefaultizedProps<
+export type SingleInputDateTimeRangeFieldProps<
   TDate,
-  AdditionalProps extends {},
-> = UseDateTimeRangeFieldDefaultizedProps<TDate> & AdditionalProps;
-
-export type UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseSingleInputDateTimeRangeFieldProps<TDate>
+  TUseV6TextField extends boolean = false,
+> = Omit<
+  BuiltInFieldTextFieldProps<TUseV6TextField>,
+  keyof UseSingleInputDateTimeRangeFieldProps<TDate, TUseV6TextField>
 > &
-  UseSingleInputDateTimeRangeFieldProps<TDate>;
-
-export interface SingleInputDateTimeRangeFieldProps<TDate>
-  extends UseSingleInputDateTimeRangeFieldComponentProps<TDate, FieldsTextFieldProps> {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: SingleInputDateTimeRangeFieldSlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: SingleInputDateTimeRangeFieldSlotProps<TDate>;
-}
-
-export type SingleInputDateTimeRangeFieldOwnerState<TDate> =
-  SingleInputDateTimeRangeFieldProps<TDate>;
+  UseSingleInputDateTimeRangeFieldProps<TDate, TUseV6TextField> & {
+    /**
+     * Overridable component slots.
+     * @default {}
+     */
+    slots?: SingleInputDateTimeRangeFieldSlots;
+    /**
+     * The props used for each component slot.
+     * @default {}
+     */
+    slotProps?: SingleInputDateTimeRangeFieldSlotProps<TDate, TUseV6TextField>;
+  };
 
 export interface SingleInputDateTimeRangeFieldSlots extends UseClearableFieldSlots {
   /**
@@ -48,10 +54,11 @@ export interface SingleInputDateTimeRangeFieldSlots extends UseClearableFieldSlo
   textField?: React.ElementType;
 }
 
-export interface SingleInputDateTimeRangeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
+export interface SingleInputDateTimeRangeFieldSlotProps<TDate, TUseV6TextField extends boolean>
+  extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    SingleInputDateTimeRangeFieldOwnerState<TDate>
+    SingleInputDateTimeRangeFieldProps<TDate, TUseV6TextField>
   >;
 }

@@ -3,6 +3,7 @@ import Stack, { StackProps, stackClasses } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
 import { textFieldClasses } from '@mui/material/TextField';
+import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 
 interface DemoGridProps {
   children: React.ReactNode;
@@ -158,13 +159,13 @@ export function DemoContainer(props: DemoGridProps) {
   } else if (childrenTypes.has('single-input-range-field')) {
     if (!childrenSupportedSections.has('date-time')) {
       extraSx = {
-        [`& > .${textFieldClasses.root}`]: {
+        [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: {
           minWidth: 300,
         },
       };
     } else {
       extraSx = {
-        [`& > .${textFieldClasses.root}`]: {
+        [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: {
           minWidth: {
             xs: 300,
             // If demo also contains MultiInputDateTimeRangeField, increase width to avoid cutting off the value.
@@ -174,13 +175,20 @@ export function DemoContainer(props: DemoGridProps) {
       };
     }
   } else if (childrenSupportedSections.has('date-time')) {
-    extraSx = { [`& > .${textFieldClasses.root}`]: { minWidth: 270 } };
+    extraSx = {
+      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: { minWidth: 270 },
+    };
     if (childrenTypes.has('multi-input-range-field')) {
       // increase width for the multi input date time range fields
-      demoItemSx = { [`& > .${stackClasses.root} > .${textFieldClasses.root}`]: { minWidth: 210 } };
+      demoItemSx = {
+        [`& > .${stackClasses.root} > .${textFieldClasses.root}, & > .${stackClasses.root} > .${pickersTextFieldClasses.root}`]:
+          { minWidth: 210 },
+      };
     }
   } else {
-    extraSx = { [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
+    extraSx = {
+      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: { minWidth: 200 },
+    };
   }
   const finalSx = {
     ...sx,

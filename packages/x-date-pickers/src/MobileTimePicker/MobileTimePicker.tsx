@@ -15,8 +15,9 @@ import { extractValidationProps } from '../internals/utils/validation/extractVal
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 
-type MobileTimePickerComponent = (<TDate>(
-  props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
+  props: MobileTimePickerProps<TDate, TimeView, TUseV6TextField> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,8 +30,11 @@ type MobileTimePickerComponent = (<TDate>(
  *
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
-const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
-  inProps: MobileTimePickerProps<TDate>,
+const MobileTimePicker = React.forwardRef(function MobileTimePicker<
+  TDate,
+  TUseV6TextField extends boolean = false,
+>(
+  inProps: MobileTimePickerProps<TDate, TimeView, TUseV6TextField>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
@@ -40,7 +44,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeView,
-    MobileTimePickerProps<TDate>
+    MobileTimePickerProps<TDate, TimeView, TUseV6TextField>
   >(inProps, 'MuiMobileTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
@@ -76,7 +80,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, TimeView, typeof props>({
+  const { renderPicker } = useMobilePicker<TDate, TimeView, TUseV6TextField, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
@@ -267,9 +271,9 @@ MobileTimePicker.propTypes = {
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -286,10 +290,6 @@ MobileTimePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific time.
@@ -299,6 +299,10 @@ MobileTimePicker.propTypes = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * @default false
+   */
+  shouldUseV6TextField: PropTypes.any,
   /**
    * The props used for each component slot.
    * @default {}

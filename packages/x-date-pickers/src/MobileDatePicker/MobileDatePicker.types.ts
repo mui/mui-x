@@ -15,13 +15,13 @@ export interface MobileDatePickerSlots<TDate>
   extends BaseDatePickerSlots<TDate>,
     MakeOptional<UseMobilePickerSlots<TDate, DateView>, 'field'> {}
 
-export interface MobileDatePickerSlotProps<TDate>
+export interface MobileDatePickerSlotProps<TDate, TUseV6TextField extends boolean>
   extends BaseDatePickerSlotProps<TDate>,
-    ExportedUseMobilePickerSlotProps<TDate, DateView> {}
+    ExportedUseMobilePickerSlotProps<TDate, DateView, TUseV6TextField> {}
 
-export interface MobileDatePickerProps<TDate>
+export interface MobileDatePickerProps<TDate, TUseV6TextField extends boolean = false>
   extends BaseDatePickerProps<TDate>,
-    MobileOnlyPickerProps<TDate> {
+    MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -31,5 +31,5 @@ export interface MobileDatePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDatePickerSlotProps<TDate>;
+  slotProps?: MobileDatePickerSlotProps<TDate, TUseV6TextField>;
 }

@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { screen } from '@mui-internal/test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
+import { pickersInputClasses } from '@mui/x-date-pickers/PickersTextField';
 
 describe('<DateTimePicker />', () => {
   const { render } = createPickerRenderer();
@@ -13,7 +14,7 @@ describe('<DateTimePicker />', () => {
 
     render(<DateTimePicker />);
 
-    expect(screen.getByLabelText(/Choose date/)).to.have.tagName('input');
+    expect(screen.getByLabelText(/Choose date/)).to.have.class(pickersInputClasses.input);
 
     window.matchMedia = originalMatchMedia;
   });
