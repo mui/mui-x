@@ -9,7 +9,7 @@ import {
 import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
 
-let warnOnce = false;
+let warnedOnce = false;
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const formatter: Formatter<'line'> = (params, dataset) => {
@@ -63,10 +63,10 @@ const formatter: Formatter<'line'> = (params, dataset) => {
           ? dataset!.map((data) => {
               const value = data[dataKey];
               if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production' && !warnOnce && value !== null) {
-                  warnOnce = true;
+                if (process.env.NODE_ENV !== 'production' && !warnedOnce && value !== null) {
+                  warnedOnce = true;
                   console.error([
-                    `MUI-X charts: your dataset key "${dataKey}" is used for plotting line, but contains non number elements.`,
+                    `MUI-X charts: your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
                     'Line plots only support numbers and null values.',
                   ]);
                 }
