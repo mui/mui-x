@@ -22,6 +22,7 @@ import {
 import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { TreeItem } from '@mui/x-tree-view';
 if (false) {
   console.log(
     'This log is here to make sure the js version has a lint error, otherwise we have a CI error',
@@ -113,7 +114,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
     ...other
   } = themeProps as TreeViewProps<any, any>;
 
-  const { getRootProps, contextValue } = useTreeView({
+  const { getRootProps, contextValue, instance } = useTreeView({
     disabledItemsFocusable,
     expanded,
     defaultExpanded,
@@ -143,9 +144,24 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
     ownerState,
   });
 
+  const nodesToRender = instance.getNodesToRender();
+
+  const renderNode = ({
+    children: itemChildren,
+    ...itemProps
+  }: ReturnType<typeof instance.getNodesToRender>[number]) => {
+    return (
+      <TreeItem key={itemProps.nodeId} {...itemProps}>
+        {itemChildren?.map(renderNode)}
+      </TreeItem>
+    );
+  };
+
   return (
     <TreeViewProvider value={contextValue}>
-      <RichTreeViewRoot {...rootProps}>{children}</RichTreeViewRoot>
+      <RichTreeViewRoot {...rootProps}>
+        {nodesToRender.map(renderNode)}
+      </RichTreeViewRoot>
     </TreeViewProvider>
   );
 }

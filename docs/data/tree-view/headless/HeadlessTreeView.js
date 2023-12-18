@@ -13,6 +13,7 @@ import { DEFAULT_TREE_VIEW_PLUGINS } from '@mui/x-tree-view/internals/plugins/de
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { TreeItem } from '@mui/x-tree-view';
 if (false) {
   console.log(
     'This log is here to make sure the js version has a lint error, otherwise we have a CI error',
@@ -67,7 +68,7 @@ function TreeView(inProps) {
     ...other
   } = themeProps;
 
-  const { getRootProps, contextValue } = useTreeView({
+  const { getRootProps, contextValue, instance } = useTreeView({
     disabledItemsFocusable,
     expanded,
     defaultExpanded,
@@ -97,9 +98,21 @@ function TreeView(inProps) {
     ownerState,
   });
 
+  const nodesToRender = instance.getNodesToRender();
+
+  const renderNode = ({ children: itemChildren, ...itemProps }) => {
+    return (
+      <TreeItem key={itemProps.nodeId} {...itemProps}>
+        {itemChildren?.map(renderNode)}
+      </TreeItem>
+    );
+  };
+
   return (
     <TreeViewProvider value={contextValue}>
-      <RichTreeViewRoot {...rootProps}>{children}</RichTreeViewRoot>
+      <RichTreeViewRoot {...rootProps}>
+        {nodesToRender.map(renderNode)}
+      </RichTreeViewRoot>
     </TreeViewProvider>
   );
 }
