@@ -21,6 +21,7 @@ import {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
+  useGridSelector,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -88,8 +89,11 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const inputRef = React.useRef<HTMLInputElement>(null);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-    const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
-    const isMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
+    const editingField = useGridSelector(apiRef, gridHeaderFilteringEditFieldSelector);
+    const isEditing = editingField === colDef.field;
+
+    const menuOpenField = useGridSelector(apiRef, gridHeaderFilteringMenuSelector);
+    const isMenuOpen = menuOpenField === colDef.field;
 
     // TODO: Support for `isAnyOf` operator
     const filterOperators =
