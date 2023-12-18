@@ -1,6 +1,7 @@
 ---
 productId: x-tree-view
 title: Rich Tree View - Items
+components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -94,7 +95,7 @@ It could be achieved by either defining the prop outside the component scope or 
 :::
 
 :::warning
-Unlike the `TreeView` component, the `RichTreeView` component only supports string labels, you can't pass React nodes to it.
+Unlike the `SimpleTreeView` component, the `RichTreeView` component only supports string labels, you can't pass React nodes to it.
 :::
 
 ## Disabled items

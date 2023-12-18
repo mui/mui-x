@@ -47,7 +47,8 @@ const warn = () => {
 };
 
 /**
- * @deprecated Consider using `SimpleTreeView` instead.
+ * This component has been deprecated in favor of the new `SimpleTreeView` component.
+ * You can have a look at how to migrate to the new component in the v7 [migration guide](https://next.mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)
  *
  * Demos:
  *
@@ -56,6 +57,8 @@ const warn = () => {
  * API:
  *
  * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
+ *
+ * @deprecated
  */
 const TreeView = React.forwardRef(function TreeView<
   Multiple extends boolean | undefined = undefined,
