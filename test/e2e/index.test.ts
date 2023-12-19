@@ -562,7 +562,7 @@ async function initializeEnvironment(
           const input = page.getByRole('textbox');
 
           const isMac = platform() === 'darwin';
-          const modifier = isMac ? 'Meta' : 'Control';
+          const modifier = isMac || browserType.name() === 'webkit' ? 'Meta' : 'Control';
 
           await input.focus();
           // ensure that the focus is moved to the end section by typing naturally - with a timeout
