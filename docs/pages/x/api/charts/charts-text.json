@@ -1,0 +1,17 @@
+{
+  "props": {
+    "text": { "type": { "name": "string" }, "required": true },
+    "lineHeight": { "type": { "name": "number" } },
+    "needsComputation": { "type": { "name": "bool" } },
+    "style": { "type": { "name": "object" } }
+  },
+  "slots": [],
+  "name": "ChartsText",
+  "imports": [
+    "import { ChartsText } from '@mui/x-charts/ChartsText';",
+    "import { ChartsText } from '@mui/x-charts';"
+  ],
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsText" },
+  "filename": "/packages/x-charts/src/ChartsText/ChartsText.tsx",
+  "demos": "<ul></ul>"
+}

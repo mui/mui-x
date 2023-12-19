@@ -43,9 +43,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.5",
-    "@mui/base": "^5.0.0-beta.26",
-    "@mui/system": "^5.14.20",
-    "@mui/utils": "^5.14.20",
+    "@mui/base": "^5.0.0-beta.27",
+    "@mui/system": "^5.15.0",
+    "@mui/utils": "^5.15.0",
     "@mui/x-date-pickers": "7.0.0-alpha.5",
     "@mui/x-license-pro": "7.0.0-alpha.1",
     "clsx": "^2.0.0",
