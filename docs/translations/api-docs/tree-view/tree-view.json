@@ -1,6 +1,11 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "checkboxSelection": {
+      "description": "If <code>true</code>, the tree view renders a checkbox at the left of its label that allows selecting it.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "children": {
       "description": "The content of the component.",
       "deprecated": "",
@@ -67,7 +72,7 @@
       "typeDescriptions": {}
     },
     "multiSelect": {
-      "description": "If true <code>ctrl</code> and <code>shift</code> will trigger multiselect.",
+      "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect.",
       "deprecated": "",
       "typeDescriptions": {}
     },

@@ -206,5 +206,6 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,
+  checkboxSelection: params.checkboxSelection ?? false,
   defaultSelected: params.defaultSelected ?? (params.multiSelect ? DEFAULT_SELECTED : null),
 });

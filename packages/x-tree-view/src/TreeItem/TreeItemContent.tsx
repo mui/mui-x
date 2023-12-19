@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import Checkbox from '@mui/material/Checkbox';
 import { useTreeItem } from './useTreeItem';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
@@ -76,12 +77,14 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     expanded,
     selected,
     focused,
+    checkboxSelection,
     handleExpansion,
     handleSelection,
     preventSelection,
   } = useTreeItem(nodeId);
 
   const icon = iconProp || expansionIcon || displayIcon;
+  const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     preventSelection(event);
@@ -92,12 +95,23 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
   };
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (checkboxRef.current?.contains(event.target as HTMLElement)) {
+      return;
+    }
+
     handleExpansion(event);
-    handleSelection(event);
+
+    if (!checkboxSelection) {
+      handleSelection(event);
+    }
 
     if (onClick) {
       onClick(event);
     }
+  };
+
+  const handleCheckboxSelectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleSelection(event);
   };
 
   return (
@@ -115,6 +129,10 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       ref={ref}
     >
       <div className={classes.iconContainer}>{icon}</div>
+      {checkboxSelection && (
+        <Checkbox checked={selected} onChange={handleCheckboxSelectionChange} ref={checkboxRef} />
+      )}
+
       <div className={classes.label}>{label}</div>
     </div>
   );

@@ -4,6 +4,7 @@ import { TreeViewContextValue } from './TreeViewProvider.types';
 export const DEFAULT_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<any> = {
   instance: null,
   multiSelect: false,
+  checkboxSelection: false,
   disabledItemsFocusable: false,
   treeId: undefined,
   icons: {

@@ -5,6 +5,7 @@ export interface TreeViewContextValue<TPlugins extends readonly TreeViewAnyPlugi
   treeId: string | undefined;
   instance: TreeViewInstance<TPlugins> | null;
   multiSelect: boolean;
+  checkboxSelection: boolean;
   disabledItemsFocusable: boolean;
   icons: {
     defaultCollapseIcon: React.ReactNode;

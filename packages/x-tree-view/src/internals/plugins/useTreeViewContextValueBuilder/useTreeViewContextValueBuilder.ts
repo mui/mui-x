@@ -15,6 +15,7 @@ export const useTreeViewContextValueBuilder: TreeViewPlugin<
       treeId,
       instance: instance as TreeViewInstance<any>,
       multiSelect: params.multiSelect,
+      checkboxSelection: params.checkboxSelection,
       disabledItemsFocusable: params.disabledItemsFocusable,
       icons: {
         defaultCollapseIcon: params.defaultCollapseIcon,

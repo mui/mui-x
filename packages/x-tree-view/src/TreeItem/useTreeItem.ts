@@ -3,7 +3,7 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 
 export function useTreeItem(nodeId: string) {
-  const { instance, multiSelect } = useTreeViewContext<DefaultTreeViewPlugins>();
+  const { instance, multiSelect, checkboxSelection } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const expandable = instance ? instance.isNodeExpandable(nodeId) : false;
   const expanded = instance ? instance.isNodeExpanded(nodeId) : false;
@@ -26,16 +26,21 @@ export function useTreeItem(nodeId: string) {
     }
   };
 
-  const handleSelection = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleSelection = (event: React.ChangeEvent | React.MouseEvent) => {
     if (instance && !disabled) {
       if (!focused) {
         instance.focusNode(event, nodeId);
       }
 
-      const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
+      const nativeEvent = (event.type === 'change'
+        ? event.nativeEvent
+        : event) as unknown as React.MouseEvent;
+
+      const multiple =
+        multiSelect && (nativeEvent.shiftKey || nativeEvent.ctrlKey || nativeEvent.metaKey);
 
       if (multiple) {
-        if (event.shiftKey) {
+        if (nativeEvent.shiftKey) {
           instance.selectRange(event, { end: nodeId });
         } else {
           instance.selectNode(event, nodeId, true);
@@ -58,6 +63,7 @@ export function useTreeItem(nodeId: string) {
     expanded,
     selected,
     focused,
+    checkboxSelection,
     handleExpansion,
     handleSelection,
     preventSelection,
