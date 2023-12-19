@@ -3,6 +3,167 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.5
+
+_Dec 14, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 New recipe added for the Data Grid
+- 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### Breaking changes
+
+- The `instanceId` prop is now required for state selectors.
+  This prop is used to distinguish between multiple Data Grid instances on the same page.
+  See [migration docs](https://next.mui.com/x/migration/migration-data-grid-v6/#instanceid-prop-is-required-for-state-selectors) for more details.
+
+#### `@mui/x-data-grid@7.0.0-alpha.5`
+
+- [DataGrid] Make `instanceId` required for state selectors (#11395) @cherniavskii
+- [DataGrid] Recipe for grouped rows autosizing (#11401) @michelengelen
+- [l10n] Improve Swedish (sv-SE) locale (#11373) @fredrikcarlbom
+- [l10n] Improve Urdu (ur-PK) locale (#11400) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.5`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
+
+### Date Pickers
+
+#### Breaking changes
+
+- The slot interfaces got renamed to match with `@mui/base` naming.
+The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
+
+  ```diff
+  - DateCalendarSlotsComponent
+  + DateCalendarSlots
+  - DateCalendarSlotsComponentsProps
+  + DateCalendarSlotProps
+  ```
+
+- Move `inputRef` inside the props passed to the field hooks
+
+  The field hooks now only receive the props instead of an object containing both the props and the `inputRef`.
+
+  ```diff
+  - const { inputRef, ...otherProps } = props
+  - const fieldResponse = useDateField({ props: otherProps, inputRef });
+  + const fieldResponse = useDateField(props);
+  ```
+
+  If you are using a multi input range field hook, the same applies to `startInputRef` and `endInputRef` params
+
+  ```diff
+  - const { inputRef: startInputRef, ...otherStartTextFieldProps } = startTextFieldProps
+  - const { inputRef: endInputRef, ...otherEndTextFieldProps } = endTextFieldProps
+
+    const fieldResponse = useMultiInputDateRangeField({
+      sharedProps,
+  -   startTextFieldProps: otherStartTextFieldProps,
+  -   endTextFieldProps: otherEndTextFieldProps,
+  -   startInputRef
+  -   endInputRef,
+  +   startTextFieldProps, 
+  +   endTextFieldProps
+    });
+  ```
+
+- Rename the ref returned by the field hooks to `inputRef`
+
+  When used with the v6 TextField approach (where the input is an `<input />` HTML element), the field hooks return a ref that needs to be passed to the `<input />` element.
+  This ref was previously named `ref` and has been renamed `inputRef` for extra clarity.
+
+  ```diff
+    const fieldResponse = useDateField(props);
+
+  - return <input ref={fieldResponse.ref} /> 
+  + return <input ref={fieldResponse.inputRef} />
+  ```
+
+  If you are using a multi input range field hook, the same applies to the ref in the `startDate` and `endDate` objects
+
+  ```diff
+    const fieldResponse = useDateField(props);
+
+    return (
+      <div>
+  -     <input ref={fieldResponse.startDate.ref} />
+  +     <input ref={fieldResponse.startDate.inputRef} />
+        <span>–</span>
+  -     <input ref={fieldResponse.endDate.ref} />
+  +     <input ref={fieldResponse.endDate.inputRef} />
+      </div>
+    )
+  ```
+
+- Restructure the API of `useClearableField`
+
+  The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
+
+  You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
+
+  ```diff
+    const fieldResponse = useDateField(props);
+
+  - const { InputProps, onClear, clearable, slots, slotProps, ...otherFieldProps } = fieldResponse
+  - const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField({
+  -   fieldProps: otherFieldProps,
+  -   InputProps,
+  -   clearable,
+  -   onClear,
+  -   slots,
+  -   slotProps,
+  - }); 
+  -
+  -  return <MyCustomTextField {...processedFieldProps} InputProps={ProcessedInputProps} />
+
+  + const processedFieldProps = useClearableField(fieldResponse);
+  +
+  + return <MyCustomTextField {...processedFieldProps} />
+  ```
+
+#### `@mui/x-date-pickers@7.0.0-alpha.5`
+
+- [fields] Support empty sections (#10307) @flaviendelangle
+- [pickers] Fix field types to avoid error on latest `@types/react` version (#11397) @LukasTy
+- [pickers] Remove all relative imports to the internals index file (#11375) @flaviendelangle
+- [pickers] Rename slots interfaces (#11339) @alexfauquette
+- [pickers] Simplify the API of the field hooks (#11371) @flaviendelangle
+- [pickers] Support name prop (#11025) @gitstart
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.5`, plus:
+
+- [DateRangePicker] Fix `autoFocus` behavior (#11273) @kealjones-wk
+
+### Charts / `@mui/x-charts@7.0.0-alpha.5`
+
+- [charts] Fix size overflow (#11385) @alexfauquette
+
+### `@mui/x-codemod@7.0.0-alpha.5`
+
+- [codemod] Add `cellSelection` codemod and update migration guide (#11353) @MBilalShafi
+
+### Docs
+
+- [docs] Respect GoT books (@janoma) (#11387) @alexfauquette
+
+### Core
+
+- [core] Automate cherry-pick of PRs from `next` -> `master` (#11382) @MBilalShafi
+- [github] Update `no-response` workflow (#11369) @MBilalShafi
+- [test] Fix flaky screenshots (#11388) @cherniavskii
+
 ## 7.0.0-alpha.4
 
 _Dec 8, 2023_
@@ -948,6 +1109,48 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.18.5
+
+_Dec 14, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.5`
+
+- [l10n] Improve Swedish (sv-SE) locale (#11379) @fredrikcarlbom
+- [l10n] Improve Urdu (ur-PK) locale for data grid (#11409) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@6.18.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.5`.
+
+#### `@mui/x-data-grid-premium@6.18.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.5`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.5`
+
+- [pickers] Fix field types to avoid error on latest `@types/react` version (#11398) @LukasTy
+- [pickers] Support name prop (#11380) @gitstart
+
+#### `@mui/x-date-pickers-pro@6.18.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.5`, plus:
+
+- [DateRangePicker] Fix `autoFocus` behavior (#11376) @kealjones-wk
+
+### Docs
+
+- [docs] Respect GoT books (#11294) @janoma
+- [test] Fix flaky screenshots (#11391) @cherniavskii
 
 ## 6.18.4
 

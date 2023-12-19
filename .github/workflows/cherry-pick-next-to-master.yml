@@ -1,5 +1,5 @@
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - next
     types: ['closed']
@@ -21,8 +21,8 @@ jobs:
         uses: carloscastrojumo/github-cherry-pick-action@v1.0.9
         with:
           branch: master
-          token: ${{ secrets.GITHUB_TOKEN }}
           body: 'Cherry-pick of #{old_pull_request_id}'
+          cherry-pick-branch: ${{ format('cherry-pick-{0}', github.event.number) }}
           labels: |
             cherry-pick
 env:
