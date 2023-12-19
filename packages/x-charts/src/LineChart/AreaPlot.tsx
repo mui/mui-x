@@ -6,6 +6,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { AreaElement, AreaElementProps } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
 
 export interface AreaPlotSlots {
   area?: React.JSXElementConstructor<AreaElementProps>;
@@ -63,7 +64,11 @@ function AreaPlot(props: AreaPlotProps) {
           if (process.env.NODE_ENV !== 'production') {
             if (xData === undefined) {
               throw new Error(
-                `Axis of id "${xAxisKey}" should have data property to be able to display a line plot.`,
+                `MUI-Charts: ${
+                  xAxisKey === DEFAULT_X_AXIS_KEY
+                    ? 'The first `xAxis`'
+                    : `The x-axis with id "${xAxisKey}"`
+                } should have data property to be able to display a line plot.`,
               );
             }
             if (xData.length < stackedData.length) {
