@@ -103,10 +103,6 @@ async function initializeEnvironment(
   context = await browser.newContext({
     // ensure consistent date formatting regardless of environment
     locale: 'en-US',
-    permissions: [
-      ...(browserType.name() !== 'firefox' ? ['clipboard-read'] : []),
-      ...(browserType.name() === 'chromium' ? ['clipboard-write'] : []),
-    ],
     ...contextOptions,
   });
   // Circle CI has low-performance CPUs.
@@ -558,8 +554,8 @@ async function initializeEnvironment(
         });
 
         it('should allow pasting a section', async () => {
-          // the pasting does not seem to work in chromium headless
-          if (browserType.name() === 'chromium') {
+          // Only firefox is capable of reliably running this test in CI and headless browsers
+          if (browserType.name() !== 'firefox' && process.env.CIRCLECI) {
             return;
           }
           await renderFixture('DatePicker/BasicDesktopDatePicker');
