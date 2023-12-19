@@ -68,7 +68,7 @@ function AreaPlot(props: AreaPlotProps) {
             }
             if (xData.length < stackedData.length) {
               throw new Error(
-                `MUI: data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items)`,
+                `MUI-Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items)`,
               );
             }
           }
