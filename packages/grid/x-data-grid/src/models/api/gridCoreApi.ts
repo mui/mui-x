@@ -64,6 +64,7 @@ export interface GridCorePrivateApi<
    * The generic event emitter manager.
    */
   eventManager: EventManager;
+
   /**
    * The React ref of the grid main container div element.
    */
@@ -72,6 +73,18 @@ export interface GridCorePrivateApi<
    * The React ref of the grid virtual scroller container element.
    */
   virtualScrollerRef: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid column container virtualized div element.
+   */
+  columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid column headers container element.
+   */
+  columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid header filter row element.
+   */
+  headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
 
   register: <
     V extends 'public' | 'private',
@@ -95,16 +108,4 @@ export interface GridCorePrivateApi<
    * Do not use in React components - use the `useGridRootProps` hook instead.
    */
   rootProps: GridProps;
-  /**
-   * The React ref of the grid column container virtualized div element.
-   */
-  columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
-  /**
-   * The React ref of the grid header filter row element.
-   */
-  headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
-  /**
-   * The React ref of the grid column headers container element.
-   */
-  columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
 }

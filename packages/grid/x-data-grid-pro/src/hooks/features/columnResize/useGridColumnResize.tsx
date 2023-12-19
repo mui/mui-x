@@ -538,12 +538,10 @@ export const useGridColumnResize = (
           `[data-field="${colDef.field}"]`,
         )!;
 
-      const headerFilterRowElement = apiRef.current.headerFiltersElementRef?.current;
-
-      if (headerFilterRowElement) {
-        headerFilterElementRef.current = headerFilterRowElement.querySelector<HTMLDivElement>(
-          `[data-field="${colDef.field}"]`,
-        ) as HTMLDivElement;
+      const root = apiRef.current.rootElementRef.current!;
+      const headerFilterElement = root.querySelector(`.${gridClasses['headerFilterRow']} [data-field="${colDef.field}"]`)
+      if (headerFilterElement) {
+        headerFilterElementRef.current = headerFilterElement as HTMLDivElement;
       }
 
       colGroupingElementRef.current = findGroupHeaderElementsFromField(
