@@ -330,7 +330,7 @@ export default function ChangeLog() {
           }}
         >
           {blogs.map((blog) => (
-            <TimelineItem>
+            <TimelineItem key={blog.announcementDate.toISOString()}>
               <TimelineOppositeContent
                 variant="body2"
                 color="text.tertiary"
