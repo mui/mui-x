@@ -46,6 +46,11 @@ ponyfillGlobal.muiDocConfig = {
       newDeps.dayjs = versions.dayjs;
     }
 
+    // monorepo would override the version to `latest` if defined in `csbGetVersions`
+    if (newDeps['date-fns']) {
+      newDeps['date-fns'] = '^2.30.0';
+    }
+
     return newDeps;
   },
   csbGetVersions: (versions, { muiCommitRef }) => {
@@ -59,7 +64,6 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
-      'date-fns': '^2.30.0',
       dayjs: 'latest',
       exceljs: 'latest',
     };
