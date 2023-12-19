@@ -15,6 +15,7 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import BrandingCssVarsProvider from 'docs/src/BrandingCssVarsProvider';
+import { useTheme } from '@mui/material/styles';
 
 type Blog = {
   title: string;
@@ -304,85 +305,89 @@ function BlogCard(props: { blog: Blog }) {
 }
 
 export default function ChangeLog() {
+  const theme = useTheme();
+
   return (
     <BrandingCssVarsProvider>
-      <Timeline
-        sx={{
-          p: 0,
-          px: { xs: 2, sm: 0 },
-          'li:first-child': {
-            '& .top-connector': {
-              visibility: 'hidden',
+      <div data-mui-color-scheme={theme.palette.mode}>
+        <Timeline
+          sx={{
+            p: 0,
+            px: { xs: 2, sm: 0 },
+            'li:first-child': {
+              '& .top-connector': {
+                visibility: 'hidden',
+              },
             },
-          },
-          'li:last-child': {
-            '& .MuiTimelineContent-root': {
-              pb: 0,
+            'li:last-child': {
+              '& .MuiTimelineContent-root': {
+                pb: 0,
+              },
+              '& .bottom-connector': {
+                visibility: 'hidden',
+              },
             },
-            '& .bottom-connector': {
-              visibility: 'hidden',
-            },
-          },
-        }}
-      >
-        {blogs.map((blog) => (
-          <TimelineItem>
-            <TimelineOppositeContent
-              variant="body2"
-              color="text.tertiary"
-              sx={{
-                display: { xs: 'none', sm: 'flex' },
-                flex: 'none',
-                px: 0,
-                pt: 3.5,
-                pr: 3,
-                width: 120,
-                textAlign: 'left',
-                fontWeight: 'medium',
-              }}
-            >
-              {blog.announcementDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-              <TimelineConnector
-                className="top-connector"
-                sx={(theme) => ({
-                  height: 32,
-                  flexGrow: 0,
-                  width: '1px',
-                  backgroundColor: 'grey.100',
-                  ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
-                })}
-              />
-              <TimelineDot
+          }}
+        >
+          {blogs.map((blog) => (
+            <TimelineItem>
+              <TimelineOppositeContent
+                variant="body2"
+                color="text.tertiary"
                 sx={{
-                  m: 0,
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                  borderColor: 'grey.500',
-                  opacity: '60%',
-                  borderWidth: '1px',
+                  display: { xs: 'none', sm: 'flex' },
+                  flex: 'none',
+                  px: 0,
+                  pt: 3.5,
+                  pr: 3,
+                  width: 120,
+                  textAlign: 'left',
+                  fontWeight: 'medium',
                 }}
-              />
-              <TimelineConnector
-                className="bottom-connector"
-                sx={(theme) => ({
-                  width: '1px',
-                  backgroundColor: 'grey.100',
-                  ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
+              >
+                {blog.announcementDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
                 })}
-              />
-            </TimelineSeparator>
-            <TimelineContent sx={{ pl: { xs: 2, sm: 4 }, pr: 0, pt: 0, pb: 3 }}>
-              <BlogCard blog={blog} />
-            </TimelineContent>
-          </TimelineItem>
-        ))}
-      </Timeline>
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineConnector
+                  className="top-connector"
+                  sx={(theme) => ({
+                    height: 32,
+                    flexGrow: 0,
+                    width: '1px',
+                    backgroundColor: 'grey.100',
+                    ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
+                  })}
+                />
+                <TimelineDot
+                  sx={{
+                    m: 0,
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                    borderColor: 'grey.500',
+                    opacity: '60%',
+                    borderWidth: '1px',
+                  }}
+                />
+                <TimelineConnector
+                  className="bottom-connector"
+                  sx={(theme) => ({
+                    width: '1px',
+                    backgroundColor: 'grey.100',
+                    ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
+                  })}
+                />
+              </TimelineSeparator>
+              <TimelineContent sx={{ pl: { xs: 2, sm: 4 }, pr: 0, pt: 0, pb: 3 }}>
+                <BlogCard blog={blog} />
+              </TimelineContent>
+            </TimelineItem>
+          ))}
+        </Timeline>
+      </div>
     </BrandingCssVarsProvider>
   );
 }
