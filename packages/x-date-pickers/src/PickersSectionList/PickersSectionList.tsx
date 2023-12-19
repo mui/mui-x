@@ -130,50 +130,36 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
 
+  const getRoot = (methodName: string) => {
+    if (!rootRef.current) {
+      throw new Error(
+        `MUI: Cannot call sectionListRef.${methodName} before the mount of the component`,
+      );
+    }
+
+    return rootRef.current;
+  };
+
   React.useImperativeHandle(sectionListRef, () => ({
     getRoot() {
-      if (!rootRef.current) {
-        throw new Error(
-          'MUI: Cannot call sectionListRef.getRoot before the mount of the component',
-        );
-      }
-
-      return rootRef.current;
+      return getRoot('getRoot');
     },
     getSectionContainer(index) {
-      if (!rootRef.current) {
-        throw new Error(
-          'MUI: Cannot call sectionListRef.getSectionContainer before the mount of the component',
-        );
-      }
-
-      return rootRef.current.querySelector<HTMLSpanElement>(
+      const root = getRoot('getSectionContainer');
+      return root.querySelector<HTMLSpanElement>(
         `.${pickersSectionListClasses.section}[data-sectionindex="${index}"]`,
       )!;
     },
     getSectionContent(index) {
-      if (!rootRef.current) {
-        throw new Error(
-          'MUI: Cannot call sectionListRef.getSectionContent before the mount of the component',
-        );
-      }
-
-      return rootRef.current.querySelector<HTMLSpanElement>(
+      const root = getRoot('getSectionContent');
+      return root.querySelector<HTMLSpanElement>(
         `.${pickersSectionListClasses.section}[data-sectionindex="${index}"] .${pickersSectionListClasses.sectionContent}`,
       )!;
     },
     getSectionIndexFromDOMElement(element) {
-      if (!rootRef.current) {
-        throw new Error(
-          'MUI: Cannot call sectionListRef.getSectionIndexFromDOMElement before the mount of the component',
-        );
-      }
+      const root = getRoot('getSectionIndexFromDOMElement');
 
-      if (element == null) {
-        return null;
-      }
-
-      if (!rootRef.current.contains(element)) {
+      if (element == null || !root.contains(element)) {
         return null;
       }
 
