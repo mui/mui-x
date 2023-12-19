@@ -22,7 +22,9 @@ export const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
+})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+  ...theme.typography.body1,
+  color: (theme.vars || theme).palette.text.primary,
   cursor: 'text',
   padding: 0,
   display: 'flex',
