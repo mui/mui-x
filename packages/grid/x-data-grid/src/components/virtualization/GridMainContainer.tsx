@@ -23,7 +23,7 @@ export const GridMainContainer = React.forwardRef<
   const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
 
   return (
-    <Element ref={ref} className={props.className} {...ariaAttributes}>
+    <Element ref={ref} className={props.className} tabIndex={-1} {...ariaAttributes}>
       {props.children}
     </Element>
   );
