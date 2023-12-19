@@ -96,13 +96,17 @@ async function initializeEnvironment(
   contextOptions?: BrowserContextOptions,
 ) {
   browser = await browserType.launch({
-    headless: false,
+    headless: true,
   });
   // eslint-disable-next-line no-console
   console.log(`Running on: ${browserType.name()}, version: ${browser.version()}.`);
   context = await browser.newContext({
     // ensure consistent date formatting regardless of environment
     locale: 'en-US',
+    permissions: [
+      ...(browserType.name() !== 'firefox' ? ['clipboard-read'] : []),
+      ...(browserType.name() === 'chromium' ? ['clipboard-write'] : []),
+    ],
     ...contextOptions,
   });
   // Circle CI has low-performance CPUs.
@@ -554,6 +558,10 @@ async function initializeEnvironment(
         });
 
         it('should allow pasting a section', async () => {
+          // the pasting does not seem to work in chromium headless
+          if (browserType.name() === 'chromium') {
+            return;
+          }
           await renderFixture('DatePicker/BasicDesktopDatePicker');
           const input = page.getByRole('textbox');
 
