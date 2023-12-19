@@ -4,6 +4,7 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
 import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
+import { getPercentageValue } from '../internals/utils';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
@@ -58,27 +59,30 @@ function PiePlot(props: PiePlotProps) {
     <g>
       {seriesOrder.map((seriesId) => {
         const {
-          innerRadius,
-          outerRadius,
+          innerRadius: innerRadiusParam,
+          outerRadius: outerRadiusParam,
           cornerRadius,
           paddingAngle,
           data,
-          cx,
-          cy,
+          cx: cxParam,
+          cy: cyParam,
           highlighted,
           faded,
           highlightScope,
         } = series[seriesId];
+
+        const outerRadius = getPercentageValue(
+          outerRadiusParam ?? availableRadius,
+          availableRadius,
+        );
+        const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
+        const cx = getPercentageValue(cxParam ?? '50%', width);
+        const cy = getPercentageValue(cyParam ?? '50%', height);
         return (
-          <g
-            key={seriesId}
-            transform={`translate(${cx === undefined ? center.x : left + cx}, ${
-              cy === undefined ? center.y : top + cy
-            })`}
-          >
+          <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
             <PieArcPlot
               innerRadius={innerRadius}
-              outerRadius={outerRadius ?? availableRadius}
+              outerRadius={outerRadius}
               cornerRadius={cornerRadius}
               paddingAngle={paddingAngle}
               id={seriesId}
@@ -96,24 +100,26 @@ function PiePlot(props: PiePlotProps) {
       })}
       {seriesOrder.map((seriesId) => {
         const {
-          innerRadius,
-          outerRadius,
+          innerRadius: innerRadiusParam,
+          outerRadius: outerRadiusParam,
           cornerRadius,
           paddingAngle,
           arcLabel,
           arcLabelMinAngle,
           data,
-          cx,
-          cy,
+          cx: cxParam,
+          cy: cyParam,
           highlightScope,
         } = series[seriesId];
+        const outerRadius = getPercentageValue(
+          outerRadiusParam ?? availableRadius,
+          availableRadius,
+        );
+        const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
+        const cx = getPercentageValue(cxParam ?? '50%', width);
+        const cy = getPercentageValue(cyParam ?? '50%', height);
         return (
-          <g
-            key={seriesId}
-            transform={`translate(${cx === undefined ? center.x : left + cx}, ${
-              cy === undefined ? center.y : top + cy
-            })`}
-          >
+          <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
             <PieArcLabelPlot
               innerRadius={innerRadius}
               outerRadius={outerRadius ?? availableRadius}

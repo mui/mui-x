@@ -24,21 +24,19 @@ export interface PieArcPlotSlotProps {
 }
 
 export interface PieArcPlotProps
-  extends DefaultizedProps<
-    Pick<
-      DefaultizedPieSeriesType,
-      | 'data'
-      | 'faded'
-      | 'highlighted'
-      | 'innerRadius'
-      | 'outerRadius'
-      | 'cornerRadius'
-      | 'paddingAngle'
-      | 'id'
-      | 'highlightScope'
-    >,
-    'outerRadius'
+  extends Pick<
+    DefaultizedPieSeriesType,
+    'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope'
   > {
+  /**
+   * The radius between circle center and the begining of the arc.
+   * @default 0
+   */
+  innerRadius?: number;
+  /**
+   * The radius between circle center and the end of the arc.
+   */
+  outerRadius: number;
   /**
    * Overridable component slots.
    * @default {}
@@ -218,7 +216,6 @@ PieArcPlot.propTypes = {
   onClick: PropTypes.func,
   /**
    * The radius between circle center and the end of the arc.
-   * @default R_max The maximal radius that fit into the drawing area.
    */
   outerRadius: PropTypes.number.isRequired,
   /**
