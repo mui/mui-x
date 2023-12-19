@@ -19,21 +19,20 @@ export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObj
 }
 
 export function useTransformData(
-  series: DefaultizedProps<
-    Pick<
-      DefaultizedPieSeriesType,
-      | 'innerRadius'
-      | 'outerRadius'
-      | 'cornerRadius'
-      | 'paddingAngle'
-      | 'id'
-      | 'highlightScope'
-      | 'highlighted'
-      | 'faded'
-      | 'data'
-    >,
-    'outerRadius'
-  >,
+  series: Pick<
+    DefaultizedPieSeriesType,
+    'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope' | 'highlighted' | 'faded' | 'data'
+  > & {
+    /**
+     * The radius between circle center and the begining of the arc.
+     * @default 0
+     */
+    innerRadius?: number;
+    /**
+     * The radius between circle center and the end of the arc.
+     */
+    outerRadius: number;
+  },
 ) {
   const {
     id: seriesId,
