@@ -457,7 +457,6 @@ export function useGridColumns(
   }, [apiRef, logger, props.columnVisibilityModel]);
 }
 
-
 function mergeColumnsState(columnsState: GridColumnsState) {
   return (state: GridStateCommunity): GridStateCommunity => ({
     ...state,

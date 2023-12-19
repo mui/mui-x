@@ -539,7 +539,9 @@ export const useGridColumnResize = (
         )!;
 
       const root = apiRef.current.rootElementRef.current!;
-      const headerFilterElement = root.querySelector(`.${gridClasses['headerFilterRow']} [data-field="${colDef.field}"]`)
+      const headerFilterElement = root.querySelector(
+        `.${gridClasses.headerFilterRow} [data-field="${colDef.field}"]`,
+      );
       if (headerFilterElement) {
         headerFilterElementRef.current = headerFilterElement as HTMLDivElement;
       }
