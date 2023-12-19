@@ -316,18 +316,6 @@ GridHeaderFilterCell.propTypes = {
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
-  filterOperators: PropTypes.arrayOf(
-    PropTypes.shape({
-      getApplyFilterFn: PropTypes.func.isRequired,
-      getValueAsString: PropTypes.func,
-      headerLabel: PropTypes.string,
-      InputComponent: PropTypes.elementType,
-      InputComponentProps: PropTypes.object,
-      label: PropTypes.string,
-      requiresFilterValue: PropTypes.bool,
-      value: PropTypes.string.isRequired,
-    }),
-  ),
   hasFocus: PropTypes.bool,
   /**
    * Class name that will be added in the column header cell.

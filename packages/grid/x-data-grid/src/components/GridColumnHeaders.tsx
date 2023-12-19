@@ -100,7 +100,6 @@ GridColumnHeaders.propTypes = {
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,
   innerRef: refType,
-  minColumnIndex: PropTypes.number,
   sortColumnLookup: PropTypes.object.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;

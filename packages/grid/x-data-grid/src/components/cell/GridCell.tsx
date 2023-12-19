@@ -476,7 +476,7 @@ GridCell.propTypes = {
     value: PropTypes.any,
   }),
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
-  isNotVisible: PropTypes.bool,
+  isNotVisible: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragEnter: PropTypes.func,

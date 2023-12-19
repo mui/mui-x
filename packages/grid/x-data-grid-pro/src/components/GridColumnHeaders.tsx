@@ -75,7 +75,6 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     },
     [`&.${gridClasses['pinnedColumnHeaders--right']}`]: {
       right: 0,
-
       '& > [role="row"] > [role="columnheader"]:first-of-type': {
         ...(ownerState.showCellVerticalBorder && {
           borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
@@ -317,7 +316,6 @@ GridColumnHeaders.propTypes = {
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,
   innerRef: refType,
-  minColumnIndex: PropTypes.number,
   sortColumnLookup: PropTypes.object.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
