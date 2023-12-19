@@ -4,14 +4,13 @@ import {
   isArrayOfObjects,
 } from './gridSelectColDefUtils';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import { GridSingleSelectColDef, ValueOptions } from '../models/colDef/gridColDef';
+import { GridSingleSelectColDef } from '../models/colDef/gridColDef';
 import { renderEditSingleSelectCell } from '../components/cell/GridEditSingleSelectCell';
 import { getGridSingleSelectOperators } from './gridSingleSelectOperators';
 import {
   getValueOptions,
   isSingleSelectColDef,
 } from '../components/panel/filterPanel/filterPanelUtils';
-import { isObject } from '../utils/utils';
 
 export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,
