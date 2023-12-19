@@ -143,7 +143,7 @@ DataGridPremiumRaw.propTypes = {
    */
   cellSelectionModel: PropTypes.object,
   /**
-   * If `true`, the grid get a first column with a checkbox that allows to select rows.
+   * If `true`, the grid gets a first column with a checkbox that allows to select rows.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -1029,7 +1029,7 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
+   * If positive, the grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
    * @default 0
    */

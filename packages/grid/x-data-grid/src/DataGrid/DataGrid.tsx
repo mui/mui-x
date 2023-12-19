@@ -83,7 +83,7 @@ DataGridRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
-   * If `true`, the grid get a first column with a checkbox that allows to select rows.
+   * If `true`, the grid gets a first column with a checkbox that allows to select rows.
    * @default false
    */
   checkboxSelection: PropTypes.bool,

@@ -32,7 +32,7 @@
       "typeDescriptions": {}
     },
     "checkboxSelection": {
-      "description": "If <code>true</code>, the grid get a first column with a checkbox that allows to select rows.",
+      "description": "If <code>true</code>, the grid gets a first column with a checkbox that allows to select rows.",
       "deprecated": "",
       "typeDescriptions": {}
     },

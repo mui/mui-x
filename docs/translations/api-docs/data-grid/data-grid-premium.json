@@ -67,7 +67,7 @@
       "typeDescriptions": {}
     },
     "checkboxSelection": {
-      "description": "If <code>true</code>, the grid get a first column with a checkbox that allows to select rows.",
+      "description": "If <code>true</code>, the grid gets a first column with a checkbox that allows to select rows.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -942,7 +942,7 @@
       "typeDescriptions": {}
     },
     "throttleRowsMs": {
-      "description": "If positive, the Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
+      "description": "If positive, the grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
       "deprecated": "",
       "typeDescriptions": {}
     },
