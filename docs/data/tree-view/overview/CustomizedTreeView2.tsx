@@ -1,13 +1,18 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Label from '@mui/icons-material/Label';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import FolderRounded from '@mui/icons-material/FolderRounded';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import Collapse from '@mui/material/Collapse';
+import { TransitionProps } from '@mui/material/transitions';
+import { animated, useSpring } from '@react-spring/web';
 
 function DotIcon() {
   return (
@@ -48,66 +53,75 @@ const StyledTreeItemLabel = styled(Typography)(({ theme, ...props }) => {
   };
 }) as unknown as typeof Typography;
 
-const StyledTreeItemRoot = styled(TreeItem)(({ theme, ...props }) => {
-  console.log('ownerState', props, theme);
-  return {
-    color: theme.palette.text.secondary,
-    position: 'relative',
+const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
+  color:
+    theme.palette.mode === 'light'
+      ? theme.palette.grey[800]
+      : theme.palette.grey[400],
+  position: 'relative',
+  [`& .${treeItemClasses.content}`]: {
+    flexDirection: 'row-reverse',
+    borderRadius: theme.spacing(0.7),
+    marginBottom: theme.spacing(0.5),
+    marginTop: theme.spacing(0.5),
+    padding: theme.spacing(0.5),
+    paddingRight: theme.spacing(1),
+    fontWeight: 500,
+    [`& .${treeItemClasses.label}`]: {
+      fontWeight: 'inherit',
+    },
+    [`& .${treeItemClasses.iconContainer}`]: {
+      marginRight: theme.spacing(2),
+    },
+    [`&.Mui-expanded `]: {
+      fontWeight: theme.typography.fontWeightRegular,
+      '&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon': {
+        color: '#4b5aff',
+      },
+      '&::before': {
+        content: '""',
+        display: 'block',
+        position: 'absolute',
+        left: '16px',
+        top: '44px',
+        height: 'calc(100% - 48px)',
+        width: '1.5px',
+        backgroundColor:
+          theme.palette.mode === 'light'
+            ? theme.palette.grey[300]
+            : theme.palette.grey[700],
+      },
+    },
+    '&:hover': {
+      // backgroundColor: '#f0f2ff',
+      backgroundColor: alpha('#4b5aff', 0.1),
+      color: theme.palette.mode === 'light' ? '#4b5aff' : 'white',
+    },
+    [`&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused`]: {
+      backgroundColor: '#4b5aff',
+      color: 'white',
+    },
+  },
+  [`& .${treeItemClasses.group}`]: {
+    marginLeft: theme.spacing(3.5),
     [`& .${treeItemClasses.content}`]: {
-      [`& .${treeItemClasses.label}`]: {
-        color: theme.palette.grey[800],
-        borderRadius: theme.spacing(0.7),
-        marginBottom: theme.spacing(0.5),
-        marginTop: theme.spacing(0.5),
-        paddingRight: theme.spacing(2),
-        fontWeight: 600,
-        // background: '#f6f9ff',
-      },
-      [`& .${treeItemClasses.iconContainer}`]: {
-        marginRight: theme.spacing(2),
-      },
-      [`&.Mui-expanded `]: {
-        fontWeight: theme.typography.fontWeightRegular,
-        '&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon': {
-          color: '#4b5aff',
-        },
-        '&::before': {
-          content: '""',
-          display: 'block',
-          position: 'absolute',
-          left: '48px',
-          top: '44px',
-          height: 'calc(100% - 48px)',
-          width: '1.5px',
-          backgroundColor: '#2828282e',
-        },
-      },
-      '&:hover': {
-        backgroundColor: 'transparent',
-        [`.${treeItemClasses.label}`]: {
-          backgroundColor: '#f0f2ff',
-          color: '#4b5aff',
-        },
-      },
-      [`&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused`]: {
-        backgroundColor: 'transparent',
-        [`.${treeItemClasses.label}`]: {
-          backgroundColor: '#4b5aff',
-          color: 'white',
-        },
-      },
+      fontWeight: 500,
     },
-    [`& .${treeItemClasses.group}`]: {
-      marginLeft: 0,
-      paddingLeft: theme.spacing(2),
-      [`& .${treeItemClasses.content}`]: {
-        [`& .${treeItemClasses.label}`]: {
-          fontWeight: 500,
-        },
-      },
+  },
+})) as unknown as typeof TreeItem;
+
+const AnimatedCollapse = animated(Collapse);
+
+function TransitionComponent(props: TransitionProps) {
+  const style = useSpring({
+    to: {
+      opacity: props.in ? 1 : 0,
+      transform: `translate3d(0,${props.in ? 0 : 20}px,0)`,
     },
-  };
-}) as unknown as typeof TreeItem;
+  });
+
+  return <AnimatedCollapse style={style} {...props} />;
+}
 
 const StyledTreeItem = React.forwardRef(function StyledTreeItem(
   props: StyledTreeItemProps,
@@ -122,20 +136,19 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(
           sx={{
             display: 'flex',
             alignItems: 'center',
-            p: 0.5,
-            pr: 0,
           }}
         >
           <Box
             component={LabelIcon}
             className="labelIcon"
             color="inherit"
-            sx={{ mr: 1 }}
+            sx={{ mr: 1, fontSize: '1.2rem' }}
           />
           <StyledTreeItemLabel variant="body2">{labelText}</StyledTreeItemLabel>
         </Box>
       }
       {...other}
+      TransitionComponent={TransitionComponent}
       ref={ref}
     />
   );
@@ -146,26 +159,32 @@ export default function CustomizedTreeView2() {
     <TreeView
       aria-label="gmail"
       defaultExpanded={['3']}
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpandIcon={<ChevronRightIcon />}
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
     >
       <StyledTreeItem nodeId="1" labelText="All Documents" labelIcon={FolderRounded}>
         <StyledTreeItem nodeId="5" labelText="Company" labelIcon={FolderRounded}>
-          <StyledTreeItem nodeId="8" labelText="Personal" labelIcon={DotIcon} />
-          <StyledTreeItem nodeId="9" labelText="Images" labelIcon={DotIcon} />
-          <StyledTreeItem nodeId="10" labelText="Personal" labelIcon={DotIcon} />
-          <StyledTreeItem nodeId="11" labelText="Images" labelIcon={DotIcon} />
+          <StyledTreeItem nodeId="8" labelText="Payments" labelIcon={DotIcon} />
+          <StyledTreeItem nodeId="9" labelText="Meeting notes" labelIcon={DotIcon} />
+          <StyledTreeItem nodeId="10" labelText="Tasks list" labelIcon={DotIcon} />
+          <StyledTreeItem nodeId="11" labelText="Equipment" labelIcon={DotIcon} />
         </StyledTreeItem>
         <StyledTreeItem nodeId="6" labelText="Personal" labelIcon={DotIcon} />
         <StyledTreeItem nodeId="7" labelText="Images" labelIcon={DotIcon} />
       </StyledTreeItem>
-      <StyledTreeItem nodeId="3" labelText="Categories" labelIcon={Label}>
-        <StyledTreeItem nodeId="12" labelText="Social" labelIcon={DotIcon} />
-        <StyledTreeItem nodeId="13" labelText="Updates" labelIcon={DotIcon} />
+      <StyledTreeItem nodeId="3" labelText="Bookmarked" labelIcon={Label}>
+        <StyledTreeItem
+          nodeId="12"
+          labelText="Learning materials"
+          labelIcon={DotIcon}
+        />
+        <StyledTreeItem nodeId="13" labelText="News" labelIcon={DotIcon} />
         <StyledTreeItem nodeId="14" labelText="Forums" labelIcon={DotIcon} />
         <StyledTreeItem
           nodeId="15"
-          labelText="Promotions"
-          labelIcon={LocalOfferIcon}
+          labelText="Travel documents"
+          labelIcon={AirplanemodeActiveIcon}
         />
       </StyledTreeItem>
       <StyledTreeItem nodeId="4" labelText="History" labelIcon={FolderRounded} />
