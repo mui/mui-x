@@ -25,6 +25,16 @@ Tree views also support multi-selection.
 
 {{"demo": "MultiSelectTreeView.js"}}
 
+## Checkbox selection
+
+To activate checkbox selection set `checkboxSelection={true}`:
+
+{{"demo": "CheckboxSelection.js"}}
+
+This is also compatible with multi selection:
+
+{{"demo": "CheckboxMultiSelection.js"}}
+
 ## Controlled tree view
 
 The tree view also offers a controlled API.
