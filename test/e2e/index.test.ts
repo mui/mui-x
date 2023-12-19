@@ -96,7 +96,7 @@ async function initializeEnvironment(
   contextOptions?: BrowserContextOptions,
 ) {
   browser = await browserType.launch({
-    headless: true,
+    headless: false,
   });
   // eslint-disable-next-line no-console
   console.log(`Running on: ${browserType.name()}, version: ${browser.version()}.`);
@@ -554,15 +554,11 @@ async function initializeEnvironment(
         });
 
         it('should allow pasting a section', async () => {
-          // the pasting does not seem to work in chromium headless
-          if (browserType.name() === 'chromium') {
-            return;
-          }
           await renderFixture('DatePicker/BasicDesktopDatePicker');
           const input = page.getByRole('textbox');
 
           const isMac = platform() === 'darwin';
-          const modifier = isMac || browserType.name() === 'webkit' ? 'Meta' : 'Control';
+          const modifier = isMac ? 'Meta' : 'Control';
 
           await input.focus();
           // ensure that the focus is moved to the end section by typing naturally - with a timeout
