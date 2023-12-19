@@ -29,7 +29,7 @@ import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarCla
 import { TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
 
-export interface DayCalendarSlotsComponent<TDate> {
+export interface DayCalendarSlots<TDate> {
   /**
    * Custom component for day.
    * Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
@@ -38,7 +38,7 @@ export interface DayCalendarSlotsComponent<TDate> {
   day?: React.ElementType<PickersDayProps<TDate>>;
 }
 
-export interface DayCalendarSlotsComponentsProps<TDate> {
+export interface DayCalendarSlotProps<TDate> {
   day?: SlotComponentProps<
     typeof PickersDay,
     {},
@@ -107,12 +107,12 @@ export interface DayCalendarProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DayCalendarSlotsComponent<TDate>;
+  slots?: DayCalendarSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DayCalendarSlotsComponentsProps<TDate>;
+  slotProps?: DayCalendarSlotProps<TDate>;
 }
 
 const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {

@@ -631,7 +631,11 @@ export const useGridKeyboardNavigation = (
             break;
           }
           const colDef = (params as GridCellParams).colDef;
-          if (colDef && colDef.type === 'treeDataGroup') {
+          if (
+            colDef &&
+            // `GRID_TREE_DATA_GROUPING_FIELD` from the Pro package
+            colDef.field === '__tree_data_group__'
+          ) {
             break;
           }
           if (!event.shiftKey && rowIndexBefore < lastRowIndexInPage) {

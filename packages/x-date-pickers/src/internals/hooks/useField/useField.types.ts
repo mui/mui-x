@@ -1,7 +1,4 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
-import IconButton from '@mui/material/IconButton';
-import { ClearIcon } from '../../../icons';
 import {
   FieldSectionType,
   FieldSection,
@@ -22,7 +19,6 @@ export interface UseFieldParams<
   TForwardedProps extends UseFieldForwardedProps,
   TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 > {
-  inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
@@ -155,6 +151,7 @@ export interface FieldRef<TSection extends FieldSection> {
 }
 
 export interface UseFieldForwardedProps {
+  inputRef?: React.Ref<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
   onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
@@ -172,8 +169,8 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
   keyof UseFieldForwardedProps
 > &
   Required<UseFieldForwardedProps> &
-  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
-    ref: React.Ref<HTMLInputElement>;
+  Pick<React.InputHTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
+    inputRef: React.Ref<HTMLInputElement>;
     value: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
@@ -244,9 +241,8 @@ export type FieldSelectedSectionsIndexes = {
   endIndex: number;
   /**
    * If `true`, the selectors at the very beginning and very end of the input will be selected.
-   * @default false
    */
-  shouldSelectBoundarySelectors?: boolean;
+  shouldSelectBoundarySelectors: boolean;
 };
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
@@ -391,21 +387,3 @@ export type SectionOrdering = {
    */
   endIndex: number;
 };
-
-export interface FieldSlotsComponents {
-  /**
-   * Icon to display inside the clear button.
-   * @default ClearIcon
-   */
-  clearIcon?: React.ElementType;
-  /**
-   * Button to clear the value.
-   * @default IconButton
-   */
-  clearButton?: React.ElementType;
-}
-
-export interface FieldSlotsComponentsProps {
-  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
-  clearButton?: SlotComponentProps<typeof IconButton, {}, {}>;
-}

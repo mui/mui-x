@@ -17,10 +17,6 @@ import {
   SingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import type {
-  SingleInputDateRangeFieldSlotsComponent,
-  SingleInputDateRangeFieldSlotsComponentsProps,
-} from '@mui/x-date-pickers-pro/SingleInputDateRangeField/SingleInputDateRangeField.types';
 
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -89,50 +85,34 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
   (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
 
-    const {
-      inputRef: externalInputRef,
-      ...textFieldProps
-    }: SingleInputDateRangeFieldProps<Dayjs> = useSlotProps({
+    const textFieldProps: SingleInputDateRangeFieldProps<Dayjs> = useSlotProps({
       elementType: 'input',
       externalSlotProps: slotProps?.textField,
       externalForwardedProps: other,
       ownerState: props as any,
     });
 
-    const {
-      ref: inputRef,
-      onClear,
-      clearable,
-      ...fieldProps
-    } = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>({
-      props: textFieldProps,
-      inputRef: externalInputRef,
-    });
+    textFieldProps.InputProps = {
+      ...textFieldProps.InputProps,
+      endAdornment: (
+        <InputAdornment position="end">
+          <IconButton onClick={onAdornmentClick}>
+            <DateRangeIcon />
+          </IconButton>
+        </InputAdornment>
+      ),
+    };
+
+    const fieldResponse = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>(
+      textFieldProps,
+    );
 
     /* If you don't need a clear button, you can skip the use of this hook */
-    const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-      useClearableField<
-        {},
-        typeof textFieldProps.InputProps,
-        SingleInputDateRangeFieldSlotsComponent,
-        SingleInputDateRangeFieldSlotsComponentsProps<Dayjs>
-      >({
-        onClear,
-        clearable,
-        fieldProps,
-        InputProps: {
-          ...fieldProps.InputProps,
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={onAdornmentClick}>
-                <DateRangeIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        },
-        slots,
-        slotProps,
-      });
+    const processedFieldProps = useClearableField({
+      ...fieldResponse,
+      slots,
+      slotProps,
+    });
 
     return (
       <BrowserField
@@ -141,8 +121,6 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
         style={{
           minWidth: 300,
         }}
-        inputRef={inputRef}
-        InputProps={{ ...ProcessedInputProps }}
       />
     );
   },
@@ -167,12 +145,12 @@ const BrowserSingleInputDateRangePicker = React.forwardRef(
         open={isOpen}
         onClose={handleClose}
         onOpen={handleOpen}
-        slots={{ field: BrowserSingleInputDateRangeField }}
+        slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
         slotProps={{
-          ...props?.slotProps,
+          ...props.slotProps,
           field: {
             onAdornmentClick: toggleOpen,
-            ...props?.slotProps?.field,
+            ...props.slotProps?.field,
           } as any,
         }}
       />

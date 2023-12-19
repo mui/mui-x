@@ -1,8 +1,15 @@
 import { stack as d3Stack } from 'd3-shape';
 import { getStackingGroups } from '../internals/stackSeries';
-import { ChartSeries, Formatter } from '../models/seriesType/config';
+import {
+  ChartSeries,
+  DatasetElementType,
+  DatasetType,
+  Formatter,
+} from '../models/seriesType/config';
 import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
+
+let warnedOnce = false;
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const formatter: Formatter<'line'> = (params, dataset) => {
@@ -10,7 +17,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
   const stackingGroups = getStackingGroups(params);
 
   // Create a data set with format adapted to d3
-  const d3Dataset: { [id: string]: number | null }[] = dataset ?? [];
+  const d3Dataset: DatasetType<number | null> = (dataset as DatasetType<number | null>) ?? [];
   seriesOrder.forEach((id) => {
     const data = series[id].data;
     if (data !== undefined) {
@@ -36,7 +43,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
   stackingGroups.forEach((stackingGroup) => {
     // Get stacked values, and derive the domain
     const { ids, stackingOrder, stackingOffset } = stackingGroup;
-    const stackedSeries = d3Stack<any, { [id: string]: number | null }, string>()
+    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, string>()
       .keys(
         ids.map((id) => {
           // Use dataKey if needed and available
@@ -52,7 +59,22 @@ const formatter: Formatter<'line'> = (params, dataset) => {
       const dataKey = series[id].dataKey;
       completedSeries[id] = {
         ...series[id],
-        data: dataKey ? dataset!.map((d) => d[dataKey]) : series[id].data!,
+        data: dataKey
+          ? dataset!.map((data) => {
+              const value = data[dataKey];
+              if (typeof value !== 'number') {
+                if (process.env.NODE_ENV !== 'production' && !warnedOnce && value !== null) {
+                  warnedOnce = true;
+                  console.error([
+                    `MUI-X charts: your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
+                    'Line plots only support numbers and null values.',
+                  ]);
+                }
+                return 0;
+              }
+              return value;
+            })
+          : series[id].data!,
         stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
       };
     });
