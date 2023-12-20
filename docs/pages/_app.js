@@ -1,6 +1,7 @@
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/data/pages'; // DO NOT REMOVE
+import { postProcessImport } from 'docsx/src/modules/utils/postProcessImport';
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
@@ -32,18 +33,6 @@ function getMuiPackageVersion(packageName, commitRef) {
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
 }
 
-const DATE_ADAPTER_VERSIONS = {
-  'date-fns': '^2.30.0',
-  'date-fns-jalali': '^2.30.0-0',
-  dayjs: '^1.11.10',
-  luxon: '^3.4.4',
-  moment: '^2.29.4',
-  'moment-hijri': '^2.1.2',
-  'moment-jalaali': '^0.10.0',
-};
-
-const PICKERS_ADAPTER_REGEX = /^@mui\/(lab|x-date-pickers)\/(?<adapterName>Adapter.*)/;
-
 ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
@@ -70,32 +59,7 @@ ponyfillGlobal.muiDocConfig = {
     };
     return output;
   },
-  postProcessImport: (importName) => {
-    // e.g. date-fns
-    const dateAdapterMatch = PICKERS_ADAPTER_REGEX.exec(importName);
-    if (dateAdapterMatch !== null) {
-      /**
-       * Mapping from the date adapter sub-packages to the npm packages they require.
-       * @example `@mui/x-date-pickers/AdapterDayjs` has a peer dependency on `dayjs`.
-       */
-      const packageName = {
-        AdapterDateFns: 'date-fns',
-        AdapterDateFnsJalali: 'date-fns-jalali',
-        AdapterDayjs: 'dayjs',
-        AdapterLuxon: 'luxon',
-        AdapterMoment: 'moment',
-        AdapterMomentHijri: 'moment-hijri',
-        AdapterMomentJalaali: 'moment-jalaali',
-      }[dateAdapterMatch.groups?.adapterName || ''];
-      if (packageName === undefined) {
-        throw new TypeError(
-          `Can't determine required npm package for adapter '${dateAdapterMatch[1]}'`,
-        );
-      }
-      return { [packageName]: DATE_ADAPTER_VERSIONS[packageName] ?? 'latest' };
-    }
-    return null;
-  },
+  postProcessImport,
 };
 
 // Client-side cache, shared for the whole session of the user in the browser.
