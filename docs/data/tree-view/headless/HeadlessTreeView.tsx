@@ -19,6 +19,7 @@ import {
 import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { extractPluginParamsFromProps } from '@mui/x-tree-view/internals/utils/extractPluginParamsFromProps';
 if (false) {
   console.log(
     'This log is here to make sure the js version has a lint error, otherwise we have a CI error',
@@ -72,6 +73,11 @@ useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
   areLogsEnabled: params.areLogsEnabled ?? false,
 });
 
+useTreeViewLogExpanded.params = {
+  areLogsEnabled: true,
+  logMessage: true,
+};
+
 // This could be exported from the package in the future
 const TreeViewRoot = styled('ul', {
   name: 'MuiTreeView',
@@ -97,62 +103,24 @@ function TreeView<Multiple extends boolean | undefined>(
   const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
   const ownerState = themeProps as TreeViewProps<any>;
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    logMessage,
-    areLogsEnabled,
-    // Component implementation
-    children,
-    ...other
-  } = themeProps as TreeViewProps<any>;
-
-  const { getRootProps, contextValue } = useTreeView({
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    logMessage,
-    areLogsEnabled,
+  const { pluginParams, otherProps } = extractPluginParamsFromProps({
+    props: themeProps,
     plugins,
   });
+
+  const { getRootProps, contextValue } = useTreeView(pluginParams);
 
   const rootProps = useSlotProps({
     elementType: TreeViewRoot,
     externalSlotProps: {},
-    externalForwardedProps: other,
+    externalForwardedProps: otherProps,
     getSlotProps: getRootProps,
     ownerState,
   });
 
   return (
     <TreeViewProvider value={contextValue}>
-      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
+      <TreeViewRoot {...rootProps} />
     </TreeViewProvider>
   );
 }

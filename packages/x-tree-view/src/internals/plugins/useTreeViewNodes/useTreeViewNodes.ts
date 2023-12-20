@@ -81,3 +81,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     isNodeDisabled,
   });
 };
+
+useTreeViewNodes.params = {
+  disabledItemsFocusable: true,
+};

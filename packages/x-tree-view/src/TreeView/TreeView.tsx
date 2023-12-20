@@ -8,6 +8,7 @@ import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
+import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
@@ -52,54 +53,20 @@ const TreeView = React.forwardRef(function TreeView<
   const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
   const ownerState = themeProps as TreeViewProps<any>;
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    // Component implementation
-    children,
-    ...other
-  } = themeProps as TreeViewProps<any>;
-
-  const { getRootProps, contextValue } = useTreeView({
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
+  const { pluginParams, otherProps } = extractPluginParamsFromProps({
+    props: themeProps,
     plugins: DEFAULT_TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
+
+  const { getRootProps, contextValue } = useTreeView(pluginParams);
 
   const classes = useUtilityClasses(themeProps);
 
   const rootProps = useSlotProps({
     elementType: TreeViewRoot,
     externalSlotProps: {},
-    externalForwardedProps: other,
+    externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
     ownerState,
@@ -107,7 +74,7 @@ const TreeView = React.forwardRef(function TreeView<
 
   return (
     <TreeViewProvider value={contextValue}>
-      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
+      <TreeViewRoot {...rootProps} />
     </TreeViewProvider>
   );
 }) as TreeViewComponent;

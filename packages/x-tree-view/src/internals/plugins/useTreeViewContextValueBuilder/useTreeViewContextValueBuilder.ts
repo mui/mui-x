@@ -25,3 +25,11 @@ export const useTreeViewContextValueBuilder: TreeViewPlugin<
     },
   };
 };
+
+useTreeViewContextValueBuilder.params = {
+  id: true,
+  defaultCollapseIcon: true,
+  defaultEndIcon: true,
+  defaultExpandIcon: true,
+  defaultParentIcon: true,
+};

@@ -85,3 +85,9 @@ useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
   defaultExpanded: params.defaultExpanded ?? DEFAULT_EXPANDED,
 });
+
+useTreeViewExpansion.params = {
+  expanded: true,
+  defaultExpanded: true,
+  onNodeToggle: true,
+};
