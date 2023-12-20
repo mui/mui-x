@@ -214,10 +214,13 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   pinnedColumns?: GridPinnedColumnFields;
   /**
    * Callback fired when the pinned columns have changed.
-   * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
+   * @param {GridPinnedColumnFields} pinnedColumns The changed pinned columns.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPinnedColumnsChange?: (pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void;
+  onPinnedColumnsChange?: (
+    pinnedColumns: GridPinnedColumnFields,
+    details: GridCallbackDetails,
+  ) => void;
   /**
    * The grouping column used by the tree data.
    */

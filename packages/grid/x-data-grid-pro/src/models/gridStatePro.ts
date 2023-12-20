@@ -2,7 +2,7 @@ import {
   GridInitialState as GridInitialStateCommunity,
   GridState as GridStateCommunity,
   GridColumnPinningState,
-  GridPinnedColumns,
+  GridPinnedColumnFields,
 } from '@mui/x-data-grid';
 import type {
   GridDetailPanelState,
@@ -25,6 +25,6 @@ export interface GridStatePro extends GridStateCommunity {
  * The initial state of `DataGridPro`.
  */
 export interface GridInitialStatePro extends GridInitialStateCommunity {
-  pinnedColumns?: GridPinnedColumns;
+  pinnedColumns?: GridPinnedColumnFields;
   detailPanel?: GridDetailPanelInitialState;
 }

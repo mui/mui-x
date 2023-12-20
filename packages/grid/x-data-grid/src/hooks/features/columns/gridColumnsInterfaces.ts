@@ -30,6 +30,11 @@ export const EMPTY_PINNED_COLUMN_FIELDS = {
   right: [] as string[],
 };
 
+export interface GridPinnedColumns {
+  left: GridStateColDef[];
+  right: GridStateColDef[];
+}
+
 export type GridColumnPinningState = GridPinnedColumnFields;
 
 export type GridColumnDimensions = { [key in GridColumnDimensionProperties]?: number };

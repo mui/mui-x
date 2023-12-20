@@ -43,8 +43,8 @@ export const gridRenderContextSelector = createSelector(
  * @ignore - do not document.
  */
 export const gridRenderContextColumnsSelector = createSelectorMemoized(
-  (state: GridStateCommunity) => gridRenderContextSelector(state).firstColumnIndex,
-  (state: GridStateCommunity) => gridRenderContextSelector(state).lastColumnIndex,
+  (state: GridStateCommunity) => state.virtualization.renderContext.firstColumnIndex,
+  (state: GridStateCommunity) => state.virtualization.renderContext.lastColumnIndex,
   (firstColumnIndex, lastColumnIndex): GridRenderContext => ({
     firstRowIndex: -1,
     lastRowIndex: -1,
