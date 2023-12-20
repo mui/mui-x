@@ -32,6 +32,18 @@ function getMuiPackageVersion(packageName, commitRef) {
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
 }
 
+const DATE_ADAPTER_VERSIONS = {
+  'date-fns': '^2.30.0',
+  'date-fns-jalali': '^2.30.0-0',
+  dayjs: '^1.11.10',
+  luxon: '^3.4.4',
+  moment: '^2.29.4',
+  'moment-hijri': '^2.1.2',
+  'moment-jalaali': '^0.10.0',
+};
+
+const PICKERS_ADAPTER_REGEX = /^@mui\/(lab|x-date-pickers)\/(?<adapterName>Adapter.*)/;
+
 ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
@@ -41,16 +53,6 @@ ponyfillGlobal.muiDocConfig = {
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
     }
-
-    if (newDeps['@mui/x-date-pickers'] || newDeps['@mui/x-date-pickers-pro']) {
-      newDeps.dayjs = versions.dayjs;
-    }
-
-    // monorepo would override the version to `latest` if defined in `csbGetVersions`
-    if (newDeps['date-fns']) {
-      newDeps['date-fns'] = '^2.30.0';
-    }
-
     return newDeps;
   },
   csbGetVersions: (versions, { muiCommitRef }) => {
@@ -64,10 +66,35 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
-      dayjs: 'latest',
       exceljs: 'latest',
     };
     return output;
+  },
+  postProcessImport: (importName) => {
+    // e.g. date-fns
+    const dateAdapterMatch = PICKERS_ADAPTER_REGEX.exec(importName);
+    if (dateAdapterMatch !== null) {
+      /**
+       * Mapping from the date adapter sub-packages to the npm packages they require.
+       * @example `@mui/x-date-pickers/AdapterDayjs` has a peer dependency on `dayjs`.
+       */
+      const packageName = {
+        AdapterDateFns: 'date-fns',
+        AdapterDateFnsJalali: 'date-fns-jalali',
+        AdapterDayjs: 'dayjs',
+        AdapterLuxon: 'luxon',
+        AdapterMoment: 'moment',
+        AdapterMomentHijri: 'moment-hijri',
+        AdapterMomentJalaali: 'moment-jalaali',
+      }[dateAdapterMatch.groups?.adapterName || ''];
+      if (packageName === undefined) {
+        throw new TypeError(
+          `Can't determine required npm package for adapter '${dateAdapterMatch[1]}'`,
+        );
+      }
+      return { [packageName]: DATE_ADAPTER_VERSIONS[packageName] ?? 'latest' };
+    }
+    return null;
   },
 };
 
