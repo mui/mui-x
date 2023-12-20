@@ -25,6 +25,7 @@ jobs:
           branch: master
           body: 'Cherry-pick of #{old_pull_request_id}'
           cherry-pick-branch: ${{ format('cherry-pick-{0}', github.event.number) }}
+          author: ${{ github.event.user.name }} <${{ github.event.user.email }}>
           labels: |
             cherry-pick
 env:
