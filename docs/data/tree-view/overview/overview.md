@@ -75,17 +75,35 @@ Or increasing the width of the item state indicator to be full-width:
 
 ## Customization
 
-### Custom icons, border and animation
+### Custom icons
+
+You can customize the collapse, expand and end icons of the TreeView.
+
+You can use icon liraries:
+
+{{"demo": "CustomMaterialIcons.js", "defaultCodeOpen": false}}
+
+Or you can create your own components:
+
+{{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
+
+### Adding borders
+
+{{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
+
+### Customizing collapse animations
+
+{{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
+
+### Customizing for complex use cases
+
+You can customize the Tree View to accomodate more complex use cases:
 
 {{"demo": "CustomizedTreeView.js"}}
 
 ### Gmail clone
 
 {{"demo": "GmailTreeView.js"}}
-
-### Gmail clone 2
-
-{{"demo": "CustomizedTreeView2.js"}}
 
 ## Disabled tree items
 
