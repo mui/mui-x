@@ -7,17 +7,17 @@
       "typeDescriptions": {}
     },
     "aria-label": {
-      "description": "The label of the grid.",
+      "description": "The label of the Data Grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "aria-labelledby": {
-      "description": "The id of the element containing a label for the grid.",
+      "description": "The id of the element containing a label for the Data Grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "autoHeight": {
-      "description": "If <code>true</code>, the grid height is dynamic and follow the number of rows in the grid.",
+      "description": "If <code>true</code>, the Data Grid height is dynamic and follow the number of rows in the Data Grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -42,7 +42,7 @@
       "typeDescriptions": {}
     },
     "checkboxSelection": {
-      "description": "If <code>true</code>, the grid get a first column with a checkbox that allows to select rows.",
+      "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -67,7 +67,7 @@
       "typeDescriptions": {}
     },
     "columnHeaderHeight": {
-      "description": "Sets the height in pixel of the column headers in the grid.",
+      "description": "Sets the height in pixel of the column headers in the Data Grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -82,7 +82,7 @@
       "typeDescriptions": {}
     },
     "columnVisibilityModel": {
-      "description": "Set the column visibility model of the grid. If defined, the grid will ignore the <code>hide</code> property in <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a>.",
+      "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a>.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -92,7 +92,7 @@
       "typeDescriptions": {}
     },
     "density": {
-      "description": "Set the density of the grid.",
+      "description": "Set the density of the Data Grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -197,7 +197,7 @@
       "typeDescriptions": {}
     },
     "filterModel": {
-      "description": "Set the filter model of the grid.",
+      "description": "Set the filter model of the Data Grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -306,7 +306,7 @@
       "typeDescriptions": {}
     },
     "ignoreValueFormatterDuringExport": {
-      "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
+      "description": "If <code>true</code>, the Data Grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -355,7 +355,7 @@
       "typeDescriptions": {}
     },
     "localeText": {
-      "description": "Set the locale text of the grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository.",
+      "description": "Set the locale text of the Data Grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -602,7 +602,7 @@
       "typeDescriptions": { "error": "The error thrown." }
     },
     "onResize": {
-      "description": "Callback fired when the grid is resized.",
+      "description": "Callback fired when the Data Grid is resized.",
       "deprecated": "",
       "typeDescriptions": {
         "containerSize": "With all properties from ElementSize.",
@@ -744,7 +744,7 @@
       "typeDescriptions": {}
     },
     "rowHeight": {
-      "description": "Sets the height in pixel of a row in the grid.",
+      "description": "Sets the height in pixel of a row in the Data Grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -774,7 +774,7 @@
       "typeDescriptions": {}
     },
     "rowSelectionModel": {
-      "description": "Sets the row selection model of the grid.",
+      "description": "Sets the row selection model of the Data Grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -794,7 +794,7 @@
       "typeDescriptions": {}
     },
     "scrollbarSize": {
-      "description": "Override the height/width of the grid inner scrollbar.",
+      "description": "Override the height/width of the Data Grid inner scrollbar.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -830,7 +830,7 @@
       "typeDescriptions": {}
     },
     "sortModel": {
-      "description": "Set the sort model of the grid.",
+      "description": "Set the sort model of the Data Grid.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -840,7 +840,7 @@
       "typeDescriptions": {}
     },
     "throttleRowsMs": {
-      "description": "If positive, the Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
+      "description": "If positive, the Data Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
       "deprecated": "",
       "typeDescriptions": {}
     },
