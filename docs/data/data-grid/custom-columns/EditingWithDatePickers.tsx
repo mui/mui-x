@@ -7,11 +7,9 @@ import {
   GridRenderEditCellParams,
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
-  GridFilterItem,
   GridColTypeDef,
   GridFilterInputValueProps,
-  GetApplyFilterFn,
-  GridFilterOperator,
+  getGridDateOperators,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -27,137 +25,6 @@ import locale from 'date-fns/locale/en-US';
 import { styled } from '@mui/material/styles';
 import { TextFieldProps } from '@mui/material/TextField';
 
-function buildApplyDateFilterFn(
-  filterItem: GridFilterItem,
-  compareFn: (value1: number, value2: number) => boolean,
-  showTime: boolean = false,
-): ReturnType<GetApplyFilterFn<any, Date, string>> {
-  if (!filterItem.value) {
-    return null;
-  }
-
-  // Make a copy of the date to not reset the hours in the original object
-  const filterValueCopy = new Date(filterItem.value);
-  filterValueCopy.setHours(0, 0, 0, 0);
-
-  const filterValueMs = filterValueCopy.getTime();
-
-  return (value) => {
-    if (!value) {
-      return false;
-    }
-
-    // Make a copy of the date to not reset the hours in the original object
-    const dateCopy = new Date(value);
-    dateCopy.setHours(
-      showTime ? value.getHours() : 0,
-      showTime ? value.getMinutes() : 0,
-      0,
-      0,
-    );
-    const cellValueMs = dateCopy.getTime();
-
-    return compareFn(cellValueMs, filterValueMs);
-  };
-}
-
-function getDateFilterOperators(
-  showTime: boolean = false,
-): GridFilterOperator<any, Date, string>[] {
-  return [
-    {
-      value: 'is',
-      getApplyFilterFn: (filterItem) => {
-        return buildApplyDateFilterFn(
-          filterItem,
-          (value1, value2) => value1 === value2,
-          showTime,
-        );
-      },
-      InputComponent: GridFilterDateInput,
-      InputComponentProps: { showTime },
-    },
-    {
-      value: 'not',
-      getApplyFilterFn: (filterItem) => {
-        return buildApplyDateFilterFn(
-          filterItem,
-          (value1, value2) => value1 !== value2,
-          showTime,
-        );
-      },
-      InputComponent: GridFilterDateInput,
-      InputComponentProps: { showTime },
-    },
-    {
-      value: 'after',
-      getApplyFilterFn: (filterItem) => {
-        return buildApplyDateFilterFn(
-          filterItem,
-          (value1, value2) => value1 > value2,
-          showTime,
-        );
-      },
-      InputComponent: GridFilterDateInput,
-      InputComponentProps: { showTime },
-    },
-    {
-      value: 'onOrAfter',
-      getApplyFilterFn: (filterItem) => {
-        return buildApplyDateFilterFn(
-          filterItem,
-          (value1, value2) => value1 >= value2,
-          showTime,
-        );
-      },
-      InputComponent: GridFilterDateInput,
-      InputComponentProps: { showTime },
-    },
-    {
-      value: 'before',
-      getApplyFilterFn: (filterItem) => {
-        return buildApplyDateFilterFn(
-          filterItem,
-          (value1, value2) => value1 < value2,
-          showTime,
-        );
-      },
-      InputComponent: GridFilterDateInput,
-      InputComponentProps: { showTime },
-    },
-    {
-      value: 'onOrBefore',
-      getApplyFilterFn: (filterItem) => {
-        return buildApplyDateFilterFn(
-          filterItem,
-          (value1, value2) => value1 <= value2,
-          showTime,
-        );
-      },
-      InputComponent: GridFilterDateInput,
-      InputComponentProps: { showTime },
-    },
-    {
-      value: 'isEmpty',
-      getApplyFilterFn: () => {
-        return (value): boolean => {
-          return value == null;
-        };
-      },
-      requiresFilterValue: false,
-    },
-    {
-      value: 'isNotEmpty',
-      getApplyFilterFn: () => {
-        return (value): boolean => {
-          return value != null;
-        };
-      },
-      requiresFilterValue: false,
-    },
-  ];
-}
-
 const dateAdapter = new AdapterDateFns({ locale });
 
 /**
@@ -170,7 +37,11 @@ const dateColumnType: GridColTypeDef<Date, string> = {
   renderEditCell: (params) => {
     return <GridEditDateCell {...params} />;
   },
-  filterOperators: getDateFilterOperators(),
+  filterOperators: getGridDateOperators(false).map((item) => ({
+    ...item,
+    InputComponent: GridFilterDateInput,
+    InputComponentProps: { showTime: false },
+  })),
   valueFormatter: (params) => {
     if (typeof params.value === 'string') {
       return params.value;
@@ -231,7 +102,7 @@ function GridFilterDateInput(
 
   return (
     <Component
-      value={item.value || null}
+      value={item.value ? new Date(item.value) : null}
       autoFocus
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       slotProps={{
@@ -261,7 +132,11 @@ const dateTimeColumnType: GridColTypeDef<Date, string> = {
   renderEditCell: (params) => {
     return <GridEditDateCell {...params} />;
   },
-  filterOperators: getDateFilterOperators(true),
+  filterOperators: getGridDateOperators(true).map((item) => ({
+    ...item,
+    InputComponent: GridFilterDateInput,
+    InputComponentProps: { showTime: true },
+  })),
   valueFormatter: (params) => {
     if (typeof params.value === 'string') {
       return params.value;
