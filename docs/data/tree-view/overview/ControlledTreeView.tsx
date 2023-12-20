@@ -7,11 +7,14 @@ import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function ControlledTreeView() {
-  const [expanded, setExpanded] = React.useState<string[]>([]);
+  const [expandedNodes, setExpandedNodes] = React.useState<string[]>([]);
   const [selected, setSelected] = React.useState<string[]>([]);
 
-  const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
-    setExpanded(nodeIds);
+  const handleExpandedNodesChange = (
+    event: React.SyntheticEvent,
+    nodeIds: string[],
+  ) => {
+    setExpandedNodes(nodeIds);
   };
 
   const handleSelect = (event: React.SyntheticEvent, nodeIds: string[]) => {
@@ -19,7 +22,7 @@ export default function ControlledTreeView() {
   };
 
   const handleExpandClick = () => {
-    setExpanded((oldExpanded) =>
+    setExpandedNodes((oldExpanded) =>
       oldExpanded.length === 0 ? ['1', '5', '6', '7'] : [],
     );
   };
@@ -34,7 +37,7 @@ export default function ControlledTreeView() {
     <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
       <Box sx={{ mb: 1 }}>
         <Button onClick={handleExpandClick}>
-          {expanded.length === 0 ? 'Expand all' : 'Collapse all'}
+          {expandedNodes.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
         <Button onClick={handleSelectClick}>
           {selected.length === 0 ? 'Select all' : 'Unselect all'}
@@ -44,9 +47,9 @@ export default function ControlledTreeView() {
         aria-label="controlled"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
-        expanded={expanded}
+        expandedNodes={expandedNodes}
         selected={selected}
-        onNodeToggle={handleToggle}
+        onExpandedNodesChange={handleExpandedNodesChange}
         onNodeSelect={handleSelect}
         multiSelect
       >

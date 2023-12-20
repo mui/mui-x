@@ -55,9 +55,10 @@ const TreeView = React.forwardRef(function TreeView<
   const {
     // Headless implementation
     disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
+    expandedNodes,
+    defaultExpandedNodes,
+    onExpandedNodesChange,
+    onNodeExpansionToggle,
     onNodeFocus,
     disableSelection,
     defaultSelected,
@@ -76,9 +77,10 @@ const TreeView = React.forwardRef(function TreeView<
 
   const { getRootProps, contextValue } = useTreeView({
     disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
+    expandedNodes,
+    defaultExpandedNodes,
+    onExpandedNodesChange,
+    onNodeExpansionToggle,
     onNodeFocus,
     disableSelection,
     defaultSelected,
@@ -143,7 +145,7 @@ TreeView.propTypes = {
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpanded: PropTypes.arrayOf(PropTypes.string),
+  defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
   /**
    * The default icon used to expand the node.
    */
@@ -176,7 +178,7 @@ TreeView.propTypes = {
    * Expanded node ids.
    * Used when the item's expansion is controlled.
    */
-  expanded: PropTypes.arrayOf(PropTypes.string),
+  expandedNodes: PropTypes.arrayOf(PropTypes.string),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -187,6 +189,19 @@ TreeView.propTypes = {
    * @default false
    */
   multiSelect: PropTypes.bool,
+  /**
+   * Callback fired when tree items are expanded/collapsed.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} nodeIds The ids of the expanded nodes.
+   */
+  onExpandedNodesChange: PropTypes.func,
+  /**
+   * Callback fired when a tree item is expanded or collapsed.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} nodeId The nodeId of the modified node.
+   * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
+   */
+  onNodeExpansionToggle: PropTypes.func,
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
@@ -201,12 +216,6 @@ TreeView.propTypes = {
    * this is an array of strings; when false (default) a string.
    */
   onNodeSelect: PropTypes.func,
-  /**
-   * Callback fired when tree items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeIds The ids of the expanded nodes.
-   */
-  onNodeToggle: PropTypes.func,
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.

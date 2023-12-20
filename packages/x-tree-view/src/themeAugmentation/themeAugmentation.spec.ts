@@ -25,7 +25,7 @@ createTheme({
     },
     MuiTreeView: {
       defaultProps: {
-        defaultExpanded: ['root'],
+        defaultExpandedNodes: ['root'],
         // @ts-expect-error invalid MuiTreeItem prop
         someRandomProp: true,
       },

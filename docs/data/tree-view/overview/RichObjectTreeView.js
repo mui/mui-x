@@ -40,7 +40,7 @@ export default function RichObjectTreeView() {
       <TreeView
         aria-label="rich object"
         defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpanded={['root']}
+        defaultExpandedNodes={['root']}
         defaultExpandIcon={<ChevronRightIcon />}
       >
         {renderTree(data)}

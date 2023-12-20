@@ -26,17 +26,17 @@ describe('<TreeView />', () => {
   }));
 
   describe('warnings', () => {
-    it('should warn when switching from controlled to uncontrolled of the expanded prop', () => {
+    it('should warn when switching from controlled to uncontrolled of the expandedNodes prop', () => {
       const { setProps } = render(
-        <TreeView expanded={[]}>
+        <TreeView expandedNodes={[]}>
           <TreeItem nodeId="1" label="one" />
         </TreeView>,
       );
 
       expect(() => {
-        setProps({ expanded: undefined });
+        setProps({ expandedNodes: undefined });
       }).toErrorDev(
-        'MUI: A component is changing the controlled expanded state of TreeView to be uncontrolled.',
+        'MUI: A component is changing the controlled expandedNodes state of TreeView to be uncontrolled.',
       );
     });
 
@@ -67,7 +67,7 @@ describe('<TreeView />', () => {
 
     it('should not crash when selecting multiple items in a deeply nested tree', () => {
       render(
-        <TreeView multiSelect defaultExpanded={['1', '1.1', '2']}>
+        <TreeView multiSelect defaultExpandedNodes={['1', '1.1', '2']}>
           <TreeItem nodeId="1" label="Item 1">
             <TreeItem nodeId="1.1" label="Item 1.1">
               <TreeItem nodeId="1.1.1" data-testid="item-1.1.1" label="Item 1.1.1" />
@@ -202,14 +202,17 @@ describe('<TreeView />', () => {
     expect(handleBlur.callCount).to.equal(1);
   });
 
-  it('should be able to be controlled with the expanded prop', () => {
+  it('should be able to be controlled with the expandedNodes prop', () => {
     function MyComponent() {
-      const [expandedState, setExpandedState] = React.useState([]);
-      const handleNodeToggle = (event, nodes) => {
-        setExpandedState(nodes);
+      const [expandedNodesState, setExpandedNodesState] = React.useState([]);
+      const handleExpandedNodesChange = (event, nodes) => {
+        setExpandedNodesState(nodes);
       };
       return (
-        <TreeView expanded={expandedState} onNodeToggle={handleNodeToggle}>
+        <TreeView
+          expandedNodes={expandedNodesState}
+          onExpandedNodesChange={handleExpandedNodesChange}
+        >
           <TreeItem nodeId="1" label="one" data-testid="one">
             <TreeItem nodeId="2" label="two" />
           </TreeItem>
@@ -408,10 +411,10 @@ describe('<TreeView />', () => {
 
   describe('onNodeToggle', () => {
     it('should be called when a parent node label is clicked', () => {
-      const handleNodeToggle = spy();
+      const handleExpandedNodesChange = spy();
 
       const { getByText } = render(
-        <TreeView onNodeToggle={handleNodeToggle}>
+        <TreeView onExpandedNodesChange={handleExpandedNodesChange}>
           <TreeItem nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
@@ -420,15 +423,15 @@ describe('<TreeView />', () => {
 
       fireEvent.click(getByText('outer'));
 
-      expect(handleNodeToggle.callCount).to.equal(1);
-      expect(handleNodeToggle.args[0][1]).to.deep.equal(['1']);
+      expect(handleExpandedNodesChange.callCount).to.equal(1);
+      expect(handleExpandedNodesChange.args[0][1]).to.deep.equal(['1']);
     });
 
     it('should be called when a parent node icon is clicked', () => {
-      const handleNodeToggle = spy();
+      const handleExpandedNodesChange = spy();
 
       const { getByTestId } = render(
-        <TreeView onNodeToggle={handleNodeToggle}>
+        <TreeView onExpandedNodesChange={handleExpandedNodesChange}>
           <TreeItem icon={<div data-testid="icon" />} nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
@@ -437,8 +440,8 @@ describe('<TreeView />', () => {
 
       fireEvent.click(getByTestId('icon'));
 
-      expect(handleNodeToggle.callCount).to.equal(1);
-      expect(handleNodeToggle.args[0][1]).to.deep.equal(['1']);
+      expect(handleExpandedNodesChange.callCount).to.equal(1);
+      expect(handleExpandedNodesChange.args[0][1]).to.deep.equal(['1']);
     });
   });
 
