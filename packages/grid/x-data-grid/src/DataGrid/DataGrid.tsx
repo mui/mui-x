@@ -147,6 +147,16 @@ DataGridRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
+   * Overridable components.
+   * @deprecated Use `slots` instead.
+   */
+  components: PropTypes.object,
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   * @deprecated Use the `slotProps` prop instead.
+   */
+  componentsProps: PropTypes.object,
+  /**
    * Set the density of the Data Grid.
    * @default "standard"
    */
@@ -297,18 +307,6 @@ DataGridRaw.propTypes = {
    * @default false
    */
   ignoreDiacritics: PropTypes.bool,
-  /**
-   * If `true`, the Data Grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
-   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default false
-   */
-  ignoreValueFormatterDuringExport: PropTypes.oneOfType([
-    PropTypes.shape({
-      clipboardExport: PropTypes.bool,
-      csvExport: PropTypes.bool,
-    }),
-    PropTypes.bool,
-  ]),
   /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -725,7 +723,7 @@ DataGridRaw.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If `true`, the Data Grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
    * @default false
    */

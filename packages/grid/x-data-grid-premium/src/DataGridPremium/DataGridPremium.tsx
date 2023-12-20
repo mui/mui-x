@@ -134,15 +134,6 @@ DataGridPremiumRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
-   * If `true`, the cell selection mode is enabled.
-   * @default false
-   */
-  cellSelection: PropTypes.bool,
-  /**
-   * Set the cell selection model of the grid.
-   */
-  cellSelectionModel: PropTypes.object,
-  /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
    */
@@ -476,18 +467,6 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   ignoreDiacritics: PropTypes.bool,
-  /**
-   * If `true`, the Data Grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
-   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default false
-   */
-  ignoreValueFormatterDuringExport: PropTypes.oneOfType([
-    PropTypes.shape({
-      clipboardExport: PropTypes.bool,
-      csvExport: PropTypes.bool,
-    }),
-    PropTypes.bool,
-  ]),
   /**
    * The initial state of the DataGridPremium.
    * The data in it is set in the state on initialization but isn't controlled.
@@ -1047,7 +1026,7 @@ DataGridPremiumRaw.propTypes = {
    */
   unstable_headerFilters: PropTypes.bool,
   /**
-   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If `true`, the Data Grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
    * @default false
    */
