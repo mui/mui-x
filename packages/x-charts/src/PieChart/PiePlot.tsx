@@ -49,10 +49,6 @@ function PiePlot(props: PiePlotProps) {
   }
   const availableRadius = Math.min(width, height) / 2;
 
-  const center = {
-    x: left + width / 2,
-    y: top + height / 2,
-  };
   const { series, seriesOrder } = seriesData;
 
   return (

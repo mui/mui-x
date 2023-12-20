@@ -2,7 +2,6 @@ import * as React from 'react';
 import { InteractionContext } from '../../context/InteractionProvider';
 import { DefaultizedPieSeriesType, DefaultizedPieValueType } from '../../models/seriesType/pie';
 import { getIsHighlighted, getIsFaded } from '../../hooks/useInteractionItemProps';
-import { DefaultizedProps } from '../../models/helpers';
 
 export interface AnimatedObject {
   innerRadius: number;

@@ -13,7 +13,6 @@ import {
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
-import { DefaultizedProps } from '../models/helpers';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;

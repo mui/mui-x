@@ -13,7 +13,6 @@ import {
   useTransformData,
 } from './dataTransform/useTransformData';
 import { PieArcLabel, PieArcLabelProps } from './PieArcLabel';
-import { DefaultizedProps } from '../models/helpers';
 
 const RATIO = 180 / Math.PI;
 
