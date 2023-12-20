@@ -13,12 +13,12 @@ export const extractPluginParamsFromProps = <
   plugins: TPlugins;
   rootRef?: React.Ref<HTMLUListElement>;
 }) => {
-  const paramsLookup = { rootRef: true };
+  type PluginParams = MergePluginsProperty<TPlugins, 'params'>;
+
+  const paramsLookup = {} as Record<keyof PluginParams, true>;
   plugins.forEach((plugin) => {
     Object.assign(paramsLookup, plugin.params);
   });
-
-  type PluginParams = MergePluginsProperty<TPlugins, 'params'>;
 
   const pluginParams = { plugins, rootRef } as PluginParams & {
     plugins: TPlugins;
@@ -27,10 +27,12 @@ export const extractPluginParamsFromProps = <
   const otherProps = {} as Omit<TProps, keyof PluginParams>;
 
   Object.keys(props).forEach((propName) => {
-    if (paramsLookup[propName]) {
-      pluginParams[propName] = props[propName];
+    const prop = props[propName as keyof typeof props] as any;
+
+    if (paramsLookup[propName as keyof PluginParams]) {
+      pluginParams[propName as keyof PluginParams] = prop;
     } else {
-      otherProps[propName] = props[propName];
+      otherProps[propName as keyof typeof otherProps] = prop;
     }
   });
 
