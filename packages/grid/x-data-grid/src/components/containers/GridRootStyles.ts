@@ -128,19 +128,15 @@ export const GridRootStyles = styled('div', {
   const radius = t.shape.borderRadius;
 
   const containerBackground = t.vars
-    ? t.vars.palette.background.defaultChannel
+    ? t.vars.palette.background.default
     : t.palette.background.default;
 
-  const pinnedBackground =
-    t.palette.mode === 'dark'
-      ? lighten(
-          t.vars ? t.vars.palette.background.defaultChannel : t.palette.background.default,
-          0.1,
-        )
-      : darken(
-          t.vars ? t.vars.palette.background.defaultChannel : t.palette.background.default,
-          0.05,
-        );
+  // eslint-disable-next-line no-nested-ternary
+  const pinnedBackground = t.vars
+    ? t.vars.palette.background.default // We cannot lighten/darken the background color if it's a CSS variable.
+    : t.palette.mode === 'dark'
+    ? lighten(t.palette.background.default, 0.1)
+    : darken(t.palette.background.default, 0.05);
 
   const overlayBackground = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
@@ -164,13 +160,15 @@ export const GridRootStyles = styled('div', {
         t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
       );
 
-  const pinnedHoverBackground = blend(pinnedBackground, hoverBackground, hoverOpacity);
-  const pinnedSelectedBackground = blend(pinnedBackground, selectedBackground, selectedOpacity);
-  const pinnedSelectedHoverBackground = blend(
-    pinnedSelectedBackground,
-    hoverBackground,
-    hoverOpacity,
-  );
+  const pinnedHoverBackground = t.vars
+    ? hoverBackground
+    : blend(pinnedBackground, hoverBackground, hoverOpacity);
+  const pinnedSelectedBackground = t.vars
+    ? selectedBackground
+    : blend(pinnedBackground, selectedBackground, selectedOpacity);
+  const pinnedSelectedHoverBackground = t.vars
+    ? hoverBackground
+    : blend(pinnedSelectedBackground, hoverBackground, hoverOpacity);
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
