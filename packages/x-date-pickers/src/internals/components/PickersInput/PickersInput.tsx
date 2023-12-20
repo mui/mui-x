@@ -53,8 +53,8 @@ export const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
   flexWrap: 'nowrap',
   overflow: 'hidden',
   letterSpacing: 'inherit',
-  // Chrome behavior
-  width: '11.389em',
+  // Baseline behavior
+  width: '182px',
 
   ...(ownerState.size === 'small' && {
     paddingTop: 1,
