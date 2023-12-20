@@ -2,7 +2,7 @@ import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import { useDrawingArea, useYScale } from '../hooks';
 import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
-import { ChartsText } from '../internals/components/ChartsText';
+import { ChartsText } from '../ChartsText';
 import {
   ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
