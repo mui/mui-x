@@ -29,6 +29,10 @@
     "disableColumnMenu": { "type": { "name": "bool" } },
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
+    "disableMultipleRowSelection": {
+      "type": { "name": "bool" },
+      "default": "false (`true` for MIT DataGrid)"
+    },
     "disableRowSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {

@@ -68,7 +68,10 @@
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
-    "disableMultipleRowSelection": { "type": { "name": "bool" } },
+    "disableMultipleRowSelection": {
+      "type": { "name": "bool" },
+      "default": "false (`true` for MIT DataGrid)"
+    },
     "disableRowGrouping": { "type": { "name": "bool" } },
     "disableRowSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
