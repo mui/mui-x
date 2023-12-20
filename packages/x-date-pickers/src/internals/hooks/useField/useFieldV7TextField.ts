@@ -314,11 +314,14 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
         (activeSection.contentType === 'digit' && digitsOnly) ||
         (activeSection.contentType === 'digit-with-letter' && digitsAndLetterOnly);
       if (isValidPastedValue) {
+        resetCharacterQuery();
         updateSectionValue({
           activeSection,
           newSectionValue: pastedValue,
           shouldGoToNextSection: true,
         });
+        // prevent default to avoid the input input handler being called
+        event.preventDefault();
       }
       if (lettersOnly || digitsOnly) {
         // The pasted value correspond to a single section but not the expected type

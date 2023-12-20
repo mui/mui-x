@@ -1,3 +1,4 @@
+import { platform } from 'node:os';
 import { expect } from 'chai';
 import {
   chromium,
@@ -536,7 +537,7 @@ async function initializeEnvironment(
           const input = page.getByRole('textbox', { includeHidden: true });
 
           await page.locator(`.${pickersInputClasses.sectionsContainer}`).click();
-          await page.getByRole(`spinbutton`, { name: 'MM' }).type('04');
+          await page.getByRole(`spinbutton`, { name: 'MM' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'DD' }).type('11');
           await page.getByRole(`spinbutton`, { name: 'YYYY' }).type('2022');
 
@@ -549,6 +550,47 @@ async function initializeEnvironment(
 
           await page.keyboard.press('Delete');
           expect(await input.inputValue()).to.equal('');
+        });
+
+        it.only('should allow pasting a section', async () => {
+          // Only firefox is capable of reliably running this test in CI and headless browsers
+          if (browserType.name() !== 'firefox' /* && process.env.CIRCLECI */) {
+            return;
+          }
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          const input = page.getByRole('textbox', { includeHidden: true });
+
+          const isMac = platform() === 'darwin';
+          const modifier = isMac ? 'Meta' : 'Control';
+
+          const monthSection = page.getByRole(`spinbutton`, { name: 'MM' });
+          const daySection = page.getByRole(`spinbutton`, { name: 'DD' });
+          const yearSection = page.getByRole(`spinbutton`, { name: 'YYYY' });
+
+          await page.locator(`.${pickersInputClasses.sectionsContainer}`).click();
+          await monthSection.fill('04');
+          await daySection.type('11');
+          await yearSection.type('2022');
+
+          // move to day section
+          await yearSection.press('ArrowLeft');
+          // copy day section value
+          await daySection.press(`${modifier}+KeyC`);
+          // move to month section
+          await daySection.press('ArrowLeft');
+          // initiate search query on month section
+          await monthSection.press('1');
+          // paste day section value to month section
+          await monthSection.press(`${modifier}+KeyV`);
+
+          expect(await input.inputValue()).to.equal('11/11/2022');
+
+          // move back to month section
+          await daySection.press('ArrowLeft');
+          // check that the search query has been cleared after pasting
+          await monthSection.press('2');
+          expect(await input.inputValue()).to.equal('02/11/2022');
         });
       });
 

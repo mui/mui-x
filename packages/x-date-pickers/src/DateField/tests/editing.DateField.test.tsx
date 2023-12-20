@@ -1090,7 +1090,7 @@ describe('<DateField /> - Editing', () => {
       });
     };
 
-    const firePasteEventV6 = (input: HTMLInputElement, pastedValue: string) => {
+    const firePasteEventV6 = (input: HTMLInputElement, pastedValue?: string, rawValue?: string) => {
       act(() => {
         const clipboardEvent = new window.Event('paste', {
           bubbles: true,
@@ -1100,11 +1100,15 @@ describe('<DateField /> - Editing', () => {
 
         // @ts-ignore
         clipboardEvent.clipboardData = {
-          getData: () => pastedValue,
+          getData: () => pastedValue ?? rawValue ?? '',
         };
         // canContinue is `false` if default have been prevented
         const canContinue = input.dispatchEvent(clipboardEvent);
         if (!canContinue) {
+          return;
+        }
+
+        if (!pastedValue) {
           return;
         }
 
@@ -1444,6 +1448,44 @@ describe('<DateField /> - Editing', () => {
 
       fireEvent.change(input, { target: { value: '09/2/2022' } }); // Press 2
       expectFieldValueV6(input, '09/02/2022'); // If internal state is not reset it would be 22 instead of 02
+    });
+
+    it('should allow pasting a section', () => {
+      const v7Response = renderWithProps({
+        defaultValue: adapter.date('2018-12-05'),
+      });
+
+      v7Response.selectSection('month');
+
+      v7Response.pressKey(0, '1'); // Press 1
+      expectFieldValueV7(v7Response.getSectionsContainer(), '01/05/2018');
+
+      firePasteEventV7(v7Response.getActiveSection(0), '05');
+      expectFieldValueV7(v7Response.getSectionsContainer(), '05/05/2018');
+
+      v7Response.selectSection('month'); // move back to month section
+      v7Response.pressKey(0, '2'); // check that the search query has been cleared after pasting
+      expectFieldValueV7(v7Response.getSectionsContainer(), '02/05/2018'); // If internal state is not reset it would be 12 instead of 02
+
+      v7Response.unmount();
+
+      const v6Response = renderWithProps({
+        defaultValue: adapter.date('2018-12-05'),
+        shouldUseV6TextField: true,
+      });
+
+      const input = getTextbox();
+      v6Response.selectSection('month');
+
+      fireEvent.change(input, { target: { value: '1/05/2018' } }); // initiate search query on month section
+      expectFieldValueV6(input, '01/05/2018');
+
+      firePasteEventV6(input, undefined, '05');
+      expectFieldValueV6(input, '05/05/2018');
+
+      v6Response.selectSection('month'); // move back to month section
+      fireEvent.change(input, { target: { value: '2/05/2018' } }); // check that the search query has been cleared after pasting
+      expectFieldValueV6(input, '02/05/2018'); // If internal state is not reset it would be 12 instead of 02
     });
   });
 

@@ -84,6 +84,7 @@ export const useFieldV6TextField: UseFieldTextField<true> = (params) => {
     valueManager,
     applyCharacterEditing,
     resetCharacterQuery,
+    updateSectionValue,
     updateValueFromValueStr,
     clearActiveSection,
     clearValue,
@@ -261,7 +262,14 @@ export const useFieldV6TextField: UseFieldTextField<true> = (params) => {
         (activeSection.contentType === 'digit' && digitsOnly) ||
         (activeSection.contentType === 'digit-with-letter' && digitsAndLetterOnly);
       if (isValidPastedValue) {
-        // Early return to let the paste update section, value
+        resetCharacterQuery();
+        updateSectionValue({
+          activeSection,
+          newSectionValue: pastedValue,
+          shouldGoToNextSection: true,
+        });
+        // prevent default to avoid the input change handler being called
+        event.preventDefault();
         return;
       }
       if (lettersOnly || digitsOnly) {
