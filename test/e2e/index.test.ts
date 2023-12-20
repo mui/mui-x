@@ -552,7 +552,7 @@ async function initializeEnvironment(
           expect(await input.inputValue()).to.equal('');
         });
 
-        it.only('should allow pasting a section', async () => {
+        it('should allow pasting a section', async () => {
           // Only firefox is capable of reliably running this test in CI and headless browsers
           if (browserType.name() !== 'firefox' /* && process.env.CIRCLECI */) {
             return;
