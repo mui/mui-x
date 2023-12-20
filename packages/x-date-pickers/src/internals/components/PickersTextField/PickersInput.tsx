@@ -17,6 +17,8 @@ import {
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
 } from '../../../PickersSectionList';
 
+const round = (value) => Math.round(value * 1e5) / 1e5;
+
 const PickersInputRoot = styled(Box, {
   name: 'MuiPickersInput',
   slot: 'Root',
@@ -25,14 +27,19 @@ const PickersInputRoot = styled(Box, {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
+    ...theme.typography.body1,
+    color: (theme.vars || theme).palette.text.primary,
+
     cursor: 'text',
-    padding: '16.5px 14px',
+    padding: '0 14px',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: ownerState.fullWidth ? '100%' : '25ch',
     position: 'relative',
     borderRadius: (theme.vars || theme).shape.borderRadius,
+    boxSizing: 'border-box', // Prevent padding issue with fullWidth.
+    letterSpacing: `${round(0.15 / 16)}em`,
+
     [`&:hover .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.text.primary,
     },
@@ -65,10 +72,6 @@ const PickersInputRoot = styled(Box, {
     [`&.${pickersInputClasses.error} .${pickersInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.error.main,
     },
-
-    ...(ownerState.size === 'small' && {
-      padding: '8.5px 14px',
-    }),
   };
 });
 
@@ -80,7 +83,19 @@ const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   lineHeight: '1.4375em', // 23px
+  outline: 'none',
+  display: 'flex',
+  flexWrap: 'nowrap',
+  padding: '16.5px 0',
   flexGrow: 1,
+  overflow: 'hidden',
+  letterSpacing: 'inherit',
+  // Chrome behavior
+  width: '182px',
+
+  ...(ownerState.size === 'small' && {
+    padding: '8.5px 0',
+  }),
   ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
   ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
     color: 'currentColor',
@@ -103,8 +118,9 @@ const PickersInputSection = styled(PickersSectionListSection, {
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
+  letterSpacing: 'inherit',
   lineHeight: '1.4375em', // 23px
-  flexGrow: 1,
+  display: 'flex',
 }));
 
 const PickersInputSectionContent = styled(PickersSectionListSectionContent, {
@@ -123,7 +139,10 @@ const PickersInputSeparator = styled(PickersSectionListSectionSeparator, {
   name: 'MuiPickersInput',
   slot: 'Separator',
   overridesResolver: (props, styles) => styles.separator,
-})(() => ({}));
+})(() => ({
+  whiteSpace: 'pre',
+  letterSpacing: 'inherit',
+}));
 
 const PickersInputInput = styled('input', {
   name: 'MuiPickersInput',
@@ -257,6 +276,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
 
   const ownerState: OwnerStateType = {
     ...(props as Omit<PickersInputProps, keyof FormControlState>),
+
     ...muiFormControl,
   };
 

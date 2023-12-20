@@ -745,7 +745,7 @@ describe('<DateField /> - Editing', () => {
   );
 
   describeAdapters('Pasting', DateField, ({ adapter, render, renderWithProps, clickOnInput }) => {
-    const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
+    const firePasteEvent = (input: HTMLInputElement, pastedValue?: string, rawValue?: string) => {
       act(() => {
         const clipboardEvent = new window.Event('paste', {
           bubbles: true,
@@ -755,11 +755,15 @@ describe('<DateField /> - Editing', () => {
 
         // @ts-ignore
         clipboardEvent.clipboardData = {
-          getData: () => pastedValue,
+          getData: () => pastedValue ?? rawValue ?? '',
         };
         // canContinue is `false` if default have been prevented
         const canContinue = input.dispatchEvent(clipboardEvent);
         if (!canContinue) {
+          return;
+        }
+
+        if (!pastedValue) {
           return;
         }
 
@@ -926,6 +930,24 @@ describe('<DateField /> - Editing', () => {
 
       fireEvent.change(input, { target: { value: '09/2/2022' } }); // Press 2
       expectInputValue(input, '09/02/2022'); // If internal state is not reset it would be 22 instead of 02
+    });
+
+    it('should allow pasting a section', () => {
+      const { input, selectSection } = renderWithProps({
+        defaultValue: adapter.date('2018-12-05'),
+      });
+
+      selectSection('month');
+
+      fireEvent.change(input, { target: { value: '1/05/2018' } }); // initiate search query on month section
+      expectInputValue(input, '01/05/2018');
+
+      firePasteEvent(input, undefined, '05');
+      expectInputValue(input, '05/05/2018');
+
+      selectSection('month'); // move back to month section
+      fireEvent.change(input, { target: { value: '2/05/2018' } }); // check that the search query has been cleared after pasting
+      expectInputValue(input, '02/05/2018'); // If internal state is not reset it would be 12 instead of 02
     });
   });
 

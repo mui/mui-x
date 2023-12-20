@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { referenceLineClasses, ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
-import { ChartsTextStyle } from '../internals/components/ChartsText';
+import { ChartsTextStyle } from '../ChartsText';
 
 export type CommonChartsReferenceLineProps = {
   /**
