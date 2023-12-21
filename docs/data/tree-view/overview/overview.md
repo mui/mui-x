@@ -81,7 +81,7 @@ You can customize the collapse, expand and end icons of the TreeView.
 
 You can use icon liraries:
 
-{{"demo": "CustomMaterialIcons.js", "defaultCodeOpen": false}}
+{{"demo": "CustomMaterialIcons.js", "defaultCodeOpen": true}}
 
 Or you can create your own components:
 

@@ -31,14 +31,11 @@ function DotIcon() {
   );
 }
 
-const StyledTreeItemLabel = styled(Typography)(({ theme, ...props }) => {
-  console.log('ownerState', props, theme);
-  return {
-    color: 'inherit',
-    fontFamily: 'General Sans',
-    fontWeight: 'inherit',
-    flexGrow: 1,
-  };
+const StyledTreeItemLabel = styled(Typography)({
+  color: 'inherit',
+  fontFamily: 'General Sans',
+  fontWeight: 'inherit',
+  flexGrow: 1,
 });
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
