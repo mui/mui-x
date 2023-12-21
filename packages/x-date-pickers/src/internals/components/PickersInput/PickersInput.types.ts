@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BoxProps } from '@mui/material/Box';
 import { PickersSectionListProps } from '../../../PickersSectionList';
 
@@ -34,8 +33,39 @@ export interface PickersInputPropsUsedByField
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
-export interface PickersInputOtherProps extends Omit<BoxProps, keyof PickersInputPropsUsedByField> {
-  ref?: React.Ref<any>;
+export interface PickersInputProps
+  extends Omit<BoxProps, keyof PickersInputPropsUsedByField>,
+    PickersInputPropsUsedByField {
+  ownerState?: any;
+  margin?: 'dense' | 'none' | 'normal';
+  renderSuffix?: (state: {
+    disabled?: boolean;
+    error?: boolean;
+    filled?: boolean;
+    focused?: boolean;
+    margin?: 'dense' | 'none' | 'normal';
+    required?: boolean;
+    adornedStart?: boolean;
+  }) => React.ReactNode;
+  ref?: React.Ref<HTMLDivElement>;
+  /**
+   * The components used for each slot inside.
+   *
+   * @default {}
+   */
+  slots?: {
+    root?: React.ElementType;
+    input?: React.ElementType;
+  };
 }
 
-export interface PickersInputProps extends PickersInputPropsUsedByField, PickersInputOtherProps {}
+export interface PickersOutlinedInputProps extends PickersInputProps {
+  notched?: boolean;
+}
+export interface PickersStandardInputProps extends PickersInputProps {
+  disableUnderline?: boolean;
+}
+export interface PickersFilledInputProps extends PickersInputProps {
+  disableUnderline?: boolean;
+  hiddenLabel?: boolean;
+}

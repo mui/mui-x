@@ -7,8 +7,16 @@ import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
-import { PickersInput } from './PickersInput';
 import { PickersTextFieldProps } from './PickersTextField.types';
+import { PickersOutlinedInput } from '../PickersInput/PickersOutlinedInput';
+import { PickersFilledInput } from '../PickersInput/PickersFilledInput';
+import { PickersStandardInput } from '../PickersInput/PickersStandardInput';
+
+const VARIANT_COMPONENT = {
+  standard: PickersStandardInput,
+  filled: PickersFilledInput,
+  outlined: PickersOutlinedInput,
+};
 
 const PickersTextFieldRoot = styled(FormControl, {
   name: 'MuiPickersTextField',
@@ -45,9 +53,8 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
     color = 'primary',
     disabled = false,
     error = false,
-    required = false,
     variant = 'outlined',
-
+    required = false,
     // Props used by PickersInput
     InputProps,
     inputProps,
@@ -100,6 +107,8 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
 
   const classes = useUtilityClasses(ownerState);
 
+  const PickersInputComponent = VARIANT_COMPONENT[variant];
+
   return (
     <PickersTextFieldRoot
       className={clsx(classes.root, className)}
@@ -111,15 +120,15 @@ export const PickersTextField = React.forwardRef(function PickersTextField(
       variant={variant}
       error={error}
       color={color}
+      fullWidth={fullWidth}
       required={required}
       ownerState={ownerState}
-      fullWidth={fullWidth}
       {...other}
     >
       <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
         {label}
       </InputLabel>
-      <PickersInput
+      <PickersInputComponent
         elements={elements}
         areAllSectionsEmpty={areAllSectionsEmpty}
         onClick={onClick}
