@@ -1,10 +1,6 @@
 {
   "props": {
-    "outerRadius": {
-      "type": { "name": "number" },
-      "default": "R_max The maximal radius that fit into the drawing area.",
-      "required": true
-    },
+    "outerRadius": { "type": { "name": "number" }, "required": true },
     "arcLabel": {
       "type": {
         "name": "union",
