@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import {
+  ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieSeriesType,
@@ -46,26 +47,18 @@ export interface PieArcLabelPlotSlotProps {
 
 export interface PieArcLabelPlotProps
   extends Pick<
-    DefaultizedPieSeriesType,
-    | 'data'
-    | 'faded'
-    | 'highlighted'
-    | 'cornerRadius'
-    | 'paddingAngle'
-    | 'arcLabel'
-    | 'arcLabelMinAngle'
-    | 'id'
-    | 'highlightScope'
-  > {
-  /**
-   * The radius between circle center and the begining of the arc.
-   * @default 0
-   */
-  innerRadius?: number;
-  /**
-   * The radius between circle center and the end of the arc.
-   */
-  outerRadius: number;
+      DefaultizedPieSeriesType,
+      | 'data'
+      | 'faded'
+      | 'highlighted'
+      | 'cornerRadius'
+      | 'paddingAngle'
+      | 'arcLabel'
+      | 'arcLabelMinAngle'
+      | 'id'
+      | 'highlightScope'
+    >,
+    ComputedPieRadius {
   /**
    * Overridable component slots.
    * @default {}

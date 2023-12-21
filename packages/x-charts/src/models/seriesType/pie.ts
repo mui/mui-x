@@ -117,3 +117,18 @@ export interface DefaultizedPieSeriesType
   extends DefaultizedProps<PieSeriesType, CommonDefaultizedProps> {
   data: DefaultizedPieValueType[];
 }
+
+/**
+ * Props received when the parent components has done the percentage conversion.
+ */
+export interface ComputedPieRadius {
+  /**
+   * The radius between circle center and the begining of the arc.
+   * @default 0
+   */
+  innerRadius?: number;
+  /**
+   * The radius between circle center and the end of the arc.
+   */
+  outerRadius: number;
+}

@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { InteractionContext } from '../../context/InteractionProvider';
-import { DefaultizedPieSeriesType, DefaultizedPieValueType } from '../../models/seriesType/pie';
+import {
+  ComputedPieRadius,
+  DefaultizedPieSeriesType,
+  DefaultizedPieValueType,
+} from '../../models/seriesType/pie';
 import { getIsHighlighted, getIsFaded } from '../../hooks/useInteractionItemProps';
 
 export interface AnimatedObject {
@@ -21,17 +25,8 @@ export function useTransformData(
   series: Pick<
     DefaultizedPieSeriesType,
     'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope' | 'highlighted' | 'faded' | 'data'
-  > & {
-    /**
-     * The radius between circle center and the begining of the arc.
-     * @default 0
-     */
-    innerRadius?: number;
-    /**
-     * The radius between circle center and the end of the arc.
-     */
-    outerRadius: number;
-  },
+  > &
+    ComputedPieRadius,
 ) {
   const {
     id: seriesId,

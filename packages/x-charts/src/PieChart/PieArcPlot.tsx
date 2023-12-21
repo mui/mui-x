@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import { PieArc, PieArcProps } from './PieArc';
 import {
+  ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieItemIdentifier,
@@ -24,18 +25,10 @@ export interface PieArcPlotSlotProps {
 
 export interface PieArcPlotProps
   extends Pick<
-    DefaultizedPieSeriesType,
-    'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope'
-  > {
-  /**
-   * The radius between circle center and the begining of the arc.
-   * @default 0
-   */
-  innerRadius?: number;
-  /**
-   * The radius between circle center and the end of the arc.
-   */
-  outerRadius: number;
+      DefaultizedPieSeriesType,
+      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope'
+    >,
+    ComputedPieRadius {
   /**
    * Overridable component slots.
    * @default {}
