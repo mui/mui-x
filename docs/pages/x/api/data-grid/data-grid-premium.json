@@ -20,9 +20,9 @@
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
-    "autoHeight": { "type": { "name": "bool" } },
-    "autoPageSize": { "type": { "name": "bool" } },
-    "autosizeOnMount": { "type": { "name": "bool" } },
+    "autoHeight": { "type": { "name": "bool" }, "default": "false" },
+    "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
+    "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOptions": {
       "type": {
         "name": "shape",
@@ -30,9 +30,9 @@
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
-    "cellSelection": { "type": { "name": "bool" } },
+    "cellSelection": { "type": { "name": "bool" }, "default": "false" },
     "cellSelectionModel": { "type": { "name": "object" } },
-    "checkboxSelection": { "type": { "name": "bool" } },
+    "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelectionVisibleOnly": {
       "type": { "name": "custom", "description": "bool" },
       "default": "false"
@@ -54,24 +54,24 @@
     "detailPanelExpandedRowIds": {
       "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
     },
-    "disableAggregation": { "type": { "name": "bool" } },
-    "disableAutosize": { "type": { "name": "bool" } },
-    "disableChildrenFiltering": { "type": { "name": "bool" } },
-    "disableChildrenSorting": { "type": { "name": "bool" } },
-    "disableClipboardPaste": { "type": { "name": "bool" } },
-    "disableColumnFilter": { "type": { "name": "bool" } },
-    "disableColumnMenu": { "type": { "name": "bool" } },
-    "disableColumnPinning": { "type": { "name": "bool" } },
-    "disableColumnReorder": { "type": { "name": "bool" } },
-    "disableColumnResize": { "type": { "name": "bool" } },
-    "disableColumnSelector": { "type": { "name": "bool" } },
-    "disableDensitySelector": { "type": { "name": "bool" } },
-    "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
-    "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
-    "disableMultipleRowSelection": { "type": { "name": "bool" } },
-    "disableRowGrouping": { "type": { "name": "bool" } },
-    "disableRowSelectionOnClick": { "type": { "name": "bool" } },
-    "disableVirtualization": { "type": { "name": "bool" } },
+    "disableAggregation": { "type": { "name": "bool" }, "default": "false" },
+    "disableAutosize": { "type": { "name": "bool" }, "default": "false" },
+    "disableChildrenFiltering": { "type": { "name": "bool" }, "default": "false" },
+    "disableChildrenSorting": { "type": { "name": "bool" }, "default": "false" },
+    "disableClipboardPaste": { "type": { "name": "bool" }, "default": "false" },
+    "disableColumnFilter": { "type": { "name": "bool" }, "default": "false" },
+    "disableColumnMenu": { "type": { "name": "bool" }, "default": "false" },
+    "disableColumnPinning": { "type": { "name": "bool" }, "default": "false" },
+    "disableColumnReorder": { "type": { "name": "bool" }, "default": "false" },
+    "disableColumnResize": { "type": { "name": "bool" }, "default": "false" },
+    "disableColumnSelector": { "type": { "name": "bool" }, "default": "false" },
+    "disableDensitySelector": { "type": { "name": "bool" }, "default": "false" },
+    "disableMultipleColumnsFiltering": { "type": { "name": "bool" }, "default": "false" },
+    "disableMultipleColumnsSorting": { "type": { "name": "bool" }, "default": "false" },
+    "disableMultipleRowSelection": { "type": { "name": "bool" }, "default": "false" },
+    "disableRowGrouping": { "type": { "name": "bool" }, "default": "false" },
+    "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
+    "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "editMode": {
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
@@ -169,15 +169,15 @@
       }
     },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
-    "headerFilters": { "type": { "name": "bool" } },
-    "hideFooter": { "type": { "name": "bool" } },
-    "hideFooterPagination": { "type": { "name": "bool" } },
+    "headerFilters": { "type": { "name": "bool" }, "default": "false" },
+    "hideFooter": { "type": { "name": "bool" }, "default": "false" },
+    "hideFooterPagination": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterRowCount": {
       "type": { "name": "custom", "description": "bool" },
       "default": "false"
     },
-    "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
-    "ignoreDiacritics": { "type": { "name": "bool" } },
+    "hideFooterSelectedRowCount": { "type": { "name": "bool" }, "default": "false" },
+    "ignoreDiacritics": { "type": { "name": "bool" }, "default": "false" },
     "ignoreValueFormatterDuringExport": {
       "type": {
         "name": "union",
@@ -210,8 +210,8 @@
         "returned": "boolean"
       }
     },
-    "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" } },
-    "keepNonExistentRowsSelected": { "type": { "name": "bool" } },
+    "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
+    "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -526,7 +526,7 @@
       },
       "default": "[25, 50, 100]"
     },
-    "pagination": { "type": { "name": "bool" } },
+    "pagination": { "type": { "name": "bool" }, "default": "false" },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -564,7 +564,7 @@
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
     "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
-    "rowReordering": { "type": { "name": "bool" } },
+    "rowReordering": { "type": { "name": "bool" }, "default": "false" },
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
@@ -582,8 +582,8 @@
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
-    "showCellVerticalBorder": { "type": { "name": "bool" } },
-    "showColumnVerticalBorder": { "type": { "name": "bool" } },
+    "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
+    "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" } },
     "sortingMode": {
@@ -612,7 +612,7 @@
       "additionalInfo": { "sx": true }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
-    "treeData": { "type": { "name": "bool" } }
+    "treeData": { "type": { "name": "bool" }, "default": "false" }
   },
   "slots": [
     {

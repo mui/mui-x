@@ -11,10 +11,10 @@
       }
     },
     "defaultValue": { "type": { "name": "any" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableFuture": { "type": { "name": "bool" }, "default": "false" },
+    "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
+    "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "focusedView": {
@@ -23,7 +23,7 @@
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
     },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
     "monthsPerRow": {
@@ -62,7 +62,7 @@
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
     },
-    "readOnly": { "type": { "name": "bool" } },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
@@ -104,7 +104,7 @@
         "returned": "boolean"
       }
     },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {

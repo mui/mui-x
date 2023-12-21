@@ -4,12 +4,12 @@
       "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
       "required": true
     },
-    "area": { "type": { "name": "bool" } },
+    "area": { "type": { "name": "bool" }, "default": "false" },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "disableAxisListener": { "type": { "name": "bool" } },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" }, "default": "undefined" },
     "margin": {
       "type": {
@@ -22,8 +22,8 @@
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
     },
-    "showHighlight": { "type": { "name": "bool" } },
-    "showTooltip": { "type": { "name": "bool" } },
+    "showHighlight": { "type": { "name": "bool" }, "default": "false" },
+    "showTooltip": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "valueFormatter": {
