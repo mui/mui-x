@@ -1104,6 +1104,36 @@ describe('<TreeItem />', () => {
 
           expect(getByTestId('one')).not.to.have.attribute('aria-selected');
         });
+
+        it('should select a node when Enter is pressed and the node is not selected', () => {
+          const { getByRole, getByTestId } = render(
+            <TreeView>
+              <TreeItem nodeId="one" label="one" data-testid="one" />
+            </TreeView>,
+          );
+
+          act(() => {
+            getByRole('tree').focus();
+          });
+          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
+
+          expect(getByTestId('one')).to.have.attribute('aria-selected');
+        });
+
+        it('should not un-select a node when Enter is pressed and the node is selected', () => {
+          const { getByRole, getByTestId } = render(
+            <TreeView defaultSelected="one">
+              <TreeItem nodeId="one" label="one" data-testid="one" />
+            </TreeView>,
+          );
+
+          act(() => {
+            getByRole('tree').focus();
+          });
+          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
+
+          expect(getByTestId('one')).to.have.attribute('aria-selected');
+        });
       });
 
       describe('mouse', () => {
