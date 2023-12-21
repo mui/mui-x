@@ -199,11 +199,12 @@ function BlogCard({ entry }) {
       sx={{
         background: 'transparent',
         borderColor: 'divider',
-        ...theme.applyDarkStyles({
+        // TODO: Allow to use theme.applyDarkStyles
+        '.mode-dark': {
           color: 'primary.300',
           background: 'transparent',
           borderColor: 'divider',
-        }),
+        },
       }}
     >
       <Box
@@ -215,10 +216,11 @@ function BlogCard({ entry }) {
           alignItems: 'center',
           gap: 3,
           background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
-          ...theme.applyDarkStyles({
+          // TODO: Allow to use theme.applyDarkStyles
+          '.mode-dark': {
             bgcolor: 'primaryDark.900',
             background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
-          }),
+          },
         }}
       >
         <div>
@@ -299,6 +301,7 @@ BlogCard.propTypes = {
 export default function ChangeLog() {
   const theme = useTheme();
 
+  console.log(theme.palette.mode);
   return (
     <BrandingCssVarsProvider>
       <div data-mui-color-scheme={theme.palette.mode}>
@@ -351,7 +354,8 @@ export default function ChangeLog() {
                     flexGrow: 0,
                     width: '1px',
                     backgroundColor: 'grey.100',
-                    ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
+                    // TODO: Allow to use theme.applyDarkStyles
+                    '.mode-dark': { backgroundColor: 'primaryDark.700' },
                   }}
                 />
                 <TimelineDot
@@ -369,7 +373,8 @@ export default function ChangeLog() {
                   sx={{
                     width: '1px',
                     backgroundColor: 'grey.100',
-                    ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
+                    // TODO: Allow to use theme.applyDarkStyles
+                    '.mode-dark': { backgroundColor: 'primaryDark.700' },
                   }}
                 />
               </TimelineSeparator>
