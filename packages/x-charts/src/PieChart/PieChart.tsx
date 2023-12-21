@@ -310,8 +310,8 @@ PieChart.propTypes = {
       arcLabelMinAngle: PropTypes.number,
       color: PropTypes.string,
       cornerRadius: PropTypes.number,
-      cx: PropTypes.number,
-      cy: PropTypes.number,
+      cx: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       data: PropTypes.arrayOf(
         PropTypes.shape({
           color: PropTypes.string,
@@ -342,8 +342,8 @@ PieChart.propTypes = {
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
       }),
       id: PropTypes.string,
-      innerRadius: PropTypes.number,
-      outerRadius: PropTypes.number,
+      innerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      outerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       paddingAngle: PropTypes.number,
       sortingValues: PropTypes.oneOfType([
         PropTypes.oneOf(['asc', 'desc', 'none']),

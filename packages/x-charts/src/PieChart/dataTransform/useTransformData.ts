@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { InteractionContext } from '../../context/InteractionProvider';
-import { DefaultizedPieSeriesType, DefaultizedPieValueType } from '../../models/seriesType/pie';
+import {
+  ComputedPieRadius,
+  DefaultizedPieSeriesType,
+  DefaultizedPieValueType,
+} from '../../models/seriesType/pie';
 import { getIsHighlighted, getIsFaded } from '../../hooks/useInteractionItemProps';
-import { DefaultizedProps } from '../../models/helpers';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -19,21 +22,11 @@ export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObj
 }
 
 export function useTransformData(
-  series: DefaultizedProps<
-    Pick<
-      DefaultizedPieSeriesType,
-      | 'innerRadius'
-      | 'outerRadius'
-      | 'cornerRadius'
-      | 'paddingAngle'
-      | 'id'
-      | 'highlightScope'
-      | 'highlighted'
-      | 'faded'
-      | 'data'
-    >,
-    'outerRadius'
-  >,
+  series: Pick<
+    DefaultizedPieSeriesType,
+    'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope' | 'highlighted' | 'faded' | 'data'
+  > &
+    ComputedPieRadius,
 ) {
   const {
     id: seriesId,
