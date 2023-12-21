@@ -18,7 +18,7 @@ const Element = styled('div')({
   '&::after': {
     content: '" "',
     position: 'absolute',
-    zIndex: 3,
+    zIndex: 5,
     bottom: 0,
     left: 0,
     height: 1,

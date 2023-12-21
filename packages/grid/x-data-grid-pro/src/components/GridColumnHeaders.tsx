@@ -66,7 +66,6 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     boxSizing: 'border-box',
-    boxShadow: theme.shadows[2],
     backgroundColor: 'var(--DataGrid-pinnedBackground)',
     ...(ownerState.side === GridPinnedColumnPosition.LEFT && { left: 0 }),
     ...(ownerState.side === GridPinnedColumnPosition.RIGHT && { right: 0 }),

@@ -18,6 +18,9 @@ const Style = styled('div')({
     position: 'sticky',
     right: 0,
   },
+  '&:not(.header):not(.pinnedRight)': {
+    transform: 'translate3d(var(--DataGrid-offsetLeft), 0, 0)',
+  },
 });
 
 function GridScrollbarFillerCell({

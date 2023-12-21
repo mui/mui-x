@@ -231,7 +231,7 @@ export function useGridDimensions(
       height: topContainerHeight + contentSize.height + bottomContainerHeight,
     };
 
-    const newFullDimensions: GridDimensions = {
+    const newDimensions: GridDimensions = {
       isReady: true,
       root: rootDimensionsRef.current,
       viewportOuterSize,
@@ -253,13 +253,13 @@ export function useGridDimensions(
     };
 
     const prevDimensions = apiRef.current.state.dimensions;
-    setDimensions(newFullDimensions);
+    setDimensions(newDimensions);
 
     if (
-      newFullDimensions.viewportInnerSize.width !== prevDimensions.viewportInnerSize.width ||
-      newFullDimensions.viewportInnerSize.height !== prevDimensions.viewportInnerSize.height
+      newDimensions.viewportInnerSize.width !== prevDimensions.viewportInnerSize.width ||
+      newDimensions.viewportInnerSize.height !== prevDimensions.viewportInnerSize.height
     ) {
-      apiRef.current.publishEvent('viewportInnerSizeChange', newFullDimensions.viewportInnerSize);
+      apiRef.current.publishEvent('viewportInnerSizeChange', newDimensions.viewportInnerSize);
     }
 
     apiRef.current.updateRenderContext?.();
