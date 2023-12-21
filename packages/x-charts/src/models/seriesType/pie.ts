@@ -26,6 +26,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   innerRadius?: number | string;
   /**
    * The radius between circle center and the end of the arc.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
    * @default '100%'
    */
@@ -61,12 +62,14 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   arcLabelMinAngle?: number;
   /**
    * The x coordinate of the pie center.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the width the drawing area.
    * @default '50%'
    */
   cx?: number | string;
   /**
    * The y coordinate of the pie center.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the height the drawing area.
    * @default '50%'
    */

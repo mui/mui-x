@@ -22,8 +22,8 @@ export function getSVGPoint(svg: SVGSVGElement, event: MouseEvent) {
 }
 
 /**
- * Helper that conver values and percentages into values.
- * @param value The value provided by the developper. Can either be a number or a string with '%' or 'px'.
+ * Helper that converts values and percentages into values.
+ * @param value The value provided by the developer. Can either be a number or a string with '%' or 'px'.
  * @param refValue The numerical value associated to 100%.
  * @returns The numerical value associated to the provided value.
  */
@@ -48,6 +48,6 @@ export function getPercentageValue(value: number | string, refValue: number) {
     }
   }
   throw Error(
-    `MUI-Charts: Received the unknown value "${value}". It should be a number, or a string with a percentage value.`,
+    `MUI-Charts: Received an unknown value "${value}". It should be a number, or a string with a percentage value.`,
   );
 }
