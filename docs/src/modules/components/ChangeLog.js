@@ -15,7 +15,6 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import { useTheme } from '@mui/material/styles';
 
 const entries = [
   {
@@ -296,7 +295,6 @@ BlogCard.propTypes = {
 };
 
 export default function ChangeLog() {
-  const theme = useTheme();
   return (
     <div>
       <Timeline
