@@ -39,7 +39,7 @@ module.exports = function getBabelConfig(api) {
       [
         'babel-plugin-transform-rename-import',
         {
-          replacements: [{ original: '@mui/utils/macros/MuiError.macro', replacement: 'react' }],
+          replacements: [{ original: '@mui-internal/babel-macros/MuiError.macro', replacement: 'react' }],
         },
       ],
       // for IE 11 support
