@@ -401,17 +401,11 @@ const buildComponentDocumentation = async (options: {
         typeDescriptions,
       };
 
-      const jsdocDefaultValue = getJsdocDefaultValue(
+      const defaultValue = getJsdocDefaultValue(
         parseDoctrine(propDescriptor.description || '', {
           sloppy: true,
         }),
       );
-
-      // Only keep `default` for bool props if it isn't 'false'.
-      let defaultValue: string | undefined;
-      if (propDescriptor.type.name !== 'bool' || jsdocDefaultValue !== 'false') {
-        defaultValue = jsdocDefaultValue;
-      }
 
       if (prop.type.raw) {
         // Recast doesn't parse TypeScript
