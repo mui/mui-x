@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -290,6 +291,10 @@ function BlogCard({ entry }) {
     </Card>
   );
 }
+
+BlogCard.propTypes = {
+  entry: PropTypes.any,
+};
 
 export default function ChangeLog() {
   const theme = useTheme();
