@@ -109,24 +109,6 @@ export interface GridRenderEditCellParams<
 }
 
 /**
- * Parameters passed to `colDef.valueGetter`.
- */
-export interface GridValueGetterParams<
-  R extends GridValidRowModel = any,
-  V = any,
-  N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
-> extends Omit<GridCellParams<R, V, any, N>, 'formattedValue' | 'isEditable'> {
-  /**
-   * GridApi that let you manipulate the grid.
-   */
-  api: GridApiCommunity;
-  /**
-   * The default value for the cell that the `valueGetter` is overriding.
-   */
-  value: GridCellParams<R, V, any>['value'];
-}
-
-/**
  * Object passed as parameter in the column [[GridColDef]] value setter callback.
  */
 export interface GridValueSetterParams<R extends GridValidRowModel = any, V = any> {

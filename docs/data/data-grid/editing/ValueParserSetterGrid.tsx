@@ -2,13 +2,9 @@ import * as React from 'react';
 import {
   DataGrid,
   GridColDef,
-  GridValueGetterParams,
+  GridValueGetter,
   GridValueSetterParams,
 } from '@mui/x-data-grid';
-
-function getFullName(params: GridValueGetterParams) {
-  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
-}
 
 function setFullName(params: GridValueSetterParams) {
   const [firstName, lastName] = params.value!.toString().split(' ');
@@ -30,6 +26,18 @@ export default function ValueParserSetterGrid() {
   );
 }
 
+const defaultRows = [
+  { id: 1, lastName: 'Snow', firstName: 'Jon' },
+  { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
+  { id: 3, lastName: 'Lannister', firstName: 'Jaime' },
+  { id: 4, lastName: 'Stark', firstName: 'Arya' },
+  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys' },
+];
+
+const getFullName: GridValueGetter<(typeof defaultRows)[number]> = (params) => {
+  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
+};
+
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130, editable: true },
   { field: 'lastName', headerName: 'Last name', width: 130, editable: true },
@@ -43,12 +51,4 @@ const columns: GridColDef[] = [
     valueParser: parseFullName,
     sortComparator: (v1, v2) => v1!.toString().localeCompare(v2!.toString()),
   },
-];
-
-const defaultRows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon' },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime' },
-  { id: 4, lastName: 'Stark', firstName: 'Arya' },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys' },
 ];

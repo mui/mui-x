@@ -7,7 +7,6 @@ import {
   GridRenderCellParams,
   GridRenderEditCellParams,
   GridValueFormatterParams,
-  GridValueGetterParams,
   GridValueSetterParams,
   GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
@@ -44,6 +43,13 @@ export type GetApplyQuickFilterFn<R extends GridValidRowModel = GridValidRowMode
   colDef: GridStateColDef<R, V>,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => null | GridApplyQuickFilter<R, V>;
+
+export type GridValueGetter<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
+  value: V,
+  row: R,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => V;
 
 /**
  * Column Definition base interface.
@@ -134,11 +140,8 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   align?: GridAlignment;
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
-   * @template R, V
-   * @param {GridValueGetterParams<R, any>} params Object containing parameters for the getter.
-   * @returns {V} The cell value.
    */
-  valueGetter?: (params: GridValueGetterParams<R, any>) => V;
+  valueGetter?: GridValueGetter<R, V, F>;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.

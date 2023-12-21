@@ -528,7 +528,7 @@
   { "name": "GridUpdateAction", "kind": "TypeAlias" },
   { "name": "GridValidRowModel", "kind": "TypeAlias" },
   { "name": "GridValueFormatterParams", "kind": "Interface" },
-  { "name": "GridValueGetterParams", "kind": "Interface" },
+  { "name": "GridValueGetter", "kind": "TypeAlias" },
   { "name": "GridValueOptionsParams", "kind": "Interface" },
   { "name": "GridValueSetterParams", "kind": "Interface" },
   { "name": "GridViewColumnIcon", "kind": "Variable" },
