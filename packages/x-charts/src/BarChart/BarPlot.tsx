@@ -98,7 +98,7 @@ const useCompletedData = (): CompletedBarData[] => {
       if (verticalLayout) {
         if (!isBandScaleConfig(xAxisConfig)) {
           throw new Error(
-            `MUI-Charts: ${
+            `MUI-X-Charts: ${
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
@@ -107,7 +107,7 @@ const useCompletedData = (): CompletedBarData[] => {
         }
         if (xAxis[xAxisKey].data === undefined) {
           throw new Error(
-            `MUI-Charts: ${
+            `MUI-X-Charts: ${
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
@@ -118,7 +118,7 @@ const useCompletedData = (): CompletedBarData[] => {
       } else {
         if (!isBandScaleConfig(yAxisConfig)) {
           throw new Error(
-            `MUI-Charts: ${
+            `MUI-X-Charts: ${
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
@@ -128,7 +128,7 @@ const useCompletedData = (): CompletedBarData[] => {
 
         if (yAxis[yAxisKey].data === undefined) {
           throw new Error(
-            `MUI-Charts: ${
+            `MUI-X-Charts: ${
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
