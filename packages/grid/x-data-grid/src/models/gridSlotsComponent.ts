@@ -5,6 +5,8 @@ import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 import type { GridCellProps } from '../components/cell/GridCell';
 import type { GridColumnHeadersProps } from '../components/GridColumnHeaders';
+// TODO: Convert all `any` to `Props & PropsOverrides`
+import type { CellPropsOverrides } from './gridSlotsComponentsProps';
 
 export interface GridBaseSlots {
   /**
@@ -87,7 +89,7 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * Component rendered for each cell.
    * @default GridCell
    */
-  cell: React.JSXElementConstructor<GridCellProps>;
+  cell: React.JSXElementConstructor<GridCellProps & CellPropsOverrides>;
   /**
    * Component rendered for each skeleton cell.
    * @default GridSkeletonCell
