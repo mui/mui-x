@@ -1,12 +1,14 @@
 import { RichTreeViewClassKey } from '../RichTreeView';
-import { TreeItemClassKey } from '../TreeItem';
+import { SimpleTreeViewClassKey } from '../SimpleTreeView';
 import { TreeViewClassKey } from '../TreeView';
+import { TreeItemClassKey } from '../TreeItem';
 
 // prettier-ignore
 export interface TreeViewComponentNameToClassKey {
-  MuiTreeItem: TreeItemClassKey;
-  MuiTreeView: TreeViewClassKey;
+  MuiSimpleTreeView: SimpleTreeViewClassKey;
   MuiRichTreeView: RichTreeViewClassKey;
+  MuiTreeView: TreeViewClassKey;
+  MuiTreeItem: TreeItemClassKey;
 }
 
 declare module '@mui/material/styles' {

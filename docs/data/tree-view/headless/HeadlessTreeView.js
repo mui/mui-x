@@ -7,13 +7,13 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { RichTreeViewRoot } from '@mui/x-tree-view/RichTreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 /* eslint-disable */
 import { DEFAULT_TREE_VIEW_PLUGINS } from '@mui/x-tree-view/internals/plugins/defaultPlugins';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { TreeItem } from '@mui/x-tree-view';
 if (false) {
   console.log(
     'This log is here to make sure the js version has a lint error, otherwise we have a CI error',

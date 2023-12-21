@@ -36,7 +36,7 @@ const ITEMS = [{ id: 'tree-view-community' }];
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's identifier is not called `id`, then you need to use the `getItemId` prop to tell the `RichTreeView` component where it's located:
+If the item's identifier is not called `id`, then you need to use the `getItemId` prop to tell the `RichTreeView` component where it is located.
 
 The following demo shows how to use `getItemId` to grab the unique identifier from a property named `internalId`:
 
@@ -125,11 +125,11 @@ The behavior of disabled tree items depends on the `disabledItemsFocusable` prop
 
 If it is false:
 
-- Arrow keys will not focus disabled items and, the next non-disabled item will be focused.
+- Arrow keys will not focus disabled items, and the next non-disabled item will be focused.
 - Typing the first character of a disabled item's label will not focus the item.
 - Mouse or keyboard interaction will not expand/collapse disabled items.
 - Mouse or keyboard interaction will not select disabled items.
-- Shift + arrow keys will skip disabled items and, the next non-disabled item will be selected.
+- Shift + arrow keys will skip disabled items, and the next non-disabled item will be selected.
 - Programmatic focus will not focus disabled items.
 
 If it is true:

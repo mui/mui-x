@@ -35,7 +35,7 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-const getAllItemWIthChildrenNodeIds = () => {
+const getAllItemWithChildrenNodeIds = () => {
   const nodeIds = [];
   const registerNodeId = (item) => {
     if (item.children?.length) {
@@ -58,7 +58,7 @@ export default function ControlledExpansion() {
 
   const handleExpandClick = () => {
     setExpanded((oldExpanded) =>
-      oldExpanded.length === 0 ? getAllItemWIthChildrenNodeIds() : [],
+      oldExpanded.length === 0 ? getAllItemWithChildrenNodeIds() : [],
     );
   };
 

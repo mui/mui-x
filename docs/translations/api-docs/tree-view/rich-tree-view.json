@@ -75,7 +75,7 @@
       "description": "Used to determine if a given item should be disabled.",
       "deprecated": "",
       "typeDescriptions": {
-        "item": "The item to check",
+        "item": "The item to check.",
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },

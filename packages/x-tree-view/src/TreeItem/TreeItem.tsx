@@ -232,8 +232,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
       instance.focusRoot();
     }
 
-    const canBeFocused = !disabledItemsFocusable && disabled;
-    if (instance && !focused && event.currentTarget === event.target && !canBeFocused) {
+    const canBeFocused = !disabled || disabledItemsFocusable;
+    if (!focused && canBeFocused && event.currentTarget === event.target) {
       instance.focusNode(event, nodeId);
     }
   }

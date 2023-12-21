@@ -17,25 +17,23 @@ Tree views can be used to represent a file system navigator displaying folders a
 
 ## Available components
 
-The Tree View exists in two versions:
+There are two versions of the Tree View available.
 
 ### SimpleTreeView
 
-The `SimpleTreeView` component accepts its items as JSX children.
+The `SimpleTreeView` component receives its items as JSX children.
 It is designed for simple use-cases where the items are hardcoded.
 
 {{"demo": "BasicSimpleTreeView.js"}}
 
 :::warning
 Most new advanced features won't be available on this component.
-If you are waiting for features like editing or virtualization, you should probably use `RichTreeView` instead.
-
-Throughout the documentation, all the features not available for this component are marked as such at the beginning of the doc pages.
+If you are waiting for features like editing or virtualization, you should use `RichTreeView` instead.
 :::
 
 ### RichTreeView
 
-The `RichTreeView` component accepts its items takes with the `items` prop.
-It is designed for more advanced use-cases where the items are dynamically loaded from a datasource.
+The `RichTreeView` component receives its items through the `items` prop.
+It is designed for more advanced use-cases where the items are dynamically loaded from a data source.
 
 {{"demo": "BasicRichTreeView.js"}}

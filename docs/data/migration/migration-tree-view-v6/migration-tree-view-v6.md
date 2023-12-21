@@ -64,7 +64,7 @@ If you were using theme augmentation, you will also need to migrate it:
  });
 ```
 
-If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeView` object:
+If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object:
 
 ```diff
   import { treeViewClasses } from '@mui/x-tree-view/TreeView';

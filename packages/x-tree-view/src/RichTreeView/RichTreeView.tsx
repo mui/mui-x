@@ -59,9 +59,9 @@ function WrappedTreeItem<R extends {}>({
 }
 
 const childrenWarning = buildWarning([
-  'The `RichTreeView` component does not support JSX children.',
+  'MUI: The `RichTreeView` component does not support JSX children.',
   'If you want to add items, you need to use the `items` prop',
-  'Check you the documentation for more details: https://mui.com/x/react-tree-view/items/#usage-with-richtreeview',
+  'Check the documentation for more details: https://next.mui.com/x/react-tree-view/rich-tree-view/items/',
 ]);
 
 /**
@@ -265,7 +265,7 @@ RichTreeView.propTypes = {
   /**
    * Used to determine if a given item should be disabled.
    * @template R
-   * @param {R} item The item to check
+   * @param {R} item The item to check.
    * @returns {boolean} `true` if the item should be disabled.
    */
   isItemDisabled: PropTypes.func,

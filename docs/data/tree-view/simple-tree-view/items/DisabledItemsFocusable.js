@@ -24,7 +24,7 @@ export default function DisabledItemsFocusable() {
               name="disabledItemsFocusable"
             />
           }
-          label="Allow focusing on disabled items"
+          label="Allow focusing disabled items"
         />
       </Box>
       <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>

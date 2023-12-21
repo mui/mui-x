@@ -26,7 +26,7 @@ export interface UseTreeViewNodesParameters<R extends {}> {
   /**
    * Used to determine if a given item should be disabled.
    * @template R
-   * @param {R} item The item to check
+   * @param {R} item The item to check.
    * @returns {boolean} `true` if the item should be disabled.
    */
   isItemDisabled?: (item: R) => boolean;

@@ -1,23 +1,25 @@
 import { createTheme } from '@mui/material/styles';
 import { treeItemClasses } from '../TreeItem';
 import { richTreeViewClasses } from '../RichTreeView';
+import { simpleTreeViewClasses } from '../SimpleTreeView';
+import { treeViewClasses } from '../TreeView';
 
 createTheme({
   components: {
-    MuiTreeItem: {
+    MuiSimpleTreeView: {
       defaultProps: {
-        nodeId: '1',
-        // @ts-expect-error invalid MuiTreeItem prop
+        defaultExpanded: ['root'],
+        // @ts-expect-error invalid MuiSimpleTreeView prop
         someRandomProp: true,
       },
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${treeItemClasses.content}`]: {
+          [`.${simpleTreeViewClasses.root}`]: {
             backgroundColor: 'green',
           },
         },
-        // @ts-expect-error invalid MuiTreeItem class key
+        // @ts-expect-error invalid MuiSimpleTreeView class key
         main: {
           backgroundColor: 'blue',
         },
@@ -51,11 +53,30 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${richTreeViewClasses.root}`]: {
+          [`.${treeViewClasses.root}`]: {
             backgroundColor: 'green',
           },
         },
         // @ts-expect-error invalid MuiTreeView class key
+        main: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+    MuiTreeItem: {
+      defaultProps: {
+        nodeId: '1',
+        // @ts-expect-error invalid MuiTreeItem prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${treeItemClasses.content}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiTreeItem class key
         main: {
           backgroundColor: 'blue',
         },

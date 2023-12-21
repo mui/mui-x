@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Selection
 
-<p class="description">Handle how the users can select items.</p>
+<p class="description">Handle how users can select items.</p>
 
 ## Multi selection
 
@@ -24,3 +24,11 @@ Use the `selected` prop to control the selected items.
 You can use the `onNodeSelect` prop to listen to changes in the selected items and update the prop accordingly.
 
 {{"demo": "ControlledSelection.js"}}
+
+:::info
+
+- The selection is **controlled** when its parent manages it by providing a `selected` prop.
+- The selection is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultSelected` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::

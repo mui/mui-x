@@ -40,9 +40,9 @@ type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefine
 const EMPTY_ITEMS: any[] = [];
 
 const itemsPropWarning = buildWarning([
-  'The `SimpleTreeView` component does not support the `items` prop.',
-  'If you want to add items, you need to pass them as JSX children',
-  'Check you the documentation for more details: https://mui.com/x/react-tree-view/items/#usage-with-treeview',
+  'MUI: The `SimpleTreeView` component does not support the `items` prop.',
+  'If you want to add items, you need to pass them as JSX children.',
+  'Check the documentation for more details: https://next.mui.com/x/react-tree-view/simple-tree-view/items/',
 ]);
 
 /**

@@ -10,6 +10,7 @@ import {
   RichTreeViewPropsBase,
   RichTreeViewRoot,
 } from '@mui/x-tree-view/RichTreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
   TreeViewPlugin,
   TreeViewPluginSignature,
@@ -22,7 +23,6 @@ import {
 import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { TreeItem } from '@mui/x-tree-view';
 if (false) {
   console.log(
     'This log is here to make sure the js version has a lint error, otherwise we have a CI error',
