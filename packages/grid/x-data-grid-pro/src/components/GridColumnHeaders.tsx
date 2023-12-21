@@ -59,7 +59,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     styles.pinnedColumnHeaders,
   ],
 })<{ ownerState: OwnerState & GridColumnHeadersPinnedColumnHeadersProps }>(
-  ({ theme, ownerState }) => ({
+  ({ ownerState }) => ({
     position: 'sticky',
     zIndex: 5,
     top: 0,

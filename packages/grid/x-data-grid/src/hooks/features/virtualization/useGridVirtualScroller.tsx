@@ -116,8 +116,10 @@ export const useGridVirtualScroller = () => {
   ]);
 
   const updateRenderContext = React.useCallback(
-    (nextRenderContext: GridRenderContext) => {
-      if (areRenderContextsEqual(nextRenderContext, previousContext.current)) {
+    (nextRenderContext: GridRenderContext, rawRenderContext: GridRenderContext) => {
+      if (
+        areRenderContextsEqual(nextRenderContext, apiRef.current.state.virtualization.renderContext)
+      ) {
         return;
       }
 
@@ -143,28 +145,29 @@ export const useGridVirtualScroller = () => {
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
       }
 
-      previousContext.current = nextRenderContext;
+      previousContext.current = rawRenderContext;
+      prevTotalWidth.current = dimensions.columnsTotalWidth;
     },
-    [apiRef, dimensions.isReady],
+    [apiRef, dimensions.isReady, dimensions.columnsTotalWidth],
   );
 
   const triggerUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-    const nextRenderContext = computeRenderContext(inputs, scrollPosition);
+    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition);
 
     // Since previous render, we have scrolled...
     const topRowsScrolled = Math.abs(
-      nextRenderContext.firstRowIndex - previousContext.current.firstRowIndex,
+      rawRenderContext.firstRowIndex - previousContext.current.firstRowIndex,
     );
     const bottomRowsScrolled = Math.abs(
-      nextRenderContext.lastRowIndex - previousContext.current.lastRowIndex,
+      rawRenderContext.lastRowIndex - previousContext.current.lastRowIndex,
     );
 
     const topColumnsScrolled = Math.abs(
-      nextRenderContext.firstColumnIndex - previousContext.current.firstColumnIndex,
+      rawRenderContext.firstColumnIndex - previousContext.current.firstColumnIndex,
     );
     const bottomColumnsScrolled = Math.abs(
-      nextRenderContext.lastColumnIndex - previousContext.current.lastColumnIndex,
+      rawRenderContext.lastColumnIndex - previousContext.current.lastColumnIndex,
     );
 
     const shouldUpdate =
@@ -180,20 +183,16 @@ export const useGridVirtualScroller = () => {
 
     // Prevents batching render context changes
     ReactDOM.flushSync(() => {
-      updateRenderContext(nextRenderContext);
+      updateRenderContext(nextRenderContext, rawRenderContext);
     });
-
-    prevTotalWidth.current = dimensions.columnsTotalWidth;
 
     return nextRenderContext;
   };
 
   const forceUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-    const nextRenderContext = computeRenderContext(inputs, scrollPosition);
-    updateRenderContext(nextRenderContext);
-
-    prevTotalWidth.current = dimensions.columnsTotalWidth;
+    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition);
+    updateRenderContext(nextRenderContext, rawRenderContext);
   };
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
@@ -504,8 +503,8 @@ export const useGridVirtualScroller = () => {
   useRunOnce(outerSize.width !== 0, () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
 
-    const initialRenderContext = computeRenderContext(inputs, scrollPosition);
-    updateRenderContext(initialRenderContext);
+    const [initialRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition);
+    updateRenderContext(initialRenderContext, rawRenderContext);
 
     apiRef.current.publishEvent('scrollPositionChange', {
       top: scrollPosition.top,
@@ -698,7 +697,7 @@ function computeRenderContext(inputs: RenderContextInputs, scrollPosition: Scrol
     };
   }
 
-  return deriveRenderContext(
+  const actualRenderContext = deriveRenderContext(
     inputs.apiRef,
     inputs.rowBuffer,
     inputs.columnBuffer,
@@ -707,6 +706,8 @@ function computeRenderContext(inputs: RenderContextInputs, scrollPosition: Scrol
     inputs.visibleColumns,
     renderContext,
   );
+
+  return [actualRenderContext, renderContext];
 }
 
 function getNearestIndexToRender(inputs: RenderContextInputs, offset: number) {
