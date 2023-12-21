@@ -1,6 +1,7 @@
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/data/pages'; // DO NOT REMOVE
+import { postProcessImport } from 'docsx/src/modules/utils/postProcessImport';
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
@@ -41,11 +42,6 @@ ponyfillGlobal.muiDocConfig = {
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
     }
-
-    if (newDeps['@mui/x-date-pickers'] || newDeps['@mui/x-date-pickers-pro']) {
-      newDeps.dayjs = versions.dayjs;
-    }
-
     return newDeps;
   },
   csbGetVersions: (versions, { muiCommitRef }) => {
@@ -59,12 +55,11 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
-      'date-fns': 'latest',
-      dayjs: 'latest',
       exceljs: 'latest',
     };
     return output;
   },
+  postProcessImport,
 };
 
 // Client-side cache, shared for the whole session of the user in the browser.
