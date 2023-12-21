@@ -15,13 +15,13 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import BrandingCssVarsProvider from 'docs/src/BrandingCssVarsProvider';
+import { useTheme } from '@mui/material/styles';
 
-const blogs = [
+const entries = [
   {
     title: 'MUI X v6.18.x',
-    description:
-      'New stable components, polished features, better performance, and more.',
-    announcementDate: 'Nov 13, 2023',
+    description: 'New stable components, polished features, better performance, and more.',
+    date: new Date(2023, 10, 13),
     url: 'https://mui.com/blog/mui-x-end-v6-features/',
     highlightList: [
       {
@@ -53,7 +53,7 @@ const blogs = [
   {
     title: 'MUI X v6.11.0',
     description: 'A roundup of all new features since v6.0.0.',
-    announcementDate: 'Aug 14, 2023',
+    date: new Date(2023, 7, 14),
     url: 'https://mui.com/blog/mui-x-mid-v6-features/',
     highlightList: [
       {
@@ -84,9 +84,8 @@ const blogs = [
   },
   {
     title: 'MUI X v6.0.0',
-    description:
-      'A new major is available, with many new features and improvements.',
-    announcementDate: 'Mar 06, 2023',
+    description: 'A new major is available, with many new features and improvements.',
+    date: new Date(2023, 2, 6),
     url: 'https://mui.com/blog/mui-x-v6/',
     highlightList: [
       {
@@ -123,7 +122,7 @@ const blogs = [
     title: 'Date Pickers v5.0.0',
     description:
       'After some months of polishing in pre-releases, the Date Pickers finally get a stable.',
-    announcementDate: 'Sep 22, 2022',
+    date: new Date(2022, 8, 22),
     url: 'https://mui.com/blog/date-pickers-stable-v5/',
     highlightList: [
       {
@@ -144,7 +143,7 @@ const blogs = [
     title: 'Data Grid v5.15',
     description:
       'This version brings an amazing set of new supported use cases with the Data Grid Premium.',
-    announcementDate: 'Aug 12, 2022',
+    date: new Date(2022, 7, 12),
     url: 'https://mui.com/blog/aggregation-functions/',
     highlightList: [
       {
@@ -161,7 +160,7 @@ const blogs = [
     title: 'New Premium plan',
     description:
       'Premium plan announcement, including the most advanced features for data analysis and management.',
-    announcementDate: 'May 12, 2022',
+    date: new Date(2022, 4, 12),
     url: 'https://mui.com/blog/premium-plan-release/',
     highlightList: [
       { title: 'Row Grouping', url: '/x/react-data-grid/row-grouping/' },
@@ -170,9 +169,8 @@ const blogs = [
   },
   {
     title: 'MUI X v5.0.0',
-    description:
-      'A new Data Grid virtualization engine, and improvements in several APIs.',
-    announcementDate: 'Nov 22, 2021',
+    description: 'A new Data Grid virtualization engine, and improvements in several APIs.',
+    date: new Date(2021, 10, 22),
     url: 'https://mui.com/blog/mui-x-v5/',
     highlightList: [
       {
@@ -191,11 +189,13 @@ const blogs = [
   },
 ];
 
-function BlogCard(props) {
+function BlogCard(entry) {
+  const theme = useTheme();
+
   return (
     <Card
       variant="outlined"
-      sx={(theme) => ({
+      sx={{
         background: 'transparent',
         borderColor: 'divider',
         ...theme.applyDarkStyles({
@@ -203,12 +203,13 @@ function BlogCard(props) {
           background: 'transparent',
           borderColor: 'divider',
         }),
-      })}
+      }}
     >
       <Box
-        sx={(theme) => ({
+        sx={{
           p: 2.5,
           display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
           justifyContent: 'space-between',
           alignItems: 'center',
           gap: 3,
@@ -217,34 +218,46 @@ function BlogCard(props) {
             bgcolor: 'primaryDark.900',
             background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
           }),
-        })}
+        }}
       >
         <div>
           <Typography
-            component="div"
-            color="text.primary"
-            fontWeight="bold"
-            mb={0.2}
+            variant="body2"
+            color="text.tertiary"
+            gutterBottom
+            sx={{ display: { xs: 'auto', sm: 'none' } }}
           >
-            {props.blog.title}
+            {entry.date.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </Typography>
+          <Typography component="div" color="text.primary" fontWeight="bold" mb={0.2}>
+            {entry.title}
           </Typography>
           <Typography component="div" color="text.secondary" variant="body2">
-            {props.blog.description}
+            {entry.description}
           </Typography>
         </div>
         <Button
           component="a"
           size="small"
           variant="outlined"
-          href={props.blog.url}
-          sx={{ height: 'fit-content', flexShrink: 0 }}
+          href={entry.url}
+          sx={{
+            height: 'fit-content',
+            flexShrink: 0,
+            width: { xs: '100%', sm: 'fit-content' },
+          }}
         >
-          Read more
+          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+          {'Read more'}
         </Button>
       </Box>
       <Divider />
       <List sx={{ p: 2, pt: 1.5 }}>
-        {props.blog.highlightList.map((item) => (
+        {entry.highlightList.map((item) => (
           <ListItem
             key={item.title}
             sx={{
@@ -264,7 +277,10 @@ function BlogCard(props) {
             <Link
               href={item.url}
               variant="body2"
-              sx={{ pl: 1.5, fontWeight: 'medium' }}
+              sx={{
+                pl: 1.5,
+                fontWeight: 'medium',
+              }}
             >
               {item.title}
             </Link>
@@ -276,79 +292,89 @@ function BlogCard(props) {
 }
 
 export default function ChangeLog() {
+  const theme = useTheme();
+
   return (
     <BrandingCssVarsProvider>
-      <Timeline
-        sx={{
-          p: 0,
-          'li:first-child': {
-            '& .top-connector': {
-              visibility: 'hidden',
+      <div data-mui-color-scheme={theme.palette.mode}>
+        <Timeline
+          sx={{
+            p: 0,
+            px: { xs: 2, sm: 0 },
+            'li:first-child': {
+              '& .top-connector': {
+                visibility: 'hidden',
+              },
             },
-          },
-          'li:last-child': {
-            '& .MuiTimelineContent-root': {
-              pb: 0,
+            'li:last-child': {
+              '& .MuiTimelineContent-root': {
+                pb: 0,
+              },
+              '& .bottom-connector': {
+                visibility: 'hidden',
+              },
             },
-            '& .bottom-connector': {
-              visibility: 'hidden',
-            },
-          },
-        }}
-      >
-        {blogs.map((blog) => (
-          <TimelineItem>
-            <TimelineOppositeContent
-              variant="body2"
-              color="text.tertiary"
-              sx={{
-                flex: 'none',
-                px: 0,
-                pt: 3.5,
-                pr: 3,
-                width: 120,
-                textAlign: 'left',
-                fontWeight: 'medium',
-              }}
-            >
-              {blog.announcementDate}
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-              <TimelineConnector
-                className="top-connector"
-                sx={(theme) => ({
-                  height: 32,
-                  flexGrow: 0,
-                  width: '1px',
-                  backgroundColor: 'grey.100',
-                  ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
-                })}
-              />
-              <TimelineDot
+          }}
+        >
+          {entries.map((entry) => (
+            <TimelineItem>
+              <TimelineOppositeContent
+                variant="body2"
+                color="text.tertiary"
                 sx={{
-                  m: 0,
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                  borderColor: 'grey.500',
-                  opacity: '60%',
-                  borderWidth: '1px',
+                  display: { xs: 'none', sm: 'flex' },
+                  flex: 'none',
+                  px: 0,
+                  pt: 3.5,
+                  pr: 3,
+                  width: 120,
+                  textAlign: 'left',
+                  fontWeight: 'medium',
                 }}
-              />
-              <TimelineConnector
-                className="bottom-connector"
-                sx={(theme) => ({
-                  width: '1px',
-                  backgroundColor: 'grey.100',
-                  ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
+              >
+                {entry.date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
                 })}
-              />
-            </TimelineSeparator>
-            <TimelineContent sx={{ pl: 4, pr: 0, pt: 0, pb: 3 }}>
-              <BlogCard blog={blog} />
-            </TimelineContent>
-          </TimelineItem>
-        ))}
-      </Timeline>
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineConnector
+                  className="top-connector"
+                  sx={{
+                    height: 32,
+                    flexGrow: 0,
+                    width: '1px',
+                    backgroundColor: 'grey.100',
+                    ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
+                  }}
+                />
+                <TimelineDot
+                  sx={{
+                    m: 0,
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                    borderColor: 'grey.500',
+                    opacity: '60%',
+                    borderWidth: '1px',
+                  }}
+                />
+                <TimelineConnector
+                  className="bottom-connector"
+                  sx={{
+                    width: '1px',
+                    backgroundColor: 'grey.100',
+                    ...theme.applyDarkStyles({ backgroundColor: 'primaryDark.700' }),
+                  }}
+                />
+              </TimelineSeparator>
+              <TimelineContent sx={{ pl: { xs: 2, sm: 4 }, pr: 0, pt: 0, pb: 3 }}>
+                <BlogCard entry={entry} />
+              </TimelineContent>
+            </TimelineItem>
+          ))}
+        </Timeline>
+      </div>
     </BrandingCssVarsProvider>
   );
 }
