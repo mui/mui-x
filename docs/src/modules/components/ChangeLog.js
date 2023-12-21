@@ -189,7 +189,7 @@ const entries = [
   },
 ];
 
-function BlogCard(entry) {
+function BlogCard({ entry }) {
   const theme = useTheme();
 
   return (
@@ -317,7 +317,7 @@ export default function ChangeLog() {
           }}
         >
           {entries.map((entry) => (
-            <TimelineItem>
+            <TimelineItem key={entry.date.toISOString()}>
               <TimelineOppositeContent
                 variant="body2"
                 color="text.tertiary"
