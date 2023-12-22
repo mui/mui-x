@@ -201,7 +201,7 @@ export interface DataGridPropsWithDefaultValues {
   /**
    * If `true`, multiple selection using the Ctrl/CMD or Shift key is disabled.
    * The MIT DataGrid will ignore this prop, unless `checkboxSelection` is enabled.
-   * @default false (`true` for MIT DataGrid)
+   * @default false (`true` MIT DataGrid with `checkboxSelection={false}`)
    */
   disableMultipleRowSelection: boolean;
   /**

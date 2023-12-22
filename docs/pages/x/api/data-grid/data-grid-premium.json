@@ -70,7 +70,7 @@
     "disableMultipleColumnsSorting": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleRowSelection": {
       "type": { "name": "bool" },
-      "default": "false (`true` for MIT DataGrid)"
+      "default": "false (`true` MIT DataGrid with `checkboxSelection={false}`)"
     },
     "disableRowGrouping": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
