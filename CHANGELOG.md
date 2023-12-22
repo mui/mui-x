@@ -55,7 +55,7 @@ From https://github.com/mui/mui-x/pull/7069
 - [DataGrid] Make `checkboxSelection` respect the `disableMultipleRowSelection` prop (#11448) @cherniavskii
 - [DataGrid] Support `Date` objects in filter model (#7069) @cherniavskii
 - [DataGrid] Use non-native `Select`s by default (#11330) @cherniavskii
-- [l10n] Improve Russian (ru-RU) locale (@wensiet) (#11441) @LukasTy
+- [l10n] Improve Russian (ru-RU) locale (#11441) @wensiet
 
 #### `@mui/x-data-grid-pro@7.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
