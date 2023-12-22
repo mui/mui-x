@@ -96,6 +96,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "disableMultipleRowSelection": {
+      "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled.",
       "deprecated": "",
