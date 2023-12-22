@@ -43,7 +43,7 @@ import { endOfMonth } from 'date-fns/endOfMonth';
 import { startOfWeek } from 'date-fns/startOfWeek';
 import { startOfYear } from 'date-fns/startOfYear';
 import { isWithinInterval } from 'date-fns/isWithinInterval';
-import { enUS as defaultLocale } from 'date-fns/locale/en-US';
+import { enUS as defaultLocale } from 'date-fns/locale';
 // @ts-ignore
 import { longFormatters } from 'date-fns/_lib/format/longFormatters';
 import {
