@@ -81,10 +81,10 @@ export const defaultLabelTransitionConfig: UseTransitionProps<ValueWithHighlight
     paddingAngle,
     opacity: 0,
   }),
-  leave: ({ innerRadius, startAngle, endAngle, arcLabelRadius }) => ({
+  leave: ({ innerRadius, startAngle, endAngle }) => ({
     innerRadius,
     outerRadius: innerRadius,
-    arcLabelRadius,
+    arcLabelRadius: innerRadius,
     startAngle: (startAngle + endAngle) / 2,
     endAngle: (startAngle + endAngle) / 2,
     opacity: 0,
