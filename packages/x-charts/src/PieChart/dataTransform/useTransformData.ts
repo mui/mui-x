@@ -65,28 +65,28 @@ export function useTransformData(
       data.map((item, itemIndex) => {
         const { isHighlighted, isFaded } = getHighlightStatus(itemIndex);
 
-        const attribuesOverride = {
+        const attributesOverride = {
           additionalRadius: 0,
           ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
         };
         const paddingAngle = Math.max(
           0,
-          (Math.PI * (attribuesOverride.paddingAngle ?? basePaddingAngle)) / 180,
+          (Math.PI * (attributesOverride.paddingAngle ?? basePaddingAngle)) / 180,
         );
-        const innerRadius = Math.max(0, attribuesOverride.innerRadius ?? baseInnerRadius);
+        const innerRadius = Math.max(0, attributesOverride.innerRadius ?? baseInnerRadius);
 
         const outerRadius = Math.max(
           0,
-          attribuesOverride.outerRadius ?? baseOuterRadius + attribuesOverride.additionalRadius,
+          attributesOverride.outerRadius ?? baseOuterRadius + attributesOverride.additionalRadius,
         );
-        const cornerRadius = attribuesOverride.cornerRadius ?? baseCornerRadius;
+        const cornerRadius = attributesOverride.cornerRadius ?? baseCornerRadius;
 
         const arcLabelRadius =
-          attribuesOverride.arcLabelRadius ?? baseArcLabelRadius ?? (innerRadius + outerRadius) / 2;
+          attributesOverride.arcLabelRadius ?? baseArcLabelRadius ?? (innerRadius + outerRadius) / 2;
 
         return {
           ...item,
-          ...attribuesOverride,
+          ...attributesOverride,
           isFaded,
           isHighlighted,
           paddingAngle,
