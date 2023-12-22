@@ -83,7 +83,7 @@ export function useTransformData(
 
         const arcLabelRadius =
           attibuesOverride.arcLabelRadius ?? baseArcLabelRadius ?? (innerRadius + outerRadius) / 2;
-        console.log({ arcLabelRadius });
+
         return {
           ...item,
           ...attibuesOverride,
