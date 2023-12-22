@@ -41,8 +41,6 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
   but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
-
-
 #### `@mui/x-data-grid@7.0.0-alpha.6`
 
 - [DataGrid] Fix typos in the JSDoc (#11451) @flaviendelangle
