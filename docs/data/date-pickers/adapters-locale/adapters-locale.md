@@ -42,6 +42,9 @@ For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 
 ```tsx
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// with date-fns v2.x
+import de from 'date-fns/locale/de';
+// with date-fns v3.x
 import { de } from 'date-fns/locale/de';
 
 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
@@ -280,6 +283,9 @@ dayjs.updateLocale('en', {
 For `date-fns`, use the `setDefaultOptions` utility:
 
 ```ts
+// with date-fns v2.x
+import setDefaultOptions from 'date-fns/setDefaultOptions';
+// with date-fns v3.x
 import { setDefaultOptions } from 'date-fns/setDefaultOptions';
 
 setDefaultOptions({
