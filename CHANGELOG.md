@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.18.6
+
+_Dec 22, 2023_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Russian (ru-RU) locale (#11429) @wensiet
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.6`
+
+- [DataGrid] Fix typos in the JSDoc (#11475) @flaviendelangle
+- [l10n] Improve Russian (ru-RU) locale (#11429) @wensiet
+
+#### `@mui/x-data-grid-pro@6.18.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.6`.
+
+#### `@mui/x-data-grid-premium@6.18.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.6`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.6`
+
+- [fields] Fix section pasting (#11467) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.6`.
+
+### Charts / `@mui/x-charts@6.18.6`
+
+- [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
+- [charts] Make error message more explicit (#11457) @alexfauquette
+- [charts] Make the helper `ChartsText` component public (#11370) @alexfauquette
+- [charts] Improve dataset typing (#11372) @alexfauquette
+- [charts] Fix size overflow (#11385) @alexfauquette
+
+### Docs
+
+- [docs] Document false default values for boolean props (#11489) @cherniavskii
+- [docs] Improve Pickers `name` prop examples (#11442) @LukasTy
+- [docs] Limit `date-fns` package to v2 in codesandbox (#11478) @LukasTy
+- [test] Reload the page if its blank and there are no links to the remaining tests (#11471) @cherniavskii
+
 ## 6.18.5
 
 _Dec 14, 2023_
