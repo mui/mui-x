@@ -10,6 +10,7 @@ import { getIsHighlighted, getIsFaded } from '../../hooks/useInteractionItemProp
 export interface AnimatedObject {
   innerRadius: number;
   outerRadius: number;
+  arcLabelRadius: number;
   cornerRadius: number;
   startAngle: number;
   endAngle: number;
@@ -36,6 +37,7 @@ export function useTransformData(
     highlighted,
     paddingAngle: basePaddingAngle = 0,
     innerRadius: baseInnerRadius = 0,
+    arcLabelRadius: baseArcLabelRadius,
     outerRadius: baseOuterRadius,
     cornerRadius: baseCornerRadius = 0,
   } = series;
@@ -79,6 +81,9 @@ export function useTransformData(
         );
         const cornerRadius = attibuesOverride.cornerRadius ?? baseCornerRadius;
 
+        const arcLabelRadius =
+          attibuesOverride.arcLabelRadius ?? baseArcLabelRadius ?? (innerRadius + outerRadius) / 2;
+        console.log({ arcLabelRadius });
         return {
           ...item,
           ...attibuesOverride,
@@ -88,6 +93,7 @@ export function useTransformData(
           innerRadius,
           outerRadius,
           cornerRadius,
+          arcLabelRadius,
         };
       }),
     [
@@ -95,6 +101,7 @@ export function useTransformData(
       baseInnerRadius,
       baseOuterRadius,
       basePaddingAngle,
+      baseArcLabelRadius,
       data,
       faded,
       getHighlightStatus,

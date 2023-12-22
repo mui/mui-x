@@ -63,36 +63,56 @@ export const defaultTransitionConfig: UseTransitionProps<ValueWithHighlight> = {
 
 export const defaultLabelTransitionConfig: UseTransitionProps<ValueWithHighlight> = {
   keys: (item) => item.id,
-  from: ({ innerRadius, outerRadius, cornerRadius, startAngle, endAngle, paddingAngle }) => ({
+  from: ({
+    innerRadius,
+    outerRadius,
+    arcLabelRadius,
+    cornerRadius,
+    startAngle,
+    endAngle,
+    paddingAngle,
+  }) => ({
     innerRadius,
     outerRadius: (innerRadius + outerRadius) / 2,
     cornerRadius,
+    arcLabelRadius,
     startAngle: (startAngle + endAngle) / 2,
     endAngle: (startAngle + endAngle) / 2,
     paddingAngle,
     opacity: 0,
   }),
-  leave: ({ innerRadius, startAngle, endAngle }) => ({
+  leave: ({ innerRadius, startAngle, endAngle, arcLabelRadius }) => ({
     innerRadius,
     outerRadius: innerRadius,
+    arcLabelRadius,
     startAngle: (startAngle + endAngle) / 2,
     endAngle: (startAngle + endAngle) / 2,
     opacity: 0,
   }),
-  enter: ({ innerRadius, outerRadius, startAngle, endAngle }) => ({
+  enter: ({ innerRadius, outerRadius, startAngle, endAngle, arcLabelRadius }) => ({
     innerRadius,
     outerRadius,
     startAngle,
     endAngle,
+    arcLabelRadius,
     opacity: 1,
   }),
-  update: ({ innerRadius, outerRadius, cornerRadius, startAngle, endAngle, paddingAngle }) => ({
+  update: ({
     innerRadius,
     outerRadius,
     cornerRadius,
     startAngle,
     endAngle,
     paddingAngle,
+    arcLabelRadius,
+  }) => ({
+    innerRadius,
+    outerRadius,
+    cornerRadius,
+    startAngle,
+    endAngle,
+    paddingAngle,
+    arcLabelRadius,
     opacity: 1,
   }),
   config: {
