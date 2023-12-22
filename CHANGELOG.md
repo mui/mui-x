@@ -39,7 +39,6 @@ Same changes as in `@mui/x-date-pickers@6.18.6`.
 
 ### Charts / `@mui/x-charts@6.18.6`
 
-- [charts] Cherry pick charts updates (changelog in the description) (#11490) @alexfauquette
 - [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
 - [charts] Make error message more explicit (#11457) @alexfauquette
 - [charts] Make the helper `ChartsText` component public (#11370) @alexfauquette
