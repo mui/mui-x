@@ -14,7 +14,7 @@ To unselect a row, hold the <kbd class="key">Ctrl</kbd> key and click on it.
 
 On the `DataGridPro` component, you can select multiple rows in two ways:
 
-- To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> key while selecting rows.
+- To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key while selecting rows.
 - To select a range of rows, hold the <kbd class="key">SHIFT</kbd> key while selecting rows.
 - To disable multiple row selection, use `disableMultipleRowSelection={true}`.
 
