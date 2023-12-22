@@ -37,7 +37,7 @@ Same changes as in `@mui/x-data-grid-pro@6.18.6`.
 
 Same changes as in `@mui/x-date-pickers@6.18.6`.
 
-### Charts / `@mui/x-charts@6.18.6`
+### Charts / `@mui/x-charts@6.18.4`
 
 - [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
 - [charts] Make error message more explicit (#11457) @alexfauquette
