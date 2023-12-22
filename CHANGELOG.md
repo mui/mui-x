@@ -13,9 +13,9 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - 🌍 Improve Russian (ru-RU) locale on the Data Grid
 - 🐞 Bugfixes
 
-From https://github.com/mui/mui-x/pull/11330
+### Data Grid
 
-## Breaking changes
+#### Breaking changes
 
 - The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
 - The `getOptionValue` and `getOptionLabel` props were removed from the following components:
@@ -38,16 +38,10 @@ From https://github.com/mui/mui-x/pull/11330
     getOptionLabel: (value: any) => value.name,
   };
   ```
-
-From https://github.com/mui/mui-x/pull/7069
-
-### Breaking changes
-
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
   but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
 
-### Data Grid
 
 #### `@mui/x-data-grid@7.0.0-alpha.6`
 
