@@ -3,6 +3,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.6
+
+_Dec 22, 2023_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Russian (ru-RU) locale on the Data Grid
+- 🐞 Bugfixes
+
+From https://github.com/mui/mui-x/pull/11330
+
+## Breaking changes
+
+- The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
+- The `getOptionValue` and `getOptionLabel` props were removed from the following components:
+
+  - `GridEditSingleSelectCell`
+  - `GridFilterInputSingleSelect`
+  - `GridFilterInputMultipleSingleSelect`
+
+  Use the `getOptionValue` and `getOptionLabel` properties on the `singleSelect` column definition instead:
+
+  ```tsx
+  const column: GridColDef = {
+    type: 'singleSelect',
+    field: 'country',
+    valueOptions: [
+      { code: 'BR', name: 'Brazil' },
+      { code: 'FR', name: 'France' },
+    ],
+    getOptionValue: (value: any) => value.code,
+    getOptionLabel: (value: any) => value.name,
+  };
+  ```
+
+From https://github.com/mui/mui-x/pull/7069
+
+### Breaking changes
+
+- The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
+  The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
+  but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.0.0-alpha.6`
+
+- [DataGrid] Fix typos in the JSDoc (#11451) @flaviendelangle
+- [DataGrid] Make `checkboxSelection` respect the `disableMultipleRowSelection` prop (#11448) @cherniavskii
+- [DataGrid] Support `Date` objects in filter model (#7069) @cherniavskii
+- [DataGrid] Use non-native `Select`s by default (#11330) @cherniavskii
+- [l10n] Improve Russian (ru-RU) locale (@wensiet) (#11441) @LukasTy
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.6`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.6`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-alpha.6`
+
+- [fields] Adjust `PickersInput` sizing styles (#11392) @noraleonte
+- [fields] Fix section pasting (#11447) @LukasTy
+- [pickers] Add `PickersTextField` `standard` and `filled` variants (#11250) @noraleonte
+- [pickers] Add missing breaking changes to changelog (#11420) @MBilalShafi
+- [pickers] Cleanup error messages in `PickersSectionList` (#11449) @flaviendelangle
+- [pickers] Create new component `PickersSectionList` (#11352) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.6`
+
+- [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
+- [charts] Improve dataset typing (#11372) @alexfauquette
+- [charts] Make error message more explicit (#11457) @alexfauquette
+- [charts] Make the helper `ChartsText` component public (#11370) @alexfauquette
+
+### Docs
+
+- [docs] Document `false` default values for boolean props (#11477) @cherniavskii
+- [docs] Improve Pickers `name` prop examples (#11422) @LukasTy
+- [docs] Limit `date-fns` package to v2 in codesandbox (#11463) @LukasTy
+
+### Core
+
+- [core] Cherry pick follow up (#11469) @LukasTy
+- [core] Fix `cherry-pick` action (#11446) @LukasTy
+- [core] Fix security regressions in cherry-pick-next-to-master.yml (#11482) @MBilalShafi
+- [test] Reload the page if its blank and there are no links to the remaining tests (#11466) @cherniavskii
+
 ## 7.0.0-alpha.5
 
 _Dec 14, 2023_
