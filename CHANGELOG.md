@@ -9,6 +9,7 @@ _Dec 22, 2023_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
+- 🎁 Data Grid now supports `Date` objects in the `filterModel`
 - 🌍 Improve Russian (ru-RU) locale on the Data Grid
 - 🐞 Bugfixes
 
