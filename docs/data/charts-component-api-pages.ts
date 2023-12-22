@@ -13,6 +13,7 @@ export default [
   { pathname: '/x/api/charts/charts-clip-path', title: 'ChartsClipPath' },
   { pathname: '/x/api/charts/charts-item-tooltip-content', title: 'ChartsItemTooltipContent' },
   { pathname: '/x/api/charts/charts-reference-line', title: 'ChartsReferenceLine' },
+  { pathname: '/x/api/charts/charts-text', title: 'ChartsText' },
   { pathname: '/x/api/charts/charts-tooltip', title: 'ChartsTooltip' },
   { pathname: '/x/api/charts/charts-x-axis', title: 'ChartsXAxis' },
   { pathname: '/x/api/charts/charts-y-axis', title: 'ChartsYAxis' },
