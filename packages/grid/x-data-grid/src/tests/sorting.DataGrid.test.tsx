@@ -53,7 +53,7 @@ describe('<DataGrid /> - Sorting', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid apiRef={apiRef} columns={cols} rows={rows}  />
+          <DataGrid apiRef={apiRef} columns={cols} rows={rows} />
         </div>
       );
     }
@@ -83,7 +83,7 @@ describe('<DataGrid /> - Sorting', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid apiRef={apiRef} columns={cols} rows={rows}  />
+          <DataGrid apiRef={apiRef} columns={cols} rows={rows} />
         </div>
       );
     }
@@ -91,7 +91,7 @@ describe('<DataGrid /> - Sorting', () => {
     render(<TestCase />);
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
     const header = getColumnHeaderCell(0);
-    
+
     // Trigger a sort using the header
     fireEvent.click(header);
     expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
@@ -99,7 +99,7 @@ describe('<DataGrid /> - Sorting', () => {
     // Clear the value using `apiRef`
     act(() => apiRef.current.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
-    
+
     // Check the behavior is idempotent
     act(() => apiRef.current.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
