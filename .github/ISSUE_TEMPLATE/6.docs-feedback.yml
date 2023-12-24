@@ -1,5 +1,5 @@
 name: Docs feedback
-description: Improve documentation about MUI Core.
+description: Improve documentation about MUI X.
 labels: ['status: waiting for maintainer', 'support: docs-feedback']
 title: '[docs] '
 body:
@@ -23,7 +23,7 @@ body:
     attributes:
       label: Related page
       description: Which page of the documentation is this about?
-      placeholder: https://mui.com/material-ui/react-badge/
+      placeholder: https://mui.com/x/
     validations:
       required: true
 
@@ -34,7 +34,7 @@ body:
       options:
         - Unclear explanations
         - Missing information
-        - Broken demonstration
+        - Broken demo
         - Other
     validations:
       required: true
