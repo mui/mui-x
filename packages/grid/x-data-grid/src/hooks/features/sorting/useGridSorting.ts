@@ -104,7 +104,7 @@ export const useGridSorting = (
             ? getNextGridSortDirection(col.sortingOrder ?? props.sortingOrder, existing.sort)
             : directionOverride;
 
-        return nextSort == null ? undefined : { ...existing, sort: nextSort };
+        return nextSort === undefined ? undefined : { ...existing, sort: nextSort };
       }
       return {
         field: col.field,
@@ -188,9 +188,6 @@ export const useGridSorting = (
   const sortColumn = React.useCallback<GridSortApi['sortColumn']>(
     (field, direction, allowMultipleSorting) => {
       const column = apiRef.current.getColumn(field);
-      if (!column.sortable) {
-        return;
-      }
       const sortItem = createSortItem(column, direction);
       let sortModel: GridSortItem[];
       if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {
@@ -308,7 +305,10 @@ export const useGridSorting = (
    * EVENTS
    */
   const handleColumnHeaderClick = React.useCallback<GridEventListener<'columnHeaderClick'>>(
-    ({ field }, event) => {
+    ({ field, colDef }, event) => {
+      if (!colDef.sortable) {
+        return;
+      }
       const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
       sortColumn(field, undefined, allowMultipleSorting);
     },
@@ -316,7 +316,10 @@ export const useGridSorting = (
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
-    ({ field }, event) => {
+    ({ field, colDef }, event) => {
+      if (!colDef.sortable) {
+        return;
+      }
       // Ctrl + Enter opens the column menu
       if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
         sortColumn(field, undefined, event.shiftKey);
