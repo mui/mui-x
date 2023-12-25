@@ -26,12 +26,13 @@ import {
 const globalScope = (typeof window === 'undefined' ? globalThis : window) as any;
 const evalCode = globalScope[atob('ZXZhbA==')] as <T>(source: string) => T;
 
-let hasEval: boolean;
-try {
-  hasEval = evalCode<boolean>('true');
-} catch (_: unknown) {
-  hasEval = false;
-}
+const getHasEval = () => {
+  try {
+    return evalCode<boolean>('true');
+  } catch (_: unknown) {
+    return false;
+  }
+};
 
 type GridFilterItemApplier = {
   fn: (row: GridValidRowModel) => boolean;
@@ -236,7 +237,7 @@ const buildAggregatedFilterItemsApplier = (
     return null;
   }
 
-  if (!hasEval || disableEval) {
+  if (disableEval || !getHasEval()) {
     // This is the original logic, which is used if `eval()` is not supported (aka prevented by CSP).
     return (row, shouldApplyFilter) => {
       const resultPerItemId: GridFilterItemResult = {};
