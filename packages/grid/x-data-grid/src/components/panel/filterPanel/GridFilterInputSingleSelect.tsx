@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { InputLabelProps } from '@mui/material/InputLabel'
 import { TextFieldProps } from '@mui/material/TextField';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { unstable_useId as useId } from '@mui/utils';
@@ -64,6 +65,7 @@ export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
      */
     isFilterActive?: boolean;
     type?: 'singleSelect';
+    inputLabelProps?: InputLabelProps
   };
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
@@ -76,9 +78,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     placeholder,
     tabIndex,
     label: labelProp,
+    variant = "standard",
     isFilterActive,
     clearButton,
-    InputLabelProps,
+    inputLabelProps,
     ...others
   } = props;
   const filterValue = item.value ?? '';
@@ -128,7 +131,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           id={labelId}
           htmlFor={id}
           shrink
-          variant="standard"
+          variant={variant}
         >
           {label}
         </rootProps.slots.baseInputLabel>
@@ -138,7 +141,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           labelId={labelId}
           value={filterValue}
           onChange={onFilterChange}
-          variant="standard"
+          variant={variant}
+          {...inputLabelProps}
           type={type || 'text'}
           inputProps={{
             tabIndex,

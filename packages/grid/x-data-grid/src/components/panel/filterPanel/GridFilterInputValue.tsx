@@ -32,6 +32,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     isFilterActive,
     clearButton,
     InputProps,
+    variant = 'standard',
     ...others
   } = props;
   const filterTimeout = useTimeout();
@@ -69,7 +70,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
-      variant="standard"
+      variant={variant}
       type={type || 'text'}
       InputProps={{
         ...(applying || clearButton

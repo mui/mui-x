@@ -35,6 +35,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     clearButton,
     tabIndex,
     label: labelProp,
+    variant = "standard",
     InputLabelProps,
     ...others
   } = props;
@@ -81,7 +82,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           label={label}
           value={filterValueState}
           onChange={onFilterChange}
-          variant="standard"
+          variant={variant}
           native={isSelectNative}
           displayEmpty
           inputProps={{ ref: focusElementRef, tabIndex }}
