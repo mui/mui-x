@@ -83,7 +83,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           value={filterValueState}
           onChange={onFilterChange}
           variant={variant}
-          notched={variant === 'outlined'}
+          notched={variant === 'outlined' ? true : undefined}
           native={isSelectNative}
           displayEmpty
           inputProps={{ ref: focusElementRef, tabIndex }}

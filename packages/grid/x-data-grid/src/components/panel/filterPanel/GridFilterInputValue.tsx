@@ -71,6 +71,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       value={filterValueState}
       onChange={onFilterChange}
       variant={variant}
+      notched={variant === 'outlined' ? true : undefined}
       type={type || 'text'}
       InputProps={{
         ...(applying || clearButton
