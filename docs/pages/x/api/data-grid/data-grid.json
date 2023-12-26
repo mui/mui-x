@@ -29,6 +29,7 @@
     "disableColumnMenu": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnSelector": { "type": { "name": "bool" }, "default": "false" },
     "disableDensitySelector": { "type": { "name": "bool" }, "default": "false" },
+    "disableEval": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleRowSelection": {
       "type": { "name": "bool" },
       "default": "false (`!props.checkboxSelection` for MIT Data Grid)"
