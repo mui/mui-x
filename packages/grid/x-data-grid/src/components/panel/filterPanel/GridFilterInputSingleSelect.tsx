@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { InputLabelProps } from '@mui/material/InputLabel'
+import { InputLabelProps } from '@mui/material/InputLabel';
 import { TextFieldProps } from '@mui/material/TextField';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { unstable_useId as useId } from '@mui/utils';
@@ -65,7 +65,7 @@ export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
      */
     isFilterActive?: boolean;
     type?: 'singleSelect';
-    inputLabelProps?: InputLabelProps
+    inputLabelProps?: InputLabelProps;
   };
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
@@ -78,7 +78,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     placeholder,
     tabIndex,
     label: labelProp,
-    variant = "standard",
+    variant = 'standard',
     isFilterActive,
     clearButton,
     inputLabelProps,
@@ -150,6 +150,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
             placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
           }}
           native={isSelectNative}
+          notched={variant === 'outlined'}
           {...others}
           {...rootProps.slotProps?.baseSelect}
         >
@@ -182,6 +183,7 @@ GridFilterInputSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  inputLabelProps: PropTypes.object,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)
