@@ -91,6 +91,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? false;
 
+  console.warn(isSelectNative)
+
   let resolvedColumn: GridSingleSelectColDef | null = null;
   if (item.field) {
     const column = apiRef.current.getColumn(item.field);
@@ -150,6 +152,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
             placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
           }}
           native={isSelectNative}
+          notched={variant === 'outlined'}
           {...others}
           {...rootProps.slotProps?.baseSelect}
         >
