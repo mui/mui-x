@@ -47,7 +47,7 @@ const FilledInputRoot = styled(PickersInputRoot, {
     },
 
     ...(!ownerState.disableUnderline && {
-      '&:after': {
+      '&::after': {
         borderBottom: `2px solid ${
           (theme.vars || theme).palette[ownerState.color || 'primary']?.main
         }`,
@@ -74,7 +74,7 @@ const FilledInputRoot = styled(PickersInputRoot, {
           borderBottomColor: (theme.vars || theme).palette.error.main,
         },
       },
-      '&:before': {
+      '&::before': {
         borderBottom: `1px solid ${
           theme.vars
             ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`

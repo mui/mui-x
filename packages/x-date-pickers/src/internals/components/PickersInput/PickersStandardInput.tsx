@@ -27,7 +27,7 @@ const StandardInputRoot = styled(PickersInputRoot, {
       marginTop: 16,
     },
     ...(!ownerState.disableUnderline && {
-      '&:after': {
+      '&::after': {
         background: 'red',
         borderBottom: `2px solid ${(theme.vars || theme).palette[ownerState.color as string].main}`,
         left: 0,
@@ -53,7 +53,7 @@ const StandardInputRoot = styled(PickersInputRoot, {
           borderBottomColor: (theme.vars || theme).palette.error.main,
         },
       },
-      '&:before': {
+      '&::before': {
         borderBottom: `1px solid ${bottomLineColor}`,
         left: 0,
         bottom: 0,
