@@ -72,7 +72,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.6`.
 
 Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
 
-### Charts / `@mui/x-charts@7.0.0-alpha.6`
+### Charts / `@mui/x-charts@7.0.0-alpha.5`
 
 - [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
 - [charts] Improve dataset typing (#11372) @alexfauquette
