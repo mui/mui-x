@@ -65,7 +65,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.6`.
 - [fields] Adjust `PickersInput` sizing styles (#11392) @noraleonte
 - [fields] Fix section pasting (#11447) @LukasTy
 - [pickers] Add `PickersTextField` `standard` and `filled` variants (#11250) @noraleonte
-- [pickers] Add missing breaking changes to changelog (#11420) @MBilalShafi
 - [pickers] Cleanup error messages in `PickersSectionList` (#11449) @flaviendelangle
 - [pickers] Create new component `PickersSectionList` (#11352) @flaviendelangle
 
@@ -73,7 +72,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.6`.
 
 Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
 
-### Charts / `@mui/x-charts@7.0.0-alpha.6`
+### Charts / `@mui/x-charts@7.0.0-alpha.5`
 
 - [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
 - [charts] Improve dataset typing (#11372) @alexfauquette
@@ -88,6 +87,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
 
 ### Core
 
+- [core] Add missing breaking changes to changelog (#11420) @MBilalShafi
 - [core] Cherry pick follow up (#11469) @LukasTy
 - [core] Fix `cherry-pick` action (#11446) @LukasTy
 - [core] Fix security regressions in cherry-pick-next-to-master.yml (#11482) @MBilalShafi
@@ -1234,7 +1234,7 @@ Same changes as in `@mui/x-data-grid-pro@6.18.6`.
 
 Same changes as in `@mui/x-date-pickers@6.18.6`.
 
-### Charts / `@mui/x-charts@6.18.6`
+### Charts / `@mui/x-charts@6.18.4`
 
 - [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
 - [charts] Make error message more explicit (#11457) @alexfauquette
