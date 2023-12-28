@@ -17,8 +17,9 @@ const CustomContentRoot = styled('div')(({ theme }) => ({
   '.MuiTreeItem-contentBar': {
     position: 'absolute',
     width: '100%',
-    height: 24,
+    height: 32,
     left: 0,
+    borderRadius: theme.shape.borderRadius,
   },
   '&:hover .MuiTreeItem-contentBar': {
     backgroundColor: theme.palette.action.hover,
