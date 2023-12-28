@@ -78,7 +78,7 @@ import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
  * SOFTWARE.
  */
 export class AdapterDateFnsV3
-  extends AdapterDateFnsBase
+  extends AdapterDateFnsBase<DateFnsLocale>
   implements MuiPickersAdapter<Date, DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
