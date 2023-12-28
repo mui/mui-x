@@ -9,25 +9,34 @@ packageName: '@mui/x-tree-view'
 
 # Tree View
 
-<p class="description">A tree view widget presents a hierarchical list.</p>
-
-Tree views can be used to represent a file system navigator displaying folders and files, an item representing a folder can be expanded to reveal the contents of the folder, which may be files, folders, or both.
+<p class="description">The Tree View component displays a hierarchical list of content where you can expand or collapse each parent or child item.</p>
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
-## Basic tree view
+## Introduction
+
+The Tree View component is commonly used to represent a file system navigator displaying folders and files.
 
 {{"demo": "FileSystemNavigator.js"}}
 
-## Multi-selection
+## Basics
 
-Tree views also support multi-selection.
+```jsx
+import { TreeView } from '@mui/x-tree-view/TreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
+```
+
+### Multi-selection
+
+Use the `multiSelect` prop on the Tree View to enable selecting multiple items at once.
 
 {{"demo": "MultiSelectTreeView.js"}}
 
-## Controlled tree view
+## Controlled Tree View
 
-The tree view also offers a controlled API.
+The Tree View component can be controlled or uncontrolled.
+
+{{"demo": "ControlledTreeView.js"}}
 
 :::info
 
@@ -37,83 +46,105 @@ The tree view also offers a controlled API.
 Learn more about controlled and uncontrolled components in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::
 
-{{"demo": "ControlledTreeView.js"}}
+### Rich object
 
-## Rich object
-
-While the `TreeView`/`TreeItem` component API maximizes flexibility, an extra step is needed to handle a rich object.
-
-Let's consider a data variable with the following shape, recursion can be used to handle it.
-
-```js
-const data = {
-  id: 'root',
-  name: 'Parent',
-  children: [
-    {
-      id: '1',
-      name: 'Child - 1',
-    },
-    // …
-  ],
-};
-```
+Use [recursion](https://developer.mozilla.org/en-US/docs/Glossary/Recursion) to pass your Tree View data as a rich object.
 
 {{"demo": "RichObjectTreeView.js"}}
 
-## ContentComponent prop
+### Disabled item
 
-You can use the `ContentComponent` prop and the `useTreeItem` hook to further customize the behavior of the TreeItem.
-
-Such as limiting expansion to clicking the expand icon:
-
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
-
-Or increasing the width of the item state indicator to be full-width:
-
-{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
-
-## Customization
-
-### Custom icons, border and animation
-
-{{"demo": "CustomizedTreeView.js"}}
-
-### Gmail clone
-
-{{"demo": "GmailTreeView.js"}}
-
-## Disabled tree items
+Use the `disabled` prop on the Tree Item component to disable interaction and focus:
 
 {{"demo": "DisabledTreeItems.js"}}
 
-The behavior of disabled tree items depends on the `disabledItemsFocusable` prop.
+#### The disabledItemsFocusable prop
 
-If it is false:
+Note that the demo above also includes a switch.
+It's toggling the `disabledItemsFocusable` prop, which controls whether or not a disabled Tree Item can be focused.
 
-- Arrow keys will not focus disabled items and, the next non-disabled item will be focused.
-- Typing the first character of a disabled item's label will not focus the item.
+In case that prop is set to false:
+
+- Navigating with keyboard arrow keys will not focus the disabled items, and the next non-disabled item will be focused instead.
+- Typing the first character of a disabled item's label will not move the focus to it.
 - Mouse or keyboard interaction will not expand/collapse disabled items.
 - Mouse or keyboard interaction will not select disabled items.
-- Shift + arrow keys will skip disabled items and, the next non-disabled item will be selected.
+- <kbd class="key">Shift</kbd> + arrow keys will skip disabled items, and the next non-disabled item will be selected instead.
 - Programmatic focus will not focus disabled items.
 
-If it is true:
+But, if it's set to true:
 
-- Arrow keys will focus disabled items.
-- Typing the first character of a disabled item's label will focus the item.
+- Navigating with keyboard arrow keys will focus disabled items.
+- Typing the first character of a disabled item's label will move focus to it.
 - Mouse or keyboard interaction will not expand/collapse disabled items.
 - Mouse or keyboard interaction will not select disabled items.
-- Shift + arrow keys will not skip disabled items but, the disabled item will not be selected.
+- <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
+
+## Customization
+
+### The ContentProps component and useTreeItem hook
+
+```jsx
+import {
+  TreeItemContentProps,
+  TreeItemProps,
+  useTreeItem,
+} from '@mui/x-tree-view/TreeItem';
+```
+
+The MUI X Tree View component also provides the `TreeItemContentProps` and `TreeItemProps` components as well as the `useTreeItem` hook for deeper customization options.
+Below are a couple of example demos on how to use them:
+
+#### Limit expansion interaction
+
+The demo below shows how to limit the expansion interaction click area to the arrow icon only.
+
+{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
+
+#### Full width background
+
+The demo below builds upon the above to also make the Tree Item background span the full Tree View width.
+
+{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
+
+### Custom icons, border, and animation
+
+The demo below shows how to use a custom animation for displaying the Tree View items (using [react-sprint](https://www.react-spring.dev/)), as well as adding a custom border and icons.
+
+{{"demo": "CustomizedTreeView.js"}}
+
+## Common examples
+
+### Gmail clone
+
+The Gmail side nav is probably one of the most famous Tree View component in daily use.
+The demo below shows how to build a similar version:
+
+{{"demo": "GmailTreeView.js"}}
 
 ## Accessibility
 
-(WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/)
+The [WAI-ARIA guidelines for the tree views](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) recommend using `aria-labelledby` or `aria-label` to reference or provide a label to the Tree View, otherwise screen readers will announce it just as "tree", making it hard to understand the context of each specific tree item.
 
-The component follows the WAI-ARIA authoring practices.
+## Anatomy
 
-To have an accessible tree view you must use `aria-labelledby` or `aria-label` to reference or provide a label on the TreeView, otherwise screen readers will announce it as "tree", making it hard to understand the context of a specific tree item.
+The Tree View component is composed of a root `<ul>` that houses interior elements like the Tree View Item and other optional components (such as the expansion item).
+
+```html
+<ul role="tree" class="MuiTreeView-root">
+  <li role="treeItem" class="MuiTreeItem-root">
+    <div class="MuiTreeItem-content">
+      <div class="MuiTreeItem-iconContainer">
+        <!-- Expansion icon goes here -->
+      </div>
+      <div class="MuiTreeItem-label">
+        <!-- Tree View Item label goes here -->
+      </div>
+    </div>
+  </li>
+</ul>
+```
 
 ## TypeScript
 

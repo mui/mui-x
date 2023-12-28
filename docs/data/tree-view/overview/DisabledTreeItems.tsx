@@ -15,34 +15,26 @@ export default function DisabledTreeItems() {
 
   return (
     <Box sx={{ minHeight: 220, flexGrow: 1, maxWidth: 300 }}>
-      <Box sx={{ mb: 1 }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={focusDisabledItems}
-              onChange={handleToggle}
-              name="focusDisabledItems"
-            />
-          }
-          label="Focus disabled items"
-        />
-      </Box>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={focusDisabledItems}
+            onChange={handleToggle}
+            name="focusDisabledItems"
+          />
+        }
+        label="Focus disabled items"
+        sx={{ mb: 1 }}
+      />
       <TreeView
         aria-label="disabled items"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
         disabledItemsFocusable={focusDisabledItems}
-        multiSelect
       >
-        <TreeItem nodeId="1" label="Applications">
-          <TreeItem nodeId="2" label="Calendar" />
-        </TreeItem>
-        <TreeItem nodeId="11" label="Blog" disabled />
-        <TreeItem nodeId="5" label="Documents">
-          <TreeItem nodeId="10" label="OSS" />
-          <TreeItem nodeId="6" label="MUI">
-            <TreeItem nodeId="8" label="index.js" />
-          </TreeItem>
+        <TreeItem nodeId="1" label="Blog" disabled />
+        <TreeItem nodeId="2" label="Documents">
+          <TreeItem nodeId="3" label="OSS" disabled />
         </TreeItem>
       </TreeView>
     </Box>

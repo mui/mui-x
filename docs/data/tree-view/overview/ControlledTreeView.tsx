@@ -32,11 +32,21 @@ export default function ControlledTreeView() {
 
   return (
     <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
-      <Box sx={{ mb: 1 }}>
-        <Button onClick={handleExpandClick}>
+      <Box sx={{ mb: 1, display: 'flex', gap: 1 }}>
+        <Button
+          onClick={handleExpandClick}
+          size="small"
+          variant="outlined"
+          fullWidth
+        >
           {expanded.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
-        <Button onClick={handleSelectClick}>
+        <Button
+          onClick={handleSelectClick}
+          size="small"
+          variant="outlined"
+          fullWidth
+        >
           {selected.length === 0 ? 'Select all' : 'Unselect all'}
         </Button>
       </Box>
