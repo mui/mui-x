@@ -63,11 +63,13 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     ];
   },
 })<{ ownerState: TreeItemOwnerState }>(({ theme }) => ({
-  padding: '0 8px',
+  padding: theme.spacing(0.5),
+  borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
   display: 'flex',
   alignItems: 'center',
+  gap: theme.spacing(1),
   cursor: 'pointer',
   WebkitTapHighlightColor: 'transparent',
   '&:hover': {
@@ -112,8 +114,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     },
   },
   [`& .${treeItemClasses.iconContainer}`]: {
-    marginRight: 4,
-    width: 15,
+    width: 16,
     display: 'flex',
     flexShrink: 0,
     justifyContent: 'center',
@@ -122,7 +123,6 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     },
   },
   [`& .${treeItemClasses.label}`]: {
-    paddingLeft: 4,
     width: '100%',
     boxSizing: 'border-box', // prevent width + padding to overflow
     // fixes overflow - see https://github.com/mui/material-ui/issues/27372
@@ -139,7 +139,7 @@ const TreeItemGroup = styled(Collapse, {
 })({
   margin: 0,
   padding: 0,
-  marginLeft: 17,
+  paddingLeft: 16,
 });
 
 /**
