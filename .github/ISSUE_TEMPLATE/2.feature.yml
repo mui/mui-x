@@ -8,7 +8,6 @@ body:
         Please provide a searchable summary of the issue in the title above ⬆️.
 
         Thanks for contributing by creating an issue! ❤️
-
   - type: input
     attributes:
       label: Search keywords
@@ -23,7 +22,6 @@ body:
       options:
         - label: I have tested the latest version
           required: true
-
   - type: textarea
     attributes:
       label: Summary 💡

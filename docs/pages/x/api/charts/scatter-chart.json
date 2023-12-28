@@ -11,8 +11,8 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "disableAxisListener": { "type": { "name": "bool" } },
-    "disableVoronoi": { "type": { "name": "bool" } },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableVoronoi": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" }, "default": "undefined" },
     "leftAxis": {
       "type": {

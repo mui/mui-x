@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "7.0.0-alpha.5",
+  "version": "7.0.0-alpha.6",
   "description": "The Pro plan edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -46,7 +46,7 @@
     "@babel/runtime": "^7.23.5",
     "@mui/system": "^5.15.0",
     "@mui/utils": "^5.15.0",
-    "@mui/x-data-grid": "7.0.0-alpha.5",
+    "@mui/x-data-grid": "7.0.0-alpha.6",
     "@mui/x-license-pro": "7.0.0-alpha.1",
     "@types/format-util": "^1.0.4",
     "clsx": "^2.0.0",
