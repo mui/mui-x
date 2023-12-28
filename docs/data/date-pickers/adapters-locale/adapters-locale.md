@@ -41,7 +41,10 @@ import 'dayjs/locale/de';
 For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 
 ```tsx
+// with date-fns v2.x
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// with date-fns v3.x
+import { unstable_AdapterDateFnsV3 as AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 // with date-fns v2.x
 import de from 'date-fns/locale/de';
 // with date-fns v3.x

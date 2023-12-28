@@ -43,111 +43,14 @@ import { endOfMonth } from 'date-fns/endOfMonth';
 import { startOfWeek } from 'date-fns/startOfWeek';
 import { startOfYear } from 'date-fns/startOfYear';
 import { isWithinInterval } from 'date-fns/isWithinInterval';
-import { enUS as defaultLocale } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale/en-US';
+// date-fns v2 does not export types
+// @ts-ignore TODO remove when date-fns-v3 is the default
+import { Locale as DateFnsLocale } from 'date-fns/locale/types';
 // @ts-ignore
 import { longFormatters } from 'date-fns/_lib/format/longFormatters';
-import {
-  AdapterFormats,
-  AdapterOptions,
-  DateBuilderReturnType,
-  FieldFormatTokenMap,
-  MuiPickersAdapter,
-} from '../models';
-
-type DateFnsLocale = typeof defaultLocale;
-
-const formatTokenMap: FieldFormatTokenMap = {
-  // Year
-  y: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
-  yy: 'year',
-  yyy: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
-  yyyy: 'year',
-
-  // Month
-  M: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
-  MM: 'month',
-  MMMM: { sectionType: 'month', contentType: 'letter' },
-  MMM: { sectionType: 'month', contentType: 'letter' },
-  L: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
-  LL: 'month',
-  LLL: { sectionType: 'month', contentType: 'letter' },
-  LLLL: { sectionType: 'month', contentType: 'letter' },
-
-  // Day of the month
-  d: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
-  dd: 'day',
-  do: { sectionType: 'day', contentType: 'digit-with-letter' },
-
-  // Day of the week
-  E: { sectionType: 'weekDay', contentType: 'letter' },
-  EE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
-  i: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
-  ii: 'weekDay',
-  iii: { sectionType: 'weekDay', contentType: 'letter' },
-  iiii: { sectionType: 'weekDay', contentType: 'letter' },
-  e: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
-  ee: 'weekDay',
-  eee: { sectionType: 'weekDay', contentType: 'letter' },
-  eeee: { sectionType: 'weekDay', contentType: 'letter' },
-  eeeee: { sectionType: 'weekDay', contentType: 'letter' },
-  eeeeee: { sectionType: 'weekDay', contentType: 'letter' },
-  c: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
-  cc: 'weekDay',
-  ccc: { sectionType: 'weekDay', contentType: 'letter' },
-  cccc: { sectionType: 'weekDay', contentType: 'letter' },
-  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
-  cccccc: { sectionType: 'weekDay', contentType: 'letter' },
-
-  // Meridiem
-  a: 'meridiem',
-  aa: 'meridiem',
-  aaa: 'meridiem',
-
-  // Hours
-  H: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
-  HH: 'hours',
-  h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
-  hh: 'hours',
-
-  // Minutes
-  m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
-  mm: 'minutes',
-
-  // Seconds
-  s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
-  ss: 'seconds',
-};
-
-const defaultFormats: AdapterFormats = {
-  year: 'yyyy',
-  month: 'LLLL',
-  monthShort: 'MMM',
-  dayOfMonth: 'd',
-  weekday: 'EEEE',
-  weekdayShort: 'EEEEEE',
-  hours24h: 'HH',
-  hours12h: 'hh',
-  meridiem: 'aa',
-  minutes: 'mm',
-  seconds: 'ss',
-
-  fullDate: 'PP',
-  keyboardDate: 'P',
-  shortDate: 'MMM d',
-  normalDate: 'd MMMM',
-  normalDateWithWeekday: 'EEE, MMM d',
-
-  fullTime: 'p',
-  fullTime12h: 'hh:mm aa',
-  fullTime24h: 'HH:mm',
-
-  keyboardDateTime: 'P p',
-  keyboardDateTime12h: 'P hh:mm aa',
-  keyboardDateTime24h: 'P HH:mm',
-};
+import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
+import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 /**
  * Based on `@date-io/date-fns`
@@ -174,54 +77,13 @@ const defaultFormats: AdapterFormats = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsV3 implements MuiPickersAdapter<Date, DateFnsLocale> {
-  public isMUIAdapter = true;
-
-  public isTimezoneCompatible = false;
-
-  public lib = 'date-fns';
-
-  public locale?: DateFnsLocale;
-
-  public formats: AdapterFormats;
-
-  public formatTokenMap = formatTokenMap;
-
-  public escapedCharacters = { start: "'", end: "'" };
-
+export class AdapterDateFnsV3
+  extends AdapterDateFnsBase
+  implements MuiPickersAdapter<Date, DateFnsLocale>
+{
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    this.locale = locale;
-    this.formats = { ...defaultFormats, ...formats };
+    super({ locale: locale ?? enUS, formats, longFormatters });
   }
-
-  public date = <T extends string | null | undefined>(
-    value?: T,
-  ): DateBuilderReturnType<T, Date> => {
-    type R = DateBuilderReturnType<T, Date>;
-    if (typeof value === 'undefined') {
-      return <R>new Date();
-    }
-
-    if (value === null) {
-      return <R>null;
-    }
-
-    return <R>new Date(value);
-  };
-
-  public getInvalidDate = () => new Date('Invalid Date');
-
-  public getTimezone = (): string => {
-    return 'default';
-  };
-
-  public setTimezone = (value: Date): Date => {
-    return value;
-  };
-
-  public toJsDate = (value: Date) => {
-    return value;
-  };
 
   public parse = (value: string, format: string) => {
     if (value === '') {
@@ -229,39 +91,6 @@ export class AdapterDateFnsV3 implements MuiPickersAdapter<Date, DateFnsLocale> 
     }
 
     return dateFnsParse(value, format, new Date(), { locale: this.locale });
-  };
-
-  public getCurrentLocaleCode = () => {
-    return this.locale?.code || 'en-US';
-  };
-
-  // Note: date-fns input types are more lenient than this adapter, so we need to expose our more
-  // strict signature and delegate to the more lenient signature. Otherwise, we have downstream type errors upon usage.
-  public is12HourCycleInCurrentLocale = () => {
-    if (this.locale) {
-      return /a/.test(this.locale.formatLong!.time({ width: 'short' }));
-    }
-
-    // By default, date-fns is using en-US locale with am/pm enabled
-    return true;
-  };
-
-  public expandFormat = (format: string) => {
-    const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
-
-    // @see https://github.com/date-fns/date-fns/blob/master/src/format/index.js#L31
-    return format
-      .match(longFormatRegexp)!
-      .map((token: string) => {
-        const firstCharacter = token[0];
-        if (firstCharacter === 'p' || firstCharacter === 'P') {
-          const longFormatter = longFormatters[firstCharacter];
-          const locale = this.locale || defaultLocale;
-          return longFormatter(token, locale.formatLong);
-        }
-        return token;
-      })
-      .join('');
   };
 
   public isValid = (value: Date | null) => {
@@ -278,10 +107,6 @@ export class AdapterDateFnsV3 implements MuiPickersAdapter<Date, DateFnsLocale> 
 
   public formatByString = (value: Date, formatString: string) => {
     return dateFnsFormat(value, formatString, { locale: this.locale });
-  };
-
-  public formatNumber = (numberToFormat: string) => {
-    return numberToFormat;
   };
 
   public isEqual = (value: Date | null, comparing: Date | null) => {
