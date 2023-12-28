@@ -7,7 +7,7 @@
       },
       "default": "`['cancel', 'accept']` for mobile and `[]` for desktop"
     },
-    "disableSpacing": { "type": { "name": "bool" } },
+    "disableSpacing": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
       "type": {
         "name": "union",

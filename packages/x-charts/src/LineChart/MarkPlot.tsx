@@ -4,6 +4,7 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -87,7 +88,11 @@ function MarkPlot(props: MarkPlotProps) {
 
           if (xData === undefined) {
             throw new Error(
-              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+              `MUI-X-Charts: ${
+                xAxisKey === DEFAULT_X_AXIS_KEY
+                  ? 'The first `xAxis`'
+                  : `The x-axis with id "${xAxisKey}"`
+              } should have data property to be able to display a line plot`,
             );
           }
 

@@ -18,6 +18,8 @@ Using your favorite package manager, install:
 - `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
 - The date library to manipulate the date.
 
+<!-- #default-branch-switch -->
+
 :::warning
 The `next` tag is used to download the latest v7 **pre-release** version.
 :::

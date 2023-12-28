@@ -342,6 +342,18 @@ describe('<DataGrid /> - Row selection', () => {
       expect(screen.queryByRole('checkbox', { name: 'Select row' })).to.equal(null);
       expect(screen.queryByRole('checkbox', { name: 'Unselect row' })).not.to.equal(null);
     });
+
+    it('should not select more than one row when disableMultipleRowSelection = true', () => {
+      render(<TestDataGridSelection checkboxSelection disableMultipleRowSelection />);
+      const input1 = getCell(0, 0).querySelector('input')!;
+      fireEvent.click(input1);
+      expect(input1.checked).to.equal(true);
+
+      const input2 = getCell(1, 0).querySelector('input')!;
+      fireEvent.click(input2);
+      expect(input1.checked).to.equal(false);
+      expect(input2.checked).to.equal(true);
+    });
   });
 
   describe('prop: checkboxSelection = true (multi selection), with keyboard events', () => {

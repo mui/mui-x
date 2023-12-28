@@ -17,7 +17,7 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "disableAxisListener": { "type": { "name": "bool" } },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
     "height": { "type": { "name": "number" }, "default": "undefined" },
     "leftAxis": {
