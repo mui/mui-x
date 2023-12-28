@@ -32,7 +32,7 @@ Use the `multiSelect` prop on the Tree View to enable selecting multiple items a
 
 {{"demo": "MultiSelectTreeView.js"}}
 
-## Controlled Tree View
+### Controlled Tree View
 
 The Tree View component can be controlled or uncontrolled.
 
