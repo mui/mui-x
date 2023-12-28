@@ -100,13 +100,13 @@ Below are a couple of example demos on how to use them:
 
 The demo below shows how to limit the expansion interaction click area to the arrow icon only.
 
-{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
+{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
 
 #### Full width background
 
 The demo below builds upon the above to also make the Tree Item background span the full Tree View width.
 
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
+{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
 
 ### Custom icons, border, and animation
 
