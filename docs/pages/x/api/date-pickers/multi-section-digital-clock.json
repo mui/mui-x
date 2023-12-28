@@ -4,10 +4,10 @@
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultValue": { "type": { "name": "any" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableFuture": { "type": { "name": "bool" }, "default": "false" },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
+    "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "focusedView": {
       "type": {
         "name": "enum",
@@ -41,7 +41,7 @@
         "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
-    "readOnly": { "type": { "name": "bool" } },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
       "type": { "name": "any" },
       "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
@@ -54,7 +54,7 @@
         "returned": "boolean"
       }
     },
-    "skipDisabled": { "type": { "name": "bool" } },
+    "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {

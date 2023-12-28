@@ -14,7 +14,6 @@ import { computeSlots, useProps } from '../internals/utils';
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   disableMultipleColumnsFiltering: true,
   disableMultipleColumnsSorting: true,
-  disableMultipleRowSelection: true,
   throttleRowsMs: undefined,
   hideFooterRowCount: false,
   pagination: true,

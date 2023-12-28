@@ -8,7 +8,7 @@ import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps } from '../internals/components/ChartsText';
+import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {

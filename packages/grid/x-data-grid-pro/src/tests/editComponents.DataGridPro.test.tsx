@@ -531,22 +531,6 @@ describe('<DataGridPro /> - Edit components', () => {
       });
     });
 
-    it('should apply getOptionLabel to the options provided', () => {
-      defaultData.columns[0].renderEditCell = (params) => {
-        return renderEditSingleSelectCell({
-          ...params,
-          getOptionLabel: (value) => (value as string).toLowerCase(),
-        });
-      };
-      render(<TestCase />);
-
-      const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-
-      expect(screen.queryAllByRole('option')[0]).to.have.text('nike');
-      expect(screen.queryAllByRole('option')[1]).to.have.text('adidas');
-    });
-
     it('should pass the value prop to the select', async () => {
       render(<TestCase />);
 

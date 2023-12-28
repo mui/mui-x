@@ -4,18 +4,18 @@
 
 ## Single row selection
 
-Single row selection comes enabled by default.
+Single row selection comes enabled by default for the MIT `DataGrid` component.
 You can select a row by clicking it, or using the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection).
-To unselect a row, hold the <kbd class="key">Ctrl</kbd> key and click on it.
+To unselect a row, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key and click on it.
 
 {{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
 
 ## Multiple row selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-On the `DataGridPro` component, you can select multiple rows in two ways:
+On the `DataGridPro` and `DataGridPremium` components, you can select multiple rows in two ways:
 
-- To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> key while selecting rows.
-- To select a range of rows, hold the <kbd class="key">SHIFT</kbd> key while selecting rows.
+- To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key while selecting rows.
+- To select a range of rows, hold the <kbd class="key">Shift</kbd> key while selecting rows.
 - To disable multiple row selection, use `disableMultipleRowSelection={true}`.
 
 {{"demo": "MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
