@@ -13,7 +13,7 @@ This repository contains a collection of codemod scripts based for use with
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod <codemod> <paths...>
+npx @mui/x-codemod@next <codemod> <paths...>
 
 Applies a `@mui/x-codemod` to the specified paths
 

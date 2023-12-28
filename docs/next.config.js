@@ -24,7 +24,7 @@ module.exports = withDocsInfra({
     FEEDBACK_URL: process.env.FEEDBACK_URL,
     CONTEXT: process.env.CONTEXT,
     // #default-branch-switch
-    SOURCE_GITHUB_BRANCH: 'master',
+    SOURCE_GITHUB_BRANCH: 'next',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },
