@@ -4,7 +4,7 @@ githubLabel: 'component: charts'
 packageName: '@mui/x-charts'
 ---
 
-# Charts
+# MUI X Charts
 
 <p class="description">A fast and extendable library of react chart components for data visualization.</p>
 
