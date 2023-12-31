@@ -1,6 +1,9 @@
+// @ts-check
 const path = require('path');
+// @ts-ignore
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const withTM = require('next-transpile-modules')(['@mui/monorepo']);
+// @ts-expect-error This expected error should be gone once we update the monorepo
 const withDocsInfra = require('@mui/monorepo/docs/nextConfigDocsInfra');
 const pkg = require('../package.json');
 const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
@@ -16,18 +19,18 @@ module.exports = withDocsInfra({
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
+    // docs-infra
     LIB_VERSION: pkg.version,
+    SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
+    SOURCE_GITHUB_BRANCH: 'next', // #default-branch-switch
+    GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
+    // MUI X related
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
-    FEEDBACK_URL: process.env.FEEDBACK_URL,
-    CONTEXT: process.env.CONTEXT,
-    // #default-branch-switch
-    SOURCE_GITHUB_BRANCH: 'next',
-    SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
-    GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },
+  // @ts-ignore
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
 
@@ -111,9 +114,11 @@ module.exports = withDocsInfra({
     const pages = findPages();
     const map = {};
 
+    // @ts-ignore
     function traverse(pages2, userLanguage) {
       const prefix = userLanguage === 'en' ? '' : `/${userLanguage}`;
 
+      // @ts-ignore
       pages2.forEach((page) => {
         // The experiments pages are only meant for experiments, they shouldn't leak to production.
         if (page.pathname.includes('/experiments/') && process.env.DEPLOY_ENV === 'production') {
@@ -121,6 +126,7 @@ module.exports = withDocsInfra({
         }
 
         if (!page.children) {
+          // @ts-ignore
           map[`${prefix}${page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')}`] = {
             page: page.pathname,
             query: {
