@@ -39,6 +39,14 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 
 {{"demo": "RowGroupingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Read-only row groups
+
+The columns with `colDef.groupable` set to `false` could be initialized, passed in the `rowGroupingModel` prop, or set using API method `setRowGroupingModel` to generate read-only row groups. These groups could be programatically added or updated but the users could not alter them from the UI.
+
+In the following example, the column `company` is not groupable and is used in the `rowGroupingModel` prop to generate read-only row group.
+
+{{"demo": "RowGroupingReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Grouping columns
 
 ### Single grouping column
