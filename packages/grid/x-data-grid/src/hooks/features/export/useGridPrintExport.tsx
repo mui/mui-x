@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
+import { raf } from 'test/utils/helperFn';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -24,14 +25,6 @@ import {
 } from '../../../components/toolbar/GridToolbarExport';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
-
-function raf() {
-  return new Promise<void>((resolve) => {
-    requestAnimationFrame(() => {
-      resolve();
-    });
-  });
-}
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
