@@ -10,6 +10,8 @@ import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
@@ -89,6 +91,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
+  const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
 
   const isDraggable = React.useMemo(
     () => !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder,
@@ -194,6 +197,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
+  const showSortIcon =
+    (colDef.sortable || sortColumnLookup[colDef.field]?.sortDirection != null) &&
+    !colDef.hideSortIcons;
 
   const columnTitleIconButtons = (
     <React.Fragment>
@@ -205,11 +211,12 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         />
       )}
 
-      {colDef.sortable && !colDef.hideSortIcons && (
+      {showSortIcon && (
         <GridColumnHeaderSortIcon
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
+          disabled={!colDef.sortable}
         />
       )}
     </React.Fragment>

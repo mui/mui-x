@@ -71,6 +71,14 @@ In the following demo, the user cannot use the _rating_ column as a sorting rule
 
 {{"demo": "DisableSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Read-only sorting
+
+The columns with `colDef.sortable` set to `false` are however still sortable programmatically. To add a sort rule to such a column, you could initialize the `sortModel`, use the `sortModel` prop, or use the api methods `sortColumn` and `setSortModel`.
+
+In the following demo, the sort on the `firstName` column is read-only with respect to the default grid UI, as it is sorted programmatically. Though you can update the sort rule for this column by clicking the custom buttons above the grid.
+
+{{"demo": "ReadOnlySortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Custom comparator
 
 A comparator determines how two cell values should be sorted.
