@@ -103,6 +103,26 @@ You can use the `onFilterModelChange` prop to listen to changes to the filters a
 
 {{"demo": "ControlledFilters.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Read-only filters
+
+You can initialize the `filterModel`, set the `filterModel` prop, or use `apiRef.current.setFilterModel` to define the filters for columns with `colDef.filterable` set to `false`. These filters will be applied but the user won't be able to change them.
+
+```jsx
+const columns = [
+  { field: 'name', filterable: false },
+  ...otherColumns,
+]
+
+<DataGrid
+  filterModel={{
+    items: [{ field: 'name', operator: 'contains', value: 'a' }],
+  }}
+  columns={columns}
+/>
+```
+
+{{"demo": "ReadOnlyFilters.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Disable the filters
 
 ### For all columns

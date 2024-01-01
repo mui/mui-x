@@ -8,7 +8,10 @@ import {
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import {
+  gridFilterableColumnDefinitionsSelector,
+  gridColumnLookupSelector,
+} from '../../../hooks/features/columns/gridColumnsSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
@@ -107,6 +110,12 @@ export interface GridFilterFormProps {
    * @default {}
    */
   columnInputProps?: any;
+  /**
+   * `true` if the filter is disabled/read only.
+   * i.e. `colDef.fiterable = false` but passed in `filterModel`
+   * @default false
+   */
+  readOnly?: boolean;
   /**
    * Props passed to the value input component.
    * @default {}
@@ -218,10 +227,12 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       operatorInputProps = {},
       columnInputProps = {},
       valueInputProps = {},
+      readOnly,
       children,
       ...other
     } = props;
     const apiRef = useGridApiContext();
+    const columnLookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const columnSelectId = useId();
@@ -247,6 +258,18 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { filteredColumns, selectedField } = React.useMemo(() => {
       let itemField: string | undefined = item.field;
+
+      // Yields a valid value if the current filter belongs to a column that is not filterable
+      const selectedNonFilterableColumn =
+        columnLookup[item.field].filterable === false ? columnLookup[item.field] : null;
+
+      if (selectedNonFilterableColumn) {
+        return {
+          filteredColumns: [selectedNonFilterableColumn],
+          selectedField: itemField,
+        };
+      }
+
       if (filterColumns === undefined || typeof filterColumns !== 'function') {
         return { filteredColumns: filterableColumns, selectedField: itemField };
       }
@@ -267,7 +290,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         }),
         selectedField: itemField,
       };
-    }, [filterColumns, filterModel?.items, filterableColumns, item.field]);
+    }, [filterColumns, filterModel?.items, filterableColumns, item.field, columnLookup]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -431,6 +454,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             title={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
             onClick={handleDeleteFilter}
             size="small"
+            disabled={readOnly}
             {...rootProps.slotProps?.baseIconButton}
           >
             <rootProps.slots.filterPanelDeleteIcon fontSize="small" />
@@ -502,6 +526,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             value={selectedField ?? ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
+            disabled={readOnly}
             {...rootProps.slotProps?.baseSelect}
           >
             {sortedFilteredColumns.map((col) => (
@@ -543,6 +568,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             onChange={changeOperator}
             native={isBaseSelectNative}
             inputRef={filterSelectorRef}
+            disabled={readOnly}
             {...rootProps.slotProps?.baseSelect}
           >
             {currentColumn?.filterOperators?.map((operator) => (
@@ -578,6 +604,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               item={item}
               applyValue={applyFilterChanges}
               focusElementRef={valueRef}
+              disabled={readOnly}
               key={item.field}
               {...currentOperator.InputComponentProps}
               {...InputComponentProps}
