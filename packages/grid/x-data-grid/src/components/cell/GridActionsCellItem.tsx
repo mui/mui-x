@@ -57,7 +57,7 @@ GridActionsCellItem.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   icon: PropTypes.element,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   showInMenu: PropTypes.bool,
 } as any;
 
