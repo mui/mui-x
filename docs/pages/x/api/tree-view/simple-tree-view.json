@@ -1,0 +1,85 @@
+{
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } },
+    "defaultCollapseIcon": { "type": { "name": "node" } },
+    "defaultEndIcon": { "type": { "name": "node" } },
+    "defaultExpanded": {
+      "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
+      "default": "[]"
+    },
+    "defaultExpandIcon": { "type": { "name": "node" } },
+    "defaultParentIcon": { "type": { "name": "node" } },
+    "defaultSelected": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" },
+      "default": "[]"
+    },
+    "disabledItemsFocusable": { "type": { "name": "bool" } },
+    "disableSelection": { "type": { "name": "bool" } },
+    "expanded": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "getItemId": {
+      "type": { "name": "func" },
+      "default": "`(item) => item.id`",
+      "signature": {
+        "type": "function(item: R) => string",
+        "describedArgs": ["item"],
+        "returned": "string"
+      }
+    },
+    "getItemLabel": {
+      "type": { "name": "func" },
+      "default": "`(item) => item.label`",
+      "signature": {
+        "type": "function(item: R) => string",
+        "describedArgs": ["item"],
+        "returned": "string"
+      }
+    },
+    "id": { "type": { "name": "string" } },
+    "multiSelect": { "type": { "name": "bool" } },
+    "onNodeFocus": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeId: string, value: string) => void",
+        "describedArgs": ["event", "nodeId", "value"]
+      }
+    },
+    "onNodeSelect": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeIds: Array<string> | string) => void",
+        "describedArgs": ["event", "nodeIds"]
+      }
+    },
+    "onNodeToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeIds: array) => void",
+        "describedArgs": ["event", "nodeIds"]
+      }
+    },
+    "selected": { "type": { "name": "any" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
+  "slots": [{ "class": null, "name": "root", "description": "" }],
+  "name": "SimpleTreeView",
+  "imports": [
+    "import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';",
+    "import { SimpleTreeView } from '@mui/x-tree-view';"
+  ],
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSimpleTreeView" },
+  "spread": true,
+  "forwardsRefTo": "HTMLUListElement",
+  "filename": "/packages/x-tree-view/src/SimpleTreeView/SimpleTreeView.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/\">Tree View</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Selection</a></li></ul>"
+}

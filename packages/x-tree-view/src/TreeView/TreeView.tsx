@@ -2,12 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps } from '@mui/base/utils';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
-import { useTreeView } from '../internals/useTreeView';
-import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
+import { SimpleTreeView, SimpleTreeViewRoot } from '../SimpleTreeView';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
@@ -21,22 +18,37 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
   return composeClasses(slots, getTreeViewUtilityClass, classes);
 };
 
-const TreeViewRoot = styled('ul', {
-  name: 'MuiTreeView',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeViewProps<any> }>({
-  padding: 0,
-  margin: 0,
-  listStyle: 'none',
-  outline: 0,
-});
-
 type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
   props: TreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+const TreeViewRoot = styled(SimpleTreeViewRoot, {
+  name: 'MuiTreeView',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
+
+let warnedOnce = false;
+
+const warn = () => {
+  if (!warnedOnce) {
+    console.warn(
+      [
+        'MUI: The TreeView component was renamed SimpleTreeView.',
+        'The component with the old naming will be removed in the version v8.0.0.',
+        '',
+        "You should use `import { SimpleTreeView } from '@mui/x-tree-view'`",
+        "or `import { SimpleTreeView } from '@mui/x-tree-view/TreeView'`",
+      ].join('\n'),
+    );
+
+    warnedOnce = true;
+  }
+};
+
 /**
+ * This component has been deprecated in favor of the new `SimpleTreeView` component.
+ * You can have a look at how to migrate to the new component in the v7 [migration guide](https://next.mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)
  *
  * Demos:
  *
@@ -45,70 +57,27 @@ type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
  * API:
  *
  * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
+ *
+ * @deprecated
  */
 const TreeView = React.forwardRef(function TreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: TreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
-  const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
-  const ownerState = themeProps as TreeViewProps<any>;
+  if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+    warn();
+  }
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    // Component implementation
-    children,
-    ...other
-  } = themeProps as TreeViewProps<any>;
+  const props = useThemeProps({ props: inProps, name: 'MuiTreeView' });
 
-  const { getRootProps, contextValue } = useTreeView({
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    plugins: DEFAULT_TREE_VIEW_PLUGINS,
-    rootRef: ref,
-  });
-
-  const classes = useUtilityClasses(themeProps);
-
-  const rootProps = useSlotProps({
-    elementType: TreeViewRoot,
-    externalSlotProps: {},
-    externalForwardedProps: other,
-    className: classes.root,
-    getSlotProps: getRootProps,
-    ownerState,
-  });
+  const classes = useUtilityClasses(props);
 
   return (
-    <TreeViewProvider value={contextValue}>
-      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
-    </TreeViewProvider>
+    <SimpleTreeView
+      {...props}
+      ref={ref}
+      classes={classes}
+      slots={{ root: TreeViewRoot, ...props.slots }}
+    />
   );
 }) as TreeViewComponent;
 
@@ -178,6 +147,24 @@ TreeView.propTypes = {
    */
   expanded: PropTypes.arrayOf(PropTypes.string),
   /**
+   * Used to determine the string label for a given item.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {string} The id of the item.
+   * @default `(item) => item.id`
+   */
+  getItemId: PropTypes.func,
+  /**
+   * Used to determine the string label for a given item.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {string} The label of the item.
+   * @default `(item) => item.label`
+   */
+  getItemLabel: PropTypes.func,
+  /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
@@ -212,6 +199,14 @@ TreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
   selected: PropTypes.any,
+  /**
+   * The props used for each component slot.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

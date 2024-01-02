@@ -1,0 +1,105 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } },
+    "defaultCollapseIcon": { "type": { "name": "node" } },
+    "defaultEndIcon": { "type": { "name": "node" } },
+    "defaultExpanded": {
+      "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
+      "default": "[]"
+    },
+    "defaultExpandIcon": { "type": { "name": "node" } },
+    "defaultParentIcon": { "type": { "name": "node" } },
+    "defaultSelected": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" },
+      "default": "[]"
+    },
+    "disabledItemsFocusable": { "type": { "name": "bool" } },
+    "disableSelection": { "type": { "name": "bool" } },
+    "expanded": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "getItemId": {
+      "type": { "name": "func" },
+      "default": "`(item) => item.id`",
+      "signature": {
+        "type": "function(item: R) => string",
+        "describedArgs": ["item"],
+        "returned": "string"
+      }
+    },
+    "getItemLabel": {
+      "type": { "name": "func" },
+      "default": "`(item) => item.label`",
+      "signature": {
+        "type": "function(item: R) => string",
+        "describedArgs": ["item"],
+        "returned": "string"
+      }
+    },
+    "id": { "type": { "name": "string" } },
+    "isItemDisabled": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(item: R) => boolean",
+        "describedArgs": ["item"],
+        "returned": "boolean"
+      }
+    },
+    "multiSelect": { "type": { "name": "bool" } },
+    "onNodeFocus": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeId: string, value: string) => void",
+        "describedArgs": ["event", "nodeId", "value"]
+      }
+    },
+    "onNodeSelect": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeIds: Array<string> | string) => void",
+        "describedArgs": ["event", "nodeIds"]
+      }
+    },
+    "onNodeToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeIds: array) => void",
+        "describedArgs": ["event", "nodeIds"]
+      }
+    },
+    "selected": { "type": { "name": "any" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
+  "slots": [
+    {
+      "class": null,
+      "name": "item",
+      "description": "Custom component for the item.",
+      "default": "TreeItem."
+    },
+    {
+      "class": null,
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "TreeViewRoot"
+    }
+  ],
+  "name": "RichTreeView",
+  "imports": [
+    "import { RichTreeView } from '@mui/x-tree-view/RichTreeView';",
+    "import { RichTreeView } from '@mui/x-tree-view';"
+  ],
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiRichTreeView" },
+  "spread": true,
+  "forwardsRefTo": "HTMLUListElement",
+  "filename": "/packages/x-tree-view/src/RichTreeView/RichTreeView.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/\">Tree View</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/\">Rich Tree View - Selection</a></li></ul>"
+}
