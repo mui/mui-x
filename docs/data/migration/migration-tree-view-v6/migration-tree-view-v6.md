@@ -99,7 +99,7 @@ The expansion props have been renamed to better describe their behaviors:
 
 :::info
 If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific node,
-you can use the new `onNodeExpansionToggle` prop which receives is called whenever a node is expanded or collapsed with its id and its expansion status
+you can use the new `onNodeExpansionToggle` prop which is called whenever a node is expanded or collapsed with its id and expansion status
 
 ```tsx
 <TreeView

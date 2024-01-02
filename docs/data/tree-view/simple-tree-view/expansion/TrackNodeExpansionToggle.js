@@ -23,6 +23,7 @@ export default function TrackNodeExpansionToggle() {
           Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.nodeId}
         </Typography>
       )}
+
       <Box sx={{ height: 264, flexGrow: 1 }}>
         <SimpleTreeView
           onNodeExpansionToggle={handleNodeExpansionToggle}
