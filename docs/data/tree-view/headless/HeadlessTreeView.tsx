@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
-import { TreeViewPropsBase } from '@mui/x-tree-view/TreeView';
+import {
+  RichTreeViewPropsBase,
+  RichTreeViewRoot,
+} from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
   TreeViewPlugin,
@@ -72,30 +76,18 @@ useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
   areLogsEnabled: params.areLogsEnabled ?? false,
 });
 
-// This could be exported from the package in the future
-const TreeViewRoot = styled('ul', {
-  name: 'MuiTreeView',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeViewProps<any> }>({
-  padding: 0,
-  margin: 0,
-  listStyle: 'none',
-  outline: 0,
-});
-
-export interface TreeViewProps<Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<Multiple>,
+export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
+  extends DefaultTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
-    TreeViewPropsBase {}
+    RichTreeViewPropsBase {}
 
 const plugins = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded] as const;
 
-function TreeView<Multiple extends boolean | undefined>(
-  inProps: TreeViewProps<Multiple>,
+function TreeView<R extends {}, Multiple extends boolean | undefined>(
+  inProps: TreeViewProps<R, Multiple>,
 ) {
-  const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
-  const ownerState = themeProps as TreeViewProps<any>;
+  const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
+  const ownerState = themeProps as TreeViewProps<any, any>;
 
   const {
     // Headless implementation
@@ -114,14 +106,15 @@ function TreeView<Multiple extends boolean | undefined>(
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
+    items,
     logMessage,
     areLogsEnabled,
     // Component implementation
     children,
     ...other
-  } = themeProps as TreeViewProps<any>;
+  } = themeProps as TreeViewProps<any, any>;
 
-  const { getRootProps, contextValue } = useTreeView({
+  const { getRootProps, contextValue, instance } = useTreeView({
     disabledItemsFocusable,
     expanded,
     defaultExpanded,
@@ -139,23 +132,55 @@ function TreeView<Multiple extends boolean | undefined>(
     defaultParentIcon,
     logMessage,
     areLogsEnabled,
+    items,
     plugins,
   });
 
   const rootProps = useSlotProps({
-    elementType: TreeViewRoot,
+    elementType: RichTreeViewRoot,
     externalSlotProps: {},
     externalForwardedProps: other,
     getSlotProps: getRootProps,
     ownerState,
   });
 
+  const nodesToRender = instance.getNodesToRender();
+
+  const renderNode = ({
+    children: itemChildren,
+    ...itemProps
+  }: ReturnType<typeof instance.getNodesToRender>[number]) => {
+    return (
+      <TreeItem key={itemProps.nodeId} {...itemProps}>
+        {itemChildren?.map(renderNode)}
+      </TreeItem>
+    );
+  };
+
   return (
     <TreeViewProvider value={contextValue}>
-      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
+      <RichTreeViewRoot {...rootProps}>
+        {nodesToRender.map(renderNode)}
+      </RichTreeViewRoot>
     </TreeViewProvider>
   );
 }
+
+const ITEMS: TreeViewBaseItem[] = [
+  {
+    id: '1',
+    label: 'Applications',
+    children: [{ id: '2', label: 'Calendar' }],
+  },
+  {
+    id: '5',
+    label: 'Documents',
+    children: [
+      { id: '10', label: 'OSS' },
+      { id: '6', label: 'MUI', children: [{ id: '8', label: 'index.js' }] },
+    ],
+  },
+];
 
 export default function HeadlessTreeView() {
   const [logs, setLogs] = React.useState<string[]>([]);
@@ -167,23 +192,14 @@ export default function HeadlessTreeView() {
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
         sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+        items={ITEMS}
         areLogsEnabled
         logMessage={(message) =>
           setLogs((prev) =>
             prev[prev.length - 1] === message ? prev : [...prev, message],
           )
         }
-      >
-        <TreeItem nodeId="1" label="Applications">
-          <TreeItem nodeId="2" label="Calendar" />
-        </TreeItem>
-        <TreeItem nodeId="5" label="Documents">
-          <TreeItem nodeId="10" label="OSS" />
-          <TreeItem nodeId="6" label="MUI">
-            <TreeItem nodeId="8" label="index.js" />
-          </TreeItem>
-        </TreeItem>
-      </TreeView>
+      />
       <Stack spacing={1}>
         {logs.map((log, index) => (
           <Typography key={index}>{log}</Typography>

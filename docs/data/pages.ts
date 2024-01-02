@@ -464,8 +464,27 @@ const pages: MuiPage[] = [
     title: 'Tree View',
     newFeature: true,
     children: [
-      { pathname: '/x/react-tree-view/getting-started' },
       { pathname: '/x/react-tree-view', title: 'Overview' },
+      { pathname: '/x/react-tree-view/getting-started' },
+      {
+        pathname: '/x/react-tree-view/simple-tree-view',
+        subheader: 'Simple Tree View',
+        children: [
+          { pathname: '/x/react-tree-view/simple-tree-view/items' },
+          { pathname: '/x/react-tree-view/simple-tree-view/selection' },
+          { pathname: '/x/react-tree-view/simple-tree-view/expansion' },
+          { pathname: '/x/react-tree-view/simple-tree-view/customization' },
+        ],
+      },
+      {
+        pathname: '/x/react-tree-view/rich-tree-view',
+        subheader: 'Rich Tree View',
+        children: [
+          { pathname: '/x/react-tree-view/rich-tree-view/items' },
+          { pathname: '/x/react-tree-view/rich-tree-view/selection' },
+          { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
+        ],
+      },
       {
         pathname: '/x/api/tree-view-group',
         title: 'API Reference',

@@ -1,6 +1,6 @@
 {
   "props": {
-    "checkboxSelection": { "type": { "name": "bool" } },
+    "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
@@ -16,11 +16,29 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" },
       "default": "[]"
     },
-    "disabledItemsFocusable": { "type": { "name": "bool" } },
-    "disableSelection": { "type": { "name": "bool" } },
+    "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
+    "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expanded": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "getItemId": {
+      "type": { "name": "func" },
+      "default": "`(item) => item.id`",
+      "signature": {
+        "type": "function(item: R) => string",
+        "describedArgs": ["item"],
+        "returned": "string"
+      }
+    },
+    "getItemLabel": {
+      "type": { "name": "func" },
+      "default": "`(item) => item.label`",
+      "signature": {
+        "type": "function(item: R) => string",
+        "describedArgs": ["item"],
+        "returned": "string"
+      }
+    },
     "id": { "type": { "name": "string" } },
-    "multiSelect": { "type": { "name": "bool" } },
+    "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onNodeFocus": {
       "type": { "name": "func" },
       "signature": {
@@ -43,6 +61,8 @@
       }
     },
     "selected": { "type": { "name": "any" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" } },
     "sx": {
       "type": {
         "name": "union",
@@ -51,7 +71,7 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [],
+  "slots": [{ "class": null, "name": "root", "description": "" }],
   "name": "TreeView",
   "imports": [
     "import { TreeView } from '@mui/x-tree-view/TreeView';",
@@ -62,5 +82,5 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/TreeView/TreeView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/\">Tree View</a></li></ul>"
+  "demos": "<ul></ul>"
 }

@@ -11,11 +11,15 @@ type ChartsReferenceLineProps<TValue extends string | number | Date = string | n
 
 function ChartsReferenceLine(props: ChartsReferenceLineProps) {
   if (props.x !== undefined && props.y !== undefined) {
-    throw new Error('MUI-X: The ChartsReferenceLine can not have both `x` and `y` props set.');
+    throw new Error(
+      'MUI-X-Charts: The ChartsReferenceLine can not have both `x` and `y` props set.',
+    );
   }
 
   if (props.x === undefined && props.y === undefined) {
-    throw new Error('MUI-X: The ChartsReferenceLine should have a value in `x` or `y` prop.');
+    throw new Error(
+      'MUI-X-Charts: The ChartsReferenceLine should have a value in `x` or `y` prop.',
+    );
   }
 
   if (props.x !== undefined) {

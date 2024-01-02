@@ -59,13 +59,12 @@ export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> 
   'disableSelection' | 'defaultSelected' | 'multiSelect' | 'checkboxSelection'
 >;
 
-export type UseTreeViewSelectionSignature<Multiple extends boolean | undefined> =
-  TreeViewPluginSignature<
-    UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewSelectionDefaultizedParameters<Multiple extends undefined ? false : Multiple>,
-    UseTreeViewSelectionInstance,
-    {},
-    {},
-    'selected',
-    [UseTreeViewNodesSignature, UseTreeViewExpansionSignature, UseTreeViewNodesSignature]
-  >;
+export type UseTreeViewSelectionSignature = TreeViewPluginSignature<
+  UseTreeViewSelectionParameters<any>,
+  UseTreeViewSelectionDefaultizedParameters<any>,
+  UseTreeViewSelectionInstance,
+  {},
+  {},
+  'selected',
+  [UseTreeViewNodesSignature, UseTreeViewExpansionSignature, UseTreeViewNodesSignature]
+>;
