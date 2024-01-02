@@ -520,6 +520,7 @@ export const GridRootStyles = styled('div', {
       borderLeftStyle: 'solid',
     },
     [`& .${c['cell--withRightBorder']}`]: {
+      borderRightColor: 'var(--DataGrid-rowBorderColor)',
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
     },
