@@ -379,6 +379,7 @@ export const GridRootStyles = styled('div', {
       color: 'inherit',
     },
     [`& .${c.menuIcon}`]: {
+      width: 0,
       visibility: 'hidden',
       fontSize: 20,
       marginRight: -10,
