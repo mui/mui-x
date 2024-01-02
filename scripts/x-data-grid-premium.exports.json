@@ -428,6 +428,7 @@
   { "name": "GridParamsApi", "kind": "Interface" },
   { "name": "GridPinnedColumnFields", "kind": "Interface" },
   { "name": "GridPinnedColumnPosition", "kind": "Enum" },
+  { "name": "GridPinnedColumns", "kind": "Interface" },
   { "name": "gridPinnedColumnsSelector", "kind": "Variable" },
   { "name": "GridPinnedRowNode", "kind": "TypeAlias" },
   { "name": "GridPinnedRowsProp", "kind": "Interface" },

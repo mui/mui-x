@@ -370,7 +370,7 @@
     "onPinnedColumnsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void",
+        "type": "function(pinnedColumns: GridPinnedColumnFields, details: GridCallbackDetails) => void",
         "describedArgs": ["pinnedColumns", "details"]
       }
     },
