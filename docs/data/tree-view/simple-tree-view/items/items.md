@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Items
 
-<p class="description">Pass data to your Tree View.</p>
+<p class="description">Learn how to add simple data to the Tree View component.</p>
 
 ## Basics
 

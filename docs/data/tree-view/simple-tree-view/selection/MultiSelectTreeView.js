@@ -7,7 +7,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function MultiSelectTreeView() {
   return (
-    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
       <SimpleTreeView
         multiSelect
         defaultCollapseIcon={<ExpandMoreIcon />}
