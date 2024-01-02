@@ -78,7 +78,6 @@ export type DataGridForcedPropsKey =
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
-  | 'disableMultipleRowSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
   | 'keepColumnPositionIfDraggedOutside'
@@ -200,8 +199,9 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableMultipleColumnsFiltering: boolean;
   /**
-   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
-   * @default false
+   * If `true`, multiple selection using the Ctrl/CMD or Shift key is disabled.
+   * The MIT DataGrid will ignore this prop, unless `checkboxSelection` is enabled.
+   * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: boolean;
   /**
