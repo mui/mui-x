@@ -26,3 +26,9 @@ You can use the `onNodeToggle` prop to listen to changes in the expanded items a
 
 Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::
+
+## Track node expansion change
+
+Use the `onNodeExpansionToggle` if you want to react to a node expansion toggling:
+
+{{"demo": "TrackNodeExpansionToggle.js"}}

@@ -73,3 +73,40 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 - const rootClass = treeViewClasses.root;
 + const rootClass = simpleTreeViewClasses.root;
 ```
+
+### Rename `onNodeToggle`, `expanded` and `defaultExpanded`
+
+The expansion props have been renamed to better describe their behaviors:
+
+| Old name          | New name                |
+| :---------------- | :---------------------- |
+| `onNodeToggle`    | `onExpandedNodesChange` |
+| `expanded`        | `expandedNodes`         |
+| `defaultExpanded` | `defaultExpandedNodes`  |
+
+```diff
+  <TreeView
+-   onNodeToggle={handleExpansionChange}
++   onExpandedNodesChange={handleExpansionChange}
+
+-   expanded={expandedNodes}
++   expandedNodes={expandedNodes}
+
+-   defaultExpanded={defaultExpandedNodes}
++   defaultExpandedNodes={defaultExpandedNodes}
+  />
+```
+
+:::info
+If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific node,
+you can use the new `onNodeExpansionToggle` prop which is called whenever a node is expanded or collapsed with its id and expansion status
+
+```tsx
+<TreeView
+  onNodeExpansionToggle={(event, nodeId, isExpanded) =>
+    console.log(nodeId, isExpanded)
+  }
+/>
+```
+
+:::
