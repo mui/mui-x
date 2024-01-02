@@ -5,7 +5,7 @@
     "className": { "type": { "name": "string" } },
     "defaultCollapseIcon": { "type": { "name": "node" } },
     "defaultEndIcon": { "type": { "name": "node" } },
-    "defaultExpanded": {
+    "defaultExpandedNodes": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
@@ -17,7 +17,7 @@
     },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
-    "expanded": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "getItemId": {
       "type": { "name": "func" },
       "default": "`(item) => item.id`",
@@ -38,6 +38,20 @@
     },
     "id": { "type": { "name": "string" } },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
+    "onExpandedNodesChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeIds: array) => void",
+        "describedArgs": ["event", "nodeIds"]
+      }
+    },
+    "onNodeExpansionToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeId: array, isExpanded: array) => void",
+        "describedArgs": ["event", "nodeId", "isExpanded"]
+      }
+    },
     "onNodeFocus": {
       "type": { "name": "func" },
       "signature": {
@@ -49,13 +63,6 @@
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.SyntheticEvent, nodeIds: Array<string> | string) => void",
-        "describedArgs": ["event", "nodeIds"]
-      }
-    },
-    "onNodeToggle": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeIds: array) => void",
         "describedArgs": ["event", "nodeIds"]
       }
     },

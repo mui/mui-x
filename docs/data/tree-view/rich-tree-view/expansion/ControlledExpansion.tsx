@@ -51,14 +51,17 @@ const getAllItemWithChildrenNodeIds = () => {
 };
 
 export default function ControlledExpansion() {
-  const [expanded, setExpanded] = React.useState<string[]>([]);
+  const [expandedNodes, setExpandedNodes] = React.useState<string[]>([]);
 
-  const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
-    setExpanded(nodeIds);
+  const handleExpandedNodesChange = (
+    event: React.SyntheticEvent,
+    nodeIds: string[],
+  ) => {
+    setExpandedNodes(nodeIds);
   };
 
   const handleExpandClick = () => {
-    setExpanded((oldExpanded) =>
+    setExpandedNodes((oldExpanded) =>
       oldExpanded.length === 0 ? getAllItemWithChildrenNodeIds() : [],
     );
   };
@@ -67,14 +70,14 @@ export default function ControlledExpansion() {
     <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
       <Box sx={{ mb: 1 }}>
         <Button onClick={handleExpandClick}>
-          {expanded.length === 0 ? 'Expand all' : 'Collapse all'}
+          {expandedNodes.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
       </Box>
       <Box sx={{ height: 264, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          expanded={expanded}
-          onNodeToggle={handleToggle}
+          expandedNodes={expandedNodes}
+          onExpandedNodesChange={handleExpandedNodesChange}
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         />

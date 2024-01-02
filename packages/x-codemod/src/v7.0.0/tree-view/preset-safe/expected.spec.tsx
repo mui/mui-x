@@ -5,6 +5,6 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 const className = simpleTreeViewClasses.root;
 
-<SimpleTreeView>
+<SimpleTreeView expandedNodes={[]} defaultExpandedNodes={[]} onExpandedNodesChange={callback}>
   <TreeItem nodeId="1" label="Item 1" />
 </SimpleTreeView>;
