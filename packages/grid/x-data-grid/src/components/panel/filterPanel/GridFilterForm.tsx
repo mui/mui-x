@@ -47,10 +47,6 @@ export interface GridFilterFormProps {
    */
   showMultiFilterOperators?: boolean;
   /**
-   * The current logic operator applied.
-   */
-  multiFilterOperator?: GridLogicOperator;
-  /**
    * If `true`, disables the logic operator field but still renders it.
    */
   disableMultiFilterOperator?: boolean;
@@ -214,7 +210,6 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       hasMultipleFilters,
       deleteFilter,
       applyFilterChanges,
-      multiFilterOperator,
       showMultiFilterOperators,
       disableMultiFilterOperator,
       applyMultiFilterOperatorChanges,
@@ -243,6 +238,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const classes = useUtilityClasses(rootProps);
     const valueRef = React.useRef<any>(null);
     const filterSelectorRef = React.useRef<HTMLInputElement>(null);
+    const multiFilterOperator = filterModel.logicOperator ?? GridLogicOperator.And;
 
     const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
 

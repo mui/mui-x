@@ -234,7 +234,6 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
               deleteFilter={deleteFilter}
               hasMultipleFilters={hasMultipleFilters}
               showMultiFilterOperators={index > 0}
-              multiFilterOperator={filterModel.logicOperator}
               disableMultiFilterOperator={index !== 1}
               applyMultiFilterOperatorChanges={applyFilterLogicOperator}
               focusElementRef={null}
@@ -252,7 +251,6 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
               deleteFilter={deleteFilter}
               hasMultipleFilters={hasMultipleFilters}
               showMultiFilterOperators={readOnlyFilters.length + index > 0}
-              multiFilterOperator={filterModel.logicOperator}
               disableMultiFilterOperator={readOnlyFilters.length + index !== 1}
               applyMultiFilterOperatorChanges={applyFilterLogicOperator}
               focusElementRef={index === validFilters.length - 1 ? lastFilterRef : null}
