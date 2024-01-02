@@ -27,6 +27,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<any> = {
   } as any,
   runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
   multiSelect: false,
+  checkboxSelection: false,
   disabledItemsFocusable: false,
   icons: {
     defaultCollapseIcon: null,

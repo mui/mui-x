@@ -5,7 +5,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-export default function MultiSelectTreeView() {
+export default function CheckboxSelection() {
   return (
     <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
       <SimpleTreeView
