@@ -1144,9 +1144,9 @@ describe('<TreeItem />', () => {
 
         it('should select a node when Enter is pressed and the node is not selected', () => {
           const { getByRole, getByTestId } = render(
-            <TreeView>
+            <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one" />
-            </TreeView>,
+            </SimpleTreeView>,
           );
 
           act(() => {
