@@ -7,7 +7,7 @@ import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Sorting', () => {
+describe.only('<DataGrid /> - Sorting', () => {
   const { render } = createRenderer();
 
   const baselineProps: DataGridProps = {
