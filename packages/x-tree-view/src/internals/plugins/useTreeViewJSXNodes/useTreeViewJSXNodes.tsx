@@ -11,7 +11,6 @@ import {
   TreeItemDescendant,
   useDescendant,
 } from '../../TreeViewProvider/DescendantProvider';
-import { useTreeViewNodes } from '@mui/x-tree-view/internals/plugins/useTreeViewNodes';
 
 export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> = ({
   instance,
