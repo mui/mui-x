@@ -192,7 +192,8 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
         isSelectionFinishedOnCurrentView && hasMoreViews ? 'partial' : currentViewSelectionState;
 
       onChange(value, globalSelectionState, selectedView);
-      // detect out of order selection
+      // Detects if the selected view is not the active one.
+      // Can happen if multiple views are displayed, like in `DesktopDateTimePicker` or `MultiSectionDigitalClock`.
       if (selectedView && selectedView !== view) {
         const nextViewAfterSelected = views[views.indexOf(selectedView) + 1];
         if (nextViewAfterSelected) {

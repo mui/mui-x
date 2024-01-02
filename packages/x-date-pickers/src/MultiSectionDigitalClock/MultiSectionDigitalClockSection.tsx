@@ -163,12 +163,6 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
       if (!activeItem || previousActive.current === activeItem) {
-        // Handle setting the ref to null if the selected item is ever reset via UI
-        if (previousActive.current !== activeItem) {
-          previousActive.current = activeItem;
-        }
-      }
-      if (!activeItem) {
         return;
       }
       previousActive.current = activeItem;
