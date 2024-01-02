@@ -34,9 +34,9 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 // Data Grid specific
-npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path>
+npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
 // Target other MUI X components as well
-npx @mui/x-codemod v7.0.0/preset-safe <path>
+npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
 :::info
