@@ -5,11 +5,11 @@ import { DefaultTreeViewPlugins } from '../internals/plugins';
 export function useTreeItem(nodeId: string) {
   const { instance, multiSelect } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const expandable = instance ? instance.isNodeExpandable(nodeId) : false;
-  const expanded = instance ? instance.isNodeExpanded(nodeId) : false;
-  const focused = instance ? instance.isNodeFocused(nodeId) : false;
-  const selected = instance ? instance.isNodeSelected(nodeId) : false;
-  const disabled = instance ? instance.isNodeDisabled(nodeId) : false;
+  const expandable = instance.isNodeExpandable(nodeId);
+  const expanded = instance.isNodeExpanded(nodeId);
+  const focused = instance.isNodeFocused(nodeId);
+  const selected = instance.isNodeSelected(nodeId);
+  const disabled = instance.isNodeDisabled(nodeId);
 
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
     if (instance && !disabled) {

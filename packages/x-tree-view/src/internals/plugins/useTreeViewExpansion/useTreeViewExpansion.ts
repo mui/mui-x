@@ -11,11 +11,11 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 }) => {
   const isNodeExpanded = React.useCallback(
     (nodeId: string) => {
-      return Array.isArray(models.expanded.value)
-        ? models.expanded.value.indexOf(nodeId) !== -1
+      return Array.isArray(models.expandedNodes.value)
+        ? models.expandedNodes.value.indexOf(nodeId) !== -1
         : false;
     },
-    [models.expanded.value],
+    [models.expandedNodes.value],
   );
 
   const isNodeExpandable = React.useCallback(
@@ -29,19 +29,24 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
         return;
       }
 
+      const isExpandedBefore = models.expandedNodes.value.indexOf(nodeId!) !== -1;
+
       let newExpanded: string[];
-
-      if (models.expanded.value.indexOf(nodeId!) !== -1) {
-        newExpanded = models.expanded.value.filter((id) => id !== nodeId);
+      if (isExpandedBefore) {
+        newExpanded = models.expandedNodes.value.filter((id) => id !== nodeId);
       } else {
-        newExpanded = [nodeId].concat(models.expanded.value);
+        newExpanded = [nodeId].concat(models.expandedNodes.value);
       }
 
-      if (params.onNodeToggle) {
-        params.onNodeToggle(event, newExpanded);
+      if (params.onNodeExpansionToggle) {
+        params.onNodeExpansionToggle(event, nodeId, !isExpandedBefore);
       }
 
-      models.expanded.setValue(newExpanded);
+      if (params.onExpandedNodesChange) {
+        params.onExpandedNodesChange(event, newExpanded);
+      }
+
+      models.expandedNodes.setValue(newExpanded);
     },
   );
 
@@ -53,14 +58,20 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       (child) => instance.isNodeExpandable(child) && !instance.isNodeExpanded(child),
     );
 
-    const newExpanded = models.expanded.value.concat(diff);
+    const newExpanded = models.expandedNodes.value.concat(diff);
 
     if (diff.length > 0) {
-      models.expanded.setValue(newExpanded);
-
-      if (params.onNodeToggle) {
-        params.onNodeToggle(event, newExpanded);
+      if (params.onNodeExpansionToggle) {
+        diff.forEach((newlyExpandedNodeId) => {
+          params.onNodeExpansionToggle!(event, newlyExpandedNodeId, true);
+        });
       }
+
+      if (params.onExpandedNodesChange) {
+        params.onExpandedNodesChange(event, newExpanded);
+      }
+
+      models.expandedNodes.setValue(newExpanded);
     }
   };
 
@@ -73,15 +84,15 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 };
 
 useTreeViewExpansion.models = {
-  expanded: {
-    controlledProp: 'expanded',
-    defaultProp: 'defaultExpanded',
+  expandedNodes: {
+    controlledProp: 'expandedNodes',
+    defaultProp: 'defaultExpandedNodes',
   },
 };
 
-const DEFAULT_EXPANDED: string[] = [];
+const DEFAULT_EXPANDED_NODES: string[] = [];
 
 useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
-  defaultExpanded: params.defaultExpanded ?? DEFAULT_EXPANDED,
+  defaultExpandedNodes: params.defaultExpandedNodes ?? DEFAULT_EXPANDED_NODES,
 });

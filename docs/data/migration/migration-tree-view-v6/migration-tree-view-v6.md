@@ -25,3 +25,88 @@ In `package.json`, change the version of the tree view package to `next`.
 
 Since `v7` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
+
+### ✅ Use `SimpleTreeView` instead of `TreeView`
+
+The `TreeView` component has been deprecated and will be removed in the next major.
+You can start replacing it with the new `SimpleTreeView` component which has exactly the same API:
+
+```diff
+- import { TreeView } from '@mui/x-tree-view';
++ import { SimpleTreeView } from '@mui/x-tree-view';
+
+- import { TreeView } from '@mui/x-tree-view/TreeView';
++ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+  return (
+-   <TreeView>
++   <SimpleTreeView>
+      <TreeItem nodeId="1" label="First item" />
+-   </TreeView>
++   </SimpleTreeView>
+  )
+```
+
+If you were using theme augmentation, you will also need to migrate it:
+
+```diff
+ const theme = createTheme({
+   components: {
+-    MuiTreeView: {
++    MuiSimpleTreeView: {
+       styleOverrides: {
+         root: {
+           opacity: 0.5,
+         },
+       },
+     },
+   },
+ });
+```
+
+If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object:
+
+```diff
+  import { treeViewClasses } from '@mui/x-tree-view/TreeView';
+  import { simpleTreeViewClasses } from '@mui/x-tree-view/SimpleTreeView';
+
+- const rootClass = treeViewClasses.root;
++ const rootClass = simpleTreeViewClasses.root;
+```
+
+### Rename `onNodeToggle`, `expanded` and `defaultExpanded`
+
+The expansion props have been renamed to better describe their behaviors:
+
+| Old name          | New name                |
+| :---------------- | :---------------------- |
+| `onNodeToggle`    | `onExpandedNodesChange` |
+| `expanded`        | `expandedNodes`         |
+| `defaultExpanded` | `defaultExpandedNodes`  |
+
+```diff
+  <TreeView
+-   onNodeToggle={handleExpansionChange}
++   onExpandedNodesChange={handleExpansionChange}
+
+-   expanded={expandedNodes}
++   expandedNodes={expandedNodes}
+
+-   defaultExpanded={defaultExpandedNodes}
++   defaultExpandedNodes={defaultExpandedNodes}
+  />
+```
+
+:::info
+If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific node,
+you can use the new `onNodeExpansionToggle` prop which is called whenever a node is expanded or collapsed with its id and expansion status
+
+```tsx
+<TreeView
+  onNodeExpansionToggle={(event, nodeId, isExpanded) =>
+    console.log(nodeId, isExpanded)
+  }
+/>
+```
+
+:::

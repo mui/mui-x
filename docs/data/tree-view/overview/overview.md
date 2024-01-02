@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Tree View React component
-components: TreeView, TreeItem
+components: SimpleTreeView, RichTreeView, TreeItem
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'
@@ -17,7 +17,15 @@ packageName: '@mui/x-tree-view'
 
 The Tree View component is commonly used to represent a file system navigator displaying folders and files.
 
-{{"demo": "FileSystemNavigator.js"}}
+<p class="description">A Tree View widget presents a hierarchical list.</p>
+
+Tree views can be used to represent a file system navigator displaying folders and files, an item representing a folder can be expanded to reveal the contents of the folder, which may be files, folders, or both.
+
+{{"component": "modules/components/ComponentLinkHeader.js"}}
+
+## Available components
+
+There are two versions of the Tree View available.
 
 ## Basics
 
@@ -30,13 +38,18 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 Use the `multiSelect` prop on the Tree View to enable selecting multiple items at once.
 
-{{"demo": "MultiSelectTreeView.js"}}
+### SimpleTreeView
+
+The `SimpleTreeView` component receives its items as JSX children.
+It is designed for simple use-cases where the items are hardcoded.
+
+<!-- {{"demo": "BasicSimpleTreeView.js"}} -->
 
 ### Controlled Tree View
 
 The Tree View component can be controlled or uncontrolled.
 
-{{"demo": "ControlledTreeView.js"}}
+<!-- {{"demo": "ControlledTreeView.js"}} -->
 
 :::info
 
@@ -50,13 +63,13 @@ Learn more about controlled and uncontrolled components in the [React documentat
 
 Use [recursion](https://developer.mozilla.org/en-US/docs/Glossary/Recursion) to pass your Tree View data as a rich object.
 
-{{"demo": "RichObjectTreeView.js"}}
+<!-- {{"demo": "RichObjectTreeView.js"}} -->
 
 ### Disabled item
 
 Use the `disabled` prop on the Tree Item component to disable interaction and focus:
 
-{{"demo": "DisabledTreeItems.js"}}
+<!-- {{"demo": "DisabledTreeItems.js"}} -->
 
 #### The disabledItemsFocusable prop
 
@@ -100,19 +113,19 @@ Below are a couple of example demos on how to use them:
 
 The demo below shows how to limit the expansion interaction click area to the arrow icon only.
 
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
+<!-- {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}} -->
 
 #### Full width background
 
 The demo below builds upon the above to also make the Tree Item background span the full Tree View width.
 
-{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
+<!-- {{"demo": "BarTreeView.js", "defaultCodeOpen": false}} -->
 
 ### Custom icons, border, and animation
 
 The demo below shows how to use a custom animation for displaying the Tree View items (using [react-sprint](https://www.react-spring.dev/)), as well as adding a custom border and icons.
 
-{{"demo": "CustomizedTreeView.js"}}
+<!-- {{"demo": "CustomizedTreeView.js"}} -->
 
 ## Common examples
 
@@ -121,7 +134,7 @@ The demo below shows how to use a custom animation for displaying the Tree View 
 The Gmail side nav is probably one of the most famous Tree View component in daily use.
 The demo below shows how to build a similar version:
 
-{{"demo": "GmailTreeView.js"}}
+<!-- {{"demo": "GmailTreeView.js"}} -->
 
 ## Accessibility
 
@@ -169,3 +182,15 @@ const theme = createTheme({
   },
 });
 ```
+
+:::warning
+Most new advanced features won't be available on this component.
+If you are waiting for features like editing or virtualization, you should use `RichTreeView` instead.
+:::
+
+### RichTreeView
+
+The `RichTreeView` component receives its items through the `items` prop.
+It is designed for more advanced use-cases where the items are dynamically loaded from a data source.
+
+<!-- {{"demo": "BasicRichTreeView.js"}} -->
