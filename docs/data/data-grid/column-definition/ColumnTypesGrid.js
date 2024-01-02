@@ -122,13 +122,13 @@ export default function ColumnTypesGrid() {
           />,
           <GridActionsCellItem
             icon={<SecurityIcon />}
-            label="Toggle Admin"
+            label={<React.Fragment>Toggle Admin</React.Fragment>}
             onClick={toggleAdmin(params.id)}
             showInMenu
           />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
-            label="Duplicate User"
+            label={<React.Fragment>Duplicate User</React.Fragment>}
             onClick={duplicateUser(params.id)}
             showInMenu
           />,
