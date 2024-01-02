@@ -52,8 +52,6 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
-  // TODO: Re-enable this test once the "standard" variant is supported
-  // eslint-disable-next-line mocha/no-skipped-tests
   it('should respect localeText from the theme', () => {
     const theme = createTheme({
       components: {
