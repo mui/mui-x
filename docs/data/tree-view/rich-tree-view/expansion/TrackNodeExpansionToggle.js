@@ -37,20 +37,6 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-const getAllItemWithChildrenNodeIds = () => {
-  const nodeIds = [];
-  const registerNodeId = (item) => {
-    if (item.children?.length) {
-      nodeIds.push(item.id);
-      item.children.forEach(registerNodeId);
-    }
-  };
-
-  MUI_X_PRODUCTS.forEach(registerNodeId);
-
-  return nodeIds;
-};
-
 export default function TrackNodeExpansionToggle() {
   const [action, setAction] = React.useState(null);
 

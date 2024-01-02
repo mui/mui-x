@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import Typography from '@mui/material/Typography';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
@@ -36,20 +36,6 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
     children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
   },
 ];
-
-const getAllItemWithChildrenNodeIds = () => {
-  const nodeIds: TreeViewItemId[] = [];
-  const registerNodeId = (item: TreeViewBaseItem) => {
-    if (item.children?.length) {
-      nodeIds.push(item.id);
-      item.children.forEach(registerNodeId);
-    }
-  };
-
-  MUI_X_PRODUCTS.forEach(registerNodeId);
-
-  return nodeIds;
-};
 
 export default function TrackNodeExpansionToggle() {
   const [action, setAction] = React.useState<{
