@@ -1,20 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useSpring, animated } from '@react-spring/web';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { TransitionProps } from '@mui/material/transitions';
-import Collapse from '@mui/material/Collapse';
-import { alpha, styled } from '@mui/material/styles';
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
-import { TransitionProps } from '@mui/material/transitions';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import { useSpring, animated } from '@react-spring/web';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
 function TransitionComponent(props: TransitionProps) {
   const style = useSpring({
