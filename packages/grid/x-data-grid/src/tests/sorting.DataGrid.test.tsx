@@ -4,10 +4,11 @@ import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridSortModel, useGridApiRef, GridApi } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
+import { GridInitialState } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DataGrid /> - Sorting', () => {
+describe('<DataGrid /> - Sorting', () => {
   const { render } = createRenderer();
 
   const baselineProps: DataGridProps = {
@@ -42,6 +43,42 @@ describe.only('<DataGrid /> - Sorting', () => {
       </div>,
     );
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
+  });
+
+  it('should allow sorting using `initialState` and `filterModel` for unsortable columns', () => {
+    function TestCase(props: Partial<DataGridProps>) {
+      const cols = [{ field: 'id', sortable: false }];
+      const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];
+      const initialState: GridInitialState = {
+        sorting: {
+          sortModel: [
+            {
+              field: 'id',
+              sort: 'asc',
+            },
+          ],
+        },
+      };
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid columns={cols} rows={rows} initialState={initialState} {...props} />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestCase />);
+    // check if initial sort is applied
+    expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
+    const header = getColumnHeaderCell(0);
+
+    // should not sort on header click when `colDef.sortable` is `false`
+    fireEvent.click(header);
+    expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
+
+    // should allow sort using `filterModel`
+    setProps({ sortModel: [{ field: 'id', sort: 'desc' }] });
+    expect(getColumnValues(0)).to.deep.equal(['10', '5', '0']);
   });
 
   it('should allow sorting using `apiRef` for unsortable columns', () => {
