@@ -6,10 +6,7 @@ import {
   getFirstNode,
   getLastNode,
 } from '../../useTreeView/useTreeView.utils';
-import {
-  UseTreeViewSelectionDefaultizedParameters,
-  UseTreeViewSelectionSignature,
-} from './useTreeViewSelection.types';
+import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
@@ -22,9 +19,46 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   const currentRangeSelection = React.useRef<string[]>([]);
 
   const isNodeSelected = (nodeId: string) =>
-    Array.isArray(models.selected.value)
-      ? models.selected.value.indexOf(nodeId) !== -1
-      : models.selected.value === nodeId;
+    Array.isArray(models.selectedNodes.value)
+      ? models.selectedNodes.value.indexOf(nodeId) !== -1
+      : models.selectedNodes.value === nodeId;
+
+  const setSelectedNodes = (
+    event: React.SyntheticEvent,
+    newSelectedNodes: typeof params.defaultSelectedNodes,
+  ) => {
+    if (params.onNodeSelectionToggle) {
+      if (params.multiSelect) {
+        const addedNodes = (newSelectedNodes as string[]).filter(
+          (nodeId) => !instance.isNodeSelected(nodeId),
+        );
+        const removedNodes = (models.selectedNodes.value as string[]).filter(
+          (nodeId) => !(newSelectedNodes as string[]).includes(nodeId),
+        );
+
+        addedNodes.forEach((nodeId) => {
+          params.onNodeSelectionToggle!(event, nodeId, true);
+        });
+
+        removedNodes.forEach((nodeId) => {
+          params.onNodeSelectionToggle!(event, nodeId, false);
+        });
+      } else if (newSelectedNodes !== models.selectedNodes.value) {
+        if (models.selectedNodes.value != null) {
+          params.onNodeSelectionToggle(event, models.selectedNodes.value as string, false);
+        }
+        if (newSelectedNodes != null) {
+          params.onNodeSelectionToggle(event, newSelectedNodes as string, true);
+        }
+      }
+    }
+
+    if (params.onSelectedNodesChange) {
+      params.onSelectedNodesChange(event, newSelectedNodes);
+    }
+
+    models.selectedNodes.setValue(newSelectedNodes);
+  };
 
   const selectNode = (event: React.SyntheticEvent, nodeId: string, multiple = false) => {
     if (params.disableSelection) {
@@ -32,31 +66,19 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     }
 
     if (multiple) {
-      if (Array.isArray(models.selected.value)) {
+      if (Array.isArray(models.selectedNodes.value)) {
         let newSelected: string[];
-        if (models.selected.value.indexOf(nodeId) !== -1) {
-          newSelected = models.selected.value.filter((id) => id !== nodeId);
+        if (models.selectedNodes.value.indexOf(nodeId) !== -1) {
+          newSelected = models.selectedNodes.value.filter((id) => id !== nodeId);
         } else {
-          newSelected = [nodeId].concat(models.selected.value);
+          newSelected = [nodeId].concat(models.selectedNodes.value);
         }
 
-        if (params.onNodeSelect) {
-          (params.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
-            event,
-            newSelected,
-          );
-        }
-
-        models.selected.setValue(newSelected);
+        setSelectedNodes(event, newSelected);
       }
     } else {
       const newSelected = params.multiSelect ? [nodeId] : nodeId;
-
-      if (params.onNodeSelect) {
-        params.onNodeSelect(event, newSelected as string & string[]);
-      }
-
-      models.selected.setValue(newSelected);
+      setSelectedNodes(event, newSelected);
     }
     lastSelectedNode.current = nodeId;
     lastSelectionWasRange.current = false;
@@ -78,7 +100,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 
   const handleRangeArrowSelect = (event: React.SyntheticEvent, nodes: TreeViewItemRange) => {
-    let base = (models.selected.value as string[]).slice();
+    let base = (models.selectedNodes.value as string[]).slice();
     const { start, next, current } = nodes;
 
     if (!next || !current) {
@@ -104,21 +126,14 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       currentRangeSelection.current.push(current, next);
     }
 
-    if (params.onNodeSelect) {
-      (params.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
-        event,
-        base,
-      );
-    }
-
-    models.selected.setValue(base);
+    setSelectedNodes(event, base);
   };
 
   const handleRangeSelect = (
     event: React.SyntheticEvent,
     nodes: { start: string; end: string },
   ) => {
-    let base = (models.selected.value as string[]).slice();
+    let base = (models.selectedNodes.value as string[]).slice();
     const { start, end } = nodes;
     // If last selection was a range selection ignore nodes that were selected.
     if (lastSelectionWasRange.current) {
@@ -131,14 +146,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     let newSelected = base.concat(range);
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
 
-    if (params.onNodeSelect) {
-      (params.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
-        event,
-        newSelected,
-      );
-    }
-
-    models.selected.setValue(newSelected);
+    setSelectedNodes(event, newSelected);
   };
 
   const selectRange = (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked = false) => {
@@ -197,14 +205,15 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 };
 
 useTreeViewSelection.models = {
-  selected: { controlledProp: 'selected', defaultProp: 'defaultSelected' },
+  selectedNodes: { controlledProp: 'selectedNodes', defaultProp: 'defaultSelectedNodes' },
 };
 
-const DEFAULT_SELECTED: string[] = [];
+const DEFAULT_SELECTED_NODES: string[] = [];
 
 useTreeViewSelection.getDefaultizedParams = (params) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,
-  defaultSelected: params.defaultSelected ?? (params.multiSelect ? DEFAULT_SELECTED : null),
+  defaultSelectedNodes:
+    params.defaultSelectedNodes ?? (params.multiSelect ? DEFAULT_SELECTED_NODES : null),
 });

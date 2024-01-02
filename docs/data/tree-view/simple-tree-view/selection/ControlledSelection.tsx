@@ -7,14 +7,14 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Button from '@mui/material/Button';
 
 export default function ControlledSelection() {
-  const [selected, setSelected] = React.useState<string[]>([]);
+  const [selectedNodes, setSelectedNodes] = React.useState<string[]>([]);
 
-  const handleSelect = (event: React.SyntheticEvent, ids: string[]) => {
-    setSelected(ids);
+  const handleSelectedNodesChange = (event: React.SyntheticEvent, ids: string[]) => {
+    setSelectedNodes(ids);
   };
 
   const handleSelectClick = () => {
-    setSelected((oldSelected) =>
+    setSelectedNodes((oldSelected) =>
       oldSelected.length === 0
         ? [
             'grid',
@@ -37,13 +37,13 @@ export default function ControlledSelection() {
     <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
       <Box sx={{ mb: 1 }}>
         <Button onClick={handleSelectClick}>
-          {selected.length === 0 ? 'Select all' : 'Unselect all'}
+          {selectedNodes.length === 0 ? 'Select all' : 'Unselect all'}
         </Button>
       </Box>
       <Box sx={{ height: 264, flexGrow: 1 }}>
         <SimpleTreeView
-          selected={selected}
-          onNodeSelect={handleSelect}
+          selectedNodes={selectedNodes}
+          onSelectedNodesChange={handleSelectedNodesChange}
           multiSelect
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}

@@ -10,10 +10,7 @@
     },
     "defaultExpandIcon": { "type": { "name": "node" } },
     "defaultParentIcon": { "type": { "name": "node" } },
-    "defaultSelected": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" },
-      "default": "[]"
-    },
+    "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
@@ -66,14 +63,21 @@
         "describedArgs": ["event", "nodeId", "value"]
       }
     },
-    "onNodeSelect": {
+    "onNodeSelectionToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeId: array, isSelected: array) => void",
+        "describedArgs": ["event", "nodeId", "isSelected"]
+      }
+    },
+    "onSelectedNodesChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.SyntheticEvent, nodeIds: Array<string> | string) => void",
         "describedArgs": ["event", "nodeIds"]
       }
     },
-    "selected": { "type": { "name": "any" } },
+    "selectedNodes": { "type": { "name": "any" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
