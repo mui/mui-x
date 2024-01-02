@@ -26,12 +26,20 @@ import {
 const globalScope = (typeof window === 'undefined' ? globalThis : window) as any;
 const evalCode = globalScope[atob('ZXZhbA==')] as <T>(source: string) => T;
 
+let hasEval: boolean | undefined;
+
 const getHasEval = () => {
-  try {
-    return evalCode<boolean>('true');
-  } catch (_: unknown) {
-    return false;
+  if (hasEval !== undefined) {
+    return hasEval;
   }
+
+  try {
+    hasEval = evalCode<boolean>('true');
+  } catch (_: unknown) {
+    hasEval = false;
+  }
+
+  return hasEval;
 };
 
 type GridFilterItemApplier = {
