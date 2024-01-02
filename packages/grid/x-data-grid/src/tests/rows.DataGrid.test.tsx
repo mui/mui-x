@@ -257,7 +257,7 @@ describe('<DataGrid /> - Rows', () => {
         <TestCase
           getActions={() => [
             <GridActionsCellItem icon={<span />} label="delete" />,
-            <GridActionsCellItem label="print" showInMenu />,
+            <GridActionsCellItem label={<React.Fragment>print</React.Fragment>} showInMenu />,
           ]}
         />,
       );
@@ -266,7 +266,13 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should show in a menu the actions marked as showInMenu', async () => {
-      render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
+      render(
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem label={<React.Fragment>print</React.Fragment>} showInMenu />,
+          ]}
+        />,
+      );
       expect(screen.queryByText('print')).to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
       await waitFor(() => {
@@ -287,7 +293,13 @@ describe('<DataGrid /> - Rows', () => {
     it('should not select the row when clicking in a menu action', async () => {
       render(
         <TestCase
-          getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
+          getActions={() => [
+            <GridActionsCellItem
+              icon={<span />}
+              label={<React.Fragment>print</React.Fragment>}
+              showInMenu
+            />,
+          ]}
         />,
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
@@ -303,7 +315,13 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should not select the row when opening the menu', async () => {
-      render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
+      render(
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem label={<React.Fragment>print</React.Fragment>} showInMenu />,
+          ]}
+        />,
+      );
       expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
       await waitFor(() => {
@@ -315,7 +333,9 @@ describe('<DataGrid /> - Rows', () => {
       render(
         <TestCase
           rows={[{ id: 1 }, { id: 2 }]}
-          getActions={() => [<GridActionsCellItem label="print" showInMenu />]}
+          getActions={() => [
+            <GridActionsCellItem label={<React.Fragment>print</React.Fragment>} showInMenu />,
+          ]}
         />,
       );
       expect(screen.queryAllByRole('menu')).to.have.length(2);
@@ -355,8 +375,16 @@ describe('<DataGrid /> - Rows', () => {
       render(
         <TestCase
           getActions={() => [
-            <GridActionsCellItem icon={<span />} label="print" showInMenu />,
-            <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+            <GridActionsCellItem
+              icon={<span />}
+              label={<React.Fragment>print</React.Fragment>}
+              showInMenu
+            />,
+            <GridActionsCellItem
+              icon={<span />}
+              label={<React.Fragment>delete</React.Fragment>}
+              showInMenu
+            />,
           ]}
         />,
       );
@@ -416,7 +444,11 @@ describe('<DataGrid /> - Rows', () => {
         <TestCase
           getActions={() => [
             <GridActionsCellItem icon={<span />} label="print" />,
-            <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+            <GridActionsCellItem
+              icon={<span />}
+              label={<React.Fragment>delete</React.Fragment>}
+              showInMenu
+            />,
           ]}
         />,
       );

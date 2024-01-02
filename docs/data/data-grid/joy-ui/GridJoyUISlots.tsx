@@ -63,8 +63,15 @@ const columns: GridColDef[] = [
         onClick={() => {}}
         label="Delete"
       />,
-      <GridActionsCellItem onClick={() => {}} label="Print" showInMenu />,
-      <GridActionsCellItem label="Duplicate User" showInMenu />,
+      <GridActionsCellItem
+        onClick={() => {}}
+        label={<React.Fragment>Print</React.Fragment>}
+        showInMenu
+      />,
+      <GridActionsCellItem
+        label={<React.Fragment>Duplicate User</React.Fragment>}
+        showInMenu
+      />,
     ],
     minWidth: 80,
     flex: 1,
