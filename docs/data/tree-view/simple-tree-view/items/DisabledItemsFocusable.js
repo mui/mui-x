@@ -14,20 +14,18 @@ export default function DisabledItemsFocusable() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={disabledItemsFocusable}
-              onChange={handleToggle}
-              name="disabledItemsFocusable"
-            />
-          }
-          label="Allow focusing disabled items"
-        />
-      </Box>
-      <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ maxWidth: 400 }}>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={disabledItemsFocusable}
+            onChange={handleToggle}
+            name="disabledItemsFocusable"
+          />
+        }
+        label="Allow focusing disabled items"
+      />
+      <Box sx={{ flexGrow: 1, mt: 2 }}>
         <SimpleTreeView
           disabledItemsFocusable={disabledItemsFocusable}
           defaultCollapseIcon={<ExpandMoreIcon />}
