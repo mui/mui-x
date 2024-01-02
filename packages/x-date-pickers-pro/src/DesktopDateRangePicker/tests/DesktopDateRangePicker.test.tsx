@@ -54,7 +54,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   // TODO: Re-enable this test once the "standard" variant is supported
   // eslint-disable-next-line mocha/no-skipped-tests
-  it.skip('should respect localeText from the theme', () => {
+  it('should respect localeText from the theme', () => {
     const theme = createTheme({
       components: {
         MuiLocalizationProvider: {
