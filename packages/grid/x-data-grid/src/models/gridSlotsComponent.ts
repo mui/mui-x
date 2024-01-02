@@ -3,11 +3,9 @@ import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import type { GridRowProps } from '../components/GridRow';
 import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
-import type { GridCellProps } from '../components/cell/GridCell';
 import type { GridColumnHeadersProps } from '../components/GridColumnHeaders';
-// TODO: Convert all `any` to `Props & PropsOverrides`
-import type { CellPropsOverrides } from './gridSlotsComponentsProps';
 
+// TODO: Convert all `any` to `Props & PropsOverrides`
 export interface GridBaseSlots {
   /**
    * The custom Checkbox component used in the grid for both header and cells.
@@ -89,7 +87,7 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * Component rendered for each cell.
    * @default GridCell
    */
-  cell: React.JSXElementConstructor<GridCellProps & CellPropsOverrides>;
+  cell: React.JSXElementConstructor<any>;
   /**
    * Component rendered for each skeleton cell.
    * @default GridSkeletonCell
