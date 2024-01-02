@@ -35,9 +35,14 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
   });
 
+  const focusRoot = useEventCallback(() => {
+    rootRef.current?.focus({ preventScroll: true });
+  });
+
   populateInstance<UseTreeViewFocusSignature>(instance, {
     isNodeFocused,
     focusNode,
+    focusRoot,
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
@@ -85,7 +90,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     };
 
   const focusedNode = instance.getNode(state.focusedNodeId!);
-  const activeDescendant = focusedNode ? focusedNode.idAttribute : null;
+  const activeDescendant = focusedNode
+    ? instance.getTreeItemId(focusedNode.id, focusedNode.idAttribute)
+    : null;
 
   return {
     getRootProps: (otherHandlers) => ({

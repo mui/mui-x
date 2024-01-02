@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "This component has been deprecated in favor of the new `SimpleTreeView` component.\nYou can have a look at how to migrate to the new component in the v7 [migration guide](https://next.mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)",
   "propDescriptions": {
     "children": {
       "description": "The content of the component.",
@@ -61,6 +61,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "getItemId": {
+      "description": "Used to determine the string label for a given item.",
+      "deprecated": "",
+      "typeDescriptions": { "item": "The item to check.", "string": "The id of the item." }
+    },
+    "getItemLabel": {
+      "description": "Used to determine the string label for a given item.",
+      "deprecated": "",
+      "typeDescriptions": { "item": "The item to check.", "string": "The label of the item." }
+    },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id.",
       "deprecated": "",
@@ -101,6 +111,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
       "deprecated": "",
@@ -108,5 +128,5 @@
     }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
-  "slotDescriptions": {}
+  "slotDescriptions": { "root": "" }
 }

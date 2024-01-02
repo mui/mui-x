@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MergePluginsProperty, TreeViewPlugin } from '../models';
+import { ConvertPluginsIntoSignatures, MergePluginsProperty, TreeViewPlugin } from '../models';
 
 export const extractPluginParamsFromProps = <
   TProps extends {},
@@ -13,7 +13,7 @@ export const extractPluginParamsFromProps = <
   plugins: TPlugins;
   rootRef?: React.Ref<HTMLUListElement>;
 }) => {
-  type PluginParams = MergePluginsProperty<TPlugins, 'params'>;
+  type PluginParams = MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
 
   const paramsLookup = {} as Record<keyof PluginParams, true>;
   plugins.forEach((plugin) => {

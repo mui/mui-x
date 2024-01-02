@@ -10,7 +10,11 @@ import {
   getPreviousNode,
   populateInstance,
 } from '../../useTreeView/useTreeView.utils';
-import { UseTreeViewKeyboardNavigationSignature } from './useTreeViewKeyboardNavigation.types';
+import {
+  TreeViewFirstCharMap,
+  UseTreeViewKeyboardNavigationSignature,
+} from './useTreeViewKeyboardNavigation.types';
+import { TreeViewBaseItem } from '../../../models';
 
 function isPrintableCharacter(string: string) {
   return string && string.length === 1 && string.match(/\S/);
@@ -30,20 +34,36 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 > = ({ instance, params, state }) => {
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';
-  const firstCharMap = React.useRef<{ [nodeId: string]: string }>({});
+  const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
+  const hasFirstCharMapBeenUpdatedImperatively = React.useRef(false);
 
-  const mapFirstChar = useEventCallback((nodeId: string, firstChar: string) => {
-    firstCharMap.current[nodeId] = firstChar;
+  const updateFirstCharMap = useEventCallback(
+    (callback: (firstCharMap: TreeViewFirstCharMap) => TreeViewFirstCharMap) => {
+      hasFirstCharMapBeenUpdatedImperatively.current = true;
+      firstCharMap.current = callback(firstCharMap.current);
+    },
+  );
 
-    return () => {
-      const newMap = { ...firstCharMap.current };
-      delete newMap[nodeId];
-      firstCharMap.current = newMap;
+  React.useEffect(() => {
+    if (hasFirstCharMapBeenUpdatedImperatively.current) {
+      return;
+    }
+
+    const newFirstCharMap: { [nodeId: string]: string } = {};
+
+    const processItem = (item: TreeViewBaseItem) => {
+      const getItemId = params.getItemId;
+      const nodeId = getItemId ? getItemId(item) : (item as { id: string }).id;
+      newFirstCharMap[nodeId] = instance.getNode(nodeId).label!.substring(0, 1).toLowerCase();
+      item.children?.forEach(processItem);
     };
-  });
+
+    params.items.forEach(processItem);
+    firstCharMap.current = newFirstCharMap;
+  }, [params.items, params.getItemId, instance]);
 
   populateInstance<UseTreeViewKeyboardNavigationSignature>(instance, {
-    mapFirstChar,
+    updateFirstCharMap,
   });
 
   const handleNextArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {
