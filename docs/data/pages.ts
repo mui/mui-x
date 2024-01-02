@@ -234,6 +234,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
+      { pathname: '/x/react-date-pickers/playground' },
       { pathname: '/x/react-date-pickers/faq', title: 'FAQ' },
       {
         pathname: '/x/react-date-pickers-components',
@@ -325,6 +326,11 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-date-pickers/fields', title: 'Field components' },
+          {
+            pathname: '/x/api/date-pickers-group',
+            title: 'API Reference',
+            children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
+          },
         ],
       },
       {
@@ -367,12 +373,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
         ],
-      },
-      { pathname: '/x/react-date-pickers/playground' },
-      {
-        pathname: '/x/api/date-pickers-group',
-        title: 'API Reference',
-        children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
       },
     ],
   },
