@@ -86,8 +86,9 @@ Premium package:
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
-## Questions and feedback
+## Support
 
+<<<<<<< HEAD
 ### GitHub
 
 We use GitHub issues as a bug and feature request tracker.
@@ -108,6 +109,9 @@ You can create an [issue](https://github.com/mui/mui-x/issues) on this repositor
 Please always provide a reproduction case.
 As a starting point, we recommend you [browse the documentation](https://mui.com/x/introduction/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case.
 Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
+=======
+From community guidance to critical business support, we're here to help. Read the [support guide](https://mui.com/x/introduction/support/).
+>>>>>>> a7c8d297f ([docs] Improve Support page)
 
 ## Contributing
 
