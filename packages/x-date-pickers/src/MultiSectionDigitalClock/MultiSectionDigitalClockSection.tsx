@@ -72,7 +72,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     '&:not(:first-of-type)': {
       borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
     },
-    '&:after': {
+    '&::after': {
       display: 'block',
       content: '""',
       // subtracting the height of one item, extra margin and borders to make sure the max height is correct

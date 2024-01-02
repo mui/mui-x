@@ -1,4 +1,4 @@
-<TreeView
+<SimpleTreeView
   aria-label="file system navigator"
   defaultCollapseIcon={<ExpandMoreIcon />}
   defaultExpandIcon={<ChevronRightIcon />}
@@ -13,4 +13,4 @@
       <TreeItem nodeId="8" label="index.js" />
     </TreeItem>
   </TreeItem>
-</TreeView>
+</SimpleTreeView>

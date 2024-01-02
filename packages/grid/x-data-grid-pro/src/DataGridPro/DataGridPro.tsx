@@ -72,15 +72,15 @@ DataGridProRaw.propTypes = {
     current: PropTypes.object.isRequired,
   }),
   /**
-   * The label of the grid.
+   * The label of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the grid.
+   * The id of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the grid height is dynamic and follow the number of rows in the grid.
+   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: PropTypes.bool,
@@ -109,7 +109,7 @@ DataGridProRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
-   * If `true`, the grid get a first column with a checkbox that allows to select rows.
+   * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -142,7 +142,7 @@ DataGridProRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Sets the height in pixel of the column headers in the grid.
+   * Sets the height in pixel of the column headers in the Data Grid.
    * @default 56
    */
   columnHeaderHeight: PropTypes.number,
@@ -156,8 +156,8 @@ DataGridProRaw.propTypes = {
    */
   columnThreshold: PropTypes.number,
   /**
-   * Set the column visibility model of the grid.
-   * If defined, the grid will ignore the `hide` property in [[GridColDef]].
+   * Set the column visibility model of the Data Grid.
+   * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
   /**
@@ -167,7 +167,7 @@ DataGridProRaw.propTypes = {
    */
   defaultGroupingExpansionDepth: PropTypes.number,
   /**
-   * Set the density of the grid.
+   * Set the density of the Data Grid.
    * @default "standard"
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
@@ -244,8 +244,9 @@ DataGridProRaw.propTypes = {
    */
   disableMultipleColumnsSorting: PropTypes.bool,
   /**
-   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
-   * @default false
+   * If `true`, multiple selection using the Ctrl/CMD or Shift key is disabled.
+   * The MIT DataGrid will ignore this prop, unless `checkboxSelection` is enabled.
+   * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: PropTypes.bool,
   /**
@@ -292,7 +293,7 @@ DataGridProRaw.propTypes = {
     return null;
   }),
   /**
-   * Set the filter model of the grid.
+   * Set the filter model of the Data Grid.
    */
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
@@ -309,7 +310,7 @@ DataGridProRaw.propTypes = {
     quickFilterValues: PropTypes.array,
   }),
   /**
-   * Forwarded props for the grid root element.
+   * Forwarded props for the Data Grid root element.
    * @ignore - do not document.
    */
   forwardedProps: PropTypes.object,
@@ -415,7 +416,7 @@ DataGridProRaw.propTypes = {
    */
   ignoreDiacritics: PropTypes.bool,
   /**
-   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If `true`, the Data Grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
    * @default false
    */
@@ -469,7 +470,7 @@ DataGridProRaw.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Set the locale text of the grid.
+   * Set the locale text of the Data Grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
@@ -670,7 +671,7 @@ DataGridProRaw.propTypes = {
    */
   onProcessRowUpdateError: PropTypes.func,
   /**
-   * Callback fired when the grid is resized.
+   * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -742,7 +743,7 @@ DataGridProRaw.propTypes = {
    */
   onSortModelChange: PropTypes.func,
   /**
-   * Callback fired when the state of the grid is updated.
+   * Callback fired when the state of the Data Grid is updated.
    * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -814,7 +815,7 @@ DataGridProRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * Sets the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the Data Grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
@@ -844,7 +845,7 @@ DataGridProRaw.propTypes = {
    */
   rowSelection: PropTypes.bool,
   /**
-   * Sets the row selection model of the grid.
+   * Sets the row selection model of the Data Grid.
    */
   rowSelectionModel: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
@@ -869,7 +870,7 @@ DataGridProRaw.propTypes = {
    */
   rowThreshold: PropTypes.number,
   /**
-   * Override the height/width of the grid inner scrollbar.
+   * Override the height/width of the Data Grid inner scrollbar.
    */
   scrollbarSize: PropTypes.number,
   /**
@@ -908,7 +909,7 @@ DataGridProRaw.propTypes = {
    */
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
   /**
-   * Set the sort model of the grid.
+   * Set the sort model of the Data Grid.
    */
   sortModel: PropTypes.arrayOf(
     PropTypes.shape({
@@ -925,7 +926,7 @@ DataGridProRaw.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
+   * If positive, the Data Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
    * @default 0
    */

@@ -5,6 +5,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { InteractionContext } from '../context/InteractionProvider';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
@@ -80,7 +81,11 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
           if (xData === undefined) {
             throw new Error(
-              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot.`,
+              `MUI-X-Charts: ${
+                xAxisKey === DEFAULT_X_AXIS_KEY
+                  ? 'The first `xAxis`'
+                  : `The x-axis with id "${xAxisKey}"`
+              } should have data property to be able to display a line plot.`,
             );
           }
           const x = xScale(xData[highlightedIndex]);

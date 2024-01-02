@@ -3,16 +3,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
-import ownerDocument from '@mui/utils/ownerDocument';
-import useForkRef from '@mui/utils/useForkRef';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import {
-  DescendantProvider,
-  TreeItemDescendant,
-  useDescendant,
-} from '../internals/TreeViewProvider/DescendantProvider';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
@@ -154,9 +147,20 @@ const TreeItemGroup = styled(Collapse, {
  */
 export const TreeItem = React.forwardRef(function TreeItem(
   inProps: TreeItemProps,
-  ref: React.Ref<HTMLLIElement>,
+  inRef: React.Ref<HTMLLIElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
+  const {
+    icons: contextIcons,
+    runItemPlugins,
+    multiSelect,
+    disabledItemsFocusable,
+    instance,
+  } = useTreeViewContext<DefaultTreeViewPlugins>();
+
+  const inPropsWithTheme = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
+
+  const { props, ref, wrapItem } = runItemPlugins({ props: inPropsWithTheme, ref: inRef });
+
   const {
     children,
     className,
@@ -165,11 +169,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ContentProps,
     endIcon,
     expandIcon,
-    disabled: disabledProp,
     icon,
-    id: idProp,
-    label,
     nodeId,
+    id,
+    label,
     onClick,
     onMouseDown,
     TransitionComponent = Collapse,
@@ -177,40 +180,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
-  const {
-    icons: contextIcons,
-    multiSelect,
-    disabledItemsFocusable,
-    treeId,
-    instance,
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
-
-  let id: string | undefined;
-  if (idProp != null) {
-    id = idProp;
-  } else if (treeId && nodeId) {
-    id = `${treeId}-${nodeId}`;
-  }
-
-  const [treeItemElement, setTreeItemElement] = React.useState<HTMLLIElement | null>(null);
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef(setTreeItemElement, ref);
-
-  const descendant = React.useMemo<TreeItemDescendant>(
-    () => ({
-      element: treeItemElement!,
-      id: nodeId,
-    }),
-    [nodeId, treeItemElement],
-  );
-
-  const { index, parentId } = useDescendant(descendant);
-
   const expandable = Boolean(Array.isArray(children) ? children.length : children);
-  const expanded = instance ? instance.isNodeExpanded(nodeId) : false;
-  const focused = instance ? instance.isNodeFocused(nodeId) : false;
-  const selected = instance ? instance.isNodeSelected(nodeId) : false;
-  const disabled = instance ? instance.isNodeDisabled(nodeId) : false;
+  const expanded = instance.isNodeExpanded(nodeId);
+  const focused = instance.isNodeFocused(nodeId);
+  const selected = instance.isNodeSelected(nodeId);
+  const disabled = instance.isNodeDisabled(nodeId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -239,34 +213,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     displayIcon = endIcon || contextIcons.defaultEndIcon;
   }
 
-  React.useEffect(() => {
-    // On the first render a node's index will be -1. We want to wait for the real index.
-    if (instance && index !== -1) {
-      instance.updateNode({
-        id: nodeId,
-        idAttribute: id,
-        index,
-        parentId,
-        expandable,
-        disabled: disabledProp,
-      });
-
-      return () => instance.removeNode(nodeId);
-    }
-
-    return undefined;
-  }, [instance, parentId, index, nodeId, expandable, disabledProp, id]);
-
-  React.useEffect(() => {
-    if (instance && label) {
-      return instance.mapFirstChar(
-        nodeId,
-        (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
-      );
-    }
-    return undefined;
-  }, [instance, nodeId, label]);
-
   let ariaSelected;
   if (multiSelect) {
     ariaSelected = selected;
@@ -283,40 +229,33 @@ export const TreeItem = React.forwardRef(function TreeItem(
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
     // DOM focus stays on the tree which manages focus with aria-activedescendant
     if (event.target === event.currentTarget) {
-      let rootElement: any;
-
-      if (typeof event.target.getRootNode === 'function') {
-        rootElement = event.target.getRootNode();
-      } else {
-        rootElement = ownerDocument(event.target);
-      }
-
-      rootElement.getElementById(treeId).focus({ preventScroll: true });
+      instance.focusRoot();
     }
 
-    const unfocusable = !disabledItemsFocusable && disabled;
-    if (instance && !focused && event.currentTarget === event.target && !unfocusable) {
+    const canBeFocused = !disabled || disabledItemsFocusable;
+    if (!focused && canBeFocused && event.currentTarget === event.target) {
       instance.focusNode(event, nodeId);
     }
   }
 
-  return (
+  const idAttribute = instance.getTreeItemId(nodeId, id);
+
+  const item = (
     <TreeItemRoot
       className={clsx(classes.root, className)}
       role="treeitem"
       aria-expanded={expandable ? expanded : undefined}
       aria-selected={ariaSelected}
       aria-disabled={disabled || undefined}
-      id={id}
+      id={idAttribute}
       tabIndex={-1}
       {...other}
       ownerState={ownerState}
       onFocus={handleFocus}
-      ref={handleRef}
+      ref={ref}
     >
       <StyledTreeItemContent
         as={ContentComponent}
-        ref={contentRef}
         classes={{
           root: classes.content,
           expanded: classes.expanded,
@@ -337,22 +276,22 @@ export const TreeItem = React.forwardRef(function TreeItem(
         {...ContentProps}
       />
       {children && (
-        <DescendantProvider id={nodeId}>
-          <TreeItemGroup
-            as={TransitionComponent}
-            unmountOnExit
-            className={classes.group}
-            in={expanded}
-            component="ul"
-            role="group"
-            {...TransitionProps}
-          >
-            {children}
-          </TreeItemGroup>
-        </DescendantProvider>
+        <TreeItemGroup
+          as={TransitionComponent}
+          unmountOnExit
+          className={classes.group}
+          in={expanded}
+          component="ul"
+          role="group"
+          {...TransitionProps}
+        >
+          {children}
+        </TreeItemGroup>
       )}
     </TreeItemRoot>
   );
+
+  return wrapItem(item);
 });
 
 TreeItem.propTypes = {

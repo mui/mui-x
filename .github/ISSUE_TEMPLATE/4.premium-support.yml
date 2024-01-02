@@ -9,7 +9,6 @@ body:
         Please provide a searchable summary of the issue in the title above ⬆️.
 
         ⚠️ **Don't use this form if the problem is [a bug](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+needs+triage&template=1.bug.yml) or a [feature request](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+needs+triage&template=2.feature.yml), use the dedicated form instead.**
-
   - type: input
     id: contact
     attributes:
@@ -18,7 +17,6 @@ body:
       placeholder: 'e.g. 11111'
     validations:
       required: true
-
   - type: input
     attributes:
       label: Search keywords
@@ -33,7 +31,6 @@ body:
       options:
         - label: I have tested the latest version
           required: true
-
   - type: textarea
     attributes:
       label: The problem in depth 🔍
