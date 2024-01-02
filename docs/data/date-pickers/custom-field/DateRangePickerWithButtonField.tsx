@@ -20,7 +20,7 @@ type DateRangeButtonFieldComponent = ((
 ) => React.JSX.Element) & { fieldType?: string };
 
 const DateRangeButtonField = React.forwardRef(
-  (props: DateRangeButtonFieldProps, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangeButtonFieldProps, ref: React.Ref<HTMLElement>) => {
     const {
       setOpen,
       label,

@@ -7,7 +7,6 @@ body:
     attributes:
       value: |
         Please provide a searchable summary of the issue in the title above ⬆️.
-
   - type: input
     attributes:
       label: Search keywords
@@ -22,7 +21,6 @@ body:
       options:
         - label: I have tested the latest version
           required: true
-
   - type: textarea
     attributes:
       label: The problem in depth 🔍

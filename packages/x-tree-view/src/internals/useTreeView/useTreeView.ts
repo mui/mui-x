@@ -14,7 +14,6 @@ import {
   UseTreeViewReturnValue,
   UseTreeViewRootSlotProps,
 } from './useTreeView.types';
-import { DEFAULT_TREE_VIEW_CONTEXT_VALUE } from '../TreeViewProvider/TreeViewContext';
 import { useTreeViewModels } from './useTreeViewModels';
 import { TreeViewContextValue } from '../TreeViewProvider';
 import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
@@ -40,7 +39,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const instanceRef = React.useRef<TreeViewInstance<Signatures>>(
     {} as TreeViewInstance<Signatures>,
   );
-  const instance = instanceRef.current;
+  const instance = instanceRef.current as TreeViewInstance<Signatures>;
   const innerRootRef = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
 
@@ -61,7 +60,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const rootPropsGetters: (<TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
-  let contextValue: TreeViewContextValue<Signatures> = DEFAULT_TREE_VIEW_CONTEXT_VALUE;
+  let contextValue = {} as TreeViewContextValue<Signatures>;
 
   const runPlugin = (plugin: TreeViewPlugin<any>) => {
     const pluginResponse =
@@ -77,6 +76,42 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   };
 
   plugins.forEach(runPlugin);
+
+  contextValue.runItemPlugins = ({ props, ref }) => {
+    let finalProps = props;
+    let finalRef = ref;
+    const itemWrappers: ((children: React.ReactNode) => React.ReactNode)[] = [];
+
+    plugins.forEach((plugin) => {
+      if (!plugin.itemPlugin) {
+        return;
+      }
+
+      const itemPluginResponse = plugin.itemPlugin({ props: finalProps, ref: finalRef });
+      if (itemPluginResponse?.props) {
+        finalProps = itemPluginResponse.props;
+      }
+      if (itemPluginResponse?.ref) {
+        finalRef = itemPluginResponse.ref;
+      }
+      if (itemPluginResponse?.wrapItem) {
+        itemWrappers.push(itemPluginResponse.wrapItem);
+      }
+    });
+
+    return {
+      props: finalProps,
+      ref: finalRef,
+      wrapItem: (children) => {
+        let finalChildren: React.ReactNode = children;
+        itemWrappers.forEach((itemWrapper) => {
+          finalChildren = itemWrapper(finalChildren);
+        });
+
+        return finalChildren;
+      },
+    };
+  };
 
   const getRootProps = <TOther extends EventHandlers = {}>(
     otherHandlers: TOther = {} as TOther,
@@ -95,5 +130,5 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     return rootProps;
   };
 
-  return { getRootProps, rootRef: handleRootRef, contextValue };
+  return { getRootProps, rootRef: handleRootRef, contextValue, instance: instance as any };
 };

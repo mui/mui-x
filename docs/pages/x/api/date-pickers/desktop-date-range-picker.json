@@ -28,13 +28,13 @@
       "default": "'start'"
     },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "disableAutoMonthSwitching": { "type": { "name": "bool" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableDragEditing": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disableOpenPicker": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
+    "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
+    "disableFuture": { "type": { "name": "bool" }, "default": "false" },
+    "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
+    "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
+    "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "format": { "type": { "name": "string" } },
@@ -44,7 +44,7 @@
     },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
@@ -87,7 +87,7 @@
         "describedArgs": ["newValue"]
       }
     },
-    "open": { "type": { "name": "bool" } },
+    "open": { "type": { "name": "bool" }, "default": "false" },
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
@@ -120,7 +120,7 @@
         "returned": "boolean"
       }
     },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {

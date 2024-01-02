@@ -4,12 +4,8 @@ export type { PickersTextFieldProps } from './PickersTextField.types';
 export {
   pickersTextFieldClasses,
   getPickersTextFieldUtilityClass,
-  pickersInputClasses,
-  getPickersInputUtilityClass,
 } from './pickersTextFieldClasses';
-export type {
-  PickersTextFieldClasses,
-  PickersTextFieldClassKey,
-  PickersInputClasses,
-  PickersInputClassKey,
-} from './pickersTextFieldClasses';
+export type { PickersTextFieldClasses, PickersTextFieldClassKey } from './pickersTextFieldClasses';
+
+export { pickersInputClasses, getPickersInputUtilityClass } from './PickersInput';
+export type { PickersInputClasses, PickersInputClassKey } from './PickersInput';

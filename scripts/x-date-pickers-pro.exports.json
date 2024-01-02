@@ -289,7 +289,7 @@
   { "name": "pickersTextFieldClasses", "kind": "Variable" },
   { "name": "PickersTextFieldClasses", "kind": "Interface" },
   { "name": "PickersTextFieldClassKey", "kind": "TypeAlias" },
-  { "name": "PickersTextFieldProps", "kind": "Interface" },
+  { "name": "PickersTextFieldProps", "kind": "TypeAlias" },
   { "name": "PickersTimezone", "kind": "TypeAlias" },
   { "name": "PickersTranslationKeys", "kind": "TypeAlias" },
   { "name": "pickersYearClasses", "kind": "Variable" },

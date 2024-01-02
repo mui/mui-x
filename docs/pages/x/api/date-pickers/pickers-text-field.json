@@ -18,7 +18,8 @@
     },
     "focused": { "type": { "name": "bool" } },
     "helperText": { "type": { "name": "node" } },
-    "hiddenLabel": { "type": { "name": "bool" } },
+    "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
+    "InputProps": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "enum",
@@ -26,7 +27,7 @@
       },
       "default": "'none'"
     },
-    "required": { "type": { "name": "bool" } },
+    "required": { "type": { "name": "bool" }, "default": "false" },
     "size": {
       "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
       "default": "'medium'"

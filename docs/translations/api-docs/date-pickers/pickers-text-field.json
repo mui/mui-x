@@ -36,6 +36,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "InputProps": {
+      "description": "Props applied to the Input element. It will be a <a href=\"/material-ui/api/filled-input/\"><code>FilledInput</code></a>, <a href=\"/material-ui/api/outlined-input/\"><code>OutlinedInput</code></a> or <a href=\"/material-ui/api/input/\"><code>Input</code></a> component depending on the <code>variant</code> prop value.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "margin": {
       "description": "If <code>dense</code> or <code>normal</code>, will adjust vertical spacing of this and contained components.",
       "deprecated": "",

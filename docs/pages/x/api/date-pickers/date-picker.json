@@ -20,11 +20,11 @@
       "type": { "name": "string" },
       "default": "'@media (pointer: fine)'"
     },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disableOpenPicker": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableFuture": { "type": { "name": "bool" }, "default": "false" },
+    "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
+    "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
+    "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "format": { "type": { "name": "string" } },
@@ -34,7 +34,7 @@
     },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
@@ -82,7 +82,7 @@
       "type": { "name": "func" },
       "signature": { "type": "function(year: TDate) => void", "describedArgs": ["year"] }
     },
-    "open": { "type": { "name": "bool" } },
+    "open": { "type": { "name": "bool" }, "default": "false" },
     "openTo": {
       "type": {
         "name": "enum",
@@ -139,7 +139,7 @@
         "returned": "boolean"
       }
     },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
