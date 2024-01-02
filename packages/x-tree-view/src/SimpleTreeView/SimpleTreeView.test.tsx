@@ -34,7 +34,7 @@ describe('<SimpleTreeView />', () => {
       );
 
       expect(() => {
-        setProps({ expanded: undefined });
+        setProps({ expandedNodes: undefined });
       }).toErrorDev(
         'MUI: A component is changing the controlled expanded state of TreeView to be uncontrolled.',
       );
