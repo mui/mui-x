@@ -6,6 +6,8 @@
 
 Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-data-grid-premium` for the commercial version, or `@mui/x-data-grid` for the free community version.
 
+<!-- #default-branch-switch -->
+
 :::warning
 The `next` tag is used to download the latest v7 **pre-release** version.
 :::

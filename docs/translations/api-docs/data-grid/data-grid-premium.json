@@ -197,7 +197,7 @@
       "typeDescriptions": {}
     },
     "disableMultipleRowSelection": {
-      "description": "If <code>true</code>, multiple selection using the Ctrl or CMD key is disabled.",
+      "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled.",
       "deprecated": "",
       "typeDescriptions": {}
     },

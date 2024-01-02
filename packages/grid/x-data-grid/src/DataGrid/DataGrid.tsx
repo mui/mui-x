@@ -166,6 +166,12 @@ DataGridRaw.propTypes = {
    */
   disableEval: PropTypes.bool,
   /**
+   * If `true`, multiple selection using the Ctrl/CMD or Shift key is disabled.
+   * The MIT DataGrid will ignore this prop, unless `checkboxSelection` is enabled.
+   * @default false (`!props.checkboxSelection` for MIT Data Grid)
+   */
+  disableMultipleRowSelection: PropTypes.bool,
+  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */

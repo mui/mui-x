@@ -89,6 +89,7 @@
   { "name": "cheerfulFiestaPalette", "kind": "Variable" },
   { "name": "cheerfulFiestaPaletteDark", "kind": "Variable" },
   { "name": "cheerfulFiestaPaletteLight", "kind": "Variable" },
+  { "name": "ComputedPieRadius", "kind": "Interface" },
   { "name": "ContinuouseScaleName", "kind": "TypeAlias" },
   { "name": "CurveType", "kind": "TypeAlias" },
   { "name": "DEFAULT_MARGINS", "kind": "Variable" },

@@ -185,8 +185,8 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Skupina',
-  groupColumn: (name) => `Zeskupit podle ${name}`,
-  unGroupColumn: (name) => `Přestat zeskupovat podle ${name}`,
+  groupColumn: (name) => `Seskupit podle ${name}`,
+  unGroupColumn: (name) => `Přestat seskupovat podle ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Přepnout detail panelu',
