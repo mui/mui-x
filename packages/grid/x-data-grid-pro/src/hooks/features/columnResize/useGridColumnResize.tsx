@@ -316,7 +316,7 @@ export const useGridColumnResize = (
       headerFilterElement.style.maxWidth = `${newWidth}px`;
     }
 
-    [...colCellElementsRef.current!, ...colGroupingElementRef.current!].forEach((element) => {
+    colGroupingElementRef.current!.forEach((element) => {
       const div = element as HTMLDivElement;
       let finalWidth: `${number}px`;
 
@@ -331,6 +331,21 @@ export const useGridColumnResize = (
       div.style.width = finalWidth;
       div.style.minWidth = finalWidth;
       div.style.maxWidth = finalWidth;
+    });
+
+    colCellElementsRef.current!.forEach((element) => {
+      const div = element as HTMLDivElement;
+      let finalWidth: `${number}px`;
+
+      if (div.getAttribute('aria-colspan') === '1') {
+        finalWidth = `${newWidth}px`;
+      } else {
+        // Cell with colspan > 1 cannot be just updated width new width.
+        // Instead, we add width diff to the current width.
+        finalWidth = `${div.offsetWidth + widthDiff}px`;
+      }
+
+      div.style.setProperty('--width', finalWidth);
     });
   };
 

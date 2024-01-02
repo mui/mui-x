@@ -58,30 +58,28 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     { [`&.${gridClasses['pinnedColumnHeaders--right']}`]: styles['pinnedColumnHeaders--right'] },
     styles.pinnedColumnHeaders,
   ],
-})<{ ownerState: OwnerState & GridColumnHeadersPinnedColumnHeadersProps }>(
-  ({ ownerState }) => ({
-    position: 'sticky',
-    zIndex: 5,
-    top: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    boxSizing: 'border-box',
-    backgroundColor: 'var(--DataGrid-pinnedBackground)',
-    ...(ownerState.side === GridPinnedColumnPosition.LEFT && { left: 0 }),
-    ...(ownerState.side === GridPinnedColumnPosition.RIGHT && { right: 0 }),
-    [`&.${gridClasses['pinnedColumnHeaders--left']}`]: {
-      left: 0,
+})<{ ownerState: OwnerState & GridColumnHeadersPinnedColumnHeadersProps }>(({ ownerState }) => ({
+  position: 'sticky',
+  zIndex: 5,
+  top: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  boxSizing: 'border-box',
+  backgroundColor: 'var(--DataGrid-pinnedBackground)',
+  ...(ownerState.side === GridPinnedColumnPosition.LEFT && { left: 0 }),
+  ...(ownerState.side === GridPinnedColumnPosition.RIGHT && { right: 0 }),
+  [`&.${gridClasses['pinnedColumnHeaders--left']}`]: {
+    left: 0,
+  },
+  [`&.${gridClasses['pinnedColumnHeaders--right']}`]: {
+    right: 0,
+    '& > [role="row"] > [role="columnheader"]:first-of-type': {
+      ...(ownerState.showCellVerticalBorder && {
+        borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
+      }),
     },
-    [`&.${gridClasses['pinnedColumnHeaders--right']}`]: {
-      right: 0,
-      '& > [role="row"] > [role="columnheader"]:first-of-type': {
-        ...(ownerState.showCellVerticalBorder && {
-          borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
-        }),
-      },
-    },
-  }),
-);
+  },
+}));
 
 const Filler = styled('div')({
   flex: 1,
