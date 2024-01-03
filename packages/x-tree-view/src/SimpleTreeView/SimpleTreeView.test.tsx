@@ -50,7 +50,7 @@ describe('<SimpleTreeView />', () => {
       expect(() => {
         setProps({ selectedNodes: undefined });
       }).toErrorDev(
-        'MUI: A component is changing the controlled selected state of TreeView to be uncontrolled.',
+        'MUI: A component is changing the controlled selectedNodes state of TreeView to be uncontrolled.',
       );
     });
 
