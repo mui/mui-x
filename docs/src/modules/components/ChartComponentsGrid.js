@@ -49,6 +49,7 @@ export default function ChartComponentsGrid() {
           <Card
             component={Link}
             noLinkStyle
+            prefetch={false}
             variant="outlined"
             href={component.href}
             sx={(theme) => ({
