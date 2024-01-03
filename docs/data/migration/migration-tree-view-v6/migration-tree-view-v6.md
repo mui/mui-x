@@ -140,7 +140,7 @@ If you were using the `onNodeSelect` prop to react to the selection or deselecti
 you can use the new `onNodeSelectionToggle` prop which is called whenever a node is selected or deselected with its id and selection status.
 
 ```tsx
-// Is also available on the deprecated `TreeView` component
+// It is also available on the deprecated `TreeView` component
 <SimpleTreeView
   onNodeSelectionToggle={(event, nodeId, isSelected) =>
     console.log(nodeId, isSelected)
