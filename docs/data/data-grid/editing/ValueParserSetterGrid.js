@@ -29,8 +29,8 @@ const defaultRows = [
   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys' },
 ];
 
-const getFullName = (params) => {
-  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
+const getFullName = (value, row) => {
+  return `${row.firstName || ''} ${row.lastName || ''}`;
 };
 
 const columns = [

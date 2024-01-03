@@ -44,12 +44,12 @@ export type GetApplyQuickFilterFn<R extends GridValidRowModel = GridValidRowMode
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => null | GridApplyQuickFilter<R, V>;
 
-export type GridValueGetter<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
+export type GridValueGetter<R extends GridValidRowModel = GridValidRowModel, V = unknown, F = V> = (
   value: V,
   row: R,
   column: GridColDef<R, V, F>,
   apiRef: React.MutableRefObject<GridApiCommunity>,
-) => V;
+) => any;
 
 /**
  * Column Definition base interface.

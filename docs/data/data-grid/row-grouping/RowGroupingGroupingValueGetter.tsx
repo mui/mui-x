@@ -17,10 +17,10 @@ export default function RowGroupingGroupingValueGetter() {
       {
         field: 'composer',
         headerName: 'Composer',
-        valueGetter: (value: { name: string }) => value.name,
+        valueGetter: (value) => value.name,
         groupingValueGetter: (params) => params.value.name,
         width: 200,
-      } as GridColDef<Movie>,
+      } as GridColDef<Movie, { name: string }>,
       {
         field: 'decade',
         headerName: 'Decade',

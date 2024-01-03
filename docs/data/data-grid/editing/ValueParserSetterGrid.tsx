@@ -34,8 +34,8 @@ const defaultRows = [
   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys' },
 ];
 
-const getFullName: GridValueGetter<(typeof defaultRows)[number]> = (params) => {
-  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
+const getFullName: GridValueGetter<(typeof defaultRows)[number]> = (value, row) => {
+  return `${row.firstName || ''} ${row.lastName || ''}`;
 };
 
 const columns: GridColDef[] = [
