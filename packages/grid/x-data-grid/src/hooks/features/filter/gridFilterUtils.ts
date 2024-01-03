@@ -257,7 +257,7 @@ const buildAggregatedFilterItemsApplier = (
     };
   }
 
-  // We generate a new function with `eval()` to avoid expensive patterns for JS engines
+  // We generate a new function with `new Function()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
   const filterItemCore = new Function(
     'appliers',
@@ -288,7 +288,10 @@ return result$$;`.replaceAll('$$', String(filterItemsApplierId)),
   );
   filterItemsApplierId += 1;
 
-  return (row, shouldApplyItem) => filterItemCore(appliers, row, shouldApplyItem);
+  // Assign to the arrow function a name to help debugging
+  const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) =>
+    filterItemCore(appliers, row, shouldApplyItem);
+  return filterItem;
 };
 
 export const shouldQuickFilterExcludeHiddenColumns = (filterModel: GridFilterModel) => {
