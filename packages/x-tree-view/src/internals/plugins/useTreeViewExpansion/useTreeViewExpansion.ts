@@ -10,7 +10,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   models,
 }) => {
   const setExpandedNodes = (event: React.SyntheticEvent, value: string[]) => {
-    models.expandedNodes.setValue(event, value);
+    models.expandedNodes.setControlledValue(value);
     params.onExpandedNodesChange?.(event, value);
   };
 

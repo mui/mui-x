@@ -23,11 +23,6 @@ export const useTreeViewModels = <
 
   const modelsRef = React.useRef<{
     [modelName: string]: {
-      onChange: (args: {
-        params: DefaultizedParams;
-        event: React.SyntheticEvent;
-        value: any;
-      }) => void;
       getDefaultValue: (params: DefaultizedParams) => any;
       isControlled: boolean;
     };
@@ -40,7 +35,6 @@ export const useTreeViewModels = <
       if (plugin.models) {
         Object.entries(plugin.models).forEach(([modelName, modelInitializer]) => {
           modelsRef.current[modelName] = {
-            onChange: modelInitializer.onChange,
             isControlled: props[modelName as keyof DefaultizedParams] !== undefined,
             getDefaultValue: modelInitializer.getDefaultValue,
           };
