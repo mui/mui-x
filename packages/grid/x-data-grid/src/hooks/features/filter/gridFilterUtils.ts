@@ -30,7 +30,7 @@ function getHasEval() {
   }
 
   try {
-    hasEval = new Function('return true') as any;
+    hasEval = new Function('return true')() as boolean;
   } catch (_: unknown) {
     hasEval = false;
   }
