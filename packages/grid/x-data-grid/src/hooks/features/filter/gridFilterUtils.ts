@@ -259,7 +259,11 @@ const buildAggregatedFilterItemsApplier = (
 
   // We generate a new function with `eval()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
-  const filterItemTemplate = `"use strict";
+  const filterItemCore = new Function(
+    'appliers',
+    'row',
+    'shouldApplyFilter',
+    `"use strict";
 ${appliers
   .map(
     (applier, i) =>
@@ -280,20 +284,11 @@ ${appliers
   .join('\n')}
 };
 
-return result$$;`;
-
-  const filterItemCore = new Function(
-    'appliers',
-    'row',
-    'shouldApplyFilter',
-    filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
+return result$$;`.replaceAll('$$', String(filterItemsApplierId)),
   );
-  const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
-    return filterItemCore(appliers, row, shouldApplyItem);
-  };
   filterItemsApplierId += 1;
 
-  return filterItem;
+  return (row, shouldApplyItem) => filterItemCore(appliers, row, shouldApplyItem);
 };
 
 export const shouldQuickFilterExcludeHiddenColumns = (filterModel: GridFilterModel) => {
