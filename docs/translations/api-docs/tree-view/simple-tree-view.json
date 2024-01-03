@@ -26,7 +26,7 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "defaultExpanded": {
+    "defaultExpandedNodes": {
       "description": "Expanded node ids. Used when the item&#39;s expansion is not controlled.",
       "deprecated": "",
       "typeDescriptions": {}
@@ -56,7 +56,7 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "expanded": {
+    "expandedNodes": {
       "description": "Expanded node ids. Used when the item&#39;s expansion is controlled.",
       "deprecated": "",
       "typeDescriptions": {}
@@ -81,6 +81,23 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "onExpandedNodesChange": {
+      "description": "Callback fired when tree items are expanded/collapsed.",
+      "deprecated": "",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "nodeIds": "The ids of the expanded nodes."
+      }
+    },
+    "onNodeExpansionToggle": {
+      "description": "Callback fired when a tree item is expanded or collapsed.",
+      "deprecated": "",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "nodeId": "The nodeId of the modified node.",
+        "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
+      }
+    },
     "onNodeFocus": {
       "description": "Callback fired when tree items are focused.",
       "deprecated": "",
@@ -96,14 +113,6 @@
       "typeDescriptions": {
         "event": "The event source of the callback",
         "nodeIds": "Ids of the selected nodes. When <code>multiSelect</code> is true this is an array of strings; when false (default) a string."
-      }
-    },
-    "onNodeToggle": {
-      "description": "Callback fired when tree items are expanded/collapsed.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "event": "The event source of the callback.",
-        "nodeIds": "The ids of the expanded nodes."
       }
     },
     "selected": {

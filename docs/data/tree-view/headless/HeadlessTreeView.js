@@ -23,7 +23,7 @@ if (false) {
 /* eslint-enable */
 
 const useTreeViewLogExpanded = ({ params, models }) => {
-  const expandedStr = JSON.stringify(models.expanded.value);
+  const expandedStr = JSON.stringify(models.expandedNodes.value);
 
   React.useEffect(() => {
     if (params.areLogsEnabled && params.logMessage) {

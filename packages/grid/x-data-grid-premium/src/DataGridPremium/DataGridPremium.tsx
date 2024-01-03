@@ -274,7 +274,6 @@ DataGridPremiumRaw.propTypes = {
   /**
    * If `true`, `eval()` is not used for performance optimization.
    * @default false
-   * @ignore - do not document
    */
   disableEval: PropTypes.bool,
   /**
