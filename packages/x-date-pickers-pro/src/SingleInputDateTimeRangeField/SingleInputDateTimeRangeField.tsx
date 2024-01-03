@@ -6,7 +6,10 @@ import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { refType } from '@mui/utils';
-import { SingleInputDateTimeRangeFieldProps, SingleInputDateTimeRangeFieldSlotProps } from './SingleInputDateTimeRangeField.types';
+import {
+  SingleInputDateTimeRangeFieldProps,
+  SingleInputDateTimeRangeFieldSlotProps,
+} from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
@@ -37,11 +40,11 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
 
   const TextField = slots?.textField ?? MuiTextField;
   const textFieldProps: SingleInputDateTimeRangeFieldProps<TDate> = useSlotProps<
-  typeof TextField,
-  SingleInputDateTimeRangeFieldSlotProps<TDate>['textField'],
-  SingleInputDateTimeRangeFieldProps<TDate>,
-  SingleInputDateTimeRangeFieldProps<TDate>
->({
+    typeof TextField,
+    SingleInputDateTimeRangeFieldSlotProps<TDate>['textField'],
+    SingleInputDateTimeRangeFieldProps<TDate>,
+    SingleInputDateTimeRangeFieldProps<TDate>
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,

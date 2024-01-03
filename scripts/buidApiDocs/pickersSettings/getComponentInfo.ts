@@ -5,7 +5,6 @@ import { getHeaders, getTitle } from '@mui/markdown';
 import {
   ComponentInfo,
   extractPackageFile,
-  fixPathname,
   getMuiName,
   parseFile,
   toGitHubPath,

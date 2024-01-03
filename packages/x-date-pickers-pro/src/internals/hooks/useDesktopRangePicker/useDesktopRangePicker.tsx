@@ -13,6 +13,7 @@ import {
   BaseFieldProps,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -24,7 +25,6 @@ import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
 import { RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
-import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker/usePickerValue.types';
 
 const releaseInfo = getReleaseInfo();
 
