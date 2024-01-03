@@ -17,7 +17,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 }) => {
   const setFocusedNodeId = useEventCallback((nodeId: React.SetStateAction<string | null>) => {
     const cleanNodeId = typeof nodeId === 'function' ? nodeId(state.focusedNodeId) : nodeId;
-    setState((prevState) => ({ ...prevState, focusedNodeId: cleanNodeId }));
+    if(nodeId!=cleanNodeId){
+        setState((prevState) => ({ ...prevState, focusedNodeId: cleanNodeId }));
+    }
   });
 
   const isNodeFocused = React.useCallback(
