@@ -41,8 +41,12 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
-  const { inputRef: externalInputRef, ...textFieldProps }: DateTimeFieldProps<TDate> = useSlotProps(
-    {
+  const { inputRef: externalInputRef, ...textFieldProps }: DateTimeFieldProps<TDate> = useSlotProps<
+  typeof TextField,
+  DateTimeFieldSlotsComponentsProps<TDate>['textField'],
+  DateTimeFieldProps<TDate>,
+  DateTimeFieldProps<TDate>
+>({
       elementType: TextField,
       externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
       externalForwardedProps: other,
