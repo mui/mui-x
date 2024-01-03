@@ -77,7 +77,7 @@ export default function CustomizedTreeView() {
     <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
       <SimpleTreeView
         aria-label="customized"
-        defaultExpanded={['1']}
+        defaultExpandedNodes={['1']}
         defaultCollapseIcon={<MinusSquare />}
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={<CloseSquare />}

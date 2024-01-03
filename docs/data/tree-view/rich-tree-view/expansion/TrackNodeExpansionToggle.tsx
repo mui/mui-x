@@ -1,10 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import Typography from '@mui/material/Typography';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
@@ -36,52 +37,37 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const getAllItemWithChildrenNodeIds = () => {
-  const nodeIds: TreeViewItemId[] = [];
-  const registerNodeId = (item: TreeViewBaseItem) => {
-    if (item.children?.length) {
-      nodeIds.push(item.id);
-      item.children.forEach(registerNodeId);
-    }
-  };
+export default function TrackNodeExpansionToggle() {
+  const [action, setAction] = React.useState<{
+    nodeId: string;
+    isExpanded: boolean;
+  } | null>(null);
 
-  MUI_X_PRODUCTS.forEach(registerNodeId);
-
-  return nodeIds;
-};
-
-export default function ControlledExpansion() {
-  const [expandedNodes, setExpandedNodes] = React.useState<string[]>([]);
-
-  const handleExpandedNodesChange = (
+  const handleNodeExpansionToggle = (
     event: React.SyntheticEvent,
-    nodeIds: string[],
+    nodeId: string,
+    isExpanded: boolean,
   ) => {
-    setExpandedNodes(nodeIds);
-  };
-
-  const handleExpandClick = () => {
-    setExpandedNodes((oldExpanded) =>
-      oldExpanded.length === 0 ? getAllItemWithChildrenNodeIds() : [],
-    );
+    setAction({ nodeId, isExpanded });
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
-        <Button onClick={handleExpandClick}>
-          {expandedNodes.length === 0 ? 'Expand all' : 'Collapse all'}
-        </Button>
-      </Box>
+    <Stack spacing={2}>
+      {action == null ? (
+        <Typography>No action recorded</Typography>
+      ) : (
+        <Typography>
+          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.nodeId}
+        </Typography>
+      )}
       <Box sx={{ height: 264, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          expandedNodes={expandedNodes}
-          onExpandedNodesChange={handleExpandedNodesChange}
+          onNodeExpansionToggle={handleNodeExpansionToggle}
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         />
       </Box>
-    </Box>
+    </Stack>
   );
 }

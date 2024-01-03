@@ -26,17 +26,17 @@ describe('<SimpleTreeView />', () => {
   }));
 
   describe('warnings', () => {
-    it('should warn when switching from controlled to uncontrolled of the expanded prop', () => {
+    it('should warn when switching from controlled to uncontrolled of the expandedNodes prop', () => {
       const { setProps } = render(
-        <SimpleTreeView expanded={[]}>
+        <SimpleTreeView expandedNodes={[]}>
           <TreeItem nodeId="1" label="one" />
         </SimpleTreeView>,
       );
 
       expect(() => {
-        setProps({ expanded: undefined });
+        setProps({ expandedNodes: undefined });
       }).toErrorDev(
-        'MUI: A component is changing the controlled expanded state of TreeView to be uncontrolled.',
+        'MUI: A component is changing the controlled expandedNodes state of TreeView to be uncontrolled.',
       );
     });
 
@@ -67,7 +67,7 @@ describe('<SimpleTreeView />', () => {
 
     it('should not crash when selecting multiple items in a deeply nested tree', () => {
       render(
-        <SimpleTreeView multiSelect defaultExpanded={['1', '1.1', '2']}>
+        <SimpleTreeView multiSelect defaultExpandedNodes={['1', '1.1', '2']}>
           <TreeItem nodeId="1" label="Item 1">
             <TreeItem nodeId="1.1" label="Item 1.1">
               <TreeItem nodeId="1.1.1" data-testid="item-1.1.1" label="Item 1.1.1" />
@@ -202,14 +202,14 @@ describe('<SimpleTreeView />', () => {
     expect(handleBlur.callCount).to.equal(1);
   });
 
-  it('should be able to be controlled with the expanded prop', () => {
+  it('should be able to be controlled with the expandedNodes prop', () => {
     function MyComponent() {
       const [expandedState, setExpandedState] = React.useState([]);
-      const handleNodeToggle = (event, nodes) => {
+      const onExpandedNodesChange = (event, nodes) => {
         setExpandedState(nodes);
       };
       return (
-        <SimpleTreeView expanded={expandedState} onNodeToggle={handleNodeToggle}>
+        <SimpleTreeView expandedNodes={expandedState} onExpandedNodesChange={onExpandedNodesChange}>
           <TreeItem nodeId="1" label="one" data-testid="one">
             <TreeItem nodeId="2" label="two" />
           </TreeItem>
@@ -408,10 +408,10 @@ describe('<SimpleTreeView />', () => {
 
   describe('onNodeToggle', () => {
     it('should be called when a parent node label is clicked', () => {
-      const handleNodeToggle = spy();
+      const onExpandedNodesChange = spy();
 
       const { getByText } = render(
-        <SimpleTreeView onNodeToggle={handleNodeToggle}>
+        <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
           <TreeItem nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
@@ -420,15 +420,15 @@ describe('<SimpleTreeView />', () => {
 
       fireEvent.click(getByText('outer'));
 
-      expect(handleNodeToggle.callCount).to.equal(1);
-      expect(handleNodeToggle.args[0][1]).to.deep.equal(['1']);
+      expect(onExpandedNodesChange.callCount).to.equal(1);
+      expect(onExpandedNodesChange.args[0][1]).to.deep.equal(['1']);
     });
 
     it('should be called when a parent node icon is clicked', () => {
-      const handleNodeToggle = spy();
+      const onExpandedNodesChange = spy();
 
       const { getByTestId } = render(
-        <SimpleTreeView onNodeToggle={handleNodeToggle}>
+        <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
           <TreeItem icon={<div data-testid="icon" />} nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
@@ -437,8 +437,8 @@ describe('<SimpleTreeView />', () => {
 
       fireEvent.click(getByTestId('icon'));
 
-      expect(handleNodeToggle.callCount).to.equal(1);
-      expect(handleNodeToggle.args[0][1]).to.deep.equal(['1']);
+      expect(onExpandedNodesChange.callCount).to.equal(1);
+      expect(onExpandedNodesChange.args[0][1]).to.deep.equal(['1']);
     });
   });
 

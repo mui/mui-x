@@ -1,52 +1,32 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import Typography from '@mui/material/Typography';
 
-export default function ControlledExpansion() {
-  const [expandedNodes, setExpandedNodes] = React.useState<string[]>([]);
+export default function TrackNodeExpansionToggle() {
+  const [action, setAction] = React.useState(null);
 
-  const handleExpandedNodesChange = (
-    event: React.SyntheticEvent,
-    nodeIds: string[],
-  ) => {
-    setExpandedNodes(nodeIds);
-  };
-
-  const handleExpandClick = () => {
-    setExpandedNodes((oldExpanded) =>
-      oldExpanded.length === 0
-        ? [
-            'grid',
-            'grid-community',
-            'grid-pro',
-            'grid-premium',
-            'pickers',
-            'pickers-community',
-            'pickers-pro',
-            'charts',
-            'charts-community',
-            'tree-view',
-            'tree-view-community',
-          ]
-        : [],
-    );
+  const handleNodeExpansionToggle = (event, nodeId, isExpanded) => {
+    setAction({ nodeId, isExpanded });
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
-        <Button onClick={handleExpandClick}>
-          {expandedNodes.length === 0 ? 'Expand all' : 'Collapse all'}
-        </Button>
-      </Box>
+    <Stack spacing={2}>
+      {action == null ? (
+        <Typography>No action recorded</Typography>
+      ) : (
+        <Typography>
+          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.nodeId}
+        </Typography>
+      )}
+
       <Box sx={{ height: 264, flexGrow: 1 }}>
         <SimpleTreeView
-          expandedNodes={expandedNodes}
-          onExpandedNodesChange={handleExpandedNodesChange}
+          onNodeExpansionToggle={handleNodeExpansionToggle}
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         >
@@ -67,6 +47,6 @@ export default function ControlledExpansion() {
           </TreeItem>
         </SimpleTreeView>
       </Box>
-    </Box>
+    </Stack>
   );
 }
