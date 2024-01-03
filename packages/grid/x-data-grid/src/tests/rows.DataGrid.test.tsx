@@ -1114,9 +1114,7 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should throw a console error if autoPageSize is used with autoHeight', () => {
       expect(() => {
-        render(
-          <TestCase autoPageSize autoHeight />,
-        );
+        render(<TestCase autoPageSize autoHeight />);
       }).toErrorDev(
         'MUI: The `autoPageSize` prop will conflict with `autoHeight` prop when both of them are enabled.',
       );
