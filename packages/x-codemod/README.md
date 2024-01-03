@@ -13,7 +13,7 @@ This repository contains a collection of codemod scripts based for use with
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod <codemod> <paths...>
+npx @mui/x-codemod@next <codemod> <paths...>
 
 Applies a `@mui/x-codemod` to the specified paths
 
@@ -202,6 +202,40 @@ Rename props related to `cellSelection` feature.
 
 ```bash
 npx @mui/x-codemod v7.0.0/data-grid/rename-cell-selection-props <path>
+```
+
+### Tree View codemods
+
+#### `preset-safe` for tree view v7.0.0
+
+The `preset-safe` codemods for tree view.
+
+```bash
+npx @mui/x-codemod v7.0.0/tree-view/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
+
+#### `rename-tree-view-simple-tree-view`
+
+Renames the `TreeView` component to `SimpleTreeView`
+
+```diff
+- import { TreeView } from '@mui/x-tree-view';
++ import { SimpleTreeView } from '@mui/x-tree-view';
+
+- import { TreeView } from '@mui/x-tree-view/TreeView';
++ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+  return (
+-   <TreeView>
++   <SimpleTreeView>
+      <TreeItem nodeId="1" label="First item" />
+-   </TreeView>
++   </SimpleTreeView>
+  )
 ```
 
 ## v6.0.0

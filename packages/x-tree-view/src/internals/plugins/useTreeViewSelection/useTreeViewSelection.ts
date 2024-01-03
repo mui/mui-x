@@ -12,7 +12,7 @@ import {
 } from './useTreeViewSelection.types';
 import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
 
-export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<any>> = ({
+export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,
   params,
   models,
@@ -181,7 +181,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<
     });
   };
 
-  populateInstance<UseTreeViewSelectionSignature<any>>(instance, {
+  populateInstance<UseTreeViewSelectionSignature>(instance, {
     isNodeSelected,
     selectNode,
     selectRange,
