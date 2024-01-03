@@ -30,6 +30,11 @@ export interface PieArcPlotProps
     >,
     ComputedPieRadius {
   /**
+   * Override the arc attibutes when it is faded.
+   * @default { additionalRadius: -5 }
+   */
+  faded?: DefaultizedPieSeriesType['faded'];
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -169,6 +174,7 @@ PieArcPlot.propTypes = {
   ).isRequired,
   /**
    * Override the arc attibutes when it is faded.
+   * @default { additionalRadius: -5 }
    */
   faded: PropTypes.shape({
     additionalRadius: PropTypes.number,

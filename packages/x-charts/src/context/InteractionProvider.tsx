@@ -78,7 +78,8 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
   }
 };
 
-export function InteractionProvider({ children }: InteractionProviderProps) {
+function InteractionProvider(props: InteractionProviderProps) {
+  const { children } = props;
   const [data, dispatch] = React.useReducer(dataReducer, {
     item: null,
     axis: { x: null, y: null },
@@ -94,3 +95,5 @@ export function InteractionProvider({ children }: InteractionProviderProps) {
 
   return <InteractionContext.Provider value={value}>{children}</InteractionContext.Provider>;
 }
+
+export { InteractionProvider };
