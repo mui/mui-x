@@ -26,11 +26,11 @@ Instead of having a long page for each, the pages are divided in two:
 1. General description of the built-in features the component provides.
 2. A set of examples demonstrating the component with customizations.
 
-### All MUI X Charts components
+## All MUI X Charts components
 
 {{"component": "modules/components/ChartComponentsGrid.js"}}
 
-### Supported features
+## Supported features
 
 The features that are shared across multiple Charts components, such as axes and legends, are also documented on separate pages.
 
