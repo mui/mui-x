@@ -130,7 +130,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
               {
                 field: 'idBis',
                 type: 'number',
-                valueGetter: (params) => params.row.id,
+                valueGetter: (valuem, row) => row.id,
                 aggregable: false,
               },
             ]}

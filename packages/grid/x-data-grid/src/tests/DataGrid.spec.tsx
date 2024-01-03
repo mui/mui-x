@@ -98,7 +98,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            valueGetter: (params) => params.row.firstName,
+            valueGetter: (value, row) => row.firstName,
             valueParser: (value, params) => params!.row.firstName,
             valueSetter: (params) => {
               const firstName = params.row.firstName;
@@ -134,7 +134,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            valueGetter: (params) => params.row.firstName,
+            valueGetter: (value, row) => row.firstName,
             valueParser: (value, params) => params!.row.firstName,
             valueSetter: (params) => {
               const firstName = params.row.firstName;

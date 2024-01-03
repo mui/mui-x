@@ -153,7 +153,7 @@ const rows: GridRowsProp<Row> = [
   },
 ];
 
-const columns: GridColDef[] = [
+const columns: GridColDef<Row>[] = [
   {
     field: 'name',
     headerName: 'Name',
@@ -161,7 +161,7 @@ const columns: GridColDef[] = [
       const hierarchy = row.hierarchy;
       return hierarchy[hierarchy.length - 1];
     },
-  } as GridColDef<Row, string>,
+  },
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
   {
     field: 'recruitmentDate',

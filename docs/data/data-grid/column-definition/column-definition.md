@@ -42,12 +42,12 @@ You can use the `valueGetter` attribute of `GridColDef` to:
    const columns: GridColDef[] = [
      {
        field: 'taxRate',
-       valueGetter: (params) => {
-         if (!params.value) {
-           return params.value;
+       valueGetter: (value) => {
+         if (!value) {
+           return value;
          }
          // Convert the decimal value to a percentage
-         return params.value * 100;
+         return value * 100;
        },
      },
    ];
@@ -59,8 +59,8 @@ You can use the `valueGetter` attribute of `GridColDef` to:
    const columns: GridColDef[] = [
      {
        field: 'fullName',
-       valueGetter: (params) => {
-         return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
+       valueGetter: (value, row) => {
+         return `${row.firstName || ''} ${row.lastName || ''}`;
        },
      },
    ];
@@ -72,7 +72,7 @@ You can use the `valueGetter` attribute of `GridColDef` to:
    const columns: GridColDef[] = [
      {
        field: 'profit',
-       valueGetter: ({ row }) => {
+       valueGetter: (value, row) => {
          if (!row.gross || !row.costs) {
            return null;
          }
@@ -240,7 +240,7 @@ If for any reason, your data type is not the correct one, you can use `valueGett
 {
   field: 'lastLogin',
   type: 'dateTime',
-  valueGetter: ({ value }) => value && new Date(value),
+  valueGetter: (value) => value && new Date(value),
 }
 ```
 

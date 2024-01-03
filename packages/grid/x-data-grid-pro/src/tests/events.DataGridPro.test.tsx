@@ -47,7 +47,7 @@ describe('<DataGridPro /> - Events params', () => {
       { field: 'age' },
       {
         field: 'firstAge',
-        valueGetter: (params) => `${params.row.first}_${params.row.age}`,
+        valueGetter: (value, row) => `${row.first}_${row.age}`,
         valueFormatter: (params) => `${params.value} yrs`,
       },
     ],

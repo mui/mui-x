@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-const columns: GridColDef[] = [
+const columns: GridColDef<(typeof rows)[number]>[] = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
     field: 'firstName',

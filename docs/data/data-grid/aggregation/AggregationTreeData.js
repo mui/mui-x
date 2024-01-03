@@ -113,12 +113,12 @@ const columns = [
     headerName: 'Last modification',
     type: 'dateTime',
     width: 200,
-    valueGetter: (params) => {
-      if (params.value == null) {
+    valueGetter: (value) => {
+      if (value == null) {
         return null;
       }
 
-      return new Date(params.value);
+      return new Date(value);
     },
   },
 ];

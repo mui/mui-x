@@ -7,7 +7,7 @@ import {
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
-import { useMovieData } from '@mui/x-data-grid-generator';
+import { useMovieData, Movie } from '@mui/x-data-grid-generator';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -20,7 +20,7 @@ function calculateProfit(gross: number, budget: number) {
   return (gross - budget) / budget;
 }
 
-const COLUMNS: GridColDef[] = [
+const COLUMNS: GridColDef<Movie>[] = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
     field: 'company',
@@ -33,7 +33,7 @@ const COLUMNS: GridColDef[] = [
     type: 'number',
     width: 70,
     groupable: false,
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       if (!row.gross || !row.budget) {
         return null;
       }

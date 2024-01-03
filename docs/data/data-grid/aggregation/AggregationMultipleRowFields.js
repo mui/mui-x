@@ -31,7 +31,7 @@ const COLUMNS = [
     type: 'number',
     width: 70,
     groupable: false,
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       if (!row.gross || !row.budget) {
         return null;
       }

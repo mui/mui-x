@@ -471,13 +471,13 @@ describe('<DataGridPremium /> - Clipboard', () => {
     it('should use valueSetter if the column has one', async () => {
       const processRowUpdateSpy = spy((newRow) => newRow);
 
-      const columns: GridColDef[] = [
+      const columns: GridColDef<(typeof rows)[number]>[] = [
         { field: 'firstName' },
         { field: 'lastName' },
         {
           field: 'fullName',
-          valueGetter: (params) => {
-            return `${params.row.firstName} ${params.row.lastName}`;
+          valueGetter: (value, row) => {
+            return `${row.firstName} ${row.lastName}`;
           },
           valueSetter: (params) => {
             const [firstName, lastName] = params.value!.toString().split(' ');
@@ -985,7 +985,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
             field: 'size',
             type: 'singleSelect',
             valueOptions: sizes,
-            valueGetter: (params) => params.value.size,
+            valueGetter: (value) => value.size,
             valueSetter: (params) => {
               const value = sizes.find((option) => option.size === params.value);
               return { ...params.row, size: value };

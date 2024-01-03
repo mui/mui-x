@@ -95,7 +95,7 @@ const rows: GridRowsProp<File> = [
   },
 ];
 
-const columns: GridColDef[] = [
+const columns: GridColDef<File>[] = [
   {
     field: 'size',
     headerName: 'Size',
@@ -124,12 +124,12 @@ const columns: GridColDef[] = [
     headerName: 'Last modification',
     type: 'dateTime',
     width: 200,
-    valueGetter: (params) => {
-      if (params.value == null) {
+    valueGetter: (value) => {
+      if (value == null) {
         return null;
       }
 
-      return new Date(params.value);
+      return new Date(value);
     },
   },
 ];

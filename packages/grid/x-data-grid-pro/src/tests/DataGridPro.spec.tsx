@@ -25,7 +25,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            valueGetter: (params) => params.row.firstName,
+            valueGetter: (value, row) => row.firstName,
           },
         ]}
       />

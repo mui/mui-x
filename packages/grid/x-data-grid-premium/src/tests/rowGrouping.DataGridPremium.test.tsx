@@ -1555,7 +1555,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
             },
             {
               field: 'category1',
-              valueGetter: (params) => `value ${params.row.category1}`,
+              valueGetter: (value, row) => `value ${row.category1}`,
             },
           ]}
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -1578,7 +1578,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
             },
             {
               field: 'category1',
-              valueGetter: (params) => `value ${params.row.category1}`,
+              valueGetter: (value, row) => `value ${row.category1}`,
               groupingValueGetter: (params: GridGroupingValueGetterParams<any, string>) =>
                 `groupingValue ${params.row.category1}`,
             },
