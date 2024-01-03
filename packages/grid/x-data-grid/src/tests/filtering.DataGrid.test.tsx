@@ -77,6 +77,28 @@ describe('<DataGrid /> - Filter', () => {
       );
     });
 
+    it('should apply the model for `filterable: false` columns but the applied filter should be readonly', () => {
+      render(
+        <TestCase
+          columns={[{ field: 'brand', filterable: false }]}
+          filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'Adidas' }] }}
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      // filter has been applied
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+
+      // field has the applied value and is read-only
+      const valueInput = screen.getByRole('textbox', { name: 'Value' });
+      expect(valueInput).to.have.value('Adidas');
+      expect(valueInput).to.have.property('disabled', true);
+    });
+
     it('should apply the model', () => {
       render(
         <TestCase
@@ -142,6 +164,23 @@ describe('<DataGrid /> - Filter', () => {
     it('should allow to initialize the filterModel', () => {
       render(
         <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'brand', operator: 'equals', value: 'Adidas' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+    });
+
+    it('should allow to initialize the filterModel for non-filterable columns', () => {
+      render(
+        <TestCase
+          columns={[{ field: 'brand', filterable: false }]}
           initialState={{
             filter: {
               filterModel: {

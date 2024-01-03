@@ -42,7 +42,6 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   item: GridFilterItem;
   showClearIcon?: boolean;
   InputComponentProps: GridFilterOperator['InputComponentProps'];
-  filterDisabled?: boolean;
 }
 
 type OwnerState = DataGridProProcessedProps & GridHeaderFilterCellProps;

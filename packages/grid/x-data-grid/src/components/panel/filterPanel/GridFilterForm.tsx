@@ -694,14 +694,16 @@ GridFilterForm.propTypes = {
    */
   logicOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   /**
-   * The current logic operator applied.
-   */
-  multiFilterOperator: PropTypes.oneOf(['and', 'or']),
-  /**
    * Props passed to the operator input component.
    * @default {}
    */
   operatorInputProps: PropTypes.any,
+  /**
+   * `true` if the filter is disabled/read only.
+   * i.e. `colDef.fiterable = false` but passed in `filterModel`
+   * @default false
+   */
+  readOnly: PropTypes.bool,
   /**
    * If `true`, the logic operator field is visible.
    */

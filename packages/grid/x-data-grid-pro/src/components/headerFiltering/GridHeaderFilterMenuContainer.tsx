@@ -93,6 +93,7 @@ GridHeaderFilterMenuContainer.propTypes = {
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
   buttonRef: refType,
+  disabled: PropTypes.bool,
   field: PropTypes.string.isRequired,
   headerFilterMenuRef: PropTypes.shape({
     current: PropTypes.object,
