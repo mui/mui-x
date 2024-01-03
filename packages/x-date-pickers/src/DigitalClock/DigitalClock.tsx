@@ -487,6 +487,7 @@ DigitalClock.propTypes = {
   view: PropTypes.oneOf(['hours']),
   /**
    * Available views.
+   * @default ['hours']
    */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours'])),
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours'])).isRequired,
 } as any;
