@@ -43,10 +43,8 @@
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
       "default": "[GridLogicOperator.And, GridLogicOperator.Or]"
     },
-    "multiFilterOperator": {
-      "type": { "name": "enum", "description": "'and'<br>&#124;&nbsp;'or'" }
-    },
     "operatorInputProps": { "type": { "name": "any" }, "default": "{}" },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "showMultiFilterOperators": { "type": { "name": "bool" } },
     "valueInputProps": { "type": { "name": "any" }, "default": "{}" }
   },

@@ -1040,7 +1040,7 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getColumnValues(1)).to.deep.equal(['Puma']);
     });
 
-    it('should allow updating logic operator even from read-only filters', () => {
+    it('should allow updating logic operator even from read-only filters', function test() {
       const newModel = {
         items: [
           {
@@ -1062,10 +1062,11 @@ describe('<DataGridPro /> - Filter', () => {
           openedPanelValue: GridPreferencePanelsValue.filters,
         },
       };
-      const { getByRole } = render(
+      const { getAllByRole } = render(
         <TestCase initialState={initialState} filterModel={newModel} columns={columns} />,
       );
-      const select = getByRole('combobox', { name: 'Logic operator' });
+      // For JSDom, the first hidden combo is also found which we are not interested in
+      const select = getAllByRole('combobox', { name: 'Logic operator' })[isJSDOM ? 1 : 0];
       expect(select).not.to.have.class('Mui-disabled');
     });
 
