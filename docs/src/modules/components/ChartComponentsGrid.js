@@ -12,13 +12,13 @@ function components() {
       title: 'Bar Chart',
       srcLight: '/static/x/component-illustrations/bar-light.png',
       srcDark: '/static/x/component-illustrations/bar-dark.png',
-      href: '/x/react-charts/bar/',
+      href: '/x/react-charts/bars/',
     },
     {
       title: 'Line Chart',
       srcLight: '/static/x/component-illustrations/lines-light.png',
       srcDark: '/static/x/component-illustrations/lines-dark.png',
-      href: '/x/react-charts/line/',
+      href: '/x/react-charts/lines/',
     },
     {
       title: 'Pie Chart',
