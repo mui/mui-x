@@ -43,12 +43,12 @@ export type TreeViewPluginSignature<
   defaultizedParams: TDefaultizedParams;
   instance: TInstance;
   state: TState;
+  events: TEvents;
   models: {
     [TControlled in TModelNames]-?: TreeViewModel<
       Exclude<TDefaultizedParams[TControlled], undefined>
     >;
   };
-  events: TEvents;
   dependantPlugins: TDependantPlugins;
 };
 
