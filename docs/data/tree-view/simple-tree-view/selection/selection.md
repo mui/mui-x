@@ -35,6 +35,6 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track node selection change
 
-Use the `onNodeSelectionToggle` if you want to react to a node selection toggling:
+Use the `onNodeSelectionToggle` if you want to react to a node selection toggle:
 
 {{"demo": "TrackNodeSelectionToggle.js"}}

@@ -247,14 +247,14 @@ Rename the expansion props
 
 ```diff
   <TreeView
--   onNodeSelect={handleSelectionChange}
-+   onSelectedNodesChange={handleSelectionChange}
+-   onNodeToggle={handleExpansionChange}
++   onExpandedNodesChange={handleExpansionChange}
 
--   selected={selectedNodes}
-+   selectedNodes={selectedNodes}
+-   expanded={expandedNodes}
++   expandedNodes={expandedNodes}
 
--   defaultSelected={defaultSelectedNodes}
-+   defaultSelectedNodes={defaultSelectedNodes}
+-   defaultExpanded={defaultExpandedNodes}
++   defaultExpandedNodes={defaultExpandedNodes}
   />
 ```
 
