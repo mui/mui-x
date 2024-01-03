@@ -56,7 +56,7 @@ export const useTreeViewModels = <
         modelName,
         {
           value,
-          setValue: (newValue: any) => {
+          setControlledValue: (newValue: any) => {
             if (!model.isControlled) {
               setModelsState((prevState) => ({
                 ...prevState,
