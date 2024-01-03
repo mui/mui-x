@@ -73,6 +73,7 @@ The corresponding sub-sections are listed below
 
 - [`preset-safe-for-pickers`](#preset-safe-for-pickers-v700)
 - [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v700)
+- [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v700)
 
 ### Pickers codemods
 
@@ -151,7 +152,7 @@ Replace types suffix `SlotsComponent` by `Slots` and `SlotsComponentsProps` by `
 npx @mui/x-codemod v7.0.0/pickers/rename-slots-types <path>
 ```
 
-### Data grid codemods
+### Data Grid codemods
 
 #### `preset-safe` for data grid v7.0.0
 
@@ -217,6 +218,8 @@ npx @mui/x-codemod v7.0.0/tree-view/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
+- [`rename-expansion-props`](#rename-expansion-props)
+- [`rename-selection-props`](#rename-selection-props)
 
 #### `rename-tree-view-simple-tree-view`
 
@@ -236,6 +239,40 @@ Renames the `TreeView` component to `SimpleTreeView`
 -   </TreeView>
 +   </SimpleTreeView>
   )
+```
+
+#### `rename-expansion-props`
+
+Rename the expansion props
+
+```diff
+  <TreeView
+-   onNodeToggle={handleExpansionChange}
++   onExpandedNodesChange={handleExpansionChange}
+
+-   expanded={expandedNodes}
++   expandedNodes={expandedNodes}
+
+-   defaultExpanded={defaultExpandedNodes}
++   defaultExpandedNodes={defaultExpandedNodes}
+  />
+```
+
+#### `rename-selection-props`
+
+Rename the selection props
+
+```diff
+  <TreeView
+-   onNodeSelect={handleSelectionChange}
++   onSelectedNodesChange={handleSelectionChange}
+
+-   selected={selectedNodes}
++   selectedNodes={selectedNodes}
+
+-   defaultSelected={defaultSelectedNodes}
++   defaultSelectedNodes={defaultSelectedNodes}
+  />
 ```
 
 ## v6.0.0
@@ -583,7 +620,7 @@ This change only affects Date and Time Pickers components.
 npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 ```
 
-### Data grid codemods
+### Data Grid codemods
 
 #### `preset-safe` for data grid v6.0.0
 
@@ -632,7 +669,7 @@ If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMen
 
 #### `row-selection-props-rename`
 
-Data grid props that have been renamed.
+Data Grid props that have been renamed.
 
 ```diff
  <DataGrid
