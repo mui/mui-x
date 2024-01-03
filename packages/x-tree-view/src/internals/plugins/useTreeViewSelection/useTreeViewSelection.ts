@@ -18,7 +18,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   const lastSelectionWasRange = React.useRef(false);
   const currentRangeSelection = React.useRef<string[]>([]);
 
-  const setSelectedNodes = (event: React.SyntheticEvent, value: typeof params.defaultSelected) => {
+  const setSelectedNodes = (event: React.SyntheticEvent, value: string | string[]) => {
     models.selected.setControlledValue(value);
     params.onNodeSelect?.(event, value);
   };
