@@ -306,7 +306,7 @@ describe('<TreeItem />', () => {
 
         it('should have the attribute `aria-selected={true}` if selected', () => {
           const { getByTestId } = render(
-            <SimpleTreeView defaultSelected={'test'}>
+            <SimpleTreeView defaultSelectedNodes={'test'}>
               <TreeItem nodeId="test" label="test" data-testid="test" />
             </SimpleTreeView>,
           );
@@ -328,7 +328,7 @@ describe('<TreeItem />', () => {
 
         it('should have the attribute `aria-selected={true}` if selected', () => {
           const { getByTestId } = render(
-            <SimpleTreeView multiSelect defaultSelected={['test']}>
+            <SimpleTreeView multiSelect defaultSelectedNodes={['test']}>
               <TreeItem nodeId="test" label="test" data-testid="test" />
             </SimpleTreeView>,
           );
@@ -369,7 +369,7 @@ describe('<TreeItem />', () => {
 
       it('should focus the selected node if a node is selected before the tree receives focus', () => {
         const { getByTestId, getByRole } = render(
-          <SimpleTreeView selected="2" id="tree">
+          <SimpleTreeView selectedNodes="2" id="tree">
             <TreeItem nodeId="1" label="one" data-testid="one" />
             <TreeItem nodeId="2" label="two" data-testid="two" />
             <TreeItem nodeId="3" label="three" />
@@ -1112,7 +1112,7 @@ describe('<TreeItem />', () => {
 
         it('should not deselect a node when space is pressed on a selected node', () => {
           const { getByRole, getByTestId } = render(
-            <SimpleTreeView defaultSelected="one">
+            <SimpleTreeView defaultSelectedNodes="one">
               <TreeItem nodeId="one" label="one" data-testid="one" />
             </SimpleTreeView>,
           );
@@ -1160,7 +1160,7 @@ describe('<TreeItem />', () => {
 
         it('should not deselect a node when clicking a selected node', () => {
           const { getByText, getByTestId } = render(
-            <SimpleTreeView defaultSelected="one">
+            <SimpleTreeView defaultSelectedNodes="one">
               <TreeItem nodeId="one" label="one" data-testid="one" />
             </SimpleTreeView>,
           );
@@ -1188,7 +1188,7 @@ describe('<TreeItem />', () => {
         describe('mouse behavior when multiple nodes are selected', () => {
           specify('clicking a selected node holding ctrl should deselect the node', () => {
             const { getByText, getByTestId } = render(
-              <SimpleTreeView multiSelect defaultSelected={['one', 'two']}>
+              <SimpleTreeView multiSelect defaultSelectedNodes={['one', 'two']}>
                 <TreeItem nodeId="one" label="one" data-testid="one" />
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </SimpleTreeView>,
@@ -1203,7 +1203,7 @@ describe('<TreeItem />', () => {
 
           specify('clicking a selected node holding meta should deselect the node', () => {
             const { getByText, getByTestId } = render(
-              <SimpleTreeView multiSelect defaultSelected={['one', 'two']}>
+              <SimpleTreeView multiSelect defaultSelectedNodes={['one', 'two']}>
                 <TreeItem nodeId="one" label="one" data-testid="one" />
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </SimpleTreeView>,
@@ -1220,7 +1220,7 @@ describe('<TreeItem />', () => {
         describe('mouse behavior when one node is selected', () => {
           it('clicking a selected node shout not deselect the node', () => {
             const { getByText, getByTestId } = render(
-              <SimpleTreeView multiSelect defaultSelected={['one']}>
+              <SimpleTreeView multiSelect defaultSelectedNodes={['one']}>
                 <TreeItem nodeId="one" label="one" data-testid="one" />
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </SimpleTreeView>,
@@ -1236,7 +1236,7 @@ describe('<TreeItem />', () => {
 
         it('should deselect the node when pressing space on a selected node', () => {
           const { getByTestId, getByRole } = render(
-            <SimpleTreeView multiSelect defaultSelected={['one']}>
+            <SimpleTreeView multiSelect defaultSelectedNodes={['one']}>
               <TreeItem nodeId="one" label="one" data-testid="one" />
             </SimpleTreeView>,
           );

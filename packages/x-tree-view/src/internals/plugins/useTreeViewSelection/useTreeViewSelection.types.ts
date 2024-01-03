@@ -26,12 +26,12 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelected?: TreeViewSelectionValue<Multiple>;
+  defaultSelectedNodes?: TreeViewSelectionValue<Multiple>;
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selected?: TreeViewSelectionValue<Multiple>;
+  selectedNodes?: TreeViewSelectionValue<Multiple>;
   /**
    * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
@@ -43,20 +43,31 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    */
   checkboxSelection?: boolean;
   /**
-   * Callback fired when tree items are selected/unselected.
+   * Callback fired when tree items are selected/deselected.
    * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
-   * this is an array of strings; when false (default) a string.
+   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
-  onNodeSelect?: (
+  onSelectedNodesChange?: (
     event: React.SyntheticEvent,
-    nodeIds: Exclude<TreeViewSelectionValue<Multiple>, null>,
+    nodeIds: TreeViewSelectionValue<Multiple>,
+  ) => void;
+  /**
+   * Callback fired when a tree item is selected or deselected.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} nodeId The nodeId of the modified node.
+   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
+   */
+  onNodeSelectionToggle?: (
+    event: React.SyntheticEvent,
+    nodeId: string,
+    isSelected: boolean,
   ) => void;
 }
 
 export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> = DefaultizedProps<
   UseTreeViewSelectionParameters<Multiple>,
-  'disableSelection' | 'defaultSelected' | 'multiSelect' | 'checkboxSelection'
+  'disableSelection' | 'defaultSelectedNodes' | 'multiSelect' | 'checkboxSelection'
 >;
 
 export type UseTreeViewSelectionSignature = TreeViewPluginSignature<
@@ -65,6 +76,6 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<
   UseTreeViewSelectionInstance,
   {},
   {},
-  'selected',
+  'selectedNodes',
   [UseTreeViewNodesSignature, UseTreeViewExpansionSignature, UseTreeViewNodesSignature]
 >;
