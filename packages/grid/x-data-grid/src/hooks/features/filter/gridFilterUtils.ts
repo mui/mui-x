@@ -22,25 +22,21 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns';
 
-// Fixes https://github.com/mui/mui-x/issues/10056
-const globalScope = (typeof window === 'undefined' ? globalThis : window) as any;
-const evalCode = globalScope[atob('ZXZhbA==')] as <T>(source: string) => T;
+let hasEval: boolean;
 
-let hasEval: boolean | undefined;
-
-const getHasEval = () => {
+function getHasEval() {
   if (hasEval !== undefined) {
     return hasEval;
   }
 
   try {
-    hasEval = evalCode<boolean>('true');
+    hasEval = new Function('return true') as any;
   } catch (_: unknown) {
     hasEval = false;
   }
 
   return hasEval;
-};
+}
 
 type GridFilterItemApplier = {
   fn: (row: GridValidRowModel) => boolean;
@@ -263,36 +259,37 @@ const buildAggregatedFilterItemsApplier = (
 
   // We generate a new function with `eval()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
-  const filterItemTemplate = `(function filterItem$$(getRowId, appliers, row, shouldApplyFilter) {
-      ${appliers
-        .map(
-          (applier, i) =>
-            `const shouldApply${i} = !shouldApplyFilter || shouldApplyFilter(${JSON.stringify(
-              applier.item.field,
-            )});`,
-        )
-        .join('\n')}
+  const filterItemTemplate = `"use strict";
+${appliers
+  .map(
+    (applier, i) =>
+      `const shouldApply${i} = !shouldApplyFilter || shouldApplyFilter(${JSON.stringify(
+        applier.item.field,
+      )});`,
+  )
+  .join('\n')}
 
-      const result$$ = {
-      ${appliers
-        .map(
-          (applier, i) =>
-            `${JSON.stringify(String(applier.item.id))}:
-          !shouldApply${i} ?
-            false :
-            appliers[${i}].fn(row),
-      `,
-        )
-        .join('\n')}};
+const result$$ = {
+${appliers
+  .map(
+    (applier, i) =>
+      `  ${JSON.stringify(
+        String(applier.item.id),
+      )}: !shouldApply${i} ? false : appliers[${i}].fn(row),`,
+  )
+  .join('\n')}
+};
 
-      return result$$;
-    })`;
+return result$$;`;
 
-  const filterItemCore = evalCode<Function>(
+  const filterItemCore = new Function(
+    'appliers',
+    'row',
+    'shouldApplyFilter',
     filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
   );
   const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
-    return filterItemCore(apiRef.current.getRowId, appliers, row, shouldApplyItem);
+    return filterItemCore(appliers, row, shouldApplyItem);
   };
   filterItemsApplierId += 1;
 
