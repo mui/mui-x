@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { TreeViewAnyPluginSignature } from './plugin';
 import type { MergePluginsProperty } from './helpers';
 
