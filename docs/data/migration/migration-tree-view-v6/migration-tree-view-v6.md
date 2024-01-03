@@ -112,7 +112,7 @@ you can use the new `onNodeExpansionToggle` prop which is called whenever a node
 
 :::
 
-### Rename `onNodeToggle`, `selected` and `defaultSelected`
+### Rename `onNodeSelect`, `selected`, and `defaultSelected`
 
 The selection props have been renamed to better describe their behaviors:
 
