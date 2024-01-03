@@ -8,6 +8,7 @@ export * from './ChartsReferenceLine';
 export * from './ChartsAxis';
 export * from './ChartsXAxis';
 export * from './ChartsYAxis';
+export * from './ChartsText';
 export * from './ChartsTooltip';
 export * from './ChartsLegend';
 export * from './ChartsAxisHighlight';

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "7.0.0-alpha.4",
+  "version": "7.0.0-alpha.6",
   "description": "The community edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -46,9 +46,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.5",
-    "@mui/base": "^5.0.0-beta.26",
-    "@mui/system": "^5.14.20",
-    "@mui/utils": "^5.14.20",
+    "@mui/base": "^5.0.0-beta.29",
+    "@mui/system": "^5.15.2",
+    "@mui/utils": "^5.15.2",
     "@types/react-transition-group": "^4.4.10",
     "clsx": "^2.0.0",
     "prop-types": "^15.8.1",

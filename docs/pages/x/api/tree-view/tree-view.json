@@ -5,7 +5,7 @@
     "className": { "type": { "name": "string" } },
     "defaultCollapseIcon": { "type": { "name": "node" } },
     "defaultEndIcon": { "type": { "name": "node" } },
-    "defaultExpanded": {
+    "defaultExpandedNodes": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
@@ -15,11 +15,43 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" },
       "default": "[]"
     },
-    "disabledItemsFocusable": { "type": { "name": "bool" } },
-    "disableSelection": { "type": { "name": "bool" } },
-    "expanded": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
+    "disableSelection": { "type": { "name": "bool" }, "default": "false" },
+    "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "getItemId": {
+      "type": { "name": "func" },
+      "default": "`(item) => item.id`",
+      "signature": {
+        "type": "function(item: R) => string",
+        "describedArgs": ["item"],
+        "returned": "string"
+      }
+    },
+    "getItemLabel": {
+      "type": { "name": "func" },
+      "default": "`(item) => item.label`",
+      "signature": {
+        "type": "function(item: R) => string",
+        "describedArgs": ["item"],
+        "returned": "string"
+      }
+    },
     "id": { "type": { "name": "string" } },
-    "multiSelect": { "type": { "name": "bool" } },
+    "multiSelect": { "type": { "name": "bool" }, "default": "false" },
+    "onExpandedNodesChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeIds: array) => void",
+        "describedArgs": ["event", "nodeIds"]
+      }
+    },
+    "onNodeExpansionToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeId: array, isExpanded: array) => void",
+        "describedArgs": ["event", "nodeId", "isExpanded"]
+      }
+    },
     "onNodeFocus": {
       "type": { "name": "func" },
       "signature": {
@@ -34,14 +66,9 @@
         "describedArgs": ["event", "nodeIds"]
       }
     },
-    "onNodeToggle": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeIds: array) => void",
-        "describedArgs": ["event", "nodeIds"]
-      }
-    },
     "selected": { "type": { "name": "any" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" } },
     "sx": {
       "type": {
         "name": "union",
@@ -50,7 +77,7 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [],
+  "slots": [{ "class": null, "name": "root", "description": "" }],
   "name": "TreeView",
   "imports": [
     "import { TreeView } from '@mui/x-tree-view/TreeView';",
@@ -61,5 +88,5 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/TreeView/TreeView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/\">Tree View</a></li></ul>"
+  "demos": "<ul></ul>"
 }

@@ -141,8 +141,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             break;
           case 'Enter':
             if (isEditing) {
-              apiRef.current.stopHeaderFilterEditMode();
-              break;
+              if (!event.defaultPrevented) {
+                apiRef.current.stopHeaderFilterEditMode();
+                break;
+              }
             }
             if (event.metaKey || event.ctrlKey) {
               headerFilterMenuRef.current = buttonRef.current;
@@ -192,7 +194,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const onMouseDown = React.useCallback(
       (event: React.MouseEvent) => {
         if (!hasFocus) {
-          if (inputRef.current && inputRef.current.contains(event.target as HTMLElement)) {
+          if (inputRef.current?.contains?.(event.target as HTMLElement)) {
             inputRef.current.focus();
           }
           apiRef.current.setColumnHeaderFilterFocus(colDef.field, event);

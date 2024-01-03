@@ -16,7 +16,12 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
-import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import {
+  GridColDef,
+  GridSingleSelectColDef,
+  GridStateColDef,
+} from '../../../models/colDef/gridColDef';
+import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -233,16 +238,17 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const baseFormControlProps = rootProps.slotProps?.baseFormControl || {};
 
     const baseSelectProps = rootProps.slotProps?.baseSelect || {};
-    const isBaseSelectNative = baseSelectProps.native ?? true;
+    const isBaseSelectNative = baseSelectProps.native ?? false;
 
     const baseInputLabelProps = rootProps.slotProps?.baseInputLabel || {};
     const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
-    const filteredColumns = React.useMemo(() => {
+    const { filteredColumns, selectedField } = React.useMemo(() => {
+      let itemField: string | undefined = item.field;
       if (filterColumns === undefined || typeof filterColumns !== 'function') {
-        return filterableColumns;
+        return { filteredColumns: filterableColumns, selectedField: itemField };
       }
 
       const filteredFields = filterColumns({
@@ -251,7 +257,16 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         currentFilters: filterModel?.items || [],
       });
 
-      return filterableColumns.filter((column) => filteredFields.includes(column.field));
+      return {
+        filteredColumns: filterableColumns.filter((column) => {
+          const isFieldIncluded = filteredFields.includes(column.field);
+          if (column.field === item.field && !isFieldIncluded) {
+            itemField = undefined;
+          }
+          return isFieldIncluded;
+        }),
+        selectedField: itemField,
+      };
     }, [filterColumns, filterModel?.items, filterableColumns, item.field]);
 
     const sortedFilteredColumns = React.useMemo(() => {
@@ -297,16 +312,38 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           column.filterOperators![0];
 
         // Erase filter value if the input component or filtered column type is modified
-        const eraseItemValue =
+        const eraseFilterValue =
           !newOperator.InputComponent ||
           newOperator.InputComponent !== currentOperator?.InputComponent ||
           column.type !== currentColumn!.type;
+
+        let filterValue = eraseFilterValue ? undefined : item.value;
+
+        // Check filter value against the new valueOptions
+        if (column.type === 'singleSelect' && filterValue !== undefined) {
+          const colDef = column as GridSingleSelectColDef;
+          const valueOptions = getValueOptions(colDef);
+          if (Array.isArray(filterValue)) {
+            filterValue = filterValue.filter((val) => {
+              return (
+                // Only keep values that are in the new value options
+                getValueFromValueOptions(val, valueOptions, colDef?.getOptionValue!) !== undefined
+              );
+            });
+          } else if (
+            getValueFromValueOptions(item.value, valueOptions, colDef?.getOptionValue!) ===
+            undefined
+          ) {
+            // Reset the filter value if it is not in the new value options
+            filterValue = undefined;
+          }
+        }
 
         applyFilterChanges({
           ...item,
           field,
           operator: newOperator.value,
-          value: eraseItemValue ? undefined : item.value,
+          value: filterValue,
         });
       },
       [apiRef, applyFilterChanges, item, currentColumn, currentOperator],
@@ -421,7 +458,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             inputProps={{
               'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
             }}
-            value={multiFilterOperator}
+            value={multiFilterOperator ?? ''}
             onChange={changeLogicOperator}
             disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
             native={isBaseSelectNative}
@@ -462,7 +499,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             labelId={columnSelectLabelId}
             id={columnSelectId}
             label={apiRef.current.getLocaleText('filterPanelColumns')}
-            value={item.field || ''}
+            value={selectedField ?? ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
             {...rootProps.slotProps?.baseSelect}
@@ -541,6 +578,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               item={item}
               applyValue={applyFilterChanges}
               focusElementRef={valueRef}
+              key={item.field}
               {...currentOperator.InputComponentProps}
               {...InputComponentProps}
             />

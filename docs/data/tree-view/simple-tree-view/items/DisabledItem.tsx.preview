@@ -1,0 +1,6 @@
+<RichTreeView
+  items={MUI_X_PRODUCTS}
+  isItemDisabled={isItemDisabled}
+  defaultCollapseIcon={<ExpandMoreIcon />}
+  defaultExpandIcon={<ChevronRightIcon />}
+/>

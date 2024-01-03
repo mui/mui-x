@@ -16,19 +16,19 @@
         "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
       }
     },
-    "centerRipple": { "type": { "name": "bool" } },
+    "centerRipple": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disableMargin": { "type": { "name": "bool" } },
-    "disableRipple": { "type": { "name": "bool" } },
-    "disableTouchRipple": { "type": { "name": "bool" } },
-    "focusRipple": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
+    "disableMargin": { "type": { "name": "bool" }, "default": "false" },
+    "disableRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
+    "focusRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusVisibleClassName": { "type": { "name": "string" } },
     "isVisuallySelected": { "type": { "name": "bool" } },
     "onFocusVisible": { "type": { "name": "func" } },
-    "selected": { "type": { "name": "bool" } },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" }, "default": "false" },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
       "type": {
         "name": "union",
@@ -36,7 +36,7 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "today": { "type": { "name": "bool" } },
+    "today": { "type": { "name": "bool" }, "default": "false" },
     "TouchRippleProps": { "type": { "name": "object" } },
     "touchRippleRef": {
       "type": {

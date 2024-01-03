@@ -70,7 +70,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Выберите время, выбрано время ${utils.format(value, 'fullTime')}`
       : 'Выберите время',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Очистить значение',
 
   // Table labels
   timeTableLabel: 'выбрать время',

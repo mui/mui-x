@@ -2,8 +2,8 @@
   "props": {
     "axisId": { "type": { "name": "string" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "disableLine": { "type": { "name": "bool" } },
-    "disableTicks": { "type": { "name": "bool" } },
+    "disableLine": { "type": { "name": "bool" }, "default": "false" },
+    "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
     "labelFontSize": {

@@ -34,9 +34,9 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 // Data Grid specific
-npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path>
+npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
 // Target other MUI X components as well
-npx @mui/x-codemod v7.0.0/preset-safe <path>
+npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
 :::info
@@ -77,10 +77,39 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
+- The `getOptionValue` and `getOptionLabel` props were removed from the following components:
 
-<!-- ### State access
+  - `GridEditSingleSelectCell`
+  - `GridFilterInputSingleSelect`
+  - `GridFilterInputMultipleSingleSelect`
 
-- -->
+  Use the `getOptionValue` and `getOptionLabel` properties on the `singleSelect` column definition instead:
+
+  ```tsx
+  const column: GridColDef = {
+    type: 'singleSelect',
+    field: 'country',
+    valueOptions: [
+      { code: 'BR', name: 'Brazil' },
+      { code: 'FR', name: 'France' },
+    ],
+    getOptionValue: (value: any) => value.code,
+    getOptionLabel: (value: any) => value.name,
+  };
+  ```
+
+### State access
+
+- Some selectors now require passing `instanceId` as a second argument:
+  ```diff
+  - gridColumnFieldsSelector(apiRef.current.state);
+  + gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
+  ```
+  However, it's preferable to pass the `apiRef` as the first argument instead:
+  ```js
+  gridColumnFieldsSelector(apiRef);
+  ```
+  See [Direct state access](/x/react-data-grid/state/#direct-selector-access) for more info.
 
 <!-- ### Events
 
@@ -198,6 +227,11 @@ Below are described the steps you need to make to migrate from v6 to v7.
   | `unstable_gridHeaderFilteringMenuSelector`        | `gridHeaderFilteringMenuSelector`        |
   | `unstable_gridHeaderFilteringStateSelector`       | `gridHeaderFilteringStateSelector`       |
   | `unstable_gridTabIndexColumnHeaderFilterSelector` | `gridTabIndexColumnHeaderFilterSelector` |
+
+- The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
+- The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
+  The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
+  but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
 
 <!-- ### Editing
 

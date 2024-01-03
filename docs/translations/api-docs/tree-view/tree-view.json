@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "This component has been deprecated in favor of the new `SimpleTreeView` component.\nYou can have a look at how to migrate to the new component in the v7 [migration guide](https://next.mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)",
   "propDescriptions": {
     "children": {
       "description": "The content of the component.",
@@ -26,7 +26,7 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "defaultExpanded": {
+    "defaultExpandedNodes": {
       "description": "Expanded node ids. Used when the item&#39;s expansion is not controlled.",
       "deprecated": "",
       "typeDescriptions": {}
@@ -56,10 +56,20 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "expanded": {
+    "expandedNodes": {
       "description": "Expanded node ids. Used when the item&#39;s expansion is controlled.",
       "deprecated": "",
       "typeDescriptions": {}
+    },
+    "getItemId": {
+      "description": "Used to determine the string label for a given item.",
+      "deprecated": "",
+      "typeDescriptions": { "item": "The item to check.", "string": "The id of the item." }
+    },
+    "getItemLabel": {
+      "description": "Used to determine the string label for a given item.",
+      "deprecated": "",
+      "typeDescriptions": { "item": "The item to check.", "string": "The label of the item." }
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id.",
@@ -70,6 +80,23 @@
       "description": "If true <code>ctrl</code> and <code>shift</code> will trigger multiselect.",
       "deprecated": "",
       "typeDescriptions": {}
+    },
+    "onExpandedNodesChange": {
+      "description": "Callback fired when tree items are expanded/collapsed.",
+      "deprecated": "",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "nodeIds": "The ids of the expanded nodes."
+      }
+    },
+    "onNodeExpansionToggle": {
+      "description": "Callback fired when a tree item is expanded or collapsed.",
+      "deprecated": "",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "nodeId": "The nodeId of the modified node.",
+        "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
+      }
     },
     "onNodeFocus": {
       "description": "Callback fired when tree items are focused.",
@@ -88,16 +115,18 @@
         "nodeIds": "Ids of the selected nodes. When <code>multiSelect</code> is true this is an array of strings; when false (default) a string."
       }
     },
-    "onNodeToggle": {
-      "description": "Callback fired when tree items are expanded/collapsed.",
-      "deprecated": "",
-      "typeDescriptions": {
-        "event": "The event source of the callback.",
-        "nodeIds": "The ids of the expanded nodes."
-      }
-    },
     "selected": {
       "description": "Selected node ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -108,5 +137,5 @@
     }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
-  "slotDescriptions": {}
+  "slotDescriptions": { "root": "" }
 }

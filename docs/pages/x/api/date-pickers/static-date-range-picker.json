@@ -24,19 +24,19 @@
       "default": "'start'"
     },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "disableAutoMonthSwitching": { "type": { "name": "bool" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableDragEditing": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
+    "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
+    "disableFuture": { "type": { "name": "bool" }, "default": "false" },
+    "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
+    "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayStaticWrapperAs": {
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
       "default": "\"mobile\""
     },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
@@ -100,7 +100,7 @@
         "returned": "boolean"
       }
     },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
