@@ -48,7 +48,6 @@ export function getComponentInfo(filename: string): ComponentInfo {
           (page) => page.pathname.startsWith('/date-pickers') && page.components.includes(name),
         )
         .map((page) => {
-          console.log(page.pathname, fixPathname(page.pathname));
           return {
             demoPageTitle: getTitle(page.markdownContent),
             demoPathname: `${page.pathname.replace('/date-pickers', '/x/react-date-pickers')}/`,
