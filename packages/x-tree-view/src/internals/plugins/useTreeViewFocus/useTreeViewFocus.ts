@@ -69,10 +69,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
         };
 
         let nodeToFocusId: string | null | undefined;
-        if (Array.isArray(models.selected.value)) {
-          nodeToFocusId = models.selected.value.find(isNodeVisible);
-        } else if (models.selected.value != null && isNodeVisible(models.selected.value)) {
-          nodeToFocusId = models.selected.value;
+        if (Array.isArray(models.selectedNodes.value)) {
+          nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
+        } else if (
+          models.selectedNodes.value != null &&
+          isNodeVisible(models.selectedNodes.value)
+        ) {
+          nodeToFocusId = models.selectedNodes.value;
         }
 
         if (nodeToFocusId == null) {

@@ -1,50 +1,31 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-export default function ControlledSelection() {
-  const [selectedNodes, setSelectedNodes] = React.useState([]);
+export default function TrackNodeSelectionToggle() {
+  const [lastSelectedNode, setLastSelectedNode] = React.useState(null);
 
-  const handleSelectedNodesChange = (event, ids) => {
-    setSelectedNodes(ids);
-  };
-
-  const handleSelectClick = () => {
-    setSelectedNodes((oldSelected) =>
-      oldSelected.length === 0
-        ? [
-            'grid',
-            'grid-community',
-            'grid-pro',
-            'grid-premium',
-            'pickers',
-            'pickers-community',
-            'pickers-pro',
-            'charts',
-            'charts-community',
-            'tree-view',
-            'tree-view-community',
-          ]
-        : [],
-    );
+  const handleNodeSelectionToggle = (event, nodeId, isSelected) => {
+    if (isSelected) {
+      setLastSelectedNode(nodeId);
+    }
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
-        <Button onClick={handleSelectClick}>
-          {selectedNodes.length === 0 ? 'Select all' : 'Unselect all'}
-        </Button>
-      </Box>
+    <Stack spacing={2}>
+      <Typography>
+        {lastSelectedNode == null
+          ? 'No node selection recorded'
+          : `Last selected node: ${lastSelectedNode}`}
+      </Typography>
       <Box sx={{ height: 264, flexGrow: 1 }}>
         <SimpleTreeView
-          selectedNodes={selectedNodes}
-          onSelectedNodesChange={handleSelectedNodesChange}
-          multiSelect
+          onNodeSelectionToggle={handleNodeSelectionToggle}
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         >
@@ -65,6 +46,6 @@ export default function ControlledSelection() {
           </TreeItem>
         </SimpleTreeView>
       </Box>
-    </Box>
+    </Stack>
   );
 }

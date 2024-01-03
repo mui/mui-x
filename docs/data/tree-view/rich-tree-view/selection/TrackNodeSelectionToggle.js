@@ -1,9 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+
+import Typography from '@mui/material/Typography';
 
 const MUI_X_PRODUCTS = [
   {
@@ -35,48 +37,30 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-const getAllItemNodeIds = () => {
-  const ids = [];
-  const registerNodeId = (item) => {
-    ids.push(item.id);
-    item.children?.forEach(registerNodeId);
-  };
+export default function TrackNodeSelectionToggle() {
+  const [lastSelectedNode, setLastSelectedNode] = React.useState(null);
 
-  MUI_X_PRODUCTS.forEach(registerNodeId);
-
-  return ids;
-};
-
-export default function ControlledSelection() {
-  const [selectedNodes, setSelectedNodes] = React.useState([]);
-
-  const handleSelectedNodesChange = (event, ids) => {
-    setSelectedNodes(ids);
-  };
-
-  const handleSelectClick = () => {
-    setSelectedNodes((oldSelected) =>
-      oldSelected.length === 0 ? getAllItemNodeIds() : [],
-    );
+  const handleNodeSelectionToggle = (event, nodeId, isSelected) => {
+    if (isSelected) {
+      setLastSelectedNode(nodeId);
+    }
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
-        <Button onClick={handleSelectClick}>
-          {selectedNodes.length === 0 ? 'Select all' : 'Unselect all'}
-        </Button>
-      </Box>
+    <Stack spacing={2}>
+      <Typography>
+        {lastSelectedNode == null
+          ? 'No node selection recorded'
+          : `Last selected node: ${lastSelectedNode}`}
+      </Typography>
       <Box sx={{ height: 264, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          selectedNodes={selectedNodes}
-          onSelectedNodesChange={handleSelectedNodesChange}
-          multiSelect
+          onNodeSelectionToggle={handleNodeSelectionToggle}
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         />
       </Box>
-    </Box>
+    </Stack>
   );
 }

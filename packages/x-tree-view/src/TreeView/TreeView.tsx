@@ -127,10 +127,7 @@ TreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelected: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string,
-  ]),
+  defaultSelectedNodes: PropTypes.any,
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -195,17 +192,24 @@ TreeView.propTypes = {
    */
   onNodeFocus: PropTypes.func,
   /**
-   * Callback fired when tree items are selected/unselected.
-   * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
-   * this is an array of strings; when false (default) a string.
+   * Callback fired when a tree item is selected or deselected.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} nodeId The nodeId of the modified node.
+   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
    */
-  onNodeSelect: PropTypes.func,
+  onNodeSelectionToggle: PropTypes.func,
+  /**
+   * Callback fired when tree items are selected/deselected.
+   * @param {React.SyntheticEvent} event The event source of the callback
+   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
+   */
+  onSelectedNodesChange: PropTypes.func,
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selected: PropTypes.any,
+  selectedNodes: PropTypes.any,
   /**
    * The props used for each component slot.
    */
