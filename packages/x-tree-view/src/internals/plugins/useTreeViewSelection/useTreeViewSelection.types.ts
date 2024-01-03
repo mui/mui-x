@@ -44,8 +44,8 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    * this is an array of strings; when false (default) a string.
    */
   onNodeSelect?: (
-      event: React.SyntheticEvent,
-      nodeIds: Exclude<TreeViewSelectionValue<Multiple>, null>,
+    event: React.SyntheticEvent,
+    nodeIds: Exclude<TreeViewSelectionValue<Multiple>, null>,
   ) => void;
 }
 
