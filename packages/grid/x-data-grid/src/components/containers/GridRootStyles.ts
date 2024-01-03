@@ -213,6 +213,7 @@ export const GridRootStyles = styled('div', {
     borderStyle: 'solid',
     borderColor,
     borderRadius: 'var(--unstable_DataGrid-radius)',
+    overflow: 'hidden',
     color: (t.vars || t).palette.text.primary,
     ...t.typography.body2,
     outline: 'none',
