@@ -69,7 +69,7 @@
     "onNodeSelect": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeIds: Array<string> | string) => void",
+        "type": "function(event: React.SyntheticEvent, nodeIds: Array<string> | string | null) => void",
         "describedArgs": ["event", "nodeIds"]
       }
     },
