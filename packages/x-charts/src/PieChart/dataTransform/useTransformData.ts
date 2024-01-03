@@ -82,7 +82,9 @@ export function useTransformData(
         const cornerRadius = attributesOverride.cornerRadius ?? baseCornerRadius;
 
         const arcLabelRadius =
-          attributesOverride.arcLabelRadius ?? baseArcLabelRadius ?? (innerRadius + outerRadius) / 2;
+          attributesOverride.arcLabelRadius ??
+          baseArcLabelRadius ??
+          (innerRadius + outerRadius) / 2;
 
         return {
           ...item,
