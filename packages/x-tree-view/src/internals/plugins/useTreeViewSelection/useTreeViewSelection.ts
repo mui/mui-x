@@ -6,10 +6,7 @@ import {
   getFirstNode,
   getLastNode,
 } from '../../useTreeView/useTreeView.utils';
-import {
-  UseTreeViewSelectionDefaultizedParameters,
-  UseTreeViewSelectionSignature,
-} from './useTreeViewSelection.types';
+import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
@@ -20,6 +17,11 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   const lastSelectedNode = React.useRef<string | null>(null);
   const lastSelectionWasRange = React.useRef(false);
   const currentRangeSelection = React.useRef<string[]>([]);
+
+  const setSelectedNodes = (event: React.SyntheticEvent, value: typeof params.defaultSelected) => {
+    models.selected.setValue(event, value);
+    params.onNodeSelect?.(event, value);
+  };
 
   const isNodeSelected = (nodeId: string) =>
     Array.isArray(models.selected.value)
@@ -40,11 +42,11 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
           newSelected = [nodeId].concat(models.selected.value);
         }
 
-        models.selected.setValue(event, newSelected);
+        setSelectedNodes(event, newSelected);
       }
     } else {
       const newSelected = params.multiSelect ? [nodeId] : nodeId;
-      models.selected.setValue(event, newSelected);
+      setSelectedNodes(event, newSelected);
     }
     lastSelectedNode.current = nodeId;
     lastSelectionWasRange.current = false;
@@ -91,7 +93,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       base.push(next);
       currentRangeSelection.current.push(current, next);
     }
-    models.selected.setValue(event, base);
+    setSelectedNodes(event, base);
   };
 
   const handleRangeSelect = (
@@ -110,7 +112,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     currentRangeSelection.current = range;
     let newSelected = base.concat(range);
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
-    models.selected.setValue(event, newSelected);
+    setSelectedNodes(event, newSelected);
   };
 
   const selectRange = (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked = false) => {
@@ -171,9 +173,6 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 useTreeViewSelection.models = {
   selected: {
     getDefaultValue: (params) => params.defaultSelected,
-    onChange: ({ params, event, value }) => {
-      params.onNodeSelect?.(event, value);
-    },
   },
 };
 

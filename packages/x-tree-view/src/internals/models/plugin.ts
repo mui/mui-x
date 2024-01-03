@@ -21,11 +21,6 @@ type TreeViewModelsInitializer<TSignature extends TreeViewAnyPluginSignature> = 
     getDefaultValue: (
       params: TSignature['defaultizedParams'],
     ) => Exclude<TSignature['defaultizedParams'][TControlled], undefined>;
-    onChange: (args: {
-      params: TSignature['defaultizedParams'];
-      event: React.SyntheticEvent;
-      value: Exclude<TSignature['defaultizedParams'][TControlled], undefined>;
-    }) => void;
   };
 };
 
@@ -92,8 +87,13 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
 type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> = TSignature['state'] &
   MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'state'>;
 
+type RemoveSetValue<Models extends Record<string, TreeViewModel<any>>> = {
+  [K in keyof Models]: Omit<Models[K], 'setValue'>;
+};
+
 export type TreeViewUsedModels<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['models'] & MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'models'>;
+  TSignature['models'] &
+    RemoveSetValue<MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'models'>>;
 
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['events'] & MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'events'>;
