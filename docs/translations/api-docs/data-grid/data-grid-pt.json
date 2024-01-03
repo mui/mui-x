@@ -21,6 +21,7 @@
     "disableColumnMenu": "If <code>true</code>, the column menu is disabled.",
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
     "disableDensitySelector": "If <code>true</code>, the density selector is disabled.",
+    "disableEval": "If <code>true</code>, <code>eval()</code> is not used for performance optimization.",
     "disableRowSelectionOnClick": "If <code>true</code>, the selection on click on a row or cell is disabled.",
     "disableVirtualization": "If <code>true</code>, the virtualization is disabled.",
     "editMode": "Controls whether to use the cell or row editing.",
