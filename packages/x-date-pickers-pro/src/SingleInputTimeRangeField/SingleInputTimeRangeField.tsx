@@ -6,7 +6,7 @@ import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/i
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
+import { SingleInputTimeRangeFieldProps, SingleInputTimeRangeFieldSlotProps } from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
@@ -37,7 +37,12 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? MuiTextField;
-  const textFieldProps: SingleInputTimeRangeFieldProps<TDate> = useSlotProps({
+  const textFieldProps: SingleInputTimeRangeFieldProps<TDate> = useSlotProps<
+  typeof TextField,
+  SingleInputTimeRangeFieldSlotProps<TDate>['textField'],
+  SingleInputTimeRangeFieldProps<TDate>,
+  SingleInputTimeRangeFieldProps<TDate>
+>({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,

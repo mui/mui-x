@@ -17,12 +17,14 @@ import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
+  UseDesktopRangePickerSlotProps,
 } from './useDesktopRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
 import { RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
+import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker/usePickerValue.types';
 
 const releaseInfo = getReleaseInfo();
 
@@ -107,7 +109,27 @@ export const useDesktopRangePicker = <
     TDate,
     RangeFieldSection,
     InferError<TExternalProps>
-  > = useSlotProps({
+  > = useSlotProps<
+    typeof Field,
+    UseDesktopRangePickerSlotProps<TDate, TView>['field'],
+    UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
+      Partial<
+        Pick<
+          UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+          | 'readOnly'
+          | 'disabled'
+          | 'className'
+          | 'sx'
+          | 'format'
+          | 'formatDensity'
+          | 'timezone'
+          | 'label'
+          | 'name'
+          | 'autoFocus'
+        >
+      >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: slotProps?.field,
     additionalProps: {

@@ -26,7 +26,7 @@ export interface TimeClockProps<TDate, TView extends TimeViewWithMeridiem = Time
    * Available views.
    * @default ['hours', 'minutes']
    */
-  views: readonly TView[];
+  views?: readonly TView[];
   /**
    * Override or extend the styles applied to the component.
    */

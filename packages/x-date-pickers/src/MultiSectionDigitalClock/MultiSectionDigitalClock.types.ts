@@ -44,7 +44,7 @@ export interface MultiSectionDigitalClockProps<TDate>
    * Available views.
    * @default ['hours', 'minutes']
    */
-  views: readonly TimeViewWithMeridiem[];
+  views?: readonly TimeViewWithMeridiem[];
   /**
    * Override or extend the styles applied to the component.
    */

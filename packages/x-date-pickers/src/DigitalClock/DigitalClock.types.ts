@@ -31,7 +31,7 @@ export interface DigitalClockProps<TDate>
    * Available views.
    * @default ['hours']
    */
-  views: readonly 'hours'[];
+  views?: readonly 'hours'[];
   /**
    * Override or extend the styles applied to the component.
    */
