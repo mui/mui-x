@@ -102,7 +102,7 @@ If you were using the `onNodeToggle` prop to react to the expansion or collapse 
 you can use the new `onNodeExpansionToggle` prop which is called whenever a node is expanded or collapsed with its id and expansion status
 
 ```tsx
-// Is also available on the deprecated `TreeView` component
+// It is also available on the deprecated `TreeView` component
 <SimpleTreeView
   onNodeExpansionToggle={(event, nodeId, isExpanded) =>
     console.log(nodeId, isExpanded)
