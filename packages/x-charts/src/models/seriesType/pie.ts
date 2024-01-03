@@ -32,6 +32,13 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
    */
   outerRadius?: number | string;
   /**
+   * The radius between circle center and the arc label.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the maximal radius that fit into the drawing area.
+   * @default (innerRadius - outerRadius) / 2
+   */
+  arcLabelRadius?: number | string;
+  /**
    * The radius applied to arc corners (similar to border radius).
    * @default 0
    */
@@ -87,6 +94,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     outerRadius?: number;
     cornerRadius?: number;
     paddingAngle?: number;
+    arcLabelRadius?: number;
     color?: string;
   };
   /**
@@ -102,6 +110,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     outerRadius?: number;
     cornerRadius?: number;
     paddingAngle?: number;
+    arcLabelRadius?: number;
     color?: string;
   };
 }
@@ -134,4 +143,9 @@ export interface ComputedPieRadius {
    * The radius between circle center and the end of the arc.
    */
   outerRadius: number;
+  /**
+   * The radius between circle center and the arc label in px.
+   * @default (innerRadius - outerRadius) / 2
+   */
+  arcLabelRadius?: number;
 }
