@@ -45,17 +45,18 @@ const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'
   value: valueGetter,
   getCellAggregationResult,
 }) => {
-  const wrappedValueGetter: GridBaseColDef['valueGetter'] = (params) => {
-    const cellAggregationResult = getCellAggregationResult(params.id, params.field);
+  const wrappedValueGetter: GridBaseColDef['valueGetter'] = (value, row, column, apiRef) => {
+    const rowId = apiRef.current.getRowId(row);
+    const cellAggregationResult = getCellAggregationResult(rowId, column.field);
     if (cellAggregationResult != null) {
       return cellAggregationResult?.value ?? null;
     }
 
     if (valueGetter) {
-      return valueGetter(params);
+      return valueGetter(value, row, column, apiRef);
     }
 
-    return params.row[params.field];
+    return row[column.field];
   };
 
   return wrappedValueGetter;

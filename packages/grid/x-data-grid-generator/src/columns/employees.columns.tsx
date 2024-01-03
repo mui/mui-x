@@ -40,10 +40,8 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     headerName: 'Avatar',
     generateData: randomColor,
     renderCell: renderAvatar,
-    valueGetter: (params) =>
-      params.row.name == null || params.row.avatar == null
-        ? null
-        : { name: params.row.name, color: params.row.avatar },
+    valueGetter: (value, row) =>
+      row.name == null || row.avatar == null ? null : { name: row.name, color: row.avatar },
     sortable: false,
     filterable: false,
     groupable: false,

@@ -16,14 +16,14 @@ export default function RowGroupingGroupingValueGetter() {
       {
         field: 'composer',
         headerName: 'Composer',
-        valueGetter: (params) => params.value?.name,
+        valueGetter: (value) => value.name,
         groupingValueGetter: (params) => params.value.name,
         width: 200,
       },
       {
         field: 'decade',
         headerName: 'Decade',
-        valueGetter: (params) => Math.floor(params.row.year / 10) * 10,
+        valueGetter: (value, row) => Math.floor(row.year / 10) * 10,
         groupingValueGetter: (params) => Math.floor(params.row.year / 10) * 10,
         renderCell: (params) => {
           if (params.value == null) {

@@ -79,7 +79,7 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             // @ts-expect-error
-            valueGetter: (params) => params.row.lastName,
+            valueGetter: (value, row) => row.lastName,
             // @ts-expect-error
             valueParser: (value, params) => params!.row.lastName,
             valueSetter: (params) => {
@@ -115,7 +115,7 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             // @ts-expect-error
-            valueGetter: (params) => params.row.lastName,
+            valueGetter: (value, row) => row.lastName,
             // @ts-expect-error
             valueParser: (value, params) => params!.row.lastName,
             valueSetter: (params) => {
