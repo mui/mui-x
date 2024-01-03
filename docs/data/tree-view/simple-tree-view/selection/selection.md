@@ -31,3 +31,9 @@ You can also use the `onNodeSelect` prop to listen to changes in the selected it
 
 Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::
+
+## Track node selection change
+
+Use the `onNodeSelectionToggle` if you want to react to a node selection change:
+
+{{"demo": "TrackNodeSelectionToggle.js"}}

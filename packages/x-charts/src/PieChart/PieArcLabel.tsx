@@ -61,6 +61,7 @@ export type PieArcLabelProps = PieArcLabelOwnerState &
     endAngle: SpringValue<number>;
     innerRadius: SpringValue<number>;
     outerRadius: SpringValue<number>;
+    arcLabelRadius: SpringValue<number>;
     cornerRadius: SpringValue<number>;
     paddingAngle: SpringValue<number>;
   } & {
@@ -77,8 +78,7 @@ const getLabelPosition =
     startAngle: number,
     endAngle: number,
     padAngle: number,
-    innerRadius: number,
-    outerRadius: number,
+    arcLabelRadius: number,
     cornerRadius: number,
   ) => {
     if (!formattedArcLabel) {
@@ -88,8 +88,8 @@ const getLabelPosition =
       padAngle,
       startAngle,
       endAngle,
-      innerRadius,
-      outerRadius,
+      innerRadius: arcLabelRadius,
+      outerRadius: arcLabelRadius,
     })!;
     if (variable === 'x') {
       return x;
@@ -105,8 +105,7 @@ function PieArcLabel(props: PieArcLabelProps) {
     startAngle,
     endAngle,
     paddingAngle,
-    innerRadius,
-    outerRadius,
+    arcLabelRadius,
     cornerRadius,
     formattedArcLabel,
     isHighlighted,
@@ -130,11 +129,11 @@ function PieArcLabel(props: PieArcLabelProps) {
       {...other}
       style={{
         x: to(
-          [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
+          [startAngle, endAngle, paddingAngle, arcLabelRadius, cornerRadius],
           getLabelPosition(formattedArcLabel, 'x'),
         ),
         y: to(
-          [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
+          [startAngle, endAngle, paddingAngle, arcLabelRadius, cornerRadius],
           getLabelPosition(formattedArcLabel, 'y'),
         ),
         ...style,
