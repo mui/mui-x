@@ -264,7 +264,7 @@ type UseCustomPluginSignature = TreeViewPluginSignature<
   {},
   // Model names
   'customModel',
-  // Dependant plugns,
+  // Dependant plugins: We want to have access to the expansion models and methods.
   [UseTreeViewExpansionSignature]
 >;
 ```
