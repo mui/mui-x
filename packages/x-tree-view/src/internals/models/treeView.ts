@@ -25,7 +25,7 @@ export interface TreeViewItemRange {
 export interface TreeViewModel<TValue> {
   name: string;
   value: TValue;
-  setValue: React.Dispatch<React.SetStateAction<TValue>>;
+  setValue: (event: React.SyntheticEvent, value: TValue | ((prevValue: TValue) => TValue)) => void;
 }
 
 export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSignature[]> =

@@ -16,10 +16,19 @@ export const useTreeViewModels = <
   plugins: TPlugins,
   props: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>,
 ) => {
+  type DefaultizedParams = MergePluginsProperty<
+    ConvertPluginsIntoSignatures<TPlugins>,
+    'defaultizedParams'
+  >;
+
   const modelsRef = React.useRef<{
     [modelName: string]: {
-      controlledProp: keyof typeof props;
-      defaultProp: keyof typeof props;
+      onChange: (args: {
+        params: DefaultizedParams;
+        event: React.SyntheticEvent;
+        value: any;
+      }) => void;
+      getDefaultValue: (params: DefaultizedParams) => any;
       isControlled: boolean;
     };
   }>({});
@@ -29,13 +38,13 @@ export const useTreeViewModels = <
 
     plugins.forEach((plugin) => {
       if (plugin.models) {
-        Object.entries(plugin.models).forEach(([modelName, model]) => {
+        Object.entries(plugin.models).forEach(([modelName, modelInitializer]) => {
           modelsRef.current[modelName] = {
-            controlledProp: model.controlledProp as keyof typeof props,
-            defaultProp: model.defaultProp as keyof typeof props,
-            isControlled: props[model.controlledProp as keyof typeof props] !== undefined,
+            onChange: modelInitializer.onChange,
+            isControlled: props[modelName as keyof DefaultizedParams] !== undefined,
+            getDefaultValue: modelInitializer.getDefaultValue,
           };
-          initialState[modelName] = props[model.defaultProp as keyof typeof props];
+          initialState[modelName] = modelInitializer.getDefaultValue(props);
         });
       }
     });
@@ -45,7 +54,7 @@ export const useTreeViewModels = <
 
   const models = Object.fromEntries(
     Object.entries(modelsRef.current).map(([modelName, model]) => {
-      const value = model.isControlled ? props[model.controlledProp] : modelsState[modelName];
+      const value = model.isControlled ? props[modelName as keyof DefaultizedParams] : modelsState[modelName];
 
       return [
         modelName,
@@ -68,8 +77,8 @@ export const useTreeViewModels = <
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
   if (process.env.NODE_ENV !== 'production') {
     Object.entries(modelsRef.current).forEach(([modelName, model]) => {
-      const controlled = props[model.controlledProp];
-      const defaultProp = props[model.defaultProp];
+      const controlled = props[modelName as keyof DefaultizedParams];
+      const newDefaultValue = model.getDefaultValue(props);
 
       React.useEffect(() => {
         if (model.isControlled !== (controlled !== undefined)) {
@@ -90,10 +99,10 @@ export const useTreeViewModels = <
         }
       }, [controlled]);
 
-      const { current: defaultValue } = React.useRef(defaultProp);
+      const { current: defaultValue } = React.useRef(newDefaultValue);
 
       React.useEffect(() => {
-        if (!model.isControlled && defaultValue !== defaultProp) {
+        if (!model.isControlled && defaultValue !== newDefaultValue) {
           console.error(
             [
               `MUI: A component is changing the default ${modelName} state of an uncontrolled TreeView after being initialized. ` +

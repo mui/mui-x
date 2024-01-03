@@ -40,23 +40,11 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
           newSelected = [nodeId].concat(models.selected.value);
         }
 
-        if (params.onNodeSelect) {
-          (params.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
-            event,
-            newSelected,
-          );
-        }
-
-        models.selected.setValue(newSelected);
+        models.selected.setValue(event, newSelected);
       }
     } else {
       const newSelected = params.multiSelect ? [nodeId] : nodeId;
-
-      if (params.onNodeSelect) {
-        params.onNodeSelect(event, newSelected as string & string[]);
-      }
-
-      models.selected.setValue(newSelected);
+      models.selected.setValue(event, newSelected);
     }
     lastSelectedNode.current = nodeId;
     lastSelectionWasRange.current = false;
@@ -103,15 +91,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       base.push(next);
       currentRangeSelection.current.push(current, next);
     }
-
-    if (params.onNodeSelect) {
-      (params.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
-        event,
-        base,
-      );
-    }
-
-    models.selected.setValue(base);
+    models.selected.setValue(event, base);
   };
 
   const handleRangeSelect = (
@@ -130,15 +110,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     currentRangeSelection.current = range;
     let newSelected = base.concat(range);
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
-
-    if (params.onNodeSelect) {
-      (params.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
-        event,
-        newSelected,
-      );
-    }
-
-    models.selected.setValue(newSelected);
+    models.selected.setValue(event, newSelected);
   };
 
   const selectRange = (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked = false) => {
@@ -197,7 +169,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 };
 
 useTreeViewSelection.models = {
-  selected: { controlledProp: 'selected', defaultProp: 'defaultSelected' },
+  selected: {
+    getDefaultValue: (params) => params.defaultSelected,
+    onChange: ({ params, event, value }) => {
+      params.onNodeSelect?.(event, value);
+    },
+  },
 };
 
 const DEFAULT_SELECTED: string[] = [];

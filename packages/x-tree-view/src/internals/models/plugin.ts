@@ -18,8 +18,14 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
 
 type TreeViewModelsInitializer<TSignature extends TreeViewAnyPluginSignature> = {
   [TControlled in keyof TSignature['models']]: {
-    controlledProp: TControlled;
-    defaultProp: keyof TSignature['params'];
+    getDefaultValue: (
+      params: TSignature['defaultizedParams'],
+    ) => Exclude<TSignature['defaultizedParams'][TControlled], undefined>;
+    onChange: (args: {
+      params: TSignature['defaultizedParams'];
+      event: React.SyntheticEvent;
+      value: Exclude<TSignature['defaultizedParams'][TControlled], undefined>;
+    }) => void;
   };
 };
 

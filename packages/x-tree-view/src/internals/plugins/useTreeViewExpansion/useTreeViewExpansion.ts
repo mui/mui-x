@@ -46,7 +46,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
         params.onExpandedNodesChange(event, newExpanded);
       }
 
-      models.expandedNodes.setValue(newExpanded);
+      models.expandedNodes.setValue(event, newExpanded);
     },
   );
 
@@ -66,12 +66,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
           params.onNodeExpansionToggle!(event, newlyExpandedNodeId, true);
         });
       }
-
-      if (params.onExpandedNodesChange) {
-        params.onExpandedNodesChange(event, newExpanded);
-      }
-
-      models.expandedNodes.setValue(newExpanded);
+      models.expandedNodes.setValue(event, newExpanded);
     }
   };
 
@@ -85,8 +80,12 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
 useTreeViewExpansion.models = {
   expandedNodes: {
-    controlledProp: 'expandedNodes',
-    defaultProp: 'defaultExpandedNodes',
+    getDefaultValue: (params) => params.defaultExpandedNodes,
+    onChange: ({ params, event, value }) => {
+      if (params.onExpandedNodesChange) {
+        params.onExpandedNodesChange(event, value);
+      }
+    },
   },
 };
 
