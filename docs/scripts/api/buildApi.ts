@@ -1,6 +1,7 @@
 import * as yargs from 'yargs';
 import path from 'path';
 import fs from 'fs';
+import * as prettier from 'prettier';
 import kebabCase from 'lodash/kebabCase';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
@@ -8,6 +9,29 @@ import buildGridSelectorsDocumentation from './buildGridSelectorsDocumentation';
 import buildGridEventsDocumentation from './buildGridEventsDocumentation';
 import { createXTypeScriptProjects } from '../createXTypeScriptProjects';
 import { DocumentedInterfaces } from './utils';
+
+const DEFAULT_PRETTIER_CONFIG_PATH = path.join(process.cwd(), 'prettier.config.js');
+
+export function writePrettifiedFile(
+  filename: string,
+  data: string,
+  prettierConfigPath: string = DEFAULT_PRETTIER_CONFIG_PATH,
+  options: object = {},
+) {
+  const prettierConfig = prettier.resolveConfig.sync(filename, {
+    config: prettierConfigPath,
+  });
+  if (prettierConfig === null) {
+    throw new Error(
+      `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
+    );
+  }
+
+  fs.writeFileSync(filename, prettier.format(data, { ...prettierConfig, filepath: filename }), {
+    encoding: 'utf8',
+    ...options,
+  });
+}
 
 const bracketsRegexp = /\[\[([^\]]+)\]\]/g;
 
@@ -44,7 +68,7 @@ export default function linkifyTranslation(
       return `<a href='${url}'>${content}</a>`;
     });
 
-    fs.writeFileSync(itemPath, linkified);
+    writePrettifiedFile(itemPath, linkified);
   });
 }
 
