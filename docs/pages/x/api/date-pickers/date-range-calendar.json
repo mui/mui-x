@@ -42,8 +42,8 @@
     "onChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: DateRange<TDate>, selectionState: PickerSelectionState | undefined) => void",
-        "describedArgs": ["value", "selectionState"]
+        "type": "function(value: TValue, selectionState: PickerSelectionState | undefined, selectedView: TView | undefined) => void",
+        "describedArgs": ["value", "selectionState", "selectedView"]
       }
     },
     "onFocusedViewChange": {

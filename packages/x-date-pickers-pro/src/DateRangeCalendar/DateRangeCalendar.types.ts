@@ -17,7 +17,6 @@ import {
   DayCalendarSlotProps,
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
-  PickerSelectionState,
   DayCalendarProps,
   ExportedUseViewsOptions,
 } from '@mui/x-date-pickers/internals';
@@ -129,13 +128,6 @@ export interface DateRangeCalendarProps<TDate>
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
   referenceDate?: TDate;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {DateRange<TDate>} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
-   */
-  onChange?: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
   className?: string;
   classes?: Partial<DateRangeCalendarClasses>;
   /**

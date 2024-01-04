@@ -232,7 +232,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     valueManager: rangeValueManager,
   });
 
-  const { setValueAndGoToNextView } = useViews({
+  const { setValueAndGoToNextView, view } = useViews({
     view: inView,
     views,
     openTo,
@@ -281,6 +281,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       setValueAndGoToNextView(
         newRange,
         isFullRangeSelected || !isNextSectionAvailable ? 'finish' : 'partial',
+        view,
       );
     },
   );
@@ -743,9 +744,11 @@ DateRangeCalendar.propTypes = {
   minDate: PropTypes.any,
   /**
    * Callback fired when the value changes.
-   * @template TDate
-   * @param {DateRange<TDate>} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TView The view type. Will be one of date or time views.
+   * @param {TValue} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
+   * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
   onChange: PropTypes.func,
   /**
