@@ -20,7 +20,6 @@ import {
   MonthValidationProps,
   DayValidationProps,
 } from '../internals/models/validation';
-import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue.types';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView, TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
@@ -113,13 +112,6 @@ export interface DateCalendarProps<TDate>
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
   referenceDate?: TDate;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
-   */
-  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
   className?: string;
   classes?: Partial<DateCalendarClasses>;
   /**

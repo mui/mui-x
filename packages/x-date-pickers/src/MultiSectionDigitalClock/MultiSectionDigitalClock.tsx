@@ -151,7 +151,10 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     return inViews.includes('meridiem') ? inViews : [...inViews, 'meridiem'];
   }, [ampm, inViews]);
 
-  const { view, setValueAndGoToView, focusedView } = useViews<TDate | null, TimeViewWithMeridiem>({
+  const { view, setValueAndGoToNextView, focusedView } = useViews<
+    TDate | null,
+    TimeViewWithMeridiem
+  >({
     view: inView,
     views,
     openTo,
@@ -162,7 +165,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
   });
 
   const handleMeridiemValueChange = useEventCallback((newValue: TDate | null) => {
-    setValueAndGoToView(newValue, null, 'meridiem');
+    setValueAndGoToNextView(newValue, 'finish', 'meridiem');
   });
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
@@ -279,14 +282,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     ],
   );
 
-  const handleSectionChange = useEventCallback(
-    (sectionView: TimeViewWithMeridiem, newValue: TDate | null) => {
-      const viewIndex = views.indexOf(sectionView);
-      const nextView = views[viewIndex + 1];
-      setValueAndGoToView(newValue, nextView, sectionView);
-    },
-  );
-
   const buildViewProps = React.useCallback(
     (viewToBuild: TimeViewWithMeridiem): MultiSectionDigitalClockViewProps<any> => {
       switch (viewToBuild) {
@@ -294,7 +289,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           return {
             onChange: (hours) => {
               const valueWithMeridiem = convertValueToMeridiem(hours, meridiemMode, ampm);
-              handleSectionChange('hours', utils.setHours(valueOrReferenceDate, valueWithMeridiem));
+              setValueAndGoToNextView(
+                utils.setHours(valueOrReferenceDate, valueWithMeridiem),
+                'finish',
+                'hours',
+              );
             },
             items: getHourSectionOptions({
               now,
@@ -311,7 +310,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         case 'minutes': {
           return {
             onChange: (minutes) => {
-              handleSectionChange('minutes', utils.setMinutes(valueOrReferenceDate, minutes));
+              setValueAndGoToNextView(
+                utils.setMinutes(valueOrReferenceDate, minutes),
+                'finish',
+                'minutes',
+              );
             },
             items: getTimeSectionOptions({
               value: utils.getMinutes(valueOrReferenceDate),
@@ -328,7 +331,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         case 'seconds': {
           return {
             onChange: (seconds) => {
-              handleSectionChange('seconds', utils.setSeconds(valueOrReferenceDate, seconds));
+              setValueAndGoToNextView(
+                utils.setSeconds(valueOrReferenceDate, seconds),
+                'finish',
+                'seconds',
+              );
             },
             items: getTimeSectionOptions({
               value: utils.getSeconds(valueOrReferenceDate),
@@ -380,7 +387,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       localeText.minutesClockNumberText,
       localeText.secondsClockNumberText,
       meridiemMode,
-      handleSectionChange,
+      setValueAndGoToNextView,
       valueOrReferenceDate,
       disabled,
       isTimeDisabled,
@@ -504,8 +511,9 @@ MultiSectionDigitalClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TDate, TView
-   * @param {TDate | null} value The new value.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TView The view type. Will be one of date or time views.
+   * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */

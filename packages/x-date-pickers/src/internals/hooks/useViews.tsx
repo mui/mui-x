@@ -13,7 +13,8 @@ export type PickerOnChangeFn<TDate> = (
 export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridiem> {
   /**
    * Callback fired when the value changes.
-   * @template TValue
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TView The view type. Will be one of date or time views.
    * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
@@ -62,7 +63,7 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridie
 }
 
 export interface ExportedUseViewsOptions<TView extends DateOrTimeViewWithMeridiem>
-  extends MakeOptional<Omit<UseViewsOptions<any, TView>, 'onChange'>, 'openTo' | 'views'> {}
+  extends MakeOptional<UseViewsOptions<any, TView>, 'onChange' | 'openTo' | 'views'> {}
 
 let warnedOnceNotValidView = false;
 
@@ -78,8 +79,8 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
   setValueAndGoToNextView: (
     value: TValue,
     currentViewSelectionState?: PickerSelectionState,
+    selectedView?: TView,
   ) => void;
-  setValueAndGoToView: (value: TValue, newView: TView | null, selectedView: TView) => void;
 }
 
 export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
@@ -162,21 +163,21 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
   });
 
   const handleChangeView = useEventCallback((newView: TView) => {
+    // always keep the focused view in sync
+    handleFocusedViewChange(newView, true);
     if (newView === view) {
       return;
     }
     setView(newView);
-    handleFocusedViewChange(newView, true);
-
     if (onViewChange) {
       onViewChange(newView);
     }
   });
+
   const goToNextView = useEventCallback(() => {
     if (nextView) {
       handleChangeView(nextView);
     }
-    handleFocusedViewChange(nextView, true);
   });
 
   const setValueAndGoToNextView = useEventCallback(
@@ -190,19 +191,17 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
       const globalSelectionState =
         isSelectionFinishedOnCurrentView && hasMoreViews ? 'partial' : currentViewSelectionState;
 
-      onChange(value, globalSelectionState);
-      if (isSelectionFinishedOnCurrentView) {
+      onChange(value, globalSelectionState, selectedView);
+      // Detects if the selected view is not the active one.
+      // Can happen if multiple views are displayed, like in `DesktopDateTimePicker` or `MultiSectionDigitalClock`.
+      if (selectedView && selectedView !== view) {
+        const nextViewAfterSelected = views[views.indexOf(selectedView) + 1];
+        if (nextViewAfterSelected) {
+          // move to next view after the selected one
+          handleChangeView(nextViewAfterSelected);
+        }
+      } else if (isSelectionFinishedOnCurrentView) {
         goToNextView();
-      }
-    },
-  );
-
-  const setValueAndGoToView = useEventCallback(
-    (value: TValue, newView: TView | null, selectedView: TView) => {
-      onChange(value, newView ? 'partial' : 'finish', selectedView);
-      if (newView) {
-        handleChangeView(newView);
-        handleFocusedViewChange(newView, true);
       }
     },
   );
@@ -218,6 +217,5 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
     defaultView: views.includes(openTo!) ? openTo! : views[0],
     goToNextView,
     setValueAndGoToNextView,
-    setValueAndGoToView,
   };
 }
