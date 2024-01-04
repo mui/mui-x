@@ -73,3 +73,79 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 - const rootClass = treeViewClasses.root;
 + const rootClass = simpleTreeViewClasses.root;
 ```
+
+### Rename `onNodeToggle`, `expanded` and `defaultExpanded`
+
+The expansion props have been renamed to better describe their behaviors:
+
+| Old name          | New name                |
+| :---------------- | :---------------------- |
+| `onNodeToggle`    | `onExpandedNodesChange` |
+| `expanded`        | `expandedNodes`         |
+| `defaultExpanded` | `defaultExpandedNodes`  |
+
+```diff
+  <TreeView
+-   onNodeToggle={handleExpansionChange}
++   onExpandedNodesChange={handleExpansionChange}
+
+-   expanded={expandedNodes}
++   expandedNodes={expandedNodes}
+
+-   defaultExpanded={defaultExpandedNodes}
++   defaultExpandedNodes={defaultExpandedNodes}
+  />
+```
+
+:::info
+If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific node,
+you can use the new `onNodeExpansionToggle` prop which is called whenever a node is expanded or collapsed with its id and expansion status
+
+```tsx
+// It is also available on the deprecated `TreeView` component
+<SimpleTreeView
+  onNodeExpansionToggle={(event, nodeId, isExpanded) =>
+    console.log(nodeId, isExpanded)
+  }
+/>
+```
+
+:::
+
+### Rename `onNodeSelect`, `selected`, and `defaultSelected`
+
+The selection props have been renamed to better describe their behaviors:
+
+| Old name          | New name                |
+| :---------------- | :---------------------- |
+| `onNodeSelect`    | `onSelectedNodesChange` |
+| `selected`        | `selectedNodes`         |
+| `defaultSelected` | `defaultSelectedNodes`  |
+
+```diff
+  <TreeView
+-   onNodeSelect={handleSelectionChange}
++   onSelectedNodesChange={handleSelectionChange}
+
+-   selected={selectedNodes}
++   selectedNodes={selectedNodes}
+
+-   defaultSelected={defaultSelectedNodes}
++   defaultSelectedNodes={defaultSelectedNodes}
+  />
+```
+
+:::info
+If you were using the `onNodeSelect` prop to react to the selection or deselection of a specific node,
+you can use the new `onNodeSelectionToggle` prop which is called whenever a node is selected or deselected with its id and selection status.
+
+```tsx
+// It is also available on the deprecated `TreeView` component
+<SimpleTreeView
+  onNodeSelectionToggle={(event, nodeId, isSelected) =>
+    console.log(nodeId, isSelected)
+  }
+/>
+```
+
+:::

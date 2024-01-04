@@ -33,8 +33,8 @@
     "directory": "packages/grid/x-data-grid-generator"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.5",
-    "@mui/base": "^5.0.0-beta.27",
+    "@babel/runtime": "^7.23.7",
+    "@mui/base": "^5.0.0-beta.29",
     "@mui/x-data-grid-premium": "7.0.0-alpha.6",
     "chance": "^1.1.11",
     "clsx": "^2.0.0",

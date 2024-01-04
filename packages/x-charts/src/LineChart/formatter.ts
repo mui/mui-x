@@ -70,7 +70,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
                     'Line plots only support numbers and null values.',
                   ]);
                 }
-                return 0;
+                return null;
               }
               return value;
             })

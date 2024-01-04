@@ -61,7 +61,7 @@ const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
   params,
   models,
 }) => {
-  const expandedStr = JSON.stringify(models.expanded.value);
+  const expandedStr = JSON.stringify(models.expandedNodes.value);
 
   React.useEffect(() => {
     if (params.areLogsEnabled && params.logMessage) {
@@ -92,15 +92,17 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
   const {
     // Headless implementation
     disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
+    expandedNodes,
+    defaultExpandedNodes,
+    onExpandedNodesChange,
+    onNodeExpansionToggle,
     onNodeFocus,
     disableSelection,
-    defaultSelected,
-    selected,
+    defaultSelectedNodes,
+    selectedNodes,
     multiSelect,
-    onNodeSelect,
+    onSelectedNodesChange,
+    onNodeSelectionToggle,
     id,
     defaultCollapseIcon,
     defaultEndIcon,
@@ -116,15 +118,17 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
 
   const { getRootProps, contextValue, instance } = useTreeView({
     disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
+    expandedNodes,
+    defaultExpandedNodes,
+    onExpandedNodesChange,
+    onNodeExpansionToggle,
     onNodeFocus,
     disableSelection,
-    defaultSelected,
-    selected,
+    defaultSelectedNodes,
+    selectedNodes,
     multiSelect,
-    onNodeSelect,
+    onSelectedNodesChange,
+    onNodeSelectionToggle,
     id,
     defaultCollapseIcon,
     defaultEndIcon,
