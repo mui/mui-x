@@ -130,12 +130,10 @@ class CellValueUpdater {
       return;
     }
 
-    const cellParams = apiRef.current.getCellParams(rowId, field);
-
     let parsedValue = pastedCellValue;
 
     if (colDef.pastedValueParser) {
-      parsedValue = colDef.pastedValueParser(pastedCellValue, cellParams);
+      parsedValue = colDef.pastedValueParser(pastedCellValue, row, colDef, apiRef);
     } else if (colDef.valueParser) {
       parsedValue = colDef.valueParser(parsedValue, row, colDef, apiRef);
     }

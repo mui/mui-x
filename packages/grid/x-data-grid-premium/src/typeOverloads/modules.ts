@@ -1,10 +1,10 @@
-import { GridCellParams, GridValidRowModel } from '@mui/x-data-grid-pro';
+import { GridValidRowModel } from '@mui/x-data-grid-pro';
 import type {
   GridControlledStateEventLookupPro,
   GridApiCachesPro,
   GridEventLookupPro,
 } from '@mui/x-data-grid-pro/typeOverloads';
-import type { GridGroupingValueGetter } from '../models';
+import type { GridGroupingValueGetter, GridPastedValueParser } from '../models';
 import type {
   GridRowGroupingModel,
   GridAggregationModel,
@@ -63,11 +63,9 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
   groupingValueGetter?: GridGroupingValueGetter<R>;
   /**
    * Function that takes the clipboard-pasted value and converts it to a value used internally.
-   * @param {string} value The pasted value.
-   * @param {GridCellParams<R, V, F>} params The cell params.
    * @returns {V} The converted value.
    */
-  pastedValueParser?: (value: string, params: GridCellParams<R, V, F>) => V | undefined;
+  pastedValueParser?: GridPastedValueParser<R, V, F>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

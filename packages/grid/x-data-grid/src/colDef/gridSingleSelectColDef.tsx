@@ -52,8 +52,8 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
   renderEditCell: renderEditSingleSelectCell,
   filterOperators: getGridSingleSelectOperators(),
   // @ts-ignore
-  pastedValueParser: (value, params) => {
-    const colDef = params.colDef as GridSingleSelectColDef;
+  pastedValueParser: (value, row, column) => {
+    const colDef = column as GridSingleSelectColDef;
     const valueOptions = getValueOptions(colDef) || [];
     const getOptionValue = (colDef as GridSingleSelectColDef).getOptionValue!;
     const valueOption = valueOptions.find((option) => {
