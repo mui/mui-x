@@ -21,7 +21,7 @@
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" }, "default": "false" },
-    "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
+    "autoPageSize": { "type": { "name": "custom", "description": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOptions": {
       "type": {

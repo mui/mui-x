@@ -77,7 +77,14 @@ DataGridRaw.propTypes = {
    * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false
    */
-  autoPageSize: PropTypes.bool,
+  autoPageSize: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (props.autoHeight && props.autoPageSize) {
+      return new Error(
+        'MUI: The `autoPageSize` prop will conflict with `autoHeight` prop when both of them are enabled.',
+      );
+    }
+    return null;
+  }),
   /**
    * Controls the modes of the cells.
    */

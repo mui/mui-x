@@ -21,7 +21,7 @@
     "onChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TDate | null, selectionState: PickerSelectionState | undefined, selectedView: TView | undefined) => void",
+        "type": "function(value: TValue, selectionState: PickerSelectionState | undefined, selectedView: TView | undefined) => void",
         "describedArgs": ["value", "selectionState", "selectedView"]
       }
     },
