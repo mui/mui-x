@@ -44,6 +44,9 @@ type BrowserFieldComponent = ((
 const BrowserField = React.forwardRef(
   (props: BrowserFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
+      // Should be ignored
+      textFieldVersion,
+
       disabled,
       id,
       label,
@@ -54,7 +57,6 @@ const BrowserField = React.forwardRef(
       focused,
       ownerState,
       sx,
-      textFieldVersion,
       ...other
     } = props;
 

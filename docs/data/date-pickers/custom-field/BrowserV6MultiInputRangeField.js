@@ -11,6 +11,8 @@ import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } f
 
 const BrowserField = React.forwardRef((props, ref) => {
   const {
+    // Should be ignored
+    textFieldVersion,
     disabled,
     id,
     label,
@@ -21,7 +23,6 @@ const BrowserField = React.forwardRef((props, ref) => {
     focused,
     ownerState,
     sx,
-    textFieldVersion,
     ...other
   } = props;
 

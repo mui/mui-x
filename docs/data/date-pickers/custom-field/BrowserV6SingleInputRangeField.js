@@ -14,6 +14,8 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 
 const BrowserField = React.forwardRef((props, ref) => {
   const {
+    // Should be ignored
+    textFieldVersion,
     disabled,
     id,
     label,
@@ -24,7 +26,6 @@ const BrowserField = React.forwardRef((props, ref) => {
     focused,
     ownerState,
     sx,
-    textFieldVersion,
     ...other
   } = props;
 
