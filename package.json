@@ -186,7 +186,9 @@
       "**/@mui/monorepo"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "autoprefixer": "^10.4.16"
+  },
   "resolutions": {
     "**/react-is": "^18.2.0",
     "**/@types/node": "^18.19.3"
