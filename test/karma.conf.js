@@ -20,7 +20,7 @@ module.exports = function setKarmaConfig(config) {
         timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000,
       },
     },
-    frameworks: ['mocha', 'webpack'],
+    frameworks: ['parallel', 'mocha', 'webpack'],
     files: [
       {
         pattern: 'test/karma.tests.js',
@@ -29,7 +29,7 @@ module.exports = function setKarmaConfig(config) {
         included: true,
       },
     ],
-    plugins: ['karma-mocha', 'karma-chrome-launcher', 'karma-sourcemap-loader', 'karma-webpack'],
+    plugins: ['karma-parallel', 'karma-mocha', 'karma-chrome-launcher', 'karma-sourcemap-loader', 'karma-webpack'],
     /**
      * possible values:
      * - config.LOG_DISABLE
