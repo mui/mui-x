@@ -108,7 +108,7 @@ DataGridRaw.propTypes = {
    */
   columnHeaderHeight: PropTypes.number,
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
   columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
     // @ts-ignore because otherwise `build:api` doesn't work

@@ -147,7 +147,7 @@ DataGridProRaw.propTypes = {
    */
   columnHeaderHeight: PropTypes.number,
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
