@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/charts/pie-plot',
     false,
-    /pie-plot.*.json$/,
+    /\.\/pie-plot.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

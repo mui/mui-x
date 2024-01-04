@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/charts/area-plot',
     false,
-    /area-plot.*.json$/,
+    /\.\/area-plot.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

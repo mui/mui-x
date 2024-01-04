@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/charts/spark-line-chart',
     false,
-    /spark-line-chart.*.json$/,
+    /\.\/spark-line-chart.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

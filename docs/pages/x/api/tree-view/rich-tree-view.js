@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/tree-view/rich-tree-view',
     false,
-    /rich-tree-view.*.json$/,
+    /\.\/rich-tree-view.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

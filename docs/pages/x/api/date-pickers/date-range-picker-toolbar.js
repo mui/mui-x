@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/date-pickers/date-range-picker-toolbar',
     false,
-    /date-range-picker-toolbar.*.json$/,
+    /\.\/date-range-picker-toolbar.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

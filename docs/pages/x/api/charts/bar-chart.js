@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/charts/bar-chart',
     false,
-    /bar-chart.*.json$/,
+    /\.\/bar-chart.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

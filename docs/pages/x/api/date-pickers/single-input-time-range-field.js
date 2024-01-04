@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/date-pickers/single-input-time-range-field',
     false,
-    /single-input-time-range-field.*.json$/,
+    /\.\/single-input-time-range-field.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

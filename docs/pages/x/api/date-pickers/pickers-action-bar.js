@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/date-pickers/pickers-action-bar',
     false,
-    /pickers-action-bar.*.json$/,
+    /\.\/pickers-action-bar.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

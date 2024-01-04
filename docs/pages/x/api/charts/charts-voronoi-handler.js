@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/charts/charts-voronoi-handler',
     false,
-    /charts-voronoi-handler.*.json$/,
+    /\.\/charts-voronoi-handler.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

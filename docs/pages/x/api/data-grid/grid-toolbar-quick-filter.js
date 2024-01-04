@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/data-grid/grid-toolbar-quick-filter',
     false,
-    /grid-toolbar-quick-filter.*.json$/,
+    /\.\/grid-toolbar-quick-filter.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
