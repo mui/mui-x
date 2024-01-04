@@ -14,6 +14,7 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
+  FieldTextFieldVersion,
 } from '@mui/x-date-pickers-pro';
 
 interface BrowserFieldProps
@@ -29,7 +30,7 @@ interface BrowserFieldProps
   focused?: boolean;
   ownerState?: any;
   sx?: any;
-  textField: 'v6' | 'v7';
+  textFieldVersion: FieldTextFieldVersion;
 }
 
 type BrowserFieldComponent = ((
@@ -49,7 +50,7 @@ const BrowserField = React.forwardRef(
       focused,
       ownerState,
       sx,
-      textField,
+      textFieldVersion,
       ...other
     } = props;
 

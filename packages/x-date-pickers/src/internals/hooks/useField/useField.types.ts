@@ -178,7 +178,7 @@ interface UseFieldV6AdditionalProps
       'inputMode' | 'placeholder' | 'value' | 'onChange' | 'autoComplete'
     >
   > {
-  textField: 'v6';
+  textFieldVersion: 'v6';
 }
 
 export interface UseFieldV7ForwardedProps {
@@ -193,7 +193,7 @@ export interface UseFieldV7ForwardedProps {
 }
 
 interface UseFieldV7AdditionalProps {
-  textField: 'v7';
+  textFieldVersion: 'v7';
   elements: PickersSectionElement[];
   tabIndex: number | undefined;
   contentEditable: boolean;

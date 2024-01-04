@@ -478,7 +478,7 @@ export const useFieldV7TextField: UseFieldTextField<'v7'> = (params) => {
       onPaste: handleContainerPaste,
 
       // Additional
-      textField: 'v7' as const,
+      textFieldVersion: 'v7' as const,
       elements,
       // TODO v7: Try to set to undefined when there is a section selected.
       tabIndex: 0,

@@ -28,7 +28,10 @@ import {
   UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers';
+import {
+  BaseSingleInputFieldProps,
+  FieldTextFieldVersion,
+} from '@mui/x-date-pickers/models';
 import {
   DateRange,
   DateRangeValidationError,
@@ -40,7 +43,7 @@ const joyTheme = extendJoyTheme();
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
-  textField?: 'v6' | 'v7';
+  textFieldVersion?: FieldTextFieldVersion;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -55,6 +58,9 @@ type JoyFieldComponent = ((
 const JoyField = React.forwardRef(
   (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
+      // Should be ignored
+      textFieldVersion,
+
       disabled,
       id,
       label,
@@ -63,7 +69,6 @@ const JoyField = React.forwardRef(
       startDecorator,
       slotProps,
       inputRef,
-      textField,
       ...other
     } = props;
 

@@ -24,7 +24,7 @@ const BrowserField = React.forwardRef((props, ref) => {
     focused,
     ownerState,
     sx,
-    textField,
+    textFieldVersion,
     ...other
   } = props;
 

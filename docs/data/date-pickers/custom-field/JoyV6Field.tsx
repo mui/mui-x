@@ -26,6 +26,7 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
+  FieldTextFieldVersion,
 } from '@mui/x-date-pickers/models';
 
 const joyTheme = extendJoyTheme();
@@ -33,7 +34,7 @@ const joyTheme = extendJoyTheme();
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
-  textField?: 'v6' | 'v7';
+  textFieldVersion?: FieldTextFieldVersion;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -49,6 +50,9 @@ type JoyFieldComponent = ((
 const JoyField = React.forwardRef(
   (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
+      // Should be ignored
+      textFieldVersion,
+
       disabled,
       id,
       label,

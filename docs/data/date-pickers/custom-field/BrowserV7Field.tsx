@@ -42,7 +42,7 @@ const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
     const {
       // Should be ignored
-      textField,
+      textFieldVersion,
 
       // Should be passed to the PickersSectionList component
       elements,
@@ -66,6 +66,8 @@ const BrowserTextField = React.forwardRef(
       areAllSectionsEmpty,
       disabled,
       readOnly,
+      focused,
+      error,
 
       InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
 

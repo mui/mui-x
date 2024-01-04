@@ -18,7 +18,10 @@ import {
   UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
+import {
+  BaseSingleInputFieldProps,
+  FieldTextFieldVersion,
+} from '@mui/x-date-pickers/models';
 import {
   DateRangeValidationError,
   RangeFieldSection,
@@ -38,7 +41,7 @@ interface BrowserFieldProps
   focused?: boolean;
   ownerState?: any;
   sx?: any;
-  textField: 'v6' | 'v7';
+  textFieldVersion: FieldTextFieldVersion;
 }
 
 type BrowserFieldComponent = ((
@@ -58,7 +61,7 @@ const BrowserField = React.forwardRef(
       focused,
       ownerState,
       sx,
-      textField,
+      textFieldVersion,
       ...other
     } = props;
 

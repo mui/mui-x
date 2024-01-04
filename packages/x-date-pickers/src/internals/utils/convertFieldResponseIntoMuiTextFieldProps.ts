@@ -4,10 +4,10 @@ import { UseFieldResponse } from '../hooks/useField';
 export const convertFieldResponseIntoMuiTextFieldProps = <
   TFieldResponse extends UseFieldResponse<any, any>,
 >({
-  textField,
+  textFieldVersion,
   ...fieldResponse
 }: TFieldResponse): TextFieldProps => {
-  if (textField === 'v7') {
+  if (textFieldVersion === 'v7') {
     const { InputProps, readOnly, ...other } = fieldResponse;
 
     return {

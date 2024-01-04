@@ -29,7 +29,7 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 const BrowserTextField = React.forwardRef((props, ref) => {
   const {
     // Should be ignored
-    textField,
+    textFieldVersion,
     // Should be passed to the PickersSectionList component
     elements,
     sectionListRef,
@@ -49,6 +49,8 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     areAllSectionsEmpty,
     disabled,
     readOnly,
+    focused,
+    error,
     InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
     // The rest can be passed to the root element
     ...other

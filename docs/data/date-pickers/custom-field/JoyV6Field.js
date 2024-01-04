@@ -24,6 +24,8 @@ const joyTheme = extendJoyTheme();
 
 const JoyField = React.forwardRef((props, ref) => {
   const {
+    // Should be ignored
+    textFieldVersion,
     disabled,
     id,
     label,

@@ -27,19 +27,19 @@ import {
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import {
   BaseMultiInputFieldProps,
-  DateRange,
   DateRangeValidationError,
-  UseDateRangeFieldProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-} from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers-pro/models';
+import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+import { UseDateRangeFieldProps, DateRange } from '@mui/x-date-pickers-pro';
 
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
-  textField?: 'v6' | 'v7';
+  textFieldVersion?: FieldTextFieldVersion;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -54,6 +54,9 @@ type JoyFieldComponent = ((
 const JoyField = React.forwardRef(
   (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
+      // Should be ignored
+      textFieldVersion,
+
       disabled,
       id,
       label,
@@ -62,7 +65,6 @@ const JoyField = React.forwardRef(
       startDecorator,
       slotProps,
       inputRef,
-      textField,
       ...other
     } = props;
 

@@ -429,7 +429,7 @@ export const useFieldV6TextField: UseFieldTextField<'v6'> = (params) => {
       inputRef: handleRef,
 
       // Additional
-      textField: 'v6' as const,
+      textFieldVersion: 'v6' as const,
       placeholder,
       inputMode,
       autoComplete: 'off',
