@@ -42,7 +42,9 @@
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
-    "columns": { "description": "Set of columns of type <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>[]." },
+    "columns": {
+      "description": "Set of columns of type <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>[]."
+    },
     "columnThreshold": {
       "description": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered."
     },
