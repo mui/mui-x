@@ -3,7 +3,7 @@ import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
-export interface UseTreeViewContextValueBuilderParameters {
+export interface UseTreeViewIconsParameters {
   /**
    * The default icon used to collapse the node.
    */
@@ -24,15 +24,24 @@ export interface UseTreeViewContextValueBuilderParameters {
   defaultParentIcon?: React.ReactNode;
 }
 
-export type UseTreeViewContextValueBuilderDefaultizedParameters =
-  UseTreeViewContextValueBuilderParameters;
+export type UseTreeViewIconsDefaultizedParameters = UseTreeViewIconsParameters;
 
-export type UseTreeViewContextValueBuilderSignature = TreeViewPluginSignature<
-  UseTreeViewContextValueBuilderParameters,
-  UseTreeViewContextValueBuilderDefaultizedParameters,
+interface UseTreeViewIconsContextValue {
+  icons: {
+    defaultCollapseIcon: React.ReactNode;
+    defaultExpandIcon: React.ReactNode;
+    defaultParentIcon: React.ReactNode;
+    defaultEndIcon: React.ReactNode;
+  };
+}
+
+export type UseTreeViewIconsSignature = TreeViewPluginSignature<
+  UseTreeViewIconsParameters,
+  UseTreeViewIconsDefaultizedParameters,
   {},
   {},
   {},
+  UseTreeViewIconsContextValue,
   never,
   [UseTreeViewNodesSignature, UseTreeViewSelectionSignature]
 >;

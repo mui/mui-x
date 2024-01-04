@@ -3,7 +3,10 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 
 export function useTreeItem(nodeId: string) {
-  const { instance, multiSelect, checkboxSelection } = useTreeViewContext<DefaultTreeViewPlugins>();
+  const {
+    instance,
+    selection: { multiSelect, checkboxSelection, disableSelection },
+  } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const expandable = instance.isNodeExpandable(nodeId);
   const expanded = instance.isNodeExpanded(nodeId);
@@ -59,10 +62,12 @@ export function useTreeItem(nodeId: string) {
   };
 
   return {
+    expandable,
     disabled,
     expanded,
     selected,
     focused,
+    disableSelection,
     checkboxSelection,
     handleExpansion,
     handleSelection,

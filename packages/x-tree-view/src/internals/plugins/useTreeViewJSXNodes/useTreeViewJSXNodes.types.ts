@@ -18,6 +18,7 @@ export type UseTreeViewJSXNodesSignature = TreeViewPluginSignature<
   UseTreeViewNodesInstance,
   {},
   {},
+  {},
   never,
   [UseTreeViewNodesSignature, UseTreeViewKeyboardNavigationSignature]
 >;

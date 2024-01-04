@@ -70,12 +70,20 @@ export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> 
   'disableSelection' | 'defaultSelectedNodes' | 'multiSelect' | 'checkboxSelection'
 >;
 
+interface UseTreeViewSelectionContextValue {
+  selection: Pick<
+    UseTreeViewSelectionDefaultizedParameters<boolean>,
+    'multiSelect' | 'checkboxSelection' | 'disableSelection'
+  >;
+}
+
 export type UseTreeViewSelectionSignature = TreeViewPluginSignature<
   UseTreeViewSelectionParameters<any>,
   UseTreeViewSelectionDefaultizedParameters<any>,
   UseTreeViewSelectionInstance,
   {},
   {},
+  UseTreeViewSelectionContextValue,
   'selectedNodes',
   [UseTreeViewNodesSignature, UseTreeViewExpansionSignature, UseTreeViewNodesSignature]
 >;

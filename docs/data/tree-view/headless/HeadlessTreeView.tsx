@@ -51,6 +51,8 @@ type TreeViewLogExpandedSignature = TreeViewPluginSignature<
   {},
   // State defined by this plugin: we don't have any
   {},
+  // Context value defined by this plugin: we don't have any
+  {},
   // Models defined by plugin: we don't have any
   never,
   // Dependencies of this plugin (we need the expansion plugin to access its model)

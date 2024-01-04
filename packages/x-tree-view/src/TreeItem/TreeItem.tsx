@@ -21,6 +21,7 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     expanded: ['expanded'],
     selected: ['selected'],
     focused: ['focused'],
+    interactive: ['interactive'],
     disabled: ['disabled'],
     iconContainer: ['iconContainer'],
     label: ['label'],
@@ -61,9 +62,11 @@ const StyledTreeItemContent = styled(TreeItemContent, {
   boxSizing: 'border-box', // prevent width + padding to overflow
   display: 'flex',
   alignItems: 'center',
-  cursor: 'pointer',
+  [`&.${treeItemClasses.interactive}`]: {
+    cursor: 'pointer',
+  },
   WebkitTapHighlightColor: 'transparent',
-  '&:hover': {
+  [`&.${treeItemClasses.interactive}:hover`]: {
     backgroundColor: (theme.vars || theme).palette.action.hover,
     // Reset on touch devices, it doesn't add specificity
     '@media (hover: none)': {
@@ -77,11 +80,11 @@ const StyledTreeItemContent = styled(TreeItemContent, {
   [`&.${treeItemClasses.focused}`]: {
     backgroundColor: (theme.vars || theme).palette.action.focus,
   },
-  [`&.${treeItemClasses.selected}`]: {
+  [`.${treeItemClasses.selected}`]: {
     backgroundColor: theme.vars
       ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
       : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-    '&:hover': {
+    [`&.${treeItemClasses.interactive}:hover`]: {
       backgroundColor: theme.vars
         ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
         : alpha(
@@ -152,7 +155,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const {
     icons: contextIcons,
     runItemPlugins,
-    multiSelect,
+    selection: { multiSelect },
     disabledItemsFocusable,
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
@@ -260,6 +263,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
           root: classes.content,
           expanded: classes.expanded,
           selected: classes.selected,
+          interactive: classes.interactive,
           focused: classes.focused,
           disabled: classes.disabled,
           iconContainer: classes.iconContainer,

@@ -201,6 +201,13 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     getRootProps: () => ({
       'aria-multiselectable': params.multiSelect,
     }),
+    contextValue: {
+      selection: {
+        multiSelect: params.multiSelect,
+        checkboxSelection: params.checkboxSelection,
+        disableSelection: params.disableSelection,
+      },
+    },
   };
 };
 
