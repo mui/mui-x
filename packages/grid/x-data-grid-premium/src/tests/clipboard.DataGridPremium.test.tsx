@@ -479,9 +479,9 @@ describe('<DataGridPremium /> - Clipboard', () => {
           valueGetter: (value, row) => {
             return `${row.firstName} ${row.lastName}`;
           },
-          valueSetter: (params) => {
-            const [firstName, lastName] = params.value!.toString().split(' ');
-            return { ...params.row, firstName, lastName };
+          valueSetter: (value, row) => {
+            const [firstName, lastName] = value!.toString().split(' ');
+            return { ...row, firstName, lastName };
           },
           editable: true,
         },
@@ -986,9 +986,9 @@ describe('<DataGridPremium /> - Clipboard', () => {
             type: 'singleSelect',
             valueOptions: sizes,
             valueGetter: (value) => value.size,
-            valueSetter: (params) => {
-              const value = sizes.find((option) => option.size === params.value);
-              return { ...params.row, size: value };
+            valueSetter: (value: string, row) => {
+              const size = sizes.find((option) => option.size === value);
+              return { ...row, size };
             },
             getOptionValue: (option: any) => option.size,
             getOptionLabel: (option: any) => option.size,

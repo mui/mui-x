@@ -109,20 +109,6 @@ export interface GridRenderEditCellParams<
 }
 
 /**
- * Object passed as parameter in the column [[GridColDef]] value setter callback.
- */
-export interface GridValueSetterParams<R extends GridValidRowModel = any, V = any> {
-  /**
-   * The new cell value.
-   */
-  value: V;
-  /**
-   * The row that is being edited.
-   */
-  row: R;
-}
-
-/**
  * Object passed as parameter in the column [[GridColDef]] value formatter callback.
  */
 export interface GridValueFormatterParams<V = any> {

@@ -6,7 +6,6 @@ import {
   GridCellParams,
   GridRenderCellParams,
   GridRenderEditCellParams,
-  GridValueSetterParams,
   GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
@@ -56,6 +55,13 @@ export type GridValueFormatter<R extends GridValidRowModel = GridValidRowModel, 
   column: GridColDef<R, V, F>,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => F;
+
+export type GridValueSetter<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
+  value: V,
+  row: R,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => R;
 
 /**
  * Column Definition base interface.
@@ -151,11 +157,9 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
-   * @template R, V
-   * @param {GridValueSetterParams<R, V>} params Object containing parameters for the setter.
    * @returns {R} The row with the updated field.
    */
-  valueSetter?: (params: GridValueSetterParams<R, V>) => R;
+  valueSetter?: GridValueSetter<R, V, F>;
   /**
    * Function that allows to apply a formatter before rendering its value.
    */

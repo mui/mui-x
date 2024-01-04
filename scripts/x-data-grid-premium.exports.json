@@ -576,7 +576,7 @@
   { "name": "GridValueFormatterParams", "kind": "Interface" },
   { "name": "GridValueGetter", "kind": "TypeAlias" },
   { "name": "GridValueOptionsParams", "kind": "Interface" },
-  { "name": "GridValueSetterParams", "kind": "Interface" },
+  { "name": "GridValueSetter", "kind": "TypeAlias" },
   { "name": "GridViewColumnIcon", "kind": "Variable" },
   { "name": "GridViewHeadlineIcon", "kind": "Variable" },
   { "name": "GridViewStreamIcon", "kind": "Variable" },

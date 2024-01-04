@@ -490,7 +490,9 @@ export const useGridCellEditing = (
       }
 
       const { value } = editingState[id][field];
-      return column.valueSetter ? column.valueSetter({ value, row }) : { ...row, [field]: value };
+      return column.valueSetter
+        ? column.valueSetter(value, row, column, apiRef)
+        : { ...row, [field]: value };
     },
     [apiRef],
   );

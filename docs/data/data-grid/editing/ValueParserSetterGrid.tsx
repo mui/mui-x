@@ -3,13 +3,15 @@ import {
   DataGrid,
   GridColDef,
   GridValueGetter,
-  GridValueSetterParams,
+  GridValueSetter,
 } from '@mui/x-data-grid';
 
-function setFullName(params: GridValueSetterParams) {
-  const [firstName, lastName] = params.value!.toString().split(' ');
-  return { ...params.row, firstName, lastName };
-}
+type Row = (typeof defaultRows)[number];
+
+const setFullName: GridValueSetter<Row> = (value, row) => {
+  const [firstName, lastName] = value!.toString().split(' ');
+  return { ...row, firstName, lastName };
+};
 
 function parseFullName(value: any) {
   return String(value)
@@ -34,7 +36,7 @@ const defaultRows = [
   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys' },
 ];
 
-const getFullName: GridValueGetter<(typeof defaultRows)[number]> = (value, row) => {
+const getFullName: GridValueGetter<Row> = (value, row) => {
   return `${row.firstName || ''} ${row.lastName || ''}`;
 };
 

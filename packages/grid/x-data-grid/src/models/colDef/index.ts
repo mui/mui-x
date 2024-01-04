@@ -11,6 +11,7 @@ export type {
   GetApplyQuickFilterFn,
   GridValueGetter,
   GridValueFormatter,
+  GridValueSetter,
 } from './gridColDef';
 
 // Other types

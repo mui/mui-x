@@ -146,7 +146,7 @@ class CellValueUpdater {
 
     let rowCopy = { ...row };
     if (typeof colDef.valueSetter === 'function') {
-      rowCopy = colDef.valueSetter({ value: parsedValue, row: rowCopy });
+      rowCopy = colDef.valueSetter(parsedValue, rowCopy, colDef, apiRef);
     } else {
       rowCopy[field] = parsedValue;
     }

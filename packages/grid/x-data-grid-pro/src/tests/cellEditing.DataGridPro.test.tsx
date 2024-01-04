@@ -7,7 +7,7 @@ import {
   useGridApiRef,
   DataGridPro,
   GridRenderEditCellParams,
-  GridValueSetterParams,
+  GridValueSetter,
   GridPreProcessEditCellProps,
   GridCellProps,
   GridCellModes,
@@ -107,10 +107,11 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should pass to renderEditCell the row with the value updated', async () => {
-        columnProps.valueSetter = ({ value, row }: GridValueSetterParams) => ({
+        const valueSetter: GridValueSetter = (value: string, row) => ({
           ...row,
           currencyPair: value.trim(),
         });
+        columnProps.valueSetter = valueSetter;
         render(<TestCase />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].row).to.deep.equal(defaultData.rows[0]);
@@ -551,7 +552,10 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should pass the new value through the value setter before calling processRowUpdate', async () => {
-        columnProps.valueSetter = spy(({ value, row }) => ({ ...row, _currencyPair: value }));
+        columnProps.valueSetter = spy<GridValueSetter>((value, row) => ({
+          ...row,
+          _currencyPair: value,
+        }));
         const processRowUpdate = spy(() => new Promise(() => {}));
         render(<TestCase processRowUpdate={processRowUpdate} />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
@@ -564,10 +568,8 @@ describe('<DataGridPro /> - Cell editing', () => {
           currencyPair: 'USDGBP',
           _currencyPair: 'USD GBP',
         });
-        expect(columnProps.valueSetter.lastCall.args[0]).to.deep.equal({
-          value: 'USD GBP',
-          row: defaultData.rows[0],
-        });
+        expect(columnProps.valueSetter.lastCall.args[0]).to.equal('USD GBP');
+        expect(columnProps.valueSetter.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
       });
 
       it('should move focus to the cell below when cellToFocusAfter=below', async () => {

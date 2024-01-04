@@ -7,7 +7,7 @@ import {
   useGridApiRef,
   DataGridPro,
   GridRenderEditCellParams,
-  GridValueSetterParams,
+  GridValueSetter,
   GridPreProcessEditCellProps,
   GridRowModes,
 } from '@mui/x-data-grid-pro';
@@ -157,10 +157,11 @@ describe('<DataGridPro /> - Row editing', () => {
       });
 
       it('should pass to renderEditCell the row with the values updated', async () => {
-        column1Props.valueSetter = ({ value, row }: GridValueSetterParams) => ({
+        const valueSetter: GridValueSetter = (value, row) => ({
           ...row,
           currencyPair: value.trim(),
         });
+        column1Props.valueSetter = valueSetter;
         render(<TestCase />);
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
         expect(renderEditCell1.lastCall.args[0].row).to.deep.equal(defaultData.rows[0]);
@@ -610,8 +611,14 @@ describe('<DataGridPro /> - Row editing', () => {
       });
 
       it('should pass the new value through all value setters before calling processRowUpdate', async () => {
-        column1Props.valueSetter = spy(({ value, row }) => ({ ...row, _currencyPair: value }));
-        column2Props.valueSetter = spy(({ value, row }) => ({ ...row, _price1M: value }));
+        column1Props.valueSetter = spy<GridValueSetter>((value, row) => ({
+          ...row,
+          _currencyPair: value,
+        }));
+        column2Props.valueSetter = spy<GridValueSetter>((value, row) => ({
+          ...row,
+          _price1M: value,
+        }));
         const processRowUpdate = spy((newRow) => newRow);
         render(<TestCase processRowUpdate={processRowUpdate} />);
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
@@ -627,13 +634,15 @@ describe('<DataGridPro /> - Row editing', () => {
           price1M: 1,
           _price1M: 1,
         });
-        expect(column1Props.valueSetter.lastCall.args[0]).to.deep.equal({
-          value: 'USD GBP',
-          row: defaultData.rows[0],
-        });
-        expect(column2Props.valueSetter.lastCall.args[0]).to.deep.equal({
-          value: 1,
-          row: { ...defaultData.rows[0], currencyPair: 'USDGBP', _currencyPair: 'USD GBP' }, // Ensure that the row contains the values from the previous setter
+        expect(column1Props.valueSetter.lastCall.args[0]).to.equal('USD GBP');
+        expect(column1Props.valueSetter.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
+
+        expect(column2Props.valueSetter.lastCall.args[0]).to.equal(1);
+        expect(column2Props.valueSetter.lastCall.args[1]).to.deep.equal({
+          // Ensure that the row contains the values from the previous setter);
+          ...defaultData.rows[0],
+          currencyPair: 'USDGBP',
+          _currencyPair: 'USD GBP',
         });
       });
 

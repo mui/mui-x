@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
-function setFullName(params) {
-  const [firstName, lastName] = params.value.toString().split(' ');
-  return { ...params.row, firstName, lastName };
-}
+const setFullName = (value, row) => {
+  const [firstName, lastName] = value.toString().split(' ');
+  return { ...row, firstName, lastName };
+};
 
 function parseFullName(value) {
   return String(value)
