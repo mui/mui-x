@@ -19,7 +19,7 @@ import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock/digitalClockClasses';
+import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';

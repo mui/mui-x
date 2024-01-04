@@ -91,7 +91,7 @@ export {
   useLocaleText,
   useNow,
 } from './hooks/useUtils';
-export type { ExportedUseViewsOptions } from './hooks/useViews';
+export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews';
 export { useValidation } from './hooks/useValidation';
 export type { ValidationProps, Validator, InferError } from './hooks/useValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
@@ -102,9 +102,15 @@ export type {
   BasePickerInputProps,
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
+export type { BaseClockProps, DesktopOnlyTimePickerProps } from './models/props/clock';
+export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
-export type { WrapperVariant } from './models/common';
+export type {
+  WrapperVariant,
+  TimeViewWithMeridiem,
+  DateOrTimeViewWithMeridiem,
+} from './models/common';
 export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,
@@ -122,6 +128,7 @@ export {
   areDatesEqual,
   getTodayDate,
 } from './utils/date-utils';
+export { resolveTimeViewsResponse } from './utils/date-time-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
@@ -135,6 +142,7 @@ export { extractValidationProps } from './utils/validation/extractValidationProp
 export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
+export { applyDefaultViewProps } from './utils/views';
 export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';

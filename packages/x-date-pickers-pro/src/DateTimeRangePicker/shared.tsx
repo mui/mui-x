@@ -9,24 +9,19 @@ import {
   BaseDateValidationProps,
   BasePickerInputProps,
   PickerViewRendererLookup,
-} from '@mui/x-date-pickers/internals';
-import {
   BaseClockProps,
   DesktopOnlyTimePickerProps,
-} from '@mui/x-date-pickers/internals/models/props/clock';
-import { applyDefaultViewProps } from '@mui/x-date-pickers/internals/utils/views';
+  applyDefaultViewProps,
+  TimeViewWithMeridiem,
+  resolveTimeViewsResponse,
+  UseViewsOptions,
+} from '@mui/x-date-pickers/internals';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
-import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
-import {
-  DigitalClockSlots,
-  DigitalClockSlotProps,
-} from '@mui/x-date-pickers/DigitalClock/DigitalClock.types';
+import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
 import {
   MultiSectionDigitalClockSlots,
   MultiSectionDigitalClockSlotProps,
-} from '@mui/x-date-pickers/MultiSectionDigitalClock/MultiSectionDigitalClock.types';
-import { resolveTimeViewsResponse } from '@mui/x-date-pickers/internals/utils/date-time-utils';
-import { UseViewsOptions } from '@mui/x-date-pickers/internals/hooks/useViews';
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { DateTimeRangeValidationError } from '../models';
 import {
   DateRange,

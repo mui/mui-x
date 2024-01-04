@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
-import { BaseClockProps } from '@mui/x-date-pickers/internals/models/props/clock';
 import {
   PickerSelectionState,
   PickerViewRenderer,
   isInternalTimeView,
   useUtils,
+  TimeViewWithMeridiem,
+  BaseClockProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, DateTimeRangePickerView } from '../internals/models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';

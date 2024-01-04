@@ -9,13 +9,14 @@ import {
   ExportedBaseToolbarProps,
   useUtils,
   pickersToolbarTextClasses,
+  DateOrTimeViewWithMeridiem,
+  WrapperVariant,
 } from '@mui/x-date-pickers/internals';
 import {
   DateTimePickerToolbarProps,
   DateTimePickerToolbar,
   dateTimePickerToolbarClasses,
 } from '@mui/x-date-pickers/DateTimePicker';
-import { DateOrTimeViewWithMeridiem, WrapperVariant } from '@mui/x-date-pickers/internals/models';
 import { DateRange } from '../internals/models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
