@@ -37,7 +37,7 @@ const COLUMNS = [
       }
       return calculateProfit(row.gross, row.budget);
     },
-    valueFormatter: ({ value }) => {
+    valueFormatter: (value) => {
       if (!value) {
         return null;
       }
@@ -50,7 +50,7 @@ const COLUMNS = [
     type: 'number',
     minWidth: 140,
     groupable: false,
-    valueFormatter: ({ value }) => {
+    valueFormatter: (value) => {
       if (!value) {
         return value;
       }
@@ -63,7 +63,7 @@ const COLUMNS = [
     type: 'number',
     minWidth: 140,
     groupable: false,
-    valueFormatter: ({ value }) => {
+    valueFormatter: (value) => {
       if (!value) {
         return value;
       }

@@ -1,16 +1,15 @@
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import { GridColTypeDef } from '../models/colDef/gridColDef';
+import { GridColTypeDef, GridValueFormatter } from '../models/colDef/gridColDef';
 import { renderBooleanCell } from '../components/cell/GridBooleanCell';
 import { renderEditBooleanCell } from '../components/cell/GridEditBooleanCell';
 import { gridNumberComparator } from '../hooks/features/sorting/gridSortingUtils';
 import { getGridBooleanOperators } from './gridBooleanOperators';
-import { GridValueFormatterParams } from '../models/params/gridCellParams';
 
-function gridBooleanFormatter({ value, api }: GridValueFormatterParams) {
+const gridBooleanFormatter: GridValueFormatter = (value, row, column, apiRef) => {
   return value
-    ? api.getLocaleText('booleanCellTrueLabel')
-    : api.getLocaleText('booleanCellFalseLabel');
-}
+    ? apiRef.current.getLocaleText('booleanCellTrueLabel')
+    : apiRef.current.getLocaleText('booleanCellFalseLabel');
+};
 
 const stringToBoolean = (value: string) => {
   switch (value.toLowerCase().trim()) {

@@ -41,8 +41,7 @@ export default function ExtendedSortComparator() {
           name: row.name,
           isAdmin: row.isAdmin,
         }),
-        valueFormatter: (params) => {
-          const value = params.value;
+        valueFormatter: (value) => {
           if (value.isAdmin) {
             return `${value.name} (admin)`;
           }

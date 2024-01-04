@@ -10,7 +10,7 @@ The demo below defines a new column type: `usdPrice` that extends the native `nu
 const usdPrice: GridColTypeDef = {
   type: 'number',
   width: 130,
-  valueFormatter: ({ value }) => valueFormatter.format(Number(value)),
+  valueFormatter: (value) => valueFormatter.format(Number(value)),
   cellClassName: 'font-tabular-nums',
 };
 ```

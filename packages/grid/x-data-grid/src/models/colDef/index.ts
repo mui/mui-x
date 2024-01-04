@@ -10,6 +10,7 @@ export type {
   GridActionsColDef,
   GetApplyQuickFilterFn,
   GridValueGetter,
+  GridValueFormatter,
 } from './gridColDef';
 
 // Other types

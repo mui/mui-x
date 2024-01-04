@@ -89,23 +89,23 @@ const columns = [
     field: 'size',
     headerName: 'Size',
     type: 'number',
-    valueFormatter: (params) => {
-      if (params.value == null) {
+    valueFormatter: (value) => {
+      if (value == null) {
         return '';
       }
-      if (params.value < 100) {
-        return `${params.value} b`;
+      if (value < 100) {
+        return `${value} b`;
       }
 
-      if (params.value < 1_000_000) {
-        return `${Math.floor(params.value / 100) / 10} Kb`;
+      if (value < 1_000_000) {
+        return `${Math.floor(value / 100) / 10} Kb`;
       }
 
-      if (params.value < 1_000_000_000) {
-        return `${Math.floor(params.value / 100_000) / 10} Mb`;
+      if (value < 1_000_000_000) {
+        return `${Math.floor(value / 100_000) / 10} Mb`;
       }
 
-      return `${Math.floor(params.value / 100_000_000) / 10} Gb`;
+      return `${Math.floor(value / 100_000_000) / 10} Gb`;
     },
   },
   {

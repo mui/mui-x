@@ -112,7 +112,7 @@ describe('<DataGridPro /> - Export', () => {
                 {
                   field: 'brand',
                   headerName: 'Brand',
-                  valueFormatter: (params) => (params.value === 'Nike' ? 'Jordan' : params.value),
+                  valueFormatter: (value) => (value === 'Nike' ? 'Jordan' : value),
                 },
               ]}
               rows={[

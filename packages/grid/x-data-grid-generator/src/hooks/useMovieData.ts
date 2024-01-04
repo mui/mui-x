@@ -28,7 +28,7 @@ const COLUMNS: GridColDef[] = [
     type: 'number',
     width: 150,
     groupable: false,
-    valueFormatter: ({ value }) => {
+    valueFormatter: (value) => {
       if (!value) {
         return '';
       }

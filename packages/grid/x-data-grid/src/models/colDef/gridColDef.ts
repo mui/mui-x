@@ -6,7 +6,6 @@ import {
   GridCellParams,
   GridRenderCellParams,
   GridRenderEditCellParams,
-  GridValueFormatterParams,
   GridValueSetterParams,
   GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
@@ -50,6 +49,13 @@ export type GridValueGetter<R extends GridValidRowModel = GridValidRowModel, V =
   column: GridColDef<R, V, F>,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => V;
+
+export type GridValueFormatter<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
+  value: any,
+  row: R,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => F;
 
 /**
  * Column Definition base interface.
@@ -156,7 +162,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * @param {GridValueFormatterParams<V>} params Object containing parameters for the formatter.
    * @returns {F} The formatted value.
    */
-  valueFormatter?: (params: GridValueFormatterParams<V>) => F;
+  valueFormatter?: GridValueFormatter;
   /**
    * Function that takes the user-entered value and converts it to a value used internally.
    * @template R, V, F

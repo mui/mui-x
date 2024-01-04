@@ -122,7 +122,7 @@ You can provide a [`valueFormatter`](/x/react-data-grid/column-definition/#value
   columns={[
     {
       field: 'progress',
-      valueFormatter: ({ value }) => `${value * 100}%`,
+      valueFormatter: (value) => `${value * 100}%`,
       renderCell: ({ value }) => <ProgressBar value={value} />,
     },
   ]}

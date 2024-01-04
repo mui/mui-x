@@ -486,7 +486,7 @@ describe('<DataGrid /> - Filter', () => {
               field: 'year',
               type: 'number',
               // Avoid the localization of the number to simplify the checks
-              valueFormatter: (params) => params.value,
+              valueFormatter: (value) => value,
             },
           ]}
         />,
@@ -611,7 +611,7 @@ describe('<DataGrid /> - Filter', () => {
               field: 'date',
               type: 'date',
               // Avoid the localization of the date to simplify the checks
-              valueFormatter: ({ value }) => {
+              valueFormatter: (value) => {
                 if (value === null) {
                   return 'null';
                 }
@@ -778,7 +778,7 @@ describe('<DataGrid /> - Filter', () => {
               field: 'date',
               type: 'dateTime',
               // Avoid the localization of the date to simplify the checks
-              valueFormatter: ({ value }) => {
+              valueFormatter: (value) => {
                 if (value === null) {
                   return 'null';
                 }

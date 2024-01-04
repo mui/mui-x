@@ -773,12 +773,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
               {
                 field: 'id',
                 type: 'number',
-                valueFormatter: (params) => {
-                  if (params.value == null) {
+                valueFormatter: (value) => {
+                  if (value == null) {
                     return null;
                   }
 
-                  return `#${params.value}`;
+                  return `#${value}`;
                 },
               },
               {
@@ -913,8 +913,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
             defaultGroupingExpansionDepth={1}
             groupingColDef={{
-              valueFormatter: (params) => {
-                const node = apiRef.current.getRowNode(params.id!)!;
+              valueFormatter: (value, row) => {
+                const rowId = apiRef.current.getRowId(row);
+                const node = apiRef.current.getRowNode(rowId)!;
                 if (node.type !== 'group') {
                   return '';
                 }
@@ -941,8 +942,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
             defaultGroupingExpansionDepth={1}
             groupingColDef={() => ({
-              valueFormatter: (params) => {
-                const node = apiRef.current.getRowNode(params.id!)!;
+              valueFormatter: (value, row) => {
+                const rowId = apiRef.current.getRowId(row);
+                const node = apiRef.current.getRowNode(rowId)!;
                 if (node.type !== 'group') {
                   return '';
                 }
@@ -1158,12 +1160,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
               {
                 field: 'id',
                 type: 'number',
-                valueFormatter: (params) => {
-                  if (params.value == null) {
+                valueFormatter: (value) => {
+                  if (value == null) {
                     return null;
                   }
 
-                  return `#${params.value}`;
+                  return `#${value}`;
                 },
               },
               {
@@ -1330,8 +1332,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
             rowGroupingColumnMode="multiple"
             defaultGroupingExpansionDepth={1}
             groupingColDef={{
-              valueFormatter: (params) => {
-                const node = apiRef.current.getRowNode(params.id!)!;
+              valueFormatter: (value, row) => {
+                const rowId = apiRef.current.getRowId(row);
+                const node = apiRef.current.getRowNode(rowId)!;
                 if (node.type !== 'group') {
                   return '';
                 }
@@ -1372,8 +1375,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
               }
 
               return {
-                valueFormatter: (params) => {
-                  const node = apiRef.current.getRowNode(params.id!)!;
+                valueFormatter: (value, row) => {
+                  const rowId = apiRef.current.getRowId(row);
+                  const node = apiRef.current.getRowNode(rowId)!;
                   if (node.type !== 'group') {
                     return '';
                   }

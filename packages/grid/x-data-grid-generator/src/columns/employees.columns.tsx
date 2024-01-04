@@ -112,7 +112,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     headerName: 'Country',
     type: 'singleSelect',
     valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
-    valueFormatter: ({ value }) => value?.label,
+    valueFormatter: (value: CountryIsoOption) => value?.label,
     generateData: randomCountry,
     renderCell: renderCountry,
     renderEditCell: renderEditCountry,
@@ -164,7 +164,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     headerName: 'Salary',
     generateData: () => randomInt(30000, 80000),
     type: 'number',
-    valueFormatter: ({ value }) => {
+    valueFormatter: (value) => {
       if (!value || typeof value !== 'number') {
         return value;
       }

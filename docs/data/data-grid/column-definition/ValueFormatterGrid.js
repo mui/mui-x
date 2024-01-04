@@ -33,11 +33,11 @@ export default function ValueFormatterGrid() {
               }
               return value * 100;
             },
-            valueFormatter: (params) => {
-              if (params.value == null) {
+            valueFormatter: (value) => {
+              if (value == null) {
                 return '';
               }
-              return `${params.value.toLocaleString()} %`;
+              return `${value.toLocaleString()} %`;
             },
           },
         ]}

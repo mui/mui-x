@@ -32,7 +32,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 const usdPrice = {
   type: 'number',
   width: 130,
-  valueFormatter: ({ value }) => currencyFormatter.format(value),
+  valueFormatter: (value) => currencyFormatter.format(value),
   cellClassName: 'font-tabular-nums',
 };
 

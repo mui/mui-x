@@ -73,19 +73,25 @@ const getAggregationValueWrappedValueFormatter: ColumnPropertyWrapper<'valueForm
     return valueFormatter;
   }
 
-  const wrappedValueFormatter: GridBaseColDef['valueFormatter'] = (params) => {
-    if (params.id != null) {
-      const cellAggregationResult = getCellAggregationResult(params.id, params.field);
+  const wrappedValueFormatter: GridBaseColDef['valueFormatter'] = (value, row, column, apiRef) => {
+    const rowId = apiRef.current.getRowId(row);
+    if (rowId != null) {
+      const cellAggregationResult = getCellAggregationResult(rowId, column.field);
       if (cellAggregationResult != null) {
-        return aggregationRule.aggregationFunction.valueFormatter!(params);
+        return aggregationRule.aggregationFunction.valueFormatter?.({
+          id: rowId,
+          field: column.field,
+          value,
+          api: apiRef.current,
+        });
       }
     }
 
     if (valueFormatter) {
-      return valueFormatter(params);
+      return valueFormatter(value, row, column, apiRef);
     }
 
-    return params.value;
+    return value;
   };
 
   return wrappedValueFormatter;

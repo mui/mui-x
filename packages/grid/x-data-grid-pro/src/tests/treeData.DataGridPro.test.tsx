@@ -341,7 +341,7 @@ describe('<DataGridPro /> - Tree data', () => {
     it('should support valueFormatter', () => {
       render(
         <Test
-          groupingColDef={{ valueFormatter: ({ value }) => `> ${value}` }}
+          groupingColDef={{ valueFormatter: (value) => `> ${value}` }}
           defaultGroupingExpansionDepth={-1}
         />,
       );

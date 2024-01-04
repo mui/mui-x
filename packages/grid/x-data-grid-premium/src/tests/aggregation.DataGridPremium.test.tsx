@@ -606,7 +606,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             {
               field: 'id',
               type: 'number',
-              valueFormatter: (params) => `- ${params.value}`,
+              valueFormatter: (value) => `- ${value}`,
             },
           ]}
         />,
@@ -636,7 +636,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             {
               field: 'id',
               type: 'number',
-              valueFormatter: (params) => `- ${params.value}`,
+              valueFormatter: (value) => `- ${value}`,
             },
           ]}
         />,
