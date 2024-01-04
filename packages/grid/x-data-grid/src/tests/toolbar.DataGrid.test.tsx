@@ -46,6 +46,13 @@ describe('<DataGrid /> - Toolbar', () => {
   };
 
   describe('density selector', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
+        this.skip();
+      }
+    });
+
     function expectHeight(value: number) {
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(value)}px`,

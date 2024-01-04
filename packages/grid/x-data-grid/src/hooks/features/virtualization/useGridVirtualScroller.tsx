@@ -262,9 +262,9 @@ export const useGridVirtualScroller = () => {
         break;
     }
 
-    if (innerSize.width === 0) {
-      return [];
-    }
+    // if (innerSize.width === 0) {
+    //   return [];
+    // }
 
     const firstRowToRender = renderContext.firstRowIndex;
     const lastRowToRender = renderContext.lastRowIndex;
