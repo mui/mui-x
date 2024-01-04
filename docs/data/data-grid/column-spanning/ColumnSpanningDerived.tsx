@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGridPro, GridColDef, GridCellParams } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 const slotTimesLookup = {
   0: '09:00 - 10:00',
@@ -77,8 +77,8 @@ const slotColumnCommonFields: Partial<GridColDef> = {
   hideable: false,
   minWidth: 140,
   cellClassName: (params) => params.value,
-  colSpan: ({ row, field, value }: GridCellParams) => {
-    const index = Number(field);
+  colSpan: (value, row, column) => {
+    const index = Number(column.field);
     let colSpan = 1;
     for (let i = index + 1; i < row.slots.length; i += 1) {
       const nextValue = row.slots[i];

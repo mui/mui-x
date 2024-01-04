@@ -27,7 +27,7 @@ const columns = [
     headerName: 'Item/Description',
     ...baseColumnOptions,
     flex: 3,
-    colSpan: ({ row }) => {
+    colSpan: (value, row) => {
       if (row.id === 'SUBTOTAL' || row.id === 'TOTAL') {
         return 3;
       }

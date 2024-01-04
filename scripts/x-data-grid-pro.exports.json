@@ -122,6 +122,7 @@
   { "name": "GridClearIcon", "kind": "Variable" },
   { "name": "GridCloseIcon", "kind": "Variable" },
   { "name": "GridColDef", "kind": "TypeAlias" },
+  { "name": "GridColSpanFn", "kind": "TypeAlias" },
   { "name": "GridColType", "kind": "TypeAlias" },
   { "name": "GridColTypeDef", "kind": "TypeAlias" },
   { "name": "GridColumnApi", "kind": "Interface" },

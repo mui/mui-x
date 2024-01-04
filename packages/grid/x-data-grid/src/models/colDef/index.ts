@@ -13,6 +13,7 @@ export type {
   GridValueFormatter,
   GridValueSetter,
   GridValueParser,
+  GridColSpanFn,
 } from './gridColDef';
 
 // Other types

@@ -66,8 +66,8 @@ const slotColumnCommonFields = {
   hideable: false,
   minWidth: 140,
   cellClassName: (params) => params.value,
-  colSpan: ({ row, field, value }) => {
-    const index = Number(field);
+  colSpan: (value, row, column) => {
+    const index = Number(column.field);
     let colSpan = 1;
     for (let i = index + 1; i < row.slots.length; i += 1) {
       const nextValue = row.slots[i];

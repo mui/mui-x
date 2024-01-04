@@ -3,7 +3,6 @@ import { GridCellClassNamePropType } from '../gridCellClass';
 import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import type { GridFilterOperator } from '../gridFilterOperator';
 import {
-  GridCellParams,
   GridRenderCellParams,
   GridRenderEditCellParams,
   GridPreProcessEditCellProps,
@@ -69,6 +68,13 @@ export type GridValueParser<R extends GridValidRowModel = GridValidRowModel, V =
   column: GridColDef<R, V, F>,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => V;
+
+export type GridColSpanFn<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
+  value: V,
+  row: R,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => number | undefined;
 
 /**
  * Column Definition base interface.
@@ -259,7 +265,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * Number of columns a cell should span.
    * @default 1
    */
-  colSpan?: number | ((params: GridCellParams<R, V, F>) => number | undefined);
+  colSpan?: number | GridColSpanFn<R, V, F>;
 }
 
 /**
