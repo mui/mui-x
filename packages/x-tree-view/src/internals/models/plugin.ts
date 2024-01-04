@@ -59,7 +59,7 @@ export type TreeViewAnyPluginSignature = {
   defaultizedParams: any;
   dependantPlugins: any;
   events: any;
-  contextValue: {};
+  contextValue: any;
   models: any;
 };
 

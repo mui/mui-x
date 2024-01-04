@@ -14,8 +14,9 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
+import { DefaultTreeViewPlugins } from '@mui/x-tree-view/internals/plugins';
 
-const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<any> = {
+const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins> = {
   instance: {
     isNodeExpandable: () => false,
     isNodeExpanded: () => false,
@@ -26,14 +27,17 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<any> = {
     mapFirstCharFromJSX: () => {},
   } as any,
   runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
-  multiSelect: false,
-  checkboxSelection: false,
   disabledItemsFocusable: false,
   icons: {
     defaultCollapseIcon: null,
     defaultExpandIcon: null,
     defaultParentIcon: null,
     defaultEndIcon: null,
+  },
+  selection: {
+    multiSelect: false,
+    checkboxSelection: false,
+    disableSelection: false,
   },
 };
 

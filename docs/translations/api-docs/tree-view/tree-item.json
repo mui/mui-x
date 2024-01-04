@@ -93,7 +93,12 @@
     "selected": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
-      "conditions": "selected"
+      "conditions": "selected and not using the checkbox selection"
+    },
+    "interactive": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "clicking it causes an action"
     },
     "focused": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",

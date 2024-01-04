@@ -60,7 +60,10 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const rootPropsGetters: (<TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
-  const contextValue = {} as TreeViewContextValue<Signatures>;
+  const contextValue = {
+    instance: instance as TreeViewInstance<any>,
+    runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
+  } as TreeViewContextValue<Signatures>;
 
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse =
@@ -76,11 +79,6 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   };
 
   plugins.forEach(runPlugin);
-
-  Object.assign(contextValue, {
-    instance: instance as TreeViewInstance<any>,
-    runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
-  });
 
   contextValue.runItemPlugins = ({ props, ref }) => {
     let finalProps = props;

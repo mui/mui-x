@@ -39,6 +39,7 @@
       "content",
       "expanded",
       "selected",
+      "interactive",
       "focused",
       "disabled",
       "iconContainer",
