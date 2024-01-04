@@ -11,7 +11,8 @@ import {
   BrowserContextOptions,
   BrowserType,
 } from '@playwright/test';
-import { pickersInputClasses, pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
+import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
+import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -536,7 +537,7 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          await page.locator(`.${pickersInputClasses.sectionsContainer}`).click();
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'MM' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'DD' }).type('11');
           await page.getByRole(`spinbutton`, { name: 'YYYY' }).type('2022');
@@ -568,7 +569,7 @@ async function initializeEnvironment(
           const daySection = page.getByRole(`spinbutton`, { name: 'DD' });
           const yearSection = page.getByRole(`spinbutton`, { name: 'YYYY' });
 
-          await page.locator(`.${pickersInputClasses.sectionsContainer}`).click();
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await monthSection.fill('04');
           await daySection.type('11');
           await yearSection.type('2022');
@@ -608,7 +609,7 @@ async function initializeEnvironment(
           await waitFor(async () => {
             // assert that the dialog has been closed and the focused element is the input
             expect(await page.evaluate(() => document.activeElement?.className)).to.contain(
-              pickersInputClasses.sectionContent,
+              pickersSectionListClasses.sectionContent,
             );
           });
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
@@ -683,7 +684,9 @@ async function initializeEnvironment(
         // assert that the dialog closes after selection is complete
         // could run into race condition otherwise
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
-        expect(await page.getByRole('textbox').inputValue()).to.equal('04/21/2022 02:05 PM');
+        expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+          '04/21/2022 02:05 PM',
+        );
       });
 
       it('should correctly select hours section when there are no time renderers', async () => {
@@ -710,7 +713,7 @@ async function initializeEnvironment(
         await renderFixture('DatePicker/BasicDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
-        await page.locator(`.${pickersInputClasses.sectionsContainer}`).first().click();
+        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '17' }).last().click();
@@ -734,13 +737,13 @@ async function initializeEnvironment(
         await renderFixture('DatePicker/BasicDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
-        await page.locator(`.${pickersInputClasses.sectionsContainer}`).first().click();
+        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
 
         // assert that the tooltip has been opened
         await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
 
         // Old selector: await page.getByRole('textbox', { name: 'End' }).click();
-        await page.locator(`.${pickersInputClasses.sectionsContainer}`).last().click();
+        await page.locator(`.${pickersSectionListClasses.root}`).last().click();
 
         // assert that the tooltip has not been closed after changing the active input
         await page.waitForSelector('[role="tooltip"]', { state: 'visible' });
@@ -769,7 +772,7 @@ describe('e2e: chromium on Android', () => {
     await renderFixture('DatePicker/BasicDesktopDateRangePicker');
 
     // Old selector: await page.getByRole('textbox', { name: 'Start' }).tap();
-    await page.locator(`.${pickersInputClasses.sectionsContainer}`).first().tap();
+    await page.locator(`.${pickersSectionListClasses.root}`).first().tap();
 
     await page.getByRole('gridcell', { name: '11' }).first().tap();
     await page.getByRole('gridcell', { name: '17' }).first().tap();
