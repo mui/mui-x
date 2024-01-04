@@ -23,7 +23,7 @@ body:
           required: true
   - type: textarea
     attributes:
-      label: The problem in depth 🔍
+      label: The problem in depth
       description: |
         **If you're reporting a bug, please provide a live example for your report.**
         If you don't have one, you can use one of these options:
@@ -31,7 +31,7 @@ body:
           - Fork any of the examples in our [documentation](https://mui.com/x/introduction/) by [clicking on the codesandbox or stackblitz icon](https://mui.com/static/docs/forking-an-example.png)
   - type: textarea
     attributes:
-      label: Your environment 🌎
+      label: Your environment
       description: Run `npx @mui/envinfo` and post the results. If you encounter issues with TypeScript please include the used tsconfig.
       value: |
         <details>

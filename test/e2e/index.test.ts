@@ -523,9 +523,9 @@ async function initializeEnvironment(
           ).to.equal('date');
           await page.getByRole('gridcell', { name: '11' }).click();
 
-          // assert that the tooltip closes after selection is complete
+          // assert that the dialog closes after selection is complete
           // could run into race condition otherwise
-          await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
           expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
         });
 
@@ -615,11 +615,61 @@ async function initializeEnvironment(
         await page.getByRole('option', { name: '30 minutes' }).click();
         await page.getByRole('option', { name: 'PM' }).click();
 
-        // assert that the tooltip closes after selection is complete
+        // assert that the dialog closes after selection is complete
         // could run into race condition otherwise
-        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 03:30 PM');
       });
+
+      it('should allow selecting same view multiple times with keyboard', async () => {
+        await renderFixture('DatePicker/BasicDesktopDateTimePicker');
+
+        await page.getByRole('button').click();
+
+        await page.keyboard.press('ArrowRight');
+        await page.keyboard.press('Enter');
+
+        // move back to date calendar
+        await page.keyboard.press('Shift+Tab');
+        await page.keyboard.press('ArrowRight');
+        await page.keyboard.press('Enter');
+
+        await page.keyboard.press('Shift+Tab');
+        await page.keyboard.press('ArrowRight');
+        await page.keyboard.press('Enter');
+
+        await page.keyboard.press('Shift+Tab');
+        await page.keyboard.press('ArrowRight');
+        await page.keyboard.press('Enter');
+
+        // check that the picker has not been closed
+        await page.waitForSelector('[role="dialog"]', { state: 'visible' });
+
+        // Change the hours
+        await page.keyboard.press('ArrowDown');
+        await page.keyboard.press('Enter');
+
+        await page.keyboard.press('Shift+Tab');
+        await page.keyboard.press('ArrowDown');
+        await page.keyboard.press('Enter');
+
+        // check that the picker has not been closed
+        await page.waitForSelector('[role="dialog"]', { state: 'visible' });
+
+        // Change the minutes
+        await page.keyboard.press('ArrowDown');
+        await page.keyboard.press('Enter');
+
+        // Change the meridiem
+        await page.keyboard.press('ArrowDown');
+        await page.keyboard.press('Enter');
+
+        // assert that the dialog closes after selection is complete
+        // could run into race condition otherwise
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+        expect(await page.getByRole('textbox').inputValue()).to.equal('04/21/2022 02:05 PM');
+      });
+
       it('should correctly select hours section when there are no time renderers', async () => {
         await renderFixture('DatePicker/DesktopDateTimePickerNoTimeRenderers');
 

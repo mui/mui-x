@@ -19,9 +19,9 @@
     "populate:demos": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/populatePickersDemos"
   },
   "dependencies": {
-    "@babel/core": "^7.23.5",
+    "@babel/core": "^7.23.7",
     "@babel/plugin-transform-object-assign": "^7.23.3",
-    "@babel/runtime-corejs2": "^7.23.5",
+    "@babel/runtime-corejs2": "^7.23.7",
     "@docsearch/react": "^3.5.2",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.3",
@@ -78,13 +78,13 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.2",
     "react-is": "^18.2.0",
-    "react-router": "^6.21.0",
-    "react-router-dom": "^6.21.0",
+    "react-router": "^6.21.1",
+    "react-router-dom": "^6.21.1",
     "react-runner": "^1.0.3",
     "react-simple-code-editor": "^0.13.1",
     "recast": "^0.23.4",
     "rimraf": "^5.0.5",
-    "styled-components": "^6.1.1",
+    "styled-components": "^6.1.6",
     "stylis-plugin-rtl": "^2.1.1",
     "webpack-bundle-analyzer": "^4.10.1"
   },
@@ -92,7 +92,7 @@
     "@babel/plugin-transform-react-constant-elements": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@types/doctrine": "^0.0.9",
-    "@types/stylis": "^4.2.4",
+    "@types/stylis": "^4.2.5",
     "cpy-cli": "^5.0.0",
     "gm": "^1.25.0",
     "typescript-to-proptypes": "^2.2.1"

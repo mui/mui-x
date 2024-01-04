@@ -41,7 +41,7 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "defaultSelected": {
+    "defaultSelectedNodes": {
       "description": "Selected node ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string.",
       "deprecated": "",
       "typeDescriptions": {}
@@ -107,15 +107,24 @@
         "value": "of the focused node."
       }
     },
-    "onNodeSelect": {
-      "description": "Callback fired when tree items are selected/unselected.",
+    "onNodeSelectionToggle": {
+      "description": "Callback fired when a tree item is selected or deselected.",
+      "deprecated": "",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "nodeId": "The nodeId of the modified node.",
+        "isSelected": "<code>true</code> if the node has just been selected, <code>false</code> if it has just been deselected."
+      }
+    },
+    "onSelectedNodesChange": {
+      "description": "Callback fired when tree items are selected/deselected.",
       "deprecated": "",
       "typeDescriptions": {
         "event": "The event source of the callback",
-        "nodeIds": "Ids of the selected nodes. When <code>multiSelect</code> is true this is an array of strings; when false (default) a string."
+        "nodeIds": "The ids of the selected nodes. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
       }
     },
-    "selected": {
+    "selectedNodes": {
       "description": "Selected node ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string.",
       "deprecated": "",
       "typeDescriptions": {}
