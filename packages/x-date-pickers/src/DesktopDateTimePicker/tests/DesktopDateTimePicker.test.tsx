@@ -38,7 +38,7 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Select year
       userEvent.mousePress(screen.getByRole('radio', { name: '2025' }));
@@ -62,6 +62,48 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
     });
+  });
+
+  it('should allow selecting same view multiple times', () => {
+    const onChange = spy();
+    const onAccept = spy();
+    const onClose = spy();
+
+    render(
+      <DesktopDateTimePicker
+        onChange={onChange}
+        onAccept={onAccept}
+        onClose={onClose}
+        defaultValue={adapterToUse.date('2018-01-01T11:55:00')}
+      />,
+    );
+
+    openPicker({ type: 'date-time', variant: 'desktop' });
+
+    // Change the date multiple times to check that picker doesn't close after cycling through all views internally
+    userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+    userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+    userEvent.mousePress(screen.getByRole('gridcell', { name: '4' }));
+    userEvent.mousePress(screen.getByRole('gridcell', { name: '5' }));
+    expect(onChange.callCount).to.equal(4);
+    expect(onAccept.callCount).to.equal(0);
+    expect(onClose.callCount).to.equal(0);
+
+    // Change the hours
+    userEvent.mousePress(screen.getByRole('option', { name: '10 hours' }));
+    userEvent.mousePress(screen.getByRole('option', { name: '9 hours' }));
+    expect(onChange.callCount).to.equal(6);
+    expect(onAccept.callCount).to.equal(0);
+    expect(onClose.callCount).to.equal(0);
+
+    // Change the minutes
+    userEvent.mousePress(screen.getByRole('option', { name: '50 minutes' }));
+    expect(onChange.callCount).to.equal(7);
+    // Change the meridiem
+    userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+    expect(onChange.callCount).to.equal(8);
+    expect(onAccept.callCount).to.equal(1);
+    expect(onClose.callCount).to.equal(1);
   });
 
   describe('prop: timeSteps', () => {
