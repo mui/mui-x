@@ -9,14 +9,14 @@ import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { validateTime } from '../internals/utils/validation/validateTime';
-import { TimeView } from '../models';
+import { FieldTextFieldVersion, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 
-type MobileTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: MobileTimePickerProps<TDate, TimeView, TUseV6TextField> &
+type MobileTimePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
+  props: MobileTimePickerProps<TDate, TimeView, TTextFieldVersion> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -32,9 +32,9 @@ type MobileTimePickerComponent = (<TDate, TUseV6TextField extends boolean = fals
  */
 const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   TDate,
-  TUseV6TextField extends boolean = false,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
 >(
-  inProps: MobileTimePickerProps<TDate, TimeView, TUseV6TextField>,
+  inProps: MobileTimePickerProps<TDate, TimeView, TTextFieldVersion>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
@@ -44,7 +44,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeView,
-    MobileTimePickerProps<TDate, TimeView, TUseV6TextField>
+    MobileTimePickerProps<TDate, TimeView, TTextFieldVersion>
   >(inProps, 'MuiMobileTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
@@ -80,7 +80,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, TimeView, TUseV6TextField, typeof props>({
+  const { renderPicker } = useMobilePicker<TDate, TimeView, TTextFieldVersion, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
@@ -300,10 +300,6 @@ MobileTimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -321,6 +317,10 @@ MobileTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

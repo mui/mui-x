@@ -150,6 +150,7 @@
   { "name": "FieldSectionContentType", "kind": "TypeAlias" },
   { "name": "FieldSectionType", "kind": "TypeAlias" },
   { "name": "FieldSelectedSections", "kind": "TypeAlias" },
+  { "name": "FieldTextFieldVersion", "kind": "TypeAlias" },
   { "name": "FieldValueType", "kind": "TypeAlias" },
   { "name": "fiFI", "kind": "Variable" },
   { "name": "frFR", "kind": "Variable" },

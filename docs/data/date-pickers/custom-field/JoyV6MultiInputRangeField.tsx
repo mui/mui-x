@@ -130,12 +130,12 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 )({ marginTop: '25px' });
 
 interface JoyMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs, true>,
+  extends UseDateRangeFieldProps<Dayjs, 'v6'>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      true,
+      'v6',
       DateRangeValidationError
     > {}
 
@@ -178,7 +178,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useMultiInputDateRangeField<
       Dayjs,
-      true,
+      'v6',
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
@@ -196,7 +196,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       },
       startTextFieldProps,
       endTextFieldProps,

@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
+import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
 
-type DatePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: DateRangePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
+  props: DateRangePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -23,8 +24,8 @@ type DatePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
  */
 const DateRangePicker = React.forwardRef(function DateRangePicker<
   TDate,
-  TUseV6TextField extends boolean = false,
->(inProps: DateRangePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(inProps: DateRangePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
 
   const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
@@ -297,10 +298,6 @@ DateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * If `true`, days outside the current month are rendered:
    *
    * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
@@ -329,6 +326,10 @@ DateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

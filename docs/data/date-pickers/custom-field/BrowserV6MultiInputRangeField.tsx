@@ -74,12 +74,12 @@ const BrowserField = React.forwardRef(
 ) as BrowserFieldComponent;
 
 interface BrowserMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs, true>,
+  extends UseDateRangeFieldProps<Dayjs, 'v6'>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      true,
+      'v6',
       DateRangeValidationError
     > {}
 
@@ -124,7 +124,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useMultiInputDateRangeField<
       Dayjs,
-      true,
+      'v6',
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
@@ -142,7 +142,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       },
       startTextFieldProps,
       endTextFieldProps,
@@ -167,7 +167,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 ) as BrowserMultiInputDateRangeFieldComponent;
 
 const BrowserDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, true>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps<Dayjs, 'v6'>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DateRangePicker
         ref={ref}

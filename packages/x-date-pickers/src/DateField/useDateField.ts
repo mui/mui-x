@@ -6,32 +6,32 @@ import { useField } from '../internals/hooks/useField';
 import { UseDateFieldProps } from './DateField.types';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
-import { FieldSection } from '../models';
+import { FieldSection, FieldTextFieldVersion } from '../models';
 import { useDefaultizedDateField } from '../internals/hooks/defaultizedFieldProps';
 
 export const useDateField = <
   TDate,
-  TUseV6TextField extends boolean,
-  TAllProps extends UseDateFieldProps<TDate, TUseV6TextField>,
+  TTextFieldVersion extends FieldTextFieldVersion,
+  TAllProps extends UseDateFieldProps<TDate, TTextFieldVersion>,
 >(
   inProps: TAllProps,
 ) => {
   const props = useDefaultizedDateField<
     TDate,
-    UseDateFieldProps<TDate, TUseV6TextField>,
+    UseDateFieldProps<TDate, TTextFieldVersion>,
     TAllProps
   >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseDateFieldProps<TDate, TUseV6TextField>
+    keyof UseDateFieldProps<TDate, TTextFieldVersion>
   >(props, 'date');
 
   return useField<
     TDate | null,
     TDate,
     FieldSection,
-    TUseV6TextField,
+    TTextFieldVersion,
     typeof forwardedProps,
     typeof internalProps
   >({

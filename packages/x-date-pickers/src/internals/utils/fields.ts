@@ -18,7 +18,7 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'selectedSections',
   'onSelectedSectionsChange',
   'unstableFieldRef',
-  'shouldUseV6TextField',
+  'textFieldVersion',
   'disabled',
   'readOnly',
 ] as const;

@@ -12,7 +12,7 @@ import {
   useControlledValueWithTimezone,
   useDefaultizedDateTimeField,
 } from '@mui/x-date-pickers/internals';
-import { DateTimeValidationError } from '@mui/x-date-pickers/models';
+import { DateTimeValidationError, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { DateRange } from '../../models/range';
 import type {
   UseMultiInputDateTimeRangeFieldParams,
@@ -30,7 +30,7 @@ import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelecte
 
 export const useMultiInputDateTimeRangeField = <
   TDate,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TTextFieldSlotProps extends {},
 >({
   sharedProps: inSharedProps,
@@ -40,12 +40,12 @@ export const useMultiInputDateTimeRangeField = <
   unstableEndFieldRef,
 }: UseMultiInputDateTimeRangeFieldParams<
   TDate,
-  TUseV6TextField,
+  TTextFieldVersion,
   TTextFieldSlotProps
->): UseMultiInputRangeFieldResponse<TUseV6TextField, TTextFieldSlotProps> => {
+>): UseMultiInputRangeFieldResponse<TTextFieldVersion, TTextFieldSlotProps> => {
   const sharedProps = useDefaultizedDateTimeField<
     TDate,
-    UseMultiInputDateTimeRangeFieldProps<TDate, TUseV6TextField>,
+    UseMultiInputDateTimeRangeFieldProps<TDate, TTextFieldVersion>,
     typeof inSharedProps
   >(inSharedProps);
   const adapter = useLocalizationContext<TDate>();
@@ -62,7 +62,7 @@ export const useMultiInputDateTimeRangeField = <
     selectedSections,
     onSelectedSectionsChange,
     timezone: timezoneProp,
-    shouldUseV6TextField,
+    textFieldVersion,
     autoFocus,
   } = sharedProps;
 
@@ -120,7 +120,7 @@ export const useMultiInputDateTimeRangeField = <
 
   const startFieldProps: UseDateTimeFieldComponentProps<
     TDate,
-    TUseV6TextField,
+    TTextFieldVersion,
     typeof sharedProps
   > = {
     error: !!validationError[0],
@@ -135,34 +135,37 @@ export const useMultiInputDateTimeRangeField = <
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
-    shouldUseV6TextField,
+    textFieldVersion,
     autoFocus, // Do not add on end field.
   };
 
-  const endFieldProps: UseDateTimeFieldComponentProps<TDate, TUseV6TextField, typeof sharedProps> =
-    {
-      error: !!validationError[1],
-      ...endTextFieldProps,
-      ...selectedSectionsResponse.end,
-      format,
-      formatDensity,
-      shouldRespectLeadingZeros,
-      disabled,
-      readOnly,
-      timezone,
-      value: valueProp === undefined ? undefined : valueProp[1],
-      defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
-      onChange: handleEndDateChange,
-      shouldUseV6TextField,
-    };
+  const endFieldProps: UseDateTimeFieldComponentProps<
+    TDate,
+    TTextFieldVersion,
+    typeof sharedProps
+  > = {
+    error: !!validationError[1],
+    ...endTextFieldProps,
+    ...selectedSectionsResponse.end,
+    format,
+    formatDensity,
+    shouldRespectLeadingZeros,
+    disabled,
+    readOnly,
+    timezone,
+    value: valueProp === undefined ? undefined : valueProp[1],
+    defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
+    onChange: handleEndDateChange,
+    textFieldVersion,
+  };
 
-  const startDateResponse = useDateTimeField<TDate, TUseV6TextField, typeof startFieldProps>(
+  const startDateResponse = useDateTimeField<TDate, TTextFieldVersion, typeof startFieldProps>(
     startFieldProps,
-  ) as UseFieldResponse<TUseV6TextField, TTextFieldSlotProps>;
+  ) as UseFieldResponse<TTextFieldVersion, TTextFieldSlotProps>;
 
-  const endDateResponse = useDateTimeField<TDate, TUseV6TextField, typeof endFieldProps>(
+  const endDateResponse = useDateTimeField<TDate, TTextFieldVersion, typeof endFieldProps>(
     endFieldProps,
-  ) as UseFieldResponse<TUseV6TextField, TTextFieldSlotProps>;
+  ) as UseFieldResponse<TTextFieldVersion, TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

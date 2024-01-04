@@ -6,7 +6,7 @@ import { createPickerRenderer, wrapPickerMount, describeRangeValidation } from '
 describe('<SingleInputDateTimeRangeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<SingleInputDateTimeRangeField />, () => ({
+  describeConformance(<SingleInputDateTimeRangeField textFieldVersion="v7" />, () => ({
     classes: {} as any,
     inheritComponent: 'div',
     render,

@@ -20,9 +20,13 @@ import {
   resolveTimeViewsResponse,
 } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
+import { FieldTextFieldVersion } from '../models';
 
-type DesktopDateTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: DesktopDateTimePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateTimePickerComponent = (<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(
+  props: DesktopDateTimePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -37,8 +41,8 @@ type DesktopDateTimePickerComponent = (<TDate, TUseV6TextField extends boolean =
  */
 const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   TDate,
-  TUseV6TextField extends boolean,
->(inProps: DesktopDateTimePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion,
+>(inProps: DesktopDateTimePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -46,7 +50,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DateOrTimeViewWithMeridiem,
-    DesktopDateTimePickerProps<TDate, TUseV6TextField>
+    DesktopDateTimePickerProps<TDate, TTextFieldVersion>
   >(inProps, 'MuiDesktopDateTimePicker');
 
   const {
@@ -127,7 +131,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const { renderPicker } = useDesktopPicker<
     TDate,
     DateOrTimeViewWithMeridiem,
-    TUseV6TextField,
+    TTextFieldVersion,
     typeof props
   >({
     props,
@@ -440,10 +444,6 @@ DesktopDateTimePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * If `true`, days outside the current month are rendered:
    *
    * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
@@ -477,6 +477,10 @@ DesktopDateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24

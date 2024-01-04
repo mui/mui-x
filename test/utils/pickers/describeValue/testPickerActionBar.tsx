@@ -36,6 +36,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            textFieldVersion="v7"
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -61,6 +62,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            textFieldVersion="v7"
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -85,6 +87,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onClose = spy();
 
         const { selectSection, pressKey } = renderWithProps({
+          textFieldVersion: 'v7',
           onChange,
           onAccept,
           onClose,
@@ -120,6 +123,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            textFieldVersion="v7"
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -145,6 +149,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onClose = spy();
 
         const { selectSection, pressKey } = renderWithProps({
+          textFieldVersion: 'v7',
           onChange,
           onAccept,
           onClose,
@@ -173,6 +178,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            textFieldVersion="v7"
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -197,6 +203,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            textFieldVersion="v7"
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -223,6 +230,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            textFieldVersion="v7"
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}

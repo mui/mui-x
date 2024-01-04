@@ -9,6 +9,7 @@ import {
   FieldValueType,
   PickersTimezone,
   FieldRef,
+  FieldTextFieldVersion,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
@@ -20,9 +21,9 @@ export interface UseFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TUseV6TextField extends boolean,
-  TForwardedProps extends UseFieldCommonForwardedProps & UseFieldForwardedProps<TUseV6TextField>,
-  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any>,
+  TTextFieldVersion extends FieldTextFieldVersion,
+  TForwardedProps extends UseFieldCommonForwardedProps & UseFieldForwardedProps<TTextFieldVersion>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TTextFieldVersion, any>,
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
@@ -41,7 +42,7 @@ export interface UseFieldInternalProps<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TError,
 > extends TimezoneProps {
   /**
@@ -126,9 +127,9 @@ export interface UseFieldInternalProps<
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
   /**
-   * @default false
+   * @default 'v6'
    */
-  shouldUseV6TextField?: TUseV6TextField;
+  textFieldVersion?: TTextFieldVersion;
   /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
@@ -158,8 +159,9 @@ export interface UseFieldCommonForwardedProps {
   clearable?: boolean;
 }
 
-export type UseFieldForwardedProps<TUseV6TextField extends boolean> = UseFieldCommonForwardedProps &
-  (TUseV6TextField extends true ? UseFieldV6ForwardedProps : UseFieldV7ForwardedProps);
+export type UseFieldForwardedProps<TTextFieldVersion extends FieldTextFieldVersion> =
+  UseFieldCommonForwardedProps &
+    (TTextFieldVersion extends 'v6' ? UseFieldV6ForwardedProps : UseFieldV7ForwardedProps);
 
 export interface UseFieldV6ForwardedProps {
   inputRef?: React.Ref<HTMLInputElement>;
@@ -201,12 +203,12 @@ interface UseFieldV7AdditionalProps {
 }
 
 export type UseFieldResponse<
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TForwardedProps extends UseFieldCommonForwardedProps & { [key: string]: any },
 > = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
   Required<UseFieldCommonForwardedProps> &
   UseFieldCommonAdditionalProps &
-  (TUseV6TextField extends true
+  (TTextFieldVersion extends 'v6'
     ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
     : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>);
 
@@ -433,14 +435,14 @@ export interface UseFieldTextFieldInteractions {
   isFieldFocused: () => boolean;
 }
 
-export type UseFieldTextField<TUseV6TextField extends boolean> = <
+export type UseFieldTextField<TTextFieldVersion extends FieldTextFieldVersion> = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TForwardedProps extends TUseV6TextField extends true
+  TForwardedProps extends TTextFieldVersion extends 'v6'
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any> & {
+  TInternalProps extends UseFieldInternalProps<any, any, any, TTextFieldVersion, any> & {
     minutesStep?: number;
   },
 >(
@@ -448,13 +450,13 @@ export type UseFieldTextField<TUseV6TextField extends boolean> = <
     TValue,
     TDate,
     TSection,
-    TUseV6TextField,
+    TTextFieldVersion,
     TForwardedProps,
     TInternalProps
   >,
 ) => {
   interactions: UseFieldTextFieldInteractions;
-  returnedValue: TUseV6TextField extends true
+  returnedValue: TTextFieldVersion extends 'v6'
     ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
     : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>;
 };
@@ -463,12 +465,19 @@ interface UseFieldTextFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TUseV6TextField extends boolean,
-  TForwardedProps extends TUseV6TextField extends true
+  TTextFieldVersion extends FieldTextFieldVersion,
+  TForwardedProps extends TTextFieldVersion extends 'v6'
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any>,
-> extends UseFieldParams<TValue, TDate, TSection, TUseV6TextField, TForwardedProps, TInternalProps>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TTextFieldVersion, any>,
+> extends UseFieldParams<
+      TValue,
+      TDate,
+      TSection,
+      TTextFieldVersion,
+      TForwardedProps,
+      TInternalProps
+    >,
     UseFieldStateResponse<TValue, TDate, TSection>,
     UseFieldCharacterEditingResponse {
   areAllSectionsEmpty: boolean;

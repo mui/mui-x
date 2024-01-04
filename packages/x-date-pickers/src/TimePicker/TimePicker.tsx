@@ -7,9 +7,10 @@ import { DesktopTimePicker } from '../DesktopTimePicker';
 import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
 import { TimePickerProps } from './TimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
+import { FieldTextFieldVersion } from '../models';
 
-type TimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: TimePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
+type TimePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
+  props: TimePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,8 +25,8 @@ type TimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
  */
 const TimePicker = React.forwardRef(function TimePicker<
   TDate,
-  TUseV6TextField extends boolean = false,
->(inProps: TimePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(inProps: TimePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
 
   const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
@@ -254,10 +255,6 @@ TimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * If `true`, disabled digital clock items will not be rendered.
    * @default false
    */
@@ -280,6 +277,10 @@ TimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24

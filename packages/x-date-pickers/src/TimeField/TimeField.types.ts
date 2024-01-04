@@ -4,20 +4,25 @@ import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
-import { FieldSection, TimeValidationError, BuiltInFieldTextFieldProps } from '../models';
+import {
+  FieldSection,
+  TimeValidationError,
+  BuiltInFieldTextFieldProps,
+  FieldTextFieldVersion,
+} from '../models';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../hooks/useClearableField';
 
-export interface UseTimeFieldProps<TDate, TUseV6TextField extends boolean>
+export interface UseTimeFieldProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
   extends MakeOptional<
       UseFieldInternalProps<
         TDate | null,
         TDate,
         FieldSection,
-        TUseV6TextField,
+        TTextFieldVersion,
         TimeValidationError
       >,
       'format'
@@ -34,18 +39,18 @@ export interface UseTimeFieldProps<TDate, TUseV6TextField extends boolean>
 
 export type UseTimeFieldComponentProps<
   TDate,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TChildProps extends {},
-> = Omit<TChildProps, keyof UseTimeFieldProps<TDate, TUseV6TextField>> &
-  UseTimeFieldProps<TDate, TUseV6TextField>;
+> = Omit<TChildProps, keyof UseTimeFieldProps<TDate, TTextFieldVersion>> &
+  UseTimeFieldProps<TDate, TTextFieldVersion>;
 
 export type TimeFieldProps<
   TDate,
-  TUseV6TextField extends boolean = false,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
 > = UseTimeFieldComponentProps<
   TDate,
-  TUseV6TextField,
-  BuiltInFieldTextFieldProps<TUseV6TextField>
+  TTextFieldVersion,
+  BuiltInFieldTextFieldProps<TTextFieldVersion>
 > & {
   /**
    * Overridable component slots.
@@ -56,13 +61,13 @@ export type TimeFieldProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimeFieldSlotProps<TDate, TUseV6TextField>;
+  slotProps?: TimeFieldSlotProps<TDate, TTextFieldVersion>;
 };
 
-export type TimeFieldOwnerState<TDate, TUseV6TextField extends boolean> = TimeFieldProps<
+export type TimeFieldOwnerState<
   TDate,
-  TUseV6TextField
->;
+  TTextFieldVersion extends FieldTextFieldVersion,
+> = TimeFieldProps<TDate, TTextFieldVersion>;
 
 export interface TimeFieldSlots extends UseClearableFieldSlots {
   /**
@@ -73,7 +78,11 @@ export interface TimeFieldSlots extends UseClearableFieldSlots {
   textField?: React.ElementType;
 }
 
-export interface TimeFieldSlotProps<TDate, TUseV6TextField extends boolean>
+export interface TimeFieldSlotProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
   extends UseClearableFieldSlotProps {
-  textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate, TUseV6TextField>>;
+  textField?: SlotComponentProps<
+    typeof TextField,
+    {},
+    TimeFieldOwnerState<TDate, TTextFieldVersion>
+  >;
 }

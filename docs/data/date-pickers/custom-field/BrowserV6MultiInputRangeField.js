@@ -90,7 +90,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     },
     startTextFieldProps,
     endTextFieldProps,

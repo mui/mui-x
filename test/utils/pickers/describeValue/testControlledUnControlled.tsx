@@ -30,29 +30,33 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
   describe('Controlled / uncontrolled value', () => {
     it('should render `props.defaultValue` if no `props.value` is passed', () => {
-      render(<ElementToTest defaultValue={values[0]} />);
+      renderWithProps({ textFieldVersion: 'v7', defaultValue: values[0] });
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if passed', () => {
-      render(<ElementToTest value={values[0]} />);
+      renderWithProps({ textFieldVersion: 'v7', value: values[0] });
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if both `props.defaultValue` and `props.value` are passed', () => {
-      render(<ElementToTest defaultValue={values[0]} value={values[1]} />);
+      renderWithProps({ textFieldVersion: 'v7', defaultValue: values[0], value: values[1] });
       assertRenderedValue(values[1]);
     });
 
     it('should render nothing if neither `props.defaultValue` or `props.value` are passed', () => {
-      render(<ElementToTest />);
+      renderWithProps({ textFieldVersion: 'v7' });
       assertRenderedValue(emptyValue);
     });
 
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
-      const v7Response = renderWithProps({ defaultValue: values[0], onChange });
+      const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
+        defaultValue: values[0],
+        onChange,
+      });
       const newValue = setNewValue(values[0], {
         selectSection: v7Response.selectSection,
         pressKey: v7Response.pressKey,
@@ -86,7 +90,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       };
 
       const v7Response = renderWithProps(
-        { value: values[0], onChange },
+        { textFieldVersion: 'v7', value: values[0], onChange },
         { hook: useControlledElement },
       );
       const newValue = setNewValue(values[0], {
@@ -105,8 +109,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should react to `props.value` update', () => {
-      const { setProps } = render(<ElementToTest value={values[0]} />);
-      setProps({ value: values[1] });
+      const v7Response = renderWithProps({ textFieldVersion: 'v7', value: values[0] });
+      v7Response.setProps({ value: values[1] });
       assertRenderedValue(values[1]);
     });
 
@@ -114,7 +118,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       if (!['field', 'picker'].includes(componentFamily)) {
         return;
       }
-      render(<ElementToTest value={values[0]} disabled />);
+
+      renderWithProps({ textFieldVersion: 'v7', value: values[0], disabled: true });
 
       getAllFieldInputRoot().forEach((fieldRoot) => {
         expect(fieldRoot).to.have.class('Mui-disabled');
@@ -125,7 +130,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       if (!['field', 'picker'].includes(componentFamily)) {
         return;
       }
-      render(<ElementToTest value={values[0]} readOnly />);
+
+      renderWithProps({ textFieldVersion: 'v7', value: values[0], readOnly: true });
 
       getAllFieldInputRoot().forEach((fieldInputRoot) => {
         expect(fieldInputRoot).to.have.class('Mui-readOnly');
@@ -139,7 +145,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       const handleChange = spy();
 
-      const v7Response = renderWithProps({ onChange: handleChange });
+      const v7Response = renderWithProps({ textFieldVersion: 'v7', onChange: handleChange });
       v7Response.selectSection(undefined);
       userEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
       expect(handleChange.callCount).to.equal(0);
@@ -153,13 +159,13 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return;
       }
 
-      render(
-        <ElementToTest
-          open
-          slotProps={{ toolbar: { hidden: false } }}
-          localeText={{ toolbarTitle: 'Test toolbar' }}
-        />,
-      );
+      renderWithProps({
+        textFieldVersion: 'v7',
+        open: true,
+        slotProps: { toolbar: { hidden: false } },
+        localeText: { toolbarTitle: 'Test toolbar' },
+      });
+
       expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
     });
 
@@ -171,20 +177,20 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return;
       }
 
-      render(
-        <ElementToTest
-          open
-          {...(params.type === 'date-range'
-            ? {
-                localeText: {
-                  start: 'test',
-                  end: 'relationship',
-                },
-              }
-            : { label: 'test relationship' })}
-          slotProps={{ toolbar: { hidden: true } }}
-        />,
-      );
+      renderWithProps({
+        textFieldVersion: 'v7',
+        open: true,
+        slotProps: { toolbar: { hidden: true } },
+        ...(params.type === 'date-range'
+          ? {
+              localeText: {
+                start: 'test',
+                end: 'relationship',
+              },
+            }
+          : { label: 'test relationship' }),
+      });
+
       expect(screen.getByLabelText('test relationship', { selector: 'div' })).to.have.attribute(
         'role',
         'dialog',
@@ -203,6 +209,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         <div>
           <div id="label-id">external label</div>
           <ElementToTest
+            textFieldVersion="v7"
             open
             {...(params.type === 'date-range' && {
               localeText: {
@@ -227,7 +234,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         if (!['field', 'picker'].includes(componentFamily)) {
           return;
         }
-        render(<ElementToTest slotProps={{ textField: { error: true } }} />);
+
+        renderWithProps({ textFieldVersion: 'v7', slotProps: { textField: { error: true } } });
 
         const fieldRoot = getFieldInputRoot();
         expect(fieldRoot).to.have.class(inputBaseClasses.error);

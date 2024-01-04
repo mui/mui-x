@@ -14,7 +14,7 @@ describe('<MobileDateTimePicker /> - Field', () => {
   });
 
   it('should pass the ampm prop to the field', () => {
-    const v7Response = renderWithProps({ ampm: true });
+    const v7Response = renderWithProps({ textFieldVersion: 'v7' as const, ampm: true });
 
     expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY hh:mm aa');
 

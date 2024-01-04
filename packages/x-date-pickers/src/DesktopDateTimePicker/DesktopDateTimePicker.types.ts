@@ -9,7 +9,7 @@ import {
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeView, FieldTextFieldVersion } from '../models';
 import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
@@ -27,14 +27,18 @@ export interface DesktopDateTimePickerSlots<TDate>
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
-export interface DesktopDateTimePickerSlotProps<TDate, TUseV6TextField extends boolean>
-  extends BaseDateTimePickerSlotProps<TDate>,
-    ExportedUseDesktopPickerSlotProps<TDate, DateOrTimeViewWithMeridiem, TUseV6TextField>,
+export interface DesktopDateTimePickerSlotProps<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion,
+> extends BaseDateTimePickerSlotProps<TDate>,
+    ExportedUseDesktopPickerSlotProps<TDate, DateOrTimeViewWithMeridiem, TTextFieldVersion>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 
-export interface DesktopDateTimePickerProps<TDate, TUseV6TextField extends boolean = false>
-  extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
+export interface DesktopDateTimePickerProps<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+> extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate> {
   /**
@@ -55,5 +59,5 @@ export interface DesktopDateTimePickerProps<TDate, TUseV6TextField extends boole
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimePickerSlotProps<TDate, TUseV6TextField>;
+  slotProps?: DesktopDateTimePickerSlotProps<TDate, TTextFieldVersion>;
 }

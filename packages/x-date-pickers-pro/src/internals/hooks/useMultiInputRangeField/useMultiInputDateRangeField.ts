@@ -12,7 +12,7 @@ import {
   useControlledValueWithTimezone,
   useDefaultizedDateField,
 } from '@mui/x-date-pickers/internals';
-import { DateValidationError } from '@mui/x-date-pickers/models';
+import { DateValidationError, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import {
   UseMultiInputDateRangeFieldParams,
   UseMultiInputDateRangeFieldProps,
@@ -30,7 +30,7 @@ import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelecte
 
 export const useMultiInputDateRangeField = <
   TDate,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TTextFieldSlotProps extends {},
 >({
   sharedProps: inSharedProps,
@@ -40,12 +40,12 @@ export const useMultiInputDateRangeField = <
   unstableEndFieldRef,
 }: UseMultiInputDateRangeFieldParams<
   TDate,
-  TUseV6TextField,
+  TTextFieldVersion,
   TTextFieldSlotProps
->): UseMultiInputRangeFieldResponse<TUseV6TextField, TTextFieldSlotProps> => {
+>): UseMultiInputRangeFieldResponse<TTextFieldVersion, TTextFieldSlotProps> => {
   const sharedProps = useDefaultizedDateField<
     TDate,
-    UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField>,
+    UseMultiInputDateRangeFieldProps<TDate, TTextFieldVersion>,
     typeof inSharedProps
   >(inSharedProps);
 
@@ -63,7 +63,7 @@ export const useMultiInputDateRangeField = <
     selectedSections,
     onSelectedSectionsChange,
     timezone: timezoneProp,
-    shouldUseV6TextField,
+    textFieldVersion,
     autoFocus,
   } = sharedProps;
 
@@ -119,24 +119,25 @@ export const useMultiInputDateRangeField = <
     unstableEndFieldRef,
   });
 
-  const startFieldProps: UseDateFieldComponentProps<TDate, TUseV6TextField, typeof sharedProps> = {
-    error: !!validationError[0],
-    ...startTextFieldProps,
-    ...selectedSectionsResponse.start,
-    disabled,
-    readOnly,
-    format,
-    formatDensity,
-    shouldRespectLeadingZeros,
-    timezone,
-    value: valueProp === undefined ? undefined : valueProp[0],
-    defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
-    onChange: handleStartDateChange,
-    shouldUseV6TextField,
-    autoFocus, // Do not add on end field.
-  };
+  const startFieldProps: UseDateFieldComponentProps<TDate, TTextFieldVersion, typeof sharedProps> =
+    {
+      error: !!validationError[0],
+      ...startTextFieldProps,
+      ...selectedSectionsResponse.start,
+      disabled,
+      readOnly,
+      format,
+      formatDensity,
+      shouldRespectLeadingZeros,
+      timezone,
+      value: valueProp === undefined ? undefined : valueProp[0],
+      defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
+      onChange: handleStartDateChange,
+      textFieldVersion,
+      autoFocus, // Do not add on end field.
+    };
 
-  const endFieldProps: UseDateFieldComponentProps<TDate, TUseV6TextField, typeof sharedProps> = {
+  const endFieldProps: UseDateFieldComponentProps<TDate, TTextFieldVersion, typeof sharedProps> = {
     error: !!validationError[1],
     ...endTextFieldProps,
     ...selectedSectionsResponse.end,
@@ -149,16 +150,16 @@ export const useMultiInputDateRangeField = <
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
-    shouldUseV6TextField,
+    textFieldVersion,
   };
 
-  const startDateResponse = useDateField<TDate, TUseV6TextField, typeof startFieldProps>(
+  const startDateResponse = useDateField<TDate, TTextFieldVersion, typeof startFieldProps>(
     startFieldProps,
-  ) as UseFieldResponse<TUseV6TextField, TTextFieldSlotProps>;
+  ) as UseFieldResponse<TTextFieldVersion, TTextFieldSlotProps>;
 
-  const endDateResponse = useDateField<TDate, TUseV6TextField, typeof endFieldProps>(
+  const endDateResponse = useDateField<TDate, TTextFieldVersion, typeof endFieldProps>(
     endFieldProps,
-  ) as UseFieldResponse<TUseV6TextField, TTextFieldSlotProps>;
+  ) as UseFieldResponse<TTextFieldVersion, TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

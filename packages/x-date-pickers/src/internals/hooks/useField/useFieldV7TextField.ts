@@ -7,7 +7,7 @@ import { UseFieldTextField, UseFieldTextFieldInteractions } from './useField.typ
 import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 
-export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
+export const useFieldV7TextField: UseFieldTextField<'v7'> = (params) => {
   const {
     internalProps: { disabled, readOnly = false },
     forwardedProps: {
@@ -448,9 +448,9 @@ export const useFieldV7TextField: UseFieldTextField<false> = (params) => {
           'MUI: The `sectionListRef` prop has not been initialized by `PickersSectionList`',
           'You probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.',
           '',
-          'If you want to keep using an `<input />` HTML element for the editing, please pass `shouldUseV6TextField` to your picker or field component:',
+          'If you want to keep using an `<input />` HTML element for the editing, please remove the `textFieldVersion="v7"` from your picker or field component:',
           '',
-          '<DatePicker shouldUseV6TextField slots={{ textField: MyCustomTextField }} />',
+          '<DatePicker slots={{ textField: MyCustomTextField }} />',
           '',
           'Warning: This DOM structure based on an `<input />` HTML element will be removed in the next major (v8).',
           'Learn more about the new DOM structure on the MUI documentation: https://next.mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',

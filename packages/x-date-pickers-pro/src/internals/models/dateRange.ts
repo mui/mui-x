@@ -3,6 +3,7 @@ import {
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
+import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { DateRange } from './range';
 import type { DateRangeValidationError, RangeFieldSection } from '../../models';
 
@@ -23,14 +24,14 @@ export interface DayRangeValidationProps<TDate> {
   shouldDisableDate?: (day: TDate, position: 'start' | 'end') => boolean;
 }
 
-export interface UseDateRangeFieldProps<TDate, TUseV6TextField extends boolean>
+export interface UseDateRangeFieldProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
   extends MakeOptional<
       Omit<
         UseFieldInternalProps<
           DateRange<TDate>,
           TDate,
           RangeFieldSection,
-          TUseV6TextField,
+          TTextFieldVersion,
           DateRangeValidationError
         >,
         'unstableFieldRef'

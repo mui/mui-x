@@ -14,12 +14,12 @@ import {
 } from '@mui/x-date-pickers/models';
 
 interface AutoCompleteFieldProps
-  extends UseDateFieldProps<Dayjs, false>,
+  extends UseDateFieldProps<Dayjs, 'v6'>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
-      false,
+      'v6',
       DateValidationError
     > {
   /**

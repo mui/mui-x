@@ -30,6 +30,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-01-01T10:15:00'),
@@ -46,6 +47,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[adapterToUse.date('2018-01-02'), adapterToUse.date('2018-01-01')]}
         />,
@@ -64,6 +66,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
@@ -110,6 +113,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           shouldDisableDate={(date, position) =>
@@ -156,6 +160,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           shouldDisableDate={(date, position) =>
@@ -201,7 +206,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
-        return <ElementToTest value={[now, now]} {...props} />;
+        return <ElementToTest textFieldVersion="v7" value={[now, now]} {...props} />;
       }
 
       const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
@@ -239,7 +244,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
-        return <ElementToTest value={[now, now]} {...props} />;
+        return <ElementToTest textFieldVersion="v7" value={[now, now]} {...props} />;
       }
 
       const { setProps } = render(<WithFakeTimer disableFuture onError={onErrorMock} />);
@@ -281,6 +286,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           minDate={adapterToUse.date('2018-03-15')}
@@ -316,6 +322,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), null]}
           minDate={adapterToUse.date('2018-03-11')}
@@ -343,6 +350,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[null, adapterToUse.date('2018-03-09')]}
           minDate={adapterToUse.date('2018-03-15')}
@@ -370,6 +378,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           maxDate={adapterToUse.date('2018-03-15')}
@@ -404,6 +413,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-10T09:00:00'),
@@ -441,6 +451,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-05T09:00:00'),
@@ -471,6 +482,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[adapterToUse.date('2018-02-01T15:00:00'), null]}
           minTime={adapterToUse.date('2018-03-01T12:00:00')}
@@ -497,6 +509,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[null, adapterToUse.date('2018-02-01T15:00:00')]}
           minTime={adapterToUse.date('2018-03-01T12:00:00')}
@@ -523,6 +536,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-10T09:00:00'),
@@ -560,6 +574,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-05T09:00:00'),
@@ -590,6 +605,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-01T09:00:00'),
@@ -624,6 +640,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-01T09:00:00'),

@@ -29,7 +29,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
   describe('text field keyboard:', () => {
     it('should not accept end date prior to start state', () => {
       const onErrorMock = spy();
-      render(<ElementToTest onError={onErrorMock} />);
+      render(<ElementToTest textFieldVersion="v7" onError={onErrorMock} />);
 
       expect(onErrorMock.callCount).to.equal(0);
       act(() => {
@@ -53,6 +53,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-11'))}
         />,
@@ -99,7 +100,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
     it('should apply disablePast', function test() {
       const onErrorMock = spy();
       const now = adapterToUse.date();
-      render(<ElementToTest disablePast onError={onErrorMock} />);
+      render(<ElementToTest textFieldVersion="v7" disablePast onError={onErrorMock} />);
 
       let past: null | typeof now = null;
       if (withDate) {
@@ -139,7 +140,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
     it('should apply disableFuture', function test() {
       const onErrorMock = spy();
       const now = adapterToUse.date();
-      render(<ElementToTest disableFuture onError={onErrorMock} />);
+      render(<ElementToTest textFieldVersion="v7" disableFuture onError={onErrorMock} />);
 
       let future: null | typeof now = null;
 
@@ -184,7 +185,13 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       }
 
       const onErrorMock = spy();
-      render(<ElementToTest onError={onErrorMock} minDate={adapterToUse.date('2018-03-15')} />);
+      render(
+        <ElementToTest
+          textFieldVersion="v7"
+          onError={onErrorMock}
+          minDate={adapterToUse.date('2018-03-15')}
+        />,
+      );
 
       act(() => {
         [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')].forEach(
@@ -221,7 +228,13 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       }
 
       const onErrorMock = spy();
-      render(<ElementToTest onError={onErrorMock} maxDate={adapterToUse.date('2018-03-15')} />);
+      render(
+        <ElementToTest
+          textFieldVersion="v7"
+          onError={onErrorMock}
+          maxDate={adapterToUse.date('2018-03-15')}
+        />,
+      );
 
       act(() => {
         [adapterToUse.date('2018-03-15'), adapterToUse.date('2018-03-17')].forEach(
@@ -251,7 +264,11 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       const onErrorMock = spy();
       render(
-        <ElementToTest onError={onErrorMock} minTime={adapterToUse.date('2018-03-10T12:00:00')} />,
+        <ElementToTest
+          textFieldVersion="v7"
+          onError={onErrorMock}
+          minTime={adapterToUse.date('2018-03-10T12:00:00')}
+        />,
       );
 
       act(() => {
@@ -291,7 +308,11 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       const onErrorMock = spy();
       render(
-        <ElementToTest onError={onErrorMock} maxTime={adapterToUse.date('2018-03-10T12:00:00')} />,
+        <ElementToTest
+          textFieldVersion="v7"
+          onError={onErrorMock}
+          maxTime={adapterToUse.date('2018-03-10T12:00:00')}
+        />,
       );
 
       act(() => {
@@ -302,18 +323,18 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
           setValue(date, { setEndDate: index === 1 });
         });
       });
-      //
-      // expect(onErrorMock.callCount).to.equal(1);
-      // expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
-      // testInvalidStatus([false, true], isSingleInput);
-      //
-      // act(() => {
-      //   setValue(adapterToUse.date('2018-03-10T12:05:00'));
-      // });
-      //
-      // expect(onErrorMock.callCount).to.equal(2);
-      // expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
-      // testInvalidStatus([true, true], isSingleInput);
+
+      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
+      testInvalidStatus([false, true], isSingleInput);
+
+      act(() => {
+        setValue(adapterToUse.date('2018-03-10T12:05:00'));
+      });
+
+      expect(onErrorMock.callCount).to.equal(2);
+      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
+      testInvalidStatus([true, true], isSingleInput);
     });
   });
 };

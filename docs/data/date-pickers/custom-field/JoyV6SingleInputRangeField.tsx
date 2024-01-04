@@ -98,12 +98,12 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoySingleInputDateRangeFieldProps
-  extends UseSingleInputDateRangeFieldProps<Dayjs, true>,
+  extends UseSingleInputDateRangeFieldProps<Dayjs, 'v6'>,
     BaseSingleInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      true,
+      'v6',
       DateRangeValidationError
     > {
   onAdornmentClick?: () => void;
@@ -126,9 +126,9 @@ const JoySingleInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useSingleInputDateRangeField<
       Dayjs,
-      true,
+      'v6',
       JoySingleInputDateRangeFieldProps
-    >({ ...textFieldProps, shouldUseV6TextField: true });
+    >({ ...textFieldProps, textFieldVersion: 'v6' });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
@@ -159,7 +159,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
 const JoySingleInputDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, true>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps<Dayjs, 'v6'>, ref: React.Ref<HTMLDivElement>) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
     const toggleOpen = (event: React.PointerEvent) => {

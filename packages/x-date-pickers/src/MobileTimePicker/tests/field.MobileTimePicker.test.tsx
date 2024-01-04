@@ -14,7 +14,10 @@ describe('<MobileTimePicker /> - Field', () => {
   });
 
   it('should pass the ampm prop to the field', () => {
-    const v7Response = renderWithProps({ ampm: true }, { componentFamily: 'picker' });
+    const v7Response = renderWithProps(
+      { textFieldVersion: 'v7' as const, ampm: true },
+      { componentFamily: 'picker' },
+    );
 
     expectFieldValueV7(v7Response.getSectionsContainer(), 'hh:mm aa');
 

@@ -254,7 +254,7 @@
       "class": null,
       "name": "textField",
       "description": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element.",
-      "default": "PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled."
+      "default": "TextField from '@mui/material' or PickersTextField if textFieldVersion === 'v6' ."
     },
     {
       "class": null,

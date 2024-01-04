@@ -38,8 +38,8 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BasePickersTextFieldProps<false>,
-    Omit<BoxProps, keyof BasePickersTextFieldProps<false>> {}
+  extends BasePickersTextFieldProps<'v7'>,
+    Omit<BoxProps, keyof BasePickersTextFieldProps<'v7'>> {}
 
 // This demo uses `BasePickersTextFieldProps` instead of `BaseMultiInputPickersTextFieldProps`,
 // That way you can reuse the same `BrowserTextField` for all your pickers, range or not.
@@ -103,12 +103,12 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs, true>,
+  extends UseDateRangeFieldProps<Dayjs, 'v7'>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      true,
+      'v7',
       DateRangeValidationError
     > {}
 
@@ -153,7 +153,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useMultiInputDateRangeField<
       Dayjs,
-      false,
+      'v7',
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
@@ -171,7 +171,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
-        shouldUseV6TextField: false,
+        textFieldVersion: 'v7',
       },
       startTextFieldProps,
       endTextFieldProps,
@@ -196,7 +196,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 ) as BrowserMultiInputDateRangeFieldComponent;
 
 const BrowserDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, true>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps<Dayjs, 'v7'>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DateRangePicker
         ref={ref}

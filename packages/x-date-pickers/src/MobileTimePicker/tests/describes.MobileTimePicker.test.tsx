@@ -37,7 +37,7 @@ describe('<MobileTimePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileTimePicker />, () => ({
+  describeConformance(<MobileTimePicker textFieldVersion="v7" />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileTimePicker',

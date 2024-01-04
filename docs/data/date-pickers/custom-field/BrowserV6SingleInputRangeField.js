@@ -66,7 +66,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
 
   const fieldResponse = useSingleInputDateRangeField({
     ...textFieldProps,
-    shouldUseV6TextField: true,
+    textFieldVersion: 'v6',
   });
 
   /* If you don't need a clear button, you can skip the use of this hook */

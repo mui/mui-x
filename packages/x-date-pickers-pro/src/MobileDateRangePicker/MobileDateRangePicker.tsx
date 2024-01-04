@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -12,8 +13,11 @@ import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 import { DateRange } from '../internals/models';
 
-type MobileDateRangePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: MobileDateRangePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(
+  props: MobileDateRangePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -28,12 +32,12 @@ type MobileDateRangePickerComponent = (<TDate, TUseV6TextField extends boolean =
  */
 const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
   TDate,
-  TUseV6TextField extends boolean,
->(inProps: MobileDateRangePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(inProps: MobileDateRangePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
-    MobileDateRangePickerProps<TDate, TUseV6TextField>
+    MobileDateRangePickerProps<TDate, TTextFieldVersion>
   >(inProps, 'MuiMobileDateRangePicker');
 
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
@@ -65,7 +69,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     },
   };
 
-  const { renderPicker } = useMobileRangePicker<TDate, 'day', TUseV6TextField, typeof props>({
+  const { renderPicker } = useMobileRangePicker<TDate, 'day', TTextFieldVersion, typeof props>({
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
@@ -327,10 +331,6 @@ MobileDateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * If `true`, days outside the current month are rendered:
    *
    * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
@@ -359,6 +359,10 @@ MobileDateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

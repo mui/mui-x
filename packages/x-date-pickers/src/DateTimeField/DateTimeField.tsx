@@ -8,9 +8,10 @@ import { useDateTimeField } from './useDateTimeField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
+import { FieldTextFieldVersion } from '../models';
 
-type DateTimeFieldComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: DateTimeFieldProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
+type DateTimeFieldComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
+  props: DateTimeFieldProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -25,8 +26,8 @@ type DateTimeFieldComponent = (<TDate, TUseV6TextField extends boolean = false>(
  */
 const DateTimeField = React.forwardRef(function DateTimeField<
   TDate,
-  TUseV6TextField extends boolean = false,
->(inProps: DateTimeFieldProps<TDate, TUseV6TextField>, inRef: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(inProps: DateTimeFieldProps<TDate, TTextFieldVersion>, inRef: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiDateTimeField',
@@ -37,7 +38,7 @@ const DateTimeField = React.forwardRef(function DateTimeField<
   const ownerState = themeProps;
 
   const TextField =
-    slots?.textField ?? (inProps.shouldUseV6TextField ? MuiTextField : PickersTextField);
+    slots?.textField ?? (inProps.textFieldVersion === 'v7' ? PickersTextField : MuiTextField);
   const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
@@ -46,13 +47,13 @@ const DateTimeField = React.forwardRef(function DateTimeField<
     additionalProps: {
       ref: inRef,
     },
-  }) as DateTimeFieldProps<TDate, TUseV6TextField>;
+  }) as DateTimeFieldProps<TDate, TTextFieldVersion>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const fieldResponse = useDateTimeField<TDate, TUseV6TextField, typeof textFieldProps>(
+  const fieldResponse = useDateTimeField<TDate, TTextFieldVersion, typeof textFieldProps>(
     textFieldProps,
   );
   const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
@@ -327,10 +328,6 @@ DateTimeField.propTypes = {
    */
   shouldRespectLeadingZeros: PropTypes.bool,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.bool,
-  /**
    * The size of the component.
    */
   size: PropTypes.any,
@@ -349,6 +346,10 @@ DateTimeField.propTypes = {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.any,
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.oneOf(['v6', 'v7']),
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

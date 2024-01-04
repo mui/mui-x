@@ -10,7 +10,12 @@ import {
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps, FieldSection, MuiPickersAdapter } from '../../../models';
+import {
+  BaseSingleInputFieldProps,
+  FieldSection,
+  FieldTextFieldVersion,
+  MuiPickersAdapter,
+} from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -38,7 +43,7 @@ export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMe
   field: React.ElementType;
   /**
    * Form control with an input to render the value inside the default field.
-   * @default PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled.
+   * @default TextField from '@mui/material' or PickersTextField if textFieldVersion === 'v6' .
    */
   textField?: React.ElementType;
   /**
@@ -60,19 +65,19 @@ export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMe
 export interface UseDesktopPickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
-> extends ExportedUseDesktopPickerSlotProps<TDate, TView, TUseV6TextField>,
+  TTextFieldVersion extends FieldTextFieldVersion,
+> extends ExportedUseDesktopPickerSlotProps<TDate, TView, TTextFieldVersion>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface ExportedUseDesktopPickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
 > extends PickersPopperSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView>,
     UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, TUseV6TextField, unknown>,
+    BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, TTextFieldVersion, unknown>,
     {},
     UsePickerProps<TDate | null, TDate, any, any, any, any>
   >;
@@ -81,7 +86,7 @@ export interface ExportedUseDesktopPickerSlotProps<
   openPickerButton?: SlotComponentProps<
     typeof IconButton,
     {},
-    UseDesktopPickerProps<TDate, any, TUseV6TextField, any, any>
+    UseDesktopPickerProps<TDate, any, TTextFieldVersion, any, any>
   >;
   openPickerIcon?: Record<string, any>;
 }
@@ -101,7 +106,7 @@ export interface DesktopOnlyPickerProps
 export interface UseDesktopPickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
@@ -115,14 +120,20 @@ export interface UseDesktopPickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopPickerSlotProps<TDate, TView, TUseV6TextField>;
+  slotProps?: UseDesktopPickerSlotProps<TDate, TView, TTextFieldVersion>;
 }
 
 export interface UseDesktopPickerParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView, TUseV6TextField, any, TExternalProps>,
+  TTextFieldVersion extends FieldTextFieldVersion,
+  TExternalProps extends UseDesktopPickerProps<
+    TDate,
+    TView,
+    TTextFieldVersion,
+    any,
+    TExternalProps
+  >,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
     'valueManager' | 'valueType' | 'validator'

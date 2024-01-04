@@ -2,7 +2,12 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createRenderer, screen, userEvent, act, fireEvent } from '@mui-internal/test-utils';
-import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
+import {
+  FieldRef,
+  FieldSection,
+  FieldSectionType,
+  FieldTextFieldVersion,
+} from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputClasses } from '@mui/x-date-pickers/PickersTextField';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
@@ -28,7 +33,7 @@ export type FieldPressCharacter = (
 
 export interface BuildFieldInteractionsResponse<P extends {}> {
   renderWithProps: (
-    props: P & { shouldUseV6TextField?: boolean },
+    props: P & { textFieldVersion: FieldTextFieldVersion },
     config?: {
       hook?: (props: P) => Record<string, any>;
       componentFamily?: 'picker' | 'field';
@@ -134,11 +139,11 @@ export const buildFieldInteractions = <P extends {}>({
     const result = render(<WrappedComponent {...(props as any)} />);
 
     const getSectionsContainer = () => {
-      if (props.shouldUseV6TextField) {
-        throw new Error('Cannot use fake input with shouldUseV6TextField');
+      if (props.textFieldVersion === 'v6') {
+        throw new Error('Cannot use fake input with v6 TextField');
       }
 
-      return document.querySelector<HTMLDivElement>(`.${pickersInputClasses.sectionsContainer}`)!;
+      return document.querySelector<HTMLDivElement>(`.${pickersSectionListClasses.root}`)!;
     };
 
     const getHiddenInput = () => {
@@ -163,13 +168,13 @@ export const buildFieldInteractions = <P extends {}>({
 
       act(() => {
         fieldRef.current!.setSelectedSections(sectionIndexToSelect);
-        if (props.shouldUseV6TextField) {
+        if (props.textFieldVersion === 'v6') {
           getTextbox().focus();
         }
       });
 
       act(() => {
-        if (!props.shouldUseV6TextField) {
+        if (props.textFieldVersion === 'v7') {
           getSection(sectionIndexToSelect).focus();
         }
       });
@@ -190,7 +195,7 @@ export const buildFieldInteractions = <P extends {}>({
     };
 
     const pressKey: FieldPressCharacter = (sectionIndex, key) => {
-      if (props.shouldUseV6TextField) {
+      if (props.textFieldVersion === 'v6') {
         throw new Error('`pressKey` is only available with v7 TextField');
       }
 
@@ -234,14 +239,14 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     // Test with v7 input
-    const v7Response = renderWithProps(props as any as P);
+    const v7Response = renderWithProps({ ...props, textFieldVersion: 'v7' } as any);
     v7Response.selectSection(selectedSection);
     v7Response.pressKey(undefined, key);
     expectFieldValueV7(v7Response.getSectionsContainer(), expectedValue);
     v7Response.unmount();
 
     // Test with v6 input
-    const v6Response = renderWithProps({ ...props, shouldUseV6TextField: true } as any as P);
+    const v6Response = renderWithProps({ ...props, textFieldVersion: 'v6' } as any);
     v6Response.selectSection(selectedSection);
     const input = getTextbox();
     userEvent.keyPress(input, { key });
@@ -257,7 +262,7 @@ export const buildFieldInteractions = <P extends {}>({
   }) => {
     if (!skipV7) {
       // Test with v7 input
-      const v7Response = renderWithProps(props as any as P);
+      const v7Response = renderWithProps({ ...props, textFieldVersion: 'v7' } as any);
       v7Response.selectSection(selectedSection);
       keyStrokes.forEach((keyStroke) => {
         v7Response.pressKey(undefined, keyStroke.value);
@@ -271,7 +276,7 @@ export const buildFieldInteractions = <P extends {}>({
     }
 
     // Test with v6 input
-    const v6Response = renderWithProps({ ...props, shouldUseV6TextField: true } as any as P);
+    const v6Response = renderWithProps({ ...props, textFieldVersion: 'v6' } as any);
     v6Response.selectSection(selectedSection);
     const input = getTextbox();
 
@@ -326,4 +331,4 @@ export const getAllFieldInputRoot = () =>
 export const getFieldInputRoot = (index = 0) => getAllFieldInputRoot()[index];
 
 export const getFieldSectionsContainer = (index = 0) =>
-  document.querySelectorAll<HTMLDivElement>(`.${pickersInputClasses.sectionsContainer}`)[index];
+  document.querySelectorAll<HTMLDivElement>(`.${pickersSectionListClasses.root}`)[index];

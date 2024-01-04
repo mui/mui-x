@@ -14,6 +14,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     it('should clear all the sections when all sections are selected and all sections are completed', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
@@ -32,7 +33,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       const v6Response = renderWithProps({
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
 
       const input = getTextbox();
@@ -48,6 +49,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     it('should clear all the sections when all sections are selected and not all sections are completed', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
@@ -68,7 +70,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Test with v6 input
       const v6Response = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
 
       const input = getTextbox();
@@ -92,6 +94,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       const onChangeV7 = spy();
 
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         onChange: onChangeV7,
       });
@@ -111,7 +114,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       const v6Response = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         onChange: onChangeV6,
       });
 
@@ -130,6 +133,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       const onChangeV7 = spy();
 
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         onChange: onChangeV7,
       });
@@ -167,7 +171,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       const onChangeV6 = spy();
 
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         onChange: onChangeV6,
       });
@@ -206,6 +210,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       const onChangeV7 = spy();
 
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         onChange: onChangeV7,
@@ -225,7 +230,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       const onChangeV6 = spy();
 
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         onChange: onChangeV6,
@@ -249,6 +254,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
         // Test with v7 input
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
@@ -267,7 +273,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         const v6Response = renderWithProps({
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -283,6 +289,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', () => {
         // Test with v7 input
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
@@ -303,7 +310,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Test with v6 input
         const v6Response = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -327,6 +334,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           onChange: onChangeV7,
         });
@@ -346,7 +354,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         const v6Response = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
           onChange: onChangeV6,
         });
 
@@ -365,6 +373,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           onChange: onChangeV7,
         });
@@ -404,7 +413,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         const onChangeV6 = spy();
 
         const v6Response = renderWithProps({
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           onChange: onChangeV6,
         });
@@ -445,6 +454,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           onChange: onChangeV7,
@@ -464,7 +474,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         const onChangeV6 = spy();
 
         const v6Response = renderWithProps({
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           onChange: onChangeV6,

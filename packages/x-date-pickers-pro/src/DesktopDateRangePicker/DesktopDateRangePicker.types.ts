@@ -1,4 +1,5 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
@@ -14,12 +15,16 @@ export interface DesktopDateRangePickerSlots<TDate>
   extends BaseDateRangePickerSlots<TDate>,
     MakeOptional<UseDesktopRangePickerSlots<TDate, 'day'>, 'field'> {}
 
-export interface DesktopDateRangePickerSlotProps<TDate, TUseV6TextField extends boolean>
-  extends BaseDateRangePickerSlotProps<TDate>,
-    UseDesktopRangePickerSlotProps<TDate, 'day', TUseV6TextField> {}
+export interface DesktopDateRangePickerSlotProps<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion,
+> extends BaseDateRangePickerSlotProps<TDate>,
+    UseDesktopRangePickerSlotProps<TDate, 'day', TTextFieldVersion> {}
 
-export interface DesktopDateRangePickerProps<TDate, TUseV6TextField extends boolean = false>
-  extends BaseDateRangePickerProps<TDate>,
+export interface DesktopDateRangePickerProps<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+> extends BaseDateRangePickerProps<TDate>,
     DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
@@ -35,5 +40,5 @@ export interface DesktopDateRangePickerProps<TDate, TUseV6TextField extends bool
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateRangePickerSlotProps<TDate, TUseV6TextField>;
+  slotProps?: DesktopDateRangePickerSlotProps<TDate, TTextFieldVersion>;
 }

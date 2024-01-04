@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -12,8 +13,12 @@ import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker'
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 import { DateRange } from '../internals/models';
 
-type DesktopDateRangePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: DesktopDateRangePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = (<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(
+  props: DesktopDateRangePickerProps<TDate, TTextFieldVersion> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -28,12 +33,12 @@ type DesktopDateRangePickerComponent = (<TDate, TUseV6TextField extends boolean 
  */
 const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   TDate,
-  TUseV6TextField extends boolean = false,
->(inProps: DesktopDateRangePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(inProps: DesktopDateRangePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
-    DesktopDateRangePickerProps<TDate, TUseV6TextField>
+    DesktopDateRangePickerProps<TDate, TTextFieldVersion>
   >(inProps, 'MuiDesktopDateRangePicker');
 
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
@@ -65,7 +70,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, 'day', TUseV6TextField, typeof props>({
+  const { renderPicker } = useDesktopRangePicker<TDate, 'day', TTextFieldVersion, typeof props>({
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
@@ -327,10 +332,6 @@ DesktopDateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * If `true`, days outside the current month are rendered:
    *
    * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
@@ -359,6 +360,10 @@ DesktopDateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

@@ -26,7 +26,10 @@ describe('<DesktopDatePicker /> - Field', () => {
     it('should be able to reset a single section', () => {
       // Test with v7 input
       const v7Response = renderWithProps(
-        { format: `${adapterToUse.formats.month} ${adapterToUse.formats.dayOfMonth}` },
+        {
+          textFieldVersion: 'v7' as const,
+          format: `${adapterToUse.formats.month} ${adapterToUse.formats.dayOfMonth}`,
+        },
         { componentFamily: 'picker' },
       );
 
@@ -47,7 +50,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       // Test with v6 input
       const v6Response = renderWithProps(
         {
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6' as const,
           format: `${adapterToUse.formats.month} ${adapterToUse.formats.dayOfMonth}`,
         },
         { componentFamily: 'picker' },
@@ -70,13 +73,16 @@ describe('<DesktopDatePicker /> - Field', () => {
     it('should adapt the default field format based on the props of the picker', () => {
       const testFormat = (props: DesktopDatePickerProps<any, any>, expectedFormat: string) => {
         // Test with v7 input
-        const v7Response = renderWithProps(props, { componentFamily: 'picker' });
+        const v7Response = renderWithProps(
+          { ...props, textFieldVersion: 'v7' as const },
+          { componentFamily: 'picker' },
+        );
         expectFieldValueV7(v7Response.getSectionsContainer(), expectedFormat);
         v7Response.unmount();
 
         // Test with v6 input
         const v6Response = renderWithProps(
-          { ...props, shouldUseV6TextField: true },
+          { ...props, textFieldVersion: 'v6' as const },
           { componentFamily: 'picker' },
         );
         const input = getTextbox();
@@ -98,6 +104,7 @@ describe('<DesktopDatePicker /> - Field', () => {
     it('should clear the selected section when all sections are completed when using timezones', () => {
       const v7Response = renderWithProps(
         {
+          textFieldVersion: 'v7' as const,
           value: adapter.date()!,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           timezone: 'America/Chicago',

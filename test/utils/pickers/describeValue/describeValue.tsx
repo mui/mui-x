@@ -39,7 +39,7 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
     renderWithProps = (props: any, config?: any) =>
       interactions.renderWithProps({ ...defaultProps, ...props }, { ...config, componentFamily });
   } else {
-    renderWithProps = (props: any, config?: any) => {
+    renderWithProps = ({ textFieldVersion, ...props }: any, config?: any) => {
       const response = render(<WrappedElementToTest {...props} hook={config?.hook} />);
 
       return {

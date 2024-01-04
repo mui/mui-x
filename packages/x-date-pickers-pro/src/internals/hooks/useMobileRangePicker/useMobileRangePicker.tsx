@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { FieldRef } from '@mui/x-date-pickers/models';
+import { FieldRef, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
@@ -29,18 +29,18 @@ const releaseInfo = getReleaseInfo();
 export const useMobileRangePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TExternalProps extends UseMobileRangePickerProps<
     TDate,
     TView,
-    TUseV6TextField,
+    TTextFieldVersion,
     any,
     TExternalProps
   >,
 >({
   props,
   ...pickerParams
-}: UseMobileRangePickerParams<TDate, TView, TUseV6TextField, TExternalProps>) => {
+}: UseMobileRangePickerParams<TDate, TView, TTextFieldVersion, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -50,7 +50,7 @@ export const useMobileRangePicker = <
     sx,
     format,
     formatDensity,
-    shouldUseV6TextField,
+    textFieldVersion,
     selectedSections,
     onSelectedSectionsChange,
     timezone,
@@ -105,7 +105,7 @@ export const useMobileRangePicker = <
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
-    TUseV6TextField,
+    TTextFieldVersion,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -118,7 +118,7 @@ export const useMobileRangePicker = <
       sx,
       format,
       formatDensity,
-      shouldUseV6TextField,
+      textFieldVersion,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
@@ -132,7 +132,7 @@ export const useMobileRangePicker = <
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,
     TView,
-    TUseV6TextField,
+    TTextFieldVersion,
     InferError<TExternalProps>
   >({
     wrapperVariant: 'mobile',

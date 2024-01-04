@@ -34,7 +34,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileDateRangePicker />, () => ({
+  describeConformance(<MobileDateRangePicker textFieldVersion="v7" />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileDateRangePicker',

@@ -3,7 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { FieldRef } from '@mui/x-date-pickers/models';
+import { FieldRef, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { UseDateRangeFieldProps } from '../internals/models/dateRange';
 import { RangePosition } from '../internals/models/range';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
@@ -11,16 +11,18 @@ import { RangeFieldSection, MultiInputRangeFieldClasses } from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TTextFieldSlotProps extends {},
 > = UseMultiInputRangeFieldParams<
-  UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField>,
+  UseMultiInputDateRangeFieldProps<TDate, TTextFieldVersion>,
   TTextFieldSlotProps
 >;
 
-export interface UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField extends boolean>
-  extends Omit<
-    UseDateRangeFieldProps<TDate, TUseV6TextField>,
+export interface UseMultiInputDateRangeFieldProps<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion,
+> extends Omit<
+    UseDateRangeFieldProps<TDate, TTextFieldVersion>,
     'unstableFieldRef' | 'clearable' | 'onClear'
   > {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
@@ -29,15 +31,17 @@ export interface UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField extends
 
 export type UseMultiInputDateRangeFieldComponentProps<
   TDate,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TChildProps extends {},
-> = Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField>> &
-  UseMultiInputDateRangeFieldProps<TDate, TUseV6TextField>;
+> = Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate, TTextFieldVersion>> &
+  UseMultiInputDateRangeFieldProps<TDate, TTextFieldVersion>;
 
-export interface MultiInputDateRangeFieldProps<TDate, TUseV6TextField extends boolean = false>
-  extends UseMultiInputDateRangeFieldComponentProps<
+export interface MultiInputDateRangeFieldProps<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+> extends UseMultiInputDateRangeFieldComponentProps<
     TDate,
-    TUseV6TextField,
+    TTextFieldVersion,
     Omit<StackProps, 'position'>
   > {
   autoFocus?: boolean;
@@ -54,7 +58,7 @@ export interface MultiInputDateRangeFieldProps<TDate, TUseV6TextField extends bo
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputDateRangeFieldSlotProps<TDate, TUseV6TextField>;
+  slotProps?: MultiInputDateRangeFieldSlotProps<TDate, TTextFieldVersion>;
 }
 
 export interface MultiInputDateRangeFieldSlots {
@@ -77,20 +81,23 @@ export interface MultiInputDateRangeFieldSlots {
   separator?: React.ElementType;
 }
 
-export interface MultiInputDateRangeFieldSlotProps<TDate, TUseV6TextField extends boolean> {
+export interface MultiInputDateRangeFieldSlotProps<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion,
+> {
   root?: SlotComponentProps<
     typeof Stack,
     {},
-    MultiInputDateRangeFieldProps<TDate, TUseV6TextField>
+    MultiInputDateRangeFieldProps<TDate, TTextFieldVersion>
   >;
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    MultiInputDateRangeFieldProps<TDate, TUseV6TextField> & { position: RangePosition }
+    MultiInputDateRangeFieldProps<TDate, TTextFieldVersion> & { position: RangePosition }
   >;
   separator?: SlotComponentProps<
     typeof Typography,
     {},
-    MultiInputDateRangeFieldProps<TDate, TUseV6TextField>
+    MultiInputDateRangeFieldProps<TDate, TTextFieldVersion>
   >;
 }

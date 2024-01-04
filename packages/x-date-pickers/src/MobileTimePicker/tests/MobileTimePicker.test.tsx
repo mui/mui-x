@@ -18,7 +18,7 @@ describe('<MobileTimePicker />', () => {
     it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      render(<MobileTimePicker onOpen={onOpen} />);
+      render(<MobileTimePicker textFieldVersion="v7" onOpen={onOpen} />);
 
       userEvent.mousePress(getFieldSectionsContainer());
 
@@ -30,6 +30,7 @@ describe('<MobileTimePicker />', () => {
       const handleChange = spy();
       render(
         <MobileTimePicker
+          textFieldVersion="v7"
           ampm
           onChange={handleChange}
           open
@@ -59,6 +60,7 @@ describe('<MobileTimePicker />', () => {
 
       render(
         <MobileTimePicker
+          textFieldVersion="v7"
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}

@@ -214,6 +214,7 @@ describe('<DateField /> - Editing', () => {
     it('should clear the selected section when only this section is completed', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
@@ -230,7 +231,7 @@ describe('<DateField /> - Editing', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
@@ -259,6 +260,7 @@ describe('<DateField /> - Editing', () => {
     it('should clear all the sections when all sections are selected and all sections are completed', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
       });
@@ -275,7 +277,7 @@ describe('<DateField /> - Editing', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
       });
@@ -293,6 +295,7 @@ describe('<DateField /> - Editing', () => {
     it('should clear all the sections when all sections are selected and not all sections are completed', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
@@ -312,7 +315,7 @@ describe('<DateField /> - Editing', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
@@ -334,9 +337,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should not keep query after typing again on a cleared section', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({
-        format: adapter.formats.year,
-      });
+      const v7Response = renderWithProps({ textFieldVersion: 'v7', format: adapter.formats.year });
 
       v7Response.selectSection('year');
 
@@ -353,7 +354,7 @@ describe('<DateField /> - Editing', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         format: adapter.formats.year,
       });
 
@@ -385,6 +386,7 @@ describe('<DateField /> - Editing', () => {
       const onChangeV7 = spy();
 
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         onChange: onChangeV7,
       });
@@ -403,7 +405,7 @@ describe('<DateField /> - Editing', () => {
       const onChangeV6 = spy();
 
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         onChange: onChangeV6,
       });
@@ -423,6 +425,7 @@ describe('<DateField /> - Editing', () => {
       const onChangeV7 = spy();
 
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
         onChange: onChangeV7,
@@ -447,7 +450,7 @@ describe('<DateField /> - Editing', () => {
       const onChangeV6 = spy();
 
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
         onChange: onChangeV6,
@@ -469,10 +472,11 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not call `onChange` if the section is already empty', () => {
-      // Test with v6 input
+      // Test with v7 input
       const onChangeV7 = spy();
 
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
         onChange: onChangeV7,
@@ -492,7 +496,7 @@ describe('<DateField /> - Editing', () => {
       const onChangeV6 = spy();
 
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
         onChange: onChangeV6,
@@ -673,6 +677,7 @@ describe('<DateField /> - Editing', () => {
     it('should allow to type the date 29th of February for leap years', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         format: adapter.formats.keyboardDate,
       });
 
@@ -703,7 +708,7 @@ describe('<DateField /> - Editing', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps({
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
         format: adapter.formats.keyboardDate,
       });
 
@@ -844,6 +849,7 @@ describe('<DateField /> - Editing', () => {
       it('should clear the selected section when only this section is completed (Backspace)', () => {
         // Test with v7 input
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
@@ -859,7 +865,7 @@ describe('<DateField /> - Editing', () => {
         // Test with v6 input
         const v6Response = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -874,6 +880,7 @@ describe('<DateField /> - Editing', () => {
       it('should clear the selected section when all sections are completed (Backspace)', () => {
         // Test with v7 input
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
         });
@@ -889,7 +896,7 @@ describe('<DateField /> - Editing', () => {
         const v6Response = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -902,6 +909,7 @@ describe('<DateField /> - Editing', () => {
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
         // Test with v7 input
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
         });
@@ -920,7 +928,7 @@ describe('<DateField /> - Editing', () => {
         const v6Response = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -936,6 +944,7 @@ describe('<DateField /> - Editing', () => {
       it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', () => {
         // Test with v7 input
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
@@ -954,7 +963,7 @@ describe('<DateField /> - Editing', () => {
         // Test with v6 input
         const v6Response = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -1006,6 +1015,7 @@ describe('<DateField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
           onChange: onChangeV7,
@@ -1028,7 +1038,7 @@ describe('<DateField /> - Editing', () => {
         const onChangeV6 = spy();
 
         const v6Response = renderWithProps({
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
           onChange: onChangeV6,
@@ -1125,6 +1135,7 @@ describe('<DateField /> - Editing', () => {
       // Test with v7 input
       const onChangeV7 = spy();
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         defaultValue: adapter.date(),
         onChange: onChangeV7,
       });
@@ -1145,7 +1156,7 @@ describe('<DateField /> - Editing', () => {
       const v6Response = renderWithProps({
         defaultValue: adapter.date(),
         onChange: onChangeV6,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
       const input = getTextbox();
       v6Response.selectSection('month');
@@ -1162,9 +1173,7 @@ describe('<DateField /> - Editing', () => {
     it('should set the date when all sections are selected, the pasted value is valid and no value is provided', () => {
       // Test with v7 input
       const onChangeV7 = spy();
-      const v7Response = renderWithProps({
-        onChange: onChangeV7,
-      });
+      const v7Response = renderWithProps({ textFieldVersion: 'v7', onChange: onChangeV7 });
       v7Response.selectSection('month');
 
       // Select all sections
@@ -1180,7 +1189,7 @@ describe('<DateField /> - Editing', () => {
       const onChangeV6 = spy();
       const v6Response = renderWithProps({
         onChange: onChangeV6,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
       const input = getTextbox();
       v6Response.selectSection('month');
@@ -1197,7 +1206,7 @@ describe('<DateField /> - Editing', () => {
     it('should not set the date when all sections are selected and the pasted value is not valid', () => {
       // Test with v7 input
       const onChangeV7 = spy();
-      const v7Response = renderWithProps({ onChange: onChangeV7 });
+      const v7Response = renderWithProps({ textFieldVersion: 'v7', onChange: onChangeV7 });
       v7Response.selectSection('month');
 
       // Select all sections
@@ -1209,7 +1218,7 @@ describe('<DateField /> - Editing', () => {
 
       // Test with v6 input
       const onChangeV6 = spy();
-      const v6Response = renderWithProps({ onChange: onChangeV6, shouldUseV6TextField: true });
+      const v6Response = renderWithProps({ onChange: onChangeV6, textFieldVersion: 'v6' });
       const input = getTextbox();
       v6Response.selectSection('month');
 
@@ -1226,6 +1235,7 @@ describe('<DateField /> - Editing', () => {
       // Test with v7 input
       const onChangeV7 = spy();
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         onChange: onChangeV7,
         format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
       });
@@ -1245,7 +1255,7 @@ describe('<DateField /> - Editing', () => {
       const v6Response = renderWithProps({
         onChange: onChangeV6,
         format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
 
       const input = getTextbox();
@@ -1264,6 +1274,7 @@ describe('<DateField /> - Editing', () => {
       const onChangeV7 = spy();
 
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         onChange: onChangeV7,
         readOnly: true,
       });
@@ -1284,7 +1295,7 @@ describe('<DateField /> - Editing', () => {
       const v6Response = renderWithProps({
         onChange: onChangeV6,
         readOnly: true,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
 
       const input = getTextbox();
@@ -1301,9 +1312,7 @@ describe('<DateField /> - Editing', () => {
       // Test with v7 input
       const onChangeV7 = spy();
 
-      const v7Response = renderWithProps({
-        onChange: onChangeV7,
-      });
+      const v7Response = renderWithProps({ textFieldVersion: 'v7', onChange: onChangeV7 });
 
       v7Response.selectSection('month');
 
@@ -1320,7 +1329,7 @@ describe('<DateField /> - Editing', () => {
 
       const v6Response = renderWithProps({
         onChange: onChangeV6,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
 
       const input = getTextbox();
@@ -1338,6 +1347,7 @@ describe('<DateField /> - Editing', () => {
       const onChangeV7 = spy();
 
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         defaultValue: adapter.date('2018-01-13'),
         onChange: onChangeV7,
       });
@@ -1358,7 +1368,7 @@ describe('<DateField /> - Editing', () => {
       const v6Response = renderWithProps({
         defaultValue: adapter.date('2018-01-13'),
         onChange: onChangeV6,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
 
       const input = getTextbox();
@@ -1376,6 +1386,7 @@ describe('<DateField /> - Editing', () => {
       const onChangeV7 = spy();
 
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         defaultValue: adapter.date('2018-01-13'),
         onChange: onChangeV7,
       });
@@ -1395,7 +1406,7 @@ describe('<DateField /> - Editing', () => {
       const v6Response = renderWithProps({
         defaultValue: adapter.date('2018-01-13'),
         onChange: onChangeV6,
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
 
       const input = getTextbox();
@@ -1410,6 +1421,7 @@ describe('<DateField /> - Editing', () => {
     it('should reset sections internal state when pasting', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         defaultValue: adapter.date('2018-12-05'),
       });
 
@@ -1434,7 +1446,7 @@ describe('<DateField /> - Editing', () => {
       // Test with v6 input
       const v6Response = renderWithProps({
         defaultValue: adapter.date('2018-12-05'),
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
 
       const input = getTextbox();
@@ -1452,6 +1464,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should allow pasting a section', () => {
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         defaultValue: adapter.date('2018-12-05'),
       });
 
@@ -1471,7 +1484,7 @@ describe('<DateField /> - Editing', () => {
 
       const v6Response = renderWithProps({
         defaultValue: adapter.date('2018-12-05'),
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
 
       const input = getTextbox();
@@ -1497,6 +1510,7 @@ describe('<DateField /> - Editing', () => {
         // Test with v7 input
         const onChangeV7 = spy();
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
         });
@@ -1511,7 +1525,7 @@ describe('<DateField /> - Editing', () => {
         const v6Response = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
         const input = getTextbox();
         v6Response.selectSection('year');
@@ -1524,6 +1538,7 @@ describe('<DateField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
         });
@@ -1559,7 +1574,7 @@ describe('<DateField /> - Editing', () => {
         const v6Response = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -1591,6 +1606,7 @@ describe('<DateField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: adapter.formats.year,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
@@ -1610,7 +1626,7 @@ describe('<DateField /> - Editing', () => {
           format: adapter.formats.year,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -1625,6 +1641,7 @@ describe('<DateField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           format: adapter.formats.month,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
@@ -1643,7 +1660,7 @@ describe('<DateField /> - Editing', () => {
           format: adapter.formats.month,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         v6Response.selectSection('month');
@@ -1661,9 +1678,7 @@ describe('<DateField /> - Editing', () => {
       it('should set the date when the change value is valid and no value is provided', () => {
         // Test with v7 input
         const onChangeV7 = spy();
-        const v7Response = renderWithProps({
-          onChange: onChangeV7,
-        });
+        const v7Response = renderWithProps({ textFieldVersion: 'v7', onChange: onChangeV7 });
         fireEvent.change(v7Response.getHiddenInput(), { target: { value: '09/16/2022' } });
 
         expect(onChangeV7.callCount).to.equal(1);
@@ -1675,7 +1690,7 @@ describe('<DateField /> - Editing', () => {
         const onChangeV6 = spy();
         renderWithProps({
           onChange: onChangeV6,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
         const input = getTextbox();
         fireEvent.change(input, { target: { value: '09/16/2022' } });
@@ -1689,6 +1704,7 @@ describe('<DateField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
+          textFieldVersion: 'v7',
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
         });
@@ -1706,7 +1722,7 @@ describe('<DateField /> - Editing', () => {
         renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -1744,7 +1760,7 @@ describe('<DateField /> - Editing', () => {
       it('should support digit editing', () => {
         const v6Response = renderWithProps({
           defaultValue: adapter.date('2022-11-23'),
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -1776,7 +1792,7 @@ describe('<DateField /> - Editing', () => {
         const v6Response = renderWithProps({
           defaultValue: adapter.date('2022-05-16'),
           format: `${adapter.formats.month} ${adapter.formats.year}`,
-          shouldUseV6TextField: true,
+          textFieldVersion: 'v6',
         });
 
         const input = getTextbox();
@@ -1807,6 +1823,7 @@ describe('<DateField /> - Editing', () => {
     it('should be able to reset the value from the outside', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
         value: adapter.date('2022-11-23'),
       });
       expectFieldValueV7(v7Response.getSectionsContainer(), '11/23/2022');
@@ -1821,7 +1838,7 @@ describe('<DateField /> - Editing', () => {
       // Test with v6 input
       const v6Response = renderWithProps({
         value: adapter.date('2022-11-23'),
-        shouldUseV6TextField: true,
+        textFieldVersion: 'v6',
       });
       const input = getTextbox();
       expectFieldValueV6(input, '11/23/2022');
@@ -1834,7 +1851,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should reset the input query state on an unfocused field', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({ value: null });
+      const v7Response = renderWithProps({ textFieldVersion: 'v7', value: null });
 
       v7Response.selectSection('month');
 
@@ -1871,7 +1888,7 @@ describe('<DateField /> - Editing', () => {
       v7Response.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({ shouldUseV6TextField: true, value: null });
+      const v6Response = renderWithProps({ textFieldVersion: 'v6', value: null });
 
       const input = getTextbox();
       v6Response.selectSection('month');
@@ -1914,7 +1931,7 @@ describe('<DateField /> - Editing', () => {
   describeAdapters('Select all', DateField, ({ renderWithProps }) => {
     it('should edit the 1st section when all sections are selected', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({});
+      const v7Response = renderWithProps({ textFieldVersion: 'v7' });
       v7Response.selectSection('month');
 
       // Select all sections
@@ -1928,7 +1945,7 @@ describe('<DateField /> - Editing', () => {
       v7Response.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({ shouldUseV6TextField: true });
+      const v6Response = renderWithProps({ textFieldVersion: 'v6' });
       v6Response.selectSection('month');
       const input = getTextbox();
 

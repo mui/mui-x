@@ -320,7 +320,7 @@
       "class": null,
       "name": "textField",
       "description": "Form control with an input to render the value inside the default field.",
-      "default": "PickersTextField, or TextField from '@mui/material' if shouldUseV6TextField is enabled."
+      "default": "TextField from '@mui/material' or PickersTextField if textFieldVersion === 'v6' ."
     },
     {
       "class": null,

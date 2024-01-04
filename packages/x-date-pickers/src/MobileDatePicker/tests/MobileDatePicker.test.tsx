@@ -25,7 +25,12 @@ describe('<MobileDatePicker />', () => {
   it('allows to change only year', () => {
     const onChangeMock = spy();
     render(
-      <MobileDatePicker open value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} />,
+      <MobileDatePicker
+        textFieldVersion="v7"
+        open
+        value={adapterToUse.date('2019-01-01')}
+        onChange={onChangeMock}
+      />,
     );
 
     fireEvent.click(screen.getByLabelText(/switch to year view/i));
@@ -38,6 +43,7 @@ describe('<MobileDatePicker />', () => {
   it('allows to select edge years from list', () => {
     render(
       <MobileDatePicker
+        textFieldVersion="v7"
         open
         reduceAnimations
         openTo="year"
@@ -52,14 +58,14 @@ describe('<MobileDatePicker />', () => {
 
   it('prop `onMonthChange` – dispatches callback when months switching', () => {
     const onMonthChangeMock = spy();
-    render(<MobileDatePicker open onMonthChange={onMonthChangeMock} />);
+    render(<MobileDatePicker textFieldVersion="v7" open onMonthChange={onMonthChangeMock} />);
 
     fireEvent.click(screen.getByLabelText('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(1);
   });
 
   it('prop `loading` – displays default loading indicator', () => {
-    render(<MobileDatePicker open loading />);
+    render(<MobileDatePicker textFieldVersion="v7" open loading />);
 
     expect(screen.queryAllByMuiTest('day')).to.have.length(0);
     expect(screen.getByMuiTest('loading-progress')).toBeVisible();
@@ -68,6 +74,7 @@ describe('<MobileDatePicker />', () => {
   it('prop `renderLoading` – displays custom loading indicator', () => {
     render(
       <MobileDatePicker
+        textFieldVersion="v7"
         loading
         renderLoading={() => <DayCalendarSkeleton data-testid="custom-loading" />}
         open
@@ -82,6 +89,7 @@ describe('<MobileDatePicker />', () => {
     it('should render custom toolbar component', () => {
       render(
         <MobileDatePicker
+          textFieldVersion="v7"
           open
           slots={{
             toolbar: () => <div data-testid="custom-toolbar" />,
@@ -95,6 +103,7 @@ describe('<MobileDatePicker />', () => {
     it('should format toolbar according to `toolbarFormat` prop', () => {
       render(
         <MobileDatePicker
+          textFieldVersion="v7"
           open
           defaultValue={adapterToUse.date('2018-01-01')}
           slotProps={{
@@ -109,7 +118,9 @@ describe('<MobileDatePicker />', () => {
     });
 
     it('should render the toolbar when `hidden` is `false`', () => {
-      render(<MobileDatePicker open slotProps={{ toolbar: { hidden: false } }} />);
+      render(
+        <MobileDatePicker textFieldVersion="v7" open slotProps={{ toolbar: { hidden: false } }} />,
+      );
 
       expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
     });
@@ -119,6 +130,7 @@ describe('<MobileDatePicker />', () => {
     it('should render custom day', () => {
       render(
         <MobileDatePicker
+          textFieldVersion="v7"
           open
           defaultValue={adapterToUse.date('2018-01-01')}
           slots={{
@@ -135,7 +147,7 @@ describe('<MobileDatePicker />', () => {
     it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      render(<MobileDatePicker onOpen={onOpen} />);
+      render(<MobileDatePicker textFieldVersion="v7" onOpen={onOpen} />);
 
       userEvent.mousePress(getFieldSectionsContainer());
 
@@ -149,7 +161,9 @@ describe('<MobileDatePicker />', () => {
       function ControlledMobileDatePicker(props) {
         const [value, setValue] = React.useState(null);
 
-        return <MobileDatePicker {...props} value={value} onChange={setValue} />;
+        return (
+          <MobileDatePicker textFieldVersion="v7" {...props} value={value} onChange={setValue} />
+        );
       }
 
       render(<ControlledMobileDatePicker onAccept={onAccept} />);
@@ -163,7 +177,10 @@ describe('<MobileDatePicker />', () => {
     });
 
     it('should update internal state when controlled value is updated', () => {
-      const v7Response = renderWithProps({ value: adapterToUse.date('2019-01-01') });
+      const v7Response = renderWithProps({
+        textFieldVersion: 'v7' as const,
+        value: adapterToUse.date('2019-01-01'),
+      });
 
       // Set a date
       expectFieldValueV7(v7Response.getSectionsContainer(), '01/01/2019');

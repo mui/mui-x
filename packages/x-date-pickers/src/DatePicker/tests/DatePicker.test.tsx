@@ -12,7 +12,7 @@ describe('<DatePicker />', () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = stubMatchMedia(false);
 
-    render(<DatePicker />);
+    render(<DatePicker textFieldVersion="v7" />);
 
     expect(screen.getByLabelText(/Choose date/)).to.have.class(pickersInputClasses.input);
 

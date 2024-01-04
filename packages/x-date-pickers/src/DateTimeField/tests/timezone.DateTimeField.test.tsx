@@ -46,7 +46,7 @@ describe('<DateTimeField /> - Timezone', () => {
 
     it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
       const onChange = spy();
-      const v7Response = renderWithProps({ onChange, format });
+      const v7Response = renderWithProps({ textFieldVersion: 'v7', onChange, format });
 
       const expectedDate = fillEmptyValue(v7Response, 'default');
 
@@ -66,7 +66,12 @@ describe('<DateTimeField /> - Timezone', () => {
       describe(`Timezone: ${timezone}`, () => {
         it('should use timezone prop for onChange and rendering when no value is provided', () => {
           const onChange = spy();
-          const v7Response = renderWithProps({ onChange, format, timezone });
+          const v7Response = renderWithProps({
+            textFieldVersion: 'v7',
+            onChange,
+            format,
+            timezone,
+          });
           const expectedDate = fillEmptyValue(v7Response, timezone);
 
           // Check the rendered value (uses timezone prop)
@@ -81,6 +86,7 @@ describe('<DateTimeField /> - Timezone', () => {
         it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
           const onChange = spy();
           const v7Response = renderWithProps({
+            textFieldVersion: 'v7',
             value: adapter.date(undefined, timezone),
             onChange,
             format,
@@ -115,7 +121,7 @@ describe('<DateTimeField /> - Timezone', () => {
     });
 
     it('should update the field when time zone changes (timestamp remains the same)', () => {
-      const v7Response = renderWithProps({});
+      const v7Response = renderWithProps({ textFieldVersion: 'v7' });
 
       const date = adapter.date('2020-06-18T14:30:10.000Z').setZone('UTC');
       v7Response.setProps({ value: date });

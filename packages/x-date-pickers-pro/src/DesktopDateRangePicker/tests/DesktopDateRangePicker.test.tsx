@@ -27,6 +27,7 @@ describe('<DesktopDateRangePicker />', () => {
   it('should scroll current month to the active selection when focusing appropriate field', () => {
     render(
       <DesktopDateRangePicker
+        textFieldVersion="v7"
         reduceAnimations
         defaultValue={[adapterToUse.date('2019-05-19'), adapterToUse.date('2019-10-30')]}
       />,
@@ -45,7 +46,10 @@ describe('<DesktopDateRangePicker />', () => {
 
   it(`should not crash when opening picker with invalid date value`, async () => {
     render(
-      <DesktopDateRangePicker defaultValue={[new Date(NaN), adapterToUse.date('2019-01-31')]} />,
+      <DesktopDateRangePicker
+        textFieldVersion="v7"
+        defaultValue={[new Date(NaN), adapterToUse.date('2019-01-31')]}
+      />,
     );
 
     openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
@@ -67,6 +71,7 @@ describe('<DesktopDateRangePicker />', () => {
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterClassToUse}>
           <DesktopDateRangePicker
+            textFieldVersion="v7"
             // We set the variant to standard to avoid having the label rendered in two places.
             slotProps={{
               textField: {
@@ -88,6 +93,7 @@ describe('<DesktopDateRangePicker />', () => {
       const handleTouchStart = spy();
       render(
         <DesktopDateRangePicker
+          textFieldVersion="v7"
           open
           slotProps={{
             popper: {
@@ -113,7 +119,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should open when clicking the start input', () => {
       const onOpen = spy();
 
-      render(<DesktopDateRangePicker onOpen={onOpen} />);
+      render(<DesktopDateRangePicker textFieldVersion="v7" onOpen={onOpen} />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -124,7 +130,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should open when clicking the end input', () => {
       const onOpen = spy();
 
-      render(<DesktopDateRangePicker onOpen={onOpen} />);
+      render(<DesktopDateRangePicker textFieldVersion="v7" onOpen={onOpen} />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
@@ -136,7 +142,7 @@ describe('<DesktopDateRangePicker />', () => {
       it(`should open when pressing "${key}" in the start input`, () => {
         const onOpen = spy();
 
-        render(<DesktopDateRangePicker onOpen={onOpen} />);
+        render(<DesktopDateRangePicker textFieldVersion="v7" onOpen={onOpen} />);
 
         const startInput = getFieldSectionsContainer();
         act(() => startInput.focus());
@@ -152,7 +158,7 @@ describe('<DesktopDateRangePicker />', () => {
       it(`should open when pressing "${key}" in the end input`, () => {
         const onOpen = spy();
 
-        render(<DesktopDateRangePicker onOpen={onOpen} />);
+        render(<DesktopDateRangePicker textFieldVersion="v7" onOpen={onOpen} />);
 
         const endInput = getFieldSectionsContainer(1);
         act(() => endInput.focus());
@@ -175,6 +181,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
+          textFieldVersion="v7"
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -217,6 +224,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
+          textFieldVersion="v7"
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -251,6 +259,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
+          textFieldVersion="v7"
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
@@ -278,6 +287,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
+          textFieldVersion="v7"
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -307,7 +317,12 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <div>
-          <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
+          <DesktopDateRangePicker
+            textFieldVersion="v7"
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+          />
           <input id="test-id" />
         </div>,
       );
@@ -341,6 +356,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <div>
           <DesktopDateRangePicker
+            textFieldVersion="v7"
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -379,7 +395,14 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
 
-      render(<DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+      render(
+        <DesktopDateRangePicker
+          textFieldVersion="v7"
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+        />,
+      );
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
@@ -400,7 +423,12 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <React.Fragment>
-          <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
+          <DesktopDateRangePicker
+            textFieldVersion="v7"
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+          />
           <button type="button" id="test">
             {' '}
             focus me
@@ -431,6 +459,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <div>
           <DesktopDateRangePicker
+            textFieldVersion="v7"
             defaultValue={defaultValue}
             onChange={onChange}
             onAccept={onAccept}
@@ -470,6 +499,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
+          textFieldVersion="v7"
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -496,6 +526,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
+          textFieldVersion="v7"
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -523,6 +554,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
+          textFieldVersion="v7"
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -547,6 +579,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
+          textFieldVersion="v7"
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -567,7 +600,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   describe('disabled dates', () => {
     it('should respect the disablePast prop', () => {
-      render(<DesktopDateRangePicker disablePast />);
+      render(<DesktopDateRangePicker textFieldVersion="v7" disablePast />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -579,7 +612,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should respect the disableFuture prop', () => {
-      render(<DesktopDateRangePicker disableFuture />);
+      render(<DesktopDateRangePicker textFieldVersion="v7" disableFuture />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -591,7 +624,9 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should respect the minDate prop', () => {
-      render(<DesktopDateRangePicker minDate={adapterToUse.date('2018-01-15')} />);
+      render(
+        <DesktopDateRangePicker textFieldVersion="v7" minDate={adapterToUse.date('2018-01-15')} />,
+      );
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -603,7 +638,9 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should respect the maxDate prop', () => {
-      render(<DesktopDateRangePicker maxDate={adapterToUse.date('2018-01-15')} />);
+      render(
+        <DesktopDateRangePicker textFieldVersion="v7" maxDate={adapterToUse.date('2018-01-15')} />,
+      );
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 

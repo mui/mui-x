@@ -1,4 +1,9 @@
-import { FieldSection, MuiPickersAdapter, PickersTimezone } from '../../../models';
+import {
+  FieldSection,
+  FieldTextFieldVersion,
+  MuiPickersAdapter,
+  PickersTimezone,
+} from '../../../models';
 import { PickersLocaleText } from '../../../locales';
 import {
   cleanLeadingZeros,
@@ -15,7 +20,7 @@ interface BuildSectionsFromFormatParams<TDate> {
   shouldRespectLeadingZeros: boolean;
   localeText: PickersLocaleText<TDate>;
   date: TDate | null;
-  shouldUseV6TextField: boolean;
+  textFieldVersion: FieldTextFieldVersion;
 }
 
 type FormatEscapedParts = { start: number; end: number }[];
@@ -293,7 +298,7 @@ const postProcessSections = <TDate>({
 
 export const buildSectionsFromFormat = <TDate>(params: BuildSectionsFromFormatParams<TDate>) => {
   let expandedFormat = expandFormat(params);
-  if (params.isRTL && !params.shouldUseV6TextField) {
+  if (params.isRTL && params.textFieldVersion === 'v7') {
     expandedFormat = expandedFormat.split(' ').reverse().join(' ');
   }
 

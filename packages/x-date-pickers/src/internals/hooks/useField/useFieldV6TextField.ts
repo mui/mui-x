@@ -69,7 +69,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   return newSections;
 };
 
-export const useFieldV6TextField: UseFieldTextField<true> = (params) => {
+export const useFieldV6TextField: UseFieldTextField<'v6'> = (params) => {
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);

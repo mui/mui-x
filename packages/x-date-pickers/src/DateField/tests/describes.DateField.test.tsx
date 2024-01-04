@@ -22,7 +22,7 @@ describe('<DateField /> - Describes', () => {
     componentFamily: 'field',
   }));
 
-  describeConformance(<DateField />, () => ({
+  describeConformance(<DateField textFieldVersion="v7" />, () => ({
     classes: {} as any,
     inheritComponent: PickersTextField,
     render,

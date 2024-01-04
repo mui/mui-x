@@ -11,7 +11,7 @@ import {
   unstable_generateUtilityClass as generateUtilityClass,
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
-import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
+import { BuiltInFieldTextFieldProps, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import {
   splitFieldInternalAndForwardedProps,
   convertFieldResponseIntoMuiTextFieldProps,
@@ -60,8 +60,11 @@ const MultiInputDateRangeFieldSeparator = styled(
   },
 )({});
 
-type MultiInputDateRangeFieldComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: MultiInputDateRangeFieldProps<TDate, TUseV6TextField> &
+type MultiInputDateRangeFieldComponent = (<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(
+  props: MultiInputDateRangeFieldProps<TDate, TTextFieldVersion> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -77,8 +80,11 @@ type MultiInputDateRangeFieldComponent = (<TDate, TUseV6TextField extends boolea
  */
 const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<
   TDate,
-  TUseV6TextField extends boolean = false,
->(inProps: MultiInputDateRangeFieldProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(
+  inProps: MultiInputDateRangeFieldProps<TDate, TTextFieldVersion>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiMultiInputDateRangeField',
@@ -114,17 +120,17 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   });
 
   const TextField =
-    slots?.textField ?? (inProps.shouldUseV6TextField ? MuiTextField : PickersTextField);
+    slots?.textField ?? (inProps.textFieldVersion === 'v7' ? PickersTextField : MuiTextField);
   const startTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
-  }) as BuiltInFieldTextFieldProps<TUseV6TextField>;
+  }) as BuiltInFieldTextFieldProps<TTextFieldVersion>;
   const endTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
-  }) as BuiltInFieldTextFieldProps<TUseV6TextField>;
+  }) as BuiltInFieldTextFieldProps<TTextFieldVersion>;
 
   const Separator = slots?.separator ?? MultiInputDateRangeFieldSeparator;
   const separatorProps = useSlotProps({
@@ -136,8 +142,8 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
 
   const fieldResponse = useMultiInputDateRangeField<
     TDate,
-    TUseV6TextField,
-    BuiltInFieldTextFieldProps<TUseV6TextField>
+    TTextFieldVersion,
+    BuiltInFieldTextFieldProps<TTextFieldVersion>
   >({
     sharedProps: internalProps,
     startTextFieldProps,
@@ -308,10 +314,6 @@ MultiInputDateRangeField.propTypes = {
    */
   shouldRespectLeadingZeros: PropTypes.bool,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.bool,
-  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -340,6 +342,10 @@ MultiInputDateRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.oneOf(['v6', 'v7']),
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

@@ -1,4 +1,5 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import {
   UseMobileRangePickerSlots,
   UseMobileRangePickerSlotProps,
@@ -14,12 +15,16 @@ export interface MobileDateRangePickerSlots<TDate>
   extends BaseDateRangePickerSlots<TDate>,
     MakeOptional<UseMobileRangePickerSlots<TDate, 'day'>, 'field'> {}
 
-export interface MobileDateRangePickerSlotProps<TDate, TUseV6TextField extends boolean>
-  extends BaseDateRangePickerSlotProps<TDate>,
-    UseMobileRangePickerSlotProps<TDate, 'day', TUseV6TextField> {}
+export interface MobileDateRangePickerSlotProps<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion,
+> extends BaseDateRangePickerSlotProps<TDate>,
+    UseMobileRangePickerSlotProps<TDate, 'day', TTextFieldVersion> {}
 
-export interface MobileDateRangePickerProps<TDate, TUseV6TextField extends boolean = false>
-  extends BaseDateRangePickerProps<TDate>,
+export interface MobileDateRangePickerProps<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+> extends BaseDateRangePickerProps<TDate>,
     MobileRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
@@ -35,5 +40,5 @@ export interface MobileDateRangePickerProps<TDate, TUseV6TextField extends boole
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateRangePickerSlotProps<TDate, TUseV6TextField>;
+  slotProps?: MobileDateRangePickerSlotProps<TDate, TTextFieldVersion>;
 }

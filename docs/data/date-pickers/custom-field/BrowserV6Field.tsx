@@ -70,12 +70,12 @@ const BrowserField = React.forwardRef(
 ) as BrowserFieldComponent;
 
 interface BrowserDateFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
+  extends UseDateFieldProps<Dayjs, 'v6'>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
-      true,
+      'v6',
       DateValidationError
     > {}
 
@@ -83,9 +83,9 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, true, typeof textFieldProps>({
+    const fieldResponse = useDateField<Dayjs, 'v6', typeof textFieldProps>({
       ...textFieldProps,
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
 
     /* If you don't need a clear button, you can skip the use of this hook */
@@ -100,9 +100,9 @@ const BrowserDateField = React.forwardRef(
 );
 
 const BrowserDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs, true>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps<Dayjs, 'v6'>, ref: React.Ref<HTMLDivElement>) => {
     return (
-      <DatePicker<Dayjs, true>
+      <DatePicker<Dayjs, 'v6'>
         ref={ref}
         {...props}
         slots={{ ...props.slots, field: BrowserDateField }}

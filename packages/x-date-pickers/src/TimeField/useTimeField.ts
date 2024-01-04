@@ -6,32 +6,32 @@ import { useField } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
 import { validateTime } from '../internals/utils/validation/validateTime';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
-import { FieldSection } from '../models';
+import { FieldSection, FieldTextFieldVersion } from '../models';
 import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
 
 export const useTimeField = <
   TDate,
-  TUseV6TextField extends boolean,
-  TAllProps extends UseTimeFieldProps<TDate, TUseV6TextField>,
+  TTextFieldVersion extends FieldTextFieldVersion,
+  TAllProps extends UseTimeFieldProps<TDate, TTextFieldVersion>,
 >(
   inProps: TAllProps,
 ) => {
   const props = useDefaultizedTimeField<
     TDate,
-    UseTimeFieldProps<TDate, TUseV6TextField>,
+    UseTimeFieldProps<TDate, TTextFieldVersion>,
     TAllProps
   >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseTimeFieldProps<any, TUseV6TextField>
+    keyof UseTimeFieldProps<any, TTextFieldVersion>
   >(props, 'time');
 
   return useField<
     TDate | null,
     TDate,
     FieldSection,
-    TUseV6TextField,
+    TTextFieldVersion,
     typeof forwardedProps,
     typeof internalProps
   >({

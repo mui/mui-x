@@ -9,6 +9,7 @@ import {
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
+import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -30,10 +31,10 @@ export interface UseMobileRangePickerSlots<TDate, TView extends DateOrTimeViewWi
 export interface UseMobileRangePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotProps<TDate, TUseV6TextField> {
+    RangePickerFieldSlotProps<TDate, TTextFieldVersion> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -47,7 +48,7 @@ export interface MobileRangeOnlyPickerProps
 export interface UseMobileRangePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends MobileRangeOnlyPickerProps,
@@ -68,7 +69,7 @@ export interface UseMobileRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobileRangePickerSlotProps<TDate, TView, TUseV6TextField>;
+  slotProps?: UseMobileRangePickerSlotProps<TDate, TView, TTextFieldVersion>;
 }
 
 export interface MobileRangePickerAdditionalViewProps
@@ -77,11 +78,11 @@ export interface MobileRangePickerAdditionalViewProps
 export interface UseMobileRangePickerParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TExternalProps extends UseMobileRangePickerProps<
     TDate,
     TView,
-    TUseV6TextField,
+    TTextFieldVersion,
     any,
     TExternalProps
   >,

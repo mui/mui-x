@@ -75,7 +75,7 @@ describe(`RTL - test arrows navigation`, () => {
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
 
     // Test with v7 input
-    const v7Response = renderWithProps({}, { direction: 'rtl' });
+    const v7Response = renderWithProps({ textFieldVersion: 'v7' }, { direction: 'rtl' });
 
     v7Response.selectSection('hours');
 
@@ -87,7 +87,7 @@ describe(`RTL - test arrows navigation`, () => {
     v7Response.unmount();
 
     // Test with v6 input
-    const v6Response = renderWithProps({ shouldUseV6TextField: true }, { direction: 'rtl' });
+    const v6Response = renderWithProps({ textFieldVersion: 'v6' }, { direction: 'rtl' });
 
     const input = getTextbox();
     v6Response.selectSection('hours');
@@ -102,7 +102,7 @@ describe(`RTL - test arrows navigation`, () => {
     const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
 
     // Test with v7 input
-    const v7Response = renderWithProps({}, { direction: 'rtl' });
+    const v7Response = renderWithProps({ textFieldVersion: 'v7' }, { direction: 'rtl' });
 
     v7Response.selectSection('day');
 
@@ -114,7 +114,7 @@ describe(`RTL - test arrows navigation`, () => {
     v7Response.unmount();
 
     // Test with v6 input
-    const v6Response = renderWithProps({ shouldUseV6TextField: true }, { direction: 'rtl' });
+    const v6Response = renderWithProps({ textFieldVersion: 'v6' }, { direction: 'rtl' });
 
     const input = getTextbox();
     v6Response.selectSection('day');
@@ -131,7 +131,7 @@ describe(`RTL - test arrows navigation`, () => {
 
     // Test with v7 input
     const v7Response = renderWithProps(
-      { defaultValue: adapter.date('2018-04-25T11:54:00') },
+      { textFieldVersion: 'v7', defaultValue: adapter.date('2018-04-25T11:54:00') },
       { direction: 'rtl' },
     );
 
@@ -146,7 +146,7 @@ describe(`RTL - test arrows navigation`, () => {
 
     // Test with v6 input
     const v6Response = renderWithProps(
-      { defaultValue: adapter.date('2018-04-25T11:54:00'), shouldUseV6TextField: true },
+      { defaultValue: adapter.date('2018-04-25T11:54:00'), textFieldVersion: 'v6' },
       { direction: 'rtl' },
     );
 
@@ -165,7 +165,7 @@ describe(`RTL - test arrows navigation`, () => {
 
     // Test with v7 input
     const v7Response = renderWithProps(
-      { defaultValue: adapter.date('2018-04-25T11:54:00') },
+      { textFieldVersion: 'v7', defaultValue: adapter.date('2018-04-25T11:54:00') },
       { direction: 'rtl' },
     );
 
@@ -180,7 +180,7 @@ describe(`RTL - test arrows navigation`, () => {
 
     // Test with v6 input
     const v6Response = renderWithProps(
-      { defaultValue: adapter.date('2018-04-25T11:54:00'), shouldUseV6TextField: true },
+      { defaultValue: adapter.date('2018-04-25T11:54:00'), textFieldVersion: 'v6' },
       { direction: 'rtl' },
     );
 
@@ -241,7 +241,11 @@ adapterToTest.forEach((adapterName) => {
       expectedValue: TDate;
       sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>;
     }) => {
-      const v7Response = renderWithProps({ defaultValue: initialValue, format });
+      const v7Response = renderWithProps({
+        textFieldVersion: 'v7',
+        defaultValue: initialValue,
+        format,
+      });
       v7Response.selectSection(sectionConfig.type);
       fireEvent.keyDown(v7Response.getActiveSection(0), { key });
 

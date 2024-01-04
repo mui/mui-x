@@ -20,7 +20,12 @@ import {
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 import { InferError } from '../useValidation';
-import { FieldSection, FieldSelectedSections, PickersTimezone } from '../../../models';
+import {
+  FieldSection,
+  FieldSelectedSections,
+  FieldTextFieldVersion,
+  PickersTimezone,
+} from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
   GetDefaultReferenceDateProps,
@@ -61,11 +66,18 @@ export const useFieldState = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TUseV6TextField extends boolean,
-  TForwardedProps extends UseFieldForwardedProps<TUseV6TextField>,
+  TTextFieldVersion extends FieldTextFieldVersion,
+  TForwardedProps extends UseFieldForwardedProps<TTextFieldVersion>,
   TInternalProps extends UseFieldInternalProps<any, any, any, any, any>,
 >(
-  params: UseFieldParams<TValue, TDate, TSection, TUseV6TextField, TForwardedProps, TInternalProps>,
+  params: UseFieldParams<
+    TValue,
+    TDate,
+    TSection,
+    TTextFieldVersion,
+    TForwardedProps,
+    TInternalProps
+  >,
 ): UseFieldStateResponse<TValue, TDate, TSection> => {
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
@@ -90,7 +102,7 @@ export const useFieldState = <
       onSelectedSectionsChange,
       shouldRespectLeadingZeros = false,
       timezone: timezoneProp,
-      shouldUseV6TextField = false,
+      textFieldVersion = false,
     },
   } = params;
 
@@ -122,7 +134,7 @@ export const useFieldState = <
           date,
           formatDensity,
           shouldRespectLeadingZeros,
-          shouldUseV6TextField,
+          textFieldVersion,
           isRTL,
         }),
       ),
@@ -135,7 +147,7 @@ export const useFieldState = <
       utils,
       formatDensity,
       timezone,
-      shouldUseV6TextField,
+      textFieldVersion,
     ],
   );
 
@@ -269,7 +281,7 @@ export const useFieldState = <
         date,
         formatDensity,
         shouldRespectLeadingZeros,
-        shouldUseV6TextField,
+        textFieldVersion,
         isRTL,
       });
       return mergeDateIntoReferenceDate(utils, timezone, date, sections, referenceDate, false);

@@ -8,18 +8,19 @@ import {
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
+import { FieldTextFieldVersion } from '../models';
 
 export interface DatePickerSlots<TDate>
   extends DesktopDatePickerSlots<TDate>,
     MobileDatePickerSlots<TDate> {}
 
-export interface DatePickerSlotProps<TDate, TUseV6TextField extends boolean>
-  extends DesktopDatePickerSlotProps<TDate, TUseV6TextField>,
-    MobileDatePickerSlotProps<TDate, TUseV6TextField> {}
+export interface DatePickerSlotProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
+  extends DesktopDatePickerSlotProps<TDate, TTextFieldVersion>,
+    MobileDatePickerSlotProps<TDate, TTextFieldVersion> {}
 
-export interface DatePickerProps<TDate, TUseV6TextField extends boolean = false>
-  extends DesktopDatePickerProps<TDate, TUseV6TextField>,
-    MobileDatePickerProps<TDate, TUseV6TextField> {
+export interface DatePickerProps<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>
+  extends DesktopDatePickerProps<TDate, TTextFieldVersion>,
+    MobileDatePickerProps<TDate, TTextFieldVersion> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -40,5 +41,5 @@ export interface DatePickerProps<TDate, TUseV6TextField extends boolean = false>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DatePickerSlotProps<TDate, TUseV6TextField>;
+  slotProps?: DatePickerSlotProps<TDate, TTextFieldVersion>;
 }

@@ -11,7 +11,12 @@ import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
-import { FieldSection, BaseSingleInputFieldProps, FieldRef } from '../../../models';
+import {
+  FieldSection,
+  BaseSingleInputFieldProps,
+  FieldRef,
+  FieldTextFieldVersion,
+} from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -23,13 +28,19 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
 export const useDesktopPicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TUseV6TextField extends boolean,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView, TUseV6TextField, any, TExternalProps>,
+  TTextFieldVersion extends FieldTextFieldVersion,
+  TExternalProps extends UseDesktopPickerProps<
+    TDate,
+    TView,
+    TTextFieldVersion,
+    any,
+    TExternalProps
+  >,
 >({
   props,
   getOpenDialogAriaText,
   ...pickerParams
-}: UseDesktopPickerParams<TDate, TView, TUseV6TextField, TExternalProps>) => {
+}: UseDesktopPickerParams<TDate, TView, TTextFieldVersion, TExternalProps>) => {
   const {
     slots,
     slotProps: innerSlotProps,
@@ -37,7 +48,7 @@ export const useDesktopPicker = <
     sx,
     format,
     formatDensity,
-    shouldUseV6TextField,
+    textFieldVersion,
     selectedSections,
     onSelectedSectionsChange,
     timezone,
@@ -105,7 +116,7 @@ export const useDesktopPicker = <
     TDate | null,
     TDate,
     FieldSection,
-    TUseV6TextField,
+    TTextFieldVersion,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -119,7 +130,7 @@ export const useDesktopPicker = <
       sx,
       format,
       formatDensity,
-      shouldUseV6TextField,
+      textFieldVersion,
       selectedSections,
       onSelectedSectionsChange,
       timezone,

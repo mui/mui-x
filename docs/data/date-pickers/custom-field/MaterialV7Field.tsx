@@ -8,17 +8,11 @@ import {
 } from '@mui/x-date-pickers/PickersTextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-const PickersTextField = React.forwardRef(
-  (props: PickersTextFieldProps, ref: React.Ref<HTMLDivElement>) => (
-    <MuiPickersTextField {...props} ref={ref} size="small" />
-  ),
-);
-
 export default function MaterialV7Field() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateField', 'DatePicker']}>
-        <DatePicker slots={{ textField: PickersTextField }} />
+        <DatePicker textFieldVersion="v7" />
       </DemoContainer>
     </LocalizationProvider>
   );

@@ -48,6 +48,9 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
     const defaultProps = {
       referenceDate: adapterToUse.date('2018-03-12'),
       open: true,
+      ...(componentFamily === 'field' || componentFamily === 'picker'
+        ? { textFieldVersion: 'v7' }
+        : {}),
     };
 
     it('should apply shouldDisableDate', function test() {

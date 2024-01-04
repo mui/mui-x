@@ -7,9 +7,10 @@ import { DesktopDateTimePicker } from '../DesktopDateTimePicker';
 import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTimePicker';
 import { DateTimePickerProps } from './DateTimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
+import { FieldTextFieldVersion } from '../models';
 
-type DateTimePickerComponent = (<TDate, TUseV6TextField extends boolean>(
-  props: DateTimePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
+type DateTimePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
+  props: DateTimePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,8 +25,8 @@ type DateTimePickerComponent = (<TDate, TUseV6TextField extends boolean>(
  */
 const DateTimePicker = React.forwardRef(function DateTimePicker<
   TDate,
-  TUseV6TextField extends boolean = false,
->(inProps: DateTimePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(inProps: DateTimePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePicker' });
 
   const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
@@ -345,10 +346,6 @@ DateTimePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * If `true`, days outside the current month are rendered:
    *
    * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
@@ -382,6 +379,10 @@ DateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24

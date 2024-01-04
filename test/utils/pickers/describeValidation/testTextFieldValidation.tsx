@@ -21,6 +21,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={adapterToUse.date('2018-03-12')}
           shouldDisableDate={(date: any) =>
@@ -54,6 +55,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={adapterToUse.date('2018-03-12')}
           shouldDisableYear={(date: any) => adapterToUse.getYear(date) === 2018}
@@ -80,6 +82,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           shouldDisableMonth={(date: any) => adapterToUse.getMonth(date) === 2}
           value={adapterToUse.date('2018-03-12')}
@@ -110,6 +113,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           shouldDisableTime={(value: any, view: TimeView) => {
             let comparingValue = adapterToUse.getHours(value);
@@ -161,7 +165,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       let now;
       function WithFakeTimer(props: any) {
         now = adapterToUse.date();
-        return <ElementToTest value={now} {...props} />;
+        return <ElementToTest textFieldVersion="v7" value={now} {...props} />;
       }
 
       const onErrorMock = spy();
@@ -194,7 +198,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       let now;
       function WithFakeTimer(props: any) {
         now = adapterToUse.date();
-        return <ElementToTest value={now} {...props} />;
+        return <ElementToTest textFieldVersion="v7" value={now} {...props} />;
       }
 
       const onErrorMock = spy();
@@ -225,6 +229,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={adapterToUse.date('2019-06-01')}
           minDate={adapterToUse.date('2019-06-15')}
@@ -255,6 +260,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={adapterToUse.date('2019-06-25')}
           maxDate={adapterToUse.date('2019-06-15')}
@@ -285,6 +291,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={adapterToUse.date('2019-06-15T10:15:00')}
           minTime={adapterToUse.date('2010-01-01T12:00:00')}
@@ -314,6 +321,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           maxTime={adapterToUse.date('2010-01-01T12:00:00')}
           value={adapterToUse.date('2019-06-15T10:15:00')}
@@ -343,6 +351,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={adapterToUse.date('2019-06-15T13:15:00')}
           maxDateTime={adapterToUse.date('2019-06-15T12:00:00')}
@@ -379,6 +388,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={adapterToUse.date('2019-06-15T13:15:00')}
           minDateTime={adapterToUse.date('2019-06-15T12:00:00')}
@@ -414,6 +424,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          textFieldVersion="v7"
           onError={onErrorMock}
           value={adapterToUse.date('2019-06-15T10:15:00')}
           minutesStep={30}

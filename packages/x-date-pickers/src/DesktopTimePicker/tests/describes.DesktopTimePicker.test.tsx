@@ -30,7 +30,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     variant: 'desktop',
   }));
 
-  describeConformance(<DesktopTimePicker />, () => ({
+  describeConformance(<DesktopTimePicker textFieldVersion="v7" />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiDesktopTimePicker',

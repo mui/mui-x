@@ -3,6 +3,7 @@ import {
   splitFieldInternalAndForwardedProps,
   useDefaultizedDateField,
 } from '@mui/x-date-pickers/internals';
+import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { UseSingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
@@ -11,27 +12,27 @@ import { RangeFieldSection } from '../models';
 
 export const useSingleInputDateRangeField = <
   TDate,
-  TUseV6TextField extends boolean,
-  TAllProps extends UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>,
+  TTextFieldVersion extends FieldTextFieldVersion,
+  TAllProps extends UseSingleInputDateRangeFieldProps<TDate, TTextFieldVersion>,
 >(
   inProps: TAllProps,
 ) => {
   const props = useDefaultizedDateField<
     TDate,
-    UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>,
+    UseSingleInputDateRangeFieldProps<TDate, TTextFieldVersion>,
     TAllProps
   >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseSingleInputDateRangeFieldProps<TDate, TUseV6TextField>
+    keyof UseSingleInputDateRangeFieldProps<TDate, TTextFieldVersion>
   >(props, 'date');
 
   return useField<
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
-    TUseV6TextField,
+    TTextFieldVersion,
     typeof forwardedProps,
     typeof internalProps
   >({

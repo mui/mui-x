@@ -13,6 +13,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     // Test with v7 input
     const v7Response = renderWithProps({
+      textFieldVersion: 'v7',
       // For Day.js: "[Escaped] YYYY"
       format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
     });
@@ -27,7 +28,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     const v6Response = renderWithProps({
       // For Day.js: "[Escaped] YYYY"
       format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
     const input = getTextbox();
     expectFieldPlaceholderV6(input, 'Escaped YYYY');
@@ -41,6 +42,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     // Test with v7 input
     const v7Response = renderWithProps({
+      textFieldVersion: 'v7',
       // For Day.js: "MMMM [Escaped] YYYY"
       format: `${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
     });
@@ -56,7 +58,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     const v6Response = renderWithProps({
       // For Day.js: "MMMM [Escaped] YYYY"
       format: `${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
 
     const input = getTextbox();
@@ -76,6 +78,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     // Test with v7 input
     const v7Response = renderWithProps({
+      textFieldVersion: 'v7',
       // For Day.js: "MMMM [Escaped[] YYYY"
       format: `${adapter.formats.month} ${startChar}Escaped ${startChar}${endChar} ${adapter.formats.year}`,
     });
@@ -91,7 +94,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     const v6Response = renderWithProps({
       // For Day.js: "MMMM [Escaped[] YYYY"
       format: `${adapter.formats.month} ${startChar}Escaped ${startChar}${endChar} ${adapter.formats.year}`,
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
 
     const input = getTextbox();
@@ -106,6 +109,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     // Test with v7 input
     const v7Response = renderWithProps({
+      textFieldVersion: 'v7',
       // For Day.js: "[Escaped] MMMM [Escaped] YYYY"
       format: `${startChar}Escaped${endChar} ${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
     });
@@ -121,7 +125,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     const v6Response = renderWithProps({
       // For Day.js: "[Escaped] MMMM [Escaped] YYYY"
       format: `${startChar}Escaped${endChar} ${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
 
     const input = getTextbox();
@@ -136,6 +140,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     // Test with v7 input
     const v7Response = renderWithProps({
+      textFieldVersion: 'v7',
       // For Day.js: "[Escaped] [Escaped]"
       format: `${startChar}Escaped${endChar} ${startChar}Escaped${endChar}`,
     });
@@ -148,7 +153,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     renderWithProps({
       // For Day.js: "[Escaped] [Escaped]"
       format: `${startChar}Escaped${endChar} ${startChar}Escaped${endChar}`,
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
 
     const input = getTextbox();
@@ -157,9 +162,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
   it('should add spaces around `/` when `formatDensity = "spacious"`', () => {
     // Test with v7 input
-    const v7Response = renderWithProps({
-      formatDensity: `spacious`,
-    });
+    const v7Response = renderWithProps({ textFieldVersion: 'v7', formatDensity: `spacious` });
 
     expectFieldValueV7(v7Response.getSectionsContainer(), 'MM / DD / YYYY');
 
@@ -171,7 +174,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     // Test with v6 input
     const v6Response = renderWithProps({
       formatDensity: `spacious`,
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
 
     const input = getTextbox();
@@ -184,6 +187,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   it('should add spaces around `.` when `formatDensity = "spacious"`', () => {
     // Test with v7 input
     const v7Response = renderWithProps({
+      textFieldVersion: 'v7',
       formatDensity: `spacious`,
       format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '.'),
     });
@@ -199,7 +203,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     const v6Response = renderWithProps({
       formatDensity: `spacious`,
       format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '.'),
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
 
     const input = getTextbox();
@@ -212,6 +216,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   it('should add spaces around `-` when `formatDensity = "spacious"`', () => {
     // Test with v7 input
     const v7Response = renderWithProps({
+      textFieldVersion: 'v7',
       formatDensity: `spacious`,
       format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '-'),
     });
@@ -227,7 +232,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     const v6Response = renderWithProps({
       formatDensity: `spacious`,
       format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '-'),
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
 
     const input = getTextbox();

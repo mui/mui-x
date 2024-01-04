@@ -17,7 +17,7 @@ import {
 import { adjustSectionValue, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
-import { FieldSection } from '../../../models';
+import { FieldSection, FieldTextFieldVersion } from '../../../models';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 
@@ -25,14 +25,21 @@ export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TUseV6TextField extends boolean,
-  TForwardedProps extends UseFieldCommonForwardedProps & UseFieldForwardedProps<TUseV6TextField>,
-  TInternalProps extends UseFieldInternalProps<any, any, any, TUseV6TextField, any> & {
+  TTextFieldVersion extends FieldTextFieldVersion,
+  TForwardedProps extends UseFieldCommonForwardedProps & UseFieldForwardedProps<TTextFieldVersion>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, TTextFieldVersion, any> & {
     minutesStep?: number;
   },
 >(
-  params: UseFieldParams<TValue, TDate, TSection, TUseV6TextField, TForwardedProps, TInternalProps>,
-): UseFieldResponse<TUseV6TextField, TForwardedProps> => {
+  params: UseFieldParams<
+    TValue,
+    TDate,
+    TSection,
+    TTextFieldVersion,
+    TForwardedProps,
+    TInternalProps
+  >,
+): UseFieldResponse<TTextFieldVersion, TForwardedProps> => {
   const utils = useUtils<TDate>();
 
   const {
@@ -40,7 +47,7 @@ export const useField = <
     internalProps: {
       unstableFieldRef,
       minutesStep,
-      shouldUseV6TextField = false,
+      textFieldVersion = 'v6',
       disabled = false,
       readOnly = false,
     },
@@ -84,12 +91,12 @@ export const useField = <
   );
 
   const useFieldTextField = (
-    shouldUseV6TextField ? useFieldV6TextField : useFieldV7TextField
-  ) as UseFieldTextField<TUseV6TextField>;
+    textFieldVersion === 'v6' ? useFieldV6TextField : useFieldV7TextField
+  ) as UseFieldTextField<TTextFieldVersion>;
 
   const sectionOrder = React.useMemo(
-    () => getSectionOrder(state.sections, isRTL && shouldUseV6TextField),
-    [state.sections, isRTL, shouldUseV6TextField],
+    () => getSectionOrder(state.sections, isRTL && textFieldVersion === 'v6'),
+    [state.sections, isRTL, textFieldVersion],
   );
 
   const { returnedValue, interactions } = useFieldTextField({

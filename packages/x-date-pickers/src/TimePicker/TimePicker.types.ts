@@ -9,18 +9,19 @@ import {
   MobileTimePickerSlots,
   MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
+import { FieldTextFieldVersion } from '../models';
 
 export interface TimePickerSlots<TDate>
   extends DesktopTimePickerSlots<TDate>,
     MobileTimePickerSlots<TDate, TimeViewWithMeridiem> {}
 
-export interface TimePickerSlotProps<TDate, TUseV6TextField extends boolean>
-  extends DesktopTimePickerSlotProps<TDate, TUseV6TextField>,
-    MobileTimePickerSlotProps<TDate, TimeViewWithMeridiem, TUseV6TextField> {}
+export interface TimePickerSlotProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
+  extends DesktopTimePickerSlotProps<TDate, TTextFieldVersion>,
+    MobileTimePickerSlotProps<TDate, TimeViewWithMeridiem, TTextFieldVersion> {}
 
-export interface TimePickerProps<TDate, TUseV6TextField extends boolean = false>
-  extends DesktopTimePickerProps<TDate, TUseV6TextField>,
-    Omit<MobileTimePickerProps<TDate, TimeViewWithMeridiem, TUseV6TextField>, 'views'> {
+export interface TimePickerProps<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>
+  extends DesktopTimePickerProps<TDate, TTextFieldVersion>,
+    Omit<MobileTimePickerProps<TDate, TimeViewWithMeridiem, TTextFieldVersion>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -36,5 +37,5 @@ export interface TimePickerProps<TDate, TUseV6TextField extends boolean = false>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimePickerSlotProps<TDate, TUseV6TextField>;
+  slotProps?: TimePickerSlotProps<TDate, TTextFieldVersion>;
 }

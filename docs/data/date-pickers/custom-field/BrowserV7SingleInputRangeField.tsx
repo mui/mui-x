@@ -43,8 +43,8 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BasePickersTextFieldProps<false>,
-    Omit<BoxProps, keyof BasePickersTextFieldProps<false>> {}
+  extends BasePickersTextFieldProps<'v7'>,
+    Omit<BoxProps, keyof BasePickersTextFieldProps<'v7'>> {}
 
 const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
@@ -106,12 +106,12 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserSingleInputDateRangeFieldProps
-  extends UseSingleInputDateRangeFieldProps<Dayjs, false>,
+  extends UseSingleInputDateRangeFieldProps<Dayjs, 'v7'>,
     BaseSingleInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      false,
+      'v7',
       DateRangeValidationError
     > {
   onAdornmentClick?: () => void;
@@ -145,9 +145,9 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useSingleInputDateRangeField<
       Dayjs,
-      false,
+      'v7',
       typeof textFieldProps
-    >({ ...textFieldProps, shouldUseV6TextField: false });
+    >({ ...textFieldProps, textFieldVersion: 'v7' });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({

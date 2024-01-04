@@ -17,7 +17,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
     }
 
     const inputRef = React.createRef<HTMLInputElement>();
-    render(<ElementToTest inputRef={inputRef} shouldUseV6TextField />);
+    render(<ElementToTest inputRef={inputRef} textFieldVersion="v6" />);
 
     expect(inputRef.current).to.have.tagName('input');
   });

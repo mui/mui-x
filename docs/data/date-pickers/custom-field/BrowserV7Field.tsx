@@ -35,8 +35,8 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BaseSingleInputPickersTextFieldProps<false>,
-    Omit<BoxProps, keyof BaseSingleInputPickersTextFieldProps<false>> {}
+  extends BaseSingleInputPickersTextFieldProps<'v7'>,
+    Omit<BoxProps, keyof BaseSingleInputPickersTextFieldProps<'v7'>> {}
 
 const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
@@ -98,12 +98,12 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserDateFieldProps
-  extends UseDateFieldProps<Dayjs, false>,
+  extends UseDateFieldProps<Dayjs, 'v7'>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
-      false,
+      'v7',
       DateValidationError
     > {}
 
@@ -111,9 +111,9 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+    const fieldResponse = useDateField<Dayjs, 'v7', typeof textFieldProps>({
       ...textFieldProps,
-      shouldUseV6TextField: false,
+      textFieldVersion: 'v7',
     });
 
     /* If you don't need a clear button, you can skip the use of this hook */

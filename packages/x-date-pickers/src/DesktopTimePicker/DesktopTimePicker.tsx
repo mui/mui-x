@@ -21,9 +21,10 @@ import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
 import { TimeView } from '../models/views';
+import { FieldTextFieldVersion } from '../models';
 
-type DesktopTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: DesktopTimePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
+type DesktopTimePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
+  props: DesktopTimePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -38,8 +39,8 @@ type DesktopTimePickerComponent = (<TDate, TUseV6TextField extends boolean = fal
  */
 const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   TDate,
-  TUseV6TextField extends boolean = false,
->(inProps: DesktopTimePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(inProps: DesktopTimePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -47,7 +48,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeViewWithMeridiem,
-    DesktopTimePickerProps<TDate, TUseV6TextField>
+    DesktopTimePickerProps<TDate, TTextFieldVersion>
   >(inProps, 'MuiDesktopTimePicker');
 
   const {
@@ -116,7 +117,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   const { renderPicker } = useDesktopPicker<
     TDate,
     TimeViewWithMeridiem,
-    TUseV6TextField,
+    TTextFieldVersion,
     typeof props
   >({
     props,
@@ -338,10 +339,6 @@ DesktopTimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * If `true`, disabled digital clock items will not be rendered.
    * @default false
    */
@@ -364,6 +361,10 @@ DesktopTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24

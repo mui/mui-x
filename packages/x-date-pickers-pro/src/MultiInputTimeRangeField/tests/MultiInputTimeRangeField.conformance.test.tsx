@@ -6,7 +6,7 @@ import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers';
 describe('<MultiInputTimeRangeField />', () => {
   const { render } = createPickerRenderer();
 
-  describeConformance(<MultiInputTimeRangeField />, () => ({
+  describeConformance(<MultiInputTimeRangeField textFieldVersion="v7" />, () => ({
     classes: {} as any,
     inheritComponent: 'div',
     render,

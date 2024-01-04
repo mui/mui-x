@@ -5,6 +5,7 @@ import {
   BaseSingleInputPickersTextFieldProps,
   FieldRef,
   FieldSection,
+  FieldTextFieldVersion,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers';
 
@@ -47,10 +48,10 @@ export interface BaseMultiInputFieldProps<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TUseV6TextField extends boolean,
+  TTextFieldVersion extends FieldTextFieldVersion,
   TError,
 > extends Omit<
-    BaseFieldProps<TValue, TDate, TSection, TUseV6TextField, TError>,
+    BaseFieldProps<TValue, TDate, TSection, TTextFieldVersion, TError>,
     'unstableFieldRef'
   > {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
@@ -78,13 +79,13 @@ export interface BaseMultiInputFieldProps<
  * Props the text field receives when used with a multi input picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.textField`.
  */
-export type BaseMultiInputPickersTextFieldProps<TUseV6TextField extends boolean> =
-  UseClearableFieldResponse<UseFieldResponse<TUseV6TextField, MultiInputFieldSlotTextFieldProps>>;
+export type BaseMultiInputPickersTextFieldProps<TTextFieldVersion extends FieldTextFieldVersion> =
+  UseClearableFieldResponse<UseFieldResponse<TTextFieldVersion, MultiInputFieldSlotTextFieldProps>>;
 
 /**
  * Props the text field receives when used with a single or multi input picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` or `props.slotProps.textField`.
  */
-export type BasePickersTextFieldProps<TUseV6TextField extends boolean> =
-  BaseSingleInputPickersTextFieldProps<TUseV6TextField> &
-    BaseMultiInputPickersTextFieldProps<TUseV6TextField>;
+export type BasePickersTextFieldProps<TTextFieldVersion extends FieldTextFieldVersion> =
+  BaseSingleInputPickersTextFieldProps<TTextFieldVersion> &
+    BaseMultiInputPickersTextFieldProps<TTextFieldVersion>;

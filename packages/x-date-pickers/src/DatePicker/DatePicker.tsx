@@ -7,9 +7,10 @@ import { DesktopDatePicker } from '../DesktopDatePicker';
 import { MobileDatePicker } from '../MobileDatePicker';
 import { DatePickerProps } from './DatePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
+import { FieldTextFieldVersion } from '../models';
 
-type DatePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: DatePickerProps<TDate, TUseV6TextField> & React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
+  props: DatePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,8 +25,8 @@ type DatePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
  */
 const DatePicker = React.forwardRef(function DatePicker<
   TDate,
-  TUseV6TextField extends boolean = false,
->(inProps: DatePickerProps<TDate, TUseV6TextField>, ref: React.Ref<HTMLDivElement>) {
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(inProps: DatePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePicker' });
 
   const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
@@ -299,10 +300,6 @@ DatePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * If `true`, days outside the current month are rendered:
    *
    * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
@@ -331,6 +328,10 @@ DatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

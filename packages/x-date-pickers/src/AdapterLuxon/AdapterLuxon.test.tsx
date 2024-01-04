@@ -107,7 +107,7 @@ describe('<AdapterLuxon />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({});
+          const v7Response = renderWithProps({ textFieldVersion: 'v7' });
 
           expectFieldValueV7(
             v7Response.getSectionsContainer(),
@@ -116,7 +116,10 @@ describe('<AdapterLuxon />', () => {
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({ value: adapter.date(testDate) });
+          const v7Response = renderWithProps({
+            textFieldVersion: 'v7',
+            value: adapter.date(testDate),
+          });
 
           expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
@@ -163,7 +166,7 @@ describe('<AdapterLuxon />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ format: 'DD' });
+          const v7Response = renderWithProps({ textFieldVersion: 'v7', format: 'DD' });
 
           expectFieldValueV7(
             v7Response.getSectionsContainer(),
@@ -172,7 +175,11 @@ describe('<AdapterLuxon />', () => {
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({ value: adapter.date(testDate), format: 'DD' });
+          const v7Response = renderWithProps({
+            textFieldVersion: 'v7',
+            value: adapter.date(testDate),
+            format: 'DD',
+          });
 
           expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });

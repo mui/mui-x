@@ -97,12 +97,12 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
+  extends UseDateFieldProps<Dayjs, 'v6'>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
-      true,
+      'v6',
       DateValidationError
     > {}
 
@@ -110,9 +110,9 @@ const JoyDateField = React.forwardRef(
   (props: JoyDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, true, typeof textFieldProps>({
+    const fieldResponse = useDateField<Dayjs, 'v6', typeof textFieldProps>({
       ...textFieldProps,
-      shouldUseV6TextField: true,
+      textFieldVersion: 'v6',
     });
 
     /* If you don't need a clear button, you can skip the use of this hook */
@@ -127,7 +127,7 @@ const JoyDateField = React.forwardRef(
 );
 
 const JoyDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs, true>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps<Dayjs, 'v6'>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DatePicker
         ref={ref}

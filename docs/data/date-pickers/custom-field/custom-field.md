@@ -57,45 +57,29 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 ## Usage with Material UI
 
-### Using Material `PickersTextField`
-
-By default, the fields and pickers are using this component to build their UI.
-You can import it to create custom wrappers:
-
-{{"demo": "MaterialV7Field.js"}}
-
 ### Using Material `TextField`
 
-The legacy field that uses the `TextField` component from `@mui/material` is still available.
-To enable it, you have to pass the `shouldUseV6TextField` prop to any field or picker component:
+By default, the fields and pickers are using this component to build their UI.
 
 {{"demo": "MaterialV6Field.js"}}
 
-:::warning
-This DOM structure will be removed in the next major (v8).
+### Using Material `PickersTextField`
 
-You can check the [presentation of the new DOM structure](/x/react-date-pickers/fields/#v7-one-span-per-section).
-:::
+By default, the fields and pickers are using this component to build their UI.
+
+Pass the `textFieldVersion="v7"` to any field or picker component to enable it:
+
+{{"demo": "MaterialV7Field.js"}}
+
+You can import it to create custom wrappers:
+
+{{"demo": "MaterialV7FieldWrapped.js"}}
 
 ## Usage with Joy UI
-
-### Using Joy `PickersTextField`
-
-TODO
 
 ### Using Joy `Input`
 
 You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
-
-:::warning
-This DOM structure will be removed in the next major (v8).
-
-You can check the following sections:
-
-- [The presentation of the new DOM structure](/x/react-date-pickers/fields/#v7-one-span-per-section)
-- [The guide on how to use Joy UI with the new DOM structure](/x/react-date-pickers/custom-field/#using-joy-pickerstextfield)
-
-:::
 
 {{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
 
@@ -103,27 +87,13 @@ You can check the following sections:
 
 {{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
 
+### Using Joy `PickersTextField`
+
+TODO
+
 ## Usage with an unstyled input
 
-### Using custom `PickersTextField`
-
-{{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
-
-{{"demo": "BrowserV7SingleInputRangeField.js", "defaultCodeOpen": false}}
-
-{{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
-
 ### Using the browser input
-
-:::warning
-This DOM structure will be removed in the next major (v8).
-
-You can check the following sections:
-
-- [The presentation of the new DOM structure](/x/react-date-pickers/fields/#v7-one-span-per-section)
-- [The guide on how to use an unstyled input with the new DOM structure](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield)
-
-:::
 
 {{"demo": "BrowserV6Field.js", "defaultCodeOpen": false}}
 
@@ -134,6 +104,14 @@ You can check the following sections:
 :::warning
 You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
+
+### Using custom `PickersTextField`
+
+{{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV7SingleInputRangeField.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
 
 ## Usage with another UI
 

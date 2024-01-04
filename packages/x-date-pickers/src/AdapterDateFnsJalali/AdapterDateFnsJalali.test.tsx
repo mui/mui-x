@@ -73,7 +73,7 @@ describe('<AdapterDateFnsJalali />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({});
+          const v7Response = renderWithProps({ textFieldVersion: 'v7' });
 
           expectFieldValueV7(
             v7Response.getSectionsContainer(),
@@ -82,7 +82,10 @@ describe('<AdapterDateFnsJalali />', () => {
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({ value: adapter.date(testDate) });
+          const v7Response = renderWithProps({
+            textFieldVersion: 'v7',
+            value: adapter.date(testDate),
+          });
 
           expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });

@@ -9,15 +9,18 @@ import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeView, FieldTextFieldVersion } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 
-type MobileDateTimePickerComponent = (<TDate, TUseV6TextField extends boolean = false>(
-  props: MobileDateTimePickerProps<TDate, DateOrTimeView, TUseV6TextField> &
+type MobileDateTimePickerComponent = (<
+  TDate,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+>(
+  props: MobileDateTimePickerProps<TDate, DateOrTimeView, TTextFieldVersion> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -33,9 +36,9 @@ type MobileDateTimePickerComponent = (<TDate, TUseV6TextField extends boolean = 
  */
 const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   TDate,
-  TUseV6TextField extends boolean = false,
+  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
 >(
-  inProps: MobileDateTimePickerProps<TDate, DateOrTimeView, TUseV6TextField>,
+  inProps: MobileDateTimePickerProps<TDate, DateOrTimeView, TTextFieldVersion>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
@@ -45,7 +48,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DateOrTimeView,
-    MobileDateTimePickerProps<TDate, DateOrTimeView, TUseV6TextField>
+    MobileDateTimePickerProps<TDate, DateOrTimeView, TTextFieldVersion>
   >(inProps, 'MuiMobileDateTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
@@ -88,7 +91,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, TUseV6TextField, typeof props>({
+  const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, TTextFieldVersion, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
@@ -399,10 +402,6 @@ MobileDateTimePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * @default false
-   */
-  shouldUseV6TextField: PropTypes.any,
-  /**
    * If `true`, days outside the current month are rendered:
    *
    * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
@@ -431,6 +430,10 @@ MobileDateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * @default 'v6'
+   */
+  textFieldVersion: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
