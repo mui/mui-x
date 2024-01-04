@@ -80,31 +80,6 @@ import 'moment/locale/de';
 
 {{"demo": "LocalizationMoment.js"}}
 
-:::warning
-Some of the `moment` methods do not support scoped locales.
-For accurate localization, you will have to manually update the global locale before updating it in `LocalizationProvider`.
-
-```tsx
-function App({ children }) {
-  const [locale, setLocale] = React.useState('en-us');
-
-  if (moment.locale() !== locale) {
-    moment.locale(locale);
-  }
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={locale}>
-      <Stack>
-        <Button onClick={() => setLocale('de')}>Switch to German</Button>
-        {children}
-      </Stack>
-    </LocalizationProvider>
-  );
-}
-```
-
-:::
-
 ## Meridiem — 12h/24h format
 
 All the time and datetime components will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
@@ -114,7 +89,6 @@ You can override the default setting with the `ampm` prop:
 
 ## Custom formats
 
-:::warning
 The format received by the props described below depends on the date library you are using.
 Please refer to each library's documentation for the full format table:
 
@@ -122,8 +96,6 @@ Please refer to each library's documentation for the full format table:
 - [date-fns](https://date-fns.org/docs/format)
 - [Luxon](https://moment.github.io/luxon/#/formatting?id=table-of-tokens)
 - [Moment.js](https://momentjs.com/docs/#/displaying/format/)
-
-:::
 
 ### Custom field format
 
@@ -217,6 +189,25 @@ Placeholders translations depend on locale.
 Some locales might keep using English placeholders, because that format is commonly used in a given locale.
 :::
 
+You can customize the specific placeholder section translation to your needs.
+All the available placeholder translation methods and their parameters are available in [the source file](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts).
+You can override them using the `localeText` prop defined on the `LocalizationProvider` or on a specific Picker component if you need more fine-grained control.
+
+A common use case is to change the placeholder of the month section to a short letter form (Jan, Feb, etc.).
+The default translation implementation might not be what you want, so you can override it:
+
+```tsx
+<LocalizationProvider
+  dateAdapter={AdapterDayjs}
+  localeText={{
+    fieldMonthPlaceholder: (params) =>
+      params.contentType === 'digit' ? 'MM' : params.format,
+  }}
+>
+  <DatePicker />
+</LocalizationProvider>
+```
+
 ### Custom toolbar format
 
 To customize the format used in the toolbar, use the `toolbarFormat` prop of the `toolbar` slot.
@@ -254,3 +245,95 @@ This prop is available on all components that render a day calendar, including t
 :::
 
 {{"demo": "CustomCalendarHeaderFormat.js"}}
+
+## Custom start of week
+
+The Date and Time Pickers are using the week settings provided by your date libraries.
+Each adapter uses its locale to define the start of the week.
+
+If the default start of the week defined in your adapter's locale is not the one you want, you can override it as shown in the following examples.
+
+:::warning
+If you want to update the start of the week after the first render of a component,
+you will have to manually remount your component to apply the new locale configuration.
+
+:::
+
+### With `dayjs`
+
+For `dayjs`, use the `updateLocale` plugin:
+
+```ts
+import updateLocale from 'dayjs/plugin/updateLocale';
+
+dayjs.extend(updateLocale);
+
+// Replace "en" with the name of the locale you want to update.
+dayjs.updateLocale('en', {
+  // Sunday = 0, Monday = 1.
+  weekStart: 1,
+});
+```
+
+### With `date-fns`
+
+For `date-fns`, use the `setDefaultOptions` utility:
+
+```ts
+import setDefaultOptions from 'date-fns/setDefaultOptions';
+
+setDefaultOptions({
+  // Sunday = 0, Monday = 1.
+  weekStartsOn: 1,
+});
+```
+
+### With `luxon`
+
+For `luxon`, use the `Settings.defaultWeekSettings` object:
+
+```ts
+import { Settings } from 'luxon';
+
+Settings.defaultWeekSettings = {
+  // Sunday = 7, Monday = 1.
+  firstDay: 1,
+  // Makes sure we don't lose the other information from `defaultWeekSettings`
+  minimalDays: Info.getMinimumDaysInFirstWeek(),
+  weekend: Info.getWeekendWeekdays(),
+};
+```
+
+:::warning
+The [browser API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) used by Luxon to determine the start of the week in the current locale is not yet supported by Firefox.
+Users on this browser will always see Monday as the start of the week.
+If you want to have the same start of week on all browsers,
+you will have to manually override the `defaultWeekSettings` to set the `firstDay` corresponding to your locale.
+
+For example, when using the `en-US` locale:
+
+```ts
+Settings.defaultWeekSettings = {
+  firstDay: 7,
+  minimalDays: Info.getMinimumDaysInFirstWeek(),
+  weekend: Info.getWeekendWeekdays(),
+};
+```
+
+:::
+
+### With `moment`
+
+For `moment`, use the `moment.updateLocale` method:
+
+```ts
+import moment from 'moment';
+
+// Replace "en" with the name of the locale you want to update.
+moment.updateLocale('en', {
+  week: {
+    // Sunday = 0, Monday = 1.
+    dow: 1,
+  },
+});
+```

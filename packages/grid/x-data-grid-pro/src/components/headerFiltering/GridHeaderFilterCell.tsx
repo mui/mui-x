@@ -17,8 +17,8 @@ import {
 import {
   GridStateColDef,
   useGridPrivateApiContext,
-  unstable_gridHeaderFilteringEditFieldSelector,
-  unstable_gridHeaderFilteringMenuSelector,
+  gridHeaderFilteringEditFieldSelector,
+  gridHeaderFilteringMenuSelector,
   isNavigationKey,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -89,8 +89,8 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const inputRef = React.useRef<HTMLInputElement>(null);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-    const isEditing = unstable_gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
-    const isMenuOpen = unstable_gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
+    const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
+    const isMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
 
     const currentOperator = filterOperators![0];
 
@@ -141,8 +141,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             break;
           case 'Enter':
             if (isEditing) {
-              apiRef.current.stopHeaderFilterEditMode();
-              break;
+              if (!event.defaultPrevented) {
+                apiRef.current.stopHeaderFilterEditMode();
+                break;
+              }
             }
             if (event.metaKey || event.ctrlKey) {
               headerFilterMenuRef.current = buttonRef.current;
@@ -192,7 +194,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const onMouseDown = React.useCallback(
       (event: React.MouseEvent) => {
         if (!hasFocus) {
-          if (inputRef.current && inputRef.current.contains(event.target as HTMLElement)) {
+          if (inputRef.current?.contains?.(event.target as HTMLElement)) {
             inputRef.current.focus();
           }
           apiRef.current.setColumnHeaderFilterFocus(colDef.field, event);

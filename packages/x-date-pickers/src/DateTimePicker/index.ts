@@ -1,8 +1,8 @@
 export { DateTimePicker } from './DateTimePicker';
 export type {
   DateTimePickerProps,
-  DateTimePickerSlotsComponents,
-  DateTimePickerSlotsComponentsProps,
+  DateTimePickerSlots,
+  DateTimePickerSlotProps,
 } from './DateTimePicker.types';
 
 export { DateTimePickerTabs } from './DateTimePickerTabs';

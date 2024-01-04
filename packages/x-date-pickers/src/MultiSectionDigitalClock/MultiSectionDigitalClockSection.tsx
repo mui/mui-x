@@ -11,8 +11,8 @@ import {
 } from './multiSectionDigitalClockSectionClasses';
 import type {
   MultiSectionDigitalClockOption,
-  MultiSectionDigitalClockSlotsComponent,
-  MultiSectionDigitalClockSlotsComponentsProps,
+  MultiSectionDigitalClockSlots,
+  MultiSectionDigitalClockSlotProps,
 } from './MultiSectionDigitalClock.types';
 import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
@@ -22,8 +22,8 @@ import {
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
   classes?: Partial<MultiSectionDigitalClockSectionClasses>;
-  slots?: MultiSectionDigitalClockSlotsComponent;
-  slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
+  slots?: MultiSectionDigitalClockSlots;
+  slotProps?: MultiSectionDigitalClockSlotProps;
 }
 
 export interface MultiSectionDigitalClockSectionProps<TValue>
@@ -61,13 +61,18 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     '@media (prefers-reduced-motion: no-preference)': {
       scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
     },
-    '&:hover': {
+    '@media (pointer: fine)': {
+      '&:hover': {
+        overflowY: 'auto',
+      },
+    },
+    '@media (pointer: none), (pointer: coarse)': {
       overflowY: 'auto',
     },
     '&:not(:first-of-type)': {
       borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
     },
-    '&:after': {
+    '&::after': {
       display: 'block',
       content: '""',
       // subtracting the height of one item, extra margin and borders to make sure the max height is correct
@@ -205,6 +210,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
               tabIndex={tabIndex}
+              className={classes.item}
               {...slotProps?.digitalClockSectionItem}
             >
               {option.label}

@@ -29,7 +29,7 @@ import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarCla
 import { TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
 
-export interface DayCalendarSlotsComponent<TDate> {
+export interface DayCalendarSlots<TDate> {
   /**
    * Custom component for day.
    * Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
@@ -38,7 +38,7 @@ export interface DayCalendarSlotsComponent<TDate> {
   day?: React.ElementType<PickersDayProps<TDate>>;
 }
 
-export interface DayCalendarSlotsComponentsProps<TDate> {
+export interface DayCalendarSlotProps<TDate> {
   day?: SlotComponentProps<
     typeof PickersDay,
     {},
@@ -54,7 +54,7 @@ export interface ExportedDayCalendarProps<TDate> extends ExportedPickersDayProps
    */
   loading?: boolean;
   /**
-   * Component displaying when passed `loading` true.
+   * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => "..."
    */
@@ -71,8 +71,8 @@ export interface ExportedDayCalendarProps<TDate> extends ExportedPickersDayProps
    */
   displayWeekNumber?: boolean;
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber?: number;
@@ -107,12 +107,12 @@ export interface DayCalendarProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DayCalendarSlotsComponent<TDate>;
+  slots?: DayCalendarSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DayCalendarSlotsComponentsProps<TDate>;
+  slotProps?: DayCalendarSlotProps<TDate>;
 }
 
 const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {

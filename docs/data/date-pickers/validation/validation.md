@@ -13,7 +13,7 @@ All the date and time pickers have an API for adding validation constraints.
 By default, they provide visual feedback if the component value doesn't meet the validation criteria.
 
 :::info
-The validation props are showcased for each type of picker component using the responsive pickers (`DatePicker`, `TimePicker`, `DateTimePicker`, and `DateRangePicker`)
+The validation props are showcased for each type of picker component using the responsive pickers (`DatePicker`, `TimePicker`, `DateTimePicker`, and `DateRangePicker`, etc.).
 
 But the same props are available on:
 
@@ -69,7 +69,8 @@ For date time pickers, it will combine both.
 {{"demo": "DateValidationDisableFuture.js", "defaultCodeOpen": false}}
 
 :::info
-The current time is computed during the first render of the `LocalizationProvider`, it will not change during the lifetime of the component.
+The current time is computed during the first render of the `LocalizationProvider`.
+It will not change during the lifetime of the component.
 :::
 
 ## Date validation
@@ -104,7 +105,7 @@ In the example below—the weekends are not selectable:
 `shouldDisableDate` only prevents the selection of disabled dates on the `day` view.
 For performance reasons—when rendering the `month` view—we are not calling the callback for every day of each month to see which one should be disabled (same for the `year` view).
 
-If you know that all days of some months are disabled—you can provide the [`shouldDisableMonth`](#disable-specific-months) prop to disable them in the `month` view.
+If you know that all days of some months are disabled, you can provide the [`shouldDisableMonth`](#disable-specific-months) prop to disable them in the `month` view.
 Same with the [`shouldDisableYear`](#disable-specific-years) prop for the `year` view.
 :::
 
@@ -128,9 +129,9 @@ The `shouldDisableMonth` prop prevents the selection of all dates in months for 
 
 :::warning
 `shouldDisableMonth` only prevents the selection of disabled months on the `day` and `month` views.
-For performance reasons—when rendering the `year` view—we are not calling the callback for every month of each year to see which one should be disabled.
+For performance reasons, when rendering the `year` view, we are not calling the callback for every month of each year to see which one should be disabled.
 
-If you know that all months of some years are disabled—you can provide the [`shouldDisableYear`](#disable-specific-years) prop to disable them in the `year` view.
+If you know that all months of some years are disabled, you can provide the [`shouldDisableYear`](#disable-specific-years) prop to disable them in the `year` view.
 :::
 
 ### Disable specific years
@@ -199,10 +200,10 @@ The `maxDateTime` prop prevents the selection of all values after `props.maxDate
 {{"demo": "DateTimeValidationMaxDateTime.js", "defaultCodeOpen": false}}
 
 :::warning
-If you want to put time boundaries independent of the date—use the [`time boundaries`](#set-time-boundaries) instead.
+If you want to put time boundaries independent of the date, use the [`time boundaries`](#set-time-boundaries) instead.
 
 For now, you cannot use `maxDateTime` and `maxTime` together.
-`maxDateTime` will override the `maxTime` behavior—Same for `minDateTime`/`minTime`
+`maxDateTime` will override the `maxTime` behavior, and the same goes for `minDateTime` and `minTime`.
 
 ```tsx
 // Disable the values between 6 PM and midnight for every day

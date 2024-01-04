@@ -19,7 +19,7 @@ The component leverages the power of React and TypeScript, to provide the best U
 Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
 :::
 
-The `DataGrid` presents information in a structured format of rows and columns. The data is displayed in a user-friendly, quick-to-scan and interactive way, enabling users to efficiently identify patterns, edit data, and gather insights.
+The Data Grid presents information in a structured format of rows and columns. The data is displayed in a user-friendly, quick-to-scan and interactive way, enabling users to efficiently identify patterns, edit data, and gather insights.
 
 The component comes in three different versions. One available under MIT license and two available under commercial license.
 
@@ -109,9 +109,7 @@ You can find more details on, the [feature comparison](/x/react-data-grid/gettin
 
 Here are some resources you might be interested in to learn more about the data grid:
 
-<!-- #default-branch-switch -->
-
-- The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/)
+- The [source on GitHub](https://github.com/mui/mui-x/blob/-/packages/)
 - The [Material Design specification](https://m2.material.io/components/data-tables) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)
 - The Figma, Adobe XD, and Sketch [design kits](https://mui.com/design-kits/).

@@ -2,16 +2,11 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
-import { FieldSlotsComponents, FieldSlotsComponentsProps } from '@mui/x-date-pickers/internals';
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
 } from '../internals/models';
-
-export interface UseSingleInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  props: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
 
 export interface UseSingleInputDateTimeRangeFieldProps<TDate>
   extends UseDateTimeRangeFieldProps<TDate> {}
@@ -33,18 +28,18 @@ export interface SingleInputDateTimeRangeFieldProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: SingleInputDateTimeRangeFieldSlotsComponent;
+  slots?: SingleInputDateTimeRangeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: SingleInputDateTimeRangeFieldSlotProps<TDate>;
 }
 
 export type SingleInputDateTimeRangeFieldOwnerState<TDate> =
   SingleInputDateTimeRangeFieldProps<TDate>;
 
-export interface SingleInputDateTimeRangeFieldSlotsComponent extends FieldSlotsComponents {
+export interface SingleInputDateTimeRangeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -53,8 +48,7 @@ export interface SingleInputDateTimeRangeFieldSlotsComponent extends FieldSlotsC
   textField?: React.ElementType;
 }
 
-export interface SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate>
-  extends FieldSlotsComponentsProps {
+export interface SingleInputDateTimeRangeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<
     typeof TextField,
     {},

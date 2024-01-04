@@ -134,8 +134,8 @@ DateRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
@@ -179,6 +179,11 @@ DateRangePicker.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Name attribute used by the `input` element in the Field.
+   * Ignored if the field has several inputs.
+   */
+  name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -251,7 +256,7 @@ DateRangePicker.propTypes = {
    */
   referenceDate: PropTypes.any,
   /**
-   * Component displaying when passed `loading` true.
+   * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => "..."
    */
@@ -269,6 +274,7 @@ DateRangePicker.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',

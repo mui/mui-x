@@ -1,0 +1,16 @@
+{
+  "props": {},
+  "slots": [],
+  "name": "PieArc",
+  "imports": [
+    "import { PieArc } from '@mui/x-charts/PieChart';",
+    "import { PieArc } from '@mui/x-charts';"
+  ],
+  "styles": {
+    "classes": ["root", "highlighted", "faded"],
+    "globalClasses": {},
+    "name": "MuiPieArc"
+  },
+  "filename": "/packages/x-charts/src/PieChart/PieArc.tsx",
+  "demos": "<ul></ul>"
+}

@@ -19,7 +19,7 @@ import { createRenderer, fireEvent, screen, act, within } from '@mui-internal/te
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getSelectInput } from 'test/utils/helperFn';
 
 const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
@@ -170,10 +170,10 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
 
-    const selectListOfColumns = document.querySelectorAll<HTMLElement>(
-      '.MuiDataGrid-filterFormColumnInput',
-    )[0];
-    const availableColumns = within(selectListOfColumns).getAllByRole('option');
+    const select = screen.getByRole('combobox', { name: 'Columns' });
+    fireEvent.mouseDown(select);
+    const listbox = screen.getByRole('listbox', { name: 'Columns' });
+    const availableColumns = within(listbox).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
   });
 
@@ -437,10 +437,12 @@ describe('<DataGridPro /> - Filter', () => {
 
     // The first combo is hidden and we include hidden elements to make the query faster
     // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
-    const select = screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
-      isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
-    ];
-    fireEvent.change(select, { target: { value: 'or' } });
+    const input = getSelectInput(
+      screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
+        isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
+      ],
+    );
+    fireEvent.change(input!, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('changeLogicOperator');
     expect(getColumnValues(0)).to.deep.equal([]);
@@ -869,7 +871,7 @@ describe('<DataGridPro /> - Filter', () => {
 
   describe('Header filters', () => {
     it('should reflect the `filterModel` prop in header filters correctly', () => {
-      render(<TestCase filterModel={filterModel} unstable_headerFilters />);
+      render(<TestCase filterModel={filterModel} headerFilters />);
 
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
       const filterCellInput = getColumnHeaderCell(0, 1).querySelector('input');
@@ -877,7 +879,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should apply filters on type when the focus is on cell', () => {
-      render(<TestCase unstable_headerFilters />);
+      render(<TestCase headerFilters />);
 
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const filterCell = getColumnHeaderCell(0, 1);
@@ -892,7 +894,7 @@ describe('<DataGridPro /> - Filter', () => {
 
     it('should call `onFilterModelChange` when filters are updated', () => {
       const onFilterModelChange = spy();
-      render(<TestCase onFilterModelChange={onFilterModelChange} unstable_headerFilters />);
+      render(<TestCase onFilterModelChange={onFilterModelChange} headerFilters />);
 
       const filterCell = getColumnHeaderCell(0, 1);
       const filterCellInput = filterCell.querySelector('input')!;
@@ -920,7 +922,7 @@ describe('<DataGridPro /> - Filter', () => {
             },
           }}
           onFilterModelChange={onFilterModelChange}
-          unstable_headerFilters
+          headerFilters
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
@@ -952,7 +954,7 @@ describe('<DataGridPro /> - Filter', () => {
               },
             },
           }}
-          unstable_headerFilters
+          headerFilters
         />,
       );
 
@@ -967,7 +969,7 @@ describe('<DataGridPro /> - Filter', () => {
           columns={[
             { field: 'brand', headerName: 'Brand', renderHeaderFilter: () => 'Custom Filter Cell' },
           ]}
-          unstable_headerFilters
+          headerFilters
         />,
       );
 
@@ -990,7 +992,7 @@ describe('<DataGridPro /> - Filter', () => {
               ],
             },
           ]}
-          unstable_headerFilters
+          headerFilters
         />,
       );
 

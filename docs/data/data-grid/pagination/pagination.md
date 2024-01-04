@@ -27,7 +27,7 @@ You should either provide an array of:
 Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
 
 :::warning
-You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the data grid according to the `pageSize`.
+You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.
 :::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
@@ -91,7 +91,7 @@ This means you have to give the rows of all pages to the data grid.
 If your dataset is too big, and you only want to fetch the current page, you can use server-side pagination.
 
 :::info
-For more information regarding server-side pagination in combination with controlled selection check [here](/x/react-data-grid/row-selection/#usage-with-server-side-pagination)
+Check out [Selection—Usage with server-side pagination](/x/react-data-grid/row-selection/#usage-with-server-side-pagination) for more details.
 :::
 
 ### Basic implementation
@@ -129,10 +129,10 @@ You can customize the rendering of the pagination in the footer following [the c
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}

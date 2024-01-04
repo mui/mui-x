@@ -6,19 +6,17 @@ The default locale of MUI is English (United States). If you want to use other l
 
 ## Translation keys
 
-<!-- #default-branch-switch -->
-
 You can use the `localeText` prop to pass in your own text and translations.
-You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts)
+You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/constants/localeTextConstants.ts)
 in the GitHub repository.
 In the following example, the labels of the density selector are customized.
 
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
 
 :::warning
-It's important to note that because the data grid uses components from the Material UI library some translation keys need to be accessed using that component key.
+It's important to note that because the Data Grid uses components from the Material UI library, some translation keys need to be accessed using that component key.
 
-One example is the table pagination component used in the data grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [`TablePagination`](/material-ui/api/table-pagination/) component.
+One example is the table pagination component used in the Data Grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [Table Pagination](/material-ui/api/table-pagination/) component.
 
 ```jsx
 <DataGrid

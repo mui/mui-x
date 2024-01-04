@@ -97,8 +97,11 @@ function extractSlots(options: {
     return {};
   }
 
-  const propType = rawSlots.propType as UnionType;
-  const propInterface = propType.types.find((type) => type.type === 'InterfaceNode');
+  const propType = rawSlots.propType as InterfaceType | UnionType;
+  const propInterface =
+    propType.type === 'InterfaceNode'
+      ? propType
+      : propType.types.find((type) => type.type === 'InterfaceNode');
   if (!propInterface) {
     throw new Error(`The \`slots\` prop in \`${componentName}\` is not an interface.`);
   }
@@ -398,17 +401,11 @@ const buildComponentDocumentation = async (options: {
         typeDescriptions,
       };
 
-      const jsdocDefaultValue = getJsdocDefaultValue(
+      const defaultValue = getJsdocDefaultValue(
         parseDoctrine(propDescriptor.description || '', {
           sloppy: true,
         }),
       );
-
-      // Only keep `default` for bool props if it isn't 'false'.
-      let defaultValue: string | undefined;
-      if (propDescriptor.type.name !== 'bool' || jsdocDefaultValue !== 'false') {
-        defaultValue = jsdocDefaultValue;
-      }
 
       if (prop.type.raw) {
         // Recast doesn't parse TypeScript

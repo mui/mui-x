@@ -5,7 +5,8 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { useLocaleText, useUtils, validateDate } from '../internals';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { CalendarIcon } from '../icons';
@@ -149,8 +150,8 @@ DesktopDatePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
@@ -197,6 +198,10 @@ DesktopDatePicker.propTypes = {
    * @default 3
    */
   monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -299,6 +304,7 @@ DesktopDatePicker.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',

@@ -4,7 +4,7 @@ import { StaticDatePickerProps } from './StaticDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { validateDate } from '../internals';
+import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
@@ -125,8 +125,8 @@ StaticDatePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,

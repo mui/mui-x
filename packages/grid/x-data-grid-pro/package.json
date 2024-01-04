@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "7.0.0-alpha.1",
+  "version": "7.0.0-alpha.6",
   "description": "The Pro plan edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -18,6 +18,7 @@
     "react-component",
     "material-ui",
     "mui",
+    "mui-x",
     "react-table",
     "table",
     "datatable",
@@ -42,9 +43,10 @@
     "directory": "packages/grid/x-data-grid-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.2",
-    "@mui/utils": "^5.14.18",
-    "@mui/x-data-grid": "7.0.0-alpha.1",
+    "@babel/runtime": "^7.23.7",
+    "@mui/system": "^5.15.2",
+    "@mui/utils": "^5.15.2",
+    "@mui/x-data-grid": "7.0.0-alpha.6",
     "@mui/x-license-pro": "7.0.0-alpha.1",
     "@types/format-util": "^1.0.4",
     "clsx": "^2.0.0",
@@ -53,7 +55,6 @@
   },
   "peerDependencies": {
     "@mui/material": "^5.4.1",
-    "@mui/system": "^5.4.1",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },

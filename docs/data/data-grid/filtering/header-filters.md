@@ -7,11 +7,6 @@ title: Data Grid - Header filters
 <p class="description">Quickly accessible per-column filters on grid header.</p>
 
 :::warning
-This feature is unstable, it needs to be explicitly activated using the `unstable_headerFilters` prop.
-
-```tsx
-<DataGridPro unstable_headerFilters {...otherProps} />
-```
 
 To use header filters, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 

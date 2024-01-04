@@ -34,6 +34,7 @@ You can either run it on a specific file, folder, or your entire codebase when c
 ```bash
 // Date and Time Pickers specific
 npx @mui/x-codemod v7.0.0/pickers/preset-safe <path>
+
 // Target Data Grid as well
 npx @mui/x-codemod v7.0.0/preset-safe <path>
 ```
@@ -102,22 +103,70 @@ For example:
 The same applies to `slotProps` and `componentsProps`.
 :::
 
+### ✅ Rename slots types
+
+The slot interfaces got renamed to match with `@mui/base` naming convention.
+Suffix `SlotsComponent` is replaced by `Slots` and `SlotsComponentsProps` is replaced by `SlotProps`.
+If you are not relying on the codemod, consider checking all the renamed types in [this file](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/src/v7.0.0/pickers/rename-slots-types/index.ts).
+Here is an example on the `DateCalendar` typing.
+
+```diff
+- DateCalendarSlotsComponent
++ DateCalendarSlots
+- DateCalendarSlotsComponentsProps
++ DateCalendarSlotProps
+```
+
+### Add new parameters to the `shortcuts` slot `onChange` callback
+
+:::warning
+The following breaking change only impacts you if you are overriding the `shortcuts` slot to create your own custom UI.
+If you are just passing shortcuts to the default UI using `slotProps={{ shortcuts: [...] }}` then you can safely skip this section.
+:::
+
+The `onChange` callback fired when selecting a shortcut now requires two new parameters (previously they were optional):
+
+- The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
+- The `item` containing the entire shortcut object.
+
+```diff
+ const CustomShortcuts = (props) => {
+   return (
+     <React.Fragment>
+       {props.items.map(item => {
+         const value = item.getValue({ isValid: props.isValid });
+         return (
+           <button
+-            onClick={() => onChange(value)}
++            onClick={() => onChange(value, props.changeImportance ?? 'accept', item)}
+           >
+             {value}
+           </button>
+         )
+       }}
+     </React.Fragment>
+   )
+ }
+
+ <DatePicker slots={{ shortcuts: CustomShortcuts }} />
+```
+
 ### Change the imports of the `calendarHeader` slot
 
 The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DateCalendar` to `@mui/x-date-pickers/PickersCalendarHeader`:
 
 ```diff
-  export {
-    pickersCalendarHeaderClasses,
-    PickersCalendarHeaderClassKey,
-    PickersCalendarHeaderClasses,
-    PickersCalendarHeader,
-    PickersCalendarHeaderProps,
-    PickersCalendarHeaderSlotsComponent,
-    PickersCalendarHeaderSlotsComponentsProps,
-    ExportedPickersCalendarHeaderProps,
-- } from '@mui/x-date-pickers/DateCalendar';
-+ } from '@mui/x-date-pickers/PickersCalendarHeader';
+ export {
+   pickersCalendarHeaderClasses,
+   PickersCalendarHeaderClassKey,
+   PickersCalendarHeaderClasses,
+   PickersCalendarHeader,
+   PickersCalendarHeaderProps,
+   PickersCalendarHeaderSlotsComponent,
+   PickersCalendarHeaderSlotsComponentsProps,
+   ExportedPickersCalendarHeaderProps,
+-} from '@mui/x-date-pickers/DateCalendar';
++} from '@mui/x-date-pickers/PickersCalendarHeader';
 ```
 
 ## Removed props
@@ -148,8 +197,8 @@ Learn more on this prop on [the `DateCalendar` documentation](/x/react-date-pick
 :::
 
 ```diff
-- <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
-+ <DateCalendar referenceDate{dayjs('2022-04-01')} />
+-<DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
++<DateCalendar referenceDate{dayjs('2022-04-01')} />
 ```
 
 ## Modified props
@@ -161,12 +210,12 @@ The string argument of the `dayOfWeekFormatter` prop has been replaced in favor 
 ```diff
  <DateCalendar
    // If you were still using the day string, you can get it back with your date library.
--   dayOfWeekFormatter={dayStr => `${dayStr}.`}
-+   dayOfWeekFormatter={day => `${day.format('dd')}.`}
+-  dayOfWeekFormatter={dayStr => `${dayStr}.`}
++  dayOfWeekFormatter={day => `${day.format('dd')}.`}
 
    // If you were already using the day object, just remove the first argument.
--   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
-+   dayOfWeekFormatter={day => `${day.format('dd')}.`
+-  dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
++  dayOfWeekFormatter={day => `${day.format('dd')}.`
  />
 ```
 
@@ -185,17 +234,126 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
  const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
 
  React.useEffect(() => {
-     const firstSection = fieldRef.current!.getSections()[0]
--    console.log(firstSection.hasLeadingZeros)
-+    console.log(firstSection.hasLeadingZerosInFormat)
- }, [])
+   const firstSection = fieldRef.current!.getSections()[0];
+-  console.log(firstSection.hasLeadingZeros);
++  console.log(firstSection.hasLeadingZerosInFormat);
+ }, []);
 
- return (
-   <DateField unstableFieldRef={fieldRef} />
- );
+ return <DateField unstableFieldRef={fieldRef} />;
 ```
 
-## Removed formats
+### Headless fields
+
+:::success
+The following breaking changes only impact you if you are using hooks like `useDateField` to build a custom UI.
+
+If you are just using the regular field components, then you can safely skip this section.
+:::
+
+#### Move `inputRef` inside the props passed to the hook
+
+The field hooks now only receive the props instead of an object containing both the props and the `inputRef`.
+
+```diff
+- const { inputRef, ...otherProps } = props
+- const fieldResponse = useDateField({ props: otherProps, inputRef });
++ const fieldResponse = useDateField(props);
+```
+
+If you are using a multi input range field hook, the same applies to `startInputRef` and `endInputRef` params
+
+```diff
+- const { inputRef: startInputRef, ...otherStartTextFieldProps } = startTextFieldProps
+- const { inputRef: endInputRef, ...otherEndTextFieldProps } = endTextFieldProps
+
+  const fieldResponse = useMultiInputDateRangeField({
+    sharedProps,
+-   startTextFieldProps: otherStartTextFieldProps,
+-   endTextFieldProps: otherEndTextFieldProps,
+-   startInputRef
+-   endInputRef,
++   startTextFieldProps,
++   endTextFieldProps
+  });
+```
+
+#### Rename the ref returned by the hook to `inputRef`
+
+When used with the v6 TextField approach (where the input is an `<input />` HTML element), the field hooks return a ref that needs to be passed to the `<input />` element.
+This ref was previously named `ref` and has been renamed `inputRef` for extra clarity.
+
+```diff
+  const fieldResponse = useDateField(props);
+
+- return <input ref={fieldResponse.ref} />
++ return <input ref={fieldResponse.inputRef} />
+```
+
+If you are using a multi input range field hook, the same applies to the ref in the `startDate` and `endDate` objects
+
+```diff
+  const fieldResponse = useDateField(props);
+
+  return (
+    <div>
+-     <input ref={fieldResponse.startDate.ref} />
++     <input ref={fieldResponse.startDate.inputRef} />
+      <span>–</span>
+-     <input ref={fieldResponse.endDate.ref} />
++     <input ref={fieldResponse.endDate.inputRef} />
+    </div>
+  )
+```
+
+#### Restructure the API of `useClearableField`
+
+The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
+
+You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
+
+```diff
+  const fieldResponse = useDateField(props);
+
+- const { InputProps, onClear, clearable, slots, slotProps, ...otherFieldProps } = fieldResponse
+- const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField({
+-   fieldProps: otherFieldProps,
+-   InputProps,
+-   clearable,
+-   onClear,
+-   slots,
+-   slotProps,
+- });
+-
+-  return <MyCustomTextField {...processedFieldProps} InputProps={ProcessedInputProps} />
+
++ const processedFieldProps = useClearableField(fieldResponse);
++
++ return <MyCustomTextField {...processedFieldProps} />
+```
+
+:::info
+If your custom field is based on one of the examples of the [Custom field](/x/react-date-pickers/custom-field/) page,
+then you can look at the page to see all the examples improved and updated to use the new simplified API.
+:::
+
+## Date management
+
+### Use localized week with luxon
+
+The `AdapterLuxon` now uses the localized week when Luxon `v3.4.4` or higher is installed.
+This improvement aligns `AdapterLuxon` with the behavior of other adapters.
+
+If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
+
+```ts
+import { Settings } from 'luxon';
+
+Settings.defaultWeekSettings = {
+  firstDay: 1,
+  minimalDays: Info.getMinimumDaysInFirstWeek(),
+  weekend: Info.getWeekendWeekdays(),
+};
+```
 
 ### Remove the `monthAndYear` format
 
@@ -203,45 +361,75 @@ The `monthAndYear` format has been removed.
 It was used in the header of the calendar views, you can replace it with the new `format` prop of the `calendarHeader` slot:
 
 ```diff
-  <LocalizationProvider
-    adapter={AdapterDayJS}
--   formats={{ monthAndYear: 'MM/YYYY' }}
-  />
-    <DatePicker
-+     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
-    />
-     <DateRangePicker
-+     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
-    />
-  <LocalizationProvider />
+ <LocalizationProvider
+   adapter={AdapterDayJS}
+-  formats={{ monthAndYear: 'MM/YYYY' }}
+ />
+   <DatePicker
++    slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+   />
+   <DateRangePicker
++    slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+   />
+ <LocalizationProvider />
 ```
 
-## Use UTC with the Day.js adapter
+## Renamed variables
+
+### ✅ Rename the `dayPickerClasses` variable to `dayCalendarClasses`
+
+The `dayPickerClasses` variable has been renamed `dayCalendarClasses` to be consistent with the new name of the `DayCalendar` component introduced in v6.0.0.
+
+```diff
+-import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
++import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+```
+
+## Usage with Day.js
+
+### Use UTC with the Day.js adapter
 
 The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.
 This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
 You can learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
 
 ```diff
-  // When a `value` or a `defaultValue` is provided
-  <LocalizationProvider
-    adapter={AdapterDayjs}
--   dateLibInstance={dayjs.utc}
-  >
-    <DatePicker value={dayjs.utc('2022-04-17')} />
-  </LocalizationProvider>
+ // When a `value` or a `defaultValue` is provided
+ <LocalizationProvider
+   adapter={AdapterDayjs}
+-  dateLibInstance={dayjs.utc}
+ >
+   <DatePicker value={dayjs.utc('2022-04-17')} />
+ </LocalizationProvider>
 
-  // When no `value` or `defaultValue` is provided
-  <LocalizationProvider
-    adapter={AdapterDayjs}
--   dateLibInstance={dayjs.utc}
-  >
--   <DatePicker />
-+   <DatePicker timezone="UTC" />
-  </LocalizationProvider>
+ // When no `value` or `defaultValue` is provided
+ <LocalizationProvider
+   adapter={AdapterDayjs}
+-  dateLibInstance={dayjs.utc}
+ >
+-  <DatePicker />
++  <DatePicker timezone="UTC" />
+ </LocalizationProvider>
 ```
 
-## Adapters
+### Usage with `customParseFormat`
+
+The call to `dayjs.extend(customParseFormatPlugin)` has been moved to the `AdapterDayjs` constructor. This allows users
+to pass custom options to this plugin before the adapter uses it.
+
+If you are using this plugin before the rendering of the first `LocalizationProvider` component and did not call
+`dayjs.extend` in your own codebase, you will need to manually extend `dayjs`:
+
+```tsx
+import dayjs from 'dayjs';
+import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormatPlugin);
+```
+
+The other plugins are still added before the adapter initialization.
+
+## Adapters internal changes
 
 :::success
 The following breaking changes only impact you if you are using the adapters outside the pickers like displayed in the following example:
@@ -256,185 +444,190 @@ adapter.isValid(dayjs('2022-04-17T15:30'));
 If you are just passing an adapter to `LocalizationProvider`, then you can safely skip this section.
 :::
 
-### Remove the `dateWithTimezone` method
+### Removed methods
+
+<details>
+  <summary>Show breaking changes</summary>
+
+#### Remove the `dateWithTimezone` method
 
 The `dateWithTimezone` method has been removed and its content has been moved the `date` method.
 You can use the `date` method instead:
 
 ```diff
-- adater.dateWithTimezone(undefined, 'system');
-+ adater.date(undefined, 'system');
+-adater.dateWithTimezone(undefined, 'system');
++adater.date(undefined, 'system');
 ```
 
-### Remove the `getDiff` method
+#### Remove the `getDiff` method
 
 The `getDiff` method have been removed, you can directly use your date library:
 
 ```diff
-  // For Day.js
-- const diff = adapter.getDiff(value, comparing, unit);
-+ const diff = value.diff(comparing, unit);
+ // For Day.js
+-const diff = adapter.getDiff(value, comparing, unit);
++const diff = value.diff(comparing, unit);
 
-  // For Luxon
-- const diff = adapter.getDiff(value, comparing, unit);
-+ const getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
-+   const parsedComparing = typeof comparing === 'string'
-+     ? DateTime.fromJSDate(new Date(comparing))
-+     : comparing;
-+   if (unit) {
-+     return Math.floor(value.diff(comparing).as(unit));
-+   }
-+   return value.diff(comparing).as('millisecond');
-+ };
+ // For Luxon
+-const diff = adapter.getDiff(value, comparing, unit);
++const getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
++  const parsedComparing = typeof comparing === 'string'
++    ? DateTime.fromJSDate(new Date(comparing))
++    : comparing;
++  if (unit) {
++    return Math.floor(value.diff(comparing).as(unit));
++  }
++  return value.diff(comparing).as('millisecond');
++};
 +
-+ const diff = getDiff(value, comparing, unit);
++const diff = getDiff(value, comparing, unit);
 
-  // For DateFns
-- const diff = adapter.getDiff(value, comparing, unit);
-+ const getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
-+   const parsedComparing = typeof comparing === 'string' ? new Date(comparing) : comparing;
-+   switch (unit) {
-+     case 'years':
-+       return dateFns.differenceInYears(value, parsedComparing);
-+     case 'quarters':
-+       return dateFns.differenceInQuarters(value, parsedComparing);
-+     case 'months':
-+       return dateFns.differenceInMonths(value, parsedComparing);
-+     case 'weeks':
-+       return dateFns.differenceInWeeks(value, parsedComparing);
-+     case 'days':
-+       return dateFns.differenceInDays(value, parsedComparing);
-+     case 'hours':
-+       return dateFns.differenceInHours(value, parsedComparing);
-+     case 'minutes':
-+       return dateFns.differenceInMinutes(value, parsedComparing);
-+     case 'seconds':
-+       return dateFns.differenceInSeconds(value, parsedComparing);
-+     default: {
-+       return dateFns.differenceInMilliseconds(value, parsedComparing);
-+     }
-+   }
-+ };
+ // For DateFns
+-const diff = adapter.getDiff(value, comparing, unit);
++const getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
++  const parsedComparing = typeof comparing === 'string' ? new Date(comparing) : comparing;
++  switch (unit) {
++    case 'years':
++      return dateFns.differenceInYears(value, parsedComparing);
++    case 'quarters':
++      return dateFns.differenceInQuarters(value, parsedComparing);
++    case 'months':
++      return dateFns.differenceInMonths(value, parsedComparing);
++    case 'weeks':
++      return dateFns.differenceInWeeks(value, parsedComparing);
++    case 'days':
++      return dateFns.differenceInDays(value, parsedComparing);
++    case 'hours':
++      return dateFns.differenceInHours(value, parsedComparing);
++    case 'minutes':
++      return dateFns.differenceInMinutes(value, parsedComparing);
++    case 'seconds':
++      return dateFns.differenceInSeconds(value, parsedComparing);
++    default: {
++      return dateFns.differenceInMilliseconds(value, parsedComparing);
++    }
++  }
++};
 +
-+ const diff = getDiff(value, comparing, unit);
++const diff = getDiff(value, comparing, unit);
 
-  // For Moment
-- const diff = adapter.getDiff(value, comparing, unit);
-+ const diff = value.diff(comparing, unit);
+ // For Moment
+-const diff = adapter.getDiff(value, comparing, unit);
++const diff = value.diff(comparing, unit);
 ```
 
-### Remove the `getFormatHelperText` method
+#### Remove the `getFormatHelperText` method
 
 The `getFormatHelperText` method have been removed, you can use the `expandFormat` instead:
 
 ```diff
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format);
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format);
 ```
 
 And if you need the exact same output, you can apply the following transformation:
 
 ```diff
-  // For Day.js
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+ // For Day.js
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
 
-  // For Luxon
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
+ // For Luxon
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
 
-  // For DateFns
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format).replace(/(aaa|aa|a)/g, '(a|p)m').toLocaleLowerCase();
+ // For DateFns
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format).replace(/(aaa|aa|a)/g, '(a|p)m').toLocaleLowerCase();
 
-  // For Moment
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+ // For Moment
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
 ```
 
-### Remove the `getMeridiemText` method
+#### Remove the `getMeridiemText` method
 
 The `getMeridiemText` method have been removed, you can use the `setHours`, `date` and `format` methods to recreate its behavior:
 
 ```diff
-- const meridiem = adapter.getMeridiemText('am');
-+ const getMeridiemText = (meridiem: 'am' | 'pm') => {
-+   const date = adapter.setHours(adapter.date()!, meridiem === 'am' ? 2 : 14);
-+   return utils.format(date, 'meridiem');
-+ };
+-const meridiem = adapter.getMeridiemText('am');
++const getMeridiemText = (meridiem: 'am' | 'pm') => {
++  const date = adapter.setHours(adapter.date()!, meridiem === 'am' ? 2 : 14);
++  return utils.format(date, 'meridiem');
++};
 +
-+ const meridiem = getMeridiemText('am');
++const meridiem = getMeridiemText('am');
 ```
 
-### Remove the `getMonthArray` method
+#### Remove the `getMonthArray` method
 
 The `getMonthArray` method have been removed, you can use the `startOfYear` and `addMonths` methods to recreate its behavior:
 
 ```diff
-- const monthArray = adapter.getMonthArray(value);
-+ const getMonthArray = (year) => {
-+   const firstMonth = utils.startOfYear(year);
-+   const months = [firstMonth];
+-const monthArray = adapter.getMonthArray(value);
++const getMonthArray = (year) => {
++  const firstMonth = utils.startOfYear(year);
++  const months = [firstMonth];
 +
-+   while (months.length < 12) {
-+     const prevMonth = months[months.length - 1];
-+     months.push(utils.addMonths(prevMonth, 1));
-+   }
++  while (months.length < 12) {
++    const prevMonth = months[months.length - 1];
++    months.push(utils.addMonths(prevMonth, 1));
++  }
 +
-+   return months;
-+ }
++  return months;
++}
 +
-+ const monthArray = getMonthArray(value);
++const monthArray = getMonthArray(value);
 ```
 
-### Remove the `getNextMonth` method
+#### Remove the `getNextMonth` method
 
 The `getNextMonth` method have been removed, you can use the `addMonths` method instead:
 
 ```diff
-- const nextMonth = adapter.getNextMonth(value);
-+ const nextMonth = adapter.addMonths(value, 1);
+-const nextMonth = adapter.getNextMonth(value);
++const nextMonth = adapter.addMonths(value, 1);
 ```
 
-### Remove the `getPreviousMonth` method
+#### Remove the `getPreviousMonth` method
 
 The `getPreviousMonth` method have been removed, you can use the `addMonths` method instead:
 
 ```diff
-- const previousMonth = adapter.getPreviousMonth(value);
-+ const previousMonth = adapter.addMonths(value, -1);
+-const previousMonth = adapter.getPreviousMonth(value);
++const previousMonth = adapter.addMonths(value, -1);
 ```
 
-### Remove the `getWeekdays` method
+#### Remove the `getWeekdays` method
 
 The `getWeekdays` method have been removed, you can use the `startOfWeek` and `addDays` methods instead:
 
 ```diff
-- const weekDays = adapter.getWeekdays(value);
-+ const getWeekdays = (value) => {
-+   const start = adapter.startOfWeek(value);
-+   return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
-+ };
+-const weekDays = adapter.getWeekdays(value);
++const getWeekdays = (value) => {
++  const start = adapter.startOfWeek(value);
++  return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
++};
 +
-+ const weekDays = getWeekdays(value);
++const weekDays = getWeekdays(value);
 ```
 
-### Remove the `isNull` method
+#### Remove the `isNull` method
 
 The `isNull` method have been removed, you can replace it with a very basic check:
 
 ```diff
-- const isNull = adapter.isNull(value);
-+ const isNull = value === null;
+-const isNull = adapter.isNull(value);
++const isNull = value === null;
 ```
 
-### Remove the `mergeDateAndTime` method
+#### Remove the `mergeDateAndTime` method
 
 The `mergeDateAndTime` method have been removed, you can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
 
 ```diff
-- const result = adapter.mergeDateAndTime(valueWithDate, valueWithTime);
-+ const mergeDateAndTime = <TDate>(
+-const result = adapter.mergeDateAndTime(valueWithDate, valueWithTime);
++const mergeDateAndTime = <TDate>(
 +   dateParam,
 +   timeParam,
 + ) => {
@@ -446,70 +639,77 @@ The `mergeDateAndTime` method have been removed, you can use the `setHours`, `se
 +   return mergedDate;
 + };
 +
-+ const result = mergeDateAndTime(valueWithDate, valueWithTime);
++const result = mergeDateAndTime(valueWithDate, valueWithTime);
 ```
 
-### Remove the `parseISO` method
+#### Remove the `parseISO` method
 
 The `parseISO` method have been removed, you can directly use your date library:
 
 ```diff
-  // For Day.js
-- const value = adapter.parseISO(isoString);
-+ const value = dayjs(isoString);
+ // For Day.js
+-const value = adapter.parseISO(isoString);
++const value = dayjs(isoString);
 
-  // For Luxon
-- const value = adapter.parseISO(isoString);
-+ const value = DateTime.fromISO(isoString);
+ // For Luxon
+-const value = adapter.parseISO(isoString);
++const value = DateTime.fromISO(isoString);
 
-  // For DateFns
-- const value = adapter.parseISO(isoString);
-+ const value = dateFns.parseISO(isoString);
+ // For DateFns
+-const value = adapter.parseISO(isoString);
++const value = dateFns.parseISO(isoString);
 
-  // For Moment
-- const value = adapter.parseISO(isoString);
-+ const value = moment(isoString, true);
+ // For Moment
+-const value = adapter.parseISO(isoString);
++const value = moment(isoString, true);
 ```
 
-### Remove the `toISO` method
+#### Remove the `toISO` method
 
 The `toISO` method have been removed, you can directly use your date library:
 
 ```diff
-- const isoString = adapter.toISO(value);
-+ const isoString = value.toISOString();
-+ const isoString = value.toUTC().toISO({ format: 'extended' });
-+ const isoString = dateFns.formatISO(value, { format: 'extended' });
-+ const isoString = value.toISOString();
+-const isoString = adapter.toISO(value);
++const isoString = value.toISOString();
++const isoString = value.toUTC().toISO({ format: 'extended' });
++const isoString = dateFns.formatISO(value, { format: 'extended' });
++const isoString = value.toISOString();
 ```
 
 The `getYearRange` method used to accept two params and now accepts a tuple to be consistent with the `isWithinRange` method:
 
 ```diff
-- adapter.getYearRange(start, end);
-+ adapter.getYearRange([start, end])
+-adapter.getYearRange(start, end);
++adapter.getYearRange([start, end])
 ```
 
-### Restrict the input format of the `date` method
+</details>
+
+### Modified methods
+
+<details>
+  <summary>Show breaking changes</summary>
+
+#### Restrict the input format of the `date` method
 
 The `date` method now have the behavior of the v6 `dateWithTimezone` method.
 It no longer accept `any` as a value but only `string | null | undefined`
 
 ```diff
-- adapter.date(new Date());
-+ adapter.date();
+-adapter.date(new Date());
++adapter.date();
 
-- adapter.date(new Date('2022-04-17');
-+ adapter.date('2022-04-17');
+-adapter.date(new Date('2022-04-17');
++adapter.date('2022-04-17');
 
-- adapter.date(new Date(2022, 3, 17, 4, 5, 34));
-+ adapter.date('2022-04-17T04:05:34');
+-adapter.date(new Date(2022, 3, 17, 4, 5, 34));
++adapter.date('2022-04-17T04:05:34');
 
-- adapter.date(new Date('Invalid Date'));
-+ adapter.getInvalidDate();
+-adapter.date(new Date('Invalid Date'));
++adapter.getInvalidDate();
 ```
 
-### Restrict the input format of the `isEqual` method
+#### Restrict the input format of the `isEqual` method
 
 The `isEqual` method used to accept any type of value for its two input and tried to parse them before checking if they were equal.
 The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in the pickers)
@@ -527,30 +727,30 @@ The method has been simplified and now only accepts an already-parsed date or `n
  const isEqual = adapterDateFns.isEqual(new Date(), new Date('2022-04-17'));
 
  // Non-supported formats (JS Date)
-- const isEqual = adapterDayjs.isEqual(new Date(), new Date('2022-04-17'));
-+ const isEqual = adapterDayjs.isEqual(dayjs(), dayjs('2022-04-17'));
+-const isEqual = adapterDayjs.isEqual(new Date(), new Date('2022-04-17'));
++const isEqual = adapterDayjs.isEqual(dayjs(), dayjs('2022-04-17'));
 
-- const isEqual = adapterLuxon.isEqual(new Date(), new Date('2022-04-17'));
-+ const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
+-const isEqual = adapterLuxon.isEqual(new Date(), new Date('2022-04-17'));
++const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
 
-- const isEqual = adapterMoment.isEqual(new Date(), new Date('2022-04-17'));
-+ const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
+-const isEqual = adapterMoment.isEqual(new Date(), new Date('2022-04-17'));
++const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
 
  // Non-supported formats (string)
-- const isEqual = adapterDayjs.isEqual('2022-04-16', '2022-04-17');
-+ const isEqual = adapterDayjs.isEqual(dayjs('2022-04-17'), dayjs('2022-04-17'));
+-const isEqual = adapterDayjs.isEqual('2022-04-16', '2022-04-17');
++const isEqual = adapterDayjs.isEqual(dayjs('2022-04-17'), dayjs('2022-04-17'));
 
-- const isEqual = adapterLuxon.isEqual('2022-04-16', '2022-04-17');
-+ const isEqual = adapterLuxon.isEqual(DateTime.fromISO('2022-04-17'), DateTime.fromISO('2022-04-17'));
+-const isEqual = adapterLuxon.isEqual('2022-04-16', '2022-04-17');
++const isEqual = adapterLuxon.isEqual(DateTime.fromISO('2022-04-17'), DateTime.fromISO('2022-04-17'));
 
-- const isEqual = adapterMoment.isEqual('2022-04-16', '2022-04-17');
-+ const isEqual = adapterMoment.isEqual(moment('2022-04-17'), moment('2022-04-17'));
+-const isEqual = adapterMoment.isEqual('2022-04-16', '2022-04-17');
++const isEqual = adapterMoment.isEqual(moment('2022-04-17'), moment('2022-04-17'));
 
-- const isEqual = adapterDateFns.isEqual('2022-04-16', '2022-04-17');
-+ const isEqual = adapterDateFns.isEqual(new Date('2022-04-17'), new Date('2022-04-17'));
+-const isEqual = adapterDateFns.isEqual('2022-04-16', '2022-04-17');
++const isEqual = adapterDateFns.isEqual(new Date('2022-04-17'), new Date('2022-04-17'));
 ```
 
-### Restrict the input format of the `isValid` method
+#### Restrict the input format of the `isValid` method
 
 The `isValid` method used to accept any type of value and tried to parse them before checking their validity.
 The method has been simplified and now only accepts an already-parsed date or `null`.
@@ -569,25 +769,27 @@ Which is the same type as the one accepted by the components `value` prop.
  const isValid = adapterDateFns.isValid(new Date());
 
  // Non-supported formats (JS Date)
-- const isValid = adapterDayjs.isValid(new Date('2022-04-17'));
-+ const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
+-const isValid = adapterDayjs.isValid(new Date('2022-04-17'));
++const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
 
-- const isValid = adapterLuxon.isValid(new Date('2022-04-17'));
-+ const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
+-const isValid = adapterLuxon.isValid(new Date('2022-04-17'));
++const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
 
-- const isValid = adapterMoment.isValid(new Date('2022-04-17'));
-+ const isValid = adapterMoment.isValid(moment('2022-04-17'));
+-const isValid = adapterMoment.isValid(new Date('2022-04-17'));
++const isValid = adapterMoment.isValid(moment('2022-04-17'));
 
  // Non-supported formats (string)
-- const isValid = adapterDayjs.isValid('2022-04-17');
-+ const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
+-const isValid = adapterDayjs.isValid('2022-04-17');
++const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
 
-- const isValid = adapterLuxon.isValid('2022-04-17');
-+ const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
+-const isValid = adapterLuxon.isValid('2022-04-17');
++const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
 
-- const isValid = adapterMoment.isValid('2022-04-17');
-+ const isValid = adapterMoment.isValid(moment('2022-04-17'));
+-const isValid = adapterMoment.isValid('2022-04-17');
++const isValid = adapterMoment.isValid(moment('2022-04-17'));
 
-- const isValid = adapterDateFns.isValid('2022-04-17');
-+ const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
+-const isValid = adapterDateFns.isValid('2022-04-17');
++const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
 ```
+
+</details>

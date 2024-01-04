@@ -34,6 +34,7 @@ const JoyField = React.forwardRef((props, ref) => {
     endDecorator,
     startDecorator,
     slotProps,
+    inputRef,
     ...other
   } = props;
 
@@ -58,6 +59,7 @@ const JoyField = React.forwardRef((props, ref) => {
         slotProps={{
           ...slotProps,
           root: { ...slotProps?.root, ref: containerRef },
+          input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
       />
@@ -68,43 +70,26 @@ const JoyField = React.forwardRef((props, ref) => {
 const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, onAdornmentClick, ...other } = props;
 
-  const { inputRef: externalInputRef, ...textFieldProps } = useSlotProps({
+  const textFieldProps = useSlotProps({
     elementType: FormControl,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState: props,
   });
 
-  const {
-    onClear,
-    clearable,
-    ref: inputRef,
-    ...fieldProps
-  } = useSingleInputDateRangeField({
-    props: textFieldProps,
-    inputRef: externalInputRef,
-  });
+  const fieldResponse = useSingleInputDateRangeField(textFieldProps);
 
   /* If you don't need a clear button, you can skip the use of this hook */
-  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-    useClearableField({
-      onClear,
-      clearable,
-      fieldProps,
-      InputProps: fieldProps.InputProps,
-      slots: { ...slots, clearButton: IconButton },
-      slotProps: { ...slotProps, clearIcon: { color: 'action' } },
-    });
+  const processedFieldProps = useClearableField({
+    ...fieldResponse,
+    slots,
+    slotProps,
+  });
 
   return (
     <JoyField
       {...processedFieldProps}
       ref={ref}
-      slotProps={{
-        input: {
-          ref: inputRef,
-        },
-      }}
       endDecorator={
         <IconButton
           onClick={onAdornmentClick}
@@ -115,7 +100,6 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
           <DateRangeIcon color="action" />
         </IconButton>
       }
-      InputProps={{ ...ProcessedInputProps }}
     />
   );
 });
@@ -142,11 +126,11 @@ const JoySingleInputDateRangePicker = React.forwardRef((props, ref) => {
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
-      slots={{ field: JoySingleInputDateRangeField }}
+      slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
       slotProps={{
-        ...props?.slotProps,
+        ...props.slotProps,
         field: {
-          ...props?.slotProps?.field,
+          ...props.slotProps?.field,
           onAdornmentClick: toggleOpen,
         },
       }}

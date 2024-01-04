@@ -9,6 +9,7 @@ describe('createSelector', () => {
     it('should warn if the instance ID is missing', () => {
       const selector = createSelectorMemoized([], () => []);
       const state = {} as GridStateCommunity;
+      // @ts-expect-error Need to test the warning
       expect(() => selector(state)).toWarnDev(
         'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
       );
@@ -32,13 +33,13 @@ describe('createSelector', () => {
       );
       const state1 = {} as GridStateCommunity;
       const state2 = {} as GridStateCommunity;
-      const value1 = selector(state1);
+      const value1 = selector(state1, { id: 1 });
 
       // The default cache has maxSize=1, which forces a recomputation if another state is passed.
       // Since the combiner function returns a new array, the references won't be the same.
-      selector(state2);
+      selector(state2, { id: 1 });
 
-      const value2 = selector(state1);
+      const value2 = selector(state1, { id: 1 });
       expect(value1).not.to.equal(value2);
     });
   });

@@ -8,7 +8,7 @@ import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps } from '../internals/components/ChartsText';
+import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
@@ -60,6 +60,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickFontSize,
     label,
     labelFontSize,
+    labelStyle,
+    tickLabelStyle,
     tickSize: tickSizeProp,
     valueFormatter,
     slots,
@@ -95,6 +97,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         fontSize: tickFontSize,
         textAnchor: position === 'right' ? 'start' : 'end',
         dominantBaseline: 'central',
+        ...tickLabelStyle,
       },
       className: classes.tickLabel,
     } as Partial<ChartsTextProps>,
@@ -110,6 +113,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         angle: positionSign * 90,
         textAnchor: 'middle',
         dominantBaseline: 'auto',
+        ...labelStyle,
       } as Partial<ChartsTextProps>['style'],
     } as Partial<ChartsTextProps>,
     ownerState: {},
@@ -153,7 +157,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
           </g>
         );
       })}
-
       {label && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />

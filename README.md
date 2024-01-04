@@ -32,7 +32,7 @@ Read the Date and Time Pickers [Installation instructions](https://mui.com/x/rea
 
 ### Charts
 
-Read the Charts [Installation instructions](https://mui.com/x/react-charts/#getting-started) in the MUI X docs.
+Read the Charts [Installation instructions](https://mui.com/x/react-charts/getting-started/#installation) in the MUI X docs.
 
 ### Tree View
 

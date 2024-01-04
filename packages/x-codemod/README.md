@@ -13,7 +13,7 @@ This repository contains a collection of codemod scripts based for use with
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod <codemod> <paths...>
+npx @mui/x-codemod@next <codemod> <paths...>
 
 Applies a `@mui/x-codemod` to the specified paths
 
@@ -73,6 +73,7 @@ The corresponding sub-sections are listed below
 
 - [`preset-safe-for-pickers`](#preset-safe-for-pickers-v700)
 - [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v700)
+- [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v700)
 
 ### Pickers codemods
 
@@ -86,7 +87,29 @@ npx @mui/x-codemod v7.0.0/pickers/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`rename-components-to-slots-pickers`](#rename-components-to-slots-pickers)
 - [`rename-default-calendar-month-to-reference-date`](#rename-default-calendar-month-to-reference-date)
+- [`rename-day-picker-classes`](#rename-day-picker-classes)
+- [`rename-slots-types`](#rename-slots-types)
+
+#### `rename-components-to-slots-pickers`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects Date and Time Picker components.
+
+```diff
+ <DatePicker
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-components-to-slots <path>
+```
 
 #### `rename-default-calendar-month-to-reference-date`
 
@@ -97,7 +120,39 @@ Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
 + <DateCalendar referenceDate{dayjs('2022-04-01')} />
 ```
 
-### Data grid codemods
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-default-calendar-month-to-reference-date <path>
+```
+
+#### `rename-day-picker-classes`
+
+Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
+
+```diff
+- import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
++ import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-day-picker-classes <path>
+```
+
+#### `rename-slots-types`
+
+Replace types suffix `SlotsComponent` by `Slots` and `SlotsComponentsProps` by `SlotProps`.
+
+```diff
+- DateCalendarSlotsComponent
++ DateCalendarSlots
+- DateCalendarSlotsComponentsProps
++ DateCalendarSlotProps
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/pickers/rename-slots-types <path>
+```
+
+### Data Grid codemods
 
 #### `preset-safe` for data grid v7.0.0
 
@@ -109,7 +164,116 @@ npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path|folder>
 
 The list includes these transformers
 
-NO CODEMOD ADDED YET
+- [`rename-components-to-slots-data-grid`](#rename-components-to-slots-data-grid)
+- [`rename-cell-selection-props`](#rename-cell-selection-props)
+
+#### `rename-components-to-slots-data-grid`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects Data Grid components.
+
+```diff
+ <DataGrid
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ toolbar: { showQuickFilter: true }}}
++  slotProps={{ toolbar: { showQuickFilter: true }}}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/data-grid/rename-components-to-slots <path>
+```
+
+#### `rename-cell-selection-props`
+
+Rename props related to `cellSelection` feature.
+
+```diff
+ <DataGridPremium
+-  unstable_cellSelection
++  cellSelection
+-  cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
++  cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
+-  unstable_onCellSelectionModelChange={() => {}}
++  onCellSelectionModelChange={() => {}}
+ />;
+```
+
+```bash
+npx @mui/x-codemod v7.0.0/data-grid/rename-cell-selection-props <path>
+```
+
+### Tree View codemods
+
+#### `preset-safe` for tree view v7.0.0
+
+The `preset-safe` codemods for tree view.
+
+```bash
+npx @mui/x-codemod v7.0.0/tree-view/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
+- [`rename-expansion-props`](#rename-expansion-props)
+- [`rename-selection-props`](#rename-selection-props)
+
+#### `rename-tree-view-simple-tree-view`
+
+Renames the `TreeView` component to `SimpleTreeView`
+
+```diff
+- import { TreeView } from '@mui/x-tree-view';
++ import { SimpleTreeView } from '@mui/x-tree-view';
+
+- import { TreeView } from '@mui/x-tree-view/TreeView';
++ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+  return (
+-   <TreeView>
++   <SimpleTreeView>
+      <TreeItem nodeId="1" label="First item" />
+-   </TreeView>
++   </SimpleTreeView>
+  )
+```
+
+#### `rename-expansion-props`
+
+Rename the expansion props
+
+```diff
+  <TreeView
+-   onNodeToggle={handleExpansionChange}
++   onExpandedNodesChange={handleExpansionChange}
+
+-   expanded={expandedNodes}
++   expandedNodes={expandedNodes}
+
+-   defaultExpanded={defaultExpandedNodes}
++   defaultExpandedNodes={defaultExpandedNodes}
+  />
+```
+
+#### `rename-selection-props`
+
+Rename the selection props
+
+```diff
+  <TreeView
+-   onNodeSelect={handleSelectionChange}
++   onSelectedNodesChange={handleSelectionChange}
+
+-   selected={selectedNodes}
++   selectedNodes={selectedNodes}
+
+-   defaultSelected={defaultSelectedNodes}
++   defaultSelectedNodes={defaultSelectedNodes}
+  />
+```
 
 ## v6.0.0
 
@@ -441,7 +605,7 @@ npx @mui/x-codemod v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
-This change only affects pickers components.
+This change only affects Date and Time Pickers components.
 
 ```diff
  <DatePicker
@@ -456,7 +620,7 @@ This change only affects pickers components.
 npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 ```
 
-### Data grid codemods
+### Data Grid codemods
 
 #### `preset-safe` for data grid v6.0.0
 
@@ -505,7 +669,7 @@ If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMen
 
 #### `row-selection-props-rename`
 
-Data grid props that have been renamed.
+Data Grid props that have been renamed.
 
 ```diff
  <DataGrid
@@ -740,7 +904,7 @@ npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
-This change only affects data grid components.
+This change only affects Data Grid components.
 
 ```diff
  <DataGrid

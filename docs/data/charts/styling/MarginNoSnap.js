@@ -17,26 +17,27 @@ export default function MarginNoSnap() {
       componentName="Margin demos"
       data={data}
       renderDemo={(props) => (
-        <BarChart
-          series={[{ data: [6, 18, 12] }]}
-          width={500}
-          height={300}
-          margin={{
-            left: props.left,
-            right: props.right,
-            top: props.top,
-            bottom: props.bottom,
-          }}
-          xAxis={[
-            {
-              id: DEFAULT_X_AXIS_KEY,
-              scaleType: 'band',
-              data: ['Page 1', 'Page 2', 'Page 3'],
-            },
-          ]}
-          topAxis={DEFAULT_X_AXIS_KEY}
-          rightAxis={DEFAULT_Y_AXIS_KEY}
-        />
+        <div style={{ width: '100%', margin: 4 }}>
+          <BarChart
+            series={[{ data: [6, 18, 12] }]}
+            height={300}
+            margin={{
+              left: props.left,
+              right: props.right,
+              top: props.top,
+              bottom: props.bottom,
+            }}
+            xAxis={[
+              {
+                id: DEFAULT_X_AXIS_KEY,
+                scaleType: 'band',
+                data: ['Page 1', 'Page 2', 'Page 3'],
+              },
+            ]}
+            topAxis={DEFAULT_X_AXIS_KEY}
+            rightAxis={DEFAULT_Y_AXIS_KEY}
+          />
+        </div>
       )}
       getCode={({ props }) => {
         return [

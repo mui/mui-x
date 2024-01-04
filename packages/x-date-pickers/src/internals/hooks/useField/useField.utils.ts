@@ -333,7 +333,9 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
     // The ...InInput values consider the unicode characters but do include them in their indexes
     const cleanedValue = cleanString(renderedValue);
     const startInInput =
-      positionInInput + renderedValue.indexOf(cleanedValue[0]) + section.startSeparator.length;
+      positionInInput +
+      (cleanedValue === '' ? 0 : renderedValue.indexOf(cleanedValue[0])) +
+      section.startSeparator.length;
     const endInInput = startInInput + cleanedValue.length;
 
     newSections.push({
@@ -356,50 +358,52 @@ const getSectionPlaceholder = <TDate>(
   timezone: PickersTimezone,
   localeText: PickersLocaleText<TDate>,
   sectionConfig: Pick<FieldSection, 'type' | 'contentType'>,
-  currentTokenValue: string,
+  sectionFormat: string,
 ) => {
   switch (sectionConfig.type) {
     case 'year': {
       return localeText.fieldYearPlaceholder({
-        digitAmount: utils.formatByString(utils.date(undefined, timezone), currentTokenValue)
-          .length,
+        digitAmount: utils.formatByString(utils.date(undefined, timezone), sectionFormat).length,
+        format: sectionFormat,
       });
     }
 
     case 'month': {
       return localeText.fieldMonthPlaceholder({
         contentType: sectionConfig.contentType,
+        format: sectionFormat,
       });
     }
 
     case 'day': {
-      return localeText.fieldDayPlaceholder();
+      return localeText.fieldDayPlaceholder({ format: sectionFormat });
     }
 
     case 'weekDay': {
       return localeText.fieldWeekDayPlaceholder({
         contentType: sectionConfig.contentType,
+        format: sectionFormat,
       });
     }
 
     case 'hours': {
-      return localeText.fieldHoursPlaceholder();
+      return localeText.fieldHoursPlaceholder({ format: sectionFormat });
     }
 
     case 'minutes': {
-      return localeText.fieldMinutesPlaceholder();
+      return localeText.fieldMinutesPlaceholder({ format: sectionFormat });
     }
 
     case 'seconds': {
-      return localeText.fieldSecondsPlaceholder();
+      return localeText.fieldSecondsPlaceholder({ format: sectionFormat });
     }
 
     case 'meridiem': {
-      return localeText.fieldMeridiemPlaceholder();
+      return localeText.fieldMeridiemPlaceholder({ format: sectionFormat });
     }
 
     default: {
-      return currentTokenValue;
+      return sectionFormat;
     }
   }
 };
@@ -630,6 +634,22 @@ export const splitFormatIntoSections = <TDate>(
 
   commitToken(currentTokenValue);
 
+  if (sections.length === 0 && startSeparator.length > 0) {
+    sections.push({
+      type: 'empty',
+      contentType: 'letter',
+      maxLength: null,
+      format: '',
+      value: '',
+      placeholder: '',
+      hasLeadingZerosInFormat: false,
+      hasLeadingZerosInInput: false,
+      startSeparator,
+      endSeparator: '',
+      modified: false,
+    });
+  }
+
   return sections.map((section) => {
     const cleanSeparator = (separator: string) => {
       let cleanedSeparator = separator;
@@ -787,6 +807,10 @@ export const getSectionsBoundaries = <TDate>(
       minimum: 0,
       maximum: 0,
     }),
+    empty: () => ({
+      minimum: 0,
+      maximum: 0,
+    }),
   };
 };
 
@@ -798,7 +822,7 @@ export const validateSections = <TSection extends FieldSection>(
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceInvalidSection) {
-      const supportedSections: FieldSectionType[] = [];
+      const supportedSections: FieldSectionType[] = ['empty'];
       if (['date', 'date-time'].includes(valueType)) {
         supportedSections.push('weekDay', 'day', 'month', 'year');
       }
@@ -810,7 +834,7 @@ export const validateSections = <TSection extends FieldSection>(
 
       if (invalidSection) {
         console.warn(
-          `MUI: The field component you are using is not compatible with the "${invalidSection.type} date section.`,
+          `MUI: The field component you are using is not compatible with the "${invalidSection.type}" date section.`,
           `The supported date sections are ["${supportedSections.join('", "')}"]\`.`,
         );
         warnedOnceInvalidSection = true;
@@ -891,6 +915,7 @@ const reliableSectionModificationOrder: Record<FieldSectionType, number> = {
   minutes: 6,
   seconds: 7,
   meridiem: 8,
+  empty: 9,
 };
 
 export const mergeDateIntoReferenceDate = <TDate>(

@@ -3,6 +3,647 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.6
+
+_Dec 22, 2023_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Data Grid now supports `Date` objects in the `filterModel`
+- 🌍 Improve Russian (ru-RU) locale on the Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### Breaking changes
+
+- The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
+- The `getOptionValue` and `getOptionLabel` props were removed from the following components:
+
+  - `GridEditSingleSelectCell`
+  - `GridFilterInputSingleSelect`
+  - `GridFilterInputMultipleSingleSelect`
+
+  Use the `getOptionValue` and `getOptionLabel` properties on the `singleSelect` column definition instead:
+
+  ```tsx
+  const column: GridColDef = {
+    type: 'singleSelect',
+    field: 'country',
+    valueOptions: [
+      { code: 'BR', name: 'Brazil' },
+      { code: 'FR', name: 'France' },
+    ],
+    getOptionValue: (value: any) => value.code,
+    getOptionLabel: (value: any) => value.name,
+  };
+  ```
+- The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
+  The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
+  but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
+
+#### `@mui/x-data-grid@7.0.0-alpha.6`
+
+- [DataGrid] Fix typos in the JSDoc (#11451) @flaviendelangle
+- [DataGrid] Make `checkboxSelection` respect the `disableMultipleRowSelection` prop (#11448) @cherniavskii
+- [DataGrid] Support `Date` objects in filter model (#7069) @cherniavskii
+- [DataGrid] Use non-native `Select`s by default (#11330) @cherniavskii
+- [l10n] Improve Russian (ru-RU) locale (#11441) @wensiet
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.6`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.6`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-alpha.6`
+
+- [fields] Adjust `PickersInput` sizing styles (#11392) @noraleonte
+- [fields] Fix section pasting (#11447) @LukasTy
+- [pickers] Add `PickersTextField` `standard` and `filled` variants (#11250) @noraleonte
+- [pickers] Cleanup error messages in `PickersSectionList` (#11449) @flaviendelangle
+- [pickers] Create new component `PickersSectionList` (#11352) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.5`
+
+- [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
+- [charts] Improve dataset typing (#11372) @alexfauquette
+- [charts] Make error message more explicit (#11457) @alexfauquette
+- [charts] Make the helper `ChartsText` component public (#11370) @alexfauquette
+
+### Docs
+
+- [docs] Document `false` default values for boolean props (#11477) @cherniavskii
+- [docs] Improve Pickers `name` prop examples (#11422) @LukasTy
+- [docs] Limit `date-fns` package to v2 in codesandbox (#11463) @LukasTy
+
+### Core
+
+- [core] Add missing breaking changes to changelog (#11420) @MBilalShafi
+- [core] Cherry pick follow up (#11469) @LukasTy
+- [core] Fix `cherry-pick` action (#11446) @LukasTy
+- [core] Fix security regressions in cherry-pick-next-to-master.yml (#11482) @MBilalShafi
+- [test] Reload the page if its blank and there are no links to the remaining tests (#11466) @cherniavskii
+
+## 7.0.0-alpha.5
+
+_Dec 14, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 New recipe added for the Data Grid
+- 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### Breaking changes
+
+- The `instanceId` prop is now required for state selectors.
+  This prop is used to distinguish between multiple Data Grid instances on the same page.
+  See [migration docs](https://next.mui.com/x/migration/migration-data-grid-v6/#instanceid-prop-is-required-for-state-selectors) for more details.
+
+#### `@mui/x-data-grid@7.0.0-alpha.5`
+
+- [DataGrid] Make `instanceId` required for state selectors (#11395) @cherniavskii
+- [DataGrid] Recipe for grouped rows autosizing (#11401) @michelengelen
+- [l10n] Improve Swedish (sv-SE) locale (#11373) @fredrikcarlbom
+- [l10n] Improve Urdu (ur-PK) locale (#11400) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.5`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
+
+### Date Pickers
+
+#### Breaking changes
+
+- The slot interfaces got renamed to match with `@mui/base` naming.
+The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
+
+  ```diff
+  - DateCalendarSlotsComponent
+  + DateCalendarSlots
+  - DateCalendarSlotsComponentsProps
+  + DateCalendarSlotProps
+  ```
+
+- Move `inputRef` inside the props passed to the field hooks
+
+  The field hooks now only receive the props instead of an object containing both the props and the `inputRef`.
+
+  ```diff
+  - const { inputRef, ...otherProps } = props
+  - const fieldResponse = useDateField({ props: otherProps, inputRef });
+  + const fieldResponse = useDateField(props);
+  ```
+
+  If you are using a multi input range field hook, the same applies to `startInputRef` and `endInputRef` params
+
+  ```diff
+  - const { inputRef: startInputRef, ...otherStartTextFieldProps } = startTextFieldProps
+  - const { inputRef: endInputRef, ...otherEndTextFieldProps } = endTextFieldProps
+
+    const fieldResponse = useMultiInputDateRangeField({
+      sharedProps,
+  -   startTextFieldProps: otherStartTextFieldProps,
+  -   endTextFieldProps: otherEndTextFieldProps,
+  -   startInputRef
+  -   endInputRef,
+  +   startTextFieldProps, 
+  +   endTextFieldProps
+    });
+  ```
+
+- Rename the ref returned by the field hooks to `inputRef`
+
+  When used with the v6 TextField approach (where the input is an `<input />` HTML element), the field hooks return a ref that needs to be passed to the `<input />` element.
+  This ref was previously named `ref` and has been renamed `inputRef` for extra clarity.
+
+  ```diff
+    const fieldResponse = useDateField(props);
+
+  - return <input ref={fieldResponse.ref} /> 
+  + return <input ref={fieldResponse.inputRef} />
+  ```
+
+  If you are using a multi input range field hook, the same applies to the ref in the `startDate` and `endDate` objects
+
+  ```diff
+    const fieldResponse = useDateField(props);
+
+    return (
+      <div>
+  -     <input ref={fieldResponse.startDate.ref} />
+  +     <input ref={fieldResponse.startDate.inputRef} />
+        <span>–</span>
+  -     <input ref={fieldResponse.endDate.ref} />
+  +     <input ref={fieldResponse.endDate.inputRef} />
+      </div>
+    )
+  ```
+
+- Restructure the API of `useClearableField`
+
+  The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
+
+  You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
+
+  ```diff
+    const fieldResponse = useDateField(props);
+
+  - const { InputProps, onClear, clearable, slots, slotProps, ...otherFieldProps } = fieldResponse
+  - const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField({
+  -   fieldProps: otherFieldProps,
+  -   InputProps,
+  -   clearable,
+  -   onClear,
+  -   slots,
+  -   slotProps,
+  - }); 
+  -
+  -  return <MyCustomTextField {...processedFieldProps} InputProps={ProcessedInputProps} />
+
+  + const processedFieldProps = useClearableField(fieldResponse);
+  +
+  + return <MyCustomTextField {...processedFieldProps} />
+  ```
+
+#### `@mui/x-date-pickers@7.0.0-alpha.5`
+
+- [fields] Support empty sections (#10307) @flaviendelangle
+- [pickers] Fix field types to avoid error on latest `@types/react` version (#11397) @LukasTy
+- [pickers] Remove all relative imports to the internals index file (#11375) @flaviendelangle
+- [pickers] Rename slots interfaces (#11339) @alexfauquette
+- [pickers] Simplify the API of the field hooks (#11371) @flaviendelangle
+- [pickers] Support name prop (#11025) @gitstart
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.5`, plus:
+
+- [DateRangePicker] Fix `autoFocus` behavior (#11273) @kealjones-wk
+
+### Charts / `@mui/x-charts@7.0.0-alpha.5`
+
+- [charts] Fix size overflow (#11385) @alexfauquette
+
+### `@mui/x-codemod@7.0.0-alpha.5`
+
+- [codemod] Add `cellSelection` codemod and update migration guide (#11353) @MBilalShafi
+
+### Docs
+
+- [docs] Respect GoT books (@janoma) (#11387) @alexfauquette
+
+### Core
+
+- [core] Automate cherry-pick of PRs from `next` -> `master` (#11382) @MBilalShafi
+- [github] Update `no-response` workflow (#11369) @MBilalShafi
+- [test] Fix flaky screenshots (#11388) @cherniavskii
+
+## 7.0.0-alpha.4
+
+_Dec 8, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 The scatter charts now use voronoi to trigger items
+
+  Users needed to hover the item to highlight the scatter item or show the tooltip.
+  Now they can interact with data by triggering the closest element. See the [docs page](https://next.mui.com/x/react-charts/scatter/#interaction) for more info.
+
+- 📚 Add [Pickers FAQ page](https://next.mui.com/x/react-date-pickers/faq/)
+- 🎉 The Data Grid Header filters feature is now stable
+- 🌍 Improve Danish (da-DK) locale on Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### Breaking changes
+
+- The header filters feature is now stable. `unstable_` prefix is removed from prop `headerFilters` and related exports.
+  See [migration docs](https://next.mui.com/x/migration/migration-data-grid-v6/#filtering) for more details.
+
+- The `GridColDef['type']` has been narrowed down to only accept the built-in column types.
+  TypeScript users need to use the `GridColDef` interface when defining columns:
+
+  ```tsx
+  // 🛑 `type` is inferred as `string` and is too wide
+  const columns = [{ type: 'number', field: 'id' }];
+  <DataGrid columns={columns} />;
+
+  // ✅ `type` is `'number'`
+  const columns: GridColDef[] = [{ type: 'number', field: 'id' }];
+  <DataGrid columns={columns} />;
+
+  // ✅ Alternalively, `as const` can be used to narrow down the type
+  const columns = [{ type: 'number' as const, field: 'id' }];
+  <DataGrid columns={columns} />;
+  ```
+
+#### `@mui/x-data-grid@7.0.0-alpha.4`
+
+- [DataGrid] Added a guard for reorder cells (#11159) @michelengelen
+- [DataGrid] Narrow down `GridColDef['type']` (#11270) @cherniavskii
+- [l10n] Improve Danish (da-DK) locale (#11304) @goibon
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.4`, plus:
+
+- [DataGridPro] Make header filters feature stable (#11243) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.4`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-alpha.4`
+
+- [fields] Rework `PickersTextField` (#11258) @flaviendelangle
+- [pickers] Fix `MultiSectionDigitalClock` issues (#11305) @LukasTy
+- [pickers] Fix views height consistency (#11337) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.4`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.4`
+
+- [charts] Remove animation on sparkline (#11311) @oliviertassinari
+- [charts] Use voronoi cells to trigger interaction with scatter items (#10981) @alexfauquette
+- [charts] Add `@mui/utils` as a dependency (#11351) @michelengelen
+
+### Docs
+
+- [docs] Add FAQ page (#11271) @noraleonte
+- [docs] Add a doc section on how to override the start of the week with each adapter (#11223) @flaviendelangle
+- [docs] Added params to `onPaginationModelChange` docs (#10191) @JFBenzs
+- [docs] Fix typo (#11324) @cadam11
+- [docs] Improve `DemoContainer` styling coverage (#11315) @LukasTy
+- [docs] General revision of the Charts docs (#11249) @danilo-leal
+
+## 7.0.0-alpha.3
+
+_Dec 4, 2023_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Support localized start of the week on pickers' `AdapterLuxon`
+
+  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g.: Sunday for `en-US`, Monday for `fr-FR`).
+
+- 📈 Fix a lot of Charts package issues
+- 🎉 The Data Grid features Cell selection and Clipboard paste are now stable
+- 🌍 Improve Bulgarian (bg-BG) locale on Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### Breaking changes
+
+- The clipboard paste feature is now enabled by default. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop.
+
+- The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are no longer prefixed with `unstable_`.
+
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the `DataGrid` exports. Use the [`filterDebounceMs`](https://next.mui.com/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+
+- The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
+
+- The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
+
+- The `unstable_` prefix has been removed from the cell selection props listed below.
+
+  | Old name                              | New name                     |
+  | :------------------------------------ | :--------------------------- |
+  | `unstable_cellSelection`              | `cellSelection`              |
+  | `unstable_cellSelectionModel`         | `cellSelectionModel`         |
+  | `unstable_onCellSelectionModelChange` | `onCellSelectionModelChange` |
+
+- The `unstable_` prefix has been removed from the cell selection API methods listed below.
+
+  | Old name                           | New name                  |
+  | :--------------------------------- | :------------------------ |
+  | `unstable_getCellSelectionModel`   | `getCellSelectionModel`   |
+  | `unstable_getSelectedCellsAsArray` | `getSelectedCellsAsArray` |
+  | `unstable_isCellSelected`          | `isCellSelected`          |
+  | `unstable_selectCellRange`         | `selectCellRange`         |
+  | `unstable_setCellSelectionModel`   | `setCellSelectionModel`   |
+
+- The Quick Filter now ignores hidden columns by default.
+  See [including hidden columns](https://next.mui.com/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+
+#### `@mui/x-data-grid@7.0.0-alpha.3`
+
+- [DataGrid] Fix cell editing adding a leading "v" on paste (#9205) @prasad5795
+- [DataGrid] Exclude hidden columns from quick filtering by default (#11229) @cherniavskii
+- [DataGrid] Fix `onFilterModelChange` being fired with stale field value (#11000) @gitstart
+- [DataGrid] Fix handling of event target in portal (#11174) @cherniavskii
+- [DataGrid] Remove deprecated constants (#11233) @michelengelen
+- [DataGrid] Remove the `preferencesPanel` slot (#11228) @cherniavskii
+- [l10n] Improve Bulgarian (bg-BG) locale (#10856) @Kristiqn95
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.3`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
+
+- [DataGridPremium] Fix aggregated column ignoring column definition changes (#11129) @cherniavskii
+- [DataGridPremium] Make Cell selection feature stable (#11246) @MBilalShafi
+- [DataGridPremium] Make Clipboard paste feature stable (#11248) @MBilalShafi
+
+### Date Pickers
+
+#### Breaking changes
+
+- The Date and Time Pickers now use the localized week when using `AdapterLuxon` and Luxon v3.4.4 or higher is installed.
+  This new behavior allows `AdapterLuxon` to have the same behavior as the other adapters.
+  If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
+  The Firefox browser currently does not support this behavior because the [getWeekInfo](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) API is not yet implemented.
+
+  ```ts
+  import { Settings } from 'luxon';
+
+  Settings.defaultWeekSettings = {
+    firstDay: 1,
+    minimalDays: Info.getMinimumDaysInFirstWeek(),
+    weekend: [6, 7],
+  };
+  ```
+
+- Add new parameters to the `shortcuts` slot `onChange` callback
+
+  The `onChange` callback fired when selecting a shortcut now requires two new parameters (previously they were optional):
+
+  - The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
+  - The `item` containing the entire shortcut object.
+
+  ```diff
+   const CustomShortcuts = (props) => {
+     return (
+       <React.Fragment>
+         {props.items.map(item => {
+           const value = item.getValue({ isValid: props.isValid });
+           return (
+             <button
+  -            onClick={() => onChange(value)}
+  +            onClick={() => onChange(value, props.changeImportance ?? 'accept', item)}
+             >
+               {value}
+             </button>
+           )
+         }}
+       </React.Fragment>
+     )
+   }
+
+   <DatePicker slots={{ shortcuts: CustomShortcuts }} />
+  ```
+
+  - Usage of `AdapterDayjs` with the `customParseFormat` plugin
+    The call to `dayjs.extend(customParseFormatPlugin)` has been moved to the `AdapterDayjs` constructor. This allows users to pass custom options to this plugin before the adapter uses it.
+
+  If you are using this plugin before the rendering of the first `LocalizationProvider` component and did not call `dayjs.extend` in your own codebase, you will need to manually extend `dayjs`:
+
+  ```tsx
+  import dayjs from 'dayjs';
+  import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
+
+  dayjs.extend(customParseFormatPlugin);
+  ```
+
+  The other plugins are still added before the adapter initialization.
+
+#### `@mui/x-date-pickers@7.0.0-alpha.3`
+
+- [pickers] Expand field placeholder methods flexibility by providing `format` parameter (#11130) @LukasTy
+- [pickers] Make `changeImportance` and `shortcut` mandatory in `PickersShortcuts` (#10941) @flaviendelangle
+- [pickers] Moved extend with `customParseFormat` to constructor (#11151) @michelengelen
+- [pickers] POC: `PickersTextField` styling - outlined variant (#10778) @noraleonte
+- [pickers] Support localized start of the week on `AdapterLuxon` (#10964) @flaviendelangle
+- [pickers] Use adapter methods instead of date library ones whenever possible (#11142) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.3`
+
+- [charts] Adjusted `defaultizeValueFormatter` util to accept an optional `series.valueFormatter` value (#11144) @michelengelen
+- [charts] Apply `labelStyle` and `tickLabelStyle` props on `<ChartsYAxis />` (#11180) @akamfoad
+- [charts] Fix TS config (#11259) @alexfauquette
+- [charts] Fix error with empty dataset (#11063) @alexfauquette
+- [charts] Fix export strategy (#11235) @alexfauquette
+- [charts] Remove outdated prop-types (#11045) @alexfauquette
+
+### Docs
+
+- [docs] Add `TextField` styling example to customization playground (#10812) @noraleonte
+- [docs] Add a card grid to the installation page (#11177) @danilo-leal
+- [docs] Add end v6 blogpost to whats new page (#10999) @joserodolfofreitas
+- [docs] Add small formatting improvements to the licensing page (#11178) @danilo-leal
+- [docs] Document charts composition (#10710) (#11239) @alexfauquette
+- [docs] Fix <title> generation (#11182) @oliviertassinari
+- [docs] Fix dead anchor link (#11265) @oliviertassinari
+- [docs] Improve Data Grid togglable columns example (#11238) @MBilalShafi
+- [docs] Improve the prop descriptions of `DayCalendar` (#11158) @flaviendelangle
+- [docs] Move the adapter breaking changes in a collapsable block (#11205) @flaviendelangle
+- [docs] Polish Next.js header description @oliviertassinari
+- [docs] Remove the `newFeature` flag on v6 features (#11168) @flaviendelangle
+- [docs] Simplify a bit chart demo (#11173) @oliviertassinari
+- [docs] Standardize the usage of callouts in the MUI X docs (#7127) @samuelsycamore
+- [docs] Adjust the Data Grid demo page design (#11231) @danilo-leal
+
+### Core
+
+- [core] Make `@mui/system` a direct dependency (#11128) @LukasTy
+- [core] Remove blank lines, coding style @oliviertassinari
+- [core] Remove outdated `ENABLE_AD` env variable (#11181) @oliviertassinari
+- [github] Do not add `plan: Pro` and `plan: Premium` labels on pro / premium issue templates (#10183) @flaviendelangle
+
+## 7.0.0-alpha.2
+
+_Nov 23, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📈 Export missing Charts props
+- 🌍 Improve Arabic (ar-SD) and Hebrew (he-IL) locales on Data Grid
+- 🌍 Add Macedonian (mk) locale and improve German (de-DE) locale on Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.0.0-alpha.2`
+
+- [l10n] Improve Arabic (ar-SD) locale (#11114) @MBilalShafi
+- [l10n] Improve Hebrew (he-IL) locale (#11056) (#11149) @MBilalShafi
+- [DataGrid] Remove unused utilities (#11156) @flaviendelangle
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.2`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.2`.
+
+### Date Pickers
+
+#### Breaking changes
+
+- The deprecated `shouldDisableClock` prop has been removed in favor of the more flexible `shouldDisableTime` prop.
+  The `shouldDisableClock` prop received `value` as a `number` of hours, minutes, or seconds.
+  Instead, the `shouldDisableTime` prop receives the date object (based on the used adapter).
+
+  You can read more about the deprecation of this prop in [v6 migration guide](https://next.mui.com//x/migration/migration-pickers-v5/#%E2%9C%85-rename-or-refactor-shoulddisabletime-prop).
+
+  ```diff
+   <DateTimePicker
+  -  shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+  +  shouldDisableTime={(value, view) => view === 'hours' && value.hour() < 12}
+   />
+  ```
+
+- The `adapter.dateWithTimezone` method has been removed and its content moved to the `date` method.
+  You can use the `adapter.date` method instead:
+
+  ```diff
+  - adapter.dateWithTimezone(undefined, 'system');
+  + adapter.date(undefined, 'system');
+  ```
+
+- The `dayPickerClasses` variable has been renamed to `dayCalendarClasses` to be consistent with the new name of the `DayCalendar` component introduced in v6.0.0.
+
+  ```diff
+  - import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
+  + import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+  ```
+
+- The deprecated `defaultCalendarMonth` prop has been removed in favor of the more flexible `referenceDate` prop.
+
+  ```diff
+  - <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
+  + <DateCalendar referenceDate{dayjs('2022-04-01')} />
+  ```
+
+- The `adapter.date` method now has the v6 `adapter.dateWithTimezone` method behavior.
+  It no longer accepts `any` as a value but only `string | null | undefined`.
+
+  ```diff
+  - adapter.date(new Date());
+  + adapter.date();
+
+  - adapter.date(new Date('2022-04-17');
+  + adapter.date('2022-04-17');
+
+  - adapter.date(new Date(2022, 3, 17, 4, 5, 34));
+  + adapter.date('2022-04-17T04:05:34');
+
+  - adapter.date(new Date('Invalid Date'));
+  + adapter.getInvalidDate();
+  ```
+
+#### `@mui/x-date-pickers@7.0.0-alpha.2`
+
+- [l10n] Improve German (de-DE) locale (#11103) @jho-vema
+- [l10n] Add Macedonian (mk) locale (#10935) @brsnik
+- [pickers] Remove the `defaultCalendarMonth` prop (#10987) @flaviendelangle
+- [pickers] Remove the `shouldDisableClock` prop (#11042) @flaviendelangle
+- [pickers] Rename the `dayPickerClasses` variable `dayCalendarClasses` (#11140) @flaviendelangle
+- [pickers] Replace `adapter.date` with the current `adapter.dateWithTimezone` (#10979) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.2`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.2`
+
+- [charts] Change export strategy in index files (#11113) @michelengelen
+- [charts] Fix `ChartsTooltip` component setup (#11152) @LukasTy
+
+### `@mui/x-codemod@7.0.0-alpha.2`
+
+- [codemod] Add codemod to use `referenceDate` instead of `defaultCalendarMonth` (#11139) @flaviendelangle
+- [codemod] Clean the components to slots codemod usage (#11145) @flaviendelangle
+
+### Docs
+
+- [docs] Add LTS section to support docs (#10927) @joserodolfofreitas
+- [docs] Clean the codemod README (#11051) @flaviendelangle
+- [docs] Fix typos and grammar issues (#11049) @flaviendelangle
+- [docs] Fix version links (#11001) @LukasTy
+- [docs] Point to the source of `@mui/x-data-grid-generator` (#11134) @oliviertassinari
+
+### Core
+
+- [core] Bump monorepo (#11160) @LukasTy
+- [core] Fix comment in doc generation (#11098) @flaviendelangle
+- [core] Rename OpenCollective @oliviertassinari
+- [core] Upgrade `babel-plugin-module-resolver` to 5.0.0 (#11065) @flaviendelangle
+- [changelog] Improve git diff format @oliviertassinari
+- [renovate] Monthly schedule for lockfile maintenance (#10336) @Janpot
+- [test] Skip flaky e2e test in webkit (#11110) @cherniavskii
+
 ## 7.0.0-alpha.1
 
 _Nov 17, 2023_
@@ -23,29 +664,29 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
   ```diff
    <DateCalendar
      // If you were still using the day string, you can get it back with your date library.
-  -   dayOfWeekFormatter={dayStr => `${dayStr}.`}
-  +   dayOfWeekFormatter={day => `${day.format('dd')}.`}
+  -  dayOfWeekFormatter={dayStr => `${dayStr}.`}
+  +  dayOfWeekFormatter={day => `${day.format('dd')}.`}
 
      // If you were already using the day object, just remove the first argument.
-  -   dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`}
-  +   dayOfWeekFormatter={day => `${day.format('dd')}.`}
+  -  dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`}
+  +  dayOfWeekFormatter={day => `${day.format('dd')}.`}
    />
   ```
 
 - The imports related to the `calendarHeader` slot have been moved from `@mui/x-date-pickers/DateCalendar` to `@mui/x-date-pickers/PIckersCalendarHeader`:
 
   ```diff
-    export {
-      pickersCalendarHeaderClasses,
-      PickersCalendarHeaderClassKey,
-      PickersCalendarHeaderClasses,
-      PickersCalendarHeader,
-      PickersCalendarHeaderProps,
-      PickersCalendarHeaderSlotsComponent,
-      PickersCalendarHeaderSlotsComponentsProps,
-      ExportedPickersCalendarHeaderProps,
-  - } from '@mui/x-date-pickers/DateCalendar';
-  + } from '@mui/x-date-pickers/PickersCalendarHeader';
+   export {
+     pickersCalendarHeaderClasses,
+     PickersCalendarHeaderClassKey,
+     PickersCalendarHeaderClasses,
+     PickersCalendarHeader,
+     PickersCalendarHeaderProps,
+     PickersCalendarHeaderSlotsComponent,
+     PickersCalendarHeaderSlotsComponentsProps,
+     ExportedPickersCalendarHeaderProps,
+  -} from '@mui/x-date-pickers/DateCalendar';
+  +} from '@mui/x-date-pickers/PickersCalendarHeader';
 
   ```
 
@@ -53,170 +694,170 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
   It was used in the header of the calendar views, you can replace it with the new `format` prop of the `calendarHeader` slot:
 
   ```diff
-    <LocalizationProvider
-      adapter={AdapterDayJS}
-  -   formats={{ monthAndYear: 'MM/YYYY' }}
-    />
-      <DatePicker
-  +     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
-      />
-       <DateRangePicker
-  +     slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
-      />
-    <LocalizationProvider />
+   <LocalizationProvider
+     adapter={AdapterDayJS}
+  -  formats={{ monthAndYear: 'MM/YYYY' }}
+   />
+     <DatePicker
+  +    slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+     />
+     <DateRangePicker
+  +    slotProps={{ calendarHeader: { format: 'MM/YYYY' }}}
+     />
+   <LocalizationProvider />
   ```
 
 - The `adapter.getDiff` method have been removed, you can directly use your date library:
 
   ```diff
-    // For Day.js
-  - const diff = adapter.getDiff(value, comparing, unit);
-  + const diff = value.diff(comparing, unit);
+   // For Day.js
+  -const diff = adapter.getDiff(value, comparing, unit);
+  +const diff = value.diff(comparing, unit);
 
-    // For Luxon
-  - const diff = adapter.getDiff(value, comparing, unit);
-  + const getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
-  +   const parsedComparing = typeof comparing === 'string'
-  +     ? DateTime.fromJSDate(new Date(comparing))
-  +     : comparing;
-  +   if (unit) {
-  +     return Math.floor(value.diff(comparing).as(unit));
-  +   }
-  +   return value.diff(comparing).as('millisecond');
-  + };
+   // For Luxon
+  -const diff = adapter.getDiff(value, comparing, unit);
+  +const getDiff = (value: DateTime, comparing: DateTime | string, unit?: AdapterUnits) => {
+  +  const parsedComparing = typeof comparing === 'string'
+  +    ? DateTime.fromJSDate(new Date(comparing))
+  +    : comparing;
+  +  if (unit) {
+  +    return Math.floor(value.diff(comparing).as(unit));
+  +  }
+  +  return value.diff(comparing).as('millisecond');
+  +};
   +
-  + const diff = getDiff(value, comparing, unit);
+  +const diff = getDiff(value, comparing, unit);
 
     // For DateFns
-  - const diff = adapter.getDiff(value, comparing, unit);
-  + const getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
-  +   const parsedComparing = typeof comparing === 'string' ? new Date(comparing) : comparing;
-  +   switch (unit) {
-  +     case 'years':
-  +       return dateFns.differenceInYears(value, parsedComparing);
-  +     case 'quarters':
-  +       return dateFns.differenceInQuarters(value, parsedComparing);
-  +     case 'months':
-  +       return dateFns.differenceInMonths(value, parsedComparing);
-  +     case 'weeks':
-  +       return dateFns.differenceInWeeks(value, parsedComparing);
-  +     case 'days':
-  +       return dateFns.differenceInDays(value, parsedComparing);
-  +     case 'hours':
-  +       return dateFns.differenceInHours(value, parsedComparing);
-  +     case 'minutes':
-  +       return dateFns.differenceInMinutes(value, parsedComparing);
-  +     case 'seconds':
-  +       return dateFns.differenceInSeconds(value, parsedComparing);
-  +     default: {
-  +       return dateFns.differenceInMilliseconds(value, parsedComparing);
-  +     }
-  +   }
-  + };
+  -const diff = adapter.getDiff(value, comparing, unit);
+  +const getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
+  +  const parsedComparing = typeof comparing === 'string' ? new Date(comparing) : comparing;
+  +  switch (unit) {
+  +    case 'years':
+  +      return dateFns.differenceInYears(value, parsedComparing);
+  +    case 'quarters':
+  +      return dateFns.differenceInQuarters(value, parsedComparing);
+  +    case 'months':
+  +      return dateFns.differenceInMonths(value, parsedComparing);
+  +    case 'weeks':
+  +      return dateFns.differenceInWeeks(value, parsedComparing);
+  +    case 'days':
+  +      return dateFns.differenceInDays(value, parsedComparing);
+  +    case 'hours':
+  +      return dateFns.differenceInHours(value, parsedComparing);
+  +    case 'minutes':
+  +      return dateFns.differenceInMinutes(value, parsedComparing);
+  +    case 'seconds':
+  +      return dateFns.differenceInSeconds(value, parsedComparing);
+  +    default: {
+  +      return dateFns.differenceInMilliseconds(value, parsedComparing);
+  +    }
+  +  }
+  +};
   +
-  + const diff = getDiff(value, comparing, unit);
+  +const diff = getDiff(value, comparing, unit);
 
-    // For Moment
-  - const diff = adapter.getDiff(value, comparing, unit);
-  + const diff = value.diff(comparing, unit);
+   // For Moment
+  -const diff = adapter.getDiff(value, comparing, unit);
+  +const diff = value.diff(comparing, unit);
   ```
 
 - The `adapter.getFormatHelperText` method have been removed, you can use the `adapter.expandFormat` instead:
 
 ```diff
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format);
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format);
 ```
 
 And if you need the exact same output you can apply the following transformation:
 
 ```diff
-  // For Day.js
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+ // For Day.js
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
 
-  // For Luxon
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
+ // For Luxon
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
 
-  // For DateFns
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format).replace(/(aaa|aa|a)/g, '(a|p)m').toLocaleLowerCase();
+ // For DateFns
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format).replace(/(aaa|aa|a)/g, '(a|p)m').toLocaleLowerCase();
 
-  // For Moment
-- const expandedFormat = adapter.getFormatHelperText(format);
-+ const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+ // For Moment
+-const expandedFormat = adapter.getFormatHelperText(format);
++const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
 ```
 
 - The `adapter.getMeridiemText` method have been removed, you can use the `adapter.setHours`, `adapter.date` and `adapter.format` methods to recreate its behavior:
 
   ```diff
-  - const meridiem = adapter.getMeridiemText('am');
-  + const getMeridiemText = (meridiem: 'am' | 'pm') => {
-  +   const date = adapter.setHours(adapter.date()!, meridiem === 'am' ? 2 : 14);
-  +   return utils.format(date, 'meridiem');
-  + };
+  -const meridiem = adapter.getMeridiemText('am');
+  +const getMeridiemText = (meridiem: 'am' | 'pm') => {
+  +  const date = adapter.setHours(adapter.date()!, meridiem === 'am' ? 2 : 14);
+  +  return utils.format(date, 'meridiem');
+  +};
   +
-  + const meridiem = getMeridiemText('am');
+  +const meridiem = getMeridiemText('am');
   ```
 
 - The `adapter.getMonthArray` method have been removed, you can use the `adapter.startOfYear` and `adapter.addMonths` methods to recreate its behavior:
 
   ```diff
-  - const monthArray = adapter.getMonthArray(value);
-  + const getMonthArray = (year) => {
-  +   const firstMonth = utils.startOfYear(year);
-  +   const months = [firstMonth];
+  -const monthArray = adapter.getMonthArray(value);
+  +const getMonthArray = (year) => {
+  +  const firstMonth = utils.startOfYear(year);
+  +  const months = [firstMonth];
   +
-  +   while (months.length < 12) {
-  +     const prevMonth = months[months.length - 1];
-  +     months.push(utils.addMonths(prevMonth, 1));
-  +   }
+  +  while (months.length < 12) {
+  +    const prevMonth = months[months.length - 1];
+  +    months.push(utils.addMonths(prevMonth, 1));
+  +  }
   +
-  +   return months;
-  + }
+  +  return months;
+  +}
   +
-  + const monthArray = getMonthArray(value);
+  +const monthArray = getMonthArray(value);
   ```
 
 - The `adapter.getNextMonth` method have been removed, you can use the `adapter.addMonths` method instead:
 
   ```diff
-  - const nextMonth = adapter.getNextMonth(value);
-  + const nextMonth = adapter.addMonths(value, 1);
+  -const nextMonth = adapter.getNextMonth(value);
+  +const nextMonth = adapter.addMonths(value, 1);
   ```
 
 - The `adapter.getPreviousMonth` method have been removed, you can use the `adapter.addMonths` method instead:
 
   ```diff
-  - const previousMonth = adapter.getPreviousMonth(value);
-  + const previousMonth = adapter.addMonths(value, -1);
+  -const previousMonth = adapter.getPreviousMonth(value);
+  +const previousMonth = adapter.addMonths(value, -1);
   ```
 
 - The `adapter.getWeekdays` method have been removed, you can use the `adapter.startOfWeek` and `adapter.addDays` methods instead:
 
   ```diff
-  - const weekDays = adapter.getWeekdays(value);
-  + const getWeekdays = (value) => {
-  +   const start = adapter.startOfWeek(value);
-  +   return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
-  + };
+  -const weekDays = adapter.getWeekdays(value);
+  +const getWeekdays = (value) => {
+  +  const start = adapter.startOfWeek(value);
+  +  return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
+  +};
   +
-  + const weekDays = getWeekdays(value);
+  +const weekDays = getWeekdays(value);
   ```
 
 - The `isNull` method have been removed, you can replace it with a very basic check:
 
   ```diff
-  - const isNull = adapter.isNull(value);
-  + const isNull = value === null;
+  -const isNull = adapter.isNull(value);
+  +const isNull = value === null;
   ```
 
 - The `adapter.mergeDateAndTime` method have been removed, you can use the `adapter.setHours`, `adapter.setMinutes`, and `adapter.setSeconds` methods to recreate its behavior:
 
   ```diff
-  - const result = adapter.mergeDateAndTime(valueWithDate, valueWithTime);
-  + const mergeDateAndTime = <TDate>(
+  -const result = adapter.mergeDateAndTime(valueWithDate, valueWithTime);
+  +const mergeDateAndTime = <TDate>(
   +   dateParam,
   +   timeParam,
   + ) => {
@@ -228,37 +869,37 @@ And if you need the exact same output you can apply the following transformation
   +   return mergedDate;
   + };
   +
-  + const result = mergeDateAndTime(valueWithDate, valueWithTime);
+  +const result = mergeDateAndTime(valueWithDate, valueWithTime);
   ```
 
 - The `adapter.parseISO` method have been removed, you can directly use your date library:
 
   ```diff
-    // For Day.js
-  - const value = adapter.parseISO(isoString);
-  + const value = dayjs(isoString);
+   // For Day.js
+  -const value = adapter.parseISO(isoString);
+  +const value = dayjs(isoString);
 
-    // For Luxon
-  - const value = adapter.parseISO(isoString);
-  + const value = DateTime.fromISO(isoString);
+   // For Luxon
+  -const value = adapter.parseISO(isoString);
+  +const value = DateTime.fromISO(isoString);
 
-    // For DateFns
-  - const value = adapter.parseISO(isoString);
-  + const value = dateFns.parseISO(isoString);
+   // For DateFns
+  -const value = adapter.parseISO(isoString);
+  +const value = dateFns.parseISO(isoString);
 
-    // For Moment
-  - const value = adapter.parseISO(isoString);
-  + const value = moment(isoString, true);
+   // For Moment
+  -const value = adapter.parseISO(isoString);
+  +const value = moment(isoString, true);
   ```
 
 - The `adapter.toISO` method have been removed, you can directly use your date library:
 
   ```diff
-  - const isoString = adapter.toISO(value);
-  + const isoString = value.toISOString();
-  + const isoString = value.toUTC().toISO({ format: 'extended' });
-  + const isoString = dateFns.formatISO(value, { format: 'extended' });
-  + const isoString = value.toISOString();
+  -const isoString = adapter.toISO(value);
+  +const isoString = value.toISOString();
+  +const isoString = value.toUTC().toISO({ format: 'extended' });
+  +const isoString = dateFns.formatISO(value, { format: 'extended' });
+  +const isoString = value.toISOString();
   ```
 
 - The `adapter.isEqual` method used to accept any type of value for its two input and tried to parse them before checking if they were equal.
@@ -277,49 +918,49 @@ And if you need the exact same output you can apply the following transformation
    const isEqual = adapterDateFns.isEqual(new Date(), new Date('2022-04-17'));
 
    // Non-supported formats (JS Date)
-  - const isEqual = adapterDayjs.isEqual(new Date(), new Date('2022-04-17'));
-  + const isEqual = adapterDayjs.isEqual(dayjs(), dayjs('2022-04-17'));
+  -const isEqual = adapterDayjs.isEqual(new Date(), new Date('2022-04-17'));
+  +const isEqual = adapterDayjs.isEqual(dayjs(), dayjs('2022-04-17'));
 
-  - const isEqual = adapterLuxon.isEqual(new Date(), new Date('2022-04-17'));
-  + const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
+  -const isEqual = adapterLuxon.isEqual(new Date(), new Date('2022-04-17'));
+  +const isEqual = adapterLuxon.isEqual(DateTime.now(), DateTime.fromISO('2022-04-17'));
 
-  - const isEqual = adapterMoment.isEqual(new Date(), new Date('2022-04-17'));
-  + const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
+  -const isEqual = adapterMoment.isEqual(new Date(), new Date('2022-04-17'));
+  +const isEqual = adapterMoment.isEqual(moment(), moment('2022-04-17'));
 
    // Non-supported formats (string)
-  - const isEqual = adapterDayjs.isEqual('2022-04-16', '2022-04-17');
-  + const isEqual = adapterDayjs.isEqual(dayjs('2022-04-17'), dayjs('2022-04-17'));
+  -const isEqual = adapterDayjs.isEqual('2022-04-16', '2022-04-17');
+  +const isEqual = adapterDayjs.isEqual(dayjs('2022-04-17'), dayjs('2022-04-17'));
 
-  - const isEqual = adapterLuxon.isEqual('2022-04-16', '2022-04-17');
-  + const isEqual = adapterLuxon.isEqual(DateTime.fromISO('2022-04-17'), DateTime.fromISO('2022-04-17'));
+  -const isEqual = adapterLuxon.isEqual('2022-04-16', '2022-04-17');
+  +const isEqual = adapterLuxon.isEqual(DateTime.fromISO('2022-04-17'), DateTime.fromISO('2022-04-17'));
 
-  - const isEqual = adapterMoment.isEqual('2022-04-16', '2022-04-17');
-  + const isEqual = adapterMoment.isEqual(moment('2022-04-17'), moment('2022-04-17'));
+  -const isEqual = adapterMoment.isEqual('2022-04-16', '2022-04-17');
+  +const isEqual = adapterMoment.isEqual(moment('2022-04-17'), moment('2022-04-17'));
 
-  - const isEqual = adapterDateFns.isEqual('2022-04-16', '2022-04-17');
-  + const isEqual = adapterDateFns.isEqual(new Date('2022-04-17'), new Date('2022-04-17'));
+  -const isEqual = adapterDateFns.isEqual('2022-04-16', '2022-04-17');
+  +const isEqual = adapterDateFns.isEqual(new Date('2022-04-17'), new Date('2022-04-17'));
   ```
 
 - The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore (#11023). This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
   You can learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
 
   ```diff
-    // When a `value` or a `defaultValue` is provided
-    <LocalizationProvider
-      adapter={AdapterDayjs}
-  -   dateLibInstance={dayjs.utc}
-    >
-      <DatePicker value={dayjs.utc('2022-04-17')} />
-    </LocalizationProvider>
+   // When a `value` or a `defaultValue` is provided
+   <LocalizationProvider
+     adapter={AdapterDayjs}
+  -  dateLibInstance={dayjs.utc}
+   >
+     <DatePicker value={dayjs.utc('2022-04-17')} />
+   </LocalizationProvider>
 
-    // When no `value` or `defaultValue` is provided
-    <LocalizationProvider
-      adapter={AdapterDayjs}
-  -   dateLibInstance={dayjs.utc}
-    >
-  -   <DatePicker />
-  +   <DatePicker timezone="UTC" />
-    </LocalizationProvider>
+   // When no `value` or `defaultValue` is provided
+   <LocalizationProvider
+     adapter={AdapterDayjs}
+  -  dateLibInstance={dayjs.utc}
+   >
+  -  <DatePicker />
+  +  <DatePicker timezone="UTC" />
+   </LocalizationProvider>
   ```
 
 - The property `hasLeadingZeros` has been removed from the sections in favor of the more precise `hasLeadingZerosInFormat` and `hasLeadingZerosInInput` properties (#10994). To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`:
@@ -328,10 +969,10 @@ And if you need the exact same output you can apply the following transformation
    const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
 
    React.useEffect(() => {
-       const firstSection = fieldRef.current!.getSections()[0]
-  -    console.log(firstSection.hasLeadingZeros)
-  +    console.log(firstSection.hasLeadingZerosInFormat)
-   }, [])
+     const firstSection = fieldRef.current!.getSections()[0];
+  -  console.log(firstSection.hasLeadingZeros);
+  +  console.log(firstSection.hasLeadingZerosInFormat);
+   }, []);
 
    return (
      <DateField unstableFieldRef={fieldRef} />
@@ -341,8 +982,8 @@ And if you need the exact same output you can apply the following transformation
 - The `adapter.getYearRange` method used to accept two params and now accepts a tuple to be consistent with the `adapter.isWithinRange` method (#10978):
 
   ```diff
-  - adapter.getYearRange(start, end);
-  + adapter.getYearRange([start, end])
+  -adapter.getYearRange(start, end);
+  +adapter.getYearRange([start, end])
   ```
 
 - The `adapter.isValid` method used to accept any type of value and tried to parse them before checking their validity (#10971).
@@ -362,27 +1003,27 @@ And if you need the exact same output you can apply the following transformation
    const isValid = adapterDateFns.isValid(new Date());
 
    // Non-supported formats (JS Date)
-  - const isValid = adapterDayjs.isValid(new Date('2022-04-17'));
-  + const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
+  -const isValid = adapterDayjs.isValid(new Date('2022-04-17'));
+  +const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
 
-  - const isValid = adapterLuxon.isValid(new Date('2022-04-17'));
-  + const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
+  -const isValid = adapterLuxon.isValid(new Date('2022-04-17'));
+  +const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
 
-  - const isValid = adapterMoment.isValid(new Date('2022-04-17'));
-  + const isValid = adapterMoment.isValid(moment('2022-04-17'));
+  -const isValid = adapterMoment.isValid(new Date('2022-04-17'));
+  +const isValid = adapterMoment.isValid(moment('2022-04-17'));
 
    // Non-supported formats (string)
-  - const isValid = adapterDayjs.isValid('2022-04-17');
-  + const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
+  -const isValid = adapterDayjs.isValid('2022-04-17');
+  +const isValid = adapterDayjs.isValid(dayjs('2022-04-17'));
 
-  - const isValid = adapterLuxon.isValid('2022-04-17');
-  + const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
+  -const isValid = adapterLuxon.isValid('2022-04-17');
+  +const isValid = adapterLuxon.isValid(DateTime.fromISO('2022-04-17'));
 
-  - const isValid = adapterMoment.isValid('2022-04-17');
-  + const isValid = adapterMoment.isValid(moment('2022-04-17'));
+  -const isValid = adapterMoment.isValid('2022-04-17');
+  +const isValid = adapterMoment.isValid(moment('2022-04-17'));
 
-  - const isValid = adapterDateFns.isValid('2022-04-17');
-  + const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
+  -const isValid = adapterDateFns.isValid('2022-04-17');
+  +const isValid = adapterDateFns.isValid(new Date('2022-04-17'));
   ```
 
 #### Changes
@@ -447,7 +1088,7 @@ A special shoutout to thank the 12 contributors who made this release possible. 
    }
    const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
 -  return (cellParams) => {
--  const { value } = cellParams;
+-    const { value } = cellParams;
 +  return (value, row, colDef, apiRef) => {
      return value != null ? filterRegex.test(String(value)) : false;
    };
@@ -559,6 +1200,249 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
 
+## 6.18.6
+
+_Dec 22, 2023_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Russian (ru-RU) locale (#11429) @wensiet
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.6`
+
+- [DataGrid] Fix typos in the JSDoc (#11475) @flaviendelangle
+- [l10n] Improve Russian (ru-RU) locale (#11429) @wensiet
+
+#### `@mui/x-data-grid-pro@6.18.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.6`.
+
+#### `@mui/x-data-grid-premium@6.18.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.6`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.6`
+
+- [fields] Fix section pasting (#11467) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.6`.
+
+### Charts / `@mui/x-charts@6.18.4`
+
+- [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
+- [charts] Make error message more explicit (#11457) @alexfauquette
+- [charts] Make the helper `ChartsText` component public (#11370) @alexfauquette
+- [charts] Improve dataset typing (#11372) @alexfauquette
+- [charts] Fix size overflow (#11385) @alexfauquette
+
+### Docs
+
+- [docs] Document false default values for boolean props (#11489) @cherniavskii
+- [docs] Improve Pickers `name` prop examples (#11442) @LukasTy
+- [docs] Limit `date-fns` package to v2 in codesandbox (#11478) @LukasTy
+- [test] Reload the page if its blank and there are no links to the remaining tests (#11471) @cherniavskii
+
+## 6.18.5
+
+_Dec 14, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Swedish (sv-SE) and Urdu (ur-PK) locales on the Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.5`
+
+- [l10n] Improve Swedish (sv-SE) locale (#11379) @fredrikcarlbom
+- [l10n] Improve Urdu (ur-PK) locale for data grid (#11409) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@6.18.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.5`.
+
+#### `@mui/x-data-grid-premium@6.18.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.5`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.5`
+
+- [pickers] Fix field types to avoid error on latest `@types/react` version (#11398) @LukasTy
+- [pickers] Support name prop (#11380) @gitstart
+
+#### `@mui/x-date-pickers-pro@6.18.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.5`, plus:
+
+- [DateRangePicker] Fix `autoFocus` behavior (#11376) @kealjones-wk
+
+### Docs
+
+- [docs] Respect GoT books (#11294) @janoma
+- [test] Fix flaky screenshots (#11391) @cherniavskii
+
+## 6.18.4
+
+_Dec 8, 2023_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Add [Pickers FAQ page](https://mui.com/x/react-date-pickers/faq/)
+- 🌍 Improve Danish (da-DK) locale on Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.4`
+
+- [DataGrid] Fix cell slot style override (#11215) @oliviertassinari
+- [l10n] Improve Danish (da-DK) locale (#11346) @goibon
+
+#### `@mui/x-data-grid-pro@6.18.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.4`.
+
+#### `@mui/x-data-grid-premium@6.18.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.4`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.4`
+
+- [pickers] Fix `MultiSectionDigitalClock` issues (#11308) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.4`.
+
+### Docs
+
+- [docs] Fix typo (#11323) @cadam11
+- [docs] Add FAQ page (#11347) @noraleonte
+
+## 6.18.3
+
+_Dec 4, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📈 Fix a lot of Charts package issues
+- 🌍 Improve Bulgarian (bg-BG) locale on Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.3`
+
+- [DataGrid] Fix cell editing adding a leading "v" on paste (#11166) @prasad5795
+- [DataGrid] Fix handling of event target in portal (#11209) @cherniavskii
+- [DataGrid] Fix `onFilterModelChange` being fired with stale field value (#11244) @gitstart
+- [l10n] Improve Bulgarian (bg-BG) locale (#10856) (#11206) @Kristiqn95
+
+#### `@mui/x-data-grid-pro@6.18.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.3`.
+
+#### `@mui/x-data-grid-premium@6.18.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.3`, plus:
+
+- [DataGridPremium] Fix aggregated column ignoring column definition changes (#11176) @cherniavskii
+- [DataGridPremium] Fix custom filter operators not working on aggregated column (#11201) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.3`
+
+- [pickers] Correctly format `MultiSectionDigitalClock` number sections (#11297) @LukasTy
+- [pickers] Expand field placeholder methods flexibility by providing `format` parameter (#11254) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.18.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.3`.
+
+### Charts / `@mui/x-charts@6.18.3`
+
+- [charts] Adjusted `defaultizeValueFormatter` util to accept an optional `series.valueFormatter` value (#11213) @michelengelen
+- [charts] Apply `labelStyle` and `tickLabelStyle` props on `<ChartsYAxis />` (#11180) @akamfoad
+- [charts] Fix TS config (#11259) @alexfauquette
+- [charts] Fix error with empty dataset (#11063) @alexfauquette
+- [charts] Fix export strategy (#11235) @alexfauquette
+
+### Docs
+
+- [docs] Add LTS section to support page (#11300) @joserodolfofreitas
+- [docs] Add end v6 blogpost to whats new page (#11299) @joserodolfofreitas
+- [docs] Document charts composition (#10710) @alexfauquette
+- [docs] Fix version links (#11167) @LukasTy
+- [docs] Improve Data Grid togglable columns example (#11241) @MBilalShafi
+- [docs] Split charts overview and getting started in distinct pages (#10910) @alexfauquette
+
+## 6.18.2
+
+_Nov 23, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Arabic (ar-SD), Czech (cs-CZ), and Hebrew (he-IL) locales on Data Grid
+- 🌍 Add Basque (eu) and Macedonian (mk) locales on Pickers
+- 🌍 Improve German (de-DE) and Spanish (es-ES) locales on Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.2`
+
+- [l10n] Improve Arabic (ar-SD) locale (#11096) @OmarWebDev
+- [l10n] Improve Czech (cs-CZ) locale (#10968) @luborepka
+- [l10n] Improve Hebrew (he-IL) locale (#11056) @LironKiloma
+
+#### `@mui/x-data-grid-pro@6.18.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.2`.
+
+#### `@mui/x-data-grid-premium@6.18.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.2`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.2`
+
+- [l10n] Add Basque (eu) locale and improve Spanish (es-ES) locale (#10985) @lajtomekadimon
+- [l10n] Add Macedonian (mk) locale (#11155) @brsnik
+- [l10n] Improve German (de-DE) locale (#11104) @jho-vema
+- [pickers] Deprecate `defaultCalendarMonth` prop (#11138) @flaviendelangle
+- [pickers] Fix `DateCalendar` crashing when given an invalid value (#11101) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@6.18.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.2`.
+
+### Charts / `@mui/x-charts@6.18.2`
+
+- [charts] Fix `ChartsTooltip` component setup (#11157) @LukasTy
+- [charts] Remove outdated prop-types (#10998) @alexfauquette
+
+### Docs
+
+- [docs] Fix incoherent naming of a component in `Custom slots and subcomponents` page (#11003) @lhilgert9
+- [test] Skip flaky e2e test in webkit (#11115) @cherniavskii
+- [test] Wait for images to load (#11109) @cherniavskii
+
 ## 6.18.1
 
 _Nov 9, 2023_
@@ -625,11 +1509,11 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - 🎁 The Charts package is now officially stable!
 - 🥧 Pie charts are now animated.
-- 📈 Line charts now support partial data, and can interpolate missing data.
+- 📈 Line charts now support partial data, and can interpolate missing data https://mui.com/x/react-charts/lines/#skip-missing-points.
 
-<img width="380" alt="line charts with partial data" src="https://github.com/mui/mui-x/assets/45398769/385ecf77-19b2-4a03-8aef-5d547db1d9ad">
+ <img src="https://github.com/mui/mui-x/assets/3165635/d2d50b1b-ee29-4e4c-9ebe-629c06f3093e" width="683" height="436" />
 
-- ✨ Allow to ignore [diacritics](https://en.wikipedia.org/wiki/Diacritic) when filtering
+- ✨ The data grid allows to ignore [diacritics](https://en.wikipedia.org/wiki/Diacritic) when filtering.
 - 📚 Documentation improvements
 
 ### Data Grid

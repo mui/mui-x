@@ -30,7 +30,7 @@ The first column will be 200px wide, leaving 300px remaining. The column with `f
 
 To set a minimum and maximum width for a `flex` column set the `minWidth` and the `maxWidth` property in `GridColDef`.
 
-:::info
+:::warning
 Before using fluid width, note that:
 
 - `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
@@ -112,6 +112,13 @@ Column autosizing is compatible with the [Dynamic row height](/x/react-data-grid
 :::warning
 When autosizing columns with long content, consider setting the `maxWidth` for the column to avoid it becoming too wide.
 :::
+
+### Autosizing with grouped rows [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+When using [row grouping](/x/react-data-grid/row-grouping/) you can utilize the `autosizeColumns` method to adjust the column width of the expanded rows dynamically.
+The demo below shows how you can subscribe to the `rowExpansionChange` event. The provided handler function then calls the `autosizeColumns` method from the gridApi.
+
+{{"demo": "ColumnAutosizingGroupedRows.js", "disableAd": true, "bg": "inline"}}
 
 ## API
 

@@ -248,20 +248,6 @@ describe('<DataGridPro /> - Edit components', () => {
       );
     });
 
-    it('should call setEditCellValue when entering the edit mode by pressing a digit', () => {
-      render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
-
-      const cell = getCell(0, 0);
-      userEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: '5' });
-
-      expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
-      expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('createdAt');
-      expect(spiedSetEditCellValue.lastCall.args[0].debounceMs).to.equal(undefined);
-      expect(spiedSetEditCellValue.lastCall.args[0].value).to.be.instanceOf(Date);
-    });
-
     it('should call setEditCellValue with null when entered an empty value', () => {
       render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
@@ -543,22 +529,6 @@ describe('<DataGridPro /> - Edit components', () => {
         field: 'brand',
         value: 'Adidas',
       });
-    });
-
-    it('should apply getOptionLabel to the options provided', () => {
-      defaultData.columns[0].renderEditCell = (params) => {
-        return renderEditSingleSelectCell({
-          ...params,
-          getOptionLabel: (value) => (value as string).toLowerCase(),
-        });
-      };
-      render(<TestCase />);
-
-      const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-
-      expect(screen.queryAllByRole('option')[0]).to.have.text('nike');
-      expect(screen.queryAllByRole('option')[1]).to.have.text('adidas');
     });
 
     it('should pass the value prop to the select', async () => {

@@ -4,6 +4,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { SxProps } from '@mui/system';
 import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
+import { TreeViewItemId } from '../models';
 
 export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   /**
@@ -60,7 +61,7 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
   /**
    * The id of the node.
    */
-  nodeId: string;
+  nodeId: TreeViewItemId;
   /**
    * The component used for the transition.
    * [Follow this guide](/material-ui/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.

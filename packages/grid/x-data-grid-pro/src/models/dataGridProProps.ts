@@ -151,7 +151,7 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * If `true`, enables the data grid filtering on header feature.
    * @default false
    */
-  unstable_headerFilters: boolean;
+  headerFilters: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>

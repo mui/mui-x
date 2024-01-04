@@ -2,13 +2,8 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
-import { FieldSlotsComponents, FieldSlotsComponentsProps } from '@mui/x-date-pickers/internals';
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { UseTimeRangeFieldDefaultizedProps, UseTimeRangeFieldProps } from '../internals/models';
-
-export interface UseSingleInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  props: UseSingleInputTimeRangeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
 
 export interface UseSingleInputTimeRangeFieldProps<TDate> extends UseTimeRangeFieldProps<TDate> {}
 
@@ -29,17 +24,17 @@ export interface SingleInputTimeRangeFieldProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: SingleInputTimeRangeFieldSlotsComponent;
+  slots?: SingleInputTimeRangeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: SingleInputTimeRangeFieldSlotProps<TDate>;
 }
 
 export type SingleInputTimeRangeFieldOwnerState<TDate> = SingleInputTimeRangeFieldProps<TDate>;
 
-export interface SingleInputTimeRangeFieldSlotsComponent extends FieldSlotsComponents {
+export interface SingleInputTimeRangeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -48,7 +43,6 @@ export interface SingleInputTimeRangeFieldSlotsComponent extends FieldSlotsCompo
   textField?: React.ElementType;
 }
 
-export interface SingleInputTimeRangeFieldSlotsComponentsProps<TDate>
-  extends FieldSlotsComponentsProps {
+export interface SingleInputTimeRangeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, SingleInputTimeRangeFieldOwnerState<TDate>>;
 }

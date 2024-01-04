@@ -1,7 +1,9 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
-import PieArc, { PieArcProps } from './PieArc';
+import { PieArc, PieArcProps } from './PieArc';
 import {
+  ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieItemIdentifier,
@@ -12,7 +14,6 @@ import {
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
-import { DefaultizedProps } from '../models/helpers';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -23,21 +24,11 @@ export interface PieArcPlotSlotProps {
 }
 
 export interface PieArcPlotProps
-  extends DefaultizedProps<
-    Pick<
+  extends Pick<
       DefaultizedPieSeriesType,
-      | 'data'
-      | 'faded'
-      | 'highlighted'
-      | 'innerRadius'
-      | 'outerRadius'
-      | 'cornerRadius'
-      | 'paddingAngle'
-      | 'id'
-      | 'highlightScope'
+      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope'
     >,
-    'outerRadius'
-  > {
+    ComputedPieRadius {
   /**
    * Overridable component slots.
    * @default {}
@@ -66,7 +57,7 @@ export interface PieArcPlotProps
   skipAnimation?: boolean;
 }
 
-export function PieArcPlot(props: PieArcPlotProps) {
+function PieArcPlot(props: PieArcPlotProps) {
   const {
     slots,
     slotProps,
@@ -115,6 +106,7 @@ export function PieArcPlot(props: PieArcPlotProps) {
             endAngle,
             paddingAngle: pA,
             innerRadius: iR,
+            arcLabelRadius,
             outerRadius: oR,
             cornerRadius: cR,
             ...style
@@ -152,3 +144,100 @@ export function PieArcPlot(props: PieArcPlotProps) {
     </g>
   );
 }
+
+PieArcPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The radius between circle center and the arc label in px.
+   * @default (innerRadius - outerRadius) / 2
+   */
+  arcLabelRadius: PropTypes.number,
+  /**
+   * The radius applied to arc corners (similar to border radius).
+   * @default 0
+   */
+  cornerRadius: PropTypes.number,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      color: PropTypes.string.isRequired,
+      endAngle: PropTypes.number.isRequired,
+      formattedValue: PropTypes.string.isRequired,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      index: PropTypes.number.isRequired,
+      label: PropTypes.string,
+      padAngle: PropTypes.number.isRequired,
+      startAngle: PropTypes.number.isRequired,
+      value: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
+  /**
+   * Override the arc attibutes when it is faded.
+   */
+  faded: PropTypes.shape({
+    additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
+    color: PropTypes.string,
+    cornerRadius: PropTypes.number,
+    innerRadius: PropTypes.number,
+    outerRadius: PropTypes.number,
+    paddingAngle: PropTypes.number,
+  }),
+  /**
+   * Override the arc attibutes when it is highlighted.
+   */
+  highlighted: PropTypes.shape({
+    additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
+    color: PropTypes.string,
+    cornerRadius: PropTypes.number,
+    innerRadius: PropTypes.number,
+    outerRadius: PropTypes.number,
+    paddingAngle: PropTypes.number,
+  }),
+  highlightScope: PropTypes.shape({
+    faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+  }),
+  id: PropTypes.string.isRequired,
+  /**
+   * The radius between circle center and the begining of the arc.
+   * @default 0
+   */
+  innerRadius: PropTypes.number,
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
+   * @param {DefaultizedPieValueType} item The pie item.
+   */
+  onClick: PropTypes.func,
+  /**
+   * The radius between circle center and the end of the arc.
+   */
+  outerRadius: PropTypes.number.isRequired,
+  /**
+   * The padding angle (deg) between two arcs.
+   * @default 0
+   */
+  paddingAngle: PropTypes.number,
+  /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { PieArcPlot };

@@ -1,3 +1,4 @@
+import { platform } from 'node:os';
 import { expect } from 'chai';
 import {
   chromium,
@@ -441,11 +442,73 @@ async function initializeEnvironment(
         );
 
         await page.click('[role="cell"][data-field="brand"]');
-        await page.type('[role="cell"][data-field="brand"]', 'p');
+        await page.keyboard.press('p');
+        if (browserType.name() === 'firefox') {
+          // In firefox the test fails without this
+          // It works fine when testing manually using the same firefox executable
+          await page.keyboard.insertText('p');
+        }
 
         expect(await page.locator('[role="cell"][data-field="brand"] input').inputValue()).to.equal(
           'p',
         );
+      });
+
+      // https://github.com/mui/mui-x/issues/9281
+      it('should return a number value when editing with a digit key press', async () => {
+        await renderFixture('DataGrid/KeyboardEditNumber');
+
+        await page.click('[role="cell"][data-field="age"]');
+        await page.keyboard.press('1');
+        if (browserType.name() === 'firefox') {
+          // In firefox the test fails without this
+          // It works fine when testing manually using the same firefox executable
+          await page.keyboard.insertText('1');
+        }
+        await page.keyboard.press('Enter');
+
+        expect(await page.getByTestId('new-value').textContent()).to.equal('number 1');
+      });
+
+      // https://github.com/mui/mui-x/issues/10582
+      it('should update input value when editing starts with `0` key press', async () => {
+        await renderFixture('DataGrid/KeyboardEditNumber');
+
+        await page.click('[role="cell"][data-field="age"]');
+        await page.keyboard.press('0');
+        if (browserType.name() === 'firefox') {
+          // In firefox the test fails without this
+          // It works fine when testing manually using the same firefox executable
+          await page.keyboard.insertText('0');
+        }
+
+        expect(await page.locator('[role="cell"][data-field="age"] input').inputValue()).to.equal(
+          '0',
+        );
+      });
+
+      // https://github.com/mui/mui-x/issues/10582
+      it('should update input value when editing starts with `-` key press', async () => {
+        await renderFixture('DataGrid/KeyboardEditNumber');
+
+        await page.click('[role="cell"][data-field="age"]');
+        await page.keyboard.press('-');
+
+        expect(await page.locator('[role="cell"][data-field="age"] input').inputValue()).to.equal(
+          '',
+        );
+      });
+
+      // https://github.com/mui/mui-x/issues/9195
+      it('should not paste "v" on Ctrl+V press', async () => {
+        await renderFixture('DataGrid/KeyboardEditInput');
+
+        await page.click('[role="cell"][data-field="brand"]');
+        await page.keyboard.press('Control+v');
+
+        expect(
+          await page.locator('[role="cell"][data-field="brand"] input').inputValue(),
+        ).not.to.equal('v');
       });
     });
 
@@ -485,9 +548,43 @@ async function initializeEnvironment(
           const input = page.getByRole('textbox');
 
           await input.focus();
-          await input.type('04/11/2022');
+          await input.fill('04/11/2022');
 
           expect(await input.inputValue()).to.equal('04/11/2022');
+        });
+
+        it('should allow pasting a section', async () => {
+          // Only firefox is capable of reliably running this test in CI and headless browsers
+          if (browserType.name() !== 'firefox' && process.env.CIRCLECI) {
+            return;
+          }
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+          const input = page.getByRole('textbox');
+
+          const isMac = platform() === 'darwin';
+          const modifier = isMac ? 'Meta' : 'Control';
+
+          await input.focus();
+          // ensure that the focus is moved to the end section by typing naturally - with a timeout
+          await input.pressSequentially('04/11/2022');
+          // move to day section
+          await input.press('ArrowLeft');
+          // copy day section value
+          await input.press(`${modifier}+KeyC`);
+          // move to month section
+          await input.press('ArrowLeft');
+          // initiate search query on month section
+          await input.press('1');
+          // paste day section value to month section
+          await input.press(`${modifier}+KeyV`);
+
+          expect(await input.inputValue()).to.equal('11/11/2022');
+
+          // move back to month section
+          await input.press('ArrowLeft');
+          // check that the search query has been cleared after pasting
+          await input.press('2');
+          expect(await input.inputValue()).to.equal('02/11/2022');
         });
       });
       describe('<MobileDatePicker />', () => {

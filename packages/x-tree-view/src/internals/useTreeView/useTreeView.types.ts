@@ -6,6 +6,7 @@ import {
   TreeViewPlugin,
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
+  TreeViewInstance,
 } from '../models';
 
 export type UseTreeViewParameters<
@@ -43,4 +44,5 @@ export interface UseTreeViewReturnValue<TPlugins extends readonly TreeViewAnyPlu
   ) => UseTreeViewRootSlotProps;
   rootRef: React.RefCallback<HTMLUListElement> | null;
   contextValue: TreeViewContextValue<TPlugins>;
+  instance: TreeViewInstance<TPlugins>;
 }
