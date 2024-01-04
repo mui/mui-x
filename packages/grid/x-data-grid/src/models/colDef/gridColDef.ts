@@ -158,9 +158,6 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   valueSetter?: (params: GridValueSetterParams<R, V>) => R;
   /**
    * Function that allows to apply a formatter before rendering its value.
-   * @template V, F
-   * @param {GridValueFormatterParams<V>} params Object containing parameters for the formatter.
-   * @returns {F} The formatted value.
    */
   valueFormatter?: GridValueFormatter;
   /**
