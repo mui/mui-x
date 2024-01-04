@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import {
-  DataGridPro,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
