@@ -127,7 +127,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
   ) {
     const containerRef = React.useRef<HTMLUListElement>(null);
     const handleRef = useForkRef(ref, containerRef);
-    const previousSelected = React.useRef<HTMLElement | null>(null);
+    const previousActive = React.useRef<HTMLElement | null>(null);
 
     const props = useThemeProps({
       props: inProps,
@@ -160,7 +160,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       if (containerRef.current === null) {
         return;
       }
-      const selectedItem = containerRef.current.querySelector<HTMLElement>(
+      const activeItem = containerRef.current.querySelector<HTMLElement>(
         '[role="option"][aria-selected="true"]',
       );
       if (active && autoFocus && activeItem) {
