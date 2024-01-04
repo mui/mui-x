@@ -119,7 +119,8 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used."
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See the {{link}} for more details."
     },
     "unstableFieldRef": {
       "description": "The ref object used to imperatively interact with the field."

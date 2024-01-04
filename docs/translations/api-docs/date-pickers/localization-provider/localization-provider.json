@@ -2,7 +2,10 @@
   "componentDescription": "",
   "propDescriptions": {
     "adapterLocale": { "description": "Locale for the date library you are using" },
-    "dateAdapter": { "description": "Date library adapter class function." },
+    "dateAdapter": {
+      "description": "Date library adapter class function.",
+      "seeMoreText": "See the localization provider {{link}} for more details."
+    },
     "dateFormats": { "description": "Formats that are used for any child pickers" },
     "dateLibInstance": {
       "description": "Date library instance you are using, if it has some global overrides <code>jsx dateLibInstance={momentTimeZone} </code>"

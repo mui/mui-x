@@ -77,7 +77,8 @@
       "description": "The time steps between two time options. For example, if <code>timeStep = 45</code>, then the available time options will be <code>[00:00, 00:45, 01:30, 02:15, 03:00, etc.]</code>."
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used."
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See the {{link}} for more details."
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
     "view": {

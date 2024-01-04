@@ -1884,7 +1884,7 @@
 
 "@mui/monorepo@https://github.com/alexfauquette/material-ui.git#generalise-scripts":
   version "5.15.3"
-  resolved "https://github.com/alexfauquette/material-ui.git#45cd0901c43a1fc9f0a4bc6a5b788473e821271d"
+  resolved "https://github.com/alexfauquette/material-ui.git#304d53c71c4f5ccda31c1f8c2a859463c4a45861"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.14.0"
