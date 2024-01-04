@@ -153,9 +153,9 @@ export const useGridRowGroupingPreProcessors = (
           .map((groupingRule) =>
             getCellGroupingCriteria({
               row,
-              id: rowId,
               groupingRule,
               colDef: columnsLookup[groupingRule.field],
+              apiRef,
             }),
           )
           .filter((cell) => cell.key != null) as RowTreeBuilderGroupingCriterion[];

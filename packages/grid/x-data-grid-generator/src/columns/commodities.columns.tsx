@@ -250,7 +250,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
       return value;
     },
     valueFormatter: (value) => value?.label,
-    groupingValueGetter: (params) => params.value.code,
+    groupingValueGetter: (value) => value.code,
     sortComparator: (v1, v2, param1, param2) =>
       gridStringOrNumberComparator(v1.label, v2.label, param1, param2),
     editable,

@@ -22,7 +22,6 @@ import {
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridApi,
-  GridGroupingValueGetterParams,
   GridPreferencePanelsValue,
   GridRowsProp,
   useGridApiRef,
@@ -1499,7 +1498,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
             },
             {
               field: 'category1',
-              groupingValueGetter: (params) => `groupingValue ${params.value}`,
+              groupingValueGetter: (value) => `groupingValue ${value}`,
             },
           ]}
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -1527,7 +1526,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
             },
             {
               field: 'modulo',
-              groupingValueGetter: (params) => params.row.id % 2,
+              groupingValueGetter: (value, row) => row.id % 2,
             },
           ]}
           initialState={{ rowGrouping: { model: ['modulo'] } }}
@@ -1541,7 +1540,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         apiRef.current.updateColumns([
           {
             field: 'modulo',
-            groupingValueGetter: (params) => params.row.id % 3,
+            groupingValueGetter: (value, row) => row.id % 3,
           },
         ]),
       );
@@ -1583,8 +1582,8 @@ describe('<DataGridPremium /> - Row grouping', () => {
             {
               field: 'category1',
               valueGetter: (value, row) => `value ${row.category1}`,
-              groupingValueGetter: (params: GridGroupingValueGetterParams<any, string>) =>
-                `groupingValue ${params.row.category1}`,
+              groupingValueGetter: (value, row: { category1: string }) =>
+                `groupingValue ${row.category1}`,
             },
           ]}
           defaultGroupingExpansionDepth={-1}

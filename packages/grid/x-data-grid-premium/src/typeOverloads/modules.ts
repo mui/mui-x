@@ -1,10 +1,10 @@
-import { GridCellParams, GridKeyValue, GridValidRowModel } from '@mui/x-data-grid-pro';
+import { GridCellParams, GridValidRowModel } from '@mui/x-data-grid-pro';
 import type {
   GridControlledStateEventLookupPro,
   GridApiCachesPro,
   GridEventLookupPro,
 } from '@mui/x-data-grid-pro/typeOverloads';
-import type { GridGroupingValueGetterParams } from '../models';
+import type { GridGroupingValueGetter } from '../models';
 import type {
   GridRowGroupingModel,
   GridAggregationModel,
@@ -58,12 +58,9 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
   availableAggregationFunctions?: string[];
   /**
    * Function that transforms a complex cell value into a key that be used for grouping the rows.
-   * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
-  groupingValueGetter?: (
-    params: GridGroupingValueGetterParams<R, V>,
-  ) => GridKeyValue | null | undefined;
+  groupingValueGetter?: GridGroupingValueGetter<R>;
   /**
    * Function that takes the clipboard-pasted value and converts it to a value used internally.
    * @param {string} value The pasted value.
