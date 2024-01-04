@@ -46,6 +46,14 @@ This will disable all features related to aggregation, even if a model is provid
 
 To disable aggregation on a specific column, set the `aggregable` property on its column definition (`GridColDef`) to `false`.
 
+The aggregation will not be available on the Grid UI but could still be applied in a **read-only mode**, i.e no option will be available in the column menu to update it. To apply such an aggregation, provide aggregation model in one of the following ways.
+
+1. Pass `aggregation.model` to the `initialState` prop. This will initialize the aggregation with the provided model.
+2. Provide the `aggregationModel` prop. This will control the aggregation with the provided model.
+3. Call the API method `setAggregationModel`. This will set the aggregation with the provided model.
+
+In the demo below, the **Year** column is not aggregable, yet it's aggregated in a read-only mode by providing an initial aggregation model.
+
 {{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Usage with row grouping
