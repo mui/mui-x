@@ -12,7 +12,7 @@ const WrappedSingleInputDateRangeField = React.forwardRef((props, ref) => {
 
 WrappedSingleInputDateRangeField.fieldType = 'single-input';
 
-export default function WrappedSingleInputDateRangePicker() {
+export default function SingleInputDateRangePickerWrapped() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['SingleInputDateRangeField']}>

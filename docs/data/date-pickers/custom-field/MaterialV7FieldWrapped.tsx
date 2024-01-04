@@ -6,6 +6,7 @@ import {
   PickersTextField as MuiPickersTextField,
   PickersTextFieldProps,
 } from '@mui/x-date-pickers/PickersTextField';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const PickersTextField = React.forwardRef(
@@ -18,6 +19,7 @@ export default function MaterialV7FieldWrapped() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateField', 'DatePicker']}>
+        <DateField textFieldVersion="v7" slots={{ textField: PickersTextField }} />
         <DatePicker textFieldVersion="v7" slots={{ textField: PickersTextField }} />
       </DemoContainer>
     </LocalizationProvider>

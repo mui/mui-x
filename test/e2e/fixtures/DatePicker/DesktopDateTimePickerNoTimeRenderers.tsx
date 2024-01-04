@@ -7,6 +7,7 @@ export default function DesktopDateTimePickerNoTimeRenderers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DesktopDateTimePicker
+        textFieldVersion="v7"
         label="Desktop Date Time Picker"
         viewRenderers={{
           hours: null,

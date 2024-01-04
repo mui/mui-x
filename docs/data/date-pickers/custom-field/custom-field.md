@@ -38,7 +38,7 @@ You can pass the single input fields to the range picker to use it for keyboard 
 If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'single-input'`.
 Otherwise, the picker won't know your field is a single input one and use the multi input event listeners:
 
-{{"demo": "WrappedSingleInputDateRangePicker.js", "defaultCodeOpen": false}}
+{{"demo": "SingleInputDateRangePickerWrapped.js", "defaultCodeOpen": false}}
 
 You can manually add an `endAdornment` if you want your range picker to look exactly like on a simple picker:
 
@@ -63,15 +63,21 @@ By default, the fields and pickers are using this component to build their UI.
 
 {{"demo": "MaterialV6Field.js"}}
 
+You can import the `TextField` component to create custom wrappers:
+
+{{"demo": "MaterialV6FieldWrapped.js"}}
+
 ### Using Material `PickersTextField`
 
-By default, the fields and pickers are using this component to build their UI.
-
-Pass the `textFieldVersion="v7"` to any field or picker component to enable it:
+Pass the `textFieldVersion="v7"` to any field or picker component to enable the new DOM structure:
 
 {{"demo": "MaterialV7Field.js"}}
 
-You can import it to create custom wrappers:
+:::success
+Learn more about this new DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#dom-structure)
+:::
+
+You can import the `PickersTextField` component to create custom wrappers:
 
 {{"demo": "MaterialV7FieldWrapped.js"}}
 
@@ -89,7 +95,9 @@ You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components ins
 
 ### Using Joy `PickersTextField`
 
-TODO
+:::warning
+This component is not available yet
+:::
 
 ## Usage with an unstyled input
 
@@ -106,6 +114,10 @@ You will need to use a component that supports the `sx` prop as a wrapper for yo
 :::
 
 ### Using custom `PickersTextField`
+
+:::success
+Learn more about this new DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#dom-structure)
+:::
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
 

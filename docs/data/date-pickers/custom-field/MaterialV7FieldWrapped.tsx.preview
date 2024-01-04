@@ -1,1 +1,2 @@
+<DateField textFieldVersion="v7" slots={{ textField: PickersTextField }} />
 <DatePicker textFieldVersion="v7" slots={{ textField: PickersTextField }} />

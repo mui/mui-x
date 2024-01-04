@@ -27,13 +27,16 @@ All fields to edit a range are available in a single input version and in a mult
 
 ## DOM structure
 
-Before the v7.0.0 version, the field editing always happened inside a `<input />` element,
+Before the v7.0.0 version, the field editing always happened inside a `<input />` element.
 Version v7.0.0 brings a new DOM structure that aims at improving the accessibility of the component.
-To provide a smooth migration path, both structures are supported during the v7 major, but the `<input />` approach will be removed in v8.
+To provide a smooth migration path, both structures are supported during the v7 major,
+but the `<input />` approach will be removed in 2025.
 
-:::warning
-WIP
-:::
+### v6: One `<input />` for all sections
+
+```html
+<input value="MM/DD/YYYY" />
+```
 
 ### v7: One `<span />` per section
 
@@ -43,12 +46,6 @@ WIP
   <span contenteditable="true">DD</span>
   <span contenteditable="true">YYYY</span>
 </span>
-```
-
-### v6: One `<input />` for all sections
-
-```html
-<input value="MM/DD/YYYY" />
 ```
 
 ## Advanced

@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 export default function BasicDesktopDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DesktopDatePicker label="Desktop Date Picker" />
+      <DesktopDatePicker textFieldVersion="v7" label="Desktop Date Picker" />
     </LocalizationProvider>
   );
 }
