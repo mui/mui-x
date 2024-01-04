@@ -63,6 +63,13 @@ export type GridValueSetter<R extends GridValidRowModel = GridValidRowModel, V =
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => R;
 
+export type GridValueParser<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
+  value: F | undefined,
+  row: R | undefined,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => V;
+
 /**
  * Column Definition base interface.
  */
@@ -166,12 +173,9 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   valueFormatter?: GridValueFormatter;
   /**
    * Function that takes the user-entered value and converts it to a value used internally.
-   * @template R, V, F
-   * @param {F | undefined} value The user-entered value.
-   * @param {GridCellParams<R, V, F>} params The params when called before saving the value.
    * @returns {V} The converted value to use internally.
    */
-  valueParser?: (value: F | undefined, params?: GridCellParams<R, V, F>) => V;
+  valueParser?: GridValueParser<R, V, F>;
   /**
    * Class name that will be added in cells for that column.
    */

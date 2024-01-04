@@ -212,7 +212,7 @@ You can use the `valueParser` property in the column definition to modify the va
 ```tsx
 const columns: GridColDef[] = [
   {
-    valueParser: (value: any, params: GridCellParams) => {
+    valueParser: (value, row, column, apiRef) => {
       return value.toLowerCase();
     },
   },

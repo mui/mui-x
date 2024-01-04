@@ -94,7 +94,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
 
         let parsedValue = newValue;
         if (column.valueParser) {
-          parsedValue = column.valueParser(newValue, apiRef.current.getCellParams(id, field));
+          parsedValue = column.valueParser(newValue, apiRef.current.getRow(id), column, apiRef);
         }
 
         setValueState(parsedValue);

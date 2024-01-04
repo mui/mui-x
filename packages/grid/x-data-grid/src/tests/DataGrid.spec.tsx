@@ -81,7 +81,7 @@ function ColumnPropTest() {
             // @ts-expect-error
             valueGetter: (value, row) => row.lastName,
             // @ts-expect-error
-            valueParser: (value, params) => params!.row.lastName,
+            valueParser: (value, row) => row!.lastName,
             valueSetter: (value, row) => {
               // @ts-expect-error
               const lastName = row.lastName;
@@ -99,7 +99,7 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             valueGetter: (value, row) => row.firstName,
-            valueParser: (value, params) => params!.row.firstName,
+            valueParser: (value, row) => row!.firstName,
             valueSetter: (value, row) => {
               const firstName = row.firstName;
               return {} as any;
@@ -117,7 +117,7 @@ function ColumnPropTest() {
             // @ts-expect-error
             valueGetter: (value, row) => row.lastName,
             // @ts-expect-error
-            valueParser: (value, params) => params!.row.lastName,
+            valueParser: (value, row) => row!.lastName,
             valueSetter: (value, row) => {
               // @ts-expect-error
               const lastName = row.lastName;
@@ -135,7 +135,7 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             valueGetter: (value, row) => row.firstName,
-            valueParser: (value, params) => params!.row.firstName,
+            valueParser: (value, row) => row!.firstName,
             valueSetter: (value, row) => {
               const firstName = row.firstName;
               return {} as any;

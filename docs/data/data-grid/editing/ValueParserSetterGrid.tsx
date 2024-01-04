@@ -4,6 +4,7 @@ import {
   GridColDef,
   GridValueGetter,
   GridValueSetter,
+  GridValueParser,
 } from '@mui/x-data-grid';
 
 type Row = (typeof defaultRows)[number];
@@ -13,12 +14,12 @@ const setFullName: GridValueSetter<Row> = (value, row) => {
   return { ...row, firstName, lastName };
 };
 
-function parseFullName(value: any) {
+const parseFullName: GridValueParser = (value) => {
   return String(value)
     .split(' ')
     .map((str) => (str.length > 0 ? str[0].toUpperCase() + str.slice(1) : ''))
     .join(' ');
-}
+};
 
 export default function ValueParserSetterGrid() {
   return (

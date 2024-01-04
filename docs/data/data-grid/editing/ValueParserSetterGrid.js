@@ -6,12 +6,12 @@ const setFullName = (value, row) => {
   return { ...row, firstName, lastName };
 };
 
-function parseFullName(value) {
+const parseFullName = (value) => {
   return String(value)
     .split(' ')
     .map((str) => (str.length > 0 ? str[0].toUpperCase() + str.slice(1) : ''))
     .join(' ');
-}
+};
 
 export default function ValueParserSetterGrid() {
   return (
