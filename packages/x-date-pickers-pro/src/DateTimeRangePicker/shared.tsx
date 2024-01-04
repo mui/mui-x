@@ -85,7 +85,7 @@ export interface BaseDateTimeRangePickerProps<TDate>
       >,
       'orientation' | 'views' | 'openTo'
     >,
-    Omit<ExportedDateRangeCalendarProps<TDate>, 'calendars'>,
+    ExportedDateRangeCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
     DesktopOnlyTimePickerProps<TDate>,
     Partial<

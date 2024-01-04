@@ -41,7 +41,7 @@ export interface BaseDateRangePickerProps<TDate>
       BasePickerInputProps<DateRange<TDate>, TDate, 'day', DateRangeValidationError>,
       'view' | 'views' | 'openTo' | 'onViewChange' | 'orientation'
     >,
-    Omit<ExportedDateRangeCalendarProps<TDate>, 'calendars'>,
+    ExportedDateRangeCalendarProps<TDate>,
     BaseDateValidationProps<TDate> {
   /**
    * Overridable component slots.

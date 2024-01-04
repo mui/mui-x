@@ -93,11 +93,6 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   onMonthChange?: (month: TDate) => void;
   /**
-   * The number of calendars to render.
-   * @default 2
-   */
-  calendars?: 1 | 2 | 3;
-  /**
    * Position the current month is rendered in.
    * @default 1
    */
@@ -128,6 +123,11 @@ export interface DateRangeCalendarProps<TDate>
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
   referenceDate?: TDate;
+  /**
+   * The number of calendars to render.
+   * @default 2
+   */
+  calendars?: 1 | 2 | 3;
   className?: string;
   classes?: Partial<DateRangeCalendarClasses>;
   /**
