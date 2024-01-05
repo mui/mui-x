@@ -1,6 +1,6 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
-const apiPages: MuiPage[] = [
+export default [
   {
     pathname: '/x/api/tree-view/rich-tree-view',
     title: 'RichTreeView',
@@ -17,6 +17,4 @@ const apiPages: MuiPage[] = [
     pathname: '/x/api/tree-view/tree-view',
     title: 'TreeView',
   },
-];
-
-export default apiPages;
+] as MuiPage[];
