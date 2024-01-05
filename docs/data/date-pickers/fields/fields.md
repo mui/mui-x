@@ -72,6 +72,11 @@ This new component will need to use the `PickersSectionList` component instead o
 
 You can have a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) to have a concrete example.
 
+:::info
+If your custom field was used to create a Joy UI design component,
+you may want to wait a few weeks for us to release an out-of-the-box Joy `PickersTextField` component instead of implement it yourself.
+:::
+
 #### Usage with theme `defaultProps`
 
 If you are using the theme to set default props to `MuiTextField`,
