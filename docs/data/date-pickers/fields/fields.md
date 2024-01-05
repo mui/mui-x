@@ -50,9 +50,85 @@ but the `<input />` approach will be removed in 2025.
 
 ### Migrating to the v7 DOM structure
 
-#### Usage with `slotProps.textField` and `slotProps.field`
+#### How to enable the v7 DOM structure?
 
-#### Usage with custom `slots.textField`
+You can enable the v7 DOM structure on any field or picker component using the `textFieldVersion` prop:
+
+```tsx
+<DateField textFieldVersion="v7" />
+<DatePicker textFieldVersion="v7" />
+<DateRangePicker textFieldVersion="v7" />
+```
+
+#### Usage with `slotProps.field`
+
+When using `slotProps.field` to pass props to your field component,
+the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
+
+- For the props forwarded to the `TextField`,
+  you can have a look at the next section to see how the migration impact them.
+
+  Both components below will render a small size UI:
+
+  ```js
+  <DatePicker
+    slotProps={{ field: { size: 'small' } }}
+    textFieldVersion="v7"
+  />
+  <DatePicker
+    slotProps={{ field: { size: 'small' } }}
+  />
+  ```
+
+- For the props consumed by the field, the behavior should remain exactly the same with v6 and v7 DOM structures.
+
+  Both components below will respect the leading zeroes on digit sections:
+
+  ```js
+  <DatePicker
+    slotProps={{ field: { shouldRespectLeadingZeros: true } }}
+    textFieldVersion="v7"
+  />
+  <DatePicker
+    slotProps={{ field: { shouldRespectLeadingZeros: true } }}
+  />
+  ```
+
+#### Usage with `slotProps.textField`
+
+If you are passing props to `slotProps.textField`,
+these props will now be received by `PickersTextField` and should keep working the same way as before.
+
+Both components below will render a small size UI:
+
+```js
+<DatePicker
+  slotProps={{ textField: { size: 'small' } }}
+  textFieldVersion="v7"
+/>
+<DatePicker
+  slotProps={{ textField: { size: 'small' } }}
+/>
+```
+
+:::info
+If you are passing `inputProps` to `slotProps.textField`,
+this props will now be passed to the hidden `<input />` element.
+:::
+
+#### Usage with `slots.field`
+
+If you are passing a custom field component to your pickers, you need to create a new one that is using the new DOM structure.
+This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
+
+You can have a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) to have a concrete example.
+
+:::info
+If your custom field was used to create a Joy UI design component,
+you may want to wait a few weeks for us to release an out-of-the-box Joy `PickersTextField` component instead of implement it yourself.
+:::
+
+#### Usage with `slots.textField`
 
 If you are passing a custom `TextField` component to your fields and pickers,
 you need to create a new one that is using the new DOM structure.
@@ -63,18 +139,6 @@ You can have a look at the second demo of the [Material PickersTextField section
 If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`,
 please consider having a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) section which uses `slots.field`.
 This approach can be more appropriate for deeper changes.
-:::
-
-#### Usage with custom `slots.field`
-
-If you are passing a custom field component to your pickers, you need to create a new one that is using the new DOM structure.
-This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
-
-You can have a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) to have a concrete example.
-
-:::info
-If your custom field was used to create a Joy UI design component,
-you may want to wait a few weeks for us to release an out-of-the-box Joy `PickersTextField` component instead of implement it yourself.
 :::
 
 #### Usage with theme `defaultProps`
