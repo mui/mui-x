@@ -9,12 +9,12 @@ import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { GridValidRowModel } from '../models/gridRows';
 import {
   PropValidator,
-  dataGridPropValidators,
+  propValidatorsDataGrid,
   validateProps,
 } from '../internals/utils/propValidation';
 
 const propValidators: PropValidator<DataGridProcessedProps>[] = [
-  ...dataGridPropValidators,
+  ...propValidatorsDataGrid,
   // Only validate in MIT version
   (props) => {
     if (props.columns && props.columns.some((column) => column.resizable)) {
