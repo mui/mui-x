@@ -39,7 +39,7 @@ describe('<GridPanel />', () => {
       (node: React.ReactNode) => {
         const wrapper = baseMount(
           <Wrapper>
-            <div className={gridClasses.columnHeaders} />
+            <div data-id="gridPanelAnchor" />
             <span>{node}</span>
           </Wrapper>,
         );
