@@ -18,7 +18,9 @@ It relies on D3.js for data manipulation and SVG for rendering.
 Like other MUI X components, charts are built to be production-ready components with nice integration into your application for common use cases.
 They also provide a high level of customization.
 
-To achieve this goal, the `@mui/x-charts` relies on three levels of customization:
+{{"demo": "ChartsOverviewDemo.js", "defaultCodeOpen": true}}
+
+## Using the documentation
 
 - _single components_ with nice defaults
 - extensive _configuration props_
