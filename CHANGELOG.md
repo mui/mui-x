@@ -78,7 +78,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
 - The expansion props have been renamed to better describe their behaviors:
 
   | Old name          | New name                |
-      | :---------------- | :---------------------- |
+  | :---------------- | :---------------------- |
   | `onNodeToggle`    | `onExpandedNodesChange` |
   | `expanded`        | `expandedNodes`         |
   | `defaultExpanded` | `defaultExpandedNodes`  |
