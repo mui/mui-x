@@ -1,25 +1,29 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import visuallyHidden from '@mui/utils/visuallyHidden';
-import { pickersInputClasses, getPickersInputUtilityClass } from './pickersInputClasses';
-import { PickersInputProps } from './PickersInput.types';
+import {
+  pickersInputBaseClasses,
+  getPickersInputBaseUtilityClass,
+} from './pickersInputBaseClasses';
+import { PickersInputBaseProps } from './PickersInputBase.types';
 import {
   Unstable_PickersSectionList as PickersSectionList,
   Unstable_PickersSectionListRoot as PickersSectionListRoot,
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
-} from '../../../PickersSectionList';
+} from '../../PickersSectionList';
 
-const round = (value) => Math.round(value * 1e5) / 1e5;
+const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
-export const PickersInputRoot = styled(Box, {
-  name: 'MuiPickersInput',
+export const PickersInputBaseRoot = styled(Box, {
+  name: 'MuiPickersInputBase',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
@@ -38,8 +42,8 @@ export const PickersInputRoot = styled(Box, {
   }),
 }));
 
-export const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
-  name: 'MuiPickersInput',
+export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, {
+  name: 'MuiPickersInputBase',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
@@ -55,7 +59,6 @@ export const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
   letterSpacing: 'inherit',
   // Baseline behavior
   width: '182px',
-
   ...(ownerState.size === 'small' && {
     paddingTop: 1,
   }),
@@ -74,8 +77,8 @@ export const PickersInputSectionsContainer = styled(PickersSectionListRoot, {
   }),
 }));
 
-const PickersInputSection = styled(PickersSectionListSection, {
-  name: 'MuiPickersInput',
+const PickersInputBaseSection = styled(PickersSectionListSection, {
+  name: 'MuiPickersInputBase',
   slot: 'Section',
   overridesResolver: (props, styles) => styles.section,
 })(({ theme }) => ({
@@ -86,8 +89,8 @@ const PickersInputSection = styled(PickersSectionListSection, {
   display: 'flex',
 }));
 
-const PickersInputSectionContent = styled(PickersSectionListSectionContent, {
-  name: 'MuiPickersInput',
+const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, {
+  name: 'MuiPickersInputBase',
   slot: 'SectionContent',
   overridesResolver: (props, styles) => styles.content,
 })(({ theme }) => ({
@@ -98,8 +101,8 @@ const PickersInputSectionContent = styled(PickersSectionListSectionContent, {
   outline: 'none',
 }));
 
-const PickersInputSeparator = styled(PickersSectionListSectionSeparator, {
-  name: 'MuiPickersInput',
+const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparator, {
+  name: 'MuiPickersInputBase',
   slot: 'Separator',
   overridesResolver: (props, styles) => styles.separator,
 })(() => ({
@@ -107,8 +110,8 @@ const PickersInputSeparator = styled(PickersSectionListSectionSeparator, {
   letterSpacing: 'inherit',
 }));
 
-const PickersInputInput = styled('input', {
-  name: 'MuiPickersInput',
+const PickersInputBaseInput = styled('input', {
+  name: 'MuiPickersInputBase',
   slot: 'Input',
   overridesResolver: (props, styles) => styles.hiddenInput,
 })({
@@ -150,17 +153,22 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
     sectionAfter: ['sectionAfter'],
   };
 
-  return composeClasses(slots, getPickersInputUtilityClass, classes);
+  return composeClasses(slots, getPickersInputBaseUtilityClass, classes);
 };
 
 interface OwnerStateType
   extends FormControlState,
-    Omit<PickersInputProps, keyof FormControlState> {}
+    Omit<PickersInputBaseProps, keyof FormControlState> {}
 
-export const PickersInput = React.forwardRef(function PickersInput(
-  props: PickersInputProps,
+const PickersInputBase = React.forwardRef(function PickersInputBase(
+  inProps: PickersInputBaseProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiPickersInputBase',
+  });
+
   const {
     elements,
     areAllSectionsEmpty,
@@ -192,7 +200,9 @@ export const PickersInput = React.forwardRef(function PickersInput(
 
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
-    throw new Error('MUI: PickersInput should always be used inside a PickersTextField component');
+    throw new Error(
+      'MUI: PickersInputBase should always be used inside a PickersTextField component',
+    );
   }
 
   const handleInputFocus = (event: React.FocusEvent<HTMLDivElement>) => {
@@ -225,15 +235,14 @@ export const PickersInput = React.forwardRef(function PickersInput(
   }, [muiFormControl, areAllSectionsEmpty]);
 
   const ownerState: OwnerStateType = {
-    ...(props as Omit<PickersInputProps, keyof FormControlState>),
-
+    ...(props as Omit<PickersInputBaseProps, keyof FormControlState>),
     ...muiFormControl,
   };
 
   const classes = useUtilityClasses(ownerState);
 
-  const InputRoot = slots?.root || PickersInputRoot;
-  const InputSectionsContainer = slots?.input || PickersInputSectionsContainer;
+  const InputRoot = slots?.root || PickersInputBaseRoot;
+  const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
   return (
     <InputRoot
@@ -257,20 +266,20 @@ export const PickersInput = React.forwardRef(function PickersInput(
         onKeyDown={onKeyDown}
         slots={{
           root: InputSectionsContainer,
-          section: PickersInputSection,
-          sectionContent: PickersInputSectionContent,
-          sectionSeparator: PickersInputSeparator,
+          section: PickersInputBaseSection,
+          sectionContent: PickersInputBaseSectionContent,
+          sectionSeparator: PickersInputBaseSectionSeparator,
         }}
         slotProps={{
           root: {
             ownerState,
           } as any,
-          sectionContent: { className: pickersInputClasses.sectionContent },
+          sectionContent: { className: pickersInputBaseClasses.sectionContent },
           sectionSeparator: ({ position }) => ({
             className:
               position === 'before'
-                ? pickersInputClasses.sectionBefore
-                : pickersInputClasses.sectionAfter,
+                ? pickersInputBaseClasses.sectionBefore
+                : pickersInputBaseClasses.sectionAfter,
           }),
         }}
       />
@@ -280,7 +289,7 @@ export const PickersInput = React.forwardRef(function PickersInput(
             ...muiFormControl,
           })
         : null}
-      <PickersInputInput
+      <PickersInputBaseInput
         className={classes.input}
         value={value}
         onChange={onChange}
@@ -294,4 +303,88 @@ export const PickersInput = React.forwardRef(function PickersInput(
   );
 });
 
-(PickersInput as any).muiName = 'Input';
+PickersInputBase.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Is `true` if the current values equals the empty value.
+   * For a single item value, it means that `value === null`
+   * For a range value, it means that `value === [null, null]`
+   */
+  areAllSectionsEmpty: PropTypes.bool.isRequired,
+  className: PropTypes.string,
+  /**
+   * The component used for the root node.
+   * Either a string to use a HTML element or a component.
+   */
+  component: PropTypes.elementType,
+  /**
+   * If true, the whole element is editable.
+   * Useful when all the sections are selected.
+   */
+  contentEditable: PropTypes.bool.isRequired,
+  /**
+   * The elements to render.
+   * Each element contains the prop to edit a section of the value.
+   */
+  elements: PropTypes.arrayOf(
+    PropTypes.shape({
+      after: PropTypes.object.isRequired,
+      before: PropTypes.object.isRequired,
+      container: PropTypes.object.isRequired,
+      content: PropTypes.object.isRequired,
+    }),
+  ).isRequired,
+  endAdornment: PropTypes.node,
+  fullWidth: PropTypes.bool,
+  id: PropTypes.string,
+  inputProps: PropTypes.object,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
+  label: PropTypes.node,
+  margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  onChange: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onInput: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func.isRequired,
+  onPaste: PropTypes.func.isRequired,
+  ownerState: PropTypes.any,
+  readOnly: PropTypes.bool,
+  renderSuffix: PropTypes.func,
+  sectionListRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getRoot: PropTypes.func.isRequired,
+        getSectionContainer: PropTypes.func.isRequired,
+        getSectionContent: PropTypes.func.isRequired,
+        getSectionIndexFromDOMElement: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
+   * The components used for each slot inside.
+   *
+   * @default {}
+   */
+  slots: PropTypes.object,
+  startAdornment: PropTypes.node,
+  style: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  value: PropTypes.string.isRequired,
+} as any;
+
+export { PickersInputBase };
