@@ -52,7 +52,6 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 Same changes as in `@mui/x-data-grid@7.0.0-alpha.7`.
 
-
 #### `@mui/x-data-grid-premium@7.0.0-alpha.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.7`.
@@ -66,7 +65,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.7`.
 #### `@mui/x-date-pickers-pro@7.0.0-alpha.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
-
 
 ### Charts / `@mui/x-charts@7.0.0-alpha.7`
 
@@ -110,17 +108,16 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
     <TreeView
   -   onNodeSelect={handleSelectionChange}
   +   onSelectedNodesChange={handleSelectionChange}
-  
+
   -   selected={selectedNodes}
   +   selectedNodes={selectedNodes}
-  
+
   -   defaultSelected={defaultSelectedNodes}
   +   defaultSelectedNodes={defaultSelectedNodes}
     />
   ```
 
 #### `@mui/x-tree-view@7.0.0-alpha.7`
-
 
 - [TreeView] Improve the expansion API (#11476) @flaviendelangle
 - [TreeView] Improve the selection API (#11560) @flaviendelangle
@@ -144,7 +141,6 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
 - [core] Remove issue emoji @oliviertassinari
 - [core] Sync the release instructions with MUI Core @oliviertassinari
 - [core] Yaml format match most common convention @oliviertassinari
-
 
 ## 7.0.0-alpha.6
 
