@@ -43,7 +43,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 #### `@mui/x-data-grid@7.0.0-alpha.7`
 
-- [DataGrid] Don't evaluate `hasEval` when `disableEval is set (#11516) @reihwald
+- [DataGrid] Don't evaluate `hasEval` when `disableEval` is set (#11516) @reihwald
 - [DataGrid] Replace `eval` with `new Function` (#11557) @oliviertassinari
 - [DataGrid] Warn devs when `autoPageSize` is used with `autoheight` (#11554) @Sboonny
 - [l10n] Improve Czech (cs-CZ) locale (@fdebef) (#11526) @LukasTy
