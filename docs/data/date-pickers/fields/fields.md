@@ -65,11 +65,16 @@ please consider having a look at the [custom PickersTextField](/x/react-date-pic
 This approach can be more appropriate for deeper changes.
 :::
 
-#### Usage with theme augmentation
+#### Usage with custom `slots.field`
 
-### Default props
+If you are passing a custom field component to your pickers, you need to create a new one that is using the new DOM structure.
+This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
 
-If you are setting default props to `MuiTextField`,
+You can have a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) to have a concrete example.
+
+#### Usage with theme `defaultProps`
+
+If you are using the theme to set default props to `MuiTextField`,
 you need to set the same default props to `MuiPickersTextField`:
 
 ```js
@@ -89,7 +94,7 @@ const theme = createTheme({
 });
 ```
 
-If you are setting default props to `MuiInput`, `MuiOutlinedInput`, `MuiFilledInput`,
+If you are using the theme to set default props to `MuiInput`, `MuiOutlinedInput`, `MuiFilledInput`,
 you need to set the same default props to `MuiPickersInput`, `MuiPickersOutlinedInput` and `MuiPickersFilledInput`
 
 ```js
@@ -111,7 +116,7 @@ const theme = createTheme({
 });
 ```
 
-If you are setting default props to `MuiInputBase`, you need to set the same default props to `MuiPickersInputBase`:
+If you are using the theme to set default props to `MuiInputBase`, you need to set the same default props to `MuiPickersInputBase`:
 
 ```js
 const theme = createTheme({
@@ -130,9 +135,9 @@ const theme = createTheme({
 });
 ```
 
-### Style overrides
+#### Usage with theme `styleOverrides`
 
-If you are setting style overrides to `MuiTextField`,
+If you are using the theme to set style overrides to `MuiTextField`,
 you need to set the same style overrides to `MuiPickersTextField`:
 
 ```js
@@ -160,7 +165,7 @@ const theme = createTheme({
 });
 ```
 
-If you are setting style overrides to `MuiInput`, `MuiOutlinedInput`, `MuiFilledInput`,
+If you are using the theme to set style overrides to `MuiInput`, `MuiOutlinedInput`, `MuiFilledInput`,
 you need to set the same default props to `MuiPickersInput`, `MuiPickersOutlinedInput` and `MuiPickersFilledInput`
 
 ```js
@@ -186,7 +191,7 @@ const theme = createTheme({
 });
 ```
 
-If you are setting default props to `MuiInputBase`, you need to set the same default props to `MuiPickersInputBase`:
+If you are using the theme to set style overrides to `MuiInputBase`, you need to set the same style overrides to `MuiPickersInputBase`:
 
 ```js
 const theme = createTheme({
@@ -208,13 +213,6 @@ const theme = createTheme({
   },
 });
 ```
-
-#### Usage with custom `slots.field`
-
-If you are passing a custom field component to your pickers, you need to create a new one that is using the new DOM structure.
-This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
-
-You can have a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) to have a concrete example.
 
 ## Advanced
 
