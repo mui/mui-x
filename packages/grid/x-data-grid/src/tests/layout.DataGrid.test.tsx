@@ -846,7 +846,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
             <DataGrid pagination={false} columns={[]} rows={[]} />
           </div>,
         );
-      }).toErrorDev(['MUI: `<DataGrid pagination={false} />` is not a valid prop.']);
+      }).toErrorDev('MUI: `<DataGrid pagination={false} />` is not a valid prop.');
     });
 
     it('should throw if the rows has no id', function test() {
