@@ -1,6 +1,6 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
-export default [
+const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/date-calendar',
     title: 'DateCalendar',
@@ -194,4 +194,6 @@ export default [
     pathname: '/x/api/date-pickers/year-calendar',
     title: 'YearCalendar',
   },
-] as MuiPage[];
+];
+
+export default apiPages;
