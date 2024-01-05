@@ -30,9 +30,15 @@ module.exports = function setKarmaConfig(config) {
         included: true,
       },
     ],
-    plugins: ['karma-parallel', 'karma-mocha', 'karma-chrome-launcher', 'karma-sourcemap-loader', 'karma-webpack'],
+    plugins: [
+      'karma-parallel',
+      'karma-mocha',
+      'karma-chrome-launcher',
+      'karma-sourcemap-loader',
+      'karma-webpack',
+    ],
     parallelOptions: {
-      executors: (process.env.CIRCLECI === 'true' ? 4 : os.cpus.length - 1),
+      executors: process.env.CIRCLECI === 'true' ? 4 : os.cpus.length - 1,
     },
     /**
      * possible values:
