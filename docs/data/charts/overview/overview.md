@@ -18,6 +18,8 @@ And, like other MUI X components, charts are production-ready components that in
 With a high level of customization, MUI X Charts provides on three levels of customization layers: **single components** with great defaults, extensive **configuration props**, and **subcomponents** for flexible composition.
 Additionally, you can also use all the MUI System tools, such as the theme override or the `sx` prop.
 
+{{"demo": "ChartsOverviewDemo.js", "defaultCodeOpen": true}}
+
 ## Using the documentation
 
 The MUI X Charts documentation has a slightly different structure than other MUI components.
