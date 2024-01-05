@@ -7,5 +7,7 @@ export {
 } from './pickersTextFieldClasses';
 export type { PickersTextFieldClasses, PickersTextFieldClassKey } from './pickersTextFieldClasses';
 
-export { pickersInputClasses, getPickersInputUtilityClass } from './PickersInput';
-export type { PickersInputClasses, PickersInputClassKey } from './PickersInput';
+export * from './PickersInput';
+export * from './PickersFilledInput';
+export * from './PickersOutlinedInput';
+export * from './PickersInputBase';

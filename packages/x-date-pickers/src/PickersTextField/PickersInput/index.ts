@@ -1,5 +1,5 @@
 export { PickersInput } from './PickersInput';
-export type { PickersInputProps } from './PickersInput.types';
+export type { PickersInputProps } from './PickersInput';
 
-export { pickersInputClasses, getPickersInputUtilityClass } from './pickersInputClasses';
 export type { PickersInputClasses, PickersInputClassKey } from './pickersInputClasses';
+export { getPickersInputUtilityClass, pickersInputClasses } from './pickersInputClasses';

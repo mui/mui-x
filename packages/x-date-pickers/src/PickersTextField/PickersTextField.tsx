@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import InputLabel from '@mui/material/InputLabel';
@@ -9,12 +9,12 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
 import { PickersTextFieldProps } from './PickersTextField.types';
-import { PickersOutlinedInput } from './PickersInput/PickersOutlinedInput';
-import { PickersFilledInput } from './PickersInput/PickersFilledInput';
-import { PickersStandardInput } from './PickersInput/PickersStandardInput';
+import { PickersOutlinedInput } from './PickersOutlinedInput';
+import { PickersFilledInput } from './PickersFilledInput';
+import { PickersInput } from './PickersInput';
 
 const VARIANT_COMPONENT = {
-  standard: PickersStandardInput,
+  standard: PickersInput,
   filled: PickersFilledInput,
   outlined: PickersOutlinedInput,
 };
@@ -43,9 +43,14 @@ const useUtilityClasses = (ownerState: PickersTextFieldProps) => {
 type OwnerStateType = Partial<PickersTextFieldProps>;
 
 const PickersTextField = React.forwardRef(function PickersTextField(
-  props: PickersTextFieldProps,
+  inProps: PickersTextFieldProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiPickersTextField',
+  });
+
   const {
     // Props used by FormControl
     onFocus,

@@ -63,22 +63,6 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
-## New field DOM structure
-
-### Usage with `slotProps.textField` and `slotProps.field`
-
-### Usage with custom `slots.textField`
-
-If you were passing a custom `TextField` component to your fields and pickers, you need to create a new one that is using the new DOM structure.
-
-If your custom `TextField` was only used to add some default props and behaviors to `@mui/material/TextField`, you can have a look at [this section](/x/react-date-pickers/custom-field/#using-material-pickerstextfield).
-
-If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`, you can have a look at [this section](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield).
-
-### Usage with theme augmentation
-
-### Usage with custom `slots.field`
-
 ## Component slots
 
 ### Rename `components` to `slots`

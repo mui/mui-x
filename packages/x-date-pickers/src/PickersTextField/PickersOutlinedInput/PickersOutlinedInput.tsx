@@ -3,113 +3,104 @@ import PropTypes from 'prop-types';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { pickersInputClasses, getPickersInputUtilityClass } from './pickersInputClasses';
+import {
+  pickersOutlinedInputClasses,
+  getPickersOutlinedInputUtilityClass,
+} from './pickersOutlinedInputClasses';
+import Outline from './Outline';
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
-import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
+import {
+  PickersInputBaseRoot,
+  PickersInputBaseSectionsContainer,
+} from '../PickersInputBase/PickersInputBase';
 
-export interface PickersInputProps extends PickersInputBaseProps {
-  disableUnderline?: boolean;
+export interface PickersOutlinedInputProps extends PickersInputBaseProps {
+  notched?: boolean;
 }
 
-const PickersInputRoot = styled(PickersInputBaseRoot, {
-  name: 'MuiPickersInput',
+const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
+  name: 'MuiPickersOutlinedInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
-  const light = theme.palette.mode === 'light';
-  let bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
-  if (theme.vars) {
-    bottomLineColor = `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`;
-  }
+  const borderColor =
+    theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
-    'label + &': {
-      marginTop: 16,
+    padding: '0 14px',
+    borderRadius: (theme.vars || theme).shape.borderRadius,
+    [`&:hover .${pickersOutlinedInputClasses.notchedOutline}`]: {
+      borderColor: (theme.vars || theme).palette.text.primary,
     },
-    ...(!ownerState.disableUnderline && {
-      '&::after': {
-        background: 'red',
-        // @ts-ignore
-        borderBottom: `2px solid ${(theme.vars || theme).palette[ownerState.color].main}`,
-        left: 0,
-        bottom: 0,
-        // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
-        content: '""',
-        position: 'absolute',
-        right: 0,
-        transform: 'scaleX(0)',
-        transition: theme.transitions.create('transform', {
-          duration: theme.transitions.duration.shorter,
-          easing: theme.transitions.easing.easeOut,
-        }),
-        pointerEvents: 'none', // Transparent to the hover style.
+    // Reset on touch devices, it doesn't add specificity
+    '@media (hover: none)': {
+      [`&:hover .${pickersOutlinedInputClasses.notchedOutline}`]: {
+        borderColor: theme.vars
+          ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`
+          : borderColor,
       },
-      [`&.${pickersInputClasses.focused}:after`]: {
-        // translateX(0) is a workaround for Safari transform scale bug
-        // See https://github.com/mui/material-ui/issues/31766
-        transform: 'scaleX(1) translateX(0)',
+    },
+    [`&.${pickersOutlinedInputClasses.focused} .${pickersOutlinedInputClasses.notchedOutline}`]: {
+      borderStyle: 'solid',
+      // @ts-ignore
+      borderColor: (theme.vars || theme).palette[ownerState.color].main,
+      borderWidth: 2,
+    },
+    [`&.${pickersOutlinedInputClasses.disabled}`]: {
+      [`& .${pickersOutlinedInputClasses.notchedOutline}`]: {
+        borderColor: (theme.vars || theme).palette.action.disabled,
       },
-      [`&.${pickersInputClasses.error}`]: {
-        '&:before, &:after': {
-          borderBottomColor: (theme.vars || theme).palette.error.main,
-        },
+      '*': {
+        color: (theme.vars || theme).palette.action.disabled,
       },
-      '&::before': {
-        borderBottom: `1px solid ${bottomLineColor}`,
-        left: 0,
-        bottom: 0,
-        // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
-        content: '"\\00a0"',
-        position: 'absolute',
-        right: 0,
-        transition: theme.transitions.create('border-bottom-color', {
-          duration: theme.transitions.duration.shorter,
-        }),
-        pointerEvents: 'none', // Transparent to the hover style.
-      },
-      [`&:hover:not(.${pickersInputClasses.disabled}, .${pickersInputClasses.error}):before`]: {
-        borderBottom: `2px solid ${(theme.vars || theme).palette.text.primary}`,
-        // Reset on touch devices, it doesn't add specificity
-        '@media (hover: none)': {
-          borderBottom: `1px solid ${bottomLineColor}`,
-        },
-      },
-      [`&.${pickersInputClasses.disabled}:before`]: {
-        borderBottomStyle: 'dotted',
-      },
-    }),
+    },
+    [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
+      borderColor: (theme.vars || theme).palette.error.main,
+    },
   };
 });
 
+const PickersOutlinedInputSectionsContainer = styled(PickersInputBaseSectionsContainer, {
+  name: 'MuiPickersOutlinedInput',
+  slot: 'SectionsContainer',
+  overridesResolver: (props, styles) => styles.sectionsContainer,
+})<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
+  padding: '16.5px 0',
+  ...(ownerState.size === 'small' && {
+    padding: '8.5px 0',
+  }),
+}));
+
 const useUtilityClasses = (ownerState: OwnerStateType) => {
-  const { classes, disableUnderline } = ownerState;
+  const { classes } = ownerState;
 
   const slots = {
-    root: ['root', !disableUnderline && 'underline'],
+    root: ['root'],
+    notchedOutline: ['notchedOutline'],
     input: ['input'],
   };
 
-  const composedClasses = composeClasses(slots, getPickersInputUtilityClass, classes);
+  const composedClasses = composeClasses(slots, getPickersOutlinedInputUtilityClass, classes);
 
   return {
-    ...classes, // forward classes to the PickersInputBase
+    ...classes, // forward classes to the InputBase
     ...composedClasses,
   };
 };
 
 interface OwnerStateType
   extends FormControlState,
-    Omit<PickersInputProps, keyof FormControlState> {}
+    Omit<PickersOutlinedInputProps, keyof FormControlState> {}
 
-const PickersInput = React.forwardRef(function PickersInput(
-  inProps: PickersInputProps,
+const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
+  inProps: PickersOutlinedInputProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({
     props: inProps,
-    name: 'MuiPickersInput',
+    name: 'MuiPickersOutlinedInput',
   });
 
-  const { label, autoFocus, ownerState: ownerStateProp, ...other } = props;
+  const { label, autoFocus, ownerState: ownerStateProp, notched, ...other } = props;
 
   const muiFormControl = useFormControl();
 
@@ -123,7 +114,25 @@ const PickersInput = React.forwardRef(function PickersInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersInputRoot }}
+      slots={{ root: PickersOutlinedInputRoot, input: PickersOutlinedInputSectionsContainer }}
+      renderSuffix={(state) => (
+        <Outline
+          shrink={Boolean(notched || state.adornedStart || state.focused || state.filled)}
+          notched={Boolean(notched || state.adornedStart || state.focused || state.filled)}
+          className={classes.notchedOutline}
+          label={
+            label != null && label !== '' && muiFormControl?.required ? (
+              <React.Fragment>
+                {label}
+                &thinsp;{'*'}
+              </React.Fragment>
+            ) : (
+              label
+            )
+          }
+          ownerState={ownerState}
+        />
+      )}
       {...other}
       label={label}
       classes={classes}
@@ -132,7 +141,7 @@ const PickersInput = React.forwardRef(function PickersInput(
   );
 });
 
-PickersInput.propTypes = {
+PickersOutlinedInput.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -154,7 +163,6 @@ PickersInput.propTypes = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
-  disableUnderline: PropTypes.bool,
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.
@@ -179,6 +187,7 @@ PickersInput.propTypes = {
   ]),
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  notched: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
@@ -217,6 +226,6 @@ PickersInput.propTypes = {
   value: PropTypes.string.isRequired,
 } as any;
 
-export { PickersInput };
+export { PickersOutlinedInput };
 
-(PickersInput as any).muiName = 'Input';
+(PickersOutlinedInput as any).muiName = 'Input';

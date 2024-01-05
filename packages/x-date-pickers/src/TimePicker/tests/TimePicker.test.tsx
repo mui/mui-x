@@ -3,7 +3,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { screen } from '@mui-internal/test-utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
-import { pickersInputClasses } from '@mui/x-date-pickers/PickersTextField';
+import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
 describe('<TimePicker />', () => {
   const { render } = createPickerRenderer();
@@ -14,7 +14,7 @@ describe('<TimePicker />', () => {
 
     render(<TimePicker textFieldVersion="v7" />);
 
-    expect(screen.getByLabelText(/Choose time/)).to.have.class(pickersInputClasses.input);
+    expect(screen.getByLabelText(/Choose time/)).to.have.class(pickersInputBaseClasses.input);
 
     window.matchMedia = originalMatchMedia;
   });

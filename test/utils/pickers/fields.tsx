@@ -9,7 +9,7 @@ import {
   FieldTextFieldVersion,
 } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
-import { pickersInputClasses } from '@mui/x-date-pickers/PickersTextField';
+import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
 
 export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
@@ -318,15 +318,15 @@ export const getCleanedSelectedContent = () => {
 };
 
 export const setValueOnFieldInput = (value: string, index = 0) => {
-  const hiddenInput = document.querySelectorAll<HTMLDivElement>(`.${pickersInputClasses.input}`)[
-    index
-  ];
+  const hiddenInput = document.querySelectorAll<HTMLDivElement>(
+    `.${pickersInputBaseClasses.input}`,
+  )[index];
 
   fireEvent.change(hiddenInput, { target: { value } });
 };
 
 export const getAllFieldInputRoot = () =>
-  document.querySelectorAll<HTMLDivElement>(`.${pickersInputClasses.root}`);
+  document.querySelectorAll<HTMLDivElement>(`.${pickersInputBaseClasses.root}`);
 
 export const getFieldInputRoot = (index = 0) => getAllFieldInputRoot()[index];
 

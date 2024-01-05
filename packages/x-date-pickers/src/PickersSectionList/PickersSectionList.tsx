@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
+import { useThemeProps } from '@mui/material/styles';
 import {
   getPickersSectionListUtilityClass,
   pickersSectionListClasses,
@@ -120,9 +121,14 @@ type PickersSectionListComponent = ((
 ) => React.JSX.Element) & { propTypes?: any };
 
 const PickersSectionList = React.forwardRef(function PickersSectionList(
-  props: PickersSectionListProps,
+  inProps: PickersSectionListProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiPickersSectionList',
+  });
+
   const { slots, slotProps, elements, sectionListRef, ...other } = props;
 
   const classes = useUtilityClasses(props);

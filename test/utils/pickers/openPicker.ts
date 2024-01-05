@@ -1,6 +1,6 @@
 import { screen, userEvent } from '@mui-internal/test-utils';
 import { getFieldSectionsContainer } from 'test/utils/pickers/fields';
-import { pickersInputClasses } from '@mui/x-date-pickers/PickersTextField';
+import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
 export type OpenPickerParams =
   | {
@@ -27,7 +27,7 @@ export const openPicker = (params: OpenPickerParams) => {
 
     if (params.isSingleInput && params.initialFocus === 'end') {
       const sections = fieldSectionsContainer.querySelectorAll(
-        `.${pickersInputClasses.sectionsContainer}`,
+        `.${pickersInputBaseClasses.sectionsContainer}`,
       );
 
       userEvent.mousePress(sections[sections.length - 1]);

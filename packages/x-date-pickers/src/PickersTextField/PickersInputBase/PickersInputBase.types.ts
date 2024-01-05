@@ -34,7 +34,7 @@ export interface PickersInputPropsUsedByField
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
-export interface PickersInputProps
+export interface PickersInputBaseProps
   extends Omit<BoxProps, keyof PickersInputPropsUsedByField>,
     PickersInputPropsUsedByField {
   ownerState?: any;
@@ -58,15 +58,4 @@ export interface PickersInputProps
     root?: React.ElementType;
     input?: React.ElementType;
   };
-}
-
-export interface PickersOutlinedInputProps extends PickersInputProps {
-  notched?: boolean;
-}
-export interface PickersStandardInputProps extends PickersInputProps {
-  disableUnderline?: boolean;
-}
-export interface PickersFilledInputProps extends PickersInputProps {
-  disableUnderline?: boolean;
-  hiddenLabel?: boolean;
 }
