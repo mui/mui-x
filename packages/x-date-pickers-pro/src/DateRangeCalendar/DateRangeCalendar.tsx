@@ -31,6 +31,7 @@ import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   buildWarning,
   useControlledValueWithTimezone,
+  useViews,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {

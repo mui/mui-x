@@ -36,10 +36,7 @@ import { DateRange } from '@mui/x-date-pickers-pro/internals/models';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-// eslint-disable-next-line no-restricted-imports
-import { isDatePickerView } from '@mui/x-date-pickers/internals/utils/date-utils';
-// eslint-disable-next-line no-restricted-imports
-import { isTimeView } from '@mui/x-date-pickers/internals/utils/time-utils';
+import { isDatePickerView, isTimeView } from '@mui/x-date-pickers/internals';
 
 function RadioGroupControl({
   label,
