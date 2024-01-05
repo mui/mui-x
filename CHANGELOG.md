@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### `@mui/x-data-grid@6.18.7`
 
-- [DataGrid] Don't evaluate `hasEval` when `disableEval is set (#11553) @reihwald
+- [DataGrid] Don't evaluate `hasEval` when `disableEval` is set (#11553) @reihwald
 - [l10n] Update Czech (cs-CZ) locale (#11498) @fdebef
 
 #### `@mui/x-data-grid-pro@6.18.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
