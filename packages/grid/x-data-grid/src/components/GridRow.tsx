@@ -152,6 +152,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
+  const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
 
@@ -370,7 +371,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         pinnedOffset =
           dimensions.columnsTotalWidth -
           columnPositions[indexRelativeToAllColumns] -
-          column.computedWidth;
+          column.computedWidth +
+          scrollbarWidth;
         break;
       case PinnedPosition.NONE:
         pinnedOffset = 0;
@@ -502,7 +504,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     : null;
 
-  const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
   const expandedWidth =
     dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth - scrollbarWidth;
   const emptyCellWidth = Math.max(0, expandedWidth);

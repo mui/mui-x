@@ -323,7 +323,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
 
     if (pinnedPosition === PinnedPosition.RIGHT) {
-      cellStyle.right = `calc(${pinnedOffset}px + var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))`;
+      cellStyle.right = pinnedOffset;
     }
 
     return cellStyle;
