@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 7.0.0-alpha.7
+
 _Jan 5, 2024_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
