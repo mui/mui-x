@@ -1,6 +1,6 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
-export default [
+const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/data-grid/data-grid',
     title: 'DataGrid',
@@ -27,4 +27,5 @@ export default [
     pathname: '/x/api/data-grid/grid-toolbar-quick-filter',
     title: 'GridToolbarQuickFilter',
   },
-] as MuiPage[];
+];
+export default apiPages;

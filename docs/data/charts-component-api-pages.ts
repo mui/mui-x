@@ -1,6 +1,6 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
-export default [
+const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/area-element',
     title: 'AreaElement',
@@ -141,4 +141,5 @@ export default [
     pathname: '/x/api/charts/spark-line-chart',
     title: 'SparkLineChart',
   },
-] as MuiPage[];
+];
+export default apiPages;

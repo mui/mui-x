@@ -34,7 +34,8 @@ export const projectChartsSettings: ProjectSettings = {
 
     return `import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
-export default ${JSON.stringify(pages, null, 2)} as MuiPage[];
+const apiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
+export default apiPages;
 `;
   },
   typeScriptProjects: [
