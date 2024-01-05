@@ -1339,6 +1339,48 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
 
+## 6.18.7
+
+_Jan 5, 2024_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Czech (cs-CZ) locale on Data Grid (#11429) @wensiet
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.7`
+
+- [DataGrid] Don't evaluate `hasEval` when `disableEval` is set (#11553) @reihwald
+- [l10n] Update Czech (cs-CZ) locale (#11498) @fdebef
+
+#### `@mui/x-data-grid-pro@6.18.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.7`.
+
+#### `@mui/x-data-grid-premium@6.18.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.7`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.7`
+
+- [pickers] Fix views management (@LukasTy) (#11572)
+
+#### `@mui/x-date-pickers-pro@6.18.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.7`.
+
+### Charts / `@mui/x-charts@6.18.7`
+
+- [charts] Fix `null` in line chart using dataset (@alexfauquette) (#11561)
+
+### Docs
+
+- [docs] Clarify Pickers usage with Luxon (#11566) @LukasTy
+
 ## 6.18.6
 
 _Dec 22, 2023_
