@@ -50,7 +50,6 @@ export const useGridVirtualScroller = () => {
   const enabledForColumns = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const outerSize = dimensions.viewportOuterSize;
-  const innerSize = dimensions.viewportInnerSize;
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
