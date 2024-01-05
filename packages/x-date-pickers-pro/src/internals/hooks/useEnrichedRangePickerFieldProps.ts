@@ -11,7 +11,6 @@ import {
   FieldRef,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
@@ -21,6 +20,7 @@ import {
   WrapperVariant,
   UsePickerProps,
   getActiveElement,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
@@ -102,6 +102,8 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
   currentView?: TView | null;
+  initialView?: TView;
+  onViewChange?: (view: TView) => void;
 }
 
 const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
@@ -120,6 +122,8 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   fieldProps,
   anchorRef,
   currentView,
+  initialView,
+  onViewChange,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -135,6 +139,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
   const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
   const handleEndFieldRef = useForkRef(fieldProps.unstableFieldRef, endFieldRef);
+  const previousRangePosition = React.useRef<RangePosition>(rangePosition);
 
   React.useEffect(() => {
     if (!open) {
@@ -145,10 +150,16 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
     currentRef.current?.focus();
     const currentFieldRef = rangePosition === 'start' ? startFieldRef : endFieldRef;
     if (!currentFieldRef.current || !currentView) {
+      // could happen when the user is switching between the inputs
+      previousRangePosition.current = rangePosition;
       return;
     }
-    // bring back focus to the field with the current view section selected
-    currentFieldRef.current.setSelectedSections(currentView);
+    // bring back focus to the field
+    currentFieldRef.current.setSelectedSections(
+      // use the current view or `0` when the range position has just been swapped
+      previousRangePosition.current === rangePosition ? currentView : 0,
+    );
+    previousRangePosition.current = rangePosition;
   }, [rangePosition, open, currentView]);
 
   const openRangeStartSelection = (
@@ -174,12 +185,18 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   const handleFocusStart = () => {
     if (open) {
       onRangePositionChange('start');
+      if (previousRangePosition.current !== 'start' && initialView) {
+        onViewChange?.(initialView);
+      }
     }
   };
 
   const handleFocusEnd = () => {
     if (open) {
       onRangePositionChange('end');
+      if (previousRangePosition.current !== 'end' && initialView) {
+        onViewChange?.(initialView);
+      }
     }
   };
 
