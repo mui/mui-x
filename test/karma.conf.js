@@ -1,3 +1,4 @@
+const os = require('os');
 const { chromium } = require('@playwright/test');
 const webpack = require('webpack');
 
@@ -30,6 +31,9 @@ module.exports = function setKarmaConfig(config) {
       },
     ],
     plugins: ['karma-parallel', 'karma-mocha', 'karma-chrome-launcher', 'karma-sourcemap-loader', 'karma-webpack'],
+    parallelOptions: {
+      executors: (process.env.CIRCLECI === 'true' ? 4 : os.cpus.length - 1),
+    },
     /**
      * possible values:
      * - config.LOG_DISABLE
