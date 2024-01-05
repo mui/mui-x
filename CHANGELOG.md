@@ -103,7 +103,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
   | `onNodeSelect`    | `onSelectedNodesChange` |
   | `selected`        | `selectedNodes`         |
   | `defaultSelected` | `defaultSelectedNodes`  |
-  
+
   ```diff
     <TreeView
   -   onNodeSelect={handleSelectionChange}
