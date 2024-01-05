@@ -1,10 +1,6 @@
 # Support
 
-<<<<<<< HEAD
-<p class="description">Learn how to get support for MUI X components; including feature requests, bug fixes, answers to how-to questions, and technical support from the team.</p>
-=======
-<p class="description">Learn how to get support for MUI X components, including feature requests, bug fixes, and technical support from the team.</p>
->>>>>>> febfecd3f (Polish content)
+<p class="description">Learn how to get support for MUI X components, including feature requests, bug fixes, and technical support from the team.</p>
 
 ## GitHub
 
@@ -69,4 +65,8 @@ This includes issues introduced by external sources, like browser upgrades or ch
 We have a [Discord Server](https://mui.com/r/discord/) to bring the MUI X community together.
 Our tools are used by thousands of developers and teams all around the world, many of whom actively engage with the community.
 
-You can join Discord to engage in lively discussions, share your projects, and interact with developers just like you from all around the world. We'd love for you to be a part of our community!
+You can join Discord to engage in lively discussions, share your projects, and interact with developers just like you from all around the world. We'd love for you to join us!
+
+:::warning
+How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
+:::
