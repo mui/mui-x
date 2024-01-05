@@ -17,7 +17,7 @@ import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { gridPinnedColumnsSelector } from '../hooks/features/columnPinning/gridColumnPinningSelector';
-import { dataGridProPropValidators } from '../internals/propValidation';
+import { propValidatorsDataGridPro } from '../internals/propValidation';
 
 const releaseInfo = getReleaseInfo();
 
@@ -31,7 +31,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
 
   const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
 
-  validateProps(props, dataGridProPropValidators);
+  validateProps(props, propValidatorsDataGridPro);
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
