@@ -130,7 +130,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
 - [docs] Complete transition to next branch (#11521) @oliviertassinari
 - [docs] Fix 404 links in the docs @oliviertassinari
 - [docs] Fix over page fetching @oliviertassinari
-- [docs] Lint next.config.js (#11514) @oliviertassinari
+- [docs] Lint `next.config.js` (#11514) @oliviertassinari
 
 ### Core
 
