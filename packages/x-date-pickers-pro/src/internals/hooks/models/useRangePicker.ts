@@ -6,9 +6,9 @@ import {
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
+  DateOrTimeViewWithMeridiem,
+  ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
-import { ExportedBaseTabsProps } from '@mui/x-date-pickers/internals/models/props/tabs';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,

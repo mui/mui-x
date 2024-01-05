@@ -5,8 +5,8 @@ import {
   MakeOptional,
   UseFieldInternalProps,
   DateTimeValidationProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { BaseRangeProps, DayRangeValidationProps } from './dateRange';
 import { DateRange } from './range';
 import { DateTimeRangeValidationError } from '../../models';

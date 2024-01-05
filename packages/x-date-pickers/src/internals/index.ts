@@ -92,6 +92,7 @@ export {
   useNow,
 } from './hooks/useUtils';
 export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews';
+export { useViews } from './hooks/useViews';
 export { useValidation } from './hooks/useValidation';
 export type { ValidationProps, Validator, InferError } from './hooks/useValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
@@ -127,6 +128,9 @@ export {
   replaceInvalidDateByNull,
   areDatesEqual,
   getTodayDate,
+  isDatePickerView,
+  mergeDateAndTime,
+  formatMeridiem,
 } from './utils/date-utils';
 export { resolveTimeViewsResponse } from './utils/date-time-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
@@ -156,5 +160,4 @@ export type {
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
 
-export { isDatePickerView } from './utils/date-utils';
 export { isInternalTimeView, isTimeView } from './utils/time-utils';

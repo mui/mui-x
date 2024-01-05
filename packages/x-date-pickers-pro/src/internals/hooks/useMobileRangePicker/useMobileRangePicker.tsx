@@ -9,9 +9,9 @@ import {
   InferError,
   ExportedBaseToolbarProps,
   useLocaleText,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import useId from '@mui/utils/useId';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,

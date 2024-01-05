@@ -2,8 +2,8 @@ import {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
   UsePickerViewsProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
   RangeOnlyPickerProps,
   RangePickerAdditionalViewProps,

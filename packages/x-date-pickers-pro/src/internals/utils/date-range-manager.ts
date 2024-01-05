@@ -1,5 +1,5 @@
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
-import { mergeDateAndTime } from '@mui/x-date-pickers/internals/utils/date-utils';
+import { mergeDateAndTime } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition } from '../models/range';
 
 interface CalculateRangeChangeOptions<TDate> {

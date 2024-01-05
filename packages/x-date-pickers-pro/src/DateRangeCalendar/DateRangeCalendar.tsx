@@ -30,8 +30,8 @@ import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   buildWarning,
   useControlledValueWithTimezone,
+  useViews,
 } from '@mui/x-date-pickers/internals';
-import { useViews } from '@mui/x-date-pickers/internals/hooks/useViews';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
