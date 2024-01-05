@@ -31,7 +31,7 @@ Same changes as in `@mui/x-data-grid-pro@6.18.7`.
 
 #### `@mui/x-date-pickers@6.18.7`
 
-- [pickers] Fix views management (@LukasTy) (#11572) 
+- [pickers] Fix views management (@LukasTy) (#11572)
 
 #### `@mui/x-date-pickers-pro@6.18.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
