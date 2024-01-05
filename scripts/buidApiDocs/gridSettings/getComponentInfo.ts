@@ -31,9 +31,9 @@ export function getComponentInfo(filename: string): ComponentInfo {
     },
     getInheritance: () => null, // TODO: Support inheritance
     getDemos: () => [
-      { demoPathname: '/x/react-data-grid/#mit-version', demoPageTitle: 'DataGrid' },
-      { demoPathname: '/x/react-data-grid/#commercial-version', demoPageTitle: 'DataGridPro' },
-      { demoPathname: '/x/react-data-grid/#premium-version', demoPageTitle: 'DataGridPremium' },
+      { demoPathname: '/x/react-data-grid/#mit-version-free-forever', demoPageTitle: 'DataGrid' },
+      { demoPathname: '/x/react-data-grid/#pro-plan', demoPageTitle: 'DataGridPro' },
+      { demoPathname: '/x/react-data-grid/#premium-plan', demoPageTitle: 'DataGridPremium' },
     ],
   };
 }
