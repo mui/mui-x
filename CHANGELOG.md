@@ -11,7 +11,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - 🎁 New component to create a Tree View from a structured data source:
 
-  You can now directly pass your data to the `RichTreeViewComponent` instead of manually converting it into JSX `TreeItem` components:
+  You can now directly pass your data to the `RichTreeView` component instead of manually converting it into JSX `TreeItem` components:
 
   ```tsx
   const ITEMS = [
