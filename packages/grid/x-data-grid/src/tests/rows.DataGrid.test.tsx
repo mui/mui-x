@@ -1112,19 +1112,18 @@ describe('<DataGrid /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
-    // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
-    // it('should throw a console error if autoPageSize is used with autoHeight', () => {
-    //   expect(() => {
-    //     render(<TestCase autoPageSize autoHeight />);
-    //   }).toErrorDev(
-    //     [
-    //       'MUI: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',
-    //       'You can not use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.',
-    //       '',
-    //       'Please remove one of these two props.',
-    //     ].join('\n'),
-    //   );
-    // });
+    it('should throw a console error if autoPageSize is used with autoHeight', () => {
+      expect(() => {
+        render(<TestCase autoPageSize autoHeight />);
+      }).toErrorDev(
+        [
+          'MUI: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',
+          'You can not use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.',
+          '',
+          'Please remove one of these two props.',
+        ].join('\n'),
+      );
+    });
   });
 
   // https://github.com/mui/mui-x/issues/10373

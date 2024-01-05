@@ -10,12 +10,14 @@ import {
   GridValidRowModel,
   useGridSelector,
 } from '@mui/x-data-grid';
+import { validateProps } from '@mui/x-data-grid/internals';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { gridPinnedColumnsSelector } from '../hooks/features/columnPinning/gridColumnPinningSelector';
+import { dataGridProPropValidators } from '../internals/propValidation';
 
 const releaseInfo = getReleaseInfo();
 
@@ -28,6 +30,8 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
+
+  validateProps(props, dataGridProPropValidators);
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
