@@ -33,11 +33,12 @@ describe('<DataGridPro/> - Components', () => {
       expect(document.querySelector(`.${gridClasses.rowCount}`)).to.equal(null);
     });
 
-    it('should throw a console error if hideFooterRowCount is used with pagination', () => {
-      expect(() => render(<TestCase hideFooterRowCount pagination />)).toErrorDev(
-        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
-      );
-    });
+    // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
+    // it('should throw a console error if hideFooterRowCount is used with pagination', () => {
+    //   expect(() => render(<TestCase hideFooterRowCount pagination />)).toErrorDev(
+    //     'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+    //   );
+    // });
   });
 
   describe('components', () => {

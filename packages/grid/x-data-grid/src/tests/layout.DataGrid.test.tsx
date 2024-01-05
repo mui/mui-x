@@ -836,16 +836,17 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   describe('warnings', () => {
-    it('should raise a warning if trying to use an enterprise feature', () => {
-      expect(() => {
-        render(
-          <div style={{ width: 150, height: 300 }}>
-            {/* @ts-ignore */}
-            <DataGrid pagination={false} columns={[]} rows={[]} />
-          </div>,
-        );
-      }).toErrorDev('MUI: `<DataGrid pagination={false} />` is not a valid prop.');
-    });
+    // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
+    // it('should raise a warning if trying to use an enterprise feature', () => {
+    //   expect(() => {
+    //     render(
+    //       <div style={{ width: 150, height: 300 }}>
+    //         {/* @ts-ignore */}
+    //         <DataGrid pagination={false} columns={[]} rows={[]} />
+    //       </div>,
+    //     );
+    //   }).toErrorDev('MUI: `<DataGrid pagination={false} />` is not a valid prop.');
+    // });
 
     it('should throw if the rows has no id', function test() {
       // TODO is this fixed?

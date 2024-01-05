@@ -136,15 +136,16 @@ describe('<DataGridPro /> - Row selection', () => {
   });
 
   describe('prop: checkboxSelectionVisibleOnly = true', () => {
-    it('should throw a console error if used without pagination', () => {
-      expect(() => {
-        render(
-          <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
-        );
-      }).toErrorDev(
-        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
-      );
-    });
+    // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
+    // it('should throw a console error if used without pagination', () => {
+    //   expect(() => {
+    //     render(
+    //       <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
+    //     );
+    //   }).toErrorDev(
+    //     'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+    //   );
+    // });
 
     it('should select all the rows of the current page if no row of the current page is selected', () => {
       render(

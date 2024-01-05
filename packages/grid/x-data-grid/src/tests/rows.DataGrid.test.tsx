@@ -1112,13 +1112,14 @@ describe('<DataGrid /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
-    it('should throw a console error if autoPageSize is used with autoHeight', () => {
-      expect(() => {
-        render(<TestCase autoPageSize autoHeight />);
-      }).toErrorDev(
-        'MUI: The `autoPageSize` prop will conflict with `autoHeight` prop when both of them are enabled.',
-      );
-    });
+    // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
+    // it('should throw a console error if autoPageSize is used with autoHeight', () => {
+    //   expect(() => {
+    //     render(<TestCase autoPageSize autoHeight />);
+    //   }).toErrorDev(
+    //     'MUI: The `autoPageSize` prop will conflict with `autoHeight` prop when both of them are enabled.',
+    //   );
+    // });
   });
 
   // https://github.com/mui/mui-x/issues/10373
