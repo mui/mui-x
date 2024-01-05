@@ -45,7 +45,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - [DataGrid] Don't evaluate `hasEval` when `disableEval` is set (#11516) @reihwald
 - [DataGrid] Replace `eval` with `new Function` (#11557) @oliviertassinari
-- [DataGrid] Warn devs when `autoPageSize` is used with `autoheight` (#11554) @Sboonny
+- [DataGrid] Warn devs when `autoPageSize` is used with `autoHeight` (#11554) @Sboonny
 - [l10n] Improve Czech (cs-CZ) locale (#11526) @fdebef
 
 #### `@mui/x-data-grid-pro@7.0.0-alpha.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
