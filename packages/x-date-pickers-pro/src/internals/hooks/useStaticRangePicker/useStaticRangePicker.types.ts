@@ -4,12 +4,12 @@ import {
   UsePickerParams,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRange } from '../../models/range';
 import { UseRangePositionProps } from '../useRangePosition';
 import { RangeFieldSection } from '../../models/fields';
