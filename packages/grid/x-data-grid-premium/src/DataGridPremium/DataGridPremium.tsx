@@ -51,7 +51,6 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
     </GridContextProvider>
   );
 });
-
 interface DataGridPremiumComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
@@ -112,14 +111,7 @@ DataGridPremiumRaw.propTypes = {
    * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false
    */
-  autoPageSize: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (props.autoHeight && props.autoPageSize) {
-      return new Error(
-        'MUI: The `autoPageSize` prop will conflict with `autoHeight` prop when both of them are enabled.',
-      );
-    }
-    return null;
-  }),
+  autoPageSize: PropTypes.bool,
   /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
