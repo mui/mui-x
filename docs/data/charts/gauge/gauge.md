@@ -2,7 +2,7 @@
 title: React Gauge chart
 ---
 
-# Charts - Gauge
+# Charts - Gauge 🚧
 
 <p class="description">Gauge chart allows to evaluate a metric.</p>
 
