@@ -7,7 +7,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'
 ---
 
-# Tree View
+# MUI X Tree View
 
 <p class="description">A Tree View widget presents a hierarchical list.</p>
 
