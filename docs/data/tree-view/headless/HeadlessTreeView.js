@@ -12,6 +12,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 /* eslint-disable */
 import { DEFAULT_TREE_VIEW_PLUGINS } from '@mui/x-tree-view/internals/plugins/defaultPlugins';
 
+import { extractPluginParamsFromProps } from '@mui/x-tree-view/internals/utils/extractPluginParamsFromProps';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 if (false) {
@@ -37,67 +38,28 @@ useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
   areLogsEnabled: params.areLogsEnabled ?? false,
 });
 
+useTreeViewLogExpanded.params = {
+  areLogsEnabled: true,
+  logMessage: true,
+};
+
 const plugins = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
 
 function TreeView(inProps) {
   const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
   const ownerState = themeProps;
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelectedNodes,
-    selectedNodes,
-    multiSelect,
-    onSelectedNodesChange,
-    onNodeSelectionToggle,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    items,
-    logMessage,
-    areLogsEnabled,
-    // Component implementation
-    children,
-    ...other
-  } = themeProps;
-
-  const { getRootProps, contextValue, instance } = useTreeView({
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelectedNodes,
-    selectedNodes,
-    multiSelect,
-    onSelectedNodesChange,
-    onNodeSelectionToggle,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    logMessage,
-    areLogsEnabled,
-    items,
+  const { pluginParams, otherProps } = extractPluginParamsFromProps({
+    props: themeProps,
     plugins,
   });
+
+  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
 
   const rootProps = useSlotProps({
     elementType: RichTreeViewRoot,
     externalSlotProps: {},
-    externalForwardedProps: other,
+    externalForwardedProps: otherProps,
     getSlotProps: getRootProps,
     ownerState,
   });

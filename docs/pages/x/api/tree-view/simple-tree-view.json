@@ -92,5 +92,5 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/SimpleTreeView/SimpleTreeView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/\">Tree View</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Selection</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/\">MUI X Tree View</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Selection</a></li></ul>"
 }

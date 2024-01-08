@@ -113,7 +113,19 @@ DataGridPremiumRaw.propTypes = {
    * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false
    */
-  autoPageSize: PropTypes.bool,
+  autoPageSize: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (props.autoHeight && props.autoPageSize) {
+      return new Error(
+        [
+          'MUI: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',
+          'You can not use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.',
+          '',
+          'Please remove one of these two props.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
   /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
