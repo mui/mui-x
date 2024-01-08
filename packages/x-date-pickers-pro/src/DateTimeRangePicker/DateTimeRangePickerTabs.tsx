@@ -18,7 +18,7 @@ import {
   getDateTimeRangePickerTabsUtilityClass,
 } from './dateTimeRangePickerTabsClasses';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
-import { RangePosition } from '../internals/models';
+import { RangePosition } from '../models';
 
 type TabValue = 'start-date' | 'start-time' | 'end-date' | 'end-time';
 

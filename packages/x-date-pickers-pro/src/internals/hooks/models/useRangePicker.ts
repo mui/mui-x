@@ -13,12 +13,13 @@ import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
+import { RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
   RangePickerFieldSlots,
   RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
+import { DateRange } from '../../../models';
 
 export interface UseRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,

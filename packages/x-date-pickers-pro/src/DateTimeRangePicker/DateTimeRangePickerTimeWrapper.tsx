@@ -8,7 +8,8 @@ import {
   TimeViewWithMeridiem,
   BaseClockProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, DateTimeRangePickerView } from '../internals/models';
+import { DateTimeRangePickerView } from '../internals/models';
+import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import { isRangeValid } from '../internals/utils/date-utils';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';

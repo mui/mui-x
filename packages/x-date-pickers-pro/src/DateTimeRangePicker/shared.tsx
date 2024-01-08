@@ -22,12 +22,8 @@ import {
   MultiSectionDigitalClockSlots,
   MultiSectionDigitalClockSlotProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { DateTimeRangeValidationError } from '../models';
-import {
-  DateRange,
-  DateTimeRangePickerView,
-  DateTimeRangePickerViewExternal,
-} from '../internals/models';
+import { DateRange, DateTimeRangeValidationError } from '../models';
+import { DateTimeRangePickerView, DateTimeRangePickerViewExternal } from '../internals/models';
 import {
   DateRangeCalendarSlots,
   DateRangeCalendarSlotProps,

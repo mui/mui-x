@@ -28,7 +28,8 @@ import {
   useMobileRangePicker,
 } from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
-import { DateRange, DateTimeRangePickerView } from '../internals/models';
+import { DateTimeRangePickerView } from '../internals/models';
+import { DateRange } from '../models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';

@@ -17,7 +17,7 @@ import {
   DateTimePickerToolbar,
   dateTimePickerToolbarClasses,
 } from '@mui/x-date-pickers/DateTimePicker';
-import { DateRange } from '../internals/models';
+import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateTimeRangePickerToolbarClasses,
