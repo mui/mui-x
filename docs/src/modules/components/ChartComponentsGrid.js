@@ -81,7 +81,7 @@ export default function ChartComponentsGrid() {
               })}
             />
             <Typography
-              component="h2"
+              component="h3"
               variant="body2"
               fontWeight="semiBold"
               sx={{ px: 2, py: 1.5 }}

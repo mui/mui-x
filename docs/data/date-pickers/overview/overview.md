@@ -7,7 +7,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
-# Date and Time Pickers
+# MUI X Date and Time Pickers
 
 <p class="description">These react date picker and time picker components let users select date or time values.</p>
 

@@ -197,3 +197,11 @@ useTreeViewNodes.getDefaultizedParams = (params) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
 });
+
+useTreeViewNodes.params = {
+  disabledItemsFocusable: true,
+  items: true,
+  isItemDisabled: true,
+  getItemLabel: true,
+  getItemId: true,
+};

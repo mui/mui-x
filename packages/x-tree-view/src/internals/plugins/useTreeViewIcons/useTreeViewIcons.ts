@@ -13,3 +13,10 @@ export const useTreeViewIcons: TreeViewPlugin<UseTreeViewIconsSignature> = ({ pa
     },
   };
 };
+
+useTreeViewIcons.params = {
+  defaultCollapseIcon: true,
+  defaultEndIcon: true,
+  defaultExpandIcon: true,
+  defaultParentIcon: true,
+};

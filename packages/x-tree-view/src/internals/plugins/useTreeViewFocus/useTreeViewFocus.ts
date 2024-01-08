@@ -107,3 +107,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 };
 
 useTreeViewFocus.getInitialState = () => ({ focusedNodeId: null });
+
+useTreeViewFocus.params = {
+  onNodeFocus: true,
+};
