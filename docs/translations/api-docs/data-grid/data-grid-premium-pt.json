@@ -33,6 +33,7 @@
     "disableColumnResize": "If <code>true</code>, resizing columns is disabled.",
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
     "disableDensitySelector": "If <code>true</code>, the density selector is disabled.",
+    "disableEval": "If <code>true</code>, <code>eval()</code> is not used for performance optimization.",
     "disableMultipleColumnsFiltering": "If <code>true</code>, filtering with multiple columns is disabled.",
     "disableMultipleColumnsSorting": "If <code>true</code>, sorting with multiple columns is disabled.",
     "disableMultipleRowSelection": "If <code>true</code>, multiple selection using the Ctrl or CMD key is disabled.",

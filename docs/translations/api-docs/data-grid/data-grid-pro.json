@@ -151,6 +151,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "disableEval": {
+      "description": "If <code>true</code>, <code>eval()</code> is not used for performance optimization.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "disableMultipleColumnsFiltering": {
       "description": "If <code>true</code>, filtering with multiple columns is disabled.",
       "deprecated": "",

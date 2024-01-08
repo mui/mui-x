@@ -96,6 +96,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "disableEval": {
+      "description": "If <code>true</code>, <code>eval()</code> is not used for performance optimization.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "disableMultipleRowSelection": {
       "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled.",
       "deprecated": "",

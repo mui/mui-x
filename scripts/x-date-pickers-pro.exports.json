@@ -222,6 +222,7 @@
   { "name": "MultiSectionDigitalClockSlots", "kind": "Interface" },
   { "name": "nbNO", "kind": "Variable" },
   { "name": "nlNL", "kind": "Variable" },
+  { "name": "NonEmptyDateRange", "kind": "TypeAlias" },
   { "name": "PickerChangeHandlerContext", "kind": "Interface" },
   { "name": "PickersActionBar", "kind": "Function" },
   { "name": "PickersActionBarAction", "kind": "TypeAlias" },

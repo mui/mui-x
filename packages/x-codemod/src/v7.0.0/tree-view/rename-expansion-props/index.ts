@@ -9,7 +9,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   return renameProps({
     root,
-    componentNames: ['TreeView'],
+    componentNames: ['TreeView', 'SimpleTreeView'],
     props: {
       expanded: 'expandedNodes',
       defaultExpanded: 'defaultExpandedNodes',
