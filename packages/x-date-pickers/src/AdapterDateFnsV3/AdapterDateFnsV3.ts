@@ -49,7 +49,6 @@ import { enUS } from 'date-fns/locale/en-US';
 import { Locale as DateFnsLocale } from 'date-fns/locale/types';
 // @ts-ignore
 import { longFormatters } from 'date-fns/_lib/format/longFormatters';
-import { version } from 'date-fns/package.json' assert { type: 'json' };
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
@@ -83,10 +82,10 @@ export class AdapterDateFnsV3
   implements MuiPickersAdapter<Date, DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    if (!version.startsWith('3.')) {
+    if (typeof addDays !== 'function') {
       throw new Error(
         [
-          `MUI: The \`date-fns\` package v${version} is not compatible with this adapter.`,
+          `MUI: The \`date-fns\` package v2.x is not compatible with this adapter.`,
           'Please, install v3.x of the package or use the `AdapterDateFns` instead.',
         ].join('\n'),
       );
