@@ -8,8 +8,8 @@ import {
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import {
   ExportedPickersLayoutSlots,

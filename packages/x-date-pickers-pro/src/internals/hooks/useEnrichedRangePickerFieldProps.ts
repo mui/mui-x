@@ -12,7 +12,6 @@ import {
   FieldTextFieldVersion,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
@@ -22,6 +21,7 @@ import {
   WrapperVariant,
   UsePickerProps,
   SlotComponentPropsFromProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition, UseDateRangeFieldProps } from '../models';
 import {
