@@ -229,6 +229,7 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
 useTreeViewSelection.params = {
   disableSelection: true,
   multiSelect: true,
+  checkboxSelection: true,
   defaultSelectedNodes: true,
   selectedNodes: true,
   onSelectedNodesChange: true,
