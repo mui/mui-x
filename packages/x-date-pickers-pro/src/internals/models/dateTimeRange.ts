@@ -7,8 +7,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { DayRangeValidationProps } from './dateRange';
-import { DateRange } from './range';
-import { DateTimeRangeValidationError, RangeFieldSection } from '../../models';
+import { DateTimeRangeValidationError, RangeFieldSection, DateRange } from '../../models';
 
 export interface UseDateTimeRangeFieldProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
   extends MakeOptional<

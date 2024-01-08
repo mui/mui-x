@@ -11,7 +11,7 @@ import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
-import { DateRange } from '../internals/models';
+import { DateRange } from '../models';
 
 type MobileDateRangePickerComponent = (<
   TDate,

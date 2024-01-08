@@ -32,7 +32,7 @@ import {
 } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
-import { DateRange } from '@mui/x-date-pickers-pro';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';

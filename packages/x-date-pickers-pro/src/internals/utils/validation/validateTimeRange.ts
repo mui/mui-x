@@ -6,8 +6,7 @@ import {
   DefaultizedProps,
 } from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../date-utils';
-import { DateRange } from '../../models/range';
-import { TimeRangeValidationError } from '../../../models';
+import { TimeRangeValidationError, DateRange } from '../../../models';
 
 export interface TimeRangeComponentValidationProps
   extends Required<BaseTimeValidationProps>,

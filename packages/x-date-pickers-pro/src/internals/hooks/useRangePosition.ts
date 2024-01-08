@@ -2,8 +2,7 @@ import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { FieldRef } from '@mui/x-date-pickers/models';
-import { RangePosition } from '../models/range';
-import { RangeFieldSection } from '../../models';
+import { RangePosition, RangeFieldSection } from '../../models';
 
 export interface UseRangePositionProps {
   /**

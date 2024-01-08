@@ -17,14 +17,13 @@ import {
   UseMultiInputDateRangeFieldParams,
   UseMultiInputDateRangeFieldProps,
 } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
-import { DateRange } from '../../models/range';
 import {
   DateRangeComponentValidationProps,
   validateDateRange,
 } from '../../utils/validation/validateDateRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
-import { DateRangeValidationError } from '../../../models';
+import { DateRangeValidationError, DateRange } from '../../../models';
 import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 

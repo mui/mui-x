@@ -7,8 +7,7 @@ import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
-import { DateRange } from '../internals/models';
-import { RangeFieldSection } from '../models';
+import { RangeFieldSection, DateRange } from '../models';
 
 export const useSingleInputTimeRangeField = <
   TDate,

@@ -23,12 +23,14 @@ import {
   SlotComponentPropsFromProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePosition, UseDateRangeFieldProps } from '../models';
+import { UseDateRangeFieldProps } from '../models';
 import {
   BaseMultiInputFieldProps,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
+  DateRange,
+  RangePosition,
 } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
 

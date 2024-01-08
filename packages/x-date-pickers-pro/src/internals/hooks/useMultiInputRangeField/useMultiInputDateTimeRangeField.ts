@@ -13,12 +13,11 @@ import {
   useDefaultizedDateTimeField,
 } from '@mui/x-date-pickers/internals';
 import { DateTimeValidationError, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
-import { DateRange } from '../../models/range';
 import type {
   UseMultiInputDateTimeRangeFieldParams,
   UseMultiInputDateTimeRangeFieldProps,
 } from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
-import { DateTimeRangeValidationError } from '../../../models';
+import { DateTimeRangeValidationError, DateRange } from '../../../models';
 import {
   DateTimeRangeComponentValidationProps,
   validateDateTimeRange,

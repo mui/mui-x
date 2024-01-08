@@ -20,8 +20,7 @@ import {
 } from './useMobileRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../models/range';
-import { BaseMultiInputFieldProps, RangeFieldSection } from '../../../models';
+import { DateRange, BaseMultiInputFieldProps, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();

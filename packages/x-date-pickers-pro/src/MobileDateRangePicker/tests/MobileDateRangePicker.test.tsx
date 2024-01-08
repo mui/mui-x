@@ -9,7 +9,7 @@ import {
   openPicker,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
-import { DateRange } from '@mui/x-date-pickers-pro';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 
 describe('<MobileDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });

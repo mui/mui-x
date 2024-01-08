@@ -5,9 +5,8 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { FieldRef, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { UseTimeRangeFieldProps } from '../internals/models/timeRange';
-import { RangePosition } from '../internals/models/range';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { RangeFieldSection, MultiInputRangeFieldClasses } from '../models';
+import { RangeFieldSection, MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputTimeRangeFieldParams<
   TDate,

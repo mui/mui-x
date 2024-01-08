@@ -8,8 +8,8 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
-import { DateRange, UseTimeRangeFieldProps } from '../internals/models';
-import { RangeFieldSection, TimeRangeValidationError } from '../models';
+import { UseTimeRangeFieldProps } from '../internals/models';
+import { DateRange, RangeFieldSection, TimeRangeValidationError } from '../models';
 
 export interface UseSingleInputTimeRangeFieldProps<
   TDate,
