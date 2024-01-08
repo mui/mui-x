@@ -2,14 +2,8 @@ import * as React from 'react';
 import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui-internal/test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  GridToolbar,
-  DataGridProps,
-  ptBR,
-  GridColDef,
-  gridClasses,
-} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, DataGridProps, GridColDef, gridClasses } from '@mui/x-data-grid';
+import { ptBR } from '@mui/x-data-grid/locales';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow, sleep } from 'test/utils/helperFn';
