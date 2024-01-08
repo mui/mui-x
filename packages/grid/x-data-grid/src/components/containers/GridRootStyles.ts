@@ -392,6 +392,7 @@ export const GridRootStyles = styled('div', {
     },
     [`.${c.menuOpen}`]: {
       visibility: 'visible',
+      width: 'auto',
     },
 
     [`& .${c.headerFilterRow}`]: {
