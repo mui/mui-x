@@ -213,7 +213,6 @@ export const GridRootStyles = styled('div', {
     borderStyle: 'solid',
     borderColor,
     borderRadius: 'var(--unstable_DataGrid-radius)',
-    overflow: 'hidden',
     color: (t.vars || t).palette.text.primary,
     ...t.typography.body2,
     outline: 'none',
@@ -223,6 +222,10 @@ export const GridRootStyles = styled('div', {
     minHeight: 0,
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
+    [`.${c.main} > *:first-child`]: {
+      borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
+      borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
+    },
     [`&.${c.autoHeight}`]: {
       height: 'auto',
     },
