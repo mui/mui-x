@@ -24,14 +24,13 @@ import {
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
-  DateRange,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-  RangePosition,
   UseDateRangeFieldProps,
   FieldType,
 } from '../models';
+import { DateRange, RangePosition } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
 export interface RangePickerFieldSlots extends UseClearableFieldSlots {

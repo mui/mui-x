@@ -50,7 +50,7 @@ import {
   isWithinRange,
 } from '../internals/utils/date-utils';
 import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
-import { DateRange } from '../internals/models';
+import { DateRange } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';

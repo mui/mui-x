@@ -4,10 +4,9 @@ import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { UseDateRangeFieldProps } from '../internals/models/dateRange';
-import { RangePosition } from '../internals/models/range';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { MultiInputFieldRefs } from '../internals/models/fields';
-import { MultiInputRangeFieldClasses } from '../models';
+import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate,

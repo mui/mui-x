@@ -20,7 +20,7 @@ import {
 } from './useDesktopRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../models/range';
+import { DateRange } from '../../../models';
 import { RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
 

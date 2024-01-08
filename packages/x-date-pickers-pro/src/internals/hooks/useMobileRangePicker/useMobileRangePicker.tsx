@@ -19,7 +19,7 @@ import {
 } from './useMobileRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../models/range';
+import { DateRange } from '../../../models';
 import { BaseMultiInputFieldProps, RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
 

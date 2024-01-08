@@ -7,10 +7,9 @@ import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
 } from '../internals/models/dateTimeRange';
-import { RangePosition } from '../internals/models/range';
 import { MultiInputFieldRefs } from '../internals/models/fields';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { MultiInputRangeFieldClasses } from '../models';
+import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputDateTimeRangeFieldParams<
   TDate,
