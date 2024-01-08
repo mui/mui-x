@@ -79,7 +79,8 @@
       "deprecated": "",
       "typeDescriptions": {
         "value": "The new value.",
-        "selectionState": "Indicates if the date selection is complete."
+        "selectionState": "Indicates if the date selection is complete.",
+        "selectedView": "Indicates the view in which the selection has been made."
       }
     },
     "onFocusedViewChange": {

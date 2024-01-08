@@ -1,8 +1,9 @@
 // DOM utils taken from
 // https://github.com/recharts/recharts/blob/master/src/util/DOMUtils.ts
 
-const isSsr = (): boolean =>
-  !(typeof window !== 'undefined' && window.document && window.setTimeout);
+function isSsr(): boolean {
+  return typeof window === 'undefined';
+}
 
 interface StringCache {
   widthCache: Record<string, any>;

@@ -5,8 +5,7 @@ import {
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from './range';
-import { TimeRangeValidationError } from '../../models';
+import { TimeRangeValidationError, DateRange } from '../../models';
 import { BaseRangeProps } from './dateRange';
 import { RangeFieldSection } from './fields';
 
