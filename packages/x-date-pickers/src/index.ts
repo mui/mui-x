@@ -47,6 +47,7 @@ export * from './PickersShortcuts';
 export * from './PickersCalendarHeader';
 
 // Field utilities
+export * from './PickersTextField';
 export * from './PickersSectionList';
 export * from './PickersTextField';
 

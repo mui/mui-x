@@ -91,6 +91,9 @@ interface OwnerStateType
   extends FormControlState,
     Omit<PickersOutlinedInputProps, keyof FormControlState> {}
 
+/**
+ * @ignore - internal component.
+ */
 const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
   inProps: PickersOutlinedInputProps,
   ref: React.Ref<HTMLDivElement>,

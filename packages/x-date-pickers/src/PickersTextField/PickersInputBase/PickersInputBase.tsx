@@ -160,6 +160,9 @@ interface OwnerStateType
   extends FormControlState,
     Omit<PickersInputBaseProps, keyof FormControlState> {}
 
+/**
+ * @ignore - internal component.
+ */
 const PickersInputBase = React.forwardRef(function PickersInputBase(
   inProps: PickersInputBaseProps,
   ref: React.Ref<HTMLDivElement>,
