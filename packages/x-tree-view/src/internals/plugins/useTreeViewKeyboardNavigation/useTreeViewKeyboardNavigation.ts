@@ -295,3 +295,5 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
   return { getRootProps: (otherHandlers) => ({ onKeyDown: createHandleKeyDown(otherHandlers) }) };
 };
+
+useTreeViewKeyboardNavigation.params = {};
