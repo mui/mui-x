@@ -16,14 +16,13 @@ import {
 import { DateValidationError } from '@mui/x-date-pickers/models';
 import { useDefaultizedDateRangeFieldProps } from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
 import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
-import { DateRange } from '../../models/range';
 import {
   DateRangeComponentValidationProps,
   validateDateRange,
 } from '../../utils/validation/validateDateRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
-import { DateRangeValidationError } from '../../../models';
+import { DateRangeValidationError, DateRange } from '../../../models';
 import { excludeProps } from './shared';
 
 export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {}>({

@@ -8,12 +8,13 @@ import {
   getTodayDate,
   getDefaultReferenceDate,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePosition } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type {
   DateRangeValidationError,
   DateTimeRangeValidationError,
   TimeRangeValidationError,
+  DateRange,
+  RangePosition,
 } from '../../models';
 import { RangeFieldSection } from '../models/fields';
 
