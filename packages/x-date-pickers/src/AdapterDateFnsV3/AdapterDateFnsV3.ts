@@ -11,7 +11,8 @@ import { addYears } from 'date-fns/addYears';
 import { endOfDay } from 'date-fns/endOfDay';
 import { endOfWeek } from 'date-fns/endOfWeek';
 import { endOfYear } from 'date-fns/endOfYear';
-import { format as dateFnsFormat } from 'date-fns/format';
+// @ts-ignore TODO remove when date-fns-v3 is the default
+import { format as dateFnsFormat, longFormatters } from 'date-fns/format';
 import { getDate } from 'date-fns/getDate';
 import { getDaysInMonth } from 'date-fns/getDaysInMonth';
 import { getHours } from 'date-fns/getHours';
@@ -47,8 +48,6 @@ import { enUS } from 'date-fns/locale/en-US';
 // date-fns v2 does not export types
 // @ts-ignore TODO remove when date-fns-v3 is the default
 import { Locale as DateFnsLocale } from 'date-fns/locale/types';
-// @ts-ignore
-import { longFormatters } from 'date-fns/_lib/format/longFormatters';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
@@ -88,6 +87,11 @@ export class AdapterDateFnsV3
           `MUI: The \`date-fns\` package v2.x is not compatible with this adapter.`,
           'Please, install v3.x of the package or use the `AdapterDateFns` instead.',
         ].join('\n'),
+      );
+    }
+    if (!longFormatters) {
+      throw new Error(
+        'MUI: The minimum supported `date-fns` package version compatible with this adapter is `3.2.x`.',
       );
     }
     super({ locale: locale ?? enUS, formats, longFormatters });
