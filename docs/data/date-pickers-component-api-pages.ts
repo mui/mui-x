@@ -14,6 +14,10 @@ const apiPages: MuiPage[] = [
     title: 'DatePicker',
   },
   {
+    pathname: '/x/api/date-pickers/date-picker-toolbar',
+    title: 'DatePickerToolbar',
+  },
+  {
     pathname: '/x/api/date-pickers/date-range-calendar',
     title: 'DateRangeCalendar',
     plan: 'pro',
