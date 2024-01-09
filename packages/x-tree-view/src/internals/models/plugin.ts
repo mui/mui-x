@@ -125,5 +125,6 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   ) => TSignature['defaultizedParams'];
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
   models?: TreeViewModelsInitializer<TSignature>;
+  params: Record<keyof TSignature['params'], true>;
   itemPlugin?: TreeViewItemPlugin;
 };

@@ -21,6 +21,7 @@ import {
   DEFAULT_TREE_VIEW_PLUGINS,
 } from '@mui/x-tree-view/internals/plugins/defaultPlugins';
 import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion';
+import { extractPluginParamsFromProps } from '@mui/x-tree-view/internals/utils/extractPluginParamsFromProps';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 if (false) {
@@ -61,7 +62,7 @@ const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
   params,
   models,
 }) => {
-  const expandedStr = JSON.stringify(models.expanded.value);
+  const expandedStr = JSON.stringify(models.expandedNodes.value);
 
   React.useEffect(() => {
     if (params.areLogsEnabled && params.logMessage) {
@@ -76,6 +77,11 @@ useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
   areLogsEnabled: params.areLogsEnabled ?? false,
 });
 
+useTreeViewLogExpanded.params = {
+  areLogsEnabled: true,
+  logMessage: true,
+};
+
 export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
   extends DefaultTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
@@ -89,57 +95,17 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
   const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
   const ownerState = themeProps as TreeViewProps<any, any>;
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    items,
-    logMessage,
-    areLogsEnabled,
-    // Component implementation
-    children,
-    ...other
-  } = themeProps as TreeViewProps<any, any>;
-
-  const { getRootProps, contextValue, instance } = useTreeView({
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    logMessage,
-    areLogsEnabled,
-    items,
+  const { pluginParams, otherProps } = extractPluginParamsFromProps({
+    props: themeProps,
     plugins,
   });
+
+  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
 
   const rootProps = useSlotProps({
     elementType: RichTreeViewRoot,
     externalSlotProps: {},
-    externalForwardedProps: other,
+    externalForwardedProps: otherProps,
     getSlotProps: getRootProps,
     ownerState,
   });

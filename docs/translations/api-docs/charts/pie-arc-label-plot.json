@@ -11,6 +11,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "arcLabelRadius": {
+      "description": "The radius between circle center and the arc label in px.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "cornerRadius": {
       "description": "The radius applied to arc corners (similar to border radius).",
       "deprecated": "",

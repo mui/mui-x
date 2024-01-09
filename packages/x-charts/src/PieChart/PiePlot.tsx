@@ -98,6 +98,7 @@ function PiePlot(props: PiePlotProps) {
         const {
           innerRadius: innerRadiusParam,
           outerRadius: outerRadiusParam,
+          arcLabelRadius: arcLabelRadiusParam,
           cornerRadius,
           paddingAngle,
           arcLabel,
@@ -112,6 +113,12 @@ function PiePlot(props: PiePlotProps) {
           availableRadius,
         );
         const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
+
+        const arcLabelRadius =
+          arcLabelRadiusParam === undefined
+            ? (outerRadius + innerRadius) / 2
+            : getPercentageValue(arcLabelRadiusParam, availableRadius);
+
         const cx = getPercentageValue(cxParam ?? '50%', width);
         const cy = getPercentageValue(cyParam ?? '50%', height);
         return (
@@ -119,6 +126,7 @@ function PiePlot(props: PiePlotProps) {
             <PieArcLabelPlot
               innerRadius={innerRadius}
               outerRadius={outerRadius ?? availableRadius}
+              arcLabelRadius={arcLabelRadius}
               cornerRadius={cornerRadius}
               paddingAngle={paddingAngle}
               id={seriesId}
