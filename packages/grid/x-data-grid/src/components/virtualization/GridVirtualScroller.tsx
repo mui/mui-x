@@ -77,9 +77,10 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
         <TopContainer>
           <GridHeaders />
-          <GridOverlays />
           <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
         </TopContainer>
+
+        <GridOverlays />
 
         <Content {...getContentProps()}>
           <RenderZone {...getRenderZoneProps()}>

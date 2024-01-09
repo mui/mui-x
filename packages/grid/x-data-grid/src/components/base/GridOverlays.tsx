@@ -24,7 +24,7 @@ const GridOverlayWrapperRoot = styled('div', {
   overridesResolver: (props, styles) => styles.overlayWrapper,
 })<{ overlayType: 'loadingOverlay' | string }>(({ overlayType }) => ({
   position: 'sticky', // To stay in place while scrolling
-  top: 0,
+  top: 'var(--DataGrid-headersTotalHeight)',
   left: 0,
   width: 0, // To stay above the content instead of shifting it down
   height: 0, // To stay above the content instead of shifting it down
