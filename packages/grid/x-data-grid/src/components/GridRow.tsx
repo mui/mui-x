@@ -483,14 +483,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     }
 
-    cells.push(
-      getCell(
-        column,
-        i + pinnedColumns.left.length,
-        indexRelativeToAllColumns,
-        middleColumnsLength,
-      ),
-    );
+    cells.push(getCell(column, i, indexRelativeToAllColumns, middleColumnsLength));
   }
 
   const eventHandlers = row
