@@ -10,6 +10,10 @@ export interface ExportedYearCalendarProps {
    * @default 3
    */
   yearsPerRow?: 3 | 4;
+  /**
+   * Display years from newest to oldest (used on year only picker)
+   */
+  yearsReversed?: boolean
 }
 
 export interface YearCalendarProps<TDate>

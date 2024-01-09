@@ -89,6 +89,10 @@ If the view defined in `openTo` is not the first view, then the views before wil
 (e.g. view the default behaviors, the `year` is only accessible when clicking on the toolbar).
 :::
 
+Intended for use with the standalone year picker, the `yearsReversed` prop can be set to show the maximum year first and minimum year at the end of the list.
+
+{{"demo": "DatePickerYearsReversed.js"}}
+
 ## Landscape orientation
 
 By default, the Date Picker component automatically sets the orientation based on the `window.orientation` value.

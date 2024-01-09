@@ -410,6 +410,10 @@ DesktopDatePicker.propTypes = {
    * @default 4
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
+  /**
+   * Years displayed in reverse order (used on year only picker)
+   */
+  yearsReversed: PropTypes.bool,
 } as any;
 
 export { DesktopDatePicker };

@@ -407,6 +407,10 @@ MobileDatePicker.propTypes = {
    * @default 3
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
+  /**
+   * Display years from newest to oldest (used on year only picker)
+   */
+  yearsReversed: PropTypes.bool,
 } as any;
 
 export { MobileDatePicker };
