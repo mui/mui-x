@@ -1,4 +1,3 @@
-import Box from '@mui/system/Box';
 import { styled } from '@mui/material/styles';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
@@ -58,7 +57,7 @@ export const ChartsTooltipCell = styled('td', {
   },
 }));
 
-export const ChartsTooltipMark = styled(Box, {
+export const ChartsTooltipMark = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Mark',
 })<{ ownerState: { color: string } }>(({ theme, ownerState }) => ({
