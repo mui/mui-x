@@ -72,7 +72,10 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
     },
     [`&.Mui-expanded `]: {
       '&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon': {
-        color: '#4b5aff',
+        color:
+          theme.palette.mode === 'light'
+            ? theme.palette.primary.main
+            : theme.palette.secondary.dark,
       },
       '&::before': {
         content: '""',
@@ -89,11 +92,14 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
       },
     },
     '&:hover': {
-      backgroundColor: alpha('#4b5aff', 0.1),
-      color: theme.palette.mode === 'light' ? '#4b5aff' : 'white',
+      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+      color: theme.palette.mode === 'light' ? theme.palette.primary.main : 'white',
     },
     [`&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused`]: {
-      backgroundColor: '#4b5aff',
+      backgroundColor:
+        theme.palette.mode === 'light'
+          ? theme.palette.primary.main
+          : theme.palette.secondary.dark,
       color: 'white',
     },
   },
