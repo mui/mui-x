@@ -1,12 +1,12 @@
 import * as React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function FirstComponent() {
   return (
-    <TreeView
+    <SimpleTreeView
       aria-label="file system navigator"
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
@@ -21,6 +21,6 @@ export default function FirstComponent() {
           <TreeItem nodeId="8" label="index.js" />
         </TreeItem>
       </TreeItem>
-    </TreeView>
+    </SimpleTreeView>
   );
 }

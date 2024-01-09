@@ -2,7 +2,7 @@
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "direction": { "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" } },
-    "hidden": { "type": { "name": "bool" } },
+    "hidden": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },

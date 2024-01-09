@@ -1,8 +1,8 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "autoFocus": { "type": { "name": "bool" } },
-    "clearable": { "type": { "name": "bool" } },
+    "autoFocus": { "type": { "name": "bool" }, "default": "false" },
+    "clearable": { "type": { "name": "bool" }, "default": "false" },
     "color": {
       "type": {
         "name": "enum",
@@ -11,10 +11,10 @@
       "default": "'primary'"
     },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableFuture": { "type": { "name": "bool" }, "default": "false" },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
+    "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
@@ -22,9 +22,9 @@
       "default": "\"dense\""
     },
     "FormHelperTextProps": { "type": { "name": "object" } },
-    "fullWidth": { "type": { "name": "bool" } },
+    "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "helperText": { "type": { "name": "node" } },
-    "hiddenLabel": { "type": { "name": "bool" } },
+    "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
     "InputLabelProps": { "type": { "name": "object" } },
     "inputProps": { "type": { "name": "object" } },
@@ -68,12 +68,12 @@
         "describedArgs": ["newValue"]
       }
     },
-    "readOnly": { "type": { "name": "bool" } },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
       "type": { "name": "any" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
-    "required": { "type": { "name": "bool" } },
+    "required": { "type": { "name": "bool" }, "default": "false" },
     "selectedSections": {
       "type": {
         "name": "union",

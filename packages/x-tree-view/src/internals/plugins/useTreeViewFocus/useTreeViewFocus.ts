@@ -35,9 +35,14 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
   });
 
+  const focusRoot = useEventCallback(() => {
+    rootRef.current?.focus({ preventScroll: true });
+  });
+
   populateInstance<UseTreeViewFocusSignature>(instance, {
     isNodeFocused,
     focusNode,
+    focusRoot,
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
@@ -64,10 +69,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
         };
 
         let nodeToFocusId: string | null | undefined;
-        if (Array.isArray(models.selected.value)) {
-          nodeToFocusId = models.selected.value.find(isNodeVisible);
-        } else if (models.selected.value != null && isNodeVisible(models.selected.value)) {
-          nodeToFocusId = models.selected.value;
+        if (Array.isArray(models.selectedNodes.value)) {
+          nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
+        } else if (
+          models.selectedNodes.value != null &&
+          isNodeVisible(models.selectedNodes.value)
+        ) {
+          nodeToFocusId = models.selectedNodes.value;
         }
 
         if (nodeToFocusId == null) {
@@ -85,7 +93,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     };
 
   const focusedNode = instance.getNode(state.focusedNodeId!);
-  const activeDescendant = focusedNode ? focusedNode.idAttribute : null;
+  const activeDescendant = focusedNode
+    ? instance.getTreeItemId(focusedNode.id, focusedNode.idAttribute)
+    : null;
 
   return {
     getRootProps: (otherHandlers) => ({
@@ -102,3 +112,7 @@ useTreeViewFocus.getDefaultizedParams = (params) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
 });
+
+useTreeViewFocus.params = {
+  onNodeFocus: true,
+};

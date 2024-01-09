@@ -8,7 +8,6 @@ body:
         Please provide a searchable summary of the issue in the title above ⬆️.
 
         Thanks for contributing by creating an issue! ❤️
-
   - type: input
     attributes:
       label: Search keywords
@@ -23,12 +22,12 @@ body:
       options:
         - label: I have tested the latest version
           required: true
-
   - type: textarea
     attributes:
       label: Steps to reproduce
       description: |
-        **⚠️ Please provide a live example for your report⚠️**
+        **⚠️ Issues that we can't reproduce can't be fixed.**
+
         If you don't have one, you can use one of these options:
           - [DataGrid codesandbox template](https://codesandbox.io/s/github/mui/mui-x/tree/master/templates/x-data-grid?file=/src/demo.tsx)
           - Fork any of the examples in our [documentation](https://mui.com/x/introduction/) by [clicking on the codesandbox or stackblitz icon](https://mui.com/static/docs/forking-an-example.png)

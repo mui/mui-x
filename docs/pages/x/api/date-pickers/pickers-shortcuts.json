@@ -4,8 +4,8 @@
       "type": { "name": "enum", "description": "'accept'<br>&#124;&nbsp;'set'" },
       "default": "\"accept\""
     },
-    "dense": { "type": { "name": "bool" } },
-    "disablePadding": { "type": { "name": "bool" } },
+    "dense": { "type": { "name": "bool" }, "default": "false" },
+    "disablePadding": { "type": { "name": "bool" }, "default": "false" },
     "items": {
       "type": {
         "name": "arrayOf",

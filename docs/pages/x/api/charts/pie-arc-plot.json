@@ -1,21 +1,21 @@
 {
   "props": {
-    "outerRadius": {
+    "outerRadius": { "type": { "name": "number" }, "required": true },
+    "arcLabelRadius": {
       "type": { "name": "number" },
-      "default": "R_max The maximal radius that fit into the drawing area.",
-      "required": true
+      "default": "(innerRadius - outerRadius) / 2"
     },
     "cornerRadius": { "type": { "name": "number" }, "default": "0" },
     "faded": {
       "type": {
         "name": "shape",
-        "description": "{ additionalRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
       }
     },
     "highlighted": {
       "type": {
         "name": "shape",
-        "description": "{ additionalRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
       }
     },
     "innerRadius": { "type": { "name": "number" }, "default": "0" },
@@ -27,7 +27,7 @@
       }
     },
     "paddingAngle": { "type": { "name": "number" }, "default": "0" },
-    "skipAnimation": { "type": { "name": "bool" } },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
