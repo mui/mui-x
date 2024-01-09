@@ -175,7 +175,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             event.preventDefault();
             instance.focusNode(event, nextNode);
 
-            // Multi select behavior when pressing Shirt + ArrowDown
+            // Multi select behavior when pressing Shift + ArrowDown
             // Toggles the selection state of the next node
             if (params.multiSelect && event.shiftKey && canToggleNodeSelection(nextNode)) {
               instance.selectRange(
@@ -199,7 +199,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             event.preventDefault();
             instance.focusNode(event, previousNode);
 
-            // Multi select behavior when pressing Shirt + ArrowUp
+            // Multi select behavior when pressing Shift + ArrowUp
             // Toggles the selection state of the previous node
             if (params.multiSelect && event.shiftKey && canToggleNodeSelection(previousNode)) {
               instance.selectRange(
