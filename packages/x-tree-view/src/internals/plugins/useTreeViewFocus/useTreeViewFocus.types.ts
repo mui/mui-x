@@ -33,6 +33,7 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<
   UseTreeViewFocusInstance,
   {},
   UseTreeViewFocusState,
+  {},
   never,
   [
     UseTreeViewIdSignature,

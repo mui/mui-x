@@ -25,6 +25,7 @@ export type UseTreeViewInstanceEventsSignature = TreeViewPluginSignature<
   UseTreeViewInstanceEventsInstance,
   {},
   {},
+  {},
   never,
   []
 >;

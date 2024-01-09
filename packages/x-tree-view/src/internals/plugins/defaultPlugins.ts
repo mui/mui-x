@@ -4,10 +4,7 @@ import { useTreeViewExpansion, UseTreeViewExpansionParameters } from './useTreeV
 import { useTreeViewSelection, UseTreeViewSelectionParameters } from './useTreeViewSelection';
 import { useTreeViewFocus, UseTreeViewFocusParameters } from './useTreeViewFocus';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
-import {
-  useTreeViewContextValueBuilder,
-  UseTreeViewContextValueBuilderParameters,
-} from './useTreeViewContextValueBuilder';
+import { useTreeViewIcons, UseTreeViewIconsParameters } from './useTreeViewIcons';
 import { ConvertPluginsIntoSignatures } from '../models';
 
 export const DEFAULT_TREE_VIEW_PLUGINS = [
@@ -17,7 +14,7 @@ export const DEFAULT_TREE_VIEW_PLUGINS = [
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
-  useTreeViewContextValueBuilder,
+  useTreeViewIcons,
 ] as const;
 
 export type DefaultTreeViewPlugins = ConvertPluginsIntoSignatures<typeof DEFAULT_TREE_VIEW_PLUGINS>;
@@ -29,4 +26,4 @@ export interface DefaultTreeViewPluginParameters<R extends {}, Multiple extends 
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewContextValueBuilderParameters {}
+    UseTreeViewIconsParameters {}

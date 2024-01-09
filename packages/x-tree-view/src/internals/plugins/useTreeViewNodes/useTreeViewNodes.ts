@@ -179,6 +179,10 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     getNavigableChildrenIds,
     isNodeDisabled,
   });
+
+  return {
+    contextValue: { disabledItemsFocusable: params.disabledItemsFocusable },
+  };
 };
 
 useTreeViewNodes.getInitialState = (params) =>
@@ -188,6 +192,11 @@ useTreeViewNodes.getInitialState = (params) =>
     getItemId: params.getItemId,
     getItemLabel: params.getItemLabel,
   });
+
+useTreeViewNodes.getDefaultizedParams = (params) => ({
+  ...params,
+  disabledItemsFocusable: params.disabledItemsFocusable ?? false,
+});
 
 useTreeViewNodes.params = {
   disabledItemsFocusable: true,
