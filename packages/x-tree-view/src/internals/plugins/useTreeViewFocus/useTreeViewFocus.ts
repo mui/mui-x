@@ -112,3 +112,7 @@ useTreeViewFocus.getDefaultizedParams = (params) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
 });
+
+useTreeViewFocus.params = {
+  onNodeFocus: true,
+};
