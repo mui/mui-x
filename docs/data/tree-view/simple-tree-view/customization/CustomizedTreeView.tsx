@@ -89,7 +89,6 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
       },
     },
     '&:hover': {
-      // backgroundColor: '#f0f2ff',
       backgroundColor: alpha('#4b5aff', 0.1),
       color: theme.palette.mode === 'light' ? '#4b5aff' : 'white',
     },

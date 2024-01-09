@@ -1,12 +1,11 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import IndeterminateCheckBoxRoundedIcon from '@mui/icons-material/IndeterminateCheckBoxRounded';
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import Collapse from '@mui/material/Collapse';
 import { TransitionProps } from '@mui/material/transitions';
 import { styled, alpha } from '@mui/material/styles';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { useSpring, animated } from '@react-spring/web';
 
@@ -54,32 +53,30 @@ const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
 
 export default function CustomAnimation() {
   return (
-    <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
-      <TreeView
-        aria-label="customized"
-        defaultExpanded={['1']}
-        defaultCollapseIcon={
-          <IndeterminateCheckBoxRoundedIcon sx={{ opacity: 0.8 }} />
-        }
-        defaultExpandIcon={<AddBoxRoundedIcon sx={{ opacity: 0.8 }} />}
-        defaultEndIcon={<DisabledByDefaultRoundedIcon sx={{ opacity: 0.3 }} />}
-        sx={{ overflowX: 'hidden' }}
-      >
-        <StyledTreeItem nodeId="1" label="Main">
-          <StyledTreeItem nodeId="2" label="Hello" />
-          <StyledTreeItem nodeId="3" label="Subtree with children">
-            <StyledTreeItem nodeId="6" label="Hello" />
-            <StyledTreeItem nodeId="7" label="Sub-subtree with children">
-              <StyledTreeItem nodeId="9" label="Child 1" />
-              <StyledTreeItem nodeId="10" label="Child 2" />
-              <StyledTreeItem nodeId="11" label="Child 3" />
-            </StyledTreeItem>
-            <StyledTreeItem nodeId="8" label="Hello" />
+    <SimpleTreeView
+      aria-label="customized"
+      defaultExpandedNodes={['1']}
+      defaultCollapseIcon={
+        <IndeterminateCheckBoxRoundedIcon sx={{ opacity: 0.8 }} />
+      }
+      defaultExpandIcon={<AddBoxRoundedIcon sx={{ opacity: 0.8 }} />}
+      defaultEndIcon={<DisabledByDefaultRoundedIcon sx={{ opacity: 0.3 }} />}
+      sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
+    >
+      <StyledTreeItem nodeId="1" label="Main">
+        <StyledTreeItem nodeId="2" label="Hello" />
+        <StyledTreeItem nodeId="3" label="Subtree with children">
+          <StyledTreeItem nodeId="6" label="Hello" />
+          <StyledTreeItem nodeId="7" label="Sub-subtree with children">
+            <StyledTreeItem nodeId="9" label="Child 1" />
+            <StyledTreeItem nodeId="10" label="Child 2" />
+            <StyledTreeItem nodeId="11" label="Child 3" />
           </StyledTreeItem>
-          <StyledTreeItem nodeId="4" label="World" />
-          <StyledTreeItem nodeId="5" label="Something something" />
+          <StyledTreeItem nodeId="8" label="Hello" />
         </StyledTreeItem>
-      </TreeView>
-    </Box>
+        <StyledTreeItem nodeId="4" label="World" />
+        <StyledTreeItem nodeId="5" label="Something something" />
+      </StyledTreeItem>
+    </SimpleTreeView>
   );
 }
