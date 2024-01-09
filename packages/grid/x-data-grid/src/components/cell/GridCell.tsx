@@ -55,6 +55,7 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
+  gridHasScrollX: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -148,7 +149,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     width,
     className,
     style: styleProp,
-    extendRowFullWidth,
+    gridHasScrollX,
     colSpan,
     disableDragEvents,
     isNotVisible,
@@ -249,7 +250,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     sectionIndex === 0;
   const showRightBorder =
     rootProps.showCellVerticalBorder &&
-    !(isSectionLastCell && pinnedPosition !== PinnedPosition.LEFT);
+    (isSectionLastCell ? pinnedPosition === PinnedPosition.LEFT || !gridHasScrollX : true);
 
   const ownerState = {
     align,
