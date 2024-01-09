@@ -1,12 +1,32 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
-import { DataGridProps } from '../models/props/DataGridProps';
+import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { GridValidRowModel } from '../models/gridRows';
+import {
+  PropValidator,
+  propValidatorsDataGrid,
+  validateProps,
+} from '../internals/utils/propValidation';
+
+const propValidators: PropValidator<DataGridProcessedProps>[] = [
+  ...propValidatorsDataGrid,
+  // Only validate in MIT version
+  (props) =>
+    (props.columns &&
+      props.columns.some((column) => column.resizable) &&
+      [
+        `MUI: \`column.resizable = true\` is not a valid prop.`,
+        'Column resizing is not available in the MIT version.',
+        '',
+        'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+      ].join('\n')) ||
+    undefined,
+];
 
 const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
@@ -14,6 +34,8 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
 ) {
   const props = useDataGridProps(inProps);
   const privateApiRef = useDataGridComponent(props.apiRef, props);
+
+  validateProps(props, propValidators);
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>

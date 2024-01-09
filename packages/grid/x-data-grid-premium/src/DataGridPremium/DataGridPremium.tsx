@@ -11,13 +11,27 @@ import {
   useGridSelector,
   gridPinnedColumnsSelector,
 } from '@mui/x-data-grid-pro';
-import { DataGridProVirtualScroller } from '@mui/x-data-grid-pro/internals';
+import {
+  propValidatorsDataGrid,
+  propValidatorsDataGridPro,
+  DataGridProVirtualScroller,
+  PropValidator,
+  validateProps,
+} from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
-import { DataGridPremiumProps } from '../models/dataGridPremiumProps';
+import {
+  DataGridPremiumProcessedProps,
+  DataGridPremiumProps,
+} from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
+
+const dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[] = [
+  ...propValidatorsDataGrid,
+  ...propValidatorsDataGridPro,
+];
 
 const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends GridValidRowModel>(
   inProps: DataGridPremiumProps<R>,
@@ -29,6 +43,8 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
+
+  validateProps(props, dataGridPremiumPropValidators);
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>

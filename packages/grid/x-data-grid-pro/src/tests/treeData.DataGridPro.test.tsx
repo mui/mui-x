@@ -536,14 +536,13 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.B']);
     });
 
-    // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
-    // it('should throw an error when using filterMode="server" and treeData', () => {
-    //   expect(() => {
-    //     render(<Test filterMode="server" />);
-    //   }).toErrorDev(
-    //     'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
-    //   );
-    // });
+    it('should throw an error when using filterMode="server" and treeData', () => {
+      expect(() => {
+        render(<Test filterMode="server" />);
+      }).toErrorDev(
+        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
+      );
+    });
 
     it('should set the filtered descendant count on matching nodes even if the children are collapsed', () => {
       render(
