@@ -63,7 +63,7 @@ export type GridCellProps = {
   onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
-  [x: string]: any;
+  [x: string]: any; // TODO v7: remove this - it breaks type safety
 };
 
 type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
