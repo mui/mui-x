@@ -478,6 +478,7 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
+  gridHasScrollX: PropTypes.bool.isRequired,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isNotVisible: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
