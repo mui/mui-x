@@ -38,14 +38,18 @@ export function Watermark(props: WatermarkProps) {
       style={{
         position: 'absolute',
         pointerEvents: 'none',
-        color: '#8282829e',
         zIndex: 100000,
         width: '100%',
         textAlign: 'center',
-        bottom: '50%',
-        right: 0,
         letterSpacing: 5,
-        fontSize: 24,
+      }}
+      ref={(el) => {
+        if (el) {
+          el.style.setProperty('color', '#8282829e', 'important');
+          el.style.setProperty('bottom', '50%', 'important');
+          el.style.setProperty('right', '0', 'important');
+          el.style.setProperty('fontSize', '24px', 'important');
+        }
       }}
     >
       {getLicenseErrorMessage(licenseStatus.status)}
