@@ -37,7 +37,7 @@ interface GridDetailPanelProps extends React.HTMLAttributes<HTMLDivElement> {
 function GridDetailPanel(props: GridDetailPanelProps) {
   const { rowId, height, style: styleProp = {}, ...other } = props;
   const apiRef = useGridPrivateApiContext();
-  const ref = React.useRef<HTMLDivElement>();
+  const ref = React.useRef<HTMLDivElement | null>(null);
   const rootProps = useGridRootProps();
   const ownerState = rootProps;
 
