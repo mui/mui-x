@@ -1,3 +1,4 @@
+import Box from '@mui/system/Box';
 import { styled } from '@mui/material/styles';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
@@ -57,7 +58,8 @@ export const ChartsTooltipCell = styled('td', {
   },
 }));
 
-export const ChartsTooltipMark = styled('div', {
+// eslint-disable-next-line material-ui/no-styled-box
+export const ChartsTooltipMark = styled(Box, {
   name: 'MuiChartsTooltip',
   slot: 'Mark',
 })<{ ownerState: { color: string } }>(({ theme, ownerState }) => ({
