@@ -56,7 +56,11 @@
     },
     "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -73,7 +77,11 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "value": { "type": { "name": "any" } },
     "view": {
@@ -86,27 +94,38 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
-      }
+      },
+      "default": "['hours', 'minutes']"
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "digitalClockSectionItem",
-      "description": "Component responsible for rendering a single multi section digital clock section item.",
-      "default": "MenuItem from '@mui/material'"
-    }
-  ],
   "name": "MultiSectionDigitalClock",
   "imports": [
     "import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';",
     "import { MultiSectionDigitalClock } from '@mui/x-date-pickers';",
     "import { MultiSectionDigitalClock } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMultiSectionDigitalClock" },
+  "slots": [
+    {
+      "name": "digitalClockSectionItem",
+      "description": "Component responsible for rendering a single multi section digital clock section item.",
+      "default": "MenuItem from '@mui/material'",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiMultiSectionDigitalClock-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": false,
+  "themeDefaultProps": false,
+  "muiName": "MuiMultiSectionDigitalClock",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MultiSectionDigitalClock/MultiSectionDigitalClock.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li></ul>",
+  "cssComponent": false
 }

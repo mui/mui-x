@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers',
+    'docsx/translations/api-docs/date-pickers/localization-provider',
     false,
-    /\.\/localization-provider(-[a-z]{2})?\.json$/,
+    /\.\/localization-provider.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

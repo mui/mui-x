@@ -6,7 +6,8 @@
     },
     "area": { "type": { "name": "bool" }, "default": "false" },
     "colors": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "blueberryTwilightPalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
@@ -16,7 +17,7 @@
         "name": "shape",
         "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
       },
-      "default": "object Depends on the charts type."
+      "default": "{\n  top: 5,\n  bottom: 5,\n  left: 5,\n  right: 5,\n}"
     },
     "plotType": {
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
@@ -25,9 +26,14 @@
     "showHighlight": { "type": { "name": "bool" }, "default": "false" },
     "showTooltip": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "valueFormatter": {
       "type": { "name": "func" },
+      "default": "(v: number) => v.toString()",
       "signature": {
         "type": "function(value: number) => string",
         "describedArgs": ["value"],
@@ -42,22 +48,25 @@
       }
     }
   },
-  "slots": [
-    { "class": null, "name": "area", "description": "" },
-    { "class": null, "name": "axisContent", "description": "" },
-    { "class": null, "name": "bar", "description": "" },
-    { "class": null, "name": "itemContent", "description": "" },
-    { "class": null, "name": "line", "description": "" },
-    { "class": null, "name": "lineHighlight", "description": "" },
-    { "class": null, "name": "mark", "description": "" },
-    { "class": null, "name": "popper", "description": "" }
-  ],
   "name": "SparkLineChart",
   "imports": [
     "import { SparkLineChart } from '@mui/x-charts/SparkLineChart';",
     "import { SparkLineChart } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiSparkLineChart" },
+  "slots": [
+    { "name": "area", "description": "", "class": null },
+    { "name": "line", "description": "", "class": null },
+    { "name": "mark", "description": "", "class": null },
+    { "name": "lineHighlight", "description": "", "class": null },
+    { "name": "bar", "description": "", "class": null },
+    { "name": "popper", "description": "", "class": null },
+    { "name": "axisContent", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiSparkLineChart",
   "filename": "/packages/x-charts/src/SparkLineChart/SparkLineChart.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/sparkline/\">Charts - Sparkline</a></li></ul>",
+  "cssComponent": false
 }
