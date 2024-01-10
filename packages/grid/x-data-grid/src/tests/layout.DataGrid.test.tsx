@@ -6,12 +6,12 @@ import {
   DataGrid,
   GridToolbar,
   DataGridProps,
-  ptBR,
   GridColDef,
   gridClasses,
   useGridApiRef,
   GridApi,
 } from '@mui/x-data-grid';
+import { ptBR } from '@mui/x-data-grid/locales';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {

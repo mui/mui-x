@@ -10,7 +10,6 @@ export * from './DataGrid';
 export * from './components';
 export * from './constants';
 export * from './hooks';
-export * from './locales';
 export * from './models';
 export * from './context';
 export * from './colDef';
