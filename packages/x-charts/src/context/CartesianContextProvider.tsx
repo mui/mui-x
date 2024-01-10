@@ -108,7 +108,7 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
           return axisConfig;
         }
         if (dataset === undefined) {
-          throw Error('MUI-X-Charts: x-axis uses `dataKey` but no `dataset` is provided.');
+          throw Error('MUI X Charts: x-axis uses `dataKey` but no `dataset` is provided.');
         }
         return {
           ...axisConfig,
@@ -126,7 +126,7 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
           return axisConfig;
         }
         if (dataset === undefined) {
-          throw Error('MUI-X-Charts: y-axis uses `dataKey` but no `dataset` is provided.');
+          throw Error('MUI X Charts: y-axis uses `dataKey` but no `dataset` is provided.');
         }
         return {
           ...axisConfig,
