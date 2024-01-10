@@ -9,6 +9,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { SIMPLE_TREE_VIEW_PLUGINS } from './SimpleTreeView.plugins';
 import { buildWarning } from '../internals/utils/warning';
+import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: SimpleTreeViewProps<Multiple>,
@@ -61,60 +62,22 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
   const ownerState = props as SimpleTreeViewProps<any>;
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelectedNodes,
-    selectedNodes,
-    multiSelect,
-    onSelectedNodesChange,
-    onNodeSelectionToggle,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    // Component implementation
-    children,
-    slots,
-    slotProps,
-    ...other
-  } = props as SimpleTreeViewProps<any>;
-
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
       itemsPropWarning();
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView({
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelectedNodes,
-    selectedNodes,
-    multiSelect,
-    onSelectedNodesChange,
-    onNodeSelectionToggle,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    items: EMPTY_ITEMS,
+  const {
+    pluginParams,
+    otherProps: { slots, slotProps, ...otherProps },
+  } = extractPluginParamsFromProps({
+    props: { ...props, items: EMPTY_ITEMS },
     plugins: SIMPLE_TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
+
+  const { getRootProps, contextValue } = useTreeView(pluginParams);
 
   const classes = useUtilityClasses(props);
 
@@ -122,7 +85,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: {},
-    externalForwardedProps: other,
+    externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
     ownerState,
@@ -130,7 +93,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
 
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{children}</Root>
+      <Root {...rootProps} />
     </TreeViewProvider>
   );
 }) as SimpleTreeViewComponent;

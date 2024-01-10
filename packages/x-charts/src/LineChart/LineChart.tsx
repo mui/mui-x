@@ -61,6 +61,7 @@ export interface LineChartProps
    * - 'none': display nothing.
    * - 'line': display a line at the current mouse position.
    * - 'band': display a band at the current mouse position. Only available with band scale.
+   * @default { x: 'line' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
@@ -185,6 +186,7 @@ LineChart.propTypes = {
    * - 'none': display nothing.
    * - 'line': display a line at the current mouse position.
    * - 'band': display a band at the current mouse position. Only available with band scale.
+   * @default { x: 'line' }
    */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
@@ -228,6 +230,7 @@ LineChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
+   * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**

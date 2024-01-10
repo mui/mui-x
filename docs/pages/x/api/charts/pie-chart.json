@@ -5,10 +5,11 @@
         "name": "union",
         "description": "{ axisId?: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, labelStyle?: object, position?: 'bottom'<br>&#124;&nbsp;'top', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
       },
-      "default": "xAxisIds[0] The id of the first provided axis"
+      "default": "null"
     },
     "colors": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "blueberryTwilightPalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
@@ -18,7 +19,7 @@
         "name": "union",
         "description": "{ axisId?: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, labelStyle?: object, position?: 'left'<br>&#124;&nbsp;'right', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
       },
-      "default": "yAxisIds[0] The id of the first provided axis"
+      "default": "null"
     },
     "margin": {
       "type": {
@@ -57,13 +58,27 @@
       }
     }
   },
-  "slots": [],
   "name": "PieChart",
   "imports": [
     "import { PieChart } from '@mui/x-charts/PieChart';",
     "import { PieChart } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPieChart" },
+  "slots": [
+    { "name": "axisLine", "description": "", "class": null },
+    { "name": "axisTick", "description": "", "class": null },
+    { "name": "axisTickLabel", "description": "", "class": null },
+    { "name": "axisLabel", "description": "", "class": null },
+    { "name": "pieArc", "description": "", "class": null },
+    { "name": "pieArcLabel", "description": "", "class": null },
+    { "name": "legend", "description": "", "class": null },
+    { "name": "popper", "description": "", "class": null },
+    { "name": "axisContent", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiPieChart",
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demonstration</a></li></ul>",
+  "cssComponent": false
 }
