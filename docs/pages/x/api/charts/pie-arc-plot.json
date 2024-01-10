@@ -10,7 +10,8 @@
       "type": {
         "name": "shape",
         "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
-      }
+      },
+      "default": "{ additionalRadius: -5 }"
     },
     "highlighted": {
       "type": {
@@ -29,15 +30,22 @@
     "paddingAngle": { "type": { "name": "number" }, "default": "0" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
   },
-  "slots": [{ "class": null, "name": "pieArc", "description": "" }],
   "name": "PieArcPlot",
   "imports": [
     "import { PieArcPlot } from '@mui/x-charts/PieChart';",
     "import { PieArcPlot } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPieArcPlot" },
+  "slots": [{ "name": "pieArc", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiPieArcPlot",
   "filename": "/packages/x-charts/src/PieChart/PieArcPlot.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demonstration</a></li></ul>",
+  "cssComponent": false
 }

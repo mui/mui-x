@@ -836,7 +836,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   describe('warnings', () => {
-    it('should raise a warning if trying to use an enterprise feature', () => {
+    // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
+    // eslint-disable-next-line mocha/no-skipped-tests
+    it.skip('should raise a warning if trying to use an enterprise feature', () => {
       expect(() => {
         render(
           <div style={{ width: 150, height: 300 }}>

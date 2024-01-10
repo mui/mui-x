@@ -153,7 +153,11 @@
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -163,7 +167,11 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "value": { "type": { "name": "any" } },
     "view": {
@@ -189,122 +197,126 @@
       "default": "3"
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
-      "default": "PickersActionBar"
-    },
-    {
-      "class": null,
-      "name": "calendarHeader",
-      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
-      "default": "PickersCalendarHeader"
-    },
-    {
-      "class": null,
-      "name": "day",
-      "description": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
-      "default": "PickersDay"
-    },
-    {
-      "class": null,
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot"
-    },
-    {
-      "class": null,
-      "name": "field",
-      "description": "Component used to enter the date with the keyboard."
-    },
-    {
-      "class": null,
-      "name": "layout",
-      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
-    },
-    {
-      "class": null,
-      "name": "leftArrowIcon",
-      "description": "Icon displayed in the left view switch button.",
-      "default": "ArrowLeft"
-    },
-    {
-      "class": null,
-      "name": "mobilePaper",
-      "description": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
-      "default": "Paper from '@mui/material'."
-    },
-    {
-      "class": null,
-      "name": "mobileTransition",
-      "description": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Fade from '@mui/material'."
-    },
-    {
-      "class": null,
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "rightArrowIcon",
-      "description": "Icon displayed in the right view switch button.",
-      "default": "ArrowRight"
-    },
-    {
-      "class": null,
-      "name": "shortcuts",
-      "description": "Custom component for the shortcuts.",
-      "default": "PickersShortcuts"
-    },
-    {
-      "class": null,
-      "name": "switchViewButton",
-      "description": "Button displayed to switch between different calendar views.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-      "default": "ArrowDropDown"
-    },
-    {
-      "class": null,
-      "name": "tabs",
-      "description": "Tabs enabling toggling between date and time pickers.",
-      "default": "DateTimePickerTabs"
-    },
-    {
-      "class": null,
-      "name": "textField",
-      "description": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
-      "default": "TextField from '@mui/material'"
-    },
-    {
-      "class": null,
-      "name": "toolbar",
-      "description": "Custom component for the toolbar rendered above the views.",
-      "default": "DateTimePickerToolbar"
-    }
-  ],
   "name": "MobileDateTimePicker",
   "imports": [
     "import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';",
     "import { MobileDateTimePicker } from '@mui/x-date-pickers';",
     "import { MobileDateTimePicker } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateTimePicker" },
+  "slots": [
+    {
+      "name": "tabs",
+      "description": "Tabs enabling toggling between date and time pickers.",
+      "default": "DateTimePickerTabs",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "DateTimePickerToolbar",
+      "class": null
+    },
+    {
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
+      "default": "PickersCalendarHeader",
+      "class": null
+    },
+    {
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+      "default": "ArrowDropDown",
+      "class": null
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft",
+      "class": null
+    },
+    {
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight",
+      "class": null
+    },
+    {
+      "name": "day",
+      "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+      "default": "PickersDay",
+      "class": null
+    },
+    {
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar",
+      "class": null
+    },
+    {
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts",
+      "class": null
+    },
+    {
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
+      "class": null
+    },
+    {
+      "name": "textField",
+      "description": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
+      "default": "TextField from '@mui/material'",
+      "class": null
+    },
+    {
+      "name": "layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "class": null
+    },
+    {
+      "name": "mobilePaper",
+      "description": "Custom component for the paper rendered inside the mobile picker's Dialog.",
+      "default": "Paper from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "mobileTransition",
+      "description": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
+      "default": "Fade from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "field",
+      "description": "Component used to enter the date with the keyboard.",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiMobileDateTimePicker",
   "filename": "/packages/x-date-pickers/src/MobileDateTimePicker/MobileDateTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
+  "cssComponent": false
 }
