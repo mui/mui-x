@@ -162,17 +162,13 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       const activeItem = containerRef.current.querySelector<HTMLElement>(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
+      if (active && autoFocus && activeItem) {
+        activeItem.focus();
+      }
       if (!activeItem || previousActive.current === activeItem) {
-        // Handle setting the ref to null if the selected item is ever reset via UI
-        if (previousActive.current !== activeItem) {
-          previousActive.current = activeItem;
-        }
         return;
       }
       previousActive.current = activeItem;
-      if (active && autoFocus) {
-        activeItem.focus();
-      }
       const offsetTop = activeItem.offsetTop;
 
       // Subtracting the 4px of extra margin intended for the first visible section item

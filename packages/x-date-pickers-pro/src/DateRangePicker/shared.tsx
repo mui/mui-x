@@ -10,8 +10,7 @@ import {
   BasePickerInputProps,
   PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
-import { DateRangeValidationError } from '../models';
-import { DateRange } from '../internals/models';
+import { DateRangeValidationError, DateRange } from '../models';
 import {
   DateRangeCalendarSlots,
   DateRangeCalendarSlotProps,

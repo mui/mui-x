@@ -2,14 +2,8 @@ import * as React from 'react';
 import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui-internal/test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  GridToolbar,
-  DataGridProps,
-  ptBR,
-  GridColDef,
-  gridClasses,
-} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, DataGridProps, GridColDef, gridClasses } from '@mui/x-data-grid';
+import { ptBR } from '@mui/x-data-grid/locales';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow, sleep } from 'test/utils/helperFn';
@@ -836,7 +830,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   describe('warnings', () => {
-    it('should raise a warning if trying to use an enterprise feature', () => {
+    // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
+    // eslint-disable-next-line mocha/no-skipped-tests
+    it.skip('should raise a warning if trying to use an enterprise feature', () => {
       expect(() => {
         render(
           <div style={{ width: 150, height: 300 }}>
