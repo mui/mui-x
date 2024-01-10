@@ -56,7 +56,7 @@ function GridVirtualScrollerFiller() {
   if (height === 0) {
     return null;
   }
-  
+
   return (
     <Filler role="presentation" style={{ height }}>
       <PinnedLeft style={{ width: leftPinnedWidth }} />

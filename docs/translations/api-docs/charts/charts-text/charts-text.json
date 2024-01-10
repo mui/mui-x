@@ -1,0 +1,10 @@
+{
+  "componentDescription": "Helper component to manage multiline text in SVG",
+  "propDescriptions": {
+    "lineHeight": { "description": "Height of a text line (in <code>em</code>)." },
+    "needsComputation": { "description": "If <code>true</code>, the line width is computed." },
+    "style": { "description": "Style applied to text elements." },
+    "text": { "description": "Text displayed." }
+  },
+  "classDescriptions": {}
+}

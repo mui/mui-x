@@ -1,12 +1,14 @@
 {
   "props": { "voronoiMaxRadius": { "type": { "name": "number" }, "default": "undefined" } },
-  "slots": [],
   "name": "ChartsVoronoiHandler",
   "imports": [
     "import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';",
     "import { ChartsVoronoiHandler } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsVoronoiHandler" },
+  "classes": [],
+  "muiName": "MuiChartsVoronoiHandler",
   "filename": "/packages/x-charts/src/ChartsVoronoiHandler/ChartsVoronoiHandler.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demonstration</a></li></ul>",
+  "cssComponent": false
 }

@@ -475,17 +475,23 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should render extra columns when the columnBuffer prop is present', () => {
       const border = 1;
-      const width = 300 + border * 2;
+      const width = 300;
       const columnBuffer = 2;
       const columnWidth = 100;
-      render(<TestCaseVirtualization width={width} nbRows={1} columnBuffer={2} />);
+      render(
+        <TestCaseVirtualization
+          width={width + border * 2}
+          nbRows={1}
+          columnBuffer={columnBuffer}
+        />,
+      );
       const firstRow = getRow(0);
-      expect(firstRow.children).to.have.length(Math.ceil(width / columnWidth) + columnBuffer);
+      expect(firstRow.children).to.have.length(Math.floor(width / columnWidth) + columnBuffer);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       virtualScroller.scrollLeft = 301;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
       expect(firstRow.children).to.have.length(
-        columnBuffer + 1 + Math.ceil(width / columnWidth) + columnBuffer,
+        columnBuffer + 1 + Math.floor(width / columnWidth) + columnBuffer,
       );
     });
 

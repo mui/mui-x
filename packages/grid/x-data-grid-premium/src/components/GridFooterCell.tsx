@@ -2,12 +2,11 @@ import * as React from 'react';
 import { getDataGridUtilityClass, GridRenderCellParams } from '@mui/x-data-grid';
 import { styled, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import Box from '@mui/material/Box';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
-const GridFooterCellRoot = styled(Box, {
+const GridFooterCellRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FooterCell',
   overridesResolver: (_, styles) => styles.footerCell,

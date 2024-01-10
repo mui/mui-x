@@ -1,5 +1,6 @@
 ---
 title: Charts - Areas demonstration
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot
 ---
 
 # Charts - Areas demonstration
