@@ -188,7 +188,7 @@ const getFilterCallbackFromItem = (
 
   const filterOperators = column.filterOperators;
   if (!filterOperators?.length) {
-    throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
+    throw new Error(`MUI X: No filter operators found for column '${column.field}'.`);
   }
 
   const filterOperator = filterOperators.find(
@@ -196,7 +196,7 @@ const getFilterCallbackFromItem = (
   )!;
   if (!filterOperator) {
     throw new Error(
-      `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operator}'.`,
+      `MUI X: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operator}'.`,
     );
   }
 

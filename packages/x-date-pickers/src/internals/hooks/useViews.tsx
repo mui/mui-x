@@ -97,7 +97,7 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
     if (!warnedOnceNotValidView) {
       if (inView != null && !views.includes(inView)) {
         console.warn(
-          `MUI: \`view="${inView}"\` is not a valid prop.`,
+          `MUI X: \`view="${inView}"\` is not a valid prop.`,
           `It must be an element of \`views=["${views.join('", "')}"]\`.`,
         );
         warnedOnceNotValidView = true;
@@ -105,7 +105,7 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
 
       if (inView == null && openTo != null && !views.includes(openTo)) {
         console.warn(
-          `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
+          `MUI X: \`openTo="${openTo}"\` is not a valid prop.`,
           `It must be an element of \`views=["${views.join('", "')}"]\`.`,
         );
         warnedOnceNotValidView = true;

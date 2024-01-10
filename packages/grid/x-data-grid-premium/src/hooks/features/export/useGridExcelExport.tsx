@@ -104,7 +104,7 @@ export const useGridExcelExport = (
       if (exceljsPostProcess && process.env.NODE_ENV !== 'production') {
         console.warn(
           [
-            `MUI: The exceljsPostProcess option is not supported when a web worker is used.`,
+            `MUI X: The exceljsPostProcess option is not supported when a web worker is used.`,
             'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
           ].join('\n'),
         );
@@ -113,7 +113,7 @@ export const useGridExcelExport = (
       if (exceljsPreProcess && process.env.NODE_ENV !== 'production') {
         console.warn(
           [
-            `MUI: The exceljsPreProcess option is not supported when a web worker is used.`,
+            `MUI X: The exceljsPreProcess option is not supported when a web worker is used.`,
             'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
           ].join('\n'),
         );
