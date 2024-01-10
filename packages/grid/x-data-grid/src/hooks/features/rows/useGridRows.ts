@@ -263,11 +263,11 @@ export const useGridRows = (
     (id, isExpanded) => {
       const currentNode = apiRef.current.getRowNode(id);
       if (!currentNode) {
-        throw new Error(`MUI X: No row with id #${id} found`);
+        throw new Error(`MUI X: No row with id #${id} found.`);
       }
 
       if (currentNode.type !== 'group') {
-        throw new Error('MUI: Only group nodes can be expanded or collapsed');
+        throw new Error('MUI: Only group nodes can be expanded or collapsed.');
       }
 
       const newNode: GridGroupNode = { ...currentNode, childrenExpanded: isExpanded };
@@ -335,16 +335,16 @@ export const useGridRows = (
       const node = apiRef.current.getRowNode(rowId);
 
       if (!node) {
-        throw new Error(`MUI X: No row with id #${rowId} found`);
+        throw new Error(`MUI X: No row with id #${rowId} found.`);
       }
 
       if (node.parent !== GRID_ROOT_GROUP_ID) {
-        throw new Error(`MUI X: The row reordering do not support reordering of grouped rows yet`);
+        throw new Error(`MUI X: The row reordering do not support reordering of grouped rows yet.`);
       }
 
       if (node.type !== 'leaf') {
         throw new Error(
-          `MUI X: The row reordering do not support reordering of footer or grouping rows`,
+          `MUI X: The row reordering do not support reordering of footer or grouping rows.`,
         );
       }
 
