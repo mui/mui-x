@@ -21,7 +21,7 @@ module.exports = function setKarmaConfig(config) {
         timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000,
       },
     },
-    frameworks: ['parallel', 'mocha', 'webpack'],
+    frameworks: (process.env.CIRCLECI === 'true' ? [] : ['parallel']).concat(['mocha', 'webpack']),
     files: [
       {
         pattern: 'test/karma.tests.js',
