@@ -32,7 +32,7 @@ const updateState = ({
     if (id == null) {
       throw new Error(
         [
-          'MUI: The Tree View component requires all items to have a unique `id` property.',
+          'MUI X: The Tree View component requires all items to have a unique `id` property.',
           'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
           'An item was provided without id in the `items` prop:',
           JSON.stringify(item),
@@ -44,7 +44,7 @@ const updateState = ({
     if (label == null) {
       throw new Error(
         [
-          'MUI: The Tree View component requires all items to have a `label` property.',
+          'MUI X: The Tree View component requires all items to have a `label` property.',
           'Alternatively, you can use the `getItemLabel` prop to specify a custom label for each item.',
           'An item was provided without label in the `items` prop:',
           JSON.stringify(item),

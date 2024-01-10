@@ -20,7 +20,7 @@ const recurrentUnwrapGroupingColumnModel = (
     if (unwrappedGroupingModelToComplete[columnGroupNode.field] !== undefined) {
       throw new Error(
         [
-          `MUI: columnGroupingModel contains duplicated field`,
+          `MUI X: columnGroupingModel contains duplicated field`,
           `column field ${columnGroupNode.field} occurs two times in the grouping model:`,
           `- ${unwrappedGroupingModelToComplete[columnGroupNode.field].join(' > ')}`,
           `- ${parents.join(' > ')}`,

@@ -26,7 +26,7 @@ export const getDateSectionConfigFromFormatToken = <TDate>(
   if (config == null) {
     throw new Error(
       [
-        `MUI: The token "${formatToken}" is not supported by the Date and Time Pickers.`,
+        `MUI X: The token "${formatToken}" is not supported by the Date and Time Pickers.`,
         'Please try using another token or open an issue on https://github.com/mui/mui-x/issues/new/choose if you think it should be supported.',
       ].join('\n'),
     );
@@ -149,7 +149,7 @@ export const cleanDigitSectionValue = <TDate>(
     if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
       throw new Error(
         [
-          `MUI: The token "${section.format}" is a digit format with letter in it.'
+          `MUI X: The token "${section.format}" is a digit format with letter in it.'
              This type of format is only supported for 'day' sections`,
         ].join('\n'),
       );
@@ -542,7 +542,7 @@ export const splitFormatIntoSections = <TDate>(
       } else {
         if (sectionConfig.maxLength == null) {
           throw new Error(
-            `MUI: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
+            `MUI X: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
           );
         }
 
@@ -580,7 +580,7 @@ export const splitFormatIntoSections = <TDate>(
     formatExpansionOverflow -= 1;
     if (formatExpansionOverflow < 0) {
       throw new Error(
-        'MUI: The format expansion seems to be  enter in an infinite loop. Please open an issue with the format passed to the picker component',
+        'MUI X: The format expansion seems to be  enter in an infinite loop. Please open an issue with the format passed to the picker component.',
       );
     }
   }
@@ -834,7 +834,7 @@ export const validateSections = <TSection extends FieldSection>(
 
       if (invalidSection) {
         console.warn(
-          `MUI: The field component you are using is not compatible with the "${invalidSection.type}" date section.`,
+          `MUI X: The field component you are using is not compatible with the "${invalidSection.type}" date section.`,
           `The supported date sections are ["${supportedSections.join('", "')}"]\`.`,
         );
         warnedOnceInvalidSection = true;
