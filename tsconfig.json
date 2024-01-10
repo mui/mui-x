@@ -31,8 +31,7 @@
       "test/*": ["./test/*"],
       "docs/*": ["./node_modules/@mui/monorepo/docs"],
       "docsx/*": ["./docs/*"]
-    },
-    "resolveJsonModule": true
+    }
   },
   "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
 }

@@ -2,8 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "types": ["react", "mocha", "node"],
-    "noImplicitAny": false,
-    "resolveJsonModule": true
+    "noImplicitAny": false
   },
   "include": [
     "src/**/*",
