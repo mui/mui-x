@@ -1,3 +1,4 @@
+import { useTreeViewId, UseTreeViewIdParameters } from './useTreeViewId';
 import { useTreeViewNodes, UseTreeViewNodesParameters } from './useTreeViewNodes';
 import { useTreeViewExpansion, UseTreeViewExpansionParameters } from './useTreeViewExpansion';
 import { useTreeViewSelection, UseTreeViewSelectionParameters } from './useTreeViewSelection';
@@ -10,6 +11,7 @@ import {
 import { ConvertPluginsIntoSignatures } from '../models';
 
 export const DEFAULT_TREE_VIEW_PLUGINS = [
+  useTreeViewId,
   useTreeViewNodes,
   useTreeViewExpansion,
   useTreeViewSelection,
@@ -21,8 +23,9 @@ export const DEFAULT_TREE_VIEW_PLUGINS = [
 export type DefaultTreeViewPlugins = ConvertPluginsIntoSignatures<typeof DEFAULT_TREE_VIEW_PLUGINS>;
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
-export interface DefaultTreeViewPluginParameters<Multiple extends boolean | undefined>
-  extends UseTreeViewNodesParameters,
+export interface DefaultTreeViewPluginParameters<R extends {}, Multiple extends boolean | undefined>
+  extends UseTreeViewIdParameters,
+    UseTreeViewNodesParameters<R>,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,

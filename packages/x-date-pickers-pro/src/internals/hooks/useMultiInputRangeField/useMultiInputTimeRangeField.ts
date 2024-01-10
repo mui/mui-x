@@ -15,12 +15,11 @@ import {
   useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
 import { TimeValidationError } from '@mui/x-date-pickers/models';
-import { DateRange } from '../../models/range';
 import {
   validateTimeRange,
   TimeRangeComponentValidationProps,
 } from '../../utils/validation/validateTimeRange';
-import { TimeRangeValidationError } from '../../../models';
+import { TimeRangeValidationError, DateRange } from '../../../models';
 import type {
   UseMultiInputTimeRangeFieldDefaultizedProps,
   UseMultiInputTimeRangeFieldParams,

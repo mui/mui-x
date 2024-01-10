@@ -1,5 +1,5 @@
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
-import { DateRange, NonEmptyDateRange } from '../models/range';
+import { DateRange, NonEmptyDateRange } from '../../models';
 
 export const isRangeValid = <TDate>(
   utils: MuiPickersAdapter<TDate>,
