@@ -146,6 +146,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "disableColumnSorting": {
+      "description": "If <code>true</code>, the column sorting feature will be disabled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "disableDensitySelector": {
       "description": "If <code>true</code>, the density selector is disabled.",
       "deprecated": "",
@@ -157,7 +162,7 @@
       "typeDescriptions": {}
     },
     "disableMultipleColumnsSorting": {
-      "description": "If <code>true</code>, sorting with multiple columns is disabled.",
+      "description": "If <code>true</code>, the sorting with multiple columns is disabled.",
       "deprecated": "",
       "typeDescriptions": {}
     },

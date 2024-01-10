@@ -91,6 +91,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "disableColumnSorting": {
+      "description": "If <code>true</code>, the column sorting feature will be disabled.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "disableDensitySelector": {
       "description": "If <code>true</code>, the density selector is disabled.",
       "deprecated": "",

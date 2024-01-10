@@ -100,7 +100,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 ### Behavioral changes
 
-- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be dynamically accessed using `initialState`, specific controlled models, or the API object. See [Read-only sorting](/x/react-data-grid/sorting/#read-only-sorting) for example.
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/). See [Read-only sorting](/x/react-data-grid/sorting/#read-only-sorting) for example.
 
 ### State access
 

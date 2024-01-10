@@ -59,11 +59,23 @@ You can use the `onSortModelChange` prop to listen to changes in the sorting rul
 
 {{"demo": "ControlledSort.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Disable the sorting
+## Disable the filters
+
+### For all columns
+
+Sorting is enabled by default, but you can easily disable this feature by setting the `disableColumnSorting` prop.
+
+```jsx
+<DataGrid disableColumnSorting />
+```
+
+{{"demo": "DisableSortingGridAllColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### For some columns
 
 By default, all columns are sortable.
 To disable sorting on a column, set the `sortable` property of `GridColDef` to `false`.
-In the following demo, the user cannot use the _rating_ column as a sorting rule.
+In the following demo, the user cannot sort the _rating_ column from the UI.
 
 ```tsx
 <DataGrid columns={[...columns, { field: 'rating', sortable: false }]} />
@@ -71,11 +83,11 @@ In the following demo, the user cannot use the _rating_ column as a sorting rule
 
 {{"demo": "DisableSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Read-only sorting
+### Sorting non-sortable columns programmatically
 
 The columns with `colDef.sortable` set to `false` are not sortable from the grid UI but could still be sorted programmatically. To add a sort rule to such a column, you could initialize the `sortModel`, use the `sortModel` prop, or use the API methods `sortColumn` or `setSortModel`.
 
-In the following demo, the sort on the `firstName` column is read-only with respect to the default grid UI, as it is sorted programmatically. Though you can update the sort rules for this column by clicking the custom buttons above the grid.
+In the following demo, the `firstName` column is not sortable by the default grid UI, but it is sorted programmatically by a custom built UI.
 
 {{"demo": "ReadOnlySortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 

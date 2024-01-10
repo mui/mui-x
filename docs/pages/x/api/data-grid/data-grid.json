@@ -28,6 +28,7 @@
     "disableColumnFilter": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnMenu": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnSelector": { "type": { "name": "bool" }, "default": "false" },
+    "disableColumnSorting": { "type": { "name": "bool" }, "default": "false" },
     "disableDensitySelector": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleRowSelection": {
       "type": { "name": "bool" },

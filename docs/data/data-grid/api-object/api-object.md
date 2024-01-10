@@ -62,15 +62,15 @@ If you try to use it in the first render of the component, it will crash because
 
 ### Access the disabled column features
 
-You can use access the disabled features of a column (e.g. hiding, sorting, filtering, pinning, grouping, etc) dynamically using `initialState`, controlled models or the API object.
+You can control the disabled features of a column (e.g. hiding, sorting, filtering, pinning, grouping, etc) programmatically using `initialState`, controlled models, or the API object.
 
 In the example below, API object is used to build a custom sorting for the _firstName_ column which is not sortable by the default grid UI (i.e `colDef.sortable` property is set to `false`).
 
 ```tsx
+const columns = [{ field: 'rating', sortable: false }, ...otherColumns];
+
 function CustomDataGrid(props) {
   const apiRef = useGridApiRef();
-
-  const columns = [{ field: 'rating', sortable: false }, ...otherColumns];
 
   return (
     <div>
