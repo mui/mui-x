@@ -45,39 +45,127 @@
       }
     }
   },
-  "slots": [],
   "name": "DateRangePickerDay",
   "imports": [
     "import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';",
     "import { DateRangePickerDay } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": [
-      "root",
-      "rangeIntervalDayHighlight",
-      "rangeIntervalDayHighlightStart",
-      "rangeIntervalDayHighlightEnd",
-      "rangeIntervalPreview",
-      "rangeIntervalDayPreview",
-      "rangeIntervalDayPreviewStart",
-      "rangeIntervalDayPreviewEnd",
-      "outsideCurrentMonth",
-      "startOfMonth",
-      "endOfMonth",
-      "firstVisibleCell",
-      "lastVisibleCell",
-      "hiddenDayFiller",
-      "day",
-      "dayOutsideRangeInterval",
-      "dayInsideRangeInterval",
-      "notSelectedDate"
-    ],
-    "globalClasses": {},
-    "name": "MuiDateRangePickerDay"
-  },
+  "classes": [
+    {
+      "key": "day",
+      "className": "MuiDateRangePickerDay-day",
+      "description": "Styles applied to the day element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dayInsideRangeInterval",
+      "className": "MuiDateRangePickerDay-dayInsideRangeInterval",
+      "description": "Styles applied to the day element if `selected=false` and `isHighlighting=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "dayOutsideRangeInterval",
+      "className": "MuiDateRangePickerDay-dayOutsideRangeInterval",
+      "description": "Styles applied to the day element if `isHighlighting=false`.",
+      "isGlobal": false
+    },
+    {
+      "key": "endOfMonth",
+      "className": "MuiDateRangePickerDay-endOfMonth",
+      "description": "Styles applied to the root element if `day` is the end of the month.",
+      "isGlobal": false
+    },
+    {
+      "key": "firstVisibleCell",
+      "className": "MuiDateRangePickerDay-firstVisibleCell",
+      "description": "Styles applied to the root element if `day` is the first visible cell of the month.",
+      "isGlobal": false
+    },
+    {
+      "key": "hiddenDayFiller",
+      "className": "MuiDateRangePickerDay-hiddenDayFiller",
+      "description": "Styles applied to the root element if it is an empty cell used to fill the week.",
+      "isGlobal": false
+    },
+    {
+      "key": "lastVisibleCell",
+      "className": "MuiDateRangePickerDay-lastVisibleCell",
+      "description": "Styles applied to the root element if `day` is the last visible cell of the month.",
+      "isGlobal": false
+    },
+    {
+      "key": "notSelectedDate",
+      "className": "MuiDateRangePickerDay-notSelectedDate",
+      "description": "Styles applied to the day element if `selected=false`.",
+      "isGlobal": false
+    },
+    {
+      "key": "outsideCurrentMonth",
+      "className": "MuiDateRangePickerDay-outsideCurrentMonth",
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true`",
+      "isGlobal": false
+    },
+    {
+      "key": "rangeIntervalDayHighlight",
+      "className": "MuiDateRangePickerDay-rangeIntervalDayHighlight",
+      "description": "Styles applied to the root element if `isHighlighting=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "rangeIntervalDayHighlightEnd",
+      "className": "MuiDateRangePickerDay-rangeIntervalDayHighlightEnd",
+      "description": "Styles applied to the root element if `isEndOfHighlighting=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "rangeIntervalDayHighlightStart",
+      "className": "MuiDateRangePickerDay-rangeIntervalDayHighlightStart",
+      "description": "Styles applied to the root element if `isStartOfHighlighting=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "rangeIntervalDayPreview",
+      "className": "MuiDateRangePickerDay-rangeIntervalDayPreview",
+      "description": "Styles applied to the root element if `isPreviewing=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "rangeIntervalDayPreviewEnd",
+      "className": "MuiDateRangePickerDay-rangeIntervalDayPreviewEnd",
+      "description": "Styles applied to the root element if `isEndOfPreviewing=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "rangeIntervalDayPreviewStart",
+      "className": "MuiDateRangePickerDay-rangeIntervalDayPreviewStart",
+      "description": "Styles applied to the root element if `isStartOfPreviewing=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "rangeIntervalPreview",
+      "className": "MuiDateRangePickerDay-rangeIntervalPreview",
+      "description": "Styles applied to the preview element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDateRangePickerDay-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "startOfMonth",
+      "className": "MuiDateRangePickerDay-startOfMonth",
+      "description": "Styles applied to the root element if `day` is the start of the month.",
+      "isGlobal": false
+    }
+  ],
   "spread": false,
+  "themeDefaultProps": false,
+  "muiName": "MuiDateRangePickerDay",
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePickerDay/DateRangePickerDay.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <span class=\"plan-pro\"></span></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
+  "cssComponent": false
 }

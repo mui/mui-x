@@ -117,3 +117,5 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
 };
 
 useTreeViewJSXNodes.itemPlugin = useTreeViewJSXNodesItemPlugin;
+
+useTreeViewJSXNodes.params = {};

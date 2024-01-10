@@ -28,7 +28,6 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [],
   "name": "GridFilterPanel",
   "imports": [
     "import { GridFilterPanel } from '@mui/x-data-grid/components';",
@@ -36,8 +35,11 @@
     "import { GridFilterPanel } from '@mui/x-data-grid-pro';",
     "import { GridFilterPanel } from '@mui/x-data-grid-premium';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
+  "classes": [],
+  "muiName": "MuiGridFilterPanel",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterPanel.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "cssComponent": false
 }

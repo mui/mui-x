@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid',
+    'docsx/translations/api-docs/data-grid/grid-toolbar-quick-filter',
     false,
-    /\.\/grid-toolbar-quick-filter(-[a-z]{2})?\.json$/,
+    /\.\/grid-toolbar-quick-filter.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

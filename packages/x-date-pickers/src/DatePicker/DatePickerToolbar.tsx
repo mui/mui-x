@@ -36,9 +36,6 @@ const DatePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (_, styles) => styles.root,
 })({});
 
-/**
- * @ignore - do not document.
- */
 const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
@@ -63,7 +60,7 @@ type DatePickerToolbarComponent = (<TDate>(
  *
  * - [DatePickerToolbar API](https://mui.com/x/api/date-pickers/date-picker-toolbar/)
  */
-const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
+export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
   inProps: DatePickerToolbarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -161,5 +158,3 @@ DatePickerToolbar.propTypes = {
   view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;
-
-export { DatePickerToolbar };

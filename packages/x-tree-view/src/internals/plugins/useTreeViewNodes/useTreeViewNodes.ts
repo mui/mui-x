@@ -188,3 +188,11 @@ useTreeViewNodes.getInitialState = (params) =>
     getItemId: params.getItemId,
     getItemLabel: params.getItemLabel,
   });
+
+useTreeViewNodes.params = {
+  disabledItemsFocusable: true,
+  items: true,
+  isItemDisabled: true,
+  getItemLabel: true,
+  getItemId: true,
+};
