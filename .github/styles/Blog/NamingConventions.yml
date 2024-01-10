@@ -1,6 +1,6 @@
 extends: substitution
 message: To be consistent with capitalization, consider using '%s' instead of '%s'.
-level: warning
+level: error
 ignorecase: false
 # swap maps tokens in form of bad: good
 # for more information: https://vale.sh/docs/topics/styles/#substitution
@@ -15,10 +15,3 @@ swap:
   Javascript: JavaScript
   css: CSS
   Css: CSS
-  Data grid: Data Grid
-  Date picker: Date Picker
-  Time picker: Time Picker
-  Date [t|T]ime picker: Date Time Picker
-  Date [r|R]ange picker: Date Range Picker
-  Time [r|R]ange picker: Time Range Picker
-  Date [t|T]ime [r|R]ange picker: Date Time Range Picker
