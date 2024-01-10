@@ -1111,6 +1111,19 @@ describe('<DataGrid /> - Rows', () => {
       act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
+
+    it('should throw a console error if autoPageSize is used with autoHeight', () => {
+      expect(() => {
+        render(<TestCase autoPageSize autoHeight />);
+      }).toErrorDev(
+        [
+          'MUI: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',
+          'You can not use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.',
+          '',
+          'Please remove one of these two props.',
+        ].join('\n'),
+      );
+    });
   });
 
   // https://github.com/mui/mui-x/issues/10373

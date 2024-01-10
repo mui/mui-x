@@ -30,16 +30,12 @@ module.exports = function setKarmaConfig(config) {
         included: true,
       },
     ],
-    plugins: [
-      'karma-parallel',
+    plugins: (process.env.CIRCLECI === 'true' ? [] : ['karma-parallel']).concat([
       'karma-mocha',
       'karma-chrome-launcher',
       'karma-sourcemap-loader',
       'karma-webpack',
-    ],
-    parallelOptions: {
-      executors: process.env.CIRCLECI === 'true' ? 4 : os.cpus.length - 1,
-    },
+    ]),
     /**
      * possible values:
      * - config.LOG_DISABLE

@@ -95,12 +95,8 @@ export const CartesianContext = React.createContext<{
  *
  * - [CartesianContextProvider API](https://mui.com/x/api/charts/cartesian-context-provider/)
  */
-function CartesianContextProvider({
-  xAxis: inXAxis,
-  yAxis: inYAxis,
-  dataset,
-  children,
-}: CartesianContextProviderProps) {
+function CartesianContextProvider(props: CartesianContextProviderProps) {
+  const { xAxis: inXAxis, yAxis: inYAxis, dataset, children } = props;
   const formattedSeries = React.useContext(SeriesContext);
   const drawingArea = React.useContext(DrawingContext);
 

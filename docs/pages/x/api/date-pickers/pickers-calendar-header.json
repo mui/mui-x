@@ -7,7 +7,11 @@
       "default": "`${adapter.formats.month} ${adapter.formats.year}`"
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -16,55 +20,73 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "leftArrowIcon",
-      "description": "Icon displayed in the left view switch button.",
-      "default": "ArrowLeft"
-    },
-    {
-      "class": null,
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "rightArrowIcon",
-      "description": "Icon displayed in the right view switch button.",
-      "default": "ArrowRight"
-    },
-    {
-      "class": null,
-      "name": "switchViewButton",
-      "description": "Button displayed to switch between different calendar views.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-      "default": "ArrowDropDown"
-    }
-  ],
   "name": "PickersCalendarHeader",
   "imports": [
     "import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';",
     "import { PickersCalendarHeader } from '@mui/x-date-pickers';",
     "import { PickersCalendarHeader } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiPickersCalendarHeader"
-  },
+  "slots": [
+    {
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton",
+      "class": "MuiPickersCalendarHeader-switchViewButton"
+    },
+    {
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+      "default": "ArrowDropDown",
+      "class": "MuiPickersCalendarHeader-switchViewIcon"
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft",
+      "class": null
+    },
+    {
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "label",
+      "className": "MuiPickersCalendarHeader-label",
+      "description": "Styles applied to the label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelContainer",
+      "className": "MuiPickersCalendarHeader-labelContainer",
+      "description": "Styles applied to the label container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPickersCalendarHeader-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiPickersCalendarHeader",
   "filename": "/packages/x-date-pickers/src/PickersCalendarHeader/PickersCalendarHeader.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
 }

@@ -4,8 +4,10 @@ Broken links found by `yarn docs:link-check` that exist:
 - https://mui.com/base-ui/react-portal/components-api/
 - https://mui.com/blog/material-ui-v4-is-out/#premium-themes-store-✨
 - https://mui.com/material-ui/api/button/#props
+- https://mui.com/material-ui/api/input-base/#InputBase-prop-disableInjectingGlobalStyles
 - https://mui.com/material-ui/api/menu-item/#css
 - https://mui.com/material-ui/api/popper/#props
+- https://mui.com/material-ui/discover-more/roadmap/#priorities
 - https://mui.com/material-ui/guides/api/#native-properties
 - https://mui.com/size-snapshot/
 - https://mui.com/system/styles/api/#creategenerateclassname-options-class-name-generator
@@ -16,4 +18,3 @@ Broken links found by `yarn docs:link-check` that exist:
 - https://mui.com/x/api/data-grid/data-grid/#props
 - https://mui.com/x/api/data-grid/data-grid/#slots
 - https://mui.com/x/api/date-pickers/date-picker/#slots
-- https://mui.com/x/react-charts/#getting-started

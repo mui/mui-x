@@ -1,13 +1,13 @@
 ---
 productId: x-tree-view
 title: Tree View React component
-components: SimpleTreeView, RichTreeView, TreeItem
+components: SimpleTreeView, RichTreeView, TreeItem, TreeView
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'
 ---
 
-# Tree View
+# MUI X Tree View
 
 <p class="description">A Tree View widget presents a hierarchical list.</p>
 

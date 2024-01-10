@@ -23,6 +23,11 @@ module.exports = {
       '@mui/x-tree-view': path.resolve(__dirname, './packages/x-tree-view/src'),
       '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license-pro/src'),
       '@mui/markdown': path.resolve(__dirname, './node_modules/@mui/monorepo/packages/markdown'),
+      '@mui/material-nextjs': path.resolve(
+        __dirname,
+        './node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
+      ),
+
       '@mui-internal/test-utils': path.resolve(
         __dirname,
         './node_modules/@mui/monorepo/packages/test-utils/src',
