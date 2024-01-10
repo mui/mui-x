@@ -181,6 +181,7 @@ export const GridRootStyles = styled('div', {
     },
   };
 
+  const ignoreSSRWarning = '';
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
     '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
@@ -222,7 +223,7 @@ export const GridRootStyles = styled('div', {
     minHeight: 0,
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
-    [`.${c.main} > *:first-child`]: {
+    [`.${c.main} > *:first-child${ignoreSSRWarning}`]: {
       borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
       borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
     },
