@@ -18,32 +18,19 @@ import type {
   GridAggregationFunction,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
-import {
-  GridPremiumSlotsComponent,
-  UncapitalizedGridPremiumSlotsComponent,
-} from './gridPremiumSlotsComponent';
+import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
-  /**
-   * If `true`, the grid will allow to paste data from clipboard.
-   */
-  clipboardPaste?: boolean;
-}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
   /**
    * Overridable components.
-   * @deprecated Use the `slots` prop instead.
    */
-  components?: Partial<GridPremiumSlotsComponent>;
-  /**
-   * Overridable components.
-   */
-  slots?: Partial<UncapitalizedGridPremiumSlotsComponent>;
+  slots?: Partial<GridPremiumSlotsComponent>;
 }
 
 /**
@@ -59,7 +46,7 @@ export interface DataGridPremiumProps<R extends GridValidRowModel = any>
 
 export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueAfterProcessing, 'localeText'> {
-  slots: UncapitalizedGridPremiumSlotsComponent;
+  slots: GridPremiumSlotsComponent;
 }
 
 /**
@@ -68,7 +55,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
 export interface DataGridPremiumProcessedProps
   extends DataGridPremiumPropsWithDefaultValue,
     DataGridPremiumPropsWithComplexDefaultValueAfterProcessing,
-    Omit<DataGridPremiumPropsWithoutDefaultValue, 'componentsProps'> {}
+    DataGridPremiumPropsWithoutDefaultValue {}
 
 export type DataGridPremiumForcedPropsKey = 'signature';
 
@@ -82,7 +69,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * If `true`, the cell selection mode is enabled.
    * @default false
    */
-  unstable_cellSelection: boolean;
+  cellSelection: boolean;
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -129,7 +116,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
    * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
    */
-  unstable_splitClipboardPastedText: (text: string) => string[][] | null;
+  splitClipboardPastedText: (text: string) => string[][] | null;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -167,13 +154,13 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * Set the cell selection model of the grid.
    */
-  unstable_cellSelectionModel?: GridCellSelectionModel;
+  cellSelectionModel?: GridCellSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple cells changes.
    * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  unstable_onCellSelectionModelChange?: (
+  onCellSelectionModelChange?: (
     cellSelectionModel: GridCellSelectionModel,
     details: GridCallbackDetails,
   ) => void;

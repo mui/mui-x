@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, within, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, within, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Column Headers', () => {
+describe('<DataGrid /> - Column headers', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
@@ -50,7 +50,7 @@ describe('<DataGrid /> - Column Headers', () => {
     });
   });
 
-  describe('Column Menu', () => {
+  describe('Column menu', () => {
     it('should allow to hide column', () => {
       render(
         <div style={{ width: 300, height: 300 }}>

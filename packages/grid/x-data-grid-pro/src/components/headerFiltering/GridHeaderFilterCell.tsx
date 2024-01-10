@@ -17,8 +17,8 @@ import {
 import {
   GridStateColDef,
   useGridPrivateApiContext,
-  unstable_gridHeaderFilteringEditFieldSelector,
-  unstable_gridHeaderFilteringMenuSelector,
+  gridHeaderFilteringEditFieldSelector,
+  gridHeaderFilteringMenuSelector,
   isNavigationKey,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -89,8 +89,8 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const inputRef = React.useRef<HTMLInputElement>(null);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-    const isEditing = unstable_gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
-    const isMenuOpen = unstable_gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
+    const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
+    const isMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
 
     const currentOperator = filterOperators![0];
 
@@ -141,8 +141,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             break;
           case 'Enter':
             if (isEditing) {
-              apiRef.current.stopHeaderFilterEditMode();
-              break;
+              if (!event.defaultPrevented) {
+                apiRef.current.stopHeaderFilterEditMode();
+                break;
+              }
             }
             if (event.metaKey || event.ctrlKey) {
               headerFilterMenuRef.current = buttonRef.current;
@@ -192,7 +194,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const onMouseDown = React.useCallback(
       (event: React.MouseEvent) => {
         if (!hasFocus) {
-          if (inputRef.current) {
+          if (inputRef.current?.contains?.(event.target as HTMLElement)) {
             inputRef.current.focus();
           }
           apiRef.current.setColumnHeaderFilterFocus(colDef.field, event);
@@ -255,7 +257,21 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               inputRef={inputRef}
               applyValue={applyFilterChanges}
               onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
-              onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
+              onBlur={(event: React.FocusEvent) => {
+                apiRef.current.stopHeaderFilterEditMode();
+                // Blurring an input element should reset focus state only if `relatedTarget` is not the header filter cell
+                if (!event.relatedTarget?.className.includes('columnHeader')) {
+                  apiRef.current.setState((state) => ({
+                    ...state,
+                    focus: {
+                      cell: null,
+                      columnHeader: null,
+                      columnHeaderFilter: null,
+                      columnGroupHeader: null,
+                    },
+                  }));
+                }
+              }}
               label={capitalize(label)}
               placeholder=""
               isFilterActive={isFilterActive}
@@ -297,7 +313,6 @@ GridHeaderFilterCell.propTypes = {
   filterOperators: PropTypes.arrayOf(
     PropTypes.shape({
       getApplyFilterFn: PropTypes.func.isRequired,
-      getApplyFilterFnV7: PropTypes.func,
       getValueAsString: PropTypes.func,
       headerLabel: PropTypes.string,
       InputComponent: PropTypes.elementType,

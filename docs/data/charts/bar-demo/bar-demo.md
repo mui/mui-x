@@ -1,5 +1,6 @@
 ---
 title: Charts - Bar demonstration
+components: BarChart, BarElement, BarPlot
 ---
 
 # Charts - Bar demonstration
@@ -21,6 +22,10 @@ title: Charts - Bar demonstration
 ## MixedBarChart
 
 {{"demo": "MixedBarChart.js"}}
+
+## PositiveAndNegativeBarChart
+
+{{"demo": "PositiveAndNegativeBarChart.js"}}
 
 ## BarChartStackedBySign
 

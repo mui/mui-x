@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
+import { screen } from '@mui-internal/test-utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
+import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
 
 describe('<TimePicker />', () => {
   const { render } = createPickerRenderer();

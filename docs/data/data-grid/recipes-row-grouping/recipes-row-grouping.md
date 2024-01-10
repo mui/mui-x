@@ -2,7 +2,7 @@
 title: Data Grid - Row grouping recipes
 ---
 
-# Data Grid - Row grouping recipes [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+# Data Grid - Row grouping recipes [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Advanced grid customization recipes.</p>
 

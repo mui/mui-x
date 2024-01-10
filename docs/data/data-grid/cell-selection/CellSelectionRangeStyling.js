@@ -44,7 +44,7 @@ export default function CellSelectionRangeStyling() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <StyledDataGridPremium rowSelection={false} unstable_cellSelection {...data} />
+      <StyledDataGridPremium rowSelection={false} cellSelection {...data} />
     </div>
   );
 }

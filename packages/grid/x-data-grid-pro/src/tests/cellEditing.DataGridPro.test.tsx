@@ -13,10 +13,10 @@ import {
   GridCellModes,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui-internal/test-utils';
 import { getCell, spyApi } from 'test/utils/helperFn';
 
-describe('<DataGridPro /> - Cell Editing', () => {
+describe('<DataGridPro /> - Cell editing', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -186,7 +186,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
           error: false,
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
-          unstable_updateValueOnRender: false,
         });
       });
 
@@ -917,7 +916,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStartCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          initialValue: 'a',
+          deleteValue: true,
         });
       });
 

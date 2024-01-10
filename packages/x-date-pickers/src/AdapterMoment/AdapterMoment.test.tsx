@@ -4,21 +4,19 @@ import momentTZ from 'moment-timezone';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
+import { screen } from '@mui-internal/test-utils/createRenderer';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
-} from 'test/utils/pickers-utils';
+  describeGregorianAdapter,
+  TEST_DATE_ISO_STRING,
+} from 'test/utils/pickers';
 import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
-import {
-  describeGregorianAdapter,
-  TEST_DATE_ISO_STRING,
-} from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {
@@ -47,11 +45,6 @@ describe('<AdapterMoment />', () => {
       const adapter = new AdapterMoment({ locale: 'en' });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
-      it('getWeekdays: should start on Monday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
-      });
-
       it('getWeekArray: week should start on Monday', () => {
         const result = adapter.getWeekArray(date);
         expect(result[0][0].format('dd')).to.equal('Su');
@@ -76,11 +69,6 @@ describe('<AdapterMoment />', () => {
 
       afterEach(() => {
         moment.locale('en');
-      });
-
-      it('getWeekdays: should start on Monday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']);
       });
 
       it('getWeekArray: week should start on Monday', () => {
@@ -112,11 +100,6 @@ describe('<AdapterMoment />', () => {
         moment.locale('en');
       });
 
-      it('getMeridiemText: should translate meridiem format', () => {
-        expect(adapter.getMeridiemText('am')).to.equal('오전');
-        expect(adapter.getMeridiemText('pm')).to.equal('오후');
-      });
-
       it('parse: should have the right locale', () => {
         expect(adapter.parse('01/01/2020', 'MM/DD/YYYY')!.locale()).to.equal('ko');
       });
@@ -138,10 +121,6 @@ describe('<AdapterMoment />', () => {
       };
 
       expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
-      expectDate('fullDateWithWeekday', 'Saturday, February 1, 2020', 'суббота, 1 февраля 2020 г.');
-      expectDate('fullDateTime', 'Feb 1, 2020 11:44 PM', '1 февр. 2020 г., 23:44');
-      expectDate('fullDateTime12h', 'Feb 1, 2020 11:44 PM', '1 февр. 2020 г. 11:44 вечера');
-      expectDate('fullDateTime24h', 'Feb 1, 2020 23:44', '1 февр. 2020 г. 23:44');
       expectDate('keyboardDate', '02/01/2020', '01.02.2020');
       expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
@@ -150,7 +129,7 @@ describe('<AdapterMoment />', () => {
   });
 
   describe('Picker localization', () => {
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
 
     const localizedTexts = {
       en: {

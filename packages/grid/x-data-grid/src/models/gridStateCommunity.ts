@@ -15,6 +15,7 @@ import type {
   GridSortingInitialState,
   GridSortingState,
   GridTabIndexState,
+  GridVirtualizationState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import type { GridEditingState } from './gridEditRowModel';
@@ -42,6 +43,7 @@ export interface GridStateCommunity {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
+  virtualization: GridVirtualizationState;
 }
 
 /**

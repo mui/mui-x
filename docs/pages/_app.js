@@ -1,6 +1,7 @@
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/data/pages'; // DO NOT REMOVE
+import { postProcessImport } from 'docsx/src/modules/utils/postProcessImport';
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
@@ -25,8 +26,10 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    // #default-branch-switch with latest for the master branch
-    return 'latest';
+    // #default-branch-switch
+    // Use the "latest" npm tag for the master git branch
+    // Use the "next" npm tag for the next git branch
+    return 'next';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -41,11 +44,6 @@ ponyfillGlobal.muiDocConfig = {
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
     }
-
-    if (newDeps['@mui/x-date-pickers'] || newDeps['@mui/x-date-pickers-pro']) {
-      newDeps.dayjs = versions.dayjs;
-    }
-
     return newDeps;
   },
   csbGetVersions: (versions, { muiCommitRef }) => {
@@ -59,12 +57,11 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
-      'date-fns': 'latest',
-      dayjs: 'latest',
       exceljs: 'latest',
     };
     return output;
   },
+  postProcessImport,
 };
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -213,7 +210,11 @@ function AppWrapper(props) {
       metadata: '',
       name: 'MUI X',
       versions: [
-        { text: `v${process.env.LIB_VERSION}`, current: true },
+        {
+          text: `v${process.env.LIB_VERSION}`,
+          current: true,
+        },
+        { text: 'v6', href: `https://mui.com${languagePrefix}/x/introduction/` },
         { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
@@ -224,8 +225,12 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          { text: `v${process.env.DATA_GRID_VERSION}`, current: true },
-          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/components/data-grid/` },
+          {
+            text: `v${process.env.DATA_GRID_VERSION}`,
+            current: true,
+          },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-data-grid/` },
+          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -234,7 +239,14 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          { text: `v${process.env.DATE_PICKERS_VERSION}`, current: true },
+          {
+            text: `v${process.env.DATE_PICKERS_VERSION}`,
+            current: true,
+          },
+          {
+            text: 'v6',
+            href: `https://mui.com${languagePrefix}/x/react-date-pickers/`,
+          },
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
@@ -245,7 +257,28 @@ function AppWrapper(props) {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Charts',
-        versions: [{ text: `v${process.env.CHARTS_VERSION}`, current: true }],
+        versions: [
+          {
+            text: `v${process.env.CHARTS_VERSION}`,
+            current: true,
+          },
+          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/` },
+        ],
+      };
+    } else if (productId === 'x-tree-view') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Tree View',
+        versions: [
+          {
+            text: `v${process.env.TREE_VIEW_VERSION}`,
+            current: true,
+          },
+          {
+            text: 'v6',
+            href: `https://mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+          },
+        ],
       };
     }
 
@@ -330,16 +363,16 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 // Track fraction of actual events to prevent exceeding event quota.
 // Filter sessions instead of individual events so that we can track multiple metrics per device.
 const disableWebVitalsReporting = Math.random() > 0.0001;
-export function reportWebVitals({ id, name, label, value }) {
+export function reportWebVitals({ id, name, label, delta, value }) {
   if (disableWebVitalsReporting) {
     return;
   }
 
-  window.ga('send', 'event', {
-    eventCategory: label === 'web-vital' ? 'Web Vitals' : 'Next.js custom metric',
-    eventAction: name,
-    eventValue: Math.round(name === 'CLS' ? value * 1000 : value), // values must be integers
-    eventLabel: id, // id unique to current page load
-    nonInteraction: true, // avoids affecting bounce rate.
+  window.gtag('event', name, {
+    value: delta,
+    metric_label: label === 'web-vital' ? 'Web Vitals' : 'Next.js custom metric',
+    metric_value: value,
+    metric_delta: delta,
+    metric_id: id, // id unique to current page load
   });
 }

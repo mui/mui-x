@@ -31,7 +31,6 @@ import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColu
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationModel } from '../gridPaginationProps';
-import { UncapitalizeObjectKeys } from '../../internals/utils';
 
 export interface GridExperimentalFeatures {
   /**
@@ -69,7 +68,7 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
-    Omit<DataGridPropsWithoutDefaultValue<R>, 'componentsProps'> {}
+    DataGridPropsWithoutDefaultValue<R> {}
 
 /**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
@@ -79,7 +78,6 @@ export type DataGridForcedPropsKey =
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
-  | 'disableMultipleRowSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
   | 'keepColumnPositionIfDraggedOutside'
@@ -92,7 +90,7 @@ export type DataGridForcedPropsKey =
  * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
-  slots: UncapitalizeObjectKeys<GridSlotsComponent>;
+  slots: GridSlotsComponent;
   localeText: GridLocaleText;
 }
 
@@ -102,15 +100,10 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
    * Overridable components.
-   * @deprecated Use `slots` instead.
    */
-  components?: Partial<GridSlotsComponent>;
+  slots?: Partial<GridSlotsComponent>;
   /**
-   * Overridable components.
-   */
-  slots?: UncapitalizeObjectKeys<Partial<GridSlotsComponent>>;
-  /**
-   * Set the locale text of the grid.
+   * Set the locale text of the Data Grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText?: Partial<GridLocaleText>;
@@ -124,7 +117,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  */
 export interface DataGridPropsWithDefaultValues {
   /**
-   * If `true`, the grid height is dynamic and follow the number of rows in the grid.
+   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: boolean;
@@ -134,7 +127,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   autoPageSize: boolean;
   /**
-   * If `true`, the grid get a first column with a checkbox that allows to select rows.
+   * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
    */
   checkboxSelection: boolean;
@@ -170,7 +163,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   columnThreshold: number;
   /**
-   * Set the density of the grid.
+   * Set the density of the Data Grid.
    * @default "standard"
    */
   density: GridDensity;
@@ -195,13 +188,19 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableDensitySelector: boolean;
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   */
+  disableEval: boolean;
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
   disableMultipleColumnsFiltering: boolean;
   /**
-   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
-   * @default false
+   * If `true`, multiple selection using the Ctrl/CMD or Shift key is disabled.
+   * The MIT DataGrid will ignore this prop, unless `checkboxSelection` is enabled.
+   * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: boolean;
   /**
@@ -231,7 +230,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   filterMode: GridFeatureMode;
   /**
-   * Sets the height in pixel of the column headers in the grid.
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: number;
+  /**
+   * Sets the height in pixel of the column headers in the Data Grid.
    * @default 56
    */
   columnHeaderHeight: number;
@@ -256,6 +260,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   hideFooterSelectedRowCount: boolean;
+  /**
+   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * @default false
+   */
+  ignoreDiacritics: boolean;
   /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
@@ -286,7 +296,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   paginationMode: GridFeatureMode;
   /**
-   * Sets the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the Data Grid.
    * @default 52
    */
   rowHeight: number;
@@ -314,7 +324,7 @@ export interface DataGridPropsWithDefaultValues {
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */
-  sortingOrder: GridSortDirection[];
+  sortingOrder: readonly GridSortDirection[];
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
@@ -323,7 +333,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   sortingMode: GridFeatureMode;
   /**
-   * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
+   * If positive, the Data Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
    * @default 0
    */
@@ -339,17 +349,17 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableColumnResize: boolean;
   /**
-   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * If `true`, moving the mouse pointer outside the Data Grid before releasing the mouse button
    * in a column re-order action will not cause the column to jump back to its original position.
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
   /**
-   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If `true`, the Data Grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default: false
+   * @default false
    */
-  unstable_ignoreValueFormatterDuringExport:
+  ignoreValueFormatterDuringExport:
     | boolean
     | {
         csvExport?: boolean;
@@ -360,6 +370,13 @@ export interface DataGridPropsWithDefaultValues {
    * @default '\t'
    */
   clipboardCopyCellDelimiter: string;
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: number;
 }
 
 /**
@@ -368,17 +385,17 @@ export interface DataGridPropsWithDefaultValues {
 export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends CommonProps {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
+   * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
-   * Forwarded props for the grid root element.
+   * Forwarded props for the Data Grid root element.
    * @ignore - do not document.
    */
   forwardedProps?: Record<string, unknown>;
   /**
    * Signal to the underlying logic what version of the public component API
-   * of the data grid is exposed [[GridSignature]].
+   * of the Data Grid is exposed [[GridSignature]].
    * @ignore - do not document.
    */
   signature?: string;
@@ -392,7 +409,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   rowCount?: number;
   /**
-   * Override the height/width of the grid inner scrollbar.
+   * Override the height/width of the Data Grid inner scrollbar.
    */
   scrollbarSize?: number;
   /**
@@ -561,14 +578,14 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onRowDoubleClick?: GridEventListener<'rowDoubleClick'>;
   /**
-   * Callback fired when the grid is resized.
+   * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onResize?: GridEventListener<'debouncedResize'>;
   /**
-   * Callback fired when the state of the grid is updated.
+   * Callback fired when the state of the Data Grid is updated.
    * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -637,7 +654,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onRowModesModelChange?: (rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void;
   /**
-   * Set the filter model of the grid.
+   * Set the filter model of the Data Grid.
    */
   filterModel?: GridFilterModel;
   /**
@@ -647,7 +664,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onFilterModelChange?: (model: GridFilterModel, details: GridCallbackDetails<'filter'>) => void;
   /**
-   * Sets the row selection model of the grid.
+   * Sets the row selection model of the Data Grid.
    */
   rowSelectionModel?: GridInputRowSelectionModel;
   /**
@@ -660,8 +677,8 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
     details: GridCallbackDetails,
   ) => void;
   /**
-   * Set the column visibility model of the grid.
-   * If defined, the grid will ignore the `hide` property in [[GridColDef]].
+   * Set the column visibility model of the Data Grid.
+   * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel?: GridColumnVisibilityModel;
   /**
@@ -674,7 +691,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
     details: GridCallbackDetails,
   ) => void;
   /**
-   * Set the sort model of the grid.
+   * Set the sort model of the Data Grid.
    */
   sortModel?: GridSortModel;
   /**
@@ -684,17 +701,17 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
   /**
-   * The label of the grid.
+   * The label of the Data Grid.
    */
   'aria-label'?: string;
   /**
-   * The id of the element containing a label for the grid.
+   * The id of the element containing a label for the Data Grid.
    */
   'aria-labelledby'?: string;
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
-  columns: GridColDef<R>[];
+  columns: readonly GridColDef<R>[];
   /**
    * Return the id of a given [[GridRowModel]].
    */
@@ -721,11 +738,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps?: GridSlotsComponentsProps;
-  /**
-   * Overridable components props dynamically passed to the component at rendering.
-   * @deprecated Use the `slotProps` prop instead.
-   */
-  componentsProps?: GridSlotsComponentsProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

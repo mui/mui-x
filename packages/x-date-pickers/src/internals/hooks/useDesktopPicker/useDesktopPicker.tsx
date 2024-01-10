@@ -5,7 +5,11 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
-import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
+import {
+  UseDesktopPickerParams,
+  UseDesktopPickerProps,
+  UseDesktopPickerSlotProps,
+} from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
@@ -13,6 +17,7 @@ import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
 import { FieldSection, BaseSingleInputFieldProps } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { UsePickerValueFieldResponse } from '../usePicker/usePickerValue.types';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -37,12 +42,14 @@ export const useDesktopPicker = <
     format,
     formatDensity,
     timezone,
+    name,
     label,
     inputRef,
     readOnly,
     disabled,
     autoFocus,
     localeText,
+    reduceAnimations,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -84,7 +91,7 @@ export const useDesktopPicker = <
     externalSlotProps: innerSlotProps?.openPickerButton,
     additionalProps: {
       disabled: disabled || readOnly,
-      onClick: actions.onOpen,
+      onClick: open ? actions.onClose : actions.onOpen,
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
       edge: inputAdornmentProps.position,
     },
@@ -99,7 +106,27 @@ export const useDesktopPicker = <
     TDate,
     FieldSection,
     InferError<TExternalProps>
-  > = useSlotProps({
+  > = useSlotProps<
+    typeof Field,
+    UseDesktopPickerSlotProps<TDate, TView>['field'],
+    UsePickerValueFieldResponse<TDate | null, FieldSection, InferError<TExternalProps>> &
+      Partial<
+        Pick<
+          UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
+          | 'readOnly'
+          | 'disabled'
+          | 'className'
+          | 'sx'
+          | 'format'
+          | 'formatDensity'
+          | 'timezone'
+          | 'label'
+          | 'name'
+          | 'autoFocus'
+        > & { focused: true | undefined }
+      >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -113,6 +140,7 @@ export const useDesktopPicker = <
       formatDensity,
       timezone,
       label,
+      name,
       autoFocus: autoFocus && !props.open,
       focused: open ? true : undefined,
     },
@@ -141,6 +169,8 @@ export const useDesktopPicker = <
     unknown
   >['slots'] = {
     textField: slots.textField,
+    clearIcon: slots.clearIcon,
+    clearButton: slots.clearButton,
     ...fieldProps.slots,
   };
 
@@ -185,6 +215,7 @@ export const useDesktopPicker = <
         slots={slots}
         slotProps={slotProps}
         shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
       >
         <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}

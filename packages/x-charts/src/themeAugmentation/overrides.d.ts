@@ -1,14 +1,16 @@
 import { BarElementClassKey } from '../BarChart/BarElement';
 import { ChartsAxisClassKey } from '../ChartsAxis';
+import { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
 import { ChartsLegendClassKey } from '../ChartsLegend';
+import { ChartsTooltipClassKey } from '../ChartsTooltip';
 import { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
   MuiChartsAxis: ChartsAxisClassKey;
-  MuiChartsXAxis:  ChartsAxisClassKey;
-  MuiChartsYAxis:  ChartsAxisClassKey;
+  MuiChartsAxisHighlight: ChartsAxisHighlightClassKey;
   MuiChartsLegend: ChartsLegendClassKey;
+  MuiChartsTooltip: ChartsTooltipClassKey;
 
   // BarChart components
   MuiBarElement: BarElementClassKey;

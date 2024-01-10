@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { describeConformance, screen } from '@mui/monorepo/test/utils';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { describeConformance, screen } from '@mui-internal/test-utils';
 import {
   clockPointerClasses,
   TimeClock,
   timeClockClasses as classes,
 } from '@mui/x-date-pickers/TimeClock';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
-import { timeClockHandler } from 'test/utils/pickers/viewHandlers';
+import {
+  wrapPickerMount,
+  createPickerRenderer,
+  adapterToUse,
+  timeClockHandler,
+  describeValue,
+} from 'test/utils/pickers';
 
 describe('<TimeClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer();
@@ -26,10 +30,7 @@ describe('<TimeClock /> - Describes', () => {
   describeValue(TimeClock, () => ({
     render,
     componentFamily: 'clock',
-    values: [
-      adapterToUse.date(new Date(2018, 0, 1, 12, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 13, 35)),
-    ],
+    values: [adapterToUse.date('2018-01-01T12:30:00'), adapterToUse.date('2018-01-01T13:35:00')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {

@@ -1,23 +1,22 @@
 import {
   DesktopTimePickerProps,
-  DesktopTimePickerSlotsComponent,
-  DesktopTimePickerSlotsComponentsProps,
+  DesktopTimePickerSlots,
+  DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileTimePickerProps,
-  MobileTimePickerSlotsComponent,
-  MobileTimePickerSlotsComponentsProps,
+  MobileTimePickerSlots,
+  MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
 
-export interface TimePickerSlotsComponents<TDate>
-  extends DesktopTimePickerSlotsComponent<TDate>,
-    MobileTimePickerSlotsComponent<TDate, TimeViewWithMeridiem> {}
+export interface TimePickerSlots<TDate>
+  extends DesktopTimePickerSlots<TDate>,
+    MobileTimePickerSlots<TDate, TimeViewWithMeridiem> {}
 
-export interface TimePickerSlotsComponentsProps<TDate>
-  extends DesktopTimePickerSlotsComponentsProps<TDate>,
-    MobileTimePickerSlotsComponentsProps<TDate, TimeViewWithMeridiem> {}
+export interface TimePickerSlotProps<TDate>
+  extends DesktopTimePickerSlotProps<TDate>,
+    MobileTimePickerSlotProps<TDate, TimeViewWithMeridiem> {}
 
 export interface TimePickerProps<TDate>
   extends DesktopTimePickerProps<TDate>,
@@ -29,25 +28,13 @@ export interface TimePickerProps<TDate>
    */
   desktopModeMediaQuery?: string;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: TimePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: TimePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TimePickerSlotsComponents<TDate>>;
+  slots?: TimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimePickerSlotsComponentsProps<TDate>;
+  slotProps?: TimePickerSlotProps<TDate>;
 }

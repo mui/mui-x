@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-const columns = [
+const columns: GridColDef[] = [
   { field: 'id' },
   { field: 'username', width: 150 },
   { field: 'age', width: 80, type: 'number' },
@@ -26,6 +26,9 @@ export default function UpdateRowsProp() {
   ]);
 
   const handleUpdateRow = () => {
+    if (rows.length === 0) {
+      return;
+    }
     setRows((prevRows) => {
       const rowToUpdateIndex = randomInt(0, rows.length - 1);
 
@@ -40,6 +43,9 @@ export default function UpdateRowsProp() {
   };
 
   const handleDeleteRow = () => {
+    if (rows.length === 0) {
+      return;
+    }
     setRows((prevRows) => {
       const rowToDeleteIndex = randomInt(0, prevRows.length - 1);
       return [

@@ -7,10 +7,14 @@ import {
   screen,
   getAllByRole,
   fireEvent,
-} from '@mui/monorepo/test/utils';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+} from '@mui-internal/test-utils';
+import {
+  adapterToUse,
+  wrapPickerMount,
+  createPickerRenderer,
+  describeValidation,
+} from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<StaticTimePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -63,7 +67,7 @@ describe('<StaticTimePicker />', () => {
     const onViewChange = spy();
     render(
       <StaticTimePicker
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2019-01-01')}
         onChange={onChange}
         onViewChange={onViewChange}
         readOnly
@@ -113,7 +117,7 @@ describe('<StaticTimePicker />', () => {
     const onViewChange = spy();
     render(
       <StaticTimePicker
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2019-01-01')}
         onChange={onChange}
         onViewChange={onViewChange}
         disabled

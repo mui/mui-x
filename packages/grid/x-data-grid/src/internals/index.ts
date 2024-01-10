@@ -24,8 +24,8 @@ export { unwrapPrivateAPI } from '../hooks/core/useGridApiInitialization';
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
-  unstable_gridHeaderFilteringEditFieldSelector,
-  unstable_gridHeaderFilteringMenuSelector,
+  gridHeaderFilteringEditFieldSelector,
+  gridHeaderFilteringMenuSelector,
 } from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
 export type { GridSlotsComponentsProps } from '../models/gridSlotsComponentsProps';
 export type {
@@ -39,6 +39,7 @@ export {
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
 export { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
+export { gridColumnsStateSelector } from '../hooks/features/columns/gridColumnsSelector';
 export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
@@ -113,7 +114,9 @@ export {
   useGridVirtualScroller,
   getRenderableIndexes,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
+export * from '../hooks/features/virtualization';
 
+export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
@@ -127,23 +130,29 @@ export type {
 } from '../models/props/DataGridProps';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
+export * from '../utils/createControllablePromise';
 export {
   createSelector,
   createSelectorMemoized,
   unstable_resetCreateSelectorCache,
 } from '../utils/createSelector';
-export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
+export {
+  findParentElementFromClassName,
+  getActiveElement,
+  isEventTargetInPortal,
+} from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
+export * from '../utils/getPublicApiRef';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
 export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+export * from '../hooks/utils/useOnMount';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';
 
 export { serializeCellValue } from '../hooks/features/export/serializers/csvSerializer';
 
-export * from '../colDef/utils';
 export * from './utils';

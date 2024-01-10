@@ -10,14 +10,14 @@ re-render when their props change. But it's very easy to cause unnecessary re-re
 render, which means the `DataGrid` itself has no choice but to re-render as well.
 
 ```tsx
-function Component({ rows }) {
+function Component(props) {
   return (
     <DataGrid
-      rows={rows}
+      rows={props.rows}
       slots={{
         row: CustomRow,
       }}
-      cellModesModel={{ [rows[0].id]: { name: { mode: GridCellModes.Edit } } }}
+      cellModesModel={{ [props.rows[0].id]: { name: { mode: GridCellModes.Edit } } }}
     />
   );
 }
@@ -31,13 +31,15 @@ const slots = {
   row: CustomRow,
 };
 
-function Component({ rows }) {
+function Component(props) {
   const cellModesModel = React.useMemo(
-    () => ({ [rows[0].id]: { name: { mode: GridCellModes.Edit } } }),
-    [rows],
+    () => ({ [props.rows[0].id]: { name: { mode: GridCellModes.Edit } } }),
+    [props.rows],
   );
 
-  return <DataGrid rows={rows} slots={slots} cellModesModel={cellModesModel} />;
+  return (
+    <DataGrid rows={props.rows} slots={slots} cellModesModel={cellModesModel} />
+  );
 }
 ```
 
@@ -47,10 +49,6 @@ The DataGrid memoizes some of its subcomponents to avoid re-rendering more than 
 shows you which cells re-render in reaction to your interaction with the grid.
 
 {{"demo": "GridVisualization.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Filtering
-
-For filtering performance, see [the filter customization section](/x/react-data-grid/filtering/customization/#optimize-performance).
 
 ## API
 

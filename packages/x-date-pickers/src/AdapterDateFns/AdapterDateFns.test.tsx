@@ -2,21 +2,19 @@ import * as React from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
+import { screen } from '@mui-internal/test-utils/createRenderer';
 import { expect } from 'chai';
 import {
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
-} from 'test/utils/pickers-utils';
+  describeGregorianAdapter,
+  TEST_DATE_ISO_STRING,
+} from 'test/utils/pickers';
 import enUS from 'date-fns/locale/en-US';
 import fr from 'date-fns/locale/fr';
 import de from 'date-fns/locale/de';
 import ru from 'date-fns/locale/ru';
-import {
-  describeGregorianAdapter,
-  TEST_DATE_ISO_STRING,
-} from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterDateFns />', () => {
   describeGregorianAdapter(AdapterDateFns, {
@@ -30,11 +28,6 @@ describe('<AdapterDateFns />', () => {
       const adapter = new AdapterDateFns({ locale: enUS });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
-      it('getWeekdays: should start on Sunday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
-      });
-
       it('getWeekArray: should start on Sunday', () => {
         const result = adapter.getWeekArray(date);
         expect(adapter.formatByString(result[0][0], 'EEEEEE')).to.equal('Su');
@@ -47,11 +40,6 @@ describe('<AdapterDateFns />', () => {
 
     describe('Russian', () => {
       const adapter = new AdapterDateFns({ locale: ru });
-
-      it('getWeekDays: should start on Monday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']);
-      });
 
       it('getWeekArray: should start on Monday', () => {
         const date = adapter.date(TEST_DATE_ISO_STRING)!;
@@ -84,14 +72,6 @@ describe('<AdapterDateFns />', () => {
       };
 
       expectDate('fullDate', 'Feb 1, 2020', '1 фев. 2020 г.');
-      expectDate(
-        'fullDateWithWeekday',
-        'Saturday, February 1st, 2020',
-        'суббота, 1 февраля 2020 г.',
-      );
-      expectDate('fullDateTime', 'Feb 1, 2020 11:44 PM', '1 фев. 2020 г. 23:44');
-      expectDate('fullDateTime12h', 'Feb 1, 2020 11:44 PM', '1 фев. 2020 г. 11:44 ПП');
-      expectDate('fullDateTime24h', 'Feb 1, 2020 23:44', '1 фев. 2020 г. 23:44');
       expectDate('keyboardDate', '02/01/2020', '01.02.2020');
       expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 ПП');
@@ -100,7 +80,7 @@ describe('<AdapterDateFns />', () => {
   });
 
   describe('Picker localization', () => {
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       undefined: {
         placeholder: 'MM/DD/YYYY hh:mm aa',

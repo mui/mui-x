@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer } from 'test/utils/pickers';
 
 describe('<PickersActionBar />', () => {
   const { render } = createPickerRenderer({

@@ -1,19 +1,16 @@
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher/PickersArrowSwitcher';
 export type {
   ExportedPickersArrowSwitcherProps,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
+  PickersArrowSwitcherSlots,
+  PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
-  PickersModalDialogSlotsComponent,
-  PickersModalDialogSlotsComponentsProps,
+  PickersModalDialogSlots,
+  PickersModalDialogSlotProps,
 } from './components/PickersModalDialog';
 export { PickersPopper } from './components/PickersPopper';
-export type {
-  PickersPopperSlotsComponent,
-  PickersPopperSlotsComponentsProps,
-} from './components/PickersPopper';
+export type { PickersPopperSlots, PickersPopperSlotProps } from './components/PickersPopper';
 export { PickersToolbar } from './components/PickersToolbar';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
@@ -83,8 +80,8 @@ export type {
 export { useStaticPicker } from './hooks/useStaticPicker';
 export type {
   StaticOnlyPickerProps,
-  UseStaticPickerSlotsComponent,
-  UseStaticPickerSlotsComponentsProps,
+  UseStaticPickerSlots,
+  UseStaticPickerSlotProps,
 } from './hooks/useStaticPicker';
 export {
   useLocalizationContext,
@@ -93,7 +90,8 @@ export {
   useLocaleText,
   useNow,
 } from './hooks/useUtils';
-export type { ExportedUseViewsOptions } from './hooks/useViews';
+export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews';
+export { useViews } from './hooks/useViews';
 export { useValidation } from './hooks/useValidation';
 export type { ValidationProps, Validator, InferError } from './hooks/useValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
@@ -104,9 +102,15 @@ export type {
   BasePickerInputProps,
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
+export type { BaseClockProps, DesktopOnlyTimePickerProps } from './models/props/clock';
+export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
-export type { WrapperVariant } from './models/common';
+export type {
+  WrapperVariant,
+  TimeViewWithMeridiem,
+  DateOrTimeViewWithMeridiem,
+} from './models/common';
 export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,
@@ -117,12 +121,17 @@ export type {
   DateTimeValidationProps,
 } from './models/validation';
 
+export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,
   areDatesEqual,
   getTodayDate,
+  isDatePickerView,
+  mergeDateAndTime,
+  formatMeridiem,
 } from './utils/date-utils';
+export { resolveTimeViewsResponse } from './utils/date-time-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
@@ -136,17 +145,18 @@ export { extractValidationProps } from './utils/validation/extractValidationProp
 export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
+export { applyDefaultViewProps } from './utils/views';
 export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
-export { uncapitalizeObjectKeys } from './utils/slots-migration';
-export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {
   DayCalendarProps,
-  DayCalendarSlotsComponent,
-  DayCalendarSlotsComponentsProps,
+  DayCalendarSlots,
+  DayCalendarSlotProps,
   ExportedDayCalendarProps,
 } from '../DateCalendar/DayCalendar';
 
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
+
+export { isTimeView } from './utils/time-utils';

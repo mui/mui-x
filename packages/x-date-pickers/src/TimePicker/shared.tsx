@@ -2,10 +2,7 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
-import {
-  TimeClockSlotsComponent,
-  TimeClockSlotsComponentsProps,
-} from '../TimeClock/TimeClock.types';
+import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
@@ -18,19 +15,18 @@ import { TimeValidationError } from '../models';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
+export interface BaseTimePickerSlots<TDate> extends TimeClockSlots {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
 }
 
-export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsComponentsProps {
+export interface BaseTimePickerSlotProps extends TimeClockSlotProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
@@ -43,27 +39,15 @@ export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem>
    */
   ampmInClock?: boolean;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseTimePickerSlotsComponentsProps;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseTimePickerSlotsComponent<TDate>>;
+  slots?: BaseTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseTimePickerSlotsComponentsProps;
+  slotProps?: BaseTimePickerSlotProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -85,10 +69,7 @@ type UseTimePickerDefaultizedProps<
   Props extends BaseTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
   TDate,
-  Omit<
-    DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>,
-    'components' | 'componentsProps'
-  >
+  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
 >;
 
 export function useTimePickerDefaultizedProps<
@@ -115,8 +96,6 @@ export function useTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
-  const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ampm,
@@ -131,14 +110,14 @@ export function useTimePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     slots: {
       toolbar: TimePickerToolbar,
-      ...slots,
+      ...themeProps.slots,
     },
     slotProps: {
-      ...slotProps,
+      ...themeProps.slotProps,
       toolbar: {
         ampm,
         ampmInClock: themeProps.ampmInClock,
-        ...slotProps?.toolbar,
+        ...themeProps.slotProps?.toolbar,
       },
     },
   };

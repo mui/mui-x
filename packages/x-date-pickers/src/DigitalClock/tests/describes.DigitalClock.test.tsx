@@ -1,11 +1,16 @@
 import * as React from 'react';
-import { screen, describeConformance } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
-import { createPickerRenderer, adapterToUse, wrapPickerMount } from 'test/utils/pickers-utils';
-import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { expect } from 'chai';
-import { digitalClockHandler } from 'test/utils/pickers/viewHandlers';
+import { screen, describeConformance } from '@mui-internal/test-utils';
+import {
+  createPickerRenderer,
+  wrapPickerMount,
+  adapterToUse,
+  digitalClockHandler,
+  describeValidation,
+  describeValue,
+  formatFullTimeValue,
+} from 'test/utils/pickers';
+import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 
 describe('<DigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -45,21 +50,15 @@ describe('<DigitalClock /> - Describes', () => {
     defaultProps: {
       views: ['hours'],
     },
-    values: [
-      adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 17, 0)),
-    ],
+    values: [adapterToUse.date('2018-01-01T15:30:00'), adapterToUse.date('2018-01-01T17:00:00')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const selectedItem = screen.queryByRole('option', { selected: true });
       if (!expectedValue) {
         expect(selectedItem).to.equal(null);
       } else {
-        expect(selectedItem).to.have.text(
-          adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h'),
-        );
+        expect(selectedItem).to.have.text(formatFullTimeValue(adapterToUse, expectedValue));
       }
     },
     setNewValue: (value) => {

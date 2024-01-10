@@ -1,9 +1,0 @@
-{
-  "props": {},
-  "slots": [],
-  "name": "CartesianContextProvider",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiCartesianContextProvider" },
-  "filename": "/packages/x-charts/src/context/CartesianContextProvider.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "CartesianContextProvider" }]
-}

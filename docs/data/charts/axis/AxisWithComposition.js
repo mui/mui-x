@@ -1,13 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  ResponsiveChartContainer,
-  BarPlot,
-  LinePlot,
-  ChartsXAxis,
-  ChartsYAxis,
-  axisClasses,
-} from '@mui/x-charts';
+import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { LinePlot } from '@mui/x-charts/LineChart';
+import { BarPlot } from '@mui/x-charts/BarChart';
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 export default function AxisWithComposition() {
   return (
@@ -46,10 +44,10 @@ export default function AxisWithComposition() {
         margin={{ left: 70, right: 70 }}
         sx={{
           [`.${axisClasses.left} .${axisClasses.label}`]: {
-            transform: 'rotate(-90deg) translate(0px, -20px)',
+            transform: 'translate(-25px, 0)',
           },
           [`.${axisClasses.right} .${axisClasses.label}`]: {
-            transform: 'rotate(90deg) translate(0px, -25px)',
+            transform: 'translate(30px, 0)',
           },
         }}
       >
@@ -57,7 +55,7 @@ export default function AxisWithComposition() {
         <LinePlot />
         <ChartsXAxis axisId="quarters" label="2021 quarters" labelFontSize={18} />
         <ChartsYAxis axisId="quantities" label="# units sold" />
-        <ChartsYAxis axisId="money" position="right" label="revenu" />
+        <ChartsYAxis axisId="money" position="right" label="revenue" />
       </ResponsiveChartContainer>
     </Box>
   );

@@ -45,6 +45,14 @@ export interface GridRowEventLookup {
    */
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   /**
+   * @ignore - do not document.
+   */
+  rowMouseOut: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
+   * @ignore - do not document.
+   */
+  rowMouseOver: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
    * Fired when the user starts dragging a row. It's mapped to the `dragstart` DOM event.
    * @ignore - do not document.
    */
@@ -174,6 +182,14 @@ export interface GridColumnHeaderEventLookup {
   columnHeaderDragEnd: {
     params: GridColumnHeaderParams;
     event: React.DragEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a `dblclick` DOM event happens in the column header separator.
+   * @ignore - do not document.
+   */
+  columnSeparatorDoubleClick: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mousedown` DOM event happens in the column header separator.

@@ -30,6 +30,7 @@ import {
   mergeStateWithFilterModel,
   cleanFilterItem,
   passFilterLogic,
+  shouldQuickFilterExcludeHiddenColumns,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
@@ -89,6 +90,8 @@ export const useGridFilter = (
     | 'slots'
     | 'slotProps'
     | 'disableColumnFilter'
+    | 'disableEval'
+    | 'ignoreDiacritics'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -106,7 +109,7 @@ export const useGridFilter = (
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
         props.filterMode === 'client'
-          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef)
+          ? buildAggregatedFilterApplier(filterModel, apiRef, props.disableEval)
           : null;
 
       const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {
@@ -130,7 +133,7 @@ export const useGridFilter = (
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
-  }, [apiRef, props.filterMode, props.getRowId]);
+  }, [apiRef, props.filterMode, props.disableEval]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
@@ -328,6 +331,7 @@ export const useGridFilter = (
     showFilterPanel,
     hideFilterPanel,
     setQuickFilterValues,
+    ignoreDiacritics: props.ignoreDiacritics,
   };
 
   useGridApiMethod(apiRef, filterApi, 'public');
@@ -505,7 +509,7 @@ export const useGridFilter = (
   useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
   useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
     const filterModel = gridFilterModelSelector(apiRef);
-    if (filterModel.quickFilterValues && filterModel.quickFilterExcludeHiddenColumns) {
+    if (filterModel.quickFilterValues && shouldQuickFilterExcludeHiddenColumns(filterModel)) {
       // re-apply filters because the quick filter results may have changed
       apiRef.current.unstable_applyFilters();
     }

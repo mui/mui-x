@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { userEvent, screen } from '@mui/monorepo/test/utils';
+import { userEvent, screen } from '@mui-internal/test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import {
-  adapterToUse,
-  buildFieldInteractions,
-  createPickerRenderer,
-} from 'test/utils/pickers-utils';
+import { adapterToUse, buildFieldInteractions, createPickerRenderer } from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
@@ -24,7 +20,7 @@ describe('<DateTimeField /> - Editing', () => {
   describe('Reference value', () => {
     it('should use the referenceDate prop when defined', () => {
       const onChange = spy();
-      const referenceDate = adapterToUse.date(new Date(2012, 4, 3, 14, 30));
+      const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const { input, selectSection } = renderWithProps({
         onChange,
@@ -41,8 +37,8 @@ describe('<DateTimeField /> - Editing', () => {
 
     it('should not use the referenceDate prop when a value is defined', () => {
       const onChange = spy();
-      const value = adapterToUse.date(new Date(2018, 10, 3, 22, 15));
-      const referenceDate = adapterToUse.date(new Date(2012, 4, 3, 14, 30));
+      const value = adapterToUse.date('2018-11-03T22:15:00');
+      const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const { input, selectSection } = renderWithProps({
         onChange,
@@ -60,8 +56,8 @@ describe('<DateTimeField /> - Editing', () => {
 
     it('should not use the referenceDate prop when a defaultValue is defined', () => {
       const onChange = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 10, 3, 22, 15));
-      const referenceDate = adapterToUse.date(new Date(2012, 4, 3, 14, 30));
+      const defaultValue = adapterToUse.date('2018-11-03T22:15:00');
+      const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const { input, selectSection } = renderWithProps({
         onChange,
@@ -130,7 +126,7 @@ describe('<DateTimeField /> - Editing', () => {
     describe('Reference value based on validation props', () => {
       it("should create a reference date just after the `minDate` if it's after the current date", () => {
         const onChange = spy();
-        const minDate = adapterToUse.date(new Date(2030, 4, 5, 18, 30));
+        const minDate = adapterToUse.date('2030-05-05T18:30:00');
 
         const { input, selectSection } = renderWithProps({
           onChange,
@@ -147,7 +143,7 @@ describe('<DateTimeField /> - Editing', () => {
 
       it("should ignore the `minDate` if  it's before the current date", () => {
         const onChange = spy();
-        const minDate = adapterToUse.date(new Date(2007, 4, 5, 18, 30));
+        const minDate = adapterToUse.date('2007-05-05T18:30:00');
 
         const { input, selectSection } = renderWithProps({
           onChange,
@@ -164,7 +160,7 @@ describe('<DateTimeField /> - Editing', () => {
 
       it("should create a reference date just before the `maxDate` if it's before the current date", () => {
         const onChange = spy();
-        const maxDate = adapterToUse.date(new Date(2007, 4, 5, 18, 30));
+        const maxDate = adapterToUse.date('2007-05-05T18:30:00');
 
         const { input, selectSection } = renderWithProps({
           onChange,
@@ -181,7 +177,7 @@ describe('<DateTimeField /> - Editing', () => {
 
       it("should ignore the `maxDate` if  it's after the current date", () => {
         const onChange = spy();
-        const maxDate = adapterToUse.date(new Date(2030, 4, 5, 18, 30));
+        const maxDate = adapterToUse.date('2030-05-05T18:30:00');
 
         const { input, selectSection } = renderWithProps({
           onChange,
@@ -204,7 +200,7 @@ describe('<DateTimeField /> - Editing', () => {
 
     setProps({
       format: 'Pp',
-      value: adapterToUse.date(new Date(2012, 4, 3, 14, 30)),
+      value: adapterToUse.date('2012-05-03T14:30:00'),
     });
     expect(screen.getByRole<HTMLInputElement>('textbox').value).to.equal('05/03/2012, 02:30 PM');
   });

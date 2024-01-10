@@ -56,7 +56,16 @@ type LocalizationProviderComponent = (<TDate, TLocale>(
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
- * @ignore - do not document.
+ * Demos:
+ *
+ * - [Date format and localization](https://mui.com/x/react-date-pickers/adapters-locale/)
+ * - [Calendar systems](https://mui.com/x/react-date-pickers/calendar-systems/)
+ * - [Translated components](https://mui.com/x/react-date-pickers/localization/)
+ * - [UTC and timezones](https://mui.com/x/react-date-pickers/timezone/)
+ *
+ * API:
+ *
+ * - [LocalizationProvider API](https://mui.com/x/api/date-pickers/localization-provider/)
  */
 export const LocalizationProvider = function LocalizationProvider<TDate, TLocale>(
   inProps: LocalizationProviderProps<TDate, TLocale>,
@@ -164,10 +173,6 @@ LocalizationProvider.propTypes = {
   dateFormats: PropTypes.shape({
     dayOfMonth: PropTypes.string,
     fullDate: PropTypes.string,
-    fullDateTime: PropTypes.string,
-    fullDateTime12h: PropTypes.string,
-    fullDateTime24h: PropTypes.string,
-    fullDateWithWeekday: PropTypes.string,
     fullTime: PropTypes.string,
     fullTime12h: PropTypes.string,
     fullTime24h: PropTypes.string,
@@ -180,8 +185,6 @@ LocalizationProvider.propTypes = {
     meridiem: PropTypes.string,
     minutes: PropTypes.string,
     month: PropTypes.string,
-    monthAndDate: PropTypes.string,
-    monthAndYear: PropTypes.string,
     monthShort: PropTypes.string,
     normalDate: PropTypes.string,
     normalDateWithWeekday: PropTypes.string,

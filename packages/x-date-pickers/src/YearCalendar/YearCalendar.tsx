@@ -18,6 +18,7 @@ import { YearCalendarProps } from './YearCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -34,7 +35,7 @@ function useYearCalendarDefaultizedProps<TDate>(
   name: string,
 ): DefaultizedProps<
   YearCalendarProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'yearsPerRow'
 > {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -47,6 +48,7 @@ function useYearCalendarDefaultizedProps<TDate>(
     disablePast: false,
     disableFuture: false,
     ...themeProps,
+    yearsPerRow: themeProps.yearsPerRow ?? 3,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -63,14 +65,26 @@ const YearCalendarRoot = styled('div', {
   overflowY: 'auto',
   height: '100%',
   padding: '0 4px',
-  width: 320,
-  maxHeight: 304,
+  width: DIALOG_WIDTH,
+  maxHeight: MAX_CALENDAR_HEIGHT,
+  // avoid padding increasing width over defined
+  boxSizing: 'border-box',
+  position: 'relative',
 });
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.JSX.Element) & {
   propTypes?: any;
 };
 
+/**
+ * Demos:
+ *
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
+ *
+ * API:
+ *
+ * - [YearCalendar API](https://mui.com/x/api/date-pickers/year-calendar/)
+ */
 export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   inProps: YearCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -94,8 +108,9 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
-    yearsPerRow = 3,
+    yearsPerRow,
     timezone: timezoneProp,
+    gridLabelId,
     ...other
   } = props;
 
@@ -133,15 +148,12 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     if (value != null) {
       return utils.getYear(value);
     }
+    return null;
+  }, [value, utils]);
 
-    if (disableHighlightToday) {
-      return null;
-    }
-
-    return utils.getYear(referenceDate);
-  }, [value, utils, disableHighlightToday, referenceDate]);
-
-  const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
+  const [focusedYear, setFocusedYear] = React.useState(
+    () => selectedYear || utils.getYear(referenceDate),
+  );
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'YearCalendar',
@@ -272,9 +284,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
       ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      role="radiogroup"
+      aria-labelledby={gridLabelId}
       {...other}
     >
-      {utils.getYearRange(minDate, maxDate).map((year) => {
+      {utils.getYearRange([minDate, maxDate]).map((year) => {
         const yearNumber = utils.getYear(year);
         const isSelected = yearNumber === selectedYear;
         const isDisabled = disabled || isYearDisabled(year);
@@ -340,6 +354,7 @@ YearCalendar.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  gridLabelId: PropTypes.string,
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
@@ -385,7 +400,7 @@ YearCalendar.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

@@ -8,8 +8,8 @@ export const GRID_DETAIL_PANEL_TOGGLE_FIELD = '__detail_panel_toggle__';
 
 export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   ...GRID_STRING_COL_DEF,
+  type: 'custom',
   field: GRID_DETAIL_PANEL_TOGGLE_FIELD,
-  type: 'detailPanelToggle',
   editable: false,
   sortable: false,
   filterable: false,

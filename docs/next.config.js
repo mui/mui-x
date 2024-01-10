@@ -1,11 +1,15 @@
+// @ts-check
 const path = require('path');
+// @ts-ignore
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const withTM = require('next-transpile-modules')(['@mui/monorepo']);
+// @ts-expect-error This expected error should be gone once we update the monorepo
 const withDocsInfra = require('@mui/monorepo/docs/nextConfigDocsInfra');
 const pkg = require('../package.json');
 const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
 const datePickersPkg = require('../packages/x-date-pickers/package.json');
 const chartsPkg = require('../packages/x-charts/package.json');
+const treeViewPkg = require('../packages/x-tree-view/package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./config');
 
@@ -15,18 +19,18 @@ module.exports = withDocsInfra({
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
-    ENABLE_AD: process.env.ENABLE_AD,
+    // docs-infra
     LIB_VERSION: pkg.version,
+    SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
+    SOURCE_GITHUB_BRANCH: 'next', // #default-branch-switch
+    GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
+    // MUI X related
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
-    FEEDBACK_URL: process.env.FEEDBACK_URL,
-    CONTEXT: process.env.CONTEXT,
-    // #default-branch-switch
-    SOURCE_GITHUB_BRANCH: 'master',
-    SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
-    GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
+    TREE_VIEW_VERSION: treeViewPkg.version,
   },
+  // @ts-ignore
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
 
@@ -103,15 +107,18 @@ module.exports = withDocsInfra({
       },
     };
   },
+  distDir: 'export',
   // Next.js provides a `defaultPathMap` argument, we could simplify the logic.
   // However, we don't in order to prevent any regression in the `findPages()` method.
   exportPathMap: () => {
     const pages = findPages();
     const map = {};
 
+    // @ts-ignore
     function traverse(pages2, userLanguage) {
       const prefix = userLanguage === 'en' ? '' : `/${userLanguage}`;
 
+      // @ts-ignore
       pages2.forEach((page) => {
         // The experiments pages are only meant for experiments, they shouldn't leak to production.
         if (page.pathname.includes('/experiments/') && process.env.DEPLOY_ENV === 'production') {
@@ -119,6 +126,7 @@ module.exports = withDocsInfra({
         }
 
         if (!page.children) {
+          // @ts-ignore
           map[`${prefix}${page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')}`] = {
             page: page.pathname,
             query: {
@@ -147,18 +155,25 @@ module.exports = withDocsInfra({
 
     return map;
   },
-  rewrites: async () => {
-    return [
-      { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
-      { source: '/api/:rest*', destination: '/api-docs/:rest*' },
-    ];
-  },
-  // redirects only take effect in the development, not production (because of `next export`).
-  redirects: async () => [
-    {
-      source: '/',
-      destination: '/x/introduction/',
-      permanent: false,
-    },
-  ],
+  // Used to signal we run yarn build
+  ...(process.env.NODE_ENV === 'production'
+    ? {
+        output: 'export',
+      }
+    : {
+        rewrites: async () => {
+          return [
+            { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
+            { source: '/api/:rest*', destination: '/api-docs/:rest*' },
+          ];
+        },
+        // redirects only take effect in the development, not production (because of `next export`).
+        redirects: async () => [
+          {
+            source: '/',
+            destination: '/x/introduction/',
+            permanent: false,
+          },
+        ],
+      }),
 });

@@ -6,9 +6,9 @@ githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Date Time Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Date Time Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The Date Time Range Field let the user select a range of dates with an explicit starting and ending time with the keyboard.</p>
+<p class="description">The Date Time Range Field lets the user select a range of dates with an explicit starting and ending time with the keyboard.</p>
 
 ## Basic usage
 

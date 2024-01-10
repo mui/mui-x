@@ -1,10 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { useLocaleText, useUtils, validateDate } from '../internals';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { CalendarIcon } from '../icons';
@@ -18,6 +20,16 @@ type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [DesktopDatePicker API](https://mui.com/x/api/date-pickers/desktop-date-picker/)
+ */
 const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
   inProps: DesktopDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -97,28 +109,12 @@ DesktopDatePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (day) => day.charAt(0).toUpperCase()
+   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
-  /**
-   * Default calendar month displayed when `value` and `defaultValue` are empty.
-   */
-  defaultCalendarMonth: PropTypes.any,
   /**
    * The default value.
    * Used when the component is not controlled.
@@ -154,8 +150,8 @@ DesktopDatePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
@@ -173,12 +169,7 @@ DesktopDatePicker.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */
@@ -207,6 +198,10 @@ DesktopDatePicker.propTypes = {
    * @default 3
    */
   monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -281,10 +276,15 @@ DesktopDatePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -304,6 +304,7 @@ DesktopDatePicker.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -320,6 +321,9 @@ DesktopDatePicker.propTypes = {
   ]),
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.
@@ -372,7 +376,7 @@ DesktopDatePicker.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

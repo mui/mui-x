@@ -13,6 +13,16 @@ type StaticTimePickerComponent = (<TDate>(
   props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [StaticTimePicker API](https://mui.com/x/api/date-pickers/static-time-picker/)
+ */
 const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
   inProps: StaticTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -86,18 +96,6 @@ StaticTimePicker.propTypes = {
    * Class name applied to the root element.
    */
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * The default value.
    * Used when the component is not controlled.
@@ -196,13 +194,15 @@ StaticTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
-  shouldDisableClock: PropTypes.func,
+  reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Disable specific time.
    * @template TDate
@@ -233,7 +233,7 @@ StaticTimePicker.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

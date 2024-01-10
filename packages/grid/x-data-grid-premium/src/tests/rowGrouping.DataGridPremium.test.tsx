@@ -6,13 +6,14 @@ import {
   act,
   userEvent,
   waitFor,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import {
   microtasks,
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
   getCell,
+  getSelectByName,
 } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -69,7 +70,7 @@ const baselineProps: DataGridPremiumProps = {
   ],
 };
 
-describe('<DataGridPremium /> - Row Grouping', () => {
+describe('<DataGridPremium /> - Row grouping', () => {
   const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -2121,7 +2122,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
+        fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2147,7 +2148,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
+        fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2375,7 +2376,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
+        fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2402,7 +2403,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
+        fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {

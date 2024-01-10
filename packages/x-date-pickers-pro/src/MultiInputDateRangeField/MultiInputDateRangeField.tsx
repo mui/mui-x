@@ -1,18 +1,43 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import Stack, { StackProps } from '@mui/material/Stack';
 import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import {
+  unstable_composeClasses as composeClasses,
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
+import {
   splitFieldInternalAndForwardedProps,
   FieldsTextFieldProps,
-  uncapitalizeObjectKeys,
+  convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
 import { UseDateRangeFieldProps } from '../internals/models/dateRange';
+import { MultiInputRangeFieldClasses } from '../models';
+
+export const multiInputDateRangeFieldClasses: MultiInputRangeFieldClasses = generateUtilityClasses(
+  'MuiMultiInputDateRangeField',
+  ['root', 'separator'],
+);
+
+export const getMultiInputDateRangeFieldUtilityClass = (slot: string) =>
+  generateUtilityClass('MuiMultiInputDateRangeField', slot);
+
+const useUtilityClasses = (ownerState: MultiInputDateRangeFieldProps<any>) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    separator: ['separator'],
+  };
+
+  return composeClasses(slots, getMultiInputDateRangeFieldUtilityClass, classes);
+};
 
 const MultiInputDateRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
@@ -35,12 +60,22 @@ const MultiInputDateRangeFieldSeparator = styled(
 )({});
 
 type MultiInputDateRangeFieldComponent = (<TDate>(
-  props: MultiInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+  props: MultiInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateRangeField](http://mui.com/x/react-date-pickers/date-range-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ *
+ * - [MultiInputDateRangeField API](https://mui.com/x/api/multi-input-date-range-field/)
+ */
 const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<TDate>(
   inProps: MultiInputDateRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,
@@ -50,25 +85,25 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const { internalProps: dateFieldInternalProps, forwardedProps } =
     splitFieldInternalAndForwardedProps<
       typeof themeProps,
-      keyof Omit<UseDateRangeFieldProps<any>, 'unstableFieldRef' | 'disabled'>
+      keyof Omit<
+        UseDateRangeFieldProps<any>,
+        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
+      >
     >(themeProps, 'date');
 
   const {
-    slots: innerSlots,
-    slotProps: innerSlotProps,
-    components,
-    componentsProps,
+    slots,
+    slotProps,
     disabled,
     autoFocus,
     unstableStartFieldRef,
     unstableEndFieldRef,
+    className,
     ...otherForwardedProps
   } = forwardedProps;
 
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
-
   const ownerState = themeProps;
+  const classes = useUtilityClasses(ownerState);
 
   const Root = slots?.root ?? MultiInputDateRangeFieldRoot;
   const rootProps = useSlotProps({
@@ -79,6 +114,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       ref,
     },
     ownerState,
+    className: clsx(className, classes.root),
   });
 
   const TextField = slots?.textField ?? MuiTextField;
@@ -97,67 +133,27 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const Separator = slots?.separator ?? MultiInputDateRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
-    externalSlotProps: slotProps?.separator ?? componentsProps?.separator,
+    externalSlotProps: slotProps?.separator,
     ownerState,
+    className: classes.separator,
   });
 
-  const {
-    startDate: {
-      onKeyDown: onStartInputKeyDown,
-      ref: startInputRef,
-      readOnly: startReadOnly,
-      inputMode: startInputMode,
-      ...startDateProps
-    },
-    endDate: {
-      onKeyDown: onEndInputKeyDown,
-      ref: endInputRef,
-      readOnly: endReadOnly,
-      inputMode: endInputMode,
-      ...endDateProps
-    },
-  } = useMultiInputDateRangeField<TDate, FieldsTextFieldProps>({
+  const fieldResponse = useMultiInputDateRangeField<TDate, FieldsTextFieldProps>({
     sharedProps: { ...dateFieldInternalProps, disabled },
     startTextFieldProps,
     endTextFieldProps,
     unstableStartFieldRef,
     unstableEndFieldRef,
-    startInputRef: startTextFieldProps.inputRef,
-    endInputRef: endTextFieldProps.inputRef,
   });
+
+  const startDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.startDate);
+  const endDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.endDate);
 
   return (
     <Root {...rootProps}>
-      <TextField
-        fullWidth
-        {...startDateProps}
-        InputProps={{
-          ...startDateProps.InputProps,
-          readOnly: startReadOnly,
-        }}
-        inputProps={{
-          ...startDateProps.inputProps,
-          ref: startInputRef,
-          inputMode: startInputMode,
-          onKeyDown: onStartInputKeyDown,
-        }}
-      />
+      <TextField fullWidth {...startDateProps} />
       <Separator {...separatorProps} />
-      <TextField
-        fullWidth
-        {...endDateProps}
-        InputProps={{
-          ...endDateProps.InputProps,
-          readOnly: endReadOnly,
-        }}
-        inputProps={{
-          ...endDateProps.inputProps,
-          ref: endInputRef,
-          readOnly: endReadOnly,
-          inputMode: endInputMode,
-          onKeyDown: onEndInputKeyDown,
-        }}
-      />
+      <TextField fullWidth {...endDateProps} />
     </Root>
   );
 }) as MultiInputDateRangeFieldComponent;
@@ -168,19 +164,12 @@ MultiInputDateRangeField.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   autoFocus: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
+  component: PropTypes.elementType,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -278,6 +267,7 @@ MultiInputDateRangeField.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -294,6 +284,9 @@ MultiInputDateRangeField.propTypes = {
   ]),
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
@@ -348,7 +341,7 @@ MultiInputDateRangeField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,

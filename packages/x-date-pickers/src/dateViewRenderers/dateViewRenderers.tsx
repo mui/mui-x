@@ -23,6 +23,7 @@ export const renderDateViewCalendar = <TDate extends unknown>({
   onFocusedViewChange,
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -38,9 +39,6 @@ export const renderDateViewCalendar = <TDate extends unknown>({
   monthsPerRow,
   onYearChange,
   yearsPerRow,
-  defaultCalendarMonth,
-  components,
-  componentsProps,
   slots,
   slotProps,
   loading,
@@ -64,6 +62,7 @@ export const renderDateViewCalendar = <TDate extends unknown>({
     onFocusedViewChange={onFocusedViewChange}
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}
@@ -79,9 +78,6 @@ export const renderDateViewCalendar = <TDate extends unknown>({
     monthsPerRow={monthsPerRow}
     onYearChange={onYearChange}
     yearsPerRow={yearsPerRow}
-    defaultCalendarMonth={defaultCalendarMonth}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     loading={loading}

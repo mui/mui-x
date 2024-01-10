@@ -5,8 +5,11 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { InferError, useValidation } from '../useValidation';
-import { FieldSection, FieldSelectedSections } from '../../../models';
-import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
+import { FieldSection, FieldSelectedSections, PickerChangeHandlerContext } from '../../../models';
+import {
+  PickerShortcutChangeImportance,
+  PickersShortcutsItemContext,
+} from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -19,7 +22,6 @@ import {
   UsePickerValueActions,
   PickerSelectionState,
   PickerValueUpdaterParams,
-  PickerChangeHandlerContext,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 
@@ -62,7 +64,7 @@ const shouldPublishValue = <TValue, TError>(
     return hasChanged(dateState.lastPublishedValue);
   }
 
-  if (action.name === 'setValueFromShortcut' && action.changeImportance === 'accept') {
+  if (action.name === 'setValueFromShortcut') {
     // On the first view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
     if (isCurrentValueTheDefaultValue) {
@@ -288,6 +290,10 @@ export const usePickerValue = <
         validationError,
       };
 
+      if (action.name === 'setValueFromShortcut') {
+        context.shortcut = action.shortcut;
+      }
+
       handleValueChange(action.value, context);
     }
 
@@ -371,11 +377,16 @@ export const usePickerValue = <
   );
 
   const handleSelectShortcut = useEventCallback(
-    (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) =>
+    (
+      newValue: TValue,
+      changeImportance: PickerShortcutChangeImportance,
+      shortcut: PickersShortcutsItemContext,
+    ) =>
       updateDate({
         name: 'setValueFromShortcut',
         value: newValue,
-        changeImportance: changeImportance ?? 'accept',
+        changeImportance,
+        shortcut,
       }),
   );
 

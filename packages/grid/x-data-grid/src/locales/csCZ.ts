@@ -174,8 +174,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'více',
 
   // Column pinning text
-  pinToLeft: 'Připnout na levo',
-  pinToRight: 'Připnout na pravo',
+  pinToLeft: 'Připnout vlevo',
+  pinToRight: 'Připnout vpravo',
   unpin: 'Odepnout',
 
   // Tree Data
@@ -185,8 +185,8 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Skupina',
-  groupColumn: (name) => `Zeskupit podle ${name}`,
-  unGroupColumn: (name) => `Přestat zeskupovat podle ${name}`,
+  groupColumn: (name) => `Seskupit podle ${name}`,
+  unGroupColumn: (name) => `Přestat seskupovat podle ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Přepnout detail panelu',

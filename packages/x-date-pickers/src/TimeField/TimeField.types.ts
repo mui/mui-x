@@ -4,14 +4,9 @@ import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { FieldSection, TimeValidationError } from '../models';
-
-export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
-  props: UseTimeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
 
 export interface UseTimeFieldProps<TDate>
   extends MakeOptional<
@@ -41,40 +36,28 @@ export type UseTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
 export interface TimeFieldProps<TDate>
   extends UseTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: TimeFieldSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: TimeFieldSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TimeFieldSlotsComponent>;
+  slots?: TimeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimeFieldSlotsComponentsProps<TDate>;
+  slotProps?: TimeFieldSlotProps<TDate>;
 }
 
 export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;
 
-export interface TimeFieldSlotsComponent {
+export interface TimeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
-  TextField?: React.ElementType;
+  textField?: React.ElementType;
 }
 
-export interface TimeFieldSlotsComponentsProps<TDate> {
+export interface TimeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate>>;
 }

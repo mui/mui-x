@@ -1,0 +1,90 @@
+{
+  "componentDescription": "This component has been deprecated in favor of the new `SimpleTreeView` component.\nYou can have a look at how to migrate to the new component in the v7 [migration guide](https://next.mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)",
+  "propDescriptions": {
+    "children": { "description": "The content of the component." },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "className": { "description": "className applied to the root element." },
+    "defaultCollapseIcon": { "description": "The default icon used to collapse the node." },
+    "defaultEndIcon": {
+      "description": "The default icon displayed next to a end node. This is applied to all tree nodes and can be overridden by the TreeItem <code>icon</code> prop."
+    },
+    "defaultExpandedNodes": {
+      "description": "Expanded node ids. Used when the item&#39;s expansion is not controlled."
+    },
+    "defaultExpandIcon": { "description": "The default icon used to expand the node." },
+    "defaultParentIcon": {
+      "description": "The default icon displayed next to a parent node. This is applied to all parent nodes and can be overridden by the TreeItem <code>icon</code> prop."
+    },
+    "defaultSelectedNodes": {
+      "description": "Selected node ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    },
+    "disabledItemsFocusable": {
+      "description": "If <code>true</code>, will allow focus on disabled items."
+    },
+    "disableSelection": { "description": "If <code>true</code> selection is disabled." },
+    "expandedNodes": {
+      "description": "Expanded node ids. Used when the item&#39;s expansion is controlled."
+    },
+    "getItemId": {
+      "description": "Used to determine the string label for a given item.",
+      "typeDescriptions": { "item": "The item to check.", "string": "The id of the item." }
+    },
+    "getItemLabel": {
+      "description": "Used to determine the string label for a given item.",
+      "typeDescriptions": { "item": "The item to check.", "string": "The label of the item." }
+    },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "multiSelect": {
+      "description": "If true <code>ctrl</code> and <code>shift</code> will trigger multiselect."
+    },
+    "onExpandedNodesChange": {
+      "description": "Callback fired when tree items are expanded/collapsed.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "nodeIds": "The ids of the expanded nodes."
+      }
+    },
+    "onNodeExpansionToggle": {
+      "description": "Callback fired when a tree item is expanded or collapsed.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "nodeId": "The nodeId of the modified node.",
+        "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
+      }
+    },
+    "onNodeFocus": {
+      "description": "Callback fired when tree items are focused.",
+      "typeDescriptions": {
+        "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
+        "nodeId": "The id of the node focused.",
+        "value": "of the focused node."
+      }
+    },
+    "onNodeSelectionToggle": {
+      "description": "Callback fired when a tree item is selected or deselected.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "nodeId": "The nodeId of the modified node.",
+        "isSelected": "<code>true</code> if the node has just been selected, <code>false</code> if it has just been deselected."
+      }
+    },
+    "onSelectedNodesChange": {
+      "description": "Callback fired when tree items are selected/deselected.",
+      "typeDescriptions": {
+        "event": "The event source of the callback",
+        "nodeIds": "The ids of the selected nodes. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
+      }
+    },
+    "selectedNodes": {
+      "description": "Selected node ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+}
