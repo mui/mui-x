@@ -19,3 +19,10 @@ export const useTreeViewContextValueBuilder: TreeViewPlugin<
     },
   };
 };
+
+useTreeViewContextValueBuilder.params = {
+  defaultCollapseIcon: true,
+  defaultEndIcon: true,
+  defaultExpandIcon: true,
+  defaultParentIcon: true,
+};

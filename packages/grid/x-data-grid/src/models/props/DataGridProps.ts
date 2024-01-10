@@ -190,7 +190,6 @@ export interface DataGridPropsWithDefaultValues {
   /**
    * If `true`, `eval()` is not used for performance optimization.
    * @default false
-   * @ignore - do not document
    */
   disableEval: boolean;
   /**
@@ -710,7 +709,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   'aria-labelledby'?: string;
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
   columns: readonly GridColDef<R>[];
   /**

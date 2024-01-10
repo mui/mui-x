@@ -99,7 +99,11 @@
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -109,7 +113,11 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "unstableFieldRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
@@ -123,39 +131,25 @@
       "default": "'outlined'"
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "clearButton",
-      "description": "Button to clear the value.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "clearIcon",
-      "description": "Icon to display inside the clear button.",
-      "default": "ClearIcon"
-    },
-    {
-      "class": null,
-      "name": "textField",
-      "description": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>.",
-      "default": "TextField from '@mui/material'"
-    }
-  ],
   "name": "SingleInputDateTimeRangeField",
   "imports": [
     "import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';",
     "import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root"],
-    "globalClasses": {},
-    "name": "MuiSingleInputDateTimeRangeField"
-  },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiSingleInputDateTimeRangeField-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
+  "themeDefaultProps": false,
+  "muiName": "MuiSingleInputDateTimeRangeField",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/SingleInputDateTimeRangeField/SingleInputDateTimeRangeField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
+  "cssComponent": false
 }

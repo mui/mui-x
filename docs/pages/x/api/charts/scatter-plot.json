@@ -1,15 +1,22 @@
 {
   "props": {
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
   },
-  "slots": [{ "class": null, "name": "scatter", "description": "" }],
   "name": "ScatterPlot",
   "imports": [
     "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
     "import { ScatterPlot } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatterPlot" },
+  "slots": [{ "name": "scatter", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiScatterPlot",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterPlot.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demonstration</a></li></ul>",
+  "cssComponent": false
 }

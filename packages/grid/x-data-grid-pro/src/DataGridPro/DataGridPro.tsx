@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
-import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
   GridFooterPlaceholder,
@@ -10,10 +9,12 @@ import {
   GridContextProvider,
   GridValidRowModel,
 } from '@mui/x-data-grid';
+import { validateProps } from '@mui/x-data-grid/internals';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
+import { propValidatorsDataGridPro } from '../internals/propValidation';
 
 const releaseInfo = getReleaseInfo();
 
@@ -25,6 +26,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
+  validateProps(props, propValidatorsDataGridPro);
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
@@ -118,14 +120,7 @@ DataGridProRaw.propTypes = {
    * It only works if the pagination is enabled.
    * @default false
    */
-  checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (!props.pagination && props.checkboxSelectionVisibleOnly) {
-      return new Error(
-        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
-      );
-    }
-    return null;
-  }),
+  checkboxSelectionVisibleOnly: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -147,7 +142,7 @@ DataGridProRaw.propTypes = {
    */
   columnHeaderHeight: PropTypes.number,
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -230,7 +225,6 @@ DataGridProRaw.propTypes = {
   /**
    * If `true`, `eval()` is not used for performance optimization.
    * @default false
-   * @ignore - do not document
    */
   disableEval: PropTypes.bool,
   /**
@@ -284,14 +278,7 @@ DataGridProRaw.propTypes = {
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
    */
-  filterMode: chainPropTypes(PropTypes.oneOf(['client', 'server']), (props: any) => {
-    if (props.treeData && props.filterMode === 'server') {
-      return new Error(
-        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
-      );
-    }
-    return null;
-  }),
+  filterMode: PropTypes.oneOf(['client', 'server']),
   /**
    * Set the filter model of the Data Grid.
    */
@@ -396,14 +383,7 @@ DataGridProRaw.propTypes = {
    * It has no effect if the pagination is enabled.
    * @default false
    */
-  hideFooterRowCount: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (props.pagination && props.hideFooterRowCount) {
-      return new Error(
-        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
-      );
-    }
-    return null;
-  }),
+  hideFooterRowCount: PropTypes.bool,
   /**
    * If `true`, the selected row count in the footer is hidden.
    * @default false

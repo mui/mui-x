@@ -1,22 +1,22 @@
 {
   "props": {
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
-  },
-  "slots": [
-    {
-      "class": null,
-      "name": "area",
-      "description": "The component that renders the root.",
-      "default": "AreaElementPath"
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
     }
-  ],
+  },
   "name": "AreaPlot",
   "imports": [
     "import { AreaPlot } from '@mui/x-charts/LineChart';",
     "import { AreaPlot } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiAreaPlot" },
+  "slots": [{ "name": "area", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiAreaPlot",
   "filename": "/packages/x-charts/src/LineChart/AreaPlot.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
 }

@@ -4,7 +4,7 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import { DateTimeFieldProps } from './DateTimeField.types';
+import { DateTimeFieldProps, DateTimeFieldSlotProps } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
 import { useClearableField } from '../hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
@@ -37,7 +37,12 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? MuiTextField;
-  const textFieldProps: DateTimeFieldProps<TDate> = useSlotProps({
+  const textFieldProps: DateTimeFieldProps<TDate> = useSlotProps<
+    typeof TextField,
+    DateTimeFieldSlotProps<TDate>['textField'],
+    DateTimeFieldProps<TDate>,
+    DateTimeFieldProps<TDate>
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,

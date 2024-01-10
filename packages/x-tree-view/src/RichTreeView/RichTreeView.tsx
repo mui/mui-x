@@ -10,6 +10,7 @@ import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
 import { buildWarning } from '../internals/utils/warning';
+import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   ownerState: RichTreeViewProps<R, Multiple>,
@@ -80,64 +81,22 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 >(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id: treeId,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    items,
-    getItemId,
-    getItemLabel,
-    isItemDisabled,
-    // Component implementation
-    slots,
-    slotProps,
-    ...other
-  } = props as RichTreeViewProps<any, any>;
-
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
       childrenWarning();
     }
   }
 
-  const { getRootProps, contextValue, instance } = useTreeView({
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id: treeId,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    items,
-    getItemId,
-    getItemLabel,
-    isItemDisabled,
+  const {
+    pluginParams,
+    otherProps: { slots, slotProps, ...otherProps },
+  } = extractPluginParamsFromProps({
+    props,
     plugins: DEFAULT_TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
+
+  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
 
   const classes = useUtilityClasses(props);
 
@@ -145,7 +104,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
-    externalForwardedProps: other,
+    externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
     ownerState: props as RichTreeViewProps<any, any>,
@@ -222,10 +181,7 @@ RichTreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelected: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string,
-  ]),
+  defaultSelectedNodes: PropTypes.any,
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -298,17 +254,24 @@ RichTreeView.propTypes = {
    */
   onNodeFocus: PropTypes.func,
   /**
-   * Callback fired when tree items are selected/unselected.
-   * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
-   * this is an array of strings; when false (default) a string.
+   * Callback fired when a tree item is selected or deselected.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} nodeId The nodeId of the modified node.
+   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
    */
-  onNodeSelect: PropTypes.func,
+  onNodeSelectionToggle: PropTypes.func,
+  /**
+   * Callback fired when tree items are selected/deselected.
+   * @param {React.SyntheticEvent} event The event source of the callback
+   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
+   */
+  onSelectedNodesChange: PropTypes.func,
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selected: PropTypes.any,
+  selectedNodes: PropTypes.any,
   /**
    * The props used for each component slot.
    * @default {}

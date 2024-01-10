@@ -9,6 +9,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { SIMPLE_TREE_VIEW_PLUGINS } from './SimpleTreeView.plugins';
 import { buildWarning } from '../internals/utils/warning';
+import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: SimpleTreeViewProps<Multiple>,
@@ -61,58 +62,22 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
   const ownerState = props as SimpleTreeViewProps<any>;
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    // Component implementation
-    children,
-    slots,
-    slotProps,
-    ...other
-  } = props as SimpleTreeViewProps<any>;
-
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
       itemsPropWarning();
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView({
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    items: EMPTY_ITEMS,
+  const {
+    pluginParams,
+    otherProps: { slots, slotProps, ...otherProps },
+  } = extractPluginParamsFromProps({
+    props: { ...props, items: EMPTY_ITEMS },
     plugins: SIMPLE_TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
+
+  const { getRootProps, contextValue } = useTreeView(pluginParams);
 
   const classes = useUtilityClasses(props);
 
@@ -120,7 +85,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: {},
-    externalForwardedProps: other,
+    externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
     ownerState,
@@ -128,7 +93,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
 
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{children}</Root>
+      <Root {...rootProps} />
     </TreeViewProvider>
   );
 }) as SimpleTreeViewComponent;
@@ -179,10 +144,7 @@ SimpleTreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelected: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string,
-  ]),
+  defaultSelectedNodes: PropTypes.any,
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -247,17 +209,24 @@ SimpleTreeView.propTypes = {
    */
   onNodeFocus: PropTypes.func,
   /**
-   * Callback fired when tree items are selected/unselected.
-   * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
-   * this is an array of strings; when false (default) a string.
+   * Callback fired when a tree item is selected or deselected.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} nodeId The nodeId of the modified node.
+   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
    */
-  onNodeSelect: PropTypes.func,
+  onNodeSelectionToggle: PropTypes.func,
+  /**
+   * Callback fired when tree items are selected/deselected.
+   * @param {React.SyntheticEvent} event The event source of the callback
+   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
+   */
+  onSelectedNodesChange: PropTypes.func,
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selected: PropTypes.any,
+  selectedNodes: PropTypes.any,
   /**
    * The props used for each component slot.
    */

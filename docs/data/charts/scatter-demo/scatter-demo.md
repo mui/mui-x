@@ -1,5 +1,6 @@
 ---
 title: Charts - Scatter demonstration
+components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler
 ---
 
 # Charts - Scatter demonstration

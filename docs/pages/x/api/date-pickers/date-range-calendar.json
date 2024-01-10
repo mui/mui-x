@@ -81,7 +81,11 @@
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -91,73 +95,95 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "calendarHeader",
-      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
-      "default": "PickersCalendarHeader"
-    },
-    {
-      "class": null,
-      "name": "day",
-      "description": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
-      "default": "DateRangePickersDay"
-    },
-    {
-      "class": null,
-      "name": "leftArrowIcon",
-      "description": "Icon displayed in the left view switch button.",
-      "default": "ArrowLeft"
-    },
-    {
-      "class": null,
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "rightArrowIcon",
-      "description": "Icon displayed in the right view switch button.",
-      "default": "ArrowRight"
-    },
-    {
-      "class": null,
-      "name": "switchViewButton",
-      "description": "Button displayed to switch between different calendar views.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-      "default": "ArrowDropDown"
-    }
-  ],
   "name": "DateRangeCalendar",
   "imports": [
     "import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';",
     "import { DateRangeCalendar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "monthContainer", "dayDragging"],
-    "globalClasses": {},
-    "name": "MuiDateRangeCalendar"
-  },
+  "slots": [
+    {
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
+      "default": "PickersCalendarHeader",
+      "class": null
+    },
+    {
+      "name": "day",
+      "description": "Custom component for day in range pickers.\nCheck the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
+      "default": "DateRangePickersDay",
+      "class": null
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft",
+      "class": null
+    },
+    {
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight",
+      "class": null
+    },
+    {
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+      "default": "ArrowDropDown",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "dayDragging",
+      "className": "MuiDateRangeCalendar-dayDragging",
+      "description": "Styles applied to the day calendar container when dragging",
+      "isGlobal": false
+    },
+    {
+      "key": "monthContainer",
+      "className": "MuiDateRangeCalendar-monthContainer",
+      "description": "Styles applied to the container of a month.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDateRangeCalendar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiDateRangeCalendar",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <span class=\"plan-pro\"></span></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
+  "cssComponent": false
 }
