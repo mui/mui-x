@@ -92,7 +92,7 @@ function MarkPlot(props: MarkPlotProps) {
                 xAxisKey === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisKey}"`
-              } should have data property to be able to display a line plot`,
+              } should have data property to be able to display a line plot.`,
             );
           }
 

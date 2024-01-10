@@ -102,7 +102,7 @@ const useCompletedData = (): CompletedBarData[] => {
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
-            } shoud be of type "band" to display the bar series of id "${seriesId}"`,
+            } shoud be of type "band" to display the bar series of id "${seriesId}".`,
           );
         }
         if (xAxis[xAxisKey].data === undefined) {
@@ -111,7 +111,7 @@ const useCompletedData = (): CompletedBarData[] => {
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
-            } shoud have data property`,
+            } shoud have data property.`,
           );
         }
         baseScaleConfig = xAxisConfig;
@@ -122,7 +122,7 @@ const useCompletedData = (): CompletedBarData[] => {
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
-            } shoud be of type "band" to display the bar series of id "${seriesId}"`,
+            } shoud be of type "band" to display the bar series of id "${seriesId}".`,
           );
         }
 
@@ -132,7 +132,7 @@ const useCompletedData = (): CompletedBarData[] => {
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
-            } shoud have data property`,
+            } shoud have data property.`,
           );
         }
         baseScaleConfig = yAxisConfig;
