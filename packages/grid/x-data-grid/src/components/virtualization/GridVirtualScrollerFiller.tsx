@@ -53,9 +53,12 @@ function GridVirtualScrollerFiller() {
   const scrollbarHeight = hasScrollX ? scrollbarSize : 0;
   const expandedHeight = viewportOuterSize.height - minimumSize.height - scrollbarHeight;
   const height = Math.max(scrollbarHeight, expandedHeight);
-
+  if (height === 0) {
+    return null;
+  }
+  
   return (
-    <Filler role="presentation" style={{ height, display: height === 0 ? 'none' : undefined }}>
+    <Filler role="presentation" style={{ height }}>
       <PinnedLeft style={{ width: leftPinnedWidth }} />
       <Main />
       <PinnedRight style={{ width: rightPinnedWidth }} />
