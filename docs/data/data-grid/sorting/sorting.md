@@ -59,7 +59,7 @@ You can use the `onSortModelChange` prop to listen to changes in the sorting rul
 
 {{"demo": "ControlledSort.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Disable the filters
+## Disable the sorting
 
 ### For all columns
 
