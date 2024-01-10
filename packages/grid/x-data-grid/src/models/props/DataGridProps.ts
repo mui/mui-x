@@ -205,7 +205,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableMultipleRowSelection: boolean;
   /**
-   * If `true`, sorting with multiple columns is disabled.
+   * If `true`, the sorting feature will be disabled.
+   * @default false
+   */
+  disableColumnSorting: boolean;
+  /**
+   * If `true`, the sorting with multiple columns is disabled.
    * @default false
    */
   disableMultipleColumnsSorting: boolean;

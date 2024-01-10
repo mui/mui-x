@@ -91,7 +91,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
-  const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
 
   const isDraggable = React.useMemo(
     () => !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder,
@@ -198,8 +197,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
   const showSortIcon =
-    (colDef.sortable || sortColumnLookup[colDef.field]?.sortDirection != null) &&
-    !colDef.hideSortIcons;
+    (colDef.sortable || sortDirection != null) &&
+    !colDef.hideSortIcons &&
+    !rootProps.disableColumnSorting;
 
   const columnTitleIconButtons = (
     <React.Fragment>
