@@ -32,7 +32,9 @@ const sortModelDisableMultiColumnsSortingWarning = buildWarning(
 
 export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
   if (disableMultipleColumnsSorting && model.length > 1) {
-    sortModelDisableMultiColumnsSortingWarning();
+    if (process.env.NODE_ENV !== 'production') {
+      sortModelDisableMultiColumnsSortingWarning();
+    }
     return [model[0]];
   }
 
