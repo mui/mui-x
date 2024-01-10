@@ -17,7 +17,7 @@ To get started, check out [the blog post about the release of MUI X v6](https://
 In `package.json`, change the version of the data grid package to `next`.
 
 ```diff
--"@mui/x-data-grid": "^6.0.0",
+-"@mui/x-data-grid": "6.x.x",
 +"@mui/x-data-grid": "next",
 ```
 
