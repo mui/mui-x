@@ -63,7 +63,7 @@ export interface GetHeadersParams {
 
 const SpaceFiller = styled('div')({
   /* GridRootStyles conflict */
-  '&:not(.increase-specificity):not(.x2)': {
+  '&&': {
     padding: 0,
     width: 'calc(var(--DataGrid-width) - var(--DataGrid-columnsTotalWidth))',
   },
