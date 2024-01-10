@@ -120,7 +120,7 @@
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
     "selectedSections": {
-      "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally."
+      "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
     },
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
@@ -167,7 +167,7 @@
     "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
     "fieldRoot": "Element rendered at the root.\nIgnored if the field has only one input.",
     "fieldSeparator": "Element rendered between the two inputs.\nIgnored if the field has only one input.",
-    "textField": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.\nReceives the same props as `@mui/material/TextField`.",
+    "textField": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.",
     "clearIcon": "Icon to display inside the clear button.",
     "clearButton": "Button to clear the value.",
     "field": ""

@@ -47,18 +47,41 @@
       "default": "'outlined'"
     }
   },
-  "slots": [],
   "name": "PickersTextField",
   "imports": [
     "import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';",
     "import { PickersTextField } from '@mui/x-date-pickers';",
     "import { PickersTextField } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "marginNormal", "marginDense", "fullWidth"],
-    "globalClasses": {},
-    "name": "MuiPickersTextField"
-  },
+  "classes": [
+    {
+      "key": "fullWidth",
+      "className": "MuiPickersTextField-fullWidth",
+      "description": "Styles applied to the root element if `fullWidth={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginDense",
+      "className": "MuiPickersTextField-marginDense",
+      "description": "Styles applied to the root element if `margin=\"dense\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginNormal",
+      "className": "MuiPickersTextField-marginNormal",
+      "description": "Styles applied to the root element if `margin=\"normal\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPickersTextField-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiPickersTextField",
   "filename": "/packages/x-date-pickers/src/PickersTextField/PickersTextField.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>",
+  "cssComponent": false
 }

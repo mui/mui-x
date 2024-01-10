@@ -94,7 +94,7 @@
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
     },
     "selectedSections": {
-      "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally."
+      "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
     },
     "shouldDisableTime": {
       "description": "Disable specific time.",
@@ -144,7 +144,7 @@
     "desktopTransition": "Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).",
     "desktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
     "popper": "Custom component for the popper inside which the views are rendered on desktop.",
-    "textField": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
+    "textField": "Form control with an input to render the value inside the default field.",
     "inputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
     "openPickerButton": "Button to open the picker on desktop.",
     "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",

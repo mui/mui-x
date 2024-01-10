@@ -1,44 +1,30 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
-    "clearable": { "type": { "name": "bool" }, "default": "false" },
-    "color": {
-      "type": {
-        "name": "enum",
-        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
-      },
-      "default": "'primary'"
-    },
+    "color": { "type": { "name": "any" }, "default": "'primary'" },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "focused": { "type": { "name": "bool" } },
+    "focused": { "type": { "name": "any" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "FormHelperTextProps": { "type": { "name": "object" } },
-    "fullWidth": { "type": { "name": "bool" }, "default": "false" },
-    "helperText": { "type": { "name": "node" } },
-    "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
-    "id": { "type": { "name": "string" } },
-    "InputLabelProps": { "type": { "name": "object" } },
-    "inputProps": { "type": { "name": "object" } },
-    "InputProps": { "type": { "name": "object" } },
-    "inputRef": { "type": { "name": "custom", "description": "ref" } },
-    "label": { "type": { "name": "node" } },
-    "margin": {
-      "type": {
-        "name": "enum",
-        "description": "'dense'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'normal'"
-      },
-      "default": "'none'"
-    },
+    "FormHelperTextProps": { "type": { "name": "any" } },
+    "fullWidth": { "type": { "name": "any" }, "default": "false" },
+    "helperText": { "type": { "name": "any" } },
+    "hiddenLabel": { "type": { "name": "any" }, "default": "false" },
+    "id": { "type": { "name": "any" } },
+    "InputLabelProps": { "type": { "name": "any" } },
+    "inputProps": { "type": { "name": "any" } },
+    "InputProps": { "type": { "name": "any" } },
+    "inputRef": { "type": { "name": "any" } },
+    "label": { "type": { "name": "any" } },
+    "margin": { "type": { "name": "any" }, "default": "'none'" },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
-    "name": { "type": { "name": "string" } },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
@@ -46,7 +32,6 @@
         "describedArgs": ["value", "context"]
       }
     },
-    "onClear": { "type": { "name": "func" } },
     "onError": {
       "type": { "name": "func" },
       "signature": {
@@ -66,11 +51,11 @@
       "type": { "name": "any" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
-    "required": { "type": { "name": "bool" }, "default": "false" },
+    "required": { "type": { "name": "any" }, "default": "false" },
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableDate": {
@@ -82,20 +67,14 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
-    "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
+    "size": { "type": { "name": "any" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
+    "sx": { "type": { "name": "any" }, "additionalInfo": { "sx": true } },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
@@ -108,13 +87,7 @@
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
     },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "variant": {
-      "type": {
-        "name": "enum",
-        "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'"
-      },
-      "default": "'outlined'"
-    }
+    "variant": { "type": { "name": "any" }, "default": "'outlined'" }
   },
   "name": "SingleInputDateRangeField",
   "imports": [
