@@ -103,26 +103,6 @@ You can use the `onFilterModelChange` prop to listen to changes to the filters a
 
 {{"demo": "ControlledFilters.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Read-only filters
-
-You can initialize the `filterModel`, set the `filterModel` prop, or use `apiRef.current.setFilterModel` to define the filters for columns with `colDef.filterable` set to `false`. These filters will be applied but the user won't be able to change them.
-
-```jsx
-const columns = [
-  { field: 'name', filterable: false },
-  ...otherColumns,
-]
-
-<DataGrid
-  filterModel={{
-    items: [{ field: 'name', operator: 'contains', value: 'a' }],
-  }}
-  columns={columns}
-/>
-```
-
-{{"demo": "ReadOnlyFilters.js", "bg": "inline", "defaultCodeOpen": false}}
-
 ## Disable the filters
 
 ### For all columns
@@ -146,6 +126,26 @@ In the example below, the _rating_ column can not be filtered.
 ```
 
 {{"demo": "DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Filter non-filterable columns programmatically
+
+You can initialize the `filterModel`, set the `filterModel` prop, or use the API method `apiRef.current.setFilterModel` to set the filters for columns with non-filterable columns. These filters will be applied but will be read-only on the UI and the user won't be able to change them.
+
+```jsx
+const columns = [
+  { field: 'name', filterable: false },
+  ...otherColumns,
+]
+
+<DataGrid
+  filterModel={{
+    items: [{ field: 'name', operator: 'contains', value: 'a' }],
+  }}
+  columns={columns}
+/>
+```
+
+{{"demo": "ReadOnlyFilters.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Ignore diacritics (accents)
 
