@@ -28,7 +28,7 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
-    'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+    'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
     'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
     'For more detail, see http://mui.com/components/data-grid/editing/#server-side-persistence.',
   ],

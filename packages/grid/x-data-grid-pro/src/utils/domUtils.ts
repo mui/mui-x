@@ -17,7 +17,7 @@ export function findGroupHeaderElementsFromField(elem: Element, field: string): 
 export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateApiPro) {
   const root = findParentElementFromClassName(col, gridClasses.root);
   if (!root) {
-    throw new Error('MUI: The root element is not found.');
+    throw new Error('MUI X: The root element is not found.');
   }
 
   const ariaColIndex = col.getAttribute('aria-colindex');

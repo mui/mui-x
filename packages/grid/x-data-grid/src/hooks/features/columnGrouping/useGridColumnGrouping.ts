@@ -29,7 +29,7 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
     const { groupId, children, ...other } = node;
     if (!groupId) {
       throw new Error(
-        'MUI: An element of the columnGroupingModel does not have either `field` or `groupId`.',
+        'MUI X: An element of the columnGroupingModel does not have either `field` or `groupId`.',
       );
     }
     if (!children) {

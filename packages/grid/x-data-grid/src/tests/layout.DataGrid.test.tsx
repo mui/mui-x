@@ -189,7 +189,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
         }).toErrorDev(
-          'MUI: useResizeContainer - The parent DOM element of the data grid has an empty height.',
+          'MUI X: useResizeContainer - The parent DOM element of the data grid has an empty height.',
         );
       });
 
@@ -205,7 +205,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
         }).toErrorDev(
-          'MUI: useResizeContainer - The parent DOM element of the data grid has an empty width',
+          'MUI X: useResizeContainer - The parent DOM element of the data grid has an empty width',
         );
       });
     });
@@ -840,7 +840,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
             <DataGrid pagination={false} columns={[]} rows={[]} />
           </div>,
         );
-      }).toErrorDev('MUI: `<DataGrid pagination={false} />` is not a valid prop.');
+      }).toErrorDev('MUI X: `<DataGrid pagination={false} />` is not a valid prop.');
     });
 
     it('should throw if the rows has no id', function test() {
