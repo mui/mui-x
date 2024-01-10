@@ -58,6 +58,11 @@ export interface AdapterFormats {
    * @example "00"
    */
   seconds: string;
+  /**
+   * The seconds without leading zeros.
+   * @example "0"
+   */
+  secondsNoLeadingZeros: string;
 
   // Date formats
   /** The localized full date.

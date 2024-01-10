@@ -28,6 +28,7 @@ interface UseFieldEditingParams<TDate, TSection extends FieldSection> {
   sections: TSection[];
   updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
+  localizedDigits: string[];
   setTempAndroidValueStr: (newValue: string | null) => void;
   timezone: PickersTimezone;
 }
@@ -78,6 +79,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   sections,
   updateSectionValue,
   sectionsValueBoundaries,
+  localizedDigits,
   setTempAndroidValueStr,
   timezone,
 }: UseFieldEditingParams<TDate, TSection>) => {
@@ -299,9 +301,9 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
       const newSectionValue = cleanDigitSectionValue(
         utils,
-        timezone,
         queryValueNumber,
         sectionBoundaries,
+        localizedDigits,
         section,
       );
 
