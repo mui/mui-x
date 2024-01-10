@@ -1160,7 +1160,7 @@ describe('<TreeItem />', () => {
 
         it('should not un-select a node when Enter is pressed and the node is selected', () => {
           const { getByRole, getByTestId } = render(
-            <SimpleTreeView defaultSelected="one">
+            <SimpleTreeView defaultSelectedNodes="one">
               <TreeItem nodeId="one" label="one" data-testid="one" />
             </SimpleTreeView>,
           );
