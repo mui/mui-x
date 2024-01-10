@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { AnimatedComponent, animated } from '@react-spring/web';
 import { color as d3Color } from 'd3-color';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
@@ -13,6 +14,7 @@ import {
   useInteractionItemProps,
 } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
+import { useAnimatedPath } from '../internals/useAnimatedPath';
 
 export interface LineElementClasses {
   /** Styles applied to the root element. */
@@ -52,7 +54,7 @@ const useUtilityClasses = (ownerState: LineElementOwnerState) => {
   return composeClasses(slots, getLineElementUtilityClass, classes);
 };
 
-export const LineElementPath = styled('path', {
+export const LineElementPath = styled(animated.path, {
   name: 'MuiLineElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
@@ -88,14 +90,24 @@ LineElementPath.propTypes = {
 } as any;
 
 export type LineElementProps = Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> & {
+  AnimatedComponent<'path'> & {
+    d: string;
     highlightScope?: Partial<HighlightScope>;
     /**
      * The props used for each component slot.
      * @default {}
      */
     slotProps?: {
-      line?: SlotComponentProps<'path', {}, LineElementOwnerState>;
+      line?: SlotComponentProps<
+        AnimatedComponent<'path'>,
+        // Added to make TS pass in useSotsProps
+        {
+          className?: string;
+          style?: React.CSSProperties;
+          ref?: React.Ref<any>;
+        },
+        LineElementOwnerState
+      >;
     };
     /**
      * Overridable component slots.
@@ -106,7 +118,7 @@ export type LineElementProps = Omit<LineElementOwnerState, 'isFaded' | 'isHighli
        * The component that renders the root.
        * @default LineElementPath
        */
-      line?: React.ElementType;
+      line?: AnimatedComponent<any>;
     };
   };
 
@@ -121,8 +133,7 @@ export type LineElementProps = Omit<LineElementOwnerState, 'isFaded' | 'isHighli
  * - [LineElement API](https://mui.com/x/api/charts/line-element/)
  */
 function LineElement(props: LineElementProps) {
-  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
-
+  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, d, ...other } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const { item } = React.useContext(InteractionContext);
@@ -151,7 +162,9 @@ function LineElement(props: LineElementProps) {
     },
     ownerState,
   });
-  return <Line {...lineProps} />;
+
+  const path = useAnimatedPath(d);
+  return <Line {...lineProps} d={path} />;
 }
 
 LineElement.propTypes = {

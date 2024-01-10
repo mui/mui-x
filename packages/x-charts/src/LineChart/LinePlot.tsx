@@ -7,6 +7,7 @@ import { LineElement, LineElementProps } from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { to, useTransition } from '@react-spring/web';
 
 export interface LinePlotSlots {
   line?: React.JSXElementConstructor<LineElementProps>;
@@ -20,6 +21,71 @@ export interface LinePlotProps
   extends React.SVGAttributes<SVGSVGElement>,
     Pick<LineElementProps, 'slots' | 'slotProps'> {}
 
+const useCompletedData = () => {
+  const seriesData = React.useContext(SeriesContext).line;
+  const axisData = React.useContext(CartesianContext);
+
+  if (seriesData === undefined) {
+    return [];
+  }
+
+  const { series, stackingGroups } = seriesData;
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+  const defaultXAxisId = xAxisIds[0];
+  const defaultYAxisId = yAxisIds[0];
+
+  return stackingGroups.flatMap(({ ids: groupIds }) => {
+    return groupIds.flatMap((seriesId) => {
+      const {
+        xAxisKey = defaultXAxisId,
+        yAxisKey = defaultYAxisId,
+        stackedData,
+        data,
+        connectNulls,
+      } = series[seriesId];
+
+      const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
+      const yScale = yAxis[yAxisKey].scale;
+      const xData = xAxis[xAxisKey].data;
+
+      if (process.env.NODE_ENV !== 'production') {
+        if (xData === undefined) {
+          throw new Error(
+            `MUI-X-Charts: ${
+              xAxisKey === DEFAULT_X_AXIS_KEY
+                ? 'The first `xAxis`'
+                : `The x-axis with id "${xAxisKey}"`
+            } should have data property to be able to display a line plot`,
+          );
+        }
+        if (xData.length < stackedData.length) {
+          throw new Error(
+            `MUI-X-Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items)`,
+          );
+        }
+      }
+
+      const linePath = d3Line<{
+        x: any;
+        y: [number, number];
+      }>()
+        .x((d) => xScale(d.x))
+        .defined((_, i) => connectNulls || data[i] != null)
+        .y((d) => yScale(d.y[1])!);
+
+      const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
+      const d3Data = connectNulls ? formattedData.filter((_, i) => data[i] != null) : formattedData;
+
+      const d = linePath.curve(getCurveFactory(series[seriesId].curve))(d3Data) || '';
+      return {
+        ...series[seriesId],
+        d,
+        seriesId,
+      };
+    });
+  });
+};
+
 /**
  * Demos:
  *
@@ -32,76 +98,23 @@ export interface LinePlotProps
  */
 function LinePlot(props: LinePlotProps) {
   const { slots, slotProps, ...other } = props;
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
 
-  if (seriesData === undefined) {
-    return null;
-  }
-  const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
-  const defaultXAxisId = xAxisIds[0];
-  const defaultYAxisId = yAxisIds[0];
+  const completedData = useCompletedData();
 
   return (
     <g {...other}>
-      {stackingGroups.flatMap(({ ids: groupIds }) => {
-        return groupIds.flatMap((seriesId) => {
-          const {
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
-            stackedData,
-            data,
-            connectNulls,
-          } = series[seriesId];
-
-          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-          const yScale = yAxis[yAxisKey].scale;
-          const xData = xAxis[xAxisKey].data;
-
-          if (process.env.NODE_ENV !== 'production') {
-            if (xData === undefined) {
-              throw new Error(
-                `MUI-X-Charts: ${
-                  xAxisKey === DEFAULT_X_AXIS_KEY
-                    ? 'The first `xAxis`'
-                    : `The x-axis with id "${xAxisKey}"`
-                } should have data property to be able to display a line plot`,
-              );
-            }
-            if (xData.length < stackedData.length) {
-              throw new Error(
-                `MUI-X-Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items)`,
-              );
-            }
-          }
-
-          const linePath = d3Line<{
-            x: any;
-            y: [number, number];
-          }>()
-            .x((d) => xScale(d.x))
-            .defined((_, i) => connectNulls || data[i] != null)
-            .y((d) => yScale(d.y[1])!);
-
-          const curve = getCurveFactory(series[seriesId].curve);
-          const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
-          const d3Data = connectNulls
-            ? formattedData.filter((_, i) => data[i] != null)
-            : formattedData;
-
-          return (
-            <LineElement
-              key={seriesId}
-              id={seriesId}
-              d={linePath.curve(curve)(d3Data) || undefined}
-              color={series[seriesId].color}
-              highlightScope={series[seriesId].highlightScope}
-              slots={slots}
-              slotProps={slotProps}
-            />
-          );
-        });
+      {completedData.map(({ d, seriesId, color, highlightScope }) => {
+        return (
+          <LineElement
+            key={seriesId}
+            id={seriesId}
+            d={d}
+            color={color}
+            highlightScope={highlightScope}
+            slots={slots}
+            slotProps={slotProps}
+          />
+        );
       })}
     </g>
   );

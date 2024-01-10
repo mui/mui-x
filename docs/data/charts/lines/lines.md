@@ -141,3 +141,7 @@ sx={{
 ```
 
 {{"demo": "CSSCustomization.js"}}
+
+## Animation
+
+{{"demo": "LineAnimation.js"}}
