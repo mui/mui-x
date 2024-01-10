@@ -297,9 +297,9 @@ export function useGridDimensions(
     }
   }, [apiRef, savedSize, updateDimensions]);
 
+  const root = apiRef.current.rootElementRef.current;
+  const dimensions = apiRef.current.state.dimensions;
   useEnhancedEffect(() => {
-    const root = apiRef.current.rootElementRef.current;
-    const dimensions = apiRef.current.state.dimensions;
     if (!root) {
       return;
     }
@@ -316,8 +316,7 @@ export function useGridDimensions(
     set('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
     set('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
     set('--DataGrid-bottomContainerHeight', `${dimensions.bottomContainerHeight}px`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiRef.current.rootElementRef.current, apiRef.current.state.dimensions]);
+  }, [root, dimensions]);
 
   const isFirstSizing = React.useRef(true);
   const handleResize = React.useCallback<GridEventListener<'resize'>>(

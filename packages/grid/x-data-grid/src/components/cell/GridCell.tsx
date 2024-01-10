@@ -55,6 +55,7 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
+  gridHasScrollX: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -62,7 +63,7 @@ export type GridCellProps = {
   onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
-  [x: string]: any;
+  [x: string]: any; // TODO v7: remove this - it breaks type safety
 };
 
 type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
@@ -148,7 +149,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     width,
     className,
     style: styleProp,
-    extendRowFullWidth,
+    gridHasScrollX,
     colSpan,
     disableDragEvents,
     isNotVisible,
@@ -238,16 +239,18 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  // @ts-expect-error To access `unstable_cellSelection` flag as it's a `premium` feature
+  // @ts-expect-error To access `cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
 
   const isSectionLastCell = sectionIndex === sectionLength - 1;
 
   const showLeftBorder =
-    rootProps.showCellVerticalBorder && pinnedPosition === PinnedPosition.RIGHT;
+    rootProps.showCellVerticalBorder &&
+    pinnedPosition === PinnedPosition.RIGHT &&
+    sectionIndex === 0;
   const showRightBorder =
     rootProps.showCellVerticalBorder &&
-    !(isSectionLastCell && pinnedPosition !== PinnedPosition.LEFT);
+    (isSectionLastCell ? pinnedPosition === PinnedPosition.LEFT || !gridHasScrollX : true);
 
   const ownerState = {
     align,
@@ -475,6 +478,7 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
+  gridHasScrollX: PropTypes.bool.isRequired,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isNotVisible: PropTypes.bool.isRequired,
   onClick: PropTypes.func,

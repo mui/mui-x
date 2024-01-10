@@ -434,6 +434,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         pinnedPosition={pinnedPosition}
         sectionIndex={indexInSection}
         sectionLength={sectionLength}
+        gridHasScrollX={dimensions.hasScrollX}
       />
     );
   };
@@ -483,14 +484,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     }
 
-    cells.push(
-      getCell(
-        column,
-        i + pinnedColumns.left.length,
-        indexRelativeToAllColumns,
-        middleColumnsLength,
-      ),
-    );
+    cells.push(getCell(column, i, indexRelativeToAllColumns, middleColumnsLength));
   }
 
   const eventHandlers = row
@@ -526,7 +520,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
       {rightCells.length > 0 && <div role="presentation" style={{ flex: '1' }} />}
       {rightCells}
-      <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />
+      {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
     </div>
   );
 });
