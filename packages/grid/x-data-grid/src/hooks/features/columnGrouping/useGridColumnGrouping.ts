@@ -32,8 +32,10 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
         'MUI X: An element of the columnGroupingModel does not have either `field` or `groupId`.',
       );
     }
-    if (!children) {
-      console.warn(`MUI X: group groupId=${groupId} has no children.`);
+    if (process.env.NODE_ENV !== 'production') {
+      if (!children) {
+        console.warn(`MUI X: group groupId=${groupId} has no children.`);
+      }
     }
     const groupParam = { ...other, groupId };
     const subTreeLookup = createGroupLookup(children);
