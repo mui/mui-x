@@ -212,6 +212,18 @@
       "class": null
     },
     {
+      "name": "mobilePaper",
+      "description": "Custom component for the paper rendered inside the mobile picker's Dialog.",
+      "default": "Paper from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "mobileTransition",
+      "description": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
+      "default": "Fade from '@mui/material'.",
+      "class": null
+    },
+    {
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar",
@@ -254,18 +266,6 @@
       "name": "clearButton",
       "description": "Button to clear the value.",
       "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "mobilePaper",
-      "description": "Custom component for the paper rendered inside the mobile picker's Dialog.",
-      "default": "Paper from '@mui/material'.",
-      "class": null
-    },
-    {
-      "name": "mobileTransition",
-      "description": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
-      "default": "Fade from '@mui/material'.",
       "class": null
     },
     { "name": "field", "description": "", "class": null }
