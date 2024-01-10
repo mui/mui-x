@@ -66,27 +66,27 @@ export const useClearableField = <
     ownerState: {},
   });
 
-  return {
-    ...other,
-    InputProps: {
-      ...InputProps,
-      endAdornment: (
-        <React.Fragment>
-          {clearable && (
-            <InputAdornment
-              position="end"
-              sx={{ marginRight: InputProps?.endAdornment ? -1 : -1.5 }}
-            >
-              <IconButton {...iconButtonProps} onClick={onClear}>
-                <EndClearIcon fontSize="small" {...endClearIconProps} />
-              </IconButton>
-            </InputAdornment>
-          )}
+  const InputProps = {
+    ...ForwardedInputProps,
+    endAdornment: (
+      <React.Fragment>
+        {clearable && (
+          <InputAdornment
+            position="end"
+            sx={{ marginRight: ForwardedInputProps?.endAdornment ? -1 : -1.5 }}
+          >
+            <IconButton {...iconButtonProps} onClick={onClear}>
+              <EndClearIcon fontSize="small" {...endClearIconProps} />
+            </IconButton>
+          </InputAdornment>
+        )}
+        {ForwardedInputProps?.endAdornment}
+      </React.Fragment>
+    ),
+  };
 
-          {InputProps?.endAdornment}
-        </React.Fragment>
-      ),
-    },
+  const fieldProps: TFieldProps = {
+    ...forwardedFieldProps,
     sx: [
       {
         '& .clearButton': {
