@@ -10,7 +10,10 @@ import { GridFilterForm, GridFilterFormProps } from './GridFilterForm';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
-import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import {
+  gridFilterableColumnDefinitionsSelector,
+  gridFilterableColumnLookupSelector,
+} from '../../../hooks/features/columns/gridColumnsSelector';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export interface GetColumnForNewFilterArgs {
@@ -73,6 +76,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     const rootProps = useGridRootProps();
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
+    const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
     const lastFilterRef = React.useRef<any>(null);
     const placeholderFilter = React.useRef<GridFilterItem | null>(null);
 
@@ -165,20 +169,24 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
 
     const hasMultipleFilters = items.length > 1;
 
-    const { readOnlyFilters, validFilters } = React.useMemo(() => {
-      const filterableFields = new Set(filterableColumns.map((col) => col.field));
-      return items.reduce(
-        (acc, item) => {
-          if (filterableFields.has(item.field)) {
-            acc.validFilters.push(item);
-          } else {
-            acc.readOnlyFilters.push(item);
-          }
-          return acc;
-        },
-        { readOnlyFilters: [] as GridFilterItem[], validFilters: [] as GridFilterItem[] },
-      );
-    }, [items, filterableColumns]);
+    const { readOnlyFilters, validFilters } = React.useMemo<{
+      readOnlyFilters: GridFilterItem[];
+      validFilters: GridFilterItem[];
+    }>(
+      () =>
+        items.reduce(
+          (acc, item) => {
+            if (filterableColumnsLookup[item.field]) {
+              acc.validFilters.push(item);
+            } else {
+              acc.readOnlyFilters.push(item);
+            }
+            return acc;
+          },
+          { readOnlyFilters: [] as GridFilterItem[], validFilters: [] as GridFilterItem[] },
+        ),
+      [items, filterableColumnsLookup],
+    );
 
     const addNewFilter = React.useCallback(() => {
       const newFilter = getNewFilter();
