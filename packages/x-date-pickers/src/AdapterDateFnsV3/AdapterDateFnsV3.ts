@@ -17,7 +17,7 @@ import { differenceInHours } from 'date-fns/differenceInHours';
 import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { differenceInSeconds } from 'date-fns/differenceInSeconds';
 import { differenceInMilliseconds } from 'date-fns/differenceInMilliseconds';
-import eachDayOfInterval from 'date-fns/eachDayOfInterval';
+import { eachDayOfInterval } from 'date-fns/eachDayOfInterval';
 import { endOfDay } from 'date-fns/endOfDay';
 import { endOfWeek } from 'date-fns/endOfWeek';
 import { endOfYear } from 'date-fns/endOfYear';
