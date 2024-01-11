@@ -44,9 +44,7 @@
       "description": "If <code>true</code>, hiding/showing columns is disabled."
     },
     "disableColumnSorting": {
-      "description": "If <code>true</code>, the column sorting feature will be disabled.",
-      "deprecated": "",
-      "typeDescriptions": {}
+      "description": "If <code>true</code>, the column sorting feature will be disabled."
     },
     "disableDensitySelector": {
       "description": "If <code>true</code>, the density selector is disabled."
