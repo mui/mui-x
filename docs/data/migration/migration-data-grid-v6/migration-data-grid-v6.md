@@ -73,9 +73,9 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 The layout of the grid has been substantially altered to use CSS sticky positioned elements. As a result, the following changes have been made:
 
- - The main element now corresponds to the virtal scroller element.
- - Headers are now contained in the virtual scroller.
- - Pinned row and column sections are now contained in the virtual scroller.
+- The main element now corresponds to the virtal scroller element.
+- Headers are now contained in the virtual scroller.
+- Pinned row and column sections are now contained in the virtual scroller.
 
 <!-- ### Renamed props
 
@@ -272,10 +272,10 @@ The layout of the grid has been substantially altered to use CSS sticky position
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v6 classes | MUI X v7 classes | Note |
-  | :--------------- | :--------------- | :--- |
-  | `.Mui-hovered`   | `:hover`         | For rows |
-  | `.MuiDataGrid--pinnedColumns-(left\|right)` | Removed | Not applicable anymore | -->
+  | MUI X v6 classes                            | MUI X v7 classes | Note                   |
+  | :------------------------------------------ | :--------------- | :--------------------- | --- |
+  | `.Mui-hovered`                              | `:hover`         | For rows               |
+  | `.MuiDataGrid--pinnedColumns-(left\|right)` | Removed          | Not applicable anymore | --> |
 
 ### Changes to the public API
 
@@ -284,7 +284,6 @@ The layout of the grid has been substantially altered to use CSS sticky position
 - The field `rootElementRef` is now always non-null.
 - The field `virtualScrollerRef` is now always non-null.
 - The event `renderedRowsIntervalChange` params changed from `GridRenderedRowsIntervalChangeParams` to `GridRenderContext`, and the former has been removed.
-
 
 ### Changes to slots
 
