@@ -10,6 +10,19 @@ _Jan 11, 2024_
 We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - ⏰ Support date-fns v3 (#11659) @LukasTy
+  Pickers support both v2 and v3 of date-fns. For v3 use `AdapterDateFnsV3`.
+  ```js
+  // with date-fns v2.x
+  import { AdapterDateFns } from '@mui/x-date- 
+  pickers/AdapterDateFns';
+  import de from 'date-fns/locale/de';
+  ```
+  ```js
+  // with date-fns v3.x
+  import { AdapterDateFns } from '@mui/x-date- 
+  pickers/AdapterDateFnsV3';
+  import { de } from 'date-fns/locale/de';
+  ```
 - 🌍 Add missing Danish (da-DK) locale export (#11641) @etlos
 
 ### Data Grid
