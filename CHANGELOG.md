@@ -13,49 +13,26 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
   Pickers support both v2 and v3 of date-fns. For v3 use `AdapterDateFnsV3`.
   ```js
   // with date-fns v2.x
-  import { AdapterDateFns } from '@mui/x-date- 
-  pickers/AdapterDateFns';
+  import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
   import de from 'date-fns/locale/de';
   ```
   ```js
   // with date-fns v3.x
-  import { AdapterDateFns } from '@mui/x-date- 
-  pickers/AdapterDateFnsV3';
+  import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
   import { de } from 'date-fns/locale/de';
   ```
 
-### Data Grid
-
-#### `@mui/x-data-grid@# 6.18.8`
-
-- [l10n] Add missing Danish (da-DK) locale export (#11641) @etlos
-
-#### `@mui/x-data-grid-pro@# 6.18.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-data-grid@# 6.18.8`.
-
-#### `@mui/x-data-grid-premium@# 6.18.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
-
-Same changes as in `@mui/x-data-grid-pro@# 6.18.8`.
-
 ### Date Pickers
 
-#### `@mui/x-date-pickers@# 6.18.8`
+#### `@mui/x-date-pickers@6.18.8`
 
 - [pickers] Add date-fns@3.x adapter (#11659) @LukasTy
 - [pickers] Fix clearable behavior blocking focus return to `OpenPickerButton` (#11643) @noraleonte
+- [l10n] Add missing Danish (da-DK) locale export (#11641) @etlos
 
-#### `@mui/x-date-pickers-pro@# 6.18.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@6.18.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@# 6.18.8`.
-
-### Charts / `@mui/x-charts@# 6.18.8`
-
-- [charts][docs] Add demo to the Overview page (#11586) @danilo-leal
-- [charts][docs] Fix 404 links in the docs @oliviertassinari
-- [charts][docs] Improve landing page (#11570) @oliviertassinari
-
-### Tree View / `@mui/x-tree-view@# 6.18.8`
+Same changes as in `@mui/x-date-pickers@6.18.8`.
 
 ### Docs
 
@@ -63,7 +40,10 @@ Same changes as in `@mui/x-date-pickers@# 6.18.8`.
 - [docs] Fix parsing of `x-date-pickers-pro` demo adapter imports (#11637) @LukasTy
 - [docs] Push up the MUI X brand (#11533) @oliviertassinari
 - [docs] Improve Server-side data grid docs (#11589) @oliviertassinari
-- [docs][Charts] Give a general revision to the docs (#11249) @danilo-leal
+- [docs] Add demo to the charts overview page (#11586) @danilo-leal
+- [docs] Fix 404 links in the docs @oliviertassinari
+- [docs] Improve landing page (#11570) @oliviertassinari
+- [docs] Give a general revision to the docs (#11249) @danilo-leal
 
 ## 6.18.7
 
