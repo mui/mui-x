@@ -14,11 +14,11 @@ export interface LicenseDetails {
 
 function getClearLicenseString(details: LicenseDetails) {
   if (details.scope && !LICENSE_SCOPES.includes(details.scope)) {
-    throw new Error('MUI: Invalid scope');
+    throw new Error('MUI X: Invalid scope');
   }
 
   if (details.licensingModel && !LICENSING_MODELS.includes(details.licensingModel)) {
-    throw new Error('MUI: Invalid licensing model');
+    throw new Error('MUI X: Invalid licensing model');
   }
 
   return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${details.scope},LM=${

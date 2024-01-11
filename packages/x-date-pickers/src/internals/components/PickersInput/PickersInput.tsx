@@ -191,7 +191,9 @@ export const PickersInput = React.forwardRef(function PickersInput(
 
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
-    throw new Error('MUI: PickersInput should always be used inside a PickersTextField component');
+    throw new Error(
+      'MUI X: PickersInput should always be used inside a PickersTextField component',
+    );
   }
 
   const handleInputFocus = (event: React.FocusEvent<HTMLDivElement>) => {

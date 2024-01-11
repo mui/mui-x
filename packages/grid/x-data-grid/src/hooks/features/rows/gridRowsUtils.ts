@@ -57,7 +57,7 @@ export function checkGridRowIdIsValid(
   if (id == null) {
     throw new Error(
       [
-        'MUI: The data grid component requires all rows to have a unique `id` property.',
+        'MUI X: The data grid component requires all rows to have a unique `id` property.',
         'Alternatively, you can use the `getRowId` prop to specify a custom id for each row.',
         detailErrorMessage,
         JSON.stringify(row),
@@ -233,7 +233,9 @@ export const updateCacheWithNewRows = ({
   updates: GridRowModelUpdate[];
 }): GridRowsInternalCache => {
   if (previousCache.updates.type === 'full') {
-    throw new Error('MUI: Unable to prepare a partial update if a full update is not applied yet');
+    throw new Error(
+      'MUI X: Unable to prepare a partial update if a full update is not applied yet.',
+    );
   }
 
   // Remove duplicate updates.

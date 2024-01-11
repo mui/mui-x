@@ -59,7 +59,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(() => {
           apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
-        }).to.throw('MUI: The cell with id=0 and field=currencyPair is not in view mode.');
+        }).to.throw('MUI X: The cell with id=0 and field=currencyPair is not in view mode.');
       });
 
       it('should update the CSS class of the cell', () => {
@@ -328,7 +328,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       it('should throw an error when the cell is not in edit mode', () => {
         render(<TestCase />);
         expect(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })).to.throw(
-          'MUI: The cell with id=0 and field=currencyPair is not in edit mode.',
+          'MUI X: The cell with id=0 and field=currencyPair is not in edit mode.',
         );
       });
 
@@ -486,7 +486,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         expect(() =>
           act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })),
         ).toErrorDev(
-          'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+          'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });

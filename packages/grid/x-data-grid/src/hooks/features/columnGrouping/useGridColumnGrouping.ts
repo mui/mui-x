@@ -29,17 +29,19 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
     const { groupId, children, ...other } = node;
     if (!groupId) {
       throw new Error(
-        'MUI: An element of the columnGroupingModel does not have either `field` or `groupId`.',
+        'MUI X: An element of the columnGroupingModel does not have either `field` or `groupId`.',
       );
     }
-    if (!children) {
-      console.warn(`MUI: group groupId=${groupId} has no children.`);
+    if (process.env.NODE_ENV !== 'production') {
+      if (!children) {
+        console.warn(`MUI X: group groupId=${groupId} has no children.`);
+      }
     }
     const groupParam = { ...other, groupId };
     const subTreeLookup = createGroupLookup(children);
     if (subTreeLookup[groupId] !== undefined || groupLookup[groupId] !== undefined) {
       throw new Error(
-        `MUI: The groupId ${groupId} is used multiple times in the columnGroupingModel.`,
+        `MUI X: The groupId ${groupId} is used multiple times in the columnGroupingModel.`,
       );
     }
     groupLookup = { ...groupLookup, ...subTreeLookup, [groupId]: groupParam };
