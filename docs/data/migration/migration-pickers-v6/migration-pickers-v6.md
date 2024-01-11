@@ -33,14 +33,14 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 // Date and Time Pickers specific
-npx @mui/x-codemod v7.0.0/pickers/preset-safe <path>
+npx @mui/x-codemod@next v7.0.0/pickers/preset-safe <path>
 
 // Target Data Grid as well
-npx @mui/x-codemod v7.0.0/preset-safe <path>
+npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers-v700) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-pickers-v700) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
@@ -75,7 +75,7 @@ And are removed from the v7.
 If not already done, this modification can be handled by the codemod
 
 ```bash
-npx @mui/x-codemod v7.0.0/pickers/ <path>
+npx @mui/x-codemod@next v7.0.0/pickers/ <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
