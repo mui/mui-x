@@ -223,7 +223,12 @@ export const GridRootStyles = styled('div', {
     minHeight: 0,
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
-    [`.${c.main} > *:first-child${ignoreSSRWarning}`]: {
+    // The selector we really want here is `:first-child`, but emotion thinks it knows better than use what we
+    // want and prints a warning to the console if we use it, about :first-child being "unsafe" in an SSR context.
+    // https://github.com/emotion-js/emotion/issues/1105
+    // Using `:first-of-type instead` is ironically less "safe" because if all our elements aren't `div`, this style
+    // will fail to apply.
+    [`.${c.main} > *:first-of-type`]: {
       borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
       borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
     },
