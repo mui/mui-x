@@ -181,7 +181,6 @@ export const GridRootStyles = styled('div', {
     },
   };
 
-  const ignoreSSRWarning = '';
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
     '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
