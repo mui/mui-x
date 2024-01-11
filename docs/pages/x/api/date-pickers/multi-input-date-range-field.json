@@ -62,7 +62,11 @@
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "spacing": {
       "type": {
         "name": "union",
@@ -79,41 +83,37 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "useFlexGap": { "type": { "name": "bool" }, "default": "false" },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "root",
-      "description": "Element rendered at the root.",
-      "default": "MultiInputDateRangeFieldRoot"
-    },
-    {
-      "class": null,
-      "name": "separator",
-      "description": "Element rendered between the two inputs.",
-      "default": "MultiInputDateRangeFieldSeparator"
-    },
-    {
-      "class": null,
-      "name": "textField",
-      "description": "Form control with an input to render a date. It is rendered twice: once for the start date and once for the end date. Receives the same props as <code>@mui/material/TextField</code>.",
-      "default": "TextField from '@mui/material'"
-    }
-  ],
   "name": "MultiInputDateRangeField",
   "imports": [
     "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';",
     "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "separator"],
-    "globalClasses": {},
-    "name": "MuiMultiInputDateRangeField"
-  },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiMultiInputDateRangeField-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "separator",
+      "className": "MuiMultiInputDateRangeField-separator",
+      "description": "Styles applied to the separator element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiMultiInputDateRangeField",
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateRangeField/MultiInputDateRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
+  "cssComponent": false
 }

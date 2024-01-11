@@ -190,7 +190,7 @@ const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
     case GridLogicOperator.Or:
       return 'filterPanelOperatorOr';
     default:
-      throw new Error('MUI: Invalid `logicOperator` property in the `GridFilterPanel`.');
+      throw new Error('MUI X: Invalid `logicOperator` property in the `GridFilterPanel`.');
   }
 };
 

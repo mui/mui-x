@@ -1,0 +1,20 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {
+    "faded": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "faded"
+    },
+    "highlighted": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "higlighted"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

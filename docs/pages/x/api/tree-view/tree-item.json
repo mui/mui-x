@@ -26,35 +26,73 @@
     "TransitionComponent": { "type": { "name": "elementType" }, "default": "Collapse" },
     "TransitionProps": { "type": { "name": "object" } }
   },
-  "slots": [],
   "name": "TreeItem",
   "imports": [
     "import { TreeItem } from '@mui/x-tree-view/TreeItem';",
     "import { TreeItem } from '@mui/x-tree-view';"
   ],
-  "styles": {
-    "classes": [
-      "root",
-      "group",
-      "content",
-      "expanded",
-      "selected",
-      "focused",
-      "disabled",
-      "iconContainer",
-      "label"
-    ],
-    "globalClasses": {
-      "expanded": "Mui-expanded",
-      "selected": "Mui-selected",
-      "focused": "Mui-focused",
-      "disabled": "Mui-disabled"
+  "classes": [
+    {
+      "key": "content",
+      "className": "MuiTreeItem-content",
+      "description": "Styles applied to the content element.",
+      "isGlobal": false
     },
-    "name": "MuiTreeItem"
-  },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the element when disabled.",
+      "isGlobal": true
+    },
+    {
+      "key": "expanded",
+      "className": "Mui-expanded",
+      "description": "State class applied to the content element when expanded.",
+      "isGlobal": true
+    },
+    {
+      "key": "focused",
+      "className": "Mui-focused",
+      "description": "State class applied to the content element when focused.",
+      "isGlobal": true
+    },
+    {
+      "key": "group",
+      "className": "MuiTreeItem-group",
+      "description": "Styles applied to the transition component.",
+      "isGlobal": false
+    },
+    {
+      "key": "iconContainer",
+      "className": "MuiTreeItem-iconContainer",
+      "description": "Styles applied to the tree node icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiTreeItem-label",
+      "description": "Styles applied to the label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiTreeItem-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "State class applied to the content element when selected.",
+      "isGlobal": true
+    }
+  ],
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiTreeItem",
   "forwardsRefTo": "HTMLLIElement",
   "filename": "/packages/x-tree-view/src/TreeItem/TreeItem.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/\">MUI X Tree View</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/\">Rich Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/\">Simple Tree View - Selection</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/overview/\">MUI X Tree View</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/expansion/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/items/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/selection/\">Simple Tree View - Selection</a></li></ul>",
+  "cssComponent": false
 }

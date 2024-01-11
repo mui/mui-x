@@ -115,7 +115,7 @@ export const LocalizationProvider = function LocalizationProvider<TDate, TLocale
     if (!adapter.isMUIAdapter) {
       throw new Error(
         [
-          'MUI: The date adapter should be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, not from `@date-io`',
+          'MUI X: The date adapter should be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, not from `@date-io`',
           "For example, `import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'` instead of `import AdapterDayjs from '@date-io/dayjs'`",
           'More information on the installation documentation: https://mui.com/x/react-date-pickers/getting-started/#installation',
         ].join(`\n`),

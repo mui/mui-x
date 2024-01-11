@@ -141,7 +141,11 @@
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -151,7 +155,11 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "value": { "type": { "name": "any" } },
     "view": {
@@ -174,169 +182,173 @@
       "default": "4 on desktop, 3 on mobile"
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
-      "default": "PickersActionBar"
-    },
-    {
-      "class": null,
-      "name": "calendarHeader",
-      "description": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
-      "default": "PickersCalendarHeader"
-    },
-    {
-      "class": null,
-      "name": "clearButton",
-      "description": "Button to clear the value.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "clearIcon",
-      "description": "Icon to display inside the clear button.",
-      "default": "ClearIcon"
-    },
-    {
-      "class": null,
-      "name": "day",
-      "description": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
-      "default": "PickersDay"
-    },
-    {
-      "class": null,
-      "name": "desktopPaper",
-      "description": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
-      "default": "PickersPopperPaper"
-    },
-    {
-      "class": null,
-      "name": "desktopTransition",
-      "description": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`."
-    },
-    {
-      "class": null,
-      "name": "desktopTrapFocus",
-      "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "FocusTrap from '@mui/base'."
-    },
-    {
-      "class": null,
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot"
-    },
-    {
-      "class": null,
-      "name": "field",
-      "description": "Component used to enter the date with the keyboard."
-    },
-    {
-      "class": null,
-      "name": "inputAdornment",
-      "description": "Component displayed on the start or end input adornment used to open the picker on desktop.",
-      "default": "InputAdornment"
-    },
-    {
-      "class": null,
-      "name": "layout",
-      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
-    },
-    {
-      "class": null,
-      "name": "leftArrowIcon",
-      "description": "Icon displayed in the left view switch button.",
-      "default": "ArrowLeft"
-    },
-    {
-      "class": null,
-      "name": "mobilePaper",
-      "description": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
-      "default": "Paper from '@mui/material'."
-    },
-    {
-      "class": null,
-      "name": "mobileTransition",
-      "description": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Fade from '@mui/material'."
-    },
-    {
-      "class": null,
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "openPickerButton",
-      "description": "Button to open the picker on desktop.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "openPickerIcon",
-      "description": "Icon displayed in the open picker button on desktop."
-    },
-    {
-      "class": null,
-      "name": "popper",
-      "description": "Custom component for the popper inside which the views are rendered on desktop.",
-      "default": "Popper from '@mui/material'."
-    },
-    {
-      "class": null,
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "rightArrowIcon",
-      "description": "Icon displayed in the right view switch button.",
-      "default": "ArrowRight"
-    },
-    {
-      "class": null,
-      "name": "shortcuts",
-      "description": "Custom component for the shortcuts.",
-      "default": "PickersShortcuts"
-    },
-    {
-      "class": null,
-      "name": "switchViewButton",
-      "description": "Button displayed to switch between different calendar views.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-      "default": "ArrowDropDown"
-    },
-    {
-      "class": null,
-      "name": "textField",
-      "description": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
-      "default": "TextField from '@mui/material'"
-    },
-    {
-      "class": null,
-      "name": "toolbar",
-      "description": "Custom component for the toolbar rendered above the views.",
-      "default": "DatePickerToolbar"
-    }
-  ],
   "name": "DatePicker",
   "imports": [
     "import { DatePicker } from '@mui/x-date-pickers/DatePicker';",
     "import { DatePicker } from '@mui/x-date-pickers';",
     "import { DatePicker } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDatePicker" },
+  "slots": [
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "DatePickerToolbar",
+      "class": null
+    },
+    {
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
+      "default": "PickersCalendarHeader",
+      "class": null
+    },
+    {
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+      "default": "ArrowDropDown",
+      "class": null
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft",
+      "class": null
+    },
+    {
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight",
+      "class": null
+    },
+    {
+      "name": "day",
+      "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+      "default": "PickersDay",
+      "class": null
+    },
+    {
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar",
+      "class": null
+    },
+    {
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts",
+      "class": null
+    },
+    {
+      "name": "desktopPaper",
+      "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
+      "default": "PickersPopperPaper",
+      "class": null
+    },
+    {
+      "name": "desktopTransition",
+      "description": "Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).",
+      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.",
+      "class": null
+    },
+    {
+      "name": "desktopTrapFocus",
+      "description": "Custom component for trapping the focus inside the views on desktop.",
+      "default": "FocusTrap from '@mui/base'.",
+      "class": null
+    },
+    {
+      "name": "popper",
+      "description": "Custom component for the popper inside which the views are rendered on desktop.",
+      "default": "Popper from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "textField",
+      "description": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
+      "default": "TextField from '@mui/material'",
+      "class": null
+    },
+    {
+      "name": "inputAdornment",
+      "description": "Component displayed on the start or end input adornment used to open the picker on desktop.",
+      "default": "InputAdornment",
+      "class": null
+    },
+    {
+      "name": "openPickerButton",
+      "description": "Button to open the picker on desktop.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "class": null
+    },
+    {
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon",
+      "class": null
+    },
+    {
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "field",
+      "description": "Component used to enter the date with the keyboard.",
+      "class": null
+    },
+    {
+      "name": "openPickerIcon",
+      "description": "Icon displayed in the open picker button on desktop.",
+      "class": null
+    },
+    {
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
+      "class": null
+    },
+    {
+      "name": "mobilePaper",
+      "description": "Custom component for the paper rendered inside the mobile picker's Dialog.",
+      "default": "Paper from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "mobileTransition",
+      "description": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
+      "default": "Fade from '@mui/material'.",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiDatePicker",
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
+  "cssComponent": false
 }

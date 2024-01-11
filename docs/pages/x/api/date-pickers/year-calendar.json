@@ -35,7 +35,11 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "value": { "type": { "name": "any" } },
     "yearsPerRow": {
@@ -43,17 +47,26 @@
       "default": "3"
     }
   },
-  "slots": [],
   "name": "YearCalendar",
   "imports": [
     "import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';",
     "import { YearCalendar } from '@mui/x-date-pickers';",
     "import { YearCalendar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearCalendar" },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiYearCalendar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiYearCalendar",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "cssComponent": false
 }
