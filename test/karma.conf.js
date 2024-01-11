@@ -1,4 +1,3 @@
-const os = require('os');
 const { chromium } = require('@playwright/test');
 const webpack = require('webpack');
 
