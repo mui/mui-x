@@ -46,12 +46,12 @@ const getValidRowHeight = (
 };
 
 const rowHeightWarning = [
-  `MUI: The \`rowHeight\` prop should be a number greater than 0.`,
+  `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
   `The default value will be used instead.`,
 ].join('\n');
 
 const getRowHeightWarning = [
-  `MUI: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
+  `MUI X: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
   `The default value will be used instead.`,
 ].join('\n');
 

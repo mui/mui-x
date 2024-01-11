@@ -6,16 +6,16 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
   (props) =>
     (props.pagination &&
       props.hideFooterRowCount &&
-      'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.') ||
+      'MUI X: The `hideFooterRowCount` prop has no effect when the pagination is enabled.') ||
     undefined,
   (props) =>
     (props.treeData &&
       props.filterMode === 'server' &&
-      'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.') ||
+      'MUI X: The `filterMode="server"` prop is not available when the `treeData` is enabled.') ||
     undefined,
   (props) =>
     (!props.pagination &&
       props.checkboxSelectionVisibleOnly &&
-      'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.') ||
+      'MUI X: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.') ||
     undefined,
 ];

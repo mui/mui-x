@@ -32,19 +32,19 @@ The `TreeView` component has been deprecated and will be removed in the next maj
 You can start replacing it with the new `SimpleTreeView` component which has exactly the same API:
 
 ```diff
-- import { TreeView } from '@mui/x-tree-view';
-+ import { SimpleTreeView } from '@mui/x-tree-view';
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
 
-- import { TreeView } from '@mui/x-tree-view/TreeView';
-+ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 
-  return (
--   <TreeView>
-+   <SimpleTreeView>
-      <TreeItem nodeId="1" label="First item" />
--   </TreeView>
-+   </SimpleTreeView>
-  )
+   return (
+-    <TreeView>
++    <SimpleTreeView>
+       <TreeItem nodeId="1" label="First item" />
+-    </TreeView>
++    </SimpleTreeView>
+   );
 ```
 
 If you were using theme augmentation, you will also need to migrate it:
@@ -67,11 +67,11 @@ If you were using theme augmentation, you will also need to migrate it:
 If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object:
 
 ```diff
-  import { treeViewClasses } from '@mui/x-tree-view/TreeView';
-  import { simpleTreeViewClasses } from '@mui/x-tree-view/SimpleTreeView';
+ import { treeViewClasses } from '@mui/x-tree-view/TreeView';
+ import { simpleTreeViewClasses } from '@mui/x-tree-view/SimpleTreeView';
 
-- const rootClass = treeViewClasses.root;
-+ const rootClass = simpleTreeViewClasses.root;
+-const rootClass = treeViewClasses.root;
++const rootClass = simpleTreeViewClasses.root;
 ```
 
 ### Rename `onNodeToggle`, `expanded` and `defaultExpanded`
@@ -85,16 +85,16 @@ The expansion props have been renamed to better describe their behaviors:
 | `defaultExpanded` | `defaultExpandedNodes`  |
 
 ```diff
-  <TreeView
--   onNodeToggle={handleExpansionChange}
-+   onExpandedNodesChange={handleExpansionChange}
+ <TreeView
+-  onNodeToggle={handleExpansionChange}
++  onExpandedNodesChange={handleExpansionChange}
 
--   expanded={expandedNodes}
-+   expandedNodes={expandedNodes}
+-  expanded={expandedNodes}
++  expandedNodes={expandedNodes}
 
--   defaultExpanded={defaultExpandedNodes}
-+   defaultExpandedNodes={defaultExpandedNodes}
-  />
+-  defaultExpanded={defaultExpandedNodes}
++  defaultExpandedNodes={defaultExpandedNodes}
+ />
 ```
 
 :::info
@@ -123,16 +123,16 @@ The selection props have been renamed to better describe their behaviors:
 | `defaultSelected` | `defaultSelectedNodes`  |
 
 ```diff
-  <TreeView
--   onNodeSelect={handleSelectionChange}
-+   onSelectedNodesChange={handleSelectionChange}
+ <TreeView
+-  onNodeSelect={handleSelectionChange}
++  onSelectedNodesChange={handleSelectionChange}
 
--   selected={selectedNodes}
-+   selectedNodes={selectedNodes}
+-  selected={selectedNodes}
++  selectedNodes={selectedNodes}
 
--   defaultSelected={defaultSelectedNodes}
-+   defaultSelectedNodes={defaultSelectedNodes}
-  />
+-  defaultSelected={defaultSelectedNodes}
++  defaultSelectedNodes={defaultSelectedNodes}
+ />
 ```
 
 :::info

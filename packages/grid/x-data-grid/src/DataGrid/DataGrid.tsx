@@ -20,7 +20,7 @@ const propValidators: PropValidator<DataGridProcessedProps>[] = [
     (props.columns &&
       props.columns.some((column) => column.resizable) &&
       [
-        `MUI: \`column.resizable = true\` is not a valid prop.`,
+        `MUI X: \`column.resizable = true\` is not a valid prop.`,
         'Column resizing is not available in the MIT version.',
         '',
         'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',

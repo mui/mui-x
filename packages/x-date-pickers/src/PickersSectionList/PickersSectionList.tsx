@@ -133,7 +133,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
   const getRoot = (methodName: string) => {
     if (!rootRef.current) {
       throw new Error(
-        `MUI: Cannot call sectionListRef.${methodName} before the mount of the component`,
+        `MUI X: Cannot call sectionListRef.${methodName} before the mount of the component.`,
       );
     }
 

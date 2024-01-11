@@ -34,7 +34,7 @@ const warn = () => {
   if (!warnedOnce) {
     console.warn(
       [
-        'MUI: The TreeView component was renamed SimpleTreeView.',
+        'MUI X: The TreeView component was renamed SimpleTreeView.',
         'The component with the old naming will be removed in the version v8.0.0.',
         '',
         "You should use `import { SimpleTreeView } from '@mui/x-tree-view'`",
