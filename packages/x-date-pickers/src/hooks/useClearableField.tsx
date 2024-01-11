@@ -68,20 +68,20 @@ export const useClearableField = <
 
   const InputProps = {
     ...ForwardedInputProps,
-    endAdornment: clearable ? (
+    endAdornment: (
       <React.Fragment>
-        <InputAdornment
-          position="end"
-          sx={{ marginRight: ForwardedInputProps?.endAdornment ? -1 : -1.5 }}
-        >
-          <IconButton {...iconButtonProps} onClick={onClear}>
-            <EndClearIcon fontSize="small" {...endClearIconProps} />
-          </IconButton>
-        </InputAdornment>
+        {clearable && (
+          <InputAdornment
+            position="end"
+            sx={{ marginRight: ForwardedInputProps?.endAdornment ? -1 : -1.5 }}
+          >
+            <IconButton {...iconButtonProps} onClick={onClear}>
+              <EndClearIcon fontSize="small" {...endClearIconProps} />
+            </IconButton>
+          </InputAdornment>
+        )}
         {ForwardedInputProps?.endAdornment}
       </React.Fragment>
-    ) : (
-      ForwardedInputProps?.endAdornment
     ),
   };
 
