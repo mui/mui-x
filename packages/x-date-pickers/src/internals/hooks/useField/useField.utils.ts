@@ -112,12 +112,14 @@ export const getLetterEditingOptions = <TDate>(
   }
 };
 
+const NON_LOCALIZED_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
 export const getLocalizedDigits = <TDate>(utils: MuiPickersAdapter<TDate>) => {
   const today = utils.date(undefined);
   const formattedZero = utils.format(utils.setSeconds(today, 0), 'secondsNoLeadingZeros');
 
   if (formattedZero === '0') {
-    return ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    return NON_LOCALIZED_DIGITS;
   }
 
   return Array.from({ length: 10 }).map((_, index) =>
@@ -125,7 +127,7 @@ export const getLocalizedDigits = <TDate>(utils: MuiPickersAdapter<TDate>) => {
   );
 };
 
-const removeLocalizedDigits = (valueStr: string, localizedDigits: string[]) => {
+export const removeLocalizedDigits = (valueStr: string, localizedDigits: string[]) => {
   if (localizedDigits[0] === '0') {
     return valueStr;
   }
@@ -144,7 +146,7 @@ const removeLocalizedDigits = (valueStr: string, localizedDigits: string[]) => {
   return digits.join('');
 };
 
-const applyLocalizedDigits = (valueStr: string, localizedDigits: string[]) => {
+export const applyLocalizedDigits = (valueStr: string, localizedDigits: string[]) => {
   if (localizedDigits[0] === '0') {
     return valueStr;
   }
@@ -153,6 +155,11 @@ const applyLocalizedDigits = (valueStr: string, localizedDigits: string[]) => {
     .split('')
     .map((char) => localizedDigits[Number(char)])
     .join('');
+};
+
+export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
+  const nonLocalizedValueStr = removeLocalizedDigits(valueStr, localizedDigits);
+  return !Number.isNaN(Number(nonLocalizedValueStr));
 };
 
 export const cleanLeadingZeros = (valueStr: string, size: number) => {
