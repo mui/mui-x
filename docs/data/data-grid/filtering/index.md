@@ -17,7 +17,7 @@ _See [the dedicated section](/x/react-data-grid/filtering/customization/) to lea
 ## Single and multi-filters
 
 :::warning
-The `DataGrid` can only filter the rows according to one criterion at the time.
+The Data Grid can only filter the rows according to one criterion at the time.
 
 To use [multi-filters](/x/react-data-grid/filtering/multi-filters/), you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
@@ -37,13 +37,13 @@ A filter item represents a filtering rule and is composed of several elements:
 - `filterItem.field`: the field on which the rule applies.
 - `filterItem.value`: the value to look for.
 - `filterItem.operator`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
-- `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)): required when multiple filter items are used.
+- `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')): required when multiple filter items are used.
 
 :::info
 Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
 :::
 
-#### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+#### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The `logicOperator` tells the data grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
@@ -127,12 +127,16 @@ In the example below, the _rating_ column can not be filtered.
 
 {{"demo": "DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Ignore diacritics (accents)
+
+You can ignore diacritics (accents) when filtering the rows. See [Quick filter - Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents).
+
 ## apiRef
 
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

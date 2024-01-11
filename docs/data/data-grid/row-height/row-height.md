@@ -13,20 +13,20 @@ Use the `rowHeight` prop to change this default value, as shown below:
 
 ## Variable row height
 
-If you need some rows to have different row heights this can be achieved using the `getRowHeight` prop.
+If you need some rows to have different row heights, this can be achieved using the `getRowHeight` prop.
 This function is called for each visible row and if the return value is a `number` then that `number` will be set as that row's `rowHeight`.
 If the return value is `null` or `undefined`, then the `rowHeight` prop will take effect for the given row.
 
 {{"demo": "VariableRowHeightGrid.js", "bg": "inline"}}
 
 :::warning
-Changing the `DataGrid` density does not affect the rows with variable row height.
+Changing the Data Grid density does not affect the rows with variable row height.
 You can access the density factor from the params provided to the `getRowHeight` prop
 :::
 
 :::warning
 Always memoize the function provided to `getRowHeight`.
-The grid bases on the referential value of these props to cache their values and optimize the rendering.
+The Data Grid bases on the referential value of these props to cache their values and optimize the rendering.
 :::
 
 ```tsx
@@ -111,8 +111,8 @@ To add a border instead, set `rowSpacingType` to `"border"` and customize the co
 />
 ```
 
-:::info
-⚠ Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/master-detail/) is not recommended because the detail panel relies on the bottom margin to work.
+:::success
+Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/master-detail/) is not recommended because the detail panel relies on the bottom margin to work.
 
 As an alternative, you can use the top spacing to define the space between rows.
 It's easier to always increase the next row spacing no matter if the detail panel is expanded or not, but you can use `gridDetailPanelExpandedRowIdsSelector` to apply a spacing depending on the open state.

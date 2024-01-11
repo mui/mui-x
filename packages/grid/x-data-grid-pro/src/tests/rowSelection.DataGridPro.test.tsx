@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
 import {
   GridApi,
   useGridApiRef,
@@ -23,7 +23,7 @@ function getSelectedRowIds() {
     );
 }
 
-describe('<DataGridPro /> - Row Selection', () => {
+describe('<DataGridPro /> - Row selection', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -121,6 +121,18 @@ describe('<DataGridPro /> - Row Selection', () => {
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'true');
     });
+
+    it('should not select more than one row when disableMultipleRowSelection = true', () => {
+      render(<TestDataGridSelection checkboxSelection disableMultipleRowSelection />);
+      const input1 = getCell(0, 0).querySelector('input')!;
+      fireEvent.click(input1);
+      expect(input1.checked).to.equal(true);
+
+      const input2 = getCell(1, 0).querySelector('input')!;
+      fireEvent.click(input2);
+      expect(input1.checked).to.equal(false);
+      expect(input2.checked).to.equal(true);
+    });
   });
 
   describe('prop: checkboxSelectionVisibleOnly = true', () => {
@@ -130,7 +142,7 @@ describe('<DataGridPro /> - Row Selection', () => {
           <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
         );
       }).toErrorDev(
-        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+        'MUI X: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
       );
     });
 

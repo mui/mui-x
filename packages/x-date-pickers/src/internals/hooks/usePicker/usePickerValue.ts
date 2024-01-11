@@ -5,8 +5,11 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { InferError, useValidation } from '../useValidation';
-import { FieldSection, FieldSelectedSections } from '../../../models';
-import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
+import { FieldSection, FieldSelectedSections, PickerChangeHandlerContext } from '../../../models';
+import {
+  PickerShortcutChangeImportance,
+  PickersShortcutsItemContext,
+} from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -19,7 +22,6 @@ import {
   UsePickerValueActions,
   PickerSelectionState,
   PickerValueUpdaterParams,
-  PickerChangeHandlerContext,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 
@@ -62,7 +64,7 @@ const shouldPublishValue = <TValue, TError>(
     return hasChanged(dateState.lastPublishedValue);
   }
 
-  if (action.name === 'setValueFromShortcut' && action.changeImportance === 'accept') {
+  if (action.name === 'setValueFromShortcut') {
     // On the first view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
     if (isCurrentValueTheDefaultValue) {
@@ -181,7 +183,7 @@ export const usePickerValue = <
       if (isControlled !== (inValue !== undefined)) {
         console.error(
           [
-            `MUI: A component is changing the ${
+            `MUI X: A component is changing the ${
               isControlled ? '' : 'un'
             }controlled value of a picker to be ${isControlled ? 'un' : ''}controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
@@ -198,7 +200,7 @@ export const usePickerValue = <
       if (!isControlled && defaultValue !== inDefaultValue) {
         console.error(
           [
-            `MUI: A component is changing the defaultValue of an uncontrolled picker after being initialized. ` +
+            `MUI X: A component is changing the defaultValue of an uncontrolled picker after being initialized. ` +
               `To suppress this warning opt to use a controlled value.`,
           ].join('\n'),
         );
@@ -288,6 +290,10 @@ export const usePickerValue = <
         validationError,
       };
 
+      if (action.name === 'setValueFromShortcut') {
+        context.shortcut = action.shortcut;
+      }
+
       handleValueChange(action.value, context);
     }
 
@@ -371,11 +377,16 @@ export const usePickerValue = <
   );
 
   const handleSelectShortcut = useEventCallback(
-    (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) =>
+    (
+      newValue: TValue,
+      changeImportance: PickerShortcutChangeImportance,
+      shortcut: PickersShortcutsItemContext,
+    ) =>
       updateDate({
         name: 'setValueFromShortcut',
         value: newValue,
-        changeImportance: changeImportance ?? 'accept',
+        changeImportance,
+        shortcut,
       }),
   );
 

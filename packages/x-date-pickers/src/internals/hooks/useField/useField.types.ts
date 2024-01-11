@@ -19,7 +19,6 @@ export interface UseFieldParams<
   TForwardedProps extends UseFieldForwardedProps,
   TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 > {
-  inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
@@ -116,6 +115,20 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * The ref object used to imperatively interact with the field.
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  /**
+   * Callback fired when the clear button is clicked.
+   */
+  onClear?: React.MouseEventHandler;
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable?: boolean;
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
 }
 
 export interface FieldRef<TSection extends FieldSection> {
@@ -138,13 +151,17 @@ export interface FieldRef<TSection extends FieldSection> {
 }
 
 export interface UseFieldForwardedProps {
+  inputRef?: React.Ref<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
   onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onBlur?: () => void;
   error?: boolean;
+  onClear?: React.MouseEventHandler;
+  clearable?: boolean;
+  disabled?: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -152,8 +169,8 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
   keyof UseFieldForwardedProps
 > &
   Required<UseFieldForwardedProps> &
-  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
-    ref: React.Ref<HTMLInputElement>;
+  Pick<React.InputHTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
+    inputRef: React.Ref<HTMLInputElement>;
     value: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
@@ -224,9 +241,8 @@ export type FieldSelectedSectionsIndexes = {
   endIndex: number;
   /**
    * If `true`, the selectors at the very beginning and very end of the input will be selected.
-   * @default false
    */
-  shouldSelectBoundarySelectors?: boolean;
+  shouldSelectBoundarySelectors: boolean;
 };
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {

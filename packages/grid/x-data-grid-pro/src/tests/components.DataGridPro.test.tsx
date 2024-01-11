@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, EventType, fireEvent, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, EventType, fireEvent, userEvent } from '@mui-internal/test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -35,7 +35,7 @@ describe('<DataGridPro/> - Components', () => {
 
     it('should throw a console error if hideFooterRowCount is used with pagination', () => {
       expect(() => render(<TestCase hideFooterRowCount pagination />)).toErrorDev(
-        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+        'MUI X: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
       );
     });
   });
@@ -51,10 +51,10 @@ describe('<DataGridPro/> - Components', () => {
         ['onDragOver', 'cellDragOver'],
       ] as const
     ).forEach(([prop, event]) => {
-      it(`should still publish the '${event}' event when overriding the '${prop}' prop in components.cell`, () => {
+      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase componentsProps={{ cell: { [prop]: propHandler } }} />);
+        render(<TestCase slotProps={{ cell: { [prop]: propHandler } }} />);
         apiRef!.current.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);
@@ -77,10 +77,10 @@ describe('<DataGridPro/> - Components', () => {
       });
     });
 
-    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in components.cell`, () => {
+    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, () => {
       const propHandler = spy();
       const eventHandler = spy();
-      render(<TestCase componentsProps={{ cell: { onKeyDown: propHandler } }} />);
+      render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
       apiRef!.current.subscribeEvent('cellKeyDown', eventHandler);
 
       expect(propHandler.callCount).to.equal(0);
@@ -100,10 +100,10 @@ describe('<DataGridPro/> - Components', () => {
         ['onDoubleClick', 'rowDoubleClick'],
       ] as const
     ).forEach(([prop, event]) => {
-      it(`should still publish the '${event}' event when overriding the '${prop}' prop in components.row`, () => {
+      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.row`, () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase componentsProps={{ row: { [prop]: propHandler } }} />);
+        render(<TestCase slotProps={{ row: { [prop]: propHandler } }} />);
         apiRef!.current.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);

@@ -29,17 +29,19 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
     const { groupId, children, ...other } = node;
     if (!groupId) {
       throw new Error(
-        'MUI: An element of the columnGroupingModel does not have either `field` or `groupId`.',
+        'MUI X: An element of the columnGroupingModel does not have either `field` or `groupId`.',
       );
     }
-    if (!children) {
-      console.warn(`MUI: group groupId=${groupId} has no children.`);
+    if (process.env.NODE_ENV !== 'production') {
+      if (!children) {
+        console.warn(`MUI X: group groupId=${groupId} has no children.`);
+      }
     }
     const groupParam = { ...other, groupId };
     const subTreeLookup = createGroupLookup(children);
     if (subTreeLookup[groupId] !== undefined || groupLookup[groupId] !== undefined) {
       throw new Error(
-        `MUI: The groupId ${groupId} is used multiple times in the columnGroupingModel.`,
+        `MUI X: The groupId ${groupId} is used multiple times in the columnGroupingModel.`,
       );
     }
     groupLookup = { ...groupLookup, ...subTreeLookup, [groupId]: groupParam };
@@ -63,6 +65,8 @@ export const columnGroupsStateInitializer: GridStateInitializer<
   const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
     columnFields,
     unwrappedGroupingModel,
+    // @ts-expect-error Move this part to `Pro` package
+    apiRef.current.state.pinnedColumns ?? {},
   );
   const maxDepth =
     visibleColumnFields.length === 0
@@ -122,9 +126,13 @@ export const useGridColumnGrouping = (
     apiRef.current.setState((state) => {
       const orderedFields = state.columns?.orderedFields ?? [];
 
+      // @ts-expect-error Move this logic to `Pro` package
+      const pinnedColumns = state.pinnedColumns ?? {};
+
       const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
         orderedFields as string[],
         unwrappedGroupingModel,
+        pinnedColumns,
       );
       return {
         ...state,
@@ -141,6 +149,8 @@ export const useGridColumnGrouping = (
       if (!props.experimentalFeatures?.columnGrouping) {
         return;
       }
+      // @ts-expect-error Move this logic to `Pro` package
+      const pinnedColumns = apiRef.current.getPinnedColumns?.() ?? {};
       const columnFields = gridColumnFieldsSelector(apiRef);
       const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
       const groupLookup = createGroupLookup(columnGroupingModel ?? []);
@@ -148,6 +158,7 @@ export const useGridColumnGrouping = (
       const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
         columnFields,
         unwrappedGroupingModel,
+        pinnedColumns,
       );
       const maxDepth =
         visibleColumnFields.length === 0

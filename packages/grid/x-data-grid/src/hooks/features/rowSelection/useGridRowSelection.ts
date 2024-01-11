@@ -27,6 +27,8 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 import { gridClasses } from '../../../constants/gridClasses';
+import { isEventTargetInPortal } from '../../../utils/domUtils';
+import { isMultipleRowSelectionEnabled } from './utils';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['rowSelectionModel'],
@@ -108,12 +110,11 @@ export const useGridRowSelection = (
 
   const {
     checkboxSelection,
-    disableMultipleRowSelection,
     disableRowSelectionOnClick,
     isRowSelectable: propIsRowSelectable,
   } = props;
 
-  const canHaveMultipleSelection = !disableMultipleRowSelection || checkboxSelection;
+  const canHaveMultipleSelection = isMultipleRowSelectionEnabled(props);
   const visibleRows = useGridVisibleRows(apiRef, props);
 
   const expandMouseRowRangeSelection = React.useCallback(
@@ -149,13 +150,13 @@ export const useGridRowSelection = (
     (model) => {
       if (
         props.signature === GridSignature.DataGrid &&
-        !props.checkboxSelection &&
+        !canHaveMultipleSelection &&
         Array.isArray(model) &&
         model.length > 1
       ) {
         throw new Error(
           [
-            'MUI: `rowSelectionModel` can only contain 1 item in DataGrid.',
+            'MUI X: `rowSelectionModel` can only contain 1 item in DataGrid.',
             'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
           ].join('\n'),
         );
@@ -170,7 +171,7 @@ export const useGridRowSelection = (
         apiRef.current.forceUpdate();
       }
     },
-    [apiRef, logger, props.rowSelection, props.signature, props.checkboxSelection],
+    [apiRef, logger, props.rowSelection, props.signature, canHaveMultipleSelection],
   );
 
   const isRowSelected = React.useCallback<GridRowSelectionApi['isRowSelected']>(
@@ -396,7 +397,7 @@ export const useGridRowSelection = (
         return;
       }
 
-      if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
+      if (event.shiftKey && canHaveMultipleSelection) {
         expandMouseRowRangeSelection(params.id);
       } else {
         handleSingleRowSelection(params.id, event);
@@ -405,7 +406,6 @@ export const useGridRowSelection = (
     [
       disableRowSelectionOnClick,
       canHaveMultipleSelection,
-      checkboxSelection,
       apiRef,
       expandMouseRowRangeSelection,
       handleSingleRowSelection,
@@ -425,13 +425,13 @@ export const useGridRowSelection = (
     GridEventListener<'rowSelectionCheckboxChange'>
   >(
     (params, event) => {
-      if ((event.nativeEvent as any).shiftKey) {
+      if (canHaveMultipleSelection && (event.nativeEvent as any).shiftKey) {
         expandMouseRowRangeSelection(params.id);
       } else {
-        apiRef.current.selectRow(params.id, params.value);
+        apiRef.current.selectRow(params.id, params.value, !canHaveMultipleSelection);
       }
     },
-    [apiRef, expandMouseRowRangeSelection],
+    [apiRef, expandMouseRowRangeSelection, canHaveMultipleSelection],
   );
 
   const handleHeaderSelectionCheckboxChange = React.useCallback<
@@ -459,7 +459,7 @@ export const useGridRowSelection = (
 
       // Ignore portal
       // Do not apply shortcuts if the focus is not on the cell root component
-      if (!event.currentTarget.contains(event.target as Element)) {
+      if (isEventTargetInPortal(event)) {
         return;
       }
 

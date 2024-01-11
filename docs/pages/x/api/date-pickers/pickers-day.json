@@ -10,18 +10,18 @@
         "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
       }
     },
-    "centerRipple": { "type": { "name": "bool" } },
+    "centerRipple": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disableMargin": { "type": { "name": "bool" } },
-    "disableRipple": { "type": { "name": "bool" } },
-    "disableTouchRipple": { "type": { "name": "bool" } },
-    "focusRipple": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
+    "disableMargin": { "type": { "name": "bool" }, "default": "false" },
+    "disableRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
+    "focusRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusVisibleClassName": { "type": { "name": "string" } },
     "onFocusVisible": { "type": { "name": "func" } },
-    "selected": { "type": { "name": "bool" } },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" }, "default": "false" },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
       "type": {
         "name": "union",
@@ -29,7 +29,7 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "today": { "type": { "name": "bool" } },
+    "today": { "type": { "name": "bool" }, "default": "false" },
     "TouchRippleProps": { "type": { "name": "object" } },
     "touchRippleRef": {
       "type": {
@@ -38,28 +38,62 @@
       }
     }
   },
-  "slots": [],
   "name": "PickersDay",
-  "styles": {
-    "classes": [
-      "root",
-      "dayWithMargin",
-      "dayOutsideMonth",
-      "hiddenDaySpacingFiller",
-      "today",
-      "selected",
-      "disabled"
-    ],
-    "globalClasses": { "selected": "Mui-selected", "disabled": "Mui-disabled" },
-    "name": "MuiPickersDay"
-  },
+  "imports": [
+    "import { PickersDay } from '@mui/x-date-pickers/PickersDay';",
+    "import { PickersDay } from '@mui/x-date-pickers';",
+    "import { PickersDay } from '@mui/x-date-pickers-pro';"
+  ],
+  "classes": [
+    {
+      "key": "dayOutsideMonth",
+      "className": "MuiPickersDay-dayOutsideMonth",
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "dayWithMargin",
+      "className": "MuiPickersDay-dayWithMargin",
+      "description": "Styles applied to the root element if `disableMargin=false`.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "hiddenDaySpacingFiller",
+      "className": "MuiPickersDay-hiddenDaySpacingFiller",
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPickersDay-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "State class applied to the root element if `selected=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "today",
+      "className": "MuiPickersDay-today",
+      "description": "Styles applied to the root element if `disableHighlightToday=false` and `today=true`.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiPickersDay",
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers/src/PickersDay/PickersDay.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersDay" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersDay" }
-  ]
+  "cssComponent": false
 }

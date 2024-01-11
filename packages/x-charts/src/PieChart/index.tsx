@@ -1,5 +1,8 @@
-export { PiePlot } from './PiePlot';
-export { PieChart } from './PieChart';
+export * from './PieChart';
+
+export * from './PiePlot';
+export * from './PieArcPlot';
+export * from './PieArcLabelPlot';
 
 export * from './PieArc';
 export * from './PieArcLabel';

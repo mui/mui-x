@@ -13,10 +13,10 @@ import {
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent, screen } from '@mui-internal/test-utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 
-describe('<DataGridPro /> - Row Editing', () => {
+describe('<DataGridPro /> - Row editing', () => {
   const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -91,7 +91,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         render(<TestCase />);
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
         expect(() => act(() => apiRef.current.startRowEditMode({ id: 0 }))).to.throw(
-          'MUI: The row with id=0 is not in view mode.',
+          'MUI X: The row with id=0 is not in view mode.',
         );
       });
 
@@ -233,7 +233,6 @@ describe('<DataGridPro /> - Row Editing', () => {
           error: false,
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
-          unstable_updateValueOnRender: false,
         });
 
         const args2 = column2Props.preProcessEditCellProps.lastCall.args[0];
@@ -244,7 +243,6 @@ describe('<DataGridPro /> - Row Editing', () => {
           value: 1,
           error: false,
           isProcessingProps: true,
-          unstable_updateValueOnRender: false,
         });
       });
 
@@ -399,7 +397,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it('should reject when the cell is not in edit mode', async () => {
         render(<TestCase />);
         expect(() => apiRef.current.stopRowEditMode({ id: 0 })).to.throw(
-          'MUI: The row with id=0 is not in edit mode.',
+          'MUI X: The row with id=0 is not in edit mode.',
         );
       });
 
@@ -549,7 +547,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         render(<TestCase processRowUpdate={processRowUpdate} />);
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
         expect(() => act(() => apiRef.current.stopRowEditMode({ id: 0 }))).toErrorDev(
-          'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+          'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
@@ -911,7 +909,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(spiedStartRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           fieldToFocus: 'currencyPair',
-          initialValue: 'a',
+          deleteValue: true,
         });
       });
 

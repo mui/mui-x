@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
@@ -9,6 +8,7 @@ import {
   GridColumnHeaderParams,
   GridColumnHeaderTitle,
 } from '@mui/x-data-grid';
+import type { GridBaseColDef } from '@mui/x-data-grid/internals';
 import { getAggregationFunctionLabel } from '../hooks/features/aggregation/gridAggregationUtils';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -19,7 +19,7 @@ interface OwnerState extends DataGridPremiumProcessedProps {
   colDef: GridColDef;
 }
 
-const GridAggregationHeaderRoot = styled(Box, {
+const GridAggregationHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeader',
   overridesResolver: (_, styles) => styles.aggregationColumnHeader,
@@ -66,8 +66,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridAggregationHeader(props: GridColumnHeaderParams) {
-  const { colDef, aggregation } = props;
+function GridAggregationHeader(
+  props: GridColumnHeaderParams & {
+    renderHeader: GridBaseColDef['renderHeader'];
+  },
+) {
+  const { renderHeader, ...params } = props;
+  const { colDef, aggregation } = params;
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -86,11 +91,15 @@ function GridAggregationHeader(props: GridColumnHeaderParams) {
 
   return (
     <GridAggregationHeaderRoot ownerState={ownerState} className={classes.root}>
-      <GridColumnHeaderTitle
-        label={colDef.headerName ?? colDef.field}
-        description={colDef.description}
-        columnWidth={colDef.computedWidth}
-      />
+      {renderHeader ? (
+        renderHeader(params)
+      ) : (
+        <GridColumnHeaderTitle
+          label={colDef.headerName ?? colDef.field}
+          description={colDef.description}
+          columnWidth={colDef.computedWidth}
+        />
+      )}
       <GridAggregationFunctionLabel ownerState={ownerState} className={classes.aggregationLabel}>
         {aggregationLabel}
       </GridAggregationFunctionLabel>

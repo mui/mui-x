@@ -372,6 +372,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * The date to show.
    */
@@ -522,10 +523,9 @@ DateRangePickerDayRaw.propTypes = {
 } as any;
 
 /**
- *
  * Demos:
  *
- * - [Date Range Picker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
  *
  * API:
  *

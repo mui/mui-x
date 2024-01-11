@@ -15,6 +15,7 @@ import {
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { formatMeridiem } from '../internals/utils/date-utils';
 
 export interface TimePickerToolbarProps<TDate>
   extends BaseToolbarProps<TDate | null, TimeViewWithMeridiem> {
@@ -142,6 +143,16 @@ TimePickerToolbarAmPmSelection.propTypes = {
   ]),
 } as any;
 
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [TimePickerToolbar API](https://mui.com/x/api/date-pickers/time-picker-toolbar/)
+ */
 function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
   const {
@@ -232,7 +243,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             data-mui-test="toolbar-am-btn"
             selected={meridiemMode === 'am'}
             typographyClassName={classes.ampmLabel}
-            value={utils.getMeridiemText('am')}
+            value={formatMeridiem(utils, 'am')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
             disabled={disabled}
           />
@@ -242,7 +253,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             data-mui-test="toolbar-pm-btn"
             selected={meridiemMode === 'pm'}
             typographyClassName={classes.ampmLabel}
-            value={utils.getMeridiemText('pm')}
+            value={formatMeridiem(utils, 'pm')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             disabled={disabled}
           />
@@ -279,6 +290,11 @@ TimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   titleId: PropTypes.string,
   /**
    * Toolbar date format.

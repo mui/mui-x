@@ -128,7 +128,7 @@ export const useGridTreeDataPreProcessors = (
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
       if (!props.getTreeDataPath) {
-        throw new Error('MUI: No getTreeDataPath given.');
+        throw new Error('MUI X: No getTreeDataPath given.');
       }
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => ({
@@ -141,7 +141,7 @@ export const useGridTreeDataPreProcessors = (
       const onDuplicatePath: GridTreePathDuplicateHandler = (firstId, secondId, path) => {
         throw new Error(
           [
-            'MUI: The path returned by `getTreeDataPath` should be unique.',
+            'MUI X: The path returned by `getTreeDataPath` should be unique.',
             `The rows with id #${firstId} and #${secondId} have the same.`,
             `Path: ${JSON.stringify(path.map((step) => step.key))}.`,
           ].join('\n'),

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent, fireEvent } from '@mui-internal/test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
-import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
-import { DateRange } from '@mui/x-date-pickers-pro';
+import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 
 describe('<MobileDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -37,8 +37,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -77,8 +77,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -109,8 +109,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -138,8 +138,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -171,8 +171,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(
@@ -203,8 +203,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
-        adapterToUse.date(new Date(2018, 0, 1)),
-        adapterToUse.date(new Date(2018, 0, 6)),
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
       ];
 
       render(

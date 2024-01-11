@@ -1,9 +1,22 @@
 {
-  "props": {},
-  "slots": [],
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "MarkPlot",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMarkPlot" },
+  "imports": [
+    "import { MarkPlot } from '@mui/x-charts/LineChart';",
+    "import { MarkPlot } from '@mui/x-charts';"
+  ],
+  "slots": [{ "name": "mark", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiMarkPlot",
   "filename": "/packages/x-charts/src/LineChart/MarkPlot.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "MarkPlot" }]
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
 }

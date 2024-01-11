@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen, userEvent, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, userEvent, waitFor } from '@mui-internal/test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -322,8 +322,8 @@ describe('<DataGrid /> - Pagination', () => {
           />,
         );
       }).toWarnDev([
-        `MUI: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
-        `MUI: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
+        `MUI X: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
+        `MUI X: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
       ]);
     });
 
@@ -350,8 +350,8 @@ describe('<DataGrid /> - Pagination', () => {
       expect(() => {
         render(<BaselineTestCase paginationModel={{ pageSize, page: 0 }} />);
       }).toWarnDev([
-        `MUI: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
-        `MUI: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
+        `MUI X: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
+        `MUI X: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
       ]);
     });
 
@@ -359,8 +359,8 @@ describe('<DataGrid /> - Pagination', () => {
       expect(() => {
         render(<BaselineTestCase pageSizeOptions={[25, 50]} />);
       }).toWarnDev([
-        `MUI: The page size \`100\` is not preset in the \`pageSizeOptions\``,
-        `MUI: The page size \`100\` is not preset in the \`pageSizeOptions\``,
+        `MUI X: The page size \`100\` is not preset in the \`pageSizeOptions\``,
+        `MUI X: The page size \`100\` is not preset in the \`pageSizeOptions\``,
       ]);
     });
 

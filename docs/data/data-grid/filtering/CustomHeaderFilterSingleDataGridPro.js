@@ -89,12 +89,7 @@ export default function CustomHeaderFilterSingleDataGridPro() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
-        {...data}
-        columns={columns}
-        disableColumnFilter
-        unstable_headerFilters
-      />
+      <DataGridPro {...data} columns={columns} disableColumnFilter headerFilters />
     </div>
   );
 }

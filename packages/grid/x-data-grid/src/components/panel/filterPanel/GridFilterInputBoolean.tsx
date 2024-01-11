@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/utils';
+import { refType, unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -35,6 +35,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     clearButton,
     tabIndex,
     label: labelProp,
+    InputLabelProps,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
@@ -44,7 +45,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const selectId = useId();
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
-  const isSelectNative = baseSelectProps.native ?? true;
+  const isSelectNative = baseSelectProps.native ?? false;
 
   const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
@@ -125,12 +126,7 @@ GridFilterInputBoolean.propTypes = {
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
   clearButton: PropTypes.node,
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
+  focusElementRef: refType,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)

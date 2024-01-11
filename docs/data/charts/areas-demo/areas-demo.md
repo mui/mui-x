@@ -1,10 +1,11 @@
 ---
 title: Charts - Areas demonstration
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot
 ---
 
 # Charts - Areas demonstration
 
-<p class="description">This page groups demonstration using areas charts.</p>
+<p class="description">This page groups demonstration using area charts.</p>
 
 ## SimpleAreaChart
 
@@ -21,3 +22,7 @@ title: Charts - Areas demonstration
 ## PercentAreaChart
 
 {{"demo": "PercentAreaChart.js"}}
+
+## AreaChartConnectNulls
+
+{{"demo": "AreaChartConnectNulls.js"}}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridSortModel, useGridApiRef, GridApi } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
@@ -10,7 +10,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGrid /> - Sorting', () => {
   const { render } = createRenderer();
 
-  const baselineProps = {
+  const baselineProps: DataGridProps = {
     autoHeight: isJSDOM,
     rows: [
       {
@@ -177,7 +177,7 @@ describe('<DataGrid /> - Sorting', () => {
 
   it('should keep rows sorted when rows prop change', () => {
     interface TestCaseProps {
-      rows: any[];
+      rows: DataGridProps['rows'];
     }
 
     function TestCase(props: TestCaseProps) {
@@ -515,7 +515,7 @@ describe('<DataGrid /> - Sorting', () => {
 
         expect(getColumnValues(0)).to.deep.equal(['2', '0', '1', '3']);
       }).toErrorDev(
-        'MUI: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
+        'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
       );
     });
   });

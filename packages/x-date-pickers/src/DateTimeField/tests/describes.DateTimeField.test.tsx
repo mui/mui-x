@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import TextField from '@mui/material/TextField';
-import { describeConformance, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, userEvent } from '@mui-internal/test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-  getTextbox,
   wrapPickerMount,
-} from 'test/utils/pickers-utils';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+  expectInputValue,
+  expectInputPlaceholder,
+  getTextbox,
+  describeValidation,
+  describeValue,
+} from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -44,7 +44,7 @@ describe('<DateTimeField /> - Describes', () => {
   describeValue(DateTimeField, () => ({
     render,
     componentFamily: 'field',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {

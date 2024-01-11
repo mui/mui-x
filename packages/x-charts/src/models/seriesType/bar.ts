@@ -20,6 +20,11 @@ export interface BarSeriesType
    */
   dataKey?: string;
   label?: string;
+  /**
+   * Layout of the bars. All bar should have the same layout.
+   * @default 'vertical'
+   */
+  layout?: 'horizontal' | 'vertical';
 }
 
 /**
@@ -33,4 +38,4 @@ export type BarItemIdentifier = {
 };
 
 export interface DefaultizedBarSeriesType
-  extends DefaultizedProps<BarSeriesType, CommonDefaultizedProps | 'color'> {}
+  extends DefaultizedProps<BarSeriesType, CommonDefaultizedProps | 'color' | 'layout'> {}

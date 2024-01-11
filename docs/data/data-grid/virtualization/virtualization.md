@@ -7,7 +7,7 @@ This is a built-in feature of the rendering engine and greatly improves renderin
 
 _\*unlimited: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
-## Row virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Row virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 Row virtualization is the insertion and removal of rows as the data grid scrolls vertically.
 
@@ -38,7 +38,7 @@ You may want to turn it off to be able to test the data grid with a headless bro
 <DataGrid {...data} disableVirtualization />
 ```
 
-:::info
+:::warning
 Disabling the virtualization will increase the size of the DOM and drastically reduce the performance.
 Use it only for testing purposes or on small datasets.
 :::

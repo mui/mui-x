@@ -8,13 +8,13 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "types": ["react", "node"],
-    "incremental": true,
-    "noImplicitAny": true
+    "incremental": true
   },
   "include": [
     "pages/**/*.ts*",
     "data/**/*",
     "src/modules/components/**/*",
+    "next.config.js",
     "../node_modules/@mui/material/themeCssVarsAugmentation",
     "../node_modules/dayjs/plugin/utc.d.ts",
     "../node_modules/dayjs/plugin/timezone.d.ts",

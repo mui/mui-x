@@ -1,18 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { ChartsYAxisProps } from '../models/axis';
-import {
-  Line,
-  Tick,
-  TickLabel,
-  Label,
-  AxisRoot,
-} from '../internals/components/AxisSharedComponents';
+import { AxisRoot } from '../internals/components/AxisSharedComponents';
+import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
@@ -38,11 +34,21 @@ const defaultProps = {
   tickSize: 6,
 } as const;
 
+/**
+ * Demos:
+ *
+ * - [Axis](https://mui.com/x/react-charts/axis/)
+ *
+ * API:
+ *
+ * - [ChartsYAxis API](https://mui.com/x/api/charts/charts-y-axis/)
+ */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
   const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
+  const { yAxisIds } = React.useContext(CartesianContext);
   const {
     yAxis: {
-      [props.axisId]: { scale: yScale, ticksNumber, ...settings },
+      [props.axisId ?? yAxisIds[0]]: { scale: yScale, tickNumber, ...settings },
     },
   } = React.useContext(CartesianContext);
 
@@ -54,8 +60,12 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickFontSize,
     label,
     labelFontSize,
+    labelStyle,
+    tickLabelStyle,
     tickSize: tickSizeProp,
     valueFormatter,
+    slots,
+    slotProps,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -65,58 +75,92 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const yTicks = useTicks({ scale: yScale, ticksNumber, valueFormatter });
+  const yTicks = useTicks({ scale: yScale, tickNumber, valueFormatter });
 
-  const positionSigne = position === 'right' ? 1 : -1;
+  const positionSign = position === 'right' ? 1 : -1;
 
   const labelRefPoint = {
-    x: positionSigne * (tickFontSize + tickSize + 10),
+    x: positionSign * (tickFontSize + tickSize + 10),
     y: top + height / 2,
   };
+
+  const Line = slots?.axisLine ?? 'line';
+  const Tick = slots?.axisTick ?? 'line';
+  const TickLabel = slots?.axisTickLabel ?? ChartsText;
+  const Label = slots?.axisLabel ?? ChartsText;
+
+  const axisTickLabelProps = useSlotProps({
+    elementType: TickLabel,
+    externalSlotProps: slotProps?.axisTickLabel,
+    additionalProps: {
+      style: {
+        fontSize: tickFontSize,
+        textAnchor: position === 'right' ? 'start' : 'end',
+        dominantBaseline: 'central',
+        ...tickLabelStyle,
+      },
+      className: classes.tickLabel,
+    } as Partial<ChartsTextProps>,
+    ownerState: {},
+  });
+
+  const axisLabelProps = useSlotProps({
+    elementType: Label,
+    externalSlotProps: slotProps?.axisLabel,
+    additionalProps: {
+      style: {
+        fontSize: labelFontSize,
+        angle: positionSign * 90,
+        textAnchor: 'middle',
+        dominantBaseline: 'auto',
+        ...labelStyle,
+      } as Partial<ChartsTextProps>['style'],
+    } as Partial<ChartsTextProps>,
+    ownerState: {},
+  });
+
   return (
     <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
     >
       {!disableLine && (
-        <Line y1={yScale.range()[0]} y2={yScale.range()[1]} className={classes.line} />
+        <Line
+          y1={yScale.range()[0]}
+          y2={yScale.range()[1]}
+          className={classes.line}
+          {...slotProps?.axisLine}
+        />
       )}
 
       {yTicks.map(({ formattedValue, offset, labelOffset }, index) => {
-        const xTickLabel = positionSigne * (tickSize + 2);
+        const xTickLabel = positionSign * (tickSize + 2);
         const yTickLabel = labelOffset;
         return (
           <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
-            {!disableTicks && <Tick x2={positionSigne * tickSize} className={classes.tick} />}
+            {!disableTicks && (
+              <Tick
+                x2={positionSign * tickSize}
+                className={classes.tick}
+                {...slotProps?.axisTick}
+              />
+            )}
+
             {formattedValue !== undefined && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
-                transform-origin={`${xTickLabel}px ${yTickLabel}px`}
-                sx={{
-                  fontSize: tickFontSize,
-                }}
-                className={classes.tickLabel}
-              >
-                {formattedValue.toLocaleString()}
-              </TickLabel>
+                text={formattedValue.toString()}
+                {...axisTickLabelProps}
+              />
             )}
           </g>
         );
       })}
-
       {label && (
-        <Label
-          {...labelRefPoint}
-          sx={{
-            fontSize: labelFontSize,
-            transform: `rotate(${positionSigne * 90}deg)`,
-            transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
-          }}
-          className={classes.label}
-        >
-          {label}
-        </Label>
+        <g className={classes.label}>
+          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
+        </g>
       )}
     </AxisRoot>
   );
@@ -128,9 +172,10 @@ ChartsYAxis.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Id of the axis to render.
+   * The id of the axis to render.
+   * If undefined, it will be the first defined axis.
    */
-  axisId: PropTypes.string.isRequired,
+  axisId: PropTypes.string,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -157,12 +202,27 @@ ChartsYAxis.propTypes = {
   /**
    * The font size of the axis label.
    * @default 14
+   * @deprecated Consider using `labelStyle.fontSize` instead.
    */
   labelFontSize: PropTypes.number,
+  /**
+   * The style applied to the axis label.
+   */
+  labelStyle: PropTypes.object,
   /**
    * Position of the axis.
    */
   position: PropTypes.oneOf(['left', 'right']),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The stroke color of the axis line.
    * @default 'currentColor'
@@ -171,8 +231,45 @@ ChartsYAxis.propTypes = {
   /**
    * The font size of the axis ticks text.
    * @default 12
+   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
    */
   tickFontSize: PropTypes.number,
+  /**
+   * Defines which ticks are displayed. Its value can be:
+   * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - an array containing the values where ticks should be displayed.
+   * @default 'auto'
+   */
+  tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
+  /**
+   * Defines which ticks get its label displayed. Its value can be:
+   * - 'auto' In such case, labels are displayed if they do not overlap with the previous one.
+   * - a filtering function of the form (value, index) => boolean. Warning: the index is tick index, not data ones.
+   * @default 'auto'
+   */
+  tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+  /**
+   * The style applied to ticks text.
+   */
+  tickLabelStyle: PropTypes.object,
+  /**
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMaxStep: PropTypes.number,
+  /**
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMinStep: PropTypes.number,
+  /**
+   * The number of ticks. This number is not guaranted.
+   * Not supported by categorical axis (band, points).
+   */
+  tickNumber: PropTypes.number,
   /**
    * The size of the ticks.
    * @default 6

@@ -18,7 +18,7 @@ import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridCol
 import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
-import { findParentElementFromClassName } from '../utils/domUtils';
+import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
@@ -103,6 +103,7 @@ function EmptyCell({ width }: { width: number }) {
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
     selected,
+    hovered,
     rowId,
     row,
     index,
@@ -124,6 +125,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     onDoubleClick,
     onMouseEnter,
     onMouseLeave,
+    onMouseOut,
+    onMouseOver,
     ...other
   } = props;
   const apiRef = useGridApiContext();
@@ -141,6 +144,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const ownerState = {
     selected,
+    hovered,
     isLastVisible,
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
@@ -198,12 +202,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ): React.MouseEventHandler<HTMLDivElement> =>
       (event) => {
         // Ignore portal
-        // The target is not an element when triggered by a Select inside the cell
-        // See https://github.com/mui/material-ui/issues/10534
-        if (
-          (event.target as any).nodeType === 1 &&
-          !event.currentTarget.contains(event.target as Element)
-        ) {
+        if (isEventTargetInPortal(event)) {
           return;
         }
 
@@ -273,12 +272,15 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       'width' | 'colSpan' | 'showRightBorder' | 'indexRelativeToAllColumns'
     >,
   ) => {
-    const disableDragEvents =
-      (disableColumnReorder && column.disableReorder) ||
-      (!rowReordering &&
-        !!sortModel.length &&
-        treeDepth > 1 &&
-        Object.keys(editRowsState).length > 0);
+    // when the cell is a reorder cell we are not allowing to reorder the col
+    // fixes https://github.com/mui/mui-x/issues/11126
+    const isReorderCell = column.field === '__reorder__';
+    const isEditingRows = Object.keys(editRowsState).length > 0;
+
+    const canReorderColumn = !(disableColumnReorder || column.disableReorder);
+    const canReorderRow = rowReordering && !sortModel.length && treeDepth <= 1 && !isEditingRows;
+
+    const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
 
     const editCellState = editRowsState[rowId]?.[column.field] ?? null;
     let cellIsNotVisible = false;
@@ -447,6 +449,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         onDoubleClick: publish('rowDoubleClick', onDoubleClick),
         onMouseEnter: publish('rowMouseEnter', onMouseEnter),
         onMouseLeave: publish('rowMouseLeave', onMouseLeave),
+        onMouseOut: publish('rowMouseOut', onMouseOut),
+        onMouseOver: publish('rowMouseOver', onMouseOver),
       }
     : null;
 
@@ -456,7 +460,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       data-id={rowId}
       data-rowindex={index}
       role="row"
-      className={clsx(...rowClassNames, classes.root, className)}
+      className={clsx(...rowClassNames, classes.root, hovered ? 'Mui-hovered' : null, className)}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}

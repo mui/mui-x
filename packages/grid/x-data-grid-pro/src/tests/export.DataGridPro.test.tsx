@@ -5,7 +5,7 @@ import {
   GridApi,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, act } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 
@@ -517,7 +517,7 @@ describe('<DataGridPro /> - Export', () => {
         apiRef.current.getDataAsCsv();
       }).toWarnDev(
         [
-          'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+          'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
           'You can provide a `valueFormatter` with a string representation to be used.',
         ].join('\n'),
       );

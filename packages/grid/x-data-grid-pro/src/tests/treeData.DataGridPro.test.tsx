@@ -1,4 +1,4 @@
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
 import {
   getCell,
   getColumnHeaderCell,
@@ -56,7 +56,7 @@ const baselineProps: DataGridProProps = {
   getRowId: (row) => row.name,
 };
 
-describe('<DataGridPro /> - Tree Data', () => {
+describe('<DataGridPro /> - Tree data', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -336,6 +336,27 @@ describe('<DataGridPro /> - Tree Data', () => {
       );
       expect(getColumnValues(0)).to.deep.equal(['A', 'A', 'B', 'B', 'A', 'B', 'A', 'A', 'C']);
     });
+
+    // https://github.com/mui/mui-x/issues/9344
+    it('should support valueFormatter', () => {
+      render(
+        <Test
+          groupingColDef={{ valueFormatter: ({ value }) => `> ${value}` }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal([
+        '> A (2)',
+        '> A',
+        '> B',
+        '> B (4)',
+        '> A',
+        '> B (2)',
+        '> A (1)',
+        '> A',
+        '> C',
+      ]);
+    });
   });
 
   describe('row grouping column', () => {
@@ -519,7 +540,7 @@ describe('<DataGridPro /> - Tree Data', () => {
       expect(() => {
         render(<Test filterMode="server" />);
       }).toErrorDev(
-        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
+        'MUI X: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
       );
     });
 

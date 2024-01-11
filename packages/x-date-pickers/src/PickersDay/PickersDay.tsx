@@ -134,6 +134,9 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   padding: 0,
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
+  transition: theme.transitions.create('background-color', {
+    duration: theme.transitions.duration.short,
+  }),
   color: (theme.vars || theme).palette.text.primary,
   '@media (pointer: fine)': {
     '&:hover': {
@@ -155,9 +158,6 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
-    transition: theme.transitions.create('background-color', {
-      duration: theme.transitions.duration.short,
-    }),
     '&:hover': {
       willChange: 'background-color',
       backgroundColor: (theme.vars || theme).palette.primary.dark,
@@ -259,6 +259,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     isLastVisibleCell,
     ...other
   } = props;
+
   const ownerState = {
     ...props,
     autoFocus,
@@ -285,7 +286,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     }
   }, [autoFocus, disabled, isAnimating, outsideCurrentMonth]);
 
-  // For day outside of current month, move focus from mouseDown to mouseUp
+  // For a day outside the current month, move the focus from mouseDown to mouseUp
   // Goal: have the onClick ends before sliding to the new month
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
     onMouseDown(event);
@@ -368,6 +369,7 @@ PickersDayRaw.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * The date to show.
    */
@@ -493,11 +495,9 @@ PickersDayRaw.propTypes = {
 } as any;
 
 /**
- *
  * Demos:
  *
- * - [Date Picker](https://mui.com/x/react-date-pickers/date-picker/)
- *
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
  * API:
  *
  * - [PickersDay API](https://mui.com/x/api/date-pickers/pickers-day/)

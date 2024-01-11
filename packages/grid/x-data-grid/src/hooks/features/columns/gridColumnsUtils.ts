@@ -94,7 +94,6 @@ export function computeFlexColumnsWidth({
         flexColumnsLookup.all[column.field] &&
         flexColumnsLookup.all[column.field].frozen === true
       ) {
-        // eslint-disable-next-line no-continue
         continue;
       }
 
@@ -293,7 +292,7 @@ export const createColumnsState = ({
   columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   keepOnlyColumnsToUpsert = false,
 }: {
-  columnsToUpsert: GridColDef[];
+  columnsToUpsert: readonly GridColDef[];
   initialState: GridColumnsInitialState | undefined;
   columnTypes: GridColumnTypesRecord;
   columnVisibilityModel?: GridColumnVisibilityModel;
@@ -349,7 +348,6 @@ export const createColumnsState = ({
     // If the column type has changed - merge the existing state with the default column type definition
     if (existingState && existingState.type !== newColumn.type) {
       existingState = {
-        ...existingState,
         ...getDefaultColTypeDef(columnTypes, newColumn.type),
         field,
       };

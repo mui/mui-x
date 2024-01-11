@@ -20,13 +20,23 @@
     },
     "timeIcon": { "type": { "name": "node" }, "default": "Time" }
   },
-  "slots": [],
   "name": "DateTimePickerTabs",
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
+  "imports": [
+    "import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';",
+    "import { DateTimePickerTabs } from '@mui/x-date-pickers';",
+    "import { DateTimePickerTabs } from '@mui/x-date-pickers-pro';"
+  ],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiDateTimePickerTabs-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDateTimePickerTabs",
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom subcomponents</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerTabs" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "DateTimePickerTabs" }
-  ]
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
 }

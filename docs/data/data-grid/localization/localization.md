@@ -1,4 +1,4 @@
-# Data Grid - Localization
+# Data Grid - Translated components
 
 <p class="description">The data grid allows to support users from different locales, with formatting, and localized strings.</p>
 
@@ -6,19 +6,17 @@ The default locale of MUI is English (United States). If you want to use other l
 
 ## Translation keys
 
-<!-- #default-branch-switch -->
-
 You can use the `localeText` prop to pass in your own text and translations.
-You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts)
+You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/constants/localeTextConstants.ts)
 in the GitHub repository.
 In the following example, the labels of the density selector are customized.
 
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
 
 :::warning
-It's important to note that because the data grid uses components from the Material UI library some translation keys need to be accessed using that component key.
+It's important to note that because the Data Grid uses components from the Material UI library, some translation keys need to be accessed using that component key.
 
-One example is the table pagination component used in the data grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [`TablePagination`](/material-ui/api/table-pagination/) component.
+One example is the table pagination component used in the Data Grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [Table Pagination](/material-ui/api/table-pagination/) component.
 
 ```jsx
 <DataGrid
@@ -42,7 +40,10 @@ You can use the theme to configure the locale text:
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { DataGrid, bgBG } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { bgBG } from '@mui/x-data-grid/locales';
+// Or import { bgBG } from '@mui/x-data-grid-pro/locales';
+// Or import { bgBG } from '@mui/x-data-grid-premium/locales';
 
 const theme = createTheme(
   {
@@ -64,7 +65,8 @@ The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { DataGrid, bgBG } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { bgBG } from '@mui/x-data-grid/locales';
 import { bgBG as pickersBgBG } from '@mui/x-date-pickers/locales';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 
@@ -84,10 +86,11 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-If you want to pass language translations directly to the data grid without using `createTheme` and `ThemeProvider`, you can directly load the language translations from the `@mui/x-data-grid` or `@mui/x-data-grid-pro` package.
+If you want to pass language translations directly to the data grid without using `createTheme` and `ThemeProvider`, you can directly load the language translations from `@mui/x-data-grid/locales`.
 
 ```jsx
-import { DataGrid, nlNL } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { nlNL } from '@mui/x-data-grid/locales';
 
 <DataGrid localeText={nlNL.components.MuiDataGrid.defaultProps.localeText} />;
 ```
@@ -101,13 +104,14 @@ You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Data Grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
 
-## RTL Support 🚧
+## RTL Support
 
-:::warning
-RTL is not fully supported in the Data Grid.
+Right-to-left languages such as Arabic, Persian, or Hebrew are supported.
+Follow [this guide](/material-ui/guides/right-to-left/) to use them.
 
-👍 Upvote [issue #230](https://github.com/mui/mui-x/issues/230) if that's a requirement in your project.
-:::
+The example below demonstrates how to use an RTL language (Arabic) with the data grid.
+
+{{"demo": "DataGridRTL.js", "bg": "inline"}}
 
 ## API
 

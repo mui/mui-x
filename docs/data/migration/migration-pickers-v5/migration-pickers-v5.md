@@ -4,8 +4,6 @@ productId: x-date-pickers
 
 # Migration from v5 to v6
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v5 to v6.</p>
 
 ## Introduction
@@ -14,7 +12,7 @@ To get started, check out [the blog post about the release of MUI X v6](https://
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `latest` or `^6.0.0`.
+In `package.json`, change the version of the date pickers package to `^6.0.0`.
 
 ```diff
 -"@mui/x-date-pickers": "5.X.X",
@@ -33,13 +31,13 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 // Date and Time Pickers specific
-npx @mui/x-codemod v6.0.0/pickers/preset-safe <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/preset-safe <path>
 // Target Data Grid as well
-npx @mui/x-codemod v6.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v6.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers-v600) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
@@ -189,11 +187,14 @@ Either rename the prop to the newly added, but deprecated `shouldDisableClock` o
 The codemod will take care of renaming the prop to keep the existing functionality but feel free to update to the new `shouldDisableTime` prop on your own.
 
 ```diff
+ // ℹ️ Rename and keep using the deprecated prop
+ // This is the change that the codemod will apply
  <DateTimePicker
 -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
 +  shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
  />
 
+ // ✅ Update your code to use the provided date value parameter instead of a number
  <DateTimePicker
 -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
 +  shouldDisableTime={(value, view) => view === 'hours' && value.hour() < 12}
@@ -959,7 +960,7 @@ To smooth the transition, pickers support both the `components` props which are 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/rename-components-to-slots <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.

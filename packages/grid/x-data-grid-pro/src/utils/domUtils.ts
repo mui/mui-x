@@ -17,7 +17,7 @@ export function findGroupHeaderElementsFromField(elem: Element, field: string): 
 export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateApiPro) {
   const root = findParentElementFromClassName(col, gridClasses.root);
   if (!root) {
-    throw new Error('MUI: The root element is not found.');
+    throw new Error('MUI X: The root element is not found.');
   }
 
   const ariaColIndex = col.getAttribute('aria-colindex');
@@ -28,13 +28,12 @@ export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateAp
   const colIndex = Number(ariaColIndex) - 1;
   const cells: Element[] = [];
 
-  const virtualScrollerContent = api.virtualScrollerRef?.current?.firstElementChild;
-  if (!virtualScrollerContent) {
+  if (!api.virtualScrollerRef?.current) {
     return [];
   }
 
-  const renderedRowElements = virtualScrollerContent.querySelectorAll(
-    `:scope > div > .${gridClasses.row}`, // Use > to ignore rows from detail panels
+  const renderedRowElements = api.virtualScrollerRef?.current.querySelectorAll(
+    `:scope > div > div > .${gridClasses.row}`, // Use > to ignore rows from nested data grids (e.g. in detail panel)
   );
 
   renderedRowElements.forEach((rowElement) => {
@@ -56,4 +55,19 @@ export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateAp
   });
 
   return cells;
+}
+
+export function findGridHeader(api: GridPrivateApiPro, field: string) {
+  const headers = api.columnHeadersContainerElementRef!.current!;
+  return headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
+}
+
+export function findGridCells(api: GridPrivateApiPro, field: string) {
+  const container = api.virtualScrollerRef!.current!;
+  const selectorFor = (role: string) =>
+    `:scope > div > div > div > [data-field="${field}"][role="${role}"]`;
+  // TODO(v7): Keep only the selector for the correct role
+  return Array.from(
+    container.querySelectorAll(`${selectorFor('cell')}, ${selectorFor('gridcell')}`),
+  );
 }

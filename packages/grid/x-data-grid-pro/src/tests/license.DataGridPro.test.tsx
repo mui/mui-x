@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, screen, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, waitFor } from '@mui-internal/test-utils';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { LicenseInfo } from '@mui/x-license-pro';
 
@@ -11,7 +11,7 @@ describe('<DataGridPro /> - License', () => {
     LicenseInfo.setLicenseKey('');
 
     expect(() => render(<DataGridPro columns={[]} rows={[]} autoHeight />)).toErrorDev([
-      'MUI: Missing license key.',
+      'MUI X: Missing license key.',
     ]);
 
     await waitFor(() => {

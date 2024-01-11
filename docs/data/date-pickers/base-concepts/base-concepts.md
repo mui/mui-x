@@ -81,6 +81,27 @@ There are many components available, each fitting specific use cases. Use the fo
 
 {{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
 
+## Reference date when no value is defined
+
+If `value` or `defaultValue` contains a valid date, this date will be used to initialize the rendered component.
+
+In the demo below, you can see that the calendar is set to April 2022 on mount:
+
+{{"demo": "ReferenceDateUsingValue.js"}}
+
+When `value` and `defaultValue` contains no valid date, the component will try to find a reference date that passes the validation to initialize its rendering:
+
+{{"demo": "ReferenceDateDefaultBehavior.js"}}
+
+You can override this date using the `referenceDate` prop:
+
+{{"demo": "ReferenceDateExplicitDateTimePicker.js"}}
+
+This can also be useful to set the part of the value that will not be selectable in the component.
+For example, in a Time Picker, it allows you to choose the date of your value:
+
+{{"demo": "ReferenceDateExplicitTimePicker.js"}}
+
 ## Accessibility
 
 Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
@@ -153,3 +174,20 @@ const cleanText = (string) =>
 // Example of a test using the helper
 expect(cleanText(input.value)).to.equal('04-17-2022');
 ```
+
+## Overriding slots and slot props
+
+Date and Time Pickers are complex components built using many subcomponents known as **slots**.
+Slots are commonly filled by React components that you can override using the `slots` prop.
+You can also pass additional props to the available slots using the `slotProps` prop.
+Learn more about the mental model of slots in the Base UI documentation: [Overriding component structure](/base-ui/guides/overriding-component-structure/).
+
+You can find the list of available slots for each component in its respective [API reference](/x/api/date-pickers/date-picker/#slots) doc.
+
+Some parts of the Pickers' UI are built on several nested slots. For instance, the adornment of the `TextField` on `DatePicker` contains three slots (`inputAdornment`, `openPickerButton`, and `openPickerIcon`) that you can use depending on what you are trying to customize.
+
+{{"demo": "CustomSlots.js"}}
+
+:::info
+Learn more about overriding slots in the doc page about [Custom slots and subcomponents](/x/react-date-pickers/custom-components/).
+:::

@@ -1,5 +1,6 @@
 ---
-title: Charts - Bars
+title: React Bar chart
+components: BarChart, BarElement, BarPlot
 ---
 
 # Charts - Bars
@@ -38,7 +39,7 @@ It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
 And a value of `-1` will make bars overlap on top of each over.
 
-{{"demo": "BarGapNoSnap.js"}}
+{{"demo": "BarGapNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Stacking
 
@@ -54,3 +55,29 @@ You can use the `stackOffset` and `stackOrder` properties to define how the seri
 By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
+
+## Layout
+
+Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
+If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
+
+{{"demo": "HorizontalBars.js"}}
+
+## Animation
+
+To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
+When set to `true` it skips animation powered by `@react-spring/web`.
+
+Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+
+```jsx
+// For a single component chart
+<BarChart skipAnimation />
+
+// For a composed chart
+<ResponsiveChartContainer>
+  <BarPlot skipAnimation />
+</ResponsiveChartContainer>
+```
+
+{{"demo": "BarAnimation.js"}}

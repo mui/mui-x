@@ -8,7 +8,6 @@ const COMMON_PROPERTIES = {
   type: 'year',
   modified: false,
   format: 'YYYY',
-  hasLeadingZeros: true,
   hasLeadingZerosInFormat: true,
   maxLength: 4,
 } as const;

@@ -1,22 +1,22 @@
+import * as React from 'react';
 import {
   describeConformance,
   screen,
   userEvent,
   fireDiscreteEvent,
-} from '@mui/monorepo/test/utils';
+} from '@mui-internal/test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
-import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   adapterToUse,
   createPickerRenderer,
+  wrapPickerMount,
+  openPicker,
   expectInputPlaceholder,
   expectInputValue,
-  openPicker,
-  wrapPickerMount,
-} from 'test/utils/pickers-utils';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
-import * as React from 'react';
+  describeRangeValidation,
+  describeValue,
+  describePicker,
+} from 'test/utils/pickers';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -62,9 +62,9 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     clock,
     values: [
       // initial start and end dates
-      [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 4))],
+      [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-04')],
       // start and end dates after `setNewValue`
-      [adapterToUse.date(new Date(2018, 0, 2)), adapterToUse.date(new Date(2018, 0, 5))],
+      [adapterToUse.date('2018-01-02'), adapterToUse.date('2018-01-05')],
     ],
     emptyValue: [null, null],
     assertRenderedValue: (expectedValues: any[]) => {

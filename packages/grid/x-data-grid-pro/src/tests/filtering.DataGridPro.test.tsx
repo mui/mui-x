@@ -6,7 +6,7 @@ import {
   GridLogicOperator,
   GridPreferencePanelsValue,
   GridRowModel,
-  SUBMIT_FILTER_STROKE_TIME,
+  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   useGridApiRef,
   DataGridPro,
   GetColumnForNewFilterArgs,
@@ -15,11 +15,13 @@ import {
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getSelectInput } from 'test/utils/helperFn';
+
+const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -73,7 +75,7 @@ describe('<DataGridPro /> - Filter', () => {
     ],
   };
 
-  it('componentsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
+  it('slotProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
     const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
       // remove already filtered fields from list of columns
       const filteredFields = currentFilters?.map((item) => item.field);
@@ -101,8 +103,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
@@ -130,8 +132,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             getColumnForNewFilter,
           },
@@ -156,8 +158,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
@@ -168,10 +170,10 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
 
-    const selectListOfColumns = document.querySelectorAll<HTMLElement>(
-      '.MuiDataGrid-filterFormColumnInput',
-    )[0];
-    const availableColumns = within(selectListOfColumns).getAllByRole('option');
+    const select = screen.getByRole('combobox', { name: 'Columns' });
+    fireEvent.mouseDown(select);
+    const listbox = screen.getByRole('listbox', { name: 'Columns' });
+    const availableColumns = within(listbox).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
   });
 
@@ -350,7 +352,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        componentsProps={{
+        slotProps={{
           filterPanel: {
             disableAddFilterButton: true,
           },
@@ -370,7 +372,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        componentsProps={{
+        slotProps={{
           filterPanel: {
             disableRemoveAllButton: true,
           },
@@ -435,10 +437,12 @@ describe('<DataGridPro /> - Filter', () => {
 
     // The first combo is hidden and we include hidden elements to make the query faster
     // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
-    const select = screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
-      isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
-    ];
-    fireEvent.change(select, { target: { value: 'or' } });
+    const input = getSelectInput(
+      screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
+        isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
+      ],
+    );
+    fireEvent.change(input!, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('changeLogicOperator');
     expect(getColumnValues(0)).to.deep.equal([]);
@@ -867,7 +871,7 @@ describe('<DataGridPro /> - Filter', () => {
 
   describe('Header filters', () => {
     it('should reflect the `filterModel` prop in header filters correctly', () => {
-      render(<TestCase filterModel={filterModel} unstable_headerFilters />);
+      render(<TestCase filterModel={filterModel} headerFilters />);
 
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
       const filterCellInput = getColumnHeaderCell(0, 1).querySelector('input');
@@ -875,13 +879,13 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should apply filters on type when the focus is on cell', () => {
-      render(<TestCase unstable_headerFilters />);
+      render(<TestCase headerFilters />);
 
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const filterCell = getColumnHeaderCell(0, 1);
       const filterCellInput = filterCell.querySelector('input')!;
       expect(filterCellInput).not.toHaveFocus();
-      fireEvent.mouseDown(filterCell);
+      fireEvent.mouseDown(filterCellInput);
       expect(filterCellInput).toHaveFocus();
       fireEvent.change(filterCellInput, { target: { value: 'ad' } });
       clock.tick(SUBMIT_FILTER_STROKE_TIME);
@@ -890,7 +894,7 @@ describe('<DataGridPro /> - Filter', () => {
 
     it('should call `onFilterModelChange` when filters are updated', () => {
       const onFilterModelChange = spy();
-      render(<TestCase onFilterModelChange={onFilterModelChange} unstable_headerFilters />);
+      render(<TestCase onFilterModelChange={onFilterModelChange} headerFilters />);
 
       const filterCell = getColumnHeaderCell(0, 1);
       const filterCellInput = filterCell.querySelector('input')!;
@@ -918,7 +922,7 @@ describe('<DataGridPro /> - Filter', () => {
             },
           }}
           onFilterModelChange={onFilterModelChange}
-          unstable_headerFilters
+          headerFilters
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
@@ -950,7 +954,7 @@ describe('<DataGridPro /> - Filter', () => {
               },
             },
           }}
-          unstable_headerFilters
+          headerFilters
         />,
       );
 
@@ -965,7 +969,7 @@ describe('<DataGridPro /> - Filter', () => {
           columns={[
             { field: 'brand', headerName: 'Brand', renderHeaderFilter: () => 'Custom Filter Cell' },
           ]}
-          unstable_headerFilters
+          headerFilters
         />,
       );
 
@@ -988,7 +992,7 @@ describe('<DataGridPro /> - Filter', () => {
               ],
             },
           ]}
-          unstable_headerFilters
+          headerFilters
         />,
       );
 

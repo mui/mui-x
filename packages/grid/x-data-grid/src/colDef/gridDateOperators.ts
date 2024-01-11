@@ -1,29 +1,26 @@
 import { GridFilterInputDate } from '../components/panel/filterPanel/GridFilterInputDate';
 import { GridFilterItem } from '../models/gridFilterItem';
-import { GridFilterOperator, GetApplyFilterFnV7 } from '../models/gridFilterOperator';
-import { convertLegacyOperators } from './utils';
-
-const dateRegex = /(\d+)-(\d+)-(\d+)/;
-const dateTimeRegex = /(\d+)-(\d+)-(\d+)T(\d+):(\d+)/;
+import { GridFilterOperator, GetApplyFilterFn } from '../models/gridFilterOperator';
 
 function buildApplyFilterFn(
   filterItem: GridFilterItem,
   compareFn: (value1: number, value2: number) => boolean,
   showTime?: boolean,
   keepHours?: boolean,
-): ReturnType<GetApplyFilterFnV7> {
+): ReturnType<GetApplyFilterFn> {
   if (!filterItem.value) {
     return null;
   }
 
-  const [year, month, day, hour, minute] = filterItem.value
-    .match(showTime ? dateTimeRegex : dateRegex)!
-    .slice(1)
-    .map(Number);
+  const date = new Date(filterItem.value);
+  if (showTime) {
+    date.setSeconds(0, 0);
+  } else {
+    date.setHours(0, 0, 0, 0);
+  }
+  const time = date.getTime();
 
-  const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
-
-  return (value): boolean => {
+  return (value: Date): boolean => {
     if (!value) {
       return false;
     }
@@ -34,87 +31,85 @@ function buildApplyFilterFn(
 
     // Make a copy of the date to not reset the hours in the original object
     const dateCopy = new Date(value);
-    const timeToCompare = dateCopy.setHours(
-      showTime ? value.getHours() : 0,
-      showTime ? value.getMinutes() : 0,
-      0,
-      0,
-    );
-    return compareFn(timeToCompare, time);
+    if (showTime) {
+      dateCopy.setSeconds(0, 0);
+    } else {
+      dateCopy.setHours(0, 0, 0, 0);
+    }
+    return compareFn(dateCopy.getTime(), time);
   };
 }
 
-export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any, Date, any>[] =>
-  convertLegacyOperators([
-    {
-      value: 'is',
-      getApplyFilterFnV7: (filterItem) => {
-        return buildApplyFilterFn(filterItem, (value1, value2) => value1 === value2, showTime);
-      },
-      InputComponent: GridFilterInputDate,
-      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any, Date, any>[] => [
+  {
+    value: 'is',
+    getApplyFilterFn: (filterItem) => {
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 === value2, showTime);
     },
-    {
-      value: 'not',
-      getApplyFilterFnV7: (filterItem) => {
-        return buildApplyFilterFn(filterItem, (value1, value2) => value1 !== value2, showTime);
-      },
-      InputComponent: GridFilterInputDate,
-      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    InputComponent: GridFilterInputDate,
+    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+  },
+  {
+    value: 'not',
+    getApplyFilterFn: (filterItem) => {
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 !== value2, showTime);
     },
-    {
-      value: 'after',
-      getApplyFilterFnV7: (filterItem) => {
-        return buildApplyFilterFn(filterItem, (value1, value2) => value1 > value2, showTime);
-      },
-      InputComponent: GridFilterInputDate,
-      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    InputComponent: GridFilterInputDate,
+    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+  },
+  {
+    value: 'after',
+    getApplyFilterFn: (filterItem) => {
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 > value2, showTime);
     },
-    {
-      value: 'onOrAfter',
-      getApplyFilterFnV7: (filterItem) => {
-        return buildApplyFilterFn(filterItem, (value1, value2) => value1 >= value2, showTime);
-      },
-      InputComponent: GridFilterInputDate,
-      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    InputComponent: GridFilterInputDate,
+    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+  },
+  {
+    value: 'onOrAfter',
+    getApplyFilterFn: (filterItem) => {
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 >= value2, showTime);
     },
-    {
-      value: 'before',
-      getApplyFilterFnV7: (filterItem) => {
-        return buildApplyFilterFn(
-          filterItem,
-          (value1, value2) => value1 < value2,
-          showTime,
-          !showTime,
-        );
-      },
-      InputComponent: GridFilterInputDate,
-      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    InputComponent: GridFilterInputDate,
+    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+  },
+  {
+    value: 'before',
+    getApplyFilterFn: (filterItem) => {
+      return buildApplyFilterFn(
+        filterItem,
+        (value1, value2) => value1 < value2,
+        showTime,
+        !showTime,
+      );
     },
-    {
-      value: 'onOrBefore',
-      getApplyFilterFnV7: (filterItem) => {
-        return buildApplyFilterFn(filterItem, (value1, value2) => value1 <= value2, showTime);
-      },
-      InputComponent: GridFilterInputDate,
-      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    InputComponent: GridFilterInputDate,
+    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+  },
+  {
+    value: 'onOrBefore',
+    getApplyFilterFn: (filterItem) => {
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 <= value2, showTime);
     },
-    {
-      value: 'isEmpty',
-      getApplyFilterFnV7: () => {
-        return (value): boolean => {
-          return value == null;
-        };
-      },
-      requiresFilterValue: false,
+    InputComponent: GridFilterInputDate,
+    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+  },
+  {
+    value: 'isEmpty',
+    getApplyFilterFn: () => {
+      return (value): boolean => {
+        return value == null;
+      };
     },
-    {
-      value: 'isNotEmpty',
-      getApplyFilterFnV7: () => {
-        return (value): boolean => {
-          return value != null;
-        };
-      },
-      requiresFilterValue: false,
+    requiresFilterValue: false,
+  },
+  {
+    value: 'isNotEmpty',
+    getApplyFilterFn: () => {
+      return (value): boolean => {
+        return value != null;
+      };
     },
-  ]);
+    requiresFilterValue: false,
+  },
+];

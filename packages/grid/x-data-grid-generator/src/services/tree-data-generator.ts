@@ -11,19 +11,21 @@ export interface AddPathToDemoDataOptions {
 
   /**
    * The depth of the tree
-   * @default: 1
+   * @default 1
    */
   maxDepth?: number;
-
   /**
    * The average amount of children in a node
-   * @default: 2
+   * @default 2
    */
   averageChildren?: number;
 }
 
 export interface DemoTreeDataValue
-  extends Pick<DataGridPremiumProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>,
+  extends Pick<
+      DataGridPremiumProps,
+      'getTreeDataPath' | 'treeData' | 'groupingColDef' | 'experimentalFeatures'
+    >,
     GridDemoData {}
 
 interface RowWithParentIndex {
@@ -39,11 +41,11 @@ export const addTreeDataOptionsToDemoData = (
 
   const hasTreeData = maxDepth > 1 && groupingField != null;
   if (!hasTreeData) {
-    return data;
+    return { ...data, experimentalFeatures: { ariaV7: true } };
   }
 
   if (data.rows.length > 1000) {
-    throw new Error('MUI: useDemoData tree data mode only works up to 1000 rows.');
+    throw new Error('MUI X: useDemoData tree data mode only works up to 1000 rows.');
   }
 
   const rowsByTreeDepth: Record<
@@ -55,7 +57,7 @@ export const addTreeDataOptionsToDemoData = (
   const groupingCol = data.columns.find((col) => col.field === options.groupingField);
 
   if (!groupingCol) {
-    throw new Error('MUI: The tree data grouping field does not exist');
+    throw new Error('MUI X: The tree data grouping field does not exist.');
   }
 
   data.initialState!.columns!.columnVisibilityModel![groupingField] = false;
@@ -108,5 +110,6 @@ export const addTreeDataOptionsToDemoData = (
     },
     getTreeDataPath: (row) => row.path,
     treeData: true,
+    experimentalFeatures: { ariaV7: true },
   };
 };

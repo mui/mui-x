@@ -5,7 +5,7 @@ import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
  */
 export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editable'> = {
   ...GRID_STRING_COL_DEF,
-  type: 'treeDataGroup',
+  type: 'custom',
   sortable: false,
   filterable: false,
   disableColumnMenu: true,
@@ -13,7 +13,9 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
   align: 'left',
   width: 200,
   valueGetter: (params) =>
-    params.rowNode.type === 'group' ? params.rowNode.groupingKey : undefined,
+    params.rowNode.type === 'group' || params.rowNode.type === 'leaf'
+      ? params.rowNode.groupingKey
+      : undefined,
 };
 
 export const GRID_TREE_DATA_GROUPING_FIELD = '__tree_data_group__';

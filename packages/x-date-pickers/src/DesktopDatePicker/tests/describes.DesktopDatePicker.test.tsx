@@ -1,15 +1,15 @@
-import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
-  getTextbox,
   expectInputPlaceholder,
-} from 'test/utils/pickers-utils';
+  getTextbox,
+  describeValidation,
+  describeValue,
+  describePicker,
+} from 'test/utils/pickers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -29,7 +29,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
     componentFamily: 'picker',
     type: 'date',
     variant: 'desktop',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {

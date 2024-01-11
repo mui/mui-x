@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act } from '@mui-internal/test-utils';
 import {
   DataGridPro,
   DataGridProProps,
@@ -21,7 +21,7 @@ const rows: GridRowsProp = [{ id: 1 }];
 
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
-describe('<DataGridPro /> - Columns Visibility', () => {
+describe('<DataGridPro /> - Columns visibility', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;

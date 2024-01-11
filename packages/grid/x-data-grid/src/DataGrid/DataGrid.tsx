@@ -1,13 +1,32 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { chainPropTypes } from '@mui/utils';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
-import { DataGridProps } from '../models/props/DataGridProps';
+import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { GridValidRowModel } from '../models/gridRows';
+import {
+  PropValidator,
+  propValidatorsDataGrid,
+  validateProps,
+} from '../internals/utils/propValidation';
+
+const propValidators: PropValidator<DataGridProcessedProps>[] = [
+  ...propValidatorsDataGrid,
+  // Only validate in MIT version
+  (props) =>
+    (props.columns &&
+      props.columns.some((column) => column.resizable) &&
+      [
+        `MUI X: \`column.resizable = true\` is not a valid prop.`,
+        'Column resizing is not available in the MIT version.',
+        '',
+        'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+      ].join('\n')) ||
+    undefined,
+];
 
 const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
@@ -15,6 +34,8 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
 ) {
   const props = useDataGridProps(inProps);
   const privateApiRef = useDataGridComponent(props.apiRef, props);
+
+  validateProps(props, propValidators);
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
@@ -40,6 +61,13 @@ interface DataGridComponent {
   propTypes?: any;
 }
 
+/**
+ * Demos:
+ * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
+ */
 export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
 
 DataGridRaw.propTypes = {
@@ -48,21 +76,21 @@ DataGridRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
+   * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
   }),
   /**
-   * The label of the grid.
+   * The label of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the grid.
+   * The id of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the grid height is dynamic and follow the number of rows in the grid.
+   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: PropTypes.bool,
@@ -76,7 +104,7 @@ DataGridRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
-   * If `true`, the grid get a first column with a checkbox that allows to select rows.
+   * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -96,49 +124,26 @@ DataGridRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Sets the height in pixel of the column headers in the grid.
+   * Sets the height in pixel of the column headers in the Data Grid.
    * @default 56
    */
   columnHeaderHeight: PropTypes.number,
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
-  columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
-    // @ts-ignore because otherwise `build:api` doesn't work
-    if (props.columns && props.columns.some((column) => column.resizable)) {
-      return new Error(
-        [
-          `MUI: \`column.resizable = true\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version.',
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-        ].join('\n'),
-      );
-    }
-    return null;
-  }),
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
    * @default 3
    */
   columnThreshold: PropTypes.number,
   /**
-   * Set the column visibility model of the grid.
-   * If defined, the grid will ignore the `hide` property in [[GridColDef]].
+   * Set the column visibility model of the Data Grid.
+   * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overridable components.
-   * @deprecated Use `slots` instead.
-   */
-  components: PropTypes.object,
-  /**
-   * Overridable components props dynamically passed to the component at rendering.
-   * @deprecated Use the `slotProps` prop instead.
-   */
-  componentsProps: PropTypes.object,
-  /**
-   * Set the density of the grid.
+   * Set the density of the Data Grid.
    * @default "standard"
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
@@ -162,6 +167,17 @@ DataGridRaw.propTypes = {
    * @default false
    */
   disableDensitySelector: PropTypes.bool,
+  /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   */
+  disableEval: PropTypes.bool,
+  /**
+   * If `true`, multiple selection using the Ctrl/CMD or Shift key is disabled.
+   * The MIT DataGrid will ignore this prop, unless `checkboxSelection` is enabled.
+   * @default false (`!props.checkboxSelection` for MIT Data Grid)
+   */
+  disableMultipleRowSelection: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
@@ -187,13 +203,18 @@ DataGridRaw.propTypes = {
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: PropTypes.number,
+  /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
    */
   filterMode: PropTypes.oneOf(['client', 'server']),
   /**
-   * Set the filter model of the grid.
+   * Set the filter model of the Data Grid.
    */
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
@@ -210,7 +231,7 @@ DataGridRaw.propTypes = {
     quickFilterValues: PropTypes.array,
   }),
   /**
-   * Forwarded props for the grid root element.
+   * Forwarded props for the Data Grid root element.
    * @ignore - do not document.
    */
   forwardedProps: PropTypes.object,
@@ -272,6 +293,24 @@ DataGridRaw.propTypes = {
    */
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
+   * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
+   * E.g. when filter value is `cafe`, the rows with `café` will be visible.
+   * @default false
+   */
+  ignoreDiacritics: PropTypes.bool,
+  /**
+   * If `true`, the Data Grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default false
+   */
+  ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
+  /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -301,7 +340,7 @@ DataGridRaw.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Set the locale text of the grid.
+   * Set the locale text of the Data Grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
@@ -469,7 +508,7 @@ DataGridRaw.propTypes = {
    */
   onProcessRowUpdateError: PropTypes.func,
   /**
-   * Callback fired when the grid is resized.
+   * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -527,7 +566,7 @@ DataGridRaw.propTypes = {
    */
   onSortModelChange: PropTypes.func,
   /**
-   * Callback fired when the state of the grid is updated.
+   * Callback fired when the state of the Data Grid is updated.
    * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -547,19 +586,7 @@ DataGridRaw.propTypes = {
       }),
     ]).isRequired,
   ),
-  pagination: (props: any) => {
-    if (props.pagination === false) {
-      return new Error(
-        [
-          'MUI: `<DataGrid pagination={false} />` is not a valid prop.',
-          'Infinite scrolling is not available in the MIT version.',
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to disable the pagination.',
-        ].join('\n'),
-      );
-    }
-    return null;
-  },
+  pagination: PropTypes.oneOf([true]),
   /**
    * Pagination can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle the pagination on the client-side.
@@ -593,7 +620,7 @@ DataGridRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * Sets the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the Data Grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
@@ -601,6 +628,13 @@ DataGridRaw.propTypes = {
    * Controls the modes of the rows.
    */
   rowModesModel: PropTypes.object,
+  /**
+   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
+   * Setting it to a lower value could be useful when using dynamic row height,
+   * but might reduce performance when displaying a large number of rows.
+   * @default 166
+   */
+  rowPositionsDebounceMs: PropTypes.number,
   /**
    * Set of rows of type [[GridRowsProp]].
    */
@@ -611,7 +645,7 @@ DataGridRaw.propTypes = {
    */
   rowSelection: PropTypes.bool,
   /**
-   * Sets the row selection model of the grid.
+   * Sets the row selection model of the Data Grid.
    */
   rowSelectionModel: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
@@ -629,7 +663,7 @@ DataGridRaw.propTypes = {
    */
   rowThreshold: PropTypes.number,
   /**
-   * Override the height/width of the grid inner scrollbar.
+   * Override the height/width of the Data Grid inner scrollbar.
    */
   scrollbarSize: PropTypes.number,
   /**
@@ -663,7 +697,7 @@ DataGridRaw.propTypes = {
    */
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
   /**
-   * Set the sort model of the grid.
+   * Set the sort model of the Data Grid.
    */
   sortModel: PropTypes.arrayOf(
     PropTypes.shape({
@@ -678,17 +712,5 @@ DataGridRaw.propTypes = {
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
-  ]),
-  /**
-   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
-   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
-   * @default: false
-   */
-  unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
-    PropTypes.shape({
-      clipboardExport: PropTypes.bool,
-      csvExport: PropTypes.bool,
-    }),
-    PropTypes.bool,
   ]),
 } as any;

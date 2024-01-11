@@ -1,17 +1,17 @@
 import * as React from 'react';
 import moment from 'moment';
+import { expect } from 'chai';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
+import { AdapterFormats } from '@mui/x-date-pickers/models';
+import { screen } from '@mui-internal/test-utils/createRenderer';
 import {
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
-} from 'test/utils/pickers-utils';
-import { describeHijriAdapter } from '@mui/x-date-pickers/tests/describeHijriAdapter';
+  describeHijriAdapter,
+} from 'test/utils/pickers';
 import 'moment/locale/ar';
-import { AdapterFormats } from '@mui/x-date-pickers';
-import { expect } from 'chai';
 
 describe('<AdapterMomentHijri />', () => {
   describeHijriAdapter(AdapterMomentHijri, {
@@ -35,12 +35,10 @@ describe('<AdapterMomentHijri />', () => {
 
       expectDate('keyboardDate', '١٤٤١/٠٥/٠٦');
       expectDate('fullDate', '١٤٤١، جمادى الأولى ١');
-      expectDate('fullDateWithWeekday', '١٤٤١، جمادى الأولى ١، الأربعاء');
       expectDate('normalDate', 'الأربعاء، ٦ جمادى ١');
       expectDate('shortDate', '٦ جمادى ١');
       expectDate('year', '١٤٤١');
       expectDate('month', 'جمادى الأولى');
-      expectDate('monthAndDate', '٦ جمادى الأولى');
       expectDate('weekday', 'الأربعاء');
       expectDate('weekdayShort', 'أربعاء');
       expectDate('dayOfMonth', '٦');
@@ -50,13 +48,11 @@ describe('<AdapterMomentHijri />', () => {
       expectDate('hours24h', '٢٣');
       expectDate('minutes', '٤٤');
       expectDate('seconds', '٠٠');
-      expectDate('fullDateTime12h', '٦ جمادى الأولى ١١:٤٤ م');
-      expectDate('fullDateTime24h', '٦ جمادى الأولى ٢٣:٤٤');
     });
   });
 
   describe('Picker localization', () => {
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       ar: {
         placeholder: 'YYYY/MM/DD hh:mm',

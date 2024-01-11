@@ -4,8 +4,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     // Already tested with eslint
     "noUnusedLocals": false,
-    // TODO, turn to true
-    "noImplicitAny": false,
+    "strict": true,
     "baseUrl": "./",
     "allowJs": true,
     "paths": {
@@ -27,6 +26,8 @@
       "@mui/x-tree-view/*": ["./packages/x-tree-view/src/*"],
       "@mui/x-license-pro": ["./packages/x-license-pro/src"],
       "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"],
+      "@mui-internal/test-utils": ["./node_modules/@mui/monorepo/packages/test-utils/src"],
+      "@mui-internal/test-utils/*": ["./node_modules/@mui/monorepo/packages/test-utils/src/*"],
       "test/*": ["./test/*"],
       "docs/*": ["./node_modules/@mui/monorepo/docs"],
       "docsx/*": ["./docs/*"]
