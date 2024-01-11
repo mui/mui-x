@@ -219,7 +219,7 @@ export const useGridColumnPinning = (
     (methodName: keyof GridColumnPinningApi) => {
       if (props.disableColumnPinning) {
         throw new Error(
-          `MUI: You cannot call \`apiRef.current.${methodName}\` when \`disableColumnPinning\` is true.`,
+          `MUI X: You cannot call \`apiRef.current.${methodName}\` when \`disableColumnPinning\` is true.`,
         );
       }
     },

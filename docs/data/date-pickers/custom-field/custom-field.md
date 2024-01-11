@@ -20,7 +20,7 @@ You can use the `textField` slot to pass custom props to the `TextField`:
 
 ### Customize the separator of multi input fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-You can use the `fieldSeparator` slot to pass custom props to the `Typography` rendered between the two `TextField`:
+You can use the `fieldSeparator` slot to pass custom props to the `Typography` rendered betweenew n the two `TextField`:
 
 {{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
 

@@ -28,7 +28,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
       label: 'Node 2',
     },
   ];
-  
+
   <RichTreeView
     items={MUI_X_PRODUCTS}
     defaultCollapseIcon={<ExpandMoreIcon />}
@@ -88,10 +88,10 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
     <TreeView
   -   onNodeToggle={handleExpansionChange}
   +   onExpandedNodesChange={handleExpansionChange}
-  
+
   -   expanded={expandedNodes}
   +   expandedNodes={expandedNodes}
-  
+
   -   defaultExpanded={defaultExpandedNodes}
   +   defaultExpandedNodes={defaultExpandedNodes}
     />
@@ -274,10 +274,10 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
 
   ```diff
-  - DateCalendarSlotsComponent
-  + DateCalendarSlots
-  - DateCalendarSlotsComponentsProps
-  + DateCalendarSlotProps
+  -DateCalendarSlotsComponent
+  -DateCalendarSlotsComponentsProps
+  +DateCalendarSlots
+  +DateCalendarSlotProps
   ```
 
 - Move `inputRef` inside the props passed to the field hooks
@@ -285,26 +285,26 @@ The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsP
   The field hooks now only receive the props instead of an object containing both the props and the `inputRef`.
 
   ```diff
-  - const { inputRef, ...otherProps } = props
-  - const fieldResponse = useDateField({ props: otherProps, inputRef });
-  + const fieldResponse = useDateField(props);
+  -const { inputRef, ...otherProps } = props
+  -const fieldResponse = useDateField({ props: otherProps, inputRef });
+  +const fieldResponse = useDateField(props);
   ```
 
   If you are using a multi input range field hook, the same applies to `startInputRef` and `endInputRef` params
 
   ```diff
-  - const { inputRef: startInputRef, ...otherStartTextFieldProps } = startTextFieldProps
-  - const { inputRef: endInputRef, ...otherEndTextFieldProps } = endTextFieldProps
+  -const { inputRef: startInputRef, ...otherStartTextFieldProps } = startTextFieldProps
+  -const { inputRef: endInputRef, ...otherEndTextFieldProps } = endTextFieldProps
 
-    const fieldResponse = useMultiInputDateRangeField({
-      sharedProps,
-  -   startTextFieldProps: otherStartTextFieldProps,
-  -   endTextFieldProps: otherEndTextFieldProps,
-  -   startInputRef
-  -   endInputRef,
-  +   startTextFieldProps, 
-  +   endTextFieldProps
-    });
+   const fieldResponse = useMultiInputDateRangeField({
+     sharedProps,
+  -  startTextFieldProps: otherStartTextFieldProps,
+  -  endTextFieldProps: otherEndTextFieldProps,
+  -  startInputRef
+  -  endInputRef,
+  +  startTextFieldProps,
+  +  endTextFieldProps
+   });
   ```
 
 - Rename the ref returned by the field hooks to `inputRef`
@@ -313,26 +313,26 @@ The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsP
   This ref was previously named `ref` and has been renamed `inputRef` for extra clarity.
 
   ```diff
-    const fieldResponse = useDateField(props);
+   const fieldResponse = useDateField(props);
 
-  - return <input ref={fieldResponse.ref} /> 
-  + return <input ref={fieldResponse.inputRef} />
+  -return <input ref={fieldResponse.ref} />
+  +return <input ref={fieldResponse.inputRef} />
   ```
 
   If you are using a multi input range field hook, the same applies to the ref in the `startDate` and `endDate` objects
 
   ```diff
-    const fieldResponse = useDateField(props);
+   const fieldResponse = useDateField(props);
 
-    return (
-      <div>
-  -     <input ref={fieldResponse.startDate.ref} />
-  +     <input ref={fieldResponse.startDate.inputRef} />
-        <span>–</span>
-  -     <input ref={fieldResponse.endDate.ref} />
-  +     <input ref={fieldResponse.endDate.inputRef} />
-      </div>
-    )
+   return (
+     <div>
+  -    <input ref={fieldResponse.startDate.ref} />
+  +    <input ref={fieldResponse.startDate.inputRef} />
+       <span>–</span>
+  -    <input ref={fieldResponse.endDate.ref} />
+  +    <input ref={fieldResponse.endDate.inputRef} />
+     </div>
+   )
   ```
 
 - Restructure the API of `useClearableField`
@@ -342,23 +342,23 @@ The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsP
   You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
 
   ```diff
-    const fieldResponse = useDateField(props);
+   const fieldResponse = useDateField(props);
 
-  - const { InputProps, onClear, clearable, slots, slotProps, ...otherFieldProps } = fieldResponse
-  - const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField({
-  -   fieldProps: otherFieldProps,
-  -   InputProps,
-  -   clearable,
-  -   onClear,
-  -   slots,
-  -   slotProps,
-  - }); 
+  -const { InputProps, onClear, clearable, slots, slotProps, ...otherFieldProps } = fieldResponse
+  -const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField({
+  -  fieldProps: otherFieldProps,
+  -  InputProps,
+  -  clearable,
+  -  onClear,
+  -  slots,
+  -  slotProps,
+  -});
   -
-  -  return <MyCustomTextField {...processedFieldProps} InputProps={ProcessedInputProps} />
+  - return <MyCustomTextField {...processedFieldProps} InputProps={ProcessedInputProps} />
 
-  + const processedFieldProps = useClearableField(fieldResponse);
+  +const processedFieldProps = useClearableField(fieldResponse);
   +
-  + return <MyCustomTextField {...processedFieldProps} />
+  +return <MyCustomTextField {...processedFieldProps} />
   ```
 
 #### `@mui/x-date-pickers@7.0.0-alpha.5`

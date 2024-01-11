@@ -36,7 +36,7 @@ const expandFormat = <TDate>({ utils, format }: BuildSectionsFromFormatParams<TD
     formatExpansionOverflow -= 1;
     if (formatExpansionOverflow < 0) {
       throw new Error(
-        'MUI: The format expansion seems to be  enter in an infinite loop. Please open an issue with the format passed to the picker component',
+        'MUI X: The format expansion seems to be  enter in an infinite loop. Please open an issue with the format passed to the picker component',
       );
     }
   }
@@ -131,7 +131,7 @@ const createSection = <TDate>({
   startSeparator: string;
 }): FieldSection => {
   if (token === '') {
-    throw new Error('MUI: Should not call `commitToken` with an empty token');
+    throw new Error('MUI X: Should not call `commitToken` with an empty token');
   }
 
   const sectionConfig = getDateSectionConfigFromFormatToken(utils, token);
@@ -159,7 +159,7 @@ const createSection = <TDate>({
     } else {
       if (sectionConfig.maxLength == null) {
         throw new Error(
-          `MUI: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
+          `MUI X: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
         );
       }
 

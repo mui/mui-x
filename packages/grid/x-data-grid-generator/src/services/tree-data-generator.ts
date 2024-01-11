@@ -45,7 +45,7 @@ export const addTreeDataOptionsToDemoData = (
   }
 
   if (data.rows.length > 1000) {
-    throw new Error('MUI: useDemoData tree data mode only works up to 1000 rows.');
+    throw new Error('MUI X: useDemoData tree data mode only works up to 1000 rows.');
   }
 
   const rowsByTreeDepth: Record<
@@ -57,7 +57,7 @@ export const addTreeDataOptionsToDemoData = (
   const groupingCol = data.columns.find((col) => col.field === options.groupingField);
 
   if (!groupingCol) {
-    throw new Error('MUI: The tree data grouping field does not exist');
+    throw new Error('MUI X: The tree data grouping field does not exist.');
   }
 
   data.initialState!.columns!.columnVisibilityModel![groupingField] = false;

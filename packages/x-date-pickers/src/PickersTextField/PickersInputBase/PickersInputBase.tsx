@@ -203,7 +203,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
-      'MUI: PickersInputBase should always be used inside a PickersTextField component',
+      'MUI X: PickersInputBase should always be used inside a PickersTextField component',
     );
   }
 

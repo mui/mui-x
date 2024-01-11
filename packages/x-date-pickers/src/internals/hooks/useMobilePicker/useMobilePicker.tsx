@@ -76,11 +76,13 @@ export const useMobilePicker = <
 
   const Field = slots.field;
   const fieldProps: Omit<
-    BaseSingleInputFieldProps<TDate | null,
-    TDate,
-    FieldSection,
-    TTextFieldVersion,
-    InferError<TExternalProps>>,
+    BaseSingleInputFieldProps<
+      TDate | null,
+      TDate,
+      FieldSection,
+      TTextFieldVersion,
+      InferError<TExternalProps>
+    >,
     'referenceDate' | 'defaultValue'
   > = useSlotProps({
     elementType: Field,

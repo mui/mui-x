@@ -75,7 +75,7 @@ export const useTreeViewModels = <
         if (model.isControlled !== (controlled !== undefined)) {
           console.error(
             [
-              `MUI: A component is changing the ${
+              `MUI X: A component is changing the ${
                 model.isControlled ? '' : 'un'
               }controlled ${modelName} state of TreeView to be ${
                 model.isControlled ? 'un' : ''
@@ -96,7 +96,7 @@ export const useTreeViewModels = <
         if (!model.isControlled && defaultValue !== defaultProp) {
           console.error(
             [
-              `MUI: A component is changing the default ${modelName} state of an uncontrolled TreeView after being initialized. ` +
+              `MUI X: A component is changing the default ${modelName} state of an uncontrolled TreeView after being initialized. ` +
                 `To suppress this warning opt to use a controlled TreeView.`,
             ].join('\n'),
           );
