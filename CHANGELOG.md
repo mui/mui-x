@@ -9,7 +9,7 @@ _Jan 11, 2024_
 
 We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
-- ⏰ Support defte-fns v3 (#11659) @LukasTy
+- ⏰ Support date-fns v3 (#11659) @LukasTy
 - 🌍 Add missing Danish (da-DK) locale export (#11641) @etlos
 
 ### Data Grid
