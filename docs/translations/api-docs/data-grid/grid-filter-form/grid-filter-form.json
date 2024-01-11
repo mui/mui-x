@@ -42,8 +42,10 @@
       "description": "Props passed to the logic operator input component."
     },
     "logicOperators": { "description": "Sets the available logic operators." },
-    "multiFilterOperator": { "description": "The current logic operator applied." },
     "operatorInputProps": { "description": "Props passed to the operator input component." },
+    "readOnly": {
+      "description": "<code>true</code> if the filter is disabled/read only. i.e. <code>colDef.fiterable = false</code> but passed in <code>filterModel</code>"
+    },
     "showMultiFilterOperators": {
       "description": "If <code>true</code>, the logic operator field is visible."
     },
