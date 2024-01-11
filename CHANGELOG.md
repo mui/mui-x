@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 6.18.8
+## 6.19.0
 
 _Jan 11, 2024_
 
@@ -24,15 +24,15 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 ### Date Pickers
 
-#### `@mui/x-date-pickers@6.18.8`
+#### `@mui/x-date-pickers@6.19.0`
 
 - [pickers] Add date-fns@3.x adapter (#11659) @LukasTy
 - [pickers] Fix clearable behavior blocking focus return to `OpenPickerButton` (#11643) @noraleonte
 - [l10n] Add missing Danish (da-DK) locale export (#11641) @etlos
 
-#### `@mui/x-date-pickers-pro@6.18.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@6.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@6.18.8`.
+Same changes as in `@mui/x-date-pickers@6.19.0`.
 
 ### Docs
 
