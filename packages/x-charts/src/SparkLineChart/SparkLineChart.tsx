@@ -17,6 +17,7 @@ import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHigh
 import { AxisConfig } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
 import { LineSeriesType } from '../models/seriesType/line';
+import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
 import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
@@ -39,7 +40,7 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis'> {
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'margin'> {
   /**
    * The xAxis configuration.
    * Notice it is a single configuration object, not an array of configuration.
@@ -60,6 +61,7 @@ export interface SparkLineChartProps
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
+   * @default (v: number) => v.toString()
    */
   valueFormatter?: (value: number) => string;
   /**
@@ -84,6 +86,18 @@ export interface SparkLineChartProps
    * @default 'linear'
    */
   curve?: LineSeriesType['curve'];
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default {
+   *   top: 5,
+   *   bottom: 5,
+   *   left: 5,
+   *   right: 5,
+   * }
+   */
+  margin?: Partial<CardinalDirections<number>>;
   /**
    * Overridable component slots.
    * @default {}
@@ -216,6 +230,7 @@ SparkLineChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
+   * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -255,7 +270,12 @@ SparkLineChart.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
+   * @default {
+   *   top: 5,
+   *   bottom: 5,
+   *   left: 5,
+   *   right: 5,
+   * }
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -308,6 +328,7 @@ SparkLineChart.propTypes = {
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
+   * @default (v: number) => v.toString()
    */
   valueFormatter: PropTypes.func,
   viewBox: PropTypes.shape({

@@ -7,7 +7,7 @@ import { buildWarning } from '../../utils/warning';
 import { fastObjectShallowCompare } from '../../utils/fastObjectShallowCompare';
 
 const stateNotInitializedWarning = buildWarning([
-  'MUI: `useGridSelector` has been called before the initialization of the state.',
+  'MUI X: `useGridSelector` has been called before the initialization of the state.',
   'This hook can only be used inside the context of the grid.',
 ]);
 

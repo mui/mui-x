@@ -26,17 +26,46 @@
       "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
     }
   },
-  "slots": [],
   "name": "ChartsReferenceLine",
   "imports": [
     "import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';",
     "import { ChartsReferenceLine } from '@mui/x-charts';"
   ],
-  "styles": {
-    "classes": ["root", "vertical", "horizontal", "line", "label"],
-    "globalClasses": {},
-    "name": "MuiChartsReferenceLine"
-  },
+  "classes": [
+    {
+      "key": "horizontal",
+      "className": "MuiChartsReferenceLine-horizontal",
+      "description": "Styles applied to the root element if the reference line is horizontal.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiChartsReferenceLine-label",
+      "description": "Styles applied to the reference label.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiChartsReferenceLine-line",
+      "description": "Styles applied to the reference line.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsReferenceLine-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "vertical",
+      "className": "MuiChartsReferenceLine-vertical",
+      "description": "Styles applied to the root element if the reference line is vertical.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChartsReferenceLine",
   "filename": "/packages/x-charts/src/ChartsReferenceLine/ChartsReferenceLine.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li></ul>",
+  "cssComponent": false
 }

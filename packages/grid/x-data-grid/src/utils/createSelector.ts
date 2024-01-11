@@ -43,7 +43,7 @@ type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, R
 const cacheContainer: CacheContainer = { cache: new WeakMap() };
 
 const missingInstanceIdWarning = buildWarning([
-  'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
+  'MUI X: A selector was called without passing the instance ID, which may impact the performance of the grid.',
   'To fix, call it with `apiRef`, e.g. `mySelector(apiRef)`, or pass the instance ID explicitly, e.g. `mySelector(state, apiRef.current.instanceId)`.',
 ]);
 

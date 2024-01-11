@@ -60,6 +60,11 @@ export interface PieArcLabelPlotProps
     >,
     ComputedPieRadius {
   /**
+   * Override the arc attibutes when it is faded.
+   * @default { additionalRadius: -5 }
+   */
+  faded?: DefaultizedPieSeriesType['faded'];
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -173,6 +178,7 @@ PieArcLabelPlot.propTypes = {
   ]),
   /**
    * The minimal angle required to display the arc label.
+   * @default 0
    */
   arcLabelMinAngle: PropTypes.number,
   /**
@@ -200,6 +206,7 @@ PieArcLabelPlot.propTypes = {
   ).isRequired,
   /**
    * Override the arc attibutes when it is faded.
+   * @default { additionalRadius: -5 }
    */
   faded: PropTypes.shape({
     additionalRadius: PropTypes.number,
