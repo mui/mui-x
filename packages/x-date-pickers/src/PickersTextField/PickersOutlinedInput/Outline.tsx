@@ -86,6 +86,9 @@ const OutlineLegend = styled('legend')<{ ownerState: any }>(({ ownerState, theme
   }),
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export default function Outline(props: OutlineProps) {
   const { children, className, label, notched, shrink, ...other } = props;
   const withLabel = label != null && label !== '';
