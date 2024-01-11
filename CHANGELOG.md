@@ -3,6 +3,146 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.7
+
+_Jan 5, 2024_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 New component to create a Tree View from a structured data source:
+
+  You can now directly pass your data to the `RichTreeView` component instead of manually converting it into JSX `TreeItem` components:
+
+  ```tsx
+  const ITEMS = [
+    {
+      id: 'node-1',
+      label: 'Node 1',
+      children: [
+        { id: 'node-1-1', label: Node 1.1' },
+        { id: 'node-1-2', label: Node 1.2' },
+      ],
+    },
+    {
+      id: 'node-2',
+      label: 'Node 2',
+    },
+  ];
+
+  <RichTreeView
+    items={MUI_X_PRODUCTS}
+    defaultCollapseIcon={<ExpandMoreIcon />}
+    defaultExpandIcon={<ChevronRightIcon />}
+  />
+  ```
+
+- 🌍 Improve Czech (cs-CZ) locale on the Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.0.0-alpha.7`
+
+- [DataGrid] Don't evaluate `hasEval` when `disableEval` is set (#11516) @reihwald
+- [DataGrid] follow warning message guideline for `autoPageSize` and `autoHeight` (#11585) @Sboonny
+- [DataGrid] Replace `eval` with `new Function` (#11557) @oliviertassinari
+- [DataGrid] Warn devs when `autoPageSize` is used with `autoHeight` (#11554) @Sboonny
+- [l10n] Improve Czech (cs-CZ) locale (#11526) @fdebef
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.7`.
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.7`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-alpha.7`
+
+- [pickers] Fix views management (#11419) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.7`
+
+- [charts] Add `arcLabelRadius` property (#11487) @alexfauquette
+- [charts] Fix `null` in line chart using dataset (#11550) @alexfauquette
+
+### Tree View
+
+#### Breaking changes
+
+- The expansion props have been renamed to better describe their behaviors:
+
+  | Old name          | New name                |
+  | :---------------- | :---------------------- |
+  | `onNodeToggle`    | `onExpandedNodesChange` |
+  | `expanded`        | `expandedNodes`         |
+  | `defaultExpanded` | `defaultExpandedNodes`  |
+
+  ```diff
+    <TreeView
+  -   onNodeToggle={handleExpansionChange}
+  +   onExpandedNodesChange={handleExpansionChange}
+
+  -   expanded={expandedNodes}
+  +   expandedNodes={expandedNodes}
+
+  -   defaultExpanded={defaultExpandedNodes}
+  +   defaultExpandedNodes={defaultExpandedNodes}
+    />
+  ```
+
+- The selection props have been renamed to better describe their behaviors:
+
+  | Old name          | New name                |
+  | :---------------- | :---------------------- |
+  | `onNodeSelect`    | `onSelectedNodesChange` |
+  | `selected`        | `selectedNodes`         |
+  | `defaultSelected` | `defaultSelectedNodes`  |
+
+  ```diff
+    <TreeView
+  -   onNodeSelect={handleSelectionChange}
+  +   onSelectedNodesChange={handleSelectionChange}
+
+  -   selected={selectedNodes}
+  +   selectedNodes={selectedNodes}
+
+  -   defaultSelected={defaultSelectedNodes}
+  +   defaultSelectedNodes={defaultSelectedNodes}
+    />
+  ```
+
+#### `@mui/x-tree-view@7.0.0-alpha.7`
+
+- [TreeView] Improve the expansion API (#11476) @flaviendelangle
+- [TreeView] Improve the selection API (#11560) @flaviendelangle
+- [TreeView] Introduce the `items` prop (#11059) @flaviendelangle
+
+### Docs
+
+- [docs] Add example for TreeView `onNodeExpansionToggle` prop (#11547) @flaviendelangle
+- [docs] Clarify Pickers usage with Luxon (#11545) @LukasTy
+- [docs] Complete transition to next branch (#11521) @oliviertassinari
+- [docs] Fix 404 links in the docs @oliviertassinari
+- [docs] Fix over page fetching @oliviertassinari
+- [docs] Lint `next.config.js` (#11514) @oliviertassinari
+
+### Core
+
+- [core] Fix release changelog (#11496) @romgrk
+- [core] Fix use of ::before & ::after (#11515) @oliviertassinari
+- [core] Localize the issue template to MUI X (#11511) @oliviertassinari
+- [core] Regen api files (#11542) @flaviendelangle
+- [core] Remove issue emoji @oliviertassinari
+- [core] Sync the release instructions with MUI Core @oliviertassinari
+- [core] Yaml format match most common convention @oliviertassinari
+
 ## 7.0.0-alpha.6
 
 _Dec 22, 2023_
@@ -65,7 +205,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.6`.
 - [fields] Adjust `PickersInput` sizing styles (#11392) @noraleonte
 - [fields] Fix section pasting (#11447) @LukasTy
 - [pickers] Add `PickersTextField` `standard` and `filled` variants (#11250) @noraleonte
-- [pickers] Add missing breaking changes to changelog (#11420) @MBilalShafi
 - [pickers] Cleanup error messages in `PickersSectionList` (#11449) @flaviendelangle
 - [pickers] Create new component `PickersSectionList` (#11352) @flaviendelangle
 
@@ -73,7 +212,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.6`.
 
 Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
 
-### Charts / `@mui/x-charts@7.0.0-alpha.6`
+### Charts / `@mui/x-charts@7.0.0-alpha.5`
 
 - [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
 - [charts] Improve dataset typing (#11372) @alexfauquette
@@ -88,6 +227,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
 
 ### Core
 
+- [core] Add missing breaking changes to changelog (#11420) @MBilalShafi
 - [core] Cherry pick follow up (#11469) @LukasTy
 - [core] Fix `cherry-pick` action (#11446) @LukasTy
 - [core] Fix security regressions in cherry-pick-next-to-master.yml (#11482) @MBilalShafi
@@ -134,10 +274,10 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
 
   ```diff
-  - DateCalendarSlotsComponent
-  + DateCalendarSlots
-  - DateCalendarSlotsComponentsProps
-  + DateCalendarSlotProps
+  -DateCalendarSlotsComponent
+  -DateCalendarSlotsComponentsProps
+  +DateCalendarSlots
+  +DateCalendarSlotProps
   ```
 
 - Move `inputRef` inside the props passed to the field hooks
@@ -145,26 +285,26 @@ The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsP
   The field hooks now only receive the props instead of an object containing both the props and the `inputRef`.
 
   ```diff
-  - const { inputRef, ...otherProps } = props
-  - const fieldResponse = useDateField({ props: otherProps, inputRef });
-  + const fieldResponse = useDateField(props);
+  -const { inputRef, ...otherProps } = props
+  -const fieldResponse = useDateField({ props: otherProps, inputRef });
+  +const fieldResponse = useDateField(props);
   ```
 
   If you are using a multi input range field hook, the same applies to `startInputRef` and `endInputRef` params
 
   ```diff
-  - const { inputRef: startInputRef, ...otherStartTextFieldProps } = startTextFieldProps
-  - const { inputRef: endInputRef, ...otherEndTextFieldProps } = endTextFieldProps
+  -const { inputRef: startInputRef, ...otherStartTextFieldProps } = startTextFieldProps
+  -const { inputRef: endInputRef, ...otherEndTextFieldProps } = endTextFieldProps
 
-    const fieldResponse = useMultiInputDateRangeField({
-      sharedProps,
-  -   startTextFieldProps: otherStartTextFieldProps,
-  -   endTextFieldProps: otherEndTextFieldProps,
-  -   startInputRef
-  -   endInputRef,
-  +   startTextFieldProps, 
-  +   endTextFieldProps
-    });
+   const fieldResponse = useMultiInputDateRangeField({
+     sharedProps,
+  -  startTextFieldProps: otherStartTextFieldProps,
+  -  endTextFieldProps: otherEndTextFieldProps,
+  -  startInputRef
+  -  endInputRef,
+  +  startTextFieldProps,
+  +  endTextFieldProps
+   });
   ```
 
 - Rename the ref returned by the field hooks to `inputRef`
@@ -173,26 +313,26 @@ The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsP
   This ref was previously named `ref` and has been renamed `inputRef` for extra clarity.
 
   ```diff
-    const fieldResponse = useDateField(props);
+   const fieldResponse = useDateField(props);
 
-  - return <input ref={fieldResponse.ref} /> 
-  + return <input ref={fieldResponse.inputRef} />
+  -return <input ref={fieldResponse.ref} />
+  +return <input ref={fieldResponse.inputRef} />
   ```
 
   If you are using a multi input range field hook, the same applies to the ref in the `startDate` and `endDate` objects
 
   ```diff
-    const fieldResponse = useDateField(props);
+   const fieldResponse = useDateField(props);
 
-    return (
-      <div>
-  -     <input ref={fieldResponse.startDate.ref} />
-  +     <input ref={fieldResponse.startDate.inputRef} />
-        <span>–</span>
-  -     <input ref={fieldResponse.endDate.ref} />
-  +     <input ref={fieldResponse.endDate.inputRef} />
-      </div>
-    )
+   return (
+     <div>
+  -    <input ref={fieldResponse.startDate.ref} />
+  +    <input ref={fieldResponse.startDate.inputRef} />
+       <span>–</span>
+  -    <input ref={fieldResponse.endDate.ref} />
+  +    <input ref={fieldResponse.endDate.inputRef} />
+     </div>
+   )
   ```
 
 - Restructure the API of `useClearableField`
@@ -202,23 +342,23 @@ The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsP
   You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
 
   ```diff
-    const fieldResponse = useDateField(props);
+   const fieldResponse = useDateField(props);
 
-  - const { InputProps, onClear, clearable, slots, slotProps, ...otherFieldProps } = fieldResponse
-  - const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField({
-  -   fieldProps: otherFieldProps,
-  -   InputProps,
-  -   clearable,
-  -   onClear,
-  -   slots,
-  -   slotProps,
-  - }); 
+  -const { InputProps, onClear, clearable, slots, slotProps, ...otherFieldProps } = fieldResponse
+  -const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField({
+  -  fieldProps: otherFieldProps,
+  -  InputProps,
+  -  clearable,
+  -  onClear,
+  -  slots,
+  -  slotProps,
+  -});
   -
-  -  return <MyCustomTextField {...processedFieldProps} InputProps={ProcessedInputProps} />
+  - return <MyCustomTextField {...processedFieldProps} InputProps={ProcessedInputProps} />
 
-  + const processedFieldProps = useClearableField(fieldResponse);
+  +const processedFieldProps = useClearableField(fieldResponse);
   +
-  + return <MyCustomTextField {...processedFieldProps} />
+  +return <MyCustomTextField {...processedFieldProps} />
   ```
 
 #### `@mui/x-date-pickers@7.0.0-alpha.5`
@@ -1200,6 +1340,48 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
 
+## 6.18.7
+
+_Jan 5, 2024_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Czech (cs-CZ) locale on Data Grid (#11429) @wensiet
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.18.7`
+
+- [DataGrid] Don't evaluate `hasEval` when `disableEval` is set (#11553) @reihwald
+- [l10n] Update Czech (cs-CZ) locale (#11498) @fdebef
+
+#### `@mui/x-data-grid-pro@6.18.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.18.7`.
+
+#### `@mui/x-data-grid-premium@6.18.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.18.7`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.18.7`
+
+- [pickers] Fix views management (@LukasTy) (#11572)
+
+#### `@mui/x-date-pickers-pro@6.18.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.18.7`.
+
+### Charts / `@mui/x-charts@6.18.7`
+
+- [charts] Fix `null` in line chart using dataset (@alexfauquette) (#11561)
+
+### Docs
+
+- [docs] Clarify Pickers usage with Luxon (#11566) @LukasTy
+
 ## 6.18.6
 
 _Dec 22, 2023_
@@ -1234,7 +1416,7 @@ Same changes as in `@mui/x-data-grid-pro@6.18.6`.
 
 Same changes as in `@mui/x-date-pickers@6.18.6`.
 
-### Charts / `@mui/x-charts@6.18.6`
+### Charts / `@mui/x-charts@6.18.4`
 
 - [charts] Allow percentage values for pie chart center and radius (#11464) @alexfauquette
 - [charts] Make error message more explicit (#11457) @alexfauquette

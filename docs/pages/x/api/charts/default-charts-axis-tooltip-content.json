@@ -29,17 +29,64 @@
     },
     "dataIndex": { "type": { "name": "number" } }
   },
-  "slots": [],
   "name": "DefaultChartsAxisTooltipContent",
   "imports": [
     "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts/ChartsTooltip';",
     "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts';"
   ],
-  "styles": {
-    "classes": ["root", "table", "row", "cell", "mark", "markCell", "labelCell", "valueCell"],
-    "globalClasses": {},
-    "name": "MuiDefaultChartsAxisTooltipContent"
-  },
+  "classes": [
+    {
+      "key": "cell",
+      "className": "MuiDefaultChartsAxisTooltipContent-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiDefaultChartsAxisTooltipContent-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiDefaultChartsAxisTooltipContent-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markCell",
+      "className": "MuiDefaultChartsAxisTooltipContent-markCell",
+      "description": "Styles applied to the markCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDefaultChartsAxisTooltipContent-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiDefaultChartsAxisTooltipContent-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiDefaultChartsAxisTooltipContent-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiDefaultChartsAxisTooltipContent-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDefaultChartsAxisTooltipContent",
   "filename": "/packages/x-charts/src/ChartsTooltip/DefaultChartsAxisTooltipContent.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
+  "cssComponent": false
 }

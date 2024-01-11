@@ -10,6 +10,7 @@ import { getIsHighlighted, getIsFaded } from '../../hooks/useInteractionItemProp
 export interface AnimatedObject {
   innerRadius: number;
   outerRadius: number;
+  arcLabelRadius: number;
   cornerRadius: number;
   startAngle: number;
   endAngle: number;
@@ -36,6 +37,7 @@ export function useTransformData(
     highlighted,
     paddingAngle: basePaddingAngle = 0,
     innerRadius: baseInnerRadius = 0,
+    arcLabelRadius: baseArcLabelRadius,
     outerRadius: baseOuterRadius,
     cornerRadius: baseCornerRadius = 0,
   } = series;
@@ -63,31 +65,37 @@ export function useTransformData(
       data.map((item, itemIndex) => {
         const { isHighlighted, isFaded } = getHighlightStatus(itemIndex);
 
-        const attibuesOverride = {
+        const attributesOverride = {
           additionalRadius: 0,
           ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
         };
         const paddingAngle = Math.max(
           0,
-          (Math.PI * (attibuesOverride.paddingAngle ?? basePaddingAngle)) / 180,
+          (Math.PI * (attributesOverride.paddingAngle ?? basePaddingAngle)) / 180,
         );
-        const innerRadius = Math.max(0, attibuesOverride.innerRadius ?? baseInnerRadius);
+        const innerRadius = Math.max(0, attributesOverride.innerRadius ?? baseInnerRadius);
 
         const outerRadius = Math.max(
           0,
-          attibuesOverride.outerRadius ?? baseOuterRadius + attibuesOverride.additionalRadius,
+          attributesOverride.outerRadius ?? baseOuterRadius + attributesOverride.additionalRadius,
         );
-        const cornerRadius = attibuesOverride.cornerRadius ?? baseCornerRadius;
+        const cornerRadius = attributesOverride.cornerRadius ?? baseCornerRadius;
+
+        const arcLabelRadius =
+          attributesOverride.arcLabelRadius ??
+          baseArcLabelRadius ??
+          (innerRadius + outerRadius) / 2;
 
         return {
           ...item,
-          ...attibuesOverride,
+          ...attributesOverride,
           isFaded,
           isHighlighted,
           paddingAngle,
           innerRadius,
           outerRadius,
           cornerRadius,
+          arcLabelRadius,
         };
       }),
     [
@@ -95,6 +103,7 @@ export function useTransformData(
       baseInnerRadius,
       baseOuterRadius,
       basePaddingAngle,
+      baseArcLabelRadius,
       data,
       faded,
       getHighlightStatus,

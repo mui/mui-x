@@ -5,11 +5,6 @@ import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
 export interface UseTreeViewContextValueBuilderParameters {
   /**
-   * This prop is used to help implement the accessibility logic.
-   * If you don't provide this prop. It falls back to a randomly generated id.
-   */
-  id?: string;
-  /**
    * The default icon used to collapse the node.
    */
   defaultCollapseIcon?: React.ReactNode;
@@ -39,5 +34,5 @@ export type UseTreeViewContextValueBuilderSignature = TreeViewPluginSignature<
   {},
   {},
   never,
-  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature<any>]
+  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature]
 >;

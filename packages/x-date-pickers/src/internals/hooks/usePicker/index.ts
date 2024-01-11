@@ -6,4 +6,8 @@ export type {
   UsePickerResponse,
 } from './usePicker.types';
 
-export type { PickerValueManager, PickerSelectionState } from './usePickerValue.types';
+export type {
+  PickerValueManager,
+  PickerSelectionState,
+  UsePickerValueFieldResponse,
+} from './usePickerValue.types';

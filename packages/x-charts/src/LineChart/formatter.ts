@@ -31,7 +31,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
         [
-          `MUI-X-Charts: line series with id='${id}' has no data.`,
+          `MUI X Charts: line series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -70,7 +70,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
                     'Line plots only support numbers and null values.',
                   ]);
                 }
-                return 0;
+                return null;
               }
               return value;
             })

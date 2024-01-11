@@ -17,7 +17,7 @@ To get started, check out [the blog post about the release of MUI X v6](https://
 In `package.json`, change the version of the data grid package to `next`.
 
 ```diff
--"@mui/x-data-grid": "^6.0.0",
+-"@mui/x-data-grid": "6.x.x",
 +"@mui/x-data-grid": "next",
 ```
 
@@ -34,9 +34,9 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 // Data Grid specific
-npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path>
+npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
 // Target other MUI X components as well
-npx @mui/x-codemod v7.0.0/preset-safe <path>
+npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
 :::info
@@ -242,6 +242,19 @@ Below are described the steps you need to make to migrate from v6 to v7.
 - -->
 
 ### Other exports
+
+- The import path for locales has been changed:
+
+  ```diff
+  -import { enUS } from '@mui/x-data-grid';
+  +import { enUS } from '@mui/x-data-grid/locales';
+
+  -import { enUS } from '@mui/x-data-grid-pro';
+  +import { enUS } from '@mui/x-data-grid-pro/locales';
+
+  -import { enUS } from '@mui/x-data-grid-premium';
+  +import { enUS } from '@mui/x-data-grid-premium/locales';
+  ```
 
 - The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
   Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.

@@ -8,12 +8,13 @@ import {
   getTodayDate,
   getDefaultReferenceDate,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePosition } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type {
   DateRangeValidationError,
   DateTimeRangeValidationError,
   TimeRangeValidationError,
+  DateRange,
+  RangePosition,
 } from '../../models';
 import { RangeFieldSection } from '../models/fields';
 
@@ -61,7 +62,7 @@ export const rangeValueManager: RangePickerValueManager = {
       value[1] == null || !utils.isValid(value[1]) ? null : utils.getTimezone(value[1]);
 
     if (timezoneStart != null && timezoneEnd != null && timezoneStart !== timezoneEnd) {
-      throw new Error('MUI: The timezone of the start and the end date should be the same');
+      throw new Error('MUI X: The timezone of the start and the end date should be the same.');
     }
 
     return timezoneStart ?? timezoneEnd;

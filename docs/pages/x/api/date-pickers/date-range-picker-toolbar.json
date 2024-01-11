@@ -5,17 +5,28 @@
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": [],
   "name": "DateRangePickerToolbar",
   "imports": [
     "import { DateRangePickerToolbar } from '@mui/x-date-pickers-pro/DateRangePicker';",
     "import { DateRangePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "container"],
-    "globalClasses": {},
-    "name": "MuiDateRangePickerToolbar"
-  },
+  "classes": [
+    {
+      "key": "container",
+      "className": "MuiDateRangePickerToolbar-container",
+      "description": "Styles applied to the container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDateRangePickerToolbar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDateRangePickerToolbar",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePickerToolbar.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
 }
