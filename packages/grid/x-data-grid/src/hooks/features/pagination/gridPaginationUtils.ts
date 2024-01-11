@@ -16,7 +16,7 @@ export const getPageCount = (rowCount: number, pageSize: number): number => {
 
 export const noRowCountInServerMode = buildWarning(
   [
-    "MUI: the 'rowCount' prop is undefined while using paginationMode='server'",
+    "MUI X: the 'rowCount' prop is undefined while using paginationMode='server'",
     'For more detail, see http://mui.com/components/data-grid/pagination/#basic-implementation',
   ],
   'error',
@@ -42,7 +42,7 @@ export const throwIfPageSizeExceedsTheLimit = (
   if (signatureProp === GridSignature.DataGrid && pageSize > MAX_PAGE_SIZE) {
     throw new Error(
       [
-        'MUI: `pageSize` cannot exceed 100 in the MIT version of the DataGrid.',
+        'MUI X: `pageSize` cannot exceed 100 in the MIT version of the DataGrid.',
         'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
       ].join('\n'),
     );

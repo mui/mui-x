@@ -73,7 +73,7 @@ describe('<DataGrid /> - Filter', () => {
           />,
         );
       }).toErrorDev(
-        'MUI: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+        'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
       );
     });
 

@@ -53,7 +53,7 @@ describe('useLicenseVerifier', function test() {
       LicenseInfo.setLicenseKey('');
       expect(() => {
         render(<TestComponent />);
-      }).toErrorDev(['MUI: Missing license key']);
+      }).toErrorDev(['MUI X: Missing license key']);
     });
 
     it('should detect an override of a valid license key in the context', () => {
@@ -98,11 +98,11 @@ describe('useLicenseVerifier', function test() {
           actualErrorMsg = error.message;
         }
       }).to.toErrorDev([
-        'MUI: Expired license key',
-        'MUI: Expired license key',
+        'MUI X: Expired license key',
+        'MUI X: Expired license key',
         'The above error occurred in the <TestComponent> component',
       ]);
-      expect(actualErrorMsg).to.match(/MUI: Expired license key/);
+      expect(actualErrorMsg).to.match(/MUI X: Expired license key/);
     });
   });
 });

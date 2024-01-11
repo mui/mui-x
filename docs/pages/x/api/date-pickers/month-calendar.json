@@ -39,21 +39,34 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "value": { "type": { "name": "any" } }
   },
-  "slots": [],
   "name": "MonthCalendar",
   "imports": [
     "import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';",
     "import { MonthCalendar } from '@mui/x-date-pickers';",
     "import { MonthCalendar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMonthCalendar" },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiMonthCalendar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiMonthCalendar",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "cssComponent": false
 }
