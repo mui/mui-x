@@ -41,7 +41,7 @@ import 'dayjs/locale/de';
 For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 
 :::info
-We support both `date-fns` major versions (v2.x and v3.x).
+Both `date-fns` major versions (v2.x and v3.x) are supported.
 
 A single adapter can not work for both `date-fns` v2.x and v3.x, because the way functions are exported has been changed in v3.x.
 
