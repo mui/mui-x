@@ -76,7 +76,7 @@ import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsV3
+export class AdapterDateFns
   extends AdapterDateFnsBase<DateFnsLocale>
   implements MuiPickersAdapter<Date, DateFnsLocale>
 {

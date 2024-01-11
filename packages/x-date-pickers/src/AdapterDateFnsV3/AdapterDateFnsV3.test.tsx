@@ -1,4 +1,4 @@
-import { unstable_AdapterDateFnsV3 as AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { describeGregorianAdapter } from 'test/utils/pickers/describeGregorianAdapter';
 import { fr } from 'date-fns/locale';
 

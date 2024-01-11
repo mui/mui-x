@@ -1,1 +1,1 @@
-export { unstable_AdapterDateFnsV3 } from '@mui/x-date-pickers/AdapterDateFnsV3';
+export { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';

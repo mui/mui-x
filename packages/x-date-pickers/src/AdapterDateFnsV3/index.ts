@@ -1,1 +1,1 @@
-export { AdapterDateFnsV3 as unstable_AdapterDateFnsV3 } from './AdapterDateFnsV3';
+export { AdapterDateFns } from './AdapterDateFnsV3';

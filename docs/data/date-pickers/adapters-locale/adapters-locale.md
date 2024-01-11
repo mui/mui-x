@@ -40,8 +40,8 @@ import 'dayjs/locale/de';
 
 For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 
-:::warning
-The support for `date-fns` v3.x is currently experimental.
+:::info
+We support both `date-fns` major versions (v2.x and v3.x).
 
 A single adapter can not work for both `date-fns` v2.x and v3.x, because the way functions are exported has been changed in v3.x.
 
@@ -52,7 +52,7 @@ To use `date-fns` v3.x, you will have to import the adapter from `@mui/x-date-pi
 // with date-fns v2.x
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // with date-fns v3.x
-import { unstable_AdapterDateFnsV3 as AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 // with date-fns v2.x
 import de from 'date-fns/locale/de';
 // with date-fns v3.x
