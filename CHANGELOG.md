@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.19.0
+
+_Jan 11, 2024_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- ⏰ Support date-fns v3 (#11659) @LukasTy
+  Pickers support both v2 and v3 of date-fns. For v3 use `AdapterDateFnsV3`.
+  ```js
+  // with date-fns v2.x
+  import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  import de from 'date-fns/locale/de';
+  ```
+  ```js
+  // with date-fns v3.x
+  import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+  import { de } from 'date-fns/locale/de';
+  ```
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.0`
+
+- [pickers] Add date-fns@3.x adapter (#11659) @LukasTy
+- [pickers] Fix clearable behavior blocking focus return to `OpenPickerButton` (#11643) @noraleonte
+- [l10n] Add missing Danish (da-DK) locale export (#11641) @etlos
+
+#### `@mui/x-date-pickers-pro@6.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.0`.
+
+### Docs
+
+- [docs] Add missing component @oliviertassinari
+- [docs] Fix parsing of `x-date-pickers-pro` demo adapter imports (#11637) @LukasTy
+- [docs] Push up the MUI X brand (#11533) @oliviertassinari
+- [docs] Improve Server-side data grid docs (#11589) @oliviertassinari
+- [docs] Add demo to the charts overview page (#11586) @danilo-leal
+- [docs] Fix 404 links in the docs @oliviertassinari
+- [docs] Improve landing page (#11570) @oliviertassinari
+- [docs] Give a general revision to the docs (#11249) @danilo-leal
+
 ## 6.18.7
 
 _Jan 5, 2024_
