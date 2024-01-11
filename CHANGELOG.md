@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.8
+
+_Jan 11, 2024_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- ⏰ Support date-fns v3 (#11659) @LukasTy
+- 🌍 Add missing Danish (da-DK) locale export (#11641) @etlos
+
+### Data Grid
+
+#### Breaking changes
+
+- The import path for locales has been changed:
+
+  ```diff
+  -import { enUS } from '@mui/x-data-grid';
+  +import { enUS } from '@mui/x-data-grid/locales';
+
+  -import { enUS } from '@mui/x-data-grid-pro';
+  +import { enUS } from '@mui/x-data-grid-pro/locales';
+
+  -import { enUS } from '@mui/x-data-grid-premium';
+  +import { enUS } from '@mui/x-data-grid-premium/locales';
+  ```
+
+#### `@mui/x-data-grid@7.0.0-alpha.8`
+
+- [DataGrid] Stop exporting locales from the package root (#11614) @cherniavskii
+- [l10n] Add missing Danish (da-DK) locale export (#11640) @etlos
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.8`.
+
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.8`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-alpha.8`
+
+- [pickers] Add date-fns@3.x adapter (#11462) @LukasTy
+- [pickers] Avoid deeper than 2nd level imports (#11588) @LukasTy
+- [pickers] Fix clearable behavior blocking focus return to `OpenPickerButton` (#11642) @noraleonte
+- [pickers] Move `DateRange` to `@mui/x-date-pickers-pro/models` (#11611) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
+
+### Tree View / `@mui/x-tree-view@7.0.0-alpha.8`
+
+- [tree view] Cleanup `onKeyDown` handler (#11481) @flaviendelangle
+- [tree view] Define the parameters used by each plugin to avoid listing them in each component (#11473) @flaviendelangle
+
+### Docs
+
+- [docs] Fix parsing of `x-date-pickers-pro` demo adapter imports (#11628) @LukasTy
+- [docs] Improve git diff format @oliviertassinari
+- [docs] Push up the MUI X brand (#11533) @oliviertassinari
+- [docs] Remove old data grid translation files (#11646) @cherniavskii
+- [docs] Improve Server-side data grid docs (#11589) @oliviertassinari
+- [docs] Improve charts landing page (#11570) @oliviertassinari
+
+### Core
+
+- [core] Lock `jsdom` version (#11652) @cherniavskii
+- [core] Remove PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD (#11608) @oliviertassinari
+- [core] Simplify isSsr logic (#11606) @oliviertassinari
+- [core] Sync playwright cache between MUI X and Material UI (#11607) @oliviertassinari
+- [core] Use MUI X official name in errors (#11645) @oliviertassinari
+
 ## 7.0.0-alpha.7
 
 _Jan 5, 2024_
