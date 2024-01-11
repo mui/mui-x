@@ -46,7 +46,11 @@
     },
     "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -57,30 +61,59 @@
     "timeStep": { "type": { "name": "number" }, "default": "30" },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "value": { "type": { "name": "any" } },
     "view": { "type": { "name": "enum", "description": "'hours'" } },
-    "views": { "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" } }
-  },
-  "slots": [
-    {
-      "class": null,
-      "name": "digitalClockItem",
-      "description": "Component responsible for rendering a single digital clock item.",
-      "default": "MenuItem from '@mui/material'"
+    "views": {
+      "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" },
+      "default": "['hours']"
     }
-  ],
+  },
   "name": "DigitalClock",
   "imports": [
     "import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';",
     "import { DigitalClock } from '@mui/x-date-pickers';",
     "import { DigitalClock } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": ["root", "list", "item"], "globalClasses": {}, "name": "MuiDigitalClock" },
+  "slots": [
+    {
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "item",
+      "className": "MuiDigitalClock-item",
+      "description": "Styles applied to the list item (by default: MenuItem) element.",
+      "isGlobal": false
+    },
+    {
+      "key": "list",
+      "className": "MuiDigitalClock-list",
+      "description": "Styles applied to the list (by default: MenuList) element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDigitalClock-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": false,
+  "themeDefaultProps": false,
+  "muiName": "MuiDigitalClock",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DigitalClock/DigitalClock.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li></ul>",
+  "cssComponent": false
 }

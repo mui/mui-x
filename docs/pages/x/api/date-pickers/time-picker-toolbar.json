@@ -17,27 +17,65 @@
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": [],
   "name": "TimePickerToolbar",
   "imports": [
     "import { TimePickerToolbar } from '@mui/x-date-pickers/TimePicker';",
     "import { TimePickerToolbar } from '@mui/x-date-pickers';",
     "import { TimePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": [
-      "root",
-      "separator",
-      "hourMinuteLabel",
-      "hourMinuteLabelLandscape",
-      "hourMinuteLabelReverse",
-      "ampmSelection",
-      "ampmLandscape",
-      "ampmLabel"
-    ],
-    "globalClasses": {},
-    "name": "MuiTimePickerToolbar"
-  },
+  "classes": [
+    {
+      "key": "ampmLabel",
+      "className": "MuiTimePickerToolbar-ampmLabel",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmLandscape",
+      "className": "MuiTimePickerToolbar-ampmLandscape",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmSelection",
+      "className": "MuiTimePickerToolbar-ampmSelection",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "hourMinuteLabel",
+      "className": "MuiTimePickerToolbar-hourMinuteLabel",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "hourMinuteLabelLandscape",
+      "className": "MuiTimePickerToolbar-hourMinuteLabelLandscape",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "hourMinuteLabelReverse",
+      "className": "MuiTimePickerToolbar-hourMinuteLabelReverse",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiTimePickerToolbar-root",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "separator",
+      "className": "MuiTimePickerToolbar-separator",
+      "description": "",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiTimePickerToolbar",
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
 }

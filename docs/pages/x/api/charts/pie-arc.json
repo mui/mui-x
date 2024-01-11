@@ -1,16 +1,33 @@
 {
   "props": {},
-  "slots": [],
   "name": "PieArc",
   "imports": [
     "import { PieArc } from '@mui/x-charts/PieChart';",
     "import { PieArc } from '@mui/x-charts';"
   ],
-  "styles": {
-    "classes": ["root", "highlighted", "faded"],
-    "globalClasses": {},
-    "name": "MuiPieArc"
-  },
+  "classes": [
+    {
+      "key": "faded",
+      "className": "MuiPieArc-faded",
+      "description": "Styles applied to the root element when faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiPieArc-highlighted",
+      "description": "Styles applied to the root element when higlighted.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPieArc-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiPieArc",
   "filename": "/packages/x-charts/src/PieChart/PieArc.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demonstration</a></li></ul>",
+  "cssComponent": false
 }
