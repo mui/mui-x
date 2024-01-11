@@ -40,9 +40,23 @@ import 'dayjs/locale/de';
 
 For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 
+:::info
+Both `date-fns` major versions (v2.x and v3.x) are supported.
+
+A single adapter can not work for both `date-fns` v2.x and v3.x, because the way functions are exported has been changed in v3.x.
+
+To use `date-fns` v3.x, you will have to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
+:::
+
 ```tsx
+// with date-fns v2.x
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// with date-fns v3.x
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+// with date-fns v2.x
 import de from 'date-fns/locale/de';
+// with date-fns v3.x
+import { de } from 'date-fns/locale/de';
 
 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
   {children}
@@ -263,3 +277,108 @@ This prop is available on all components that render a day calendar, including t
 The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
+
+### Custom calendar header format
+
+To customize the format used on the calendar header, use the `format` prop of the `calendarHeader` slot.
+
+:::info
+This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
+:::
+
+{{"demo": "CustomCalendarHeaderFormat.js"}}
+
+## Custom start of week
+
+The Date and Time Pickers are using the week settings provided by your date libraries.
+Each adapter uses its locale to define the start of the week.
+
+If the default start of the week defined in your adapter's locale is not the one you want, you can override it as shown in the following examples.
+
+:::warning
+If you want to update the start of the week after the first render of a component,
+you will have to manually remount your component to apply the new locale configuration.
+
+:::
+
+### With `dayjs`
+
+For `dayjs`, use the `updateLocale` plugin:
+
+```ts
+import updateLocale from 'dayjs/plugin/updateLocale';
+
+dayjs.extend(updateLocale);
+
+// Replace "en" with the name of the locale you want to update.
+dayjs.updateLocale('en', {
+  // Sunday = 0, Monday = 1.
+  weekStart: 1,
+});
+```
+
+### With `date-fns`
+
+For `date-fns`, use the `setDefaultOptions` utility:
+
+```ts
+// with date-fns v2.x
+import setDefaultOptions from 'date-fns/setDefaultOptions';
+// with date-fns v3.x
+import { setDefaultOptions } from 'date-fns/setDefaultOptions';
+
+setDefaultOptions({
+  // Sunday = 0, Monday = 1.
+  weekStartsOn: 1,
+});
+```
+
+### With `luxon`
+
+For `luxon`, use the `Settings.defaultWeekSettings` object:
+
+```ts
+import { Settings } from 'luxon';
+
+Settings.defaultWeekSettings = {
+  // Sunday = 7, Monday = 1.
+  firstDay: 1,
+  // Makes sure we don't lose the other information from `defaultWeekSettings`
+  minimalDays: Info.getMinimumDaysInFirstWeek(),
+  weekend: Info.getWeekendWeekdays(),
+};
+```
+
+:::warning
+The [browser API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) used by Luxon to determine the start of the week in the current locale is not yet supported by Firefox.
+Users on this browser will always see Monday as the start of the week.
+If you want to have the same start of week on all browsers,
+you will have to manually override the `defaultWeekSettings` to set the `firstDay` corresponding to your locale.
+
+For example, when using the `en-US` locale:
+
+```ts
+Settings.defaultWeekSettings = {
+  firstDay: 7,
+  minimalDays: Info.getMinimumDaysInFirstWeek(),
+  weekend: Info.getWeekendWeekdays(),
+};
+```
+
+:::
+
+### With `moment`
+
+For `moment`, use the `moment.updateLocale` method:
+
+```ts
+import moment from 'moment';
+
+// Replace "en" with the name of the locale you want to update.
+moment.updateLocale('en', {
+  week: {
+    // Sunday = 0, Monday = 1.
+    dow: 1,
+  },
+});
+```
