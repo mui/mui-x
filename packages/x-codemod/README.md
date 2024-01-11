@@ -101,8 +101,8 @@ This change only affects Date and Time Picker components.
 ```diff
  <DatePicker
 -  components={{ Toolbar: CustomToolbar }}
-+  slots={{ toolbar: CustomToolbar }}
 -  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slots={{ toolbar: CustomToolbar }}
 +  slotProps={{ actionBar: { actions: ['clear'] } }}
  />;
 ```
@@ -142,10 +142,10 @@ npx @mui/x-codemod v7.0.0/pickers/rename-day-picker-classes <path>
 Replace types suffix `SlotsComponent` by `Slots` and `SlotsComponentsProps` by `SlotProps`.
 
 ```diff
-- DateCalendarSlotsComponent
-+ DateCalendarSlots
-- DateCalendarSlotsComponentsProps
-+ DateCalendarSlotProps
+-DateCalendarSlotsComponent
+-DateCalendarSlotsComponentsProps
++DateCalendarSlots
++DateCalendarSlotProps
 ```
 
 ```bash
@@ -226,19 +226,19 @@ The list includes these transformers
 Renames the `TreeView` component to `SimpleTreeView`
 
 ```diff
-- import { TreeView } from '@mui/x-tree-view';
-+ import { SimpleTreeView } from '@mui/x-tree-view';
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
 
-- import { TreeView } from '@mui/x-tree-view/TreeView';
-+ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 
-  return (
--   <TreeView>
-+   <SimpleTreeView>
-      <TreeItem nodeId="1" label="First item" />
--   </TreeView>
-+   </SimpleTreeView>
-  )
+   return (
+-    <TreeView>
++    <SimpleTreeView>
+       <TreeItem nodeId="1" label="First item" />
+-    </TreeView>
++    </SimpleTreeView>
+   );
 ```
 
 #### `rename-expansion-props`
@@ -610,8 +610,8 @@ This change only affects Date and Time Pickers components.
 ```diff
  <DatePicker
 -  components={{ Toolbar: CustomToolbar }}
-+  slots={{ toolbar: CustomToolbar }}
 -  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slots={{ toolbar: CustomToolbar }}
 +  slotProps={{ actionBar: { actions: ['clear'] } }}
  />;
 ```
@@ -909,8 +909,8 @@ This change only affects Data Grid components.
 ```diff
  <DataGrid
 -  components={{ Toolbar: CustomToolbar }}
-+  slots={{ toolbar: CustomToolbar }}
 -  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slots={{ toolbar: CustomToolbar }}
 +  slotProps={{ actionBar: { actions: ['clear'] } }}
  />;
 ```

@@ -142,7 +142,7 @@ describe('<DataGridPro /> - Row selection', () => {
           <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
         );
       }).toErrorDev(
-        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+        'MUI X: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
       );
     });
 

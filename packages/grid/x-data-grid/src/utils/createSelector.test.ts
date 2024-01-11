@@ -11,7 +11,7 @@ describe('createSelector', () => {
       const state = {} as GridStateCommunity;
       // @ts-expect-error Need to test the warning
       expect(() => selector(state)).toWarnDev(
-        'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
+        'MUI X: A selector was called without passing the instance ID, which may impact the performance of the grid.',
       );
       expect(() => selector(state, { id: 0 })).not.toWarnDev();
     });
