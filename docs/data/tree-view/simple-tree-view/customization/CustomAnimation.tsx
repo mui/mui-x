@@ -4,7 +4,7 @@ import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultR
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import Collapse from '@mui/material/Collapse';
 import { TransitionProps } from '@mui/material/transitions';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { useSpring, animated } from '@react-spring/web';
@@ -43,11 +43,6 @@ const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
     '& .close': {
       opacity: 0.3,
     },
-  },
-  [`& .${treeItemClasses.group}`]: {
-    marginLeft: 15,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
 }));
 

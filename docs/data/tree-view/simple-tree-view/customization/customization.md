@@ -11,35 +11,45 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Customize the rendering of your Tree View.</p>
 
-## Custom icons
+## Customization props
+
+### Custom icons
 
 Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props to customize the Tree View icons. You can use either icon libraries, such as Material Icons, or create your own.
 
 {{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
 
-## Connection border
-
-Target the `treeItemClasses.group` class to add connection borders between the Tree View items.
-
-{{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
-
-## Toggle animations
+### Custom toggle animations
 
 Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
 
 {{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
 
-## Customizing for complex use cases
+### Setting custom content
+
+You can use the `ContentComponent` prop to replace the `TreeItem` with a custom component
+
+{{"demo": "CustomContentTreeView.js"}}
+
+## Common examples
+
+### Connection border
+
+Target the `treeItemClasses.group` class to add connection borders between the Tree View items.
+
+{{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
+
+### File explorer
 
 You can customize the Tree View to accomodate more complex use cases:
 
 {{"demo": "CustomizedTreeView.js"}}
 
-## Gmail clone
+### Gmail clone
 
 {{"demo": "GmailTreeView.js"}}
 
-## ContentComponent prop
+### ContentComponent prop
 
 You can use the `ContentComponent` prop and the `useTreeItem` hook to further customize the behavior of the TreeItem.
 
