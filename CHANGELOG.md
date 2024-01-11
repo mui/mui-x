@@ -23,7 +23,6 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
   pickers/AdapterDateFnsV3';
   import { de } from 'date-fns/locale/de';
   ```
-- 🌍 Add missing Danish (da-DK) locale export (#11641) @etlos
 
 ### Data Grid
 
