@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { TimeFieldProps, TimeFieldSlotProps } from './TimeField.types';
+import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
@@ -39,12 +39,7 @@ const TimeField = React.forwardRef(function TimeField<
 
   const TextField =
     slots?.textField ?? (inProps.textFieldVersion === 'v7' ? PickersTextField : MuiTextField);
-  const textFieldProps = useSlotProps<
-    typeof TextField,
-    TimeFieldSlotProps<TDate>['textField'],
-    TimeFieldProps<TDate>,
-    TimeFieldProps<TDate>
-  >({
+  const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,

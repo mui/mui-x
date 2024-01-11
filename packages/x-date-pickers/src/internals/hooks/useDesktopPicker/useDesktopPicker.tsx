@@ -117,33 +117,7 @@ export const useDesktopPicker = <
   const OpenPickerIcon = slots.openPickerIcon;
 
   const Field = slots.field;
-  const fieldProps: BaseSingleInputFieldProps<
-    TDate | null,
-    TDate,
-    FieldSection,
-    TTextFieldVersion,
-    InferError<TExternalProps>
-  > = useSlotProps<
-    typeof Field,
-    UseDesktopPickerSlotProps<TDate, TView>['field'],
-    UsePickerValueFieldResponse<TDate | null, FieldSection, InferError<TExternalProps>> &
-      Partial<
-        Pick<
-          UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
-          | 'readOnly'
-          | 'disabled'
-          | 'className'
-          | 'sx'
-          | 'format'
-          | 'formatDensity'
-          | 'timezone'
-          | 'label'
-          | 'name'
-          | 'autoFocus'
-        > & { focused: true | undefined }
-      >,
-    TExternalProps
-  >({
+  const fieldProps = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -166,7 +140,13 @@ export const useDesktopPicker = <
       ...(inputRef ? { inputRef } : {}),
     },
     ownerState: props,
-  });
+  }) as BaseSingleInputFieldProps<
+    TDate | null,
+    TDate,
+    FieldSection,
+    TTextFieldVersion,
+    InferError<TExternalProps>
+  >;
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
   if (hasUIView) {

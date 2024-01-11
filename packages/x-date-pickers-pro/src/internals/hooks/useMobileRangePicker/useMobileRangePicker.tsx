@@ -102,33 +102,7 @@ export const useMobileRangePicker = <
 
   const Field = slots.field;
 
-  const fieldProps: BaseMultiInputFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    TTextFieldVersion,
-    InferError<TExternalProps>
-  > = useSlotProps<
-    typeof Field,
-    UseMobileRangePickerSlotProps<TDate, TView>['field'],
-    UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
-      Partial<
-        Pick<
-          UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
-          | 'readOnly'
-          | 'disabled'
-          | 'className'
-          | 'sx'
-          | 'format'
-          | 'formatDensity'
-          | 'timezone'
-          | 'label'
-          | 'name'
-          | 'autoFocus'
-        >
-      >,
-    TExternalProps
-  >({
+  const fieldProps = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -146,7 +120,13 @@ export const useMobileRangePicker = <
       ...(inputRef ? { inputRef, name } : {}),
     },
     ownerState: props,
-  });
+  }) as BaseMultiInputFieldProps<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    TTextFieldVersion,
+    InferError<TExternalProps>
+  >;
 
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 

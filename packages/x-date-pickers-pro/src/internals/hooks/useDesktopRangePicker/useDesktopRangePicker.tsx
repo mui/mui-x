@@ -13,12 +13,10 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
-  UseDesktopRangePickerSlotProps,
 } from './useDesktopRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
@@ -118,33 +116,7 @@ export const useDesktopRangePicker = <
   };
 
   const Field = slots.field;
-  const fieldProps: BaseMultiInputFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    TTextFieldVersion,
-    InferError<TExternalProps>
-  > = useSlotProps<
-    typeof Field,
-    UseDesktopRangePickerSlotProps<TDate, TView>['field'],
-    UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
-      Partial<
-        Pick<
-          UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
-          | 'readOnly'
-          | 'disabled'
-          | 'className'
-          | 'sx'
-          | 'format'
-          | 'formatDensity'
-          | 'timezone'
-          | 'label'
-          | 'name'
-          | 'autoFocus'
-        >
-      >,
-    TExternalProps
-  >({
+  const fieldProps = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
     additionalProps: {
@@ -164,7 +136,13 @@ export const useDesktopRangePicker = <
       ...(inputRef ? { inputRef, name } : {}),
     },
     ownerState: props,
-  });
+  }) as BaseMultiInputFieldProps<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    TTextFieldVersion,
+    InferError<TExternalProps>
+  >;
 
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,

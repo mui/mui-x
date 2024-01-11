@@ -3,7 +3,6 @@ import { Dayjs } from 'dayjs';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import styled from '@mui/system/styled';
-import Box, { BoxProps } from '@mui/system/Box';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
@@ -27,7 +26,7 @@ import {
 import { BaseSingleInputFieldProps } from '@mui/x-date-pickers';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-const BrowserFieldRoot = styled(Box, { name: 'BrowserField', slot: 'Root' })({
+const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
   alignItems: 'center',
 });
@@ -44,7 +43,10 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 
 interface BrowserTextFieldProps
   extends BasePickersTextFieldProps<'v7'>,
-    Omit<BoxProps, keyof BasePickersTextFieldProps<'v7'>> {}
+    Omit<
+      React.HTMLAttributes<HTMLDivElement>,
+      keyof BasePickersTextFieldProps<'v7'>
+    > {}
 
 const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {

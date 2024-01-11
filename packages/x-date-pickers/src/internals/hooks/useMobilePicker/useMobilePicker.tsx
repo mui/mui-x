@@ -75,16 +75,7 @@ export const useMobilePicker = <
   });
 
   const Field = slots.field;
-  const fieldProps: Omit<
-    BaseSingleInputFieldProps<
-      TDate | null,
-      TDate,
-      FieldSection,
-      TTextFieldVersion,
-      InferError<TExternalProps>
-    >,
-    'referenceDate' | 'defaultValue'
-  > = useSlotProps({
+  const fieldProps = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -109,7 +100,13 @@ export const useMobilePicker = <
       ...(inputRef ? { inputRef } : {}),
     },
     ownerState: props,
-  });
+  }) as BaseSingleInputFieldProps<
+    TDate | null,
+    TDate,
+    FieldSection,
+    TTextFieldVersion,
+    InferError<TExternalProps>
+  >;
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
   fieldProps.inputProps = {

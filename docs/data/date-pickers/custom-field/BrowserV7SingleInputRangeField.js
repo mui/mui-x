@@ -3,7 +3,6 @@ import * as React from 'react';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import styled from '@mui/system/styled';
-import Box from '@mui/system/Box';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
@@ -14,7 +13,7 @@ import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField }
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
-const BrowserFieldRoot = styled(Box, { name: 'BrowserField', slot: 'Root' })({
+const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
   alignItems: 'center',
 });

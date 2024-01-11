@@ -3,7 +3,6 @@ import { Dayjs } from 'dayjs';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import styled from '@mui/system/styled';
-import Box, { BoxProps } from '@mui/system/Box';
 import Stack from '@mui/system/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,7 +21,7 @@ import {
 } from '@mui/x-date-pickers-pro/models';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
-const BrowserFieldRoot = styled(Box, { name: 'BrowserField', slot: 'Root' })({
+const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
   alignItems: 'center',
 });
@@ -39,7 +38,10 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 
 interface BrowserTextFieldProps
   extends BasePickersTextFieldProps<'v7'>,
-    Omit<BoxProps, keyof BasePickersTextFieldProps<'v7'>> {}
+    Omit<
+      React.HTMLAttributes<HTMLDivElement>,
+      keyof BasePickersTextFieldProps<'v7'>
+    > {}
 
 // This demo uses `BasePickersTextFieldProps` instead of `BaseMultiInputPickersTextFieldProps`,
 // That way you can reuse the same `BrowserTextField` for all your pickers, range or not.
