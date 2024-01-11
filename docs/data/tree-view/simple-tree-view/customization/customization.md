@@ -11,7 +11,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Customize the rendering of your Tree View.</p>
 
-## Customization props
+## Basics of customization
 
 ### Custom icons
 
@@ -24,6 +24,12 @@ Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props t
 Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
 
 {{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
+
+### Styling
+
+You can use the `treeItemClasses` to target the internal elements of the TreeView.
+
+{{"demo": "CustomStyling.js"}}
 
 ### Setting custom content
 

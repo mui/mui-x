@@ -75,7 +75,7 @@ const CustomContent = React.forwardRef(function CustomContent(
             fontSize: '0.8rem',
           })}
         >
-          {label[0]}
+          {(label as string)[0]}
         </Avatar>
         <Typography component="div" className={classes.label}>
           {label}
@@ -101,14 +101,15 @@ export default function CustomContentTreeView() {
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
         sx={{ position: 'relative' }}
+        defaultExpandedNodes={['3']}
       >
         <CustomTreeItem nodeId="1" label="Amelia Hart">
           <CustomTreeItem nodeId="2" label="Jane Fisher" />
         </CustomTreeItem>
-        <CustomTreeItem nodeId="5" label="Bailey Monroe">
-          <CustomTreeItem nodeId="10" label="Freddie Reed" />
-          <CustomTreeItem nodeId="6" label="Georgia Johnson">
-            <CustomTreeItem nodeId="8" label="Samantha Malone" />
+        <CustomTreeItem nodeId="3" label="Bailey Monroe">
+          <CustomTreeItem nodeId="4" label="Freddie Reed" />
+          <CustomTreeItem nodeId="5" label="Georgia Johnson">
+            <CustomTreeItem nodeId="6" label="Samantha Malone" />
           </CustomTreeItem>
         </CustomTreeItem>
       </SimpleTreeView>

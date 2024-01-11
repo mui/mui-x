@@ -6,25 +6,13 @@ import { styled } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
-const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
-  [`& .${treeItemClasses.content}`]: {
-    padding: theme.spacing(0.5, 1),
-    margin: theme.spacing(0.2, 0),
-    [`& .${treeItemClasses.label}`]: {
-      fontFamily: 'monospace',
-      fontSize: '0.8rem',
-    },
-  },
+const CustomTreeItem = styled(TreeItem)({
   [`& .${treeItemClasses.iconContainer}`]: {
     '& .close': {
       opacity: 0.3,
     },
   },
-  [`& .${treeItemClasses.group}`]: {
-    marginLeft: 15,
-    paddingLeft: 18,
-  },
-}));
+});
 
 function CloseSquare(props: SvgIconProps) {
   return (

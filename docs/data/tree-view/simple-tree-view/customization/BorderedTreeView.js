@@ -11,7 +11,8 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
     padding: theme.spacing(0.5, 1),
     margin: theme.spacing(0.2, 0),
     [`& .${treeItemClasses.label}`]: {
-      fontFamily: 'monospace',
+      fontFamily: 'General Sans',
+      fontWeight: 500,
       fontSize: '0.8rem',
     },
   },

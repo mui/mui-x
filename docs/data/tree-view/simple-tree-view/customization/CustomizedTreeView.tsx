@@ -160,6 +160,7 @@ export default function CustomizedTreeView() {
     <SimpleTreeView
       aria-label="gmail"
       defaultExpandedNodes={['3']}
+      defaultSelectedNodes="3"
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
