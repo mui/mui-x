@@ -5,10 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
-import {
-  UseDesktopPickerParams,
-  UseDesktopPickerProps,
-} from './useDesktopPicker.types';
+import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
