@@ -96,15 +96,21 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'PP',
+  fullDateWithWeekday: 'PPPP',
   keyboardDate: 'P',
   shortDate: 'MMM d',
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
+  monthAndYear: 'LLLL yyyy',
+  monthAndDate: 'MMMM d',
 
   fullTime: 'p',
   fullTime12h: 'hh:mm aa',
   fullTime24h: 'HH:mm',
 
+  fullDateTime: 'PP p',
+  fullDateTime12h: 'PP hh:mm aa',
+  fullDateTime24h: 'PP HH:mm',
   keyboardDateTime: 'P p',
   keyboardDateTime12h: 'P hh:mm aa',
   keyboardDateTime24h: 'P HH:mm',
@@ -147,14 +153,17 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
     Pick<
       MuiPickersAdapter<Date, DateFnsLocale>,
       | 'date'
-      | 'getInvalidDate'
+      | 'dateWithTimezone'
       | 'getTimezone'
       | 'setTimezone'
       | 'toJsDate'
       | 'getCurrentLocaleCode'
       | 'is12HourCycleInCurrentLocale'
       | 'expandFormat'
+      | 'getFormatHelperText'
+      | 'isNull'
       | 'formatNumber'
+      | 'getMeridiemText'
     >
 {
   public isMUIAdapter = true;
@@ -180,22 +189,23 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
     this.longFormatters = longFormatters;
   }
 
-  public date = <T extends string | null | undefined>(
-    value?: T,
-  ): DateBuilderReturnType<T, Date> => {
-    type R = DateBuilderReturnType<T, Date>;
+  public date = (value?: any) => {
     if (typeof value === 'undefined') {
-      return <R>new Date();
+      return new Date();
     }
 
     if (value === null) {
-      return <R>null;
+      return null;
     }
 
-    return <R>new Date(value);
+    return new Date(value);
   };
 
-  public getInvalidDate = () => new Date('Invalid Date');
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
+  ): DateBuilderReturnType<T, Date> => {
+    return <DateBuilderReturnType<T, Date>>this.date(value);
+  };
 
   public getTimezone = (): string => {
     return 'default';
@@ -241,7 +251,21 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
       .join('');
   };
 
+  public getFormatHelperText = (format: string) => {
+    return this.expandFormat(format)
+      .replace(/(aaa|aa|a)/g, '(a|p)m')
+      .toLocaleLowerCase();
+  };
+
+  public isNull = (value: Date | null) => {
+    return value === null;
+  };
+
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
+  };
+
+  public getMeridiemText = (ampm: 'am' | 'pm') => {
+    return ampm === 'am' ? 'AM' : 'PM';
   };
 }

@@ -8,6 +8,16 @@ import { addHours } from 'date-fns/addHours';
 import { addWeeks } from 'date-fns/addWeeks';
 import { addMonths } from 'date-fns/addMonths';
 import { addYears } from 'date-fns/addYears';
+import { differenceInYears } from 'date-fns/differenceInYears';
+import { differenceInQuarters } from 'date-fns/differenceInQuarters';
+import { differenceInMonths } from 'date-fns/differenceInMonths';
+import { differenceInWeeks } from 'date-fns/differenceInWeeks';
+import { differenceInDays } from 'date-fns/differenceInDays';
+import { differenceInHours } from 'date-fns/differenceInHours';
+import { differenceInMinutes } from 'date-fns/differenceInMinutes';
+import { differenceInSeconds } from 'date-fns/differenceInSeconds';
+import { differenceInMilliseconds } from 'date-fns/differenceInMilliseconds';
+import eachDayOfInterval from 'date-fns/eachDayOfInterval';
 import { endOfDay } from 'date-fns/endOfDay';
 import { endOfWeek } from 'date-fns/endOfWeek';
 import { endOfYear } from 'date-fns/endOfYear';
@@ -43,12 +53,14 @@ import { startOfMonth } from 'date-fns/startOfMonth';
 import { endOfMonth } from 'date-fns/endOfMonth';
 import { startOfWeek } from 'date-fns/startOfWeek';
 import { startOfYear } from 'date-fns/startOfYear';
+import { formatISO } from 'date-fns/formatISO';
+import { parseISO } from 'date-fns/parseISO';
 import { isWithinInterval } from 'date-fns/isWithinInterval';
 import { enUS } from 'date-fns/locale/en-US';
 // date-fns v2 does not export types
 // @ts-ignore TODO remove when date-fns-v3 is the default
 import { Locale as DateFnsLocale } from 'date-fns/locale/types';
-import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
+import { AdapterFormats, AdapterOptions, AdapterUnits, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 /**
@@ -97,6 +109,14 @@ export class AdapterDateFns
     super({ locale: locale ?? enUS, formats, longFormatters });
   }
 
+  public parseISO = (isoString: string) => {
+    return parseISO(isoString);
+  };
+
+  public toISO = (value: Date) => {
+    return formatISO(value, { format: 'extended' });
+  };
+
   public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
@@ -105,12 +125,8 @@ export class AdapterDateFns
     return dateFnsParse(value, format, new Date(), { locale: this.locale });
   };
 
-  public isValid = (value: Date | null) => {
-    if (value == null) {
-      return false;
-    }
-
-    return isValid(value);
+  public isValid = (value: any) => {
+    return isValid(this.date(value));
   };
 
   public format = (value: Date, formatKey: keyof AdapterFormats) => {
@@ -121,13 +137,33 @@ export class AdapterDateFns
     return dateFnsFormat(value, formatString, { locale: this.locale });
   };
 
-  public isEqual = (value: Date | null, comparing: Date | null) => {
+  public getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
+    switch (unit) {
+      case 'years':
+        return differenceInYears(value, this.date(comparing)!);
+      case 'quarters':
+        return differenceInQuarters(value, this.date(comparing)!);
+      case 'months':
+        return differenceInMonths(value, this.date(comparing)!);
+      case 'weeks':
+        return differenceInWeeks(value, this.date(comparing)!);
+      case 'days':
+        return differenceInDays(value, this.date(comparing)!);
+      case 'hours':
+        return differenceInHours(value, this.date(comparing)!);
+      case 'minutes':
+        return differenceInMinutes(value, this.date(comparing)!);
+      case 'seconds':
+        return differenceInSeconds(value, this.date(comparing)!);
+      default: {
+        return differenceInMilliseconds(value, this.date(comparing)!);
+      }
+    }
+  };
+
+  public isEqual = (value: any, comparing: any) => {
     if (value === null && comparing === null) {
       return true;
-    }
-
-    if (value === null || comparing === null) {
-      return false;
     }
 
     return isEqual(value, comparing);
@@ -297,20 +333,58 @@ export class AdapterDateFns
     return getDaysInMonth(value);
   };
 
+  public getNextMonth = (value: Date) => {
+    return addMonths(value, 1);
+  };
+
+  public getPreviousMonth = (value: Date) => {
+    return addMonths(value, -1);
+  };
+
+  public getMonthArray = (value: Date) => {
+    const firstMonth = startOfYear(value);
+    const monthArray = [firstMonth];
+
+    while (monthArray.length < 12) {
+      const prevMonth = monthArray[monthArray.length - 1];
+      monthArray.push(this.getNextMonth(prevMonth));
+    }
+
+    return monthArray;
+  };
+
+  public mergeDateAndTime = (dateParam: Date, timeParam: Date) => {
+    return this.setSeconds(
+      this.setMinutes(
+        this.setHours(dateParam, this.getHours(timeParam)),
+        this.getMinutes(timeParam),
+      ),
+      this.getSeconds(timeParam),
+    );
+  };
+
+  public getWeekdays = () => {
+    const now = new Date();
+    return eachDayOfInterval({
+      start: startOfWeek(now, { locale: this.locale }),
+      end: endOfWeek(now, { locale: this.locale }),
+    }).map((day) => this.formatByString(day, 'EEEEEE'));
+  };
+
   public getWeekArray = (value: Date) => {
-    const start = this.startOfWeek(this.startOfMonth(value));
-    const end = this.endOfWeek(this.endOfMonth(value));
+    const start = startOfWeek(startOfMonth(value), { locale: this.locale });
+    const end = endOfWeek(endOfMonth(value), { locale: this.locale });
 
     let count = 0;
     let current = start;
     const nestedWeeks: Date[][] = [];
 
-    while (this.isBefore(current, end)) {
+    while (isBefore(current, end)) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
       nestedWeeks[weekNumber].push(current);
 
-      current = this.addDays(current, 1);
+      current = addDays(current, 1);
       count += 1;
     }
 
@@ -321,15 +395,15 @@ export class AdapterDateFns
     return getWeek(value, { locale: this.locale });
   };
 
-  public getYearRange = ([start, end]: [Date, Date]) => {
-    const startDate = this.startOfYear(start);
-    const endDate = this.endOfYear(end);
+  public getYearRange = (start: Date, end: Date) => {
+    const startDate = startOfYear(start);
+    const endDate = endOfYear(end);
     const years: Date[] = [];
 
     let current = startDate;
-    while (this.isBefore(current, endDate)) {
+    while (isBefore(current, endDate)) {
       years.push(current);
-      current = this.addYears(current, 1);
+      current = addYears(current, 1);
     }
 
     return years;

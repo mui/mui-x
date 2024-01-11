@@ -56,7 +56,7 @@ import isWithinInterval from 'date-fns/isWithinInterval';
 import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
-import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
+import { AdapterFormats, AdapterOptions, AdapterUnits, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 type DateFnsLocale = typeof defaultLocale;
@@ -118,11 +118,6 @@ export class AdapterDateFns
     return dateFnsParse(value, format, new Date(), { locale: this.locale });
   };
 
-  public isValid = (value: Date | null) => {
-    if (value == null) {
-      return false;
-    }
-
   public isValid = (value: any) => {
     return isValid(this.date(value));
   };
@@ -135,9 +130,27 @@ export class AdapterDateFns
     return dateFnsFormat(value, formatString, { locale: this.locale });
   };
 
-  public isEqual = (value: Date | null, comparing: Date | null) => {
-    if (value === null && comparing === null) {
-      return true;
+  public getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
+    switch (unit) {
+      case 'years':
+        return differenceInYears(value, this.date(comparing)!);
+      case 'quarters':
+        return differenceInQuarters(value, this.date(comparing)!);
+      case 'months':
+        return differenceInMonths(value, this.date(comparing)!);
+      case 'weeks':
+        return differenceInWeeks(value, this.date(comparing)!);
+      case 'days':
+        return differenceInDays(value, this.date(comparing)!);
+      case 'hours':
+        return differenceInHours(value, this.date(comparing)!);
+      case 'minutes':
+        return differenceInMinutes(value, this.date(comparing)!);
+      case 'seconds':
+        return differenceInSeconds(value, this.date(comparing)!);
+      default: {
+        return differenceInMilliseconds(value, this.date(comparing)!);
+      }
     }
   };
 
@@ -387,9 +400,5 @@ export class AdapterDateFns
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am' ? 'AM' : 'PM';
   };
 }
