@@ -8,7 +8,6 @@ import { PickersPopper } from '../../components/PickersPopper';
 import {
   UseDesktopPickerParams,
   UseDesktopPickerProps,
-  UseDesktopPickerSlotProps,
 } from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
@@ -22,7 +21,6 @@ import {
   FieldTextFieldVersion,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { UsePickerValueFieldResponse } from '../usePicker/usePickerValue.types';
 
 /**
  * Hook managing all the single-date desktop pickers:
