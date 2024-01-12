@@ -12,13 +12,9 @@ export interface UseTreeViewNodesParameters {}
 
 export interface UseTreeViewNodesDefaultizedParameters {}
 
-export type UseTreeViewJSXNodesSignature = TreeViewPluginSignature<
-  UseTreeViewNodesParameters,
-  UseTreeViewNodesDefaultizedParameters,
-  UseTreeViewNodesInstance,
-  {},
-  {},
-  {},
-  never,
-  [UseTreeViewNodesSignature, UseTreeViewKeyboardNavigationSignature]
->;
+export type UseTreeViewJSXNodesSignature = TreeViewPluginSignature<{
+  params: UseTreeViewNodesParameters;
+  defaultizedParams: UseTreeViewNodesDefaultizedParameters;
+  instance: UseTreeViewNodesInstance;
+  dependantPlugins: [UseTreeViewNodesSignature, UseTreeViewKeyboardNavigationSignature];
+}>;

@@ -62,7 +62,6 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
   const contextValue = {
     instance: instance as TreeViewInstance<any>,
-    runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
   } as TreeViewContextValue<Signatures>;
 
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {

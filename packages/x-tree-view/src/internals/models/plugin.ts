@@ -17,8 +17,9 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
 
 type TreeViewModelsInitializer<TSignature extends TreeViewAnyPluginSignature> = {
   [TControlled in keyof TSignature['models']]: {
-    controlledProp: TControlled;
-    defaultProp: keyof TSignature['params'];
+    getDefaultValue: (
+      params: TSignature['defaultizedParams'],
+    ) => Exclude<TSignature['defaultizedParams'][TControlled], undefined>;
   };
 };
 
@@ -29,27 +30,31 @@ type TreeViewResponse<TSignature extends TreeViewAnyPluginSignature> = {
 } & OptionalIfEmpty<'contextValue', TSignature['contextValue']>;
 
 export type TreeViewPluginSignature<
-  TParams extends {},
-  TDefaultizedParams extends {},
-  TInstance extends {},
-  TEvents extends { [key in keyof TEvents]: TreeViewEventLookupElement },
-  TState extends {},
-  TContextValue extends {},
-  TModelNames extends keyof TDefaultizedParams,
-  TDependantPlugins extends readonly TreeViewAnyPluginSignature[],
+  T extends {
+    params?: {};
+    defaultizedParams?: {};
+    instance?: {};
+    events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
+    state?: {};
+    contextValue?: {};
+    modelNames?: keyof T['defaultizedParams'];
+    dependantPlugins?: readonly TreeViewAnyPluginSignature[];
+  },
 > = {
-  params: TParams;
-  defaultizedParams: TDefaultizedParams;
-  instance: TInstance;
-  state: TState;
-  models: {
-    [TControlled in TModelNames]-?: TreeViewModel<
-      Exclude<TDefaultizedParams[TControlled], undefined>
-    >;
-  };
-  events: TEvents;
-  contextValue: TContextValue;
-  dependantPlugins: TDependantPlugins;
+  params: T extends { params: {} } ? T['params'] : {};
+  defaultizedParams: T extends { defaultizedParams: {} } ? T['defaultizedParams'] : {};
+  instance: T extends { instance: {} } ? T['instance'] : {};
+  events: T extends { events: {} } ? T['events'] : {};
+  state: T extends { state: {} } ? T['state'] : {};
+  contextValue: T extends { contextValue: {} } ? T['contextValue'] : {};
+  models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
+    ? {
+        [TControlled in T['modelNames']]-?: TreeViewModel<
+          Exclude<T['defaultizedParams'][TControlled], undefined>
+        >;
+      }
+    : {};
+  dependantPlugins: T extends { dependantPlugins: Array<any> } ? T['dependantPlugins'] : [];
 };
 
 export type TreeViewAnyPluginSignature = {
@@ -87,8 +92,13 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
 type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> = TSignature['state'] &
   MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'state'>;
 
+type RemoveSetValue<Models extends Record<string, TreeViewModel<any>>> = {
+  [K in keyof Models]: Omit<Models[K], 'setValue'>;
+};
+
 export type TreeViewUsedModels<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['models'] & MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'models'>;
+  TSignature['models'] &
+    RemoveSetValue<MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'models'>>;
 
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['events'] & MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'events'>;

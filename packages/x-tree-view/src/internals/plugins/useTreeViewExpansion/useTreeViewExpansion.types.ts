@@ -45,13 +45,10 @@ export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
   'defaultExpandedNodes'
 >;
 
-export type UseTreeViewExpansionSignature = TreeViewPluginSignature<
-  UseTreeViewExpansionParameters,
-  UseTreeViewExpansionDefaultizedParameters,
-  UseTreeViewExpansionInstance,
-  {},
-  {},
-  {},
-  'expandedNodes',
-  [UseTreeViewNodesSignature]
->;
+export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
+  params: UseTreeViewExpansionParameters;
+  defaultizedParams: UseTreeViewExpansionDefaultizedParameters;
+  instance: UseTreeViewExpansionInstance;
+  modelNames: 'expandedNodes';
+  dependantPlugins: [UseTreeViewNodesSignature];
+}>;

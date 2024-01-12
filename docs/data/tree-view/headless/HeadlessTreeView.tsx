@@ -41,24 +41,14 @@ interface TreeViewLogExpandedDefaultizedParameters {
   logMessage?: (message: string) => void;
 }
 
-type TreeViewLogExpandedSignature = TreeViewPluginSignature<
+type TreeViewLogExpandedSignature = TreeViewPluginSignature<{
   // The parameters of this plugin as they are passed to `useTreeView`
-  TreeViewLogExpandedParameters,
+  params: TreeViewLogExpandedParameters;
   // The parameters of this plugin as they are passed to the plugin after calling `plugin.getDefaultizedParams`
-  TreeViewLogExpandedDefaultizedParameters,
-  // Instance methods of this plugin: we don't have any
-  {},
-  // Events defined by this plugin: we don't have any
-  {},
-  // State defined by this plugin: we don't have any
-  {},
-  // Context defined by this plugin: we don't have any
-  {},
-  // Models defined by plugin: we don't have any
-  never,
+  defaultizedParams: TreeViewLogExpandedDefaultizedParameters;
   // Dependencies of this plugin (we need the expansion plugin to access its model)
-  [UseTreeViewExpansionSignature]
->;
+  dependantPlugins: [UseTreeViewExpansionSignature];
+}>;
 
 const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
   params,

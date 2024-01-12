@@ -77,13 +77,15 @@ interface UseTreeViewSelectionContextValue {
   >;
 }
 
-export type UseTreeViewSelectionSignature = TreeViewPluginSignature<
-  UseTreeViewSelectionParameters<any>,
-  UseTreeViewSelectionDefaultizedParameters<any>,
-  UseTreeViewSelectionInstance,
-  {},
-  {},
-  UseTreeViewSelectionContextValue,
-  'selectedNodes',
-  [UseTreeViewNodesSignature, UseTreeViewExpansionSignature, UseTreeViewNodesSignature]
->;
+export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
+  params: UseTreeViewSelectionParameters<any>;
+  defaultizedParams: UseTreeViewSelectionDefaultizedParameters<any>;
+  instance: UseTreeViewSelectionInstance;
+  contextValue: UseTreeViewSelectionContextValue;
+  modelNames: 'selectedNodes';
+  dependantPlugins: [
+    UseTreeViewNodesSignature,
+    UseTreeViewExpansionSignature,
+    UseTreeViewNodesSignature,
+  ];
+}>;
