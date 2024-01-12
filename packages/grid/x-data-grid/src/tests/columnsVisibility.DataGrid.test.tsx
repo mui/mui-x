@@ -361,4 +361,41 @@ describe('<DataGridPro /> - Columns visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
     });
   });
+
+  describe('prop: toggleAllMode', () => {
+    it('should toggle filtered columns when `toggleAllMode` is `filtered`', () => {
+      render(
+        <div style={{ width: 400, height: 300 }}>
+          <DataGrid
+            columns={[
+              { field: 'id' },
+              { field: 'firstName' },
+              { field: 'lastName' },
+              { field: 'age' },
+            ]}
+            rows={[{ id: 1, firstName: 'John', lastName: 'Doe', age: 20 }]}
+            autoHeight={isJSDOM}
+            slotProps={{
+              columnsPanel: {
+                toggleAllMode: 'filtered',
+              },
+            }}
+            slots={{ toolbar: GridToolbar }}
+          />
+        </div>,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'lastName', 'age']);
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      const input = screen.getByRole('textbox', { name: 'Find column' });
+
+      fireEvent.change(input, { target: { value: 'name' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Hide all' }));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'age']);
+
+      fireEvent.change(input, { target: { value: 'firstName' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Show all' }));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'age']);
+    });
+  });
 });
