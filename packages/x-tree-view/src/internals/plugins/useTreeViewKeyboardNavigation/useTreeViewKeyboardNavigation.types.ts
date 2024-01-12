@@ -8,20 +8,14 @@ export interface UseTreeViewKeyboardNavigationInstance {
   updateFirstCharMap: (updater: (map: TreeViewFirstCharMap) => TreeViewFirstCharMap) => void;
 }
 
-export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<
-  {},
-  {},
-  UseTreeViewKeyboardNavigationInstance,
-  {},
-  {},
-  {},
-  never,
-  [
+export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<{
+  instance: UseTreeViewKeyboardNavigationInstance;
+  dependantPlugins: [
     UseTreeViewNodesSignature,
     UseTreeViewSelectionSignature,
     UseTreeViewFocusSignature,
     UseTreeViewExpansionSignature,
-  ]
->;
+  ];
+}>;
 
 export type TreeViewFirstCharMap = { [nodeId: string]: string };

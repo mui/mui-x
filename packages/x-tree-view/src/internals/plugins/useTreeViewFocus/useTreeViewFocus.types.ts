@@ -27,18 +27,15 @@ export interface UseTreeViewFocusState {
   focusedNodeId: string | null;
 }
 
-export type UseTreeViewFocusSignature = TreeViewPluginSignature<
-  UseTreeViewFocusParameters,
-  UseTreeViewFocusParameters,
-  UseTreeViewFocusInstance,
-  {},
-  UseTreeViewFocusState,
-  {},
-  never,
-  [
+export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
+  params: UseTreeViewFocusParameters;
+  defaultizedParams: UseTreeViewFocusDefaultizedParameters;
+  instance: UseTreeViewFocusInstance;
+  state: UseTreeViewFocusState;
+  dependantPlugins: [
     UseTreeViewIdSignature,
     UseTreeViewNodesSignature,
     UseTreeViewSelectionSignature,
     UseTreeViewExpansionSignature,
-  ]
->;
+  ];
+}>;
