@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/base/utils';
 import { TreeViewModel } from './treeView';
-import type { TreeViewContextValue } from '../TreeViewProvider';
-import type { MergePluginsProperty } from './helpers';
+import type { MergePluginsProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginsSignature } from '../corePlugins';
 import type { TreeItemProps } from '../../TreeItem';
@@ -23,12 +22,11 @@ type TreeViewModelsInitializer<TSignature extends TreeViewAnyPluginSignature> = 
   };
 };
 
-interface TreeViewResponse {
+type TreeViewResponse<TSignature extends TreeViewAnyPluginSignature> = {
   getRootProps?: <TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>;
-  contextValue?: TreeViewContextValue<any>;
-}
+} & OptionalIfEmpty<'contextValue', TSignature['contextValue']>;
 
 export type TreeViewPluginSignature<
   TParams extends {},
@@ -36,6 +34,7 @@ export type TreeViewPluginSignature<
   TInstance extends {},
   TEvents extends { [key in keyof TEvents]: TreeViewEventLookupElement },
   TState extends {},
+  TContextValue extends {},
   TModelNames extends keyof TDefaultizedParams,
   TDependantPlugins extends readonly TreeViewAnyPluginSignature[],
 > = {
@@ -49,6 +48,7 @@ export type TreeViewPluginSignature<
     >;
   };
   events: TEvents;
+  contextValue: TContextValue;
   dependantPlugins: TDependantPlugins;
 };
 
@@ -59,6 +59,7 @@ export type TreeViewAnyPluginSignature = {
   defaultizedParams: any;
   dependantPlugins: any;
   events: any;
+  contextValue: any;
   models: any;
 };
 
@@ -119,7 +120,7 @@ export type TreeViewItemPlugin = (
 ) => void | TreeViewItemPluginResponse;
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
-  (options: TreeViewPluginOptions<TSignature>): void | TreeViewResponse;
+  (options: TreeViewPluginOptions<TSignature>): void | TreeViewResponse<TSignature>;
   getDefaultizedParams?: (
     params: TreeViewUsedParams<TSignature>,
   ) => TSignature['defaultizedParams'];
