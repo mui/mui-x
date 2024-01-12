@@ -78,8 +78,10 @@ export default function CustomizedTreeView() {
       <SimpleTreeView
         aria-label="customized"
         defaultExpandedNodes={['1']}
-        defaultCollapseIcon={<MinusSquare />}
-        defaultExpandIcon={<PlusSquare />}
+        slots={{
+          expandIcon: PlusSquare,
+          collapseIcon: MinusSquare,
+        }}
         defaultEndIcon={<CloseSquare />}
         sx={{ overflowX: 'hidden' }}
       >

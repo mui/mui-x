@@ -1,6 +1,8 @@
-<TreeView
-  defaultCollapseIcon={<ExpandMoreIcon />}
-  defaultExpandIcon={<ChevronRightIcon />}
+<SimpleTreeView
+  slots={{
+    collapseIcon: ExpandMoreIcon,
+    expandIcon: ChevronRightIcon,
+  }}
 >
   <TreeItem nodeId="grid" label="Data Grid">
     <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
@@ -11,4 +13,4 @@
     <TreeItem nodeId="pickers-community" label="@mui/x-date-pickers" />
     <TreeItem nodeId="pickers-pro" label="@mui/x-date-pickers-pro" />
   </TreeItem>
-</TreeView>
+</SimpleTreeView>

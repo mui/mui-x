@@ -153,10 +153,6 @@ RichTreeView.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * The default icon used to collapse the node.
-   */
-  defaultCollapseIcon: PropTypes.node,
-  /**
    * The default icon displayed next to a end node. This is applied to all
    * tree nodes and can be overridden by the TreeItem `icon` prop.
    */
@@ -167,10 +163,6 @@ RichTreeView.propTypes = {
    * @default []
    */
   defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
-  /**
-   * The default icon used to expand the node.
-   */
-  defaultExpandIcon: PropTypes.node,
   /**
    * The default icon displayed next to a parent node. This is applied to all
    * parent nodes and can be overridden by the TreeItem `icon` prop.

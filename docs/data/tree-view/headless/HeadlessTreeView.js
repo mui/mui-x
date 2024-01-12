@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
 import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
@@ -106,8 +104,6 @@ export default function HeadlessTreeView() {
     <Stack spacing={2}>
       <TreeView
         aria-label="file system navigator"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
         sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         items={ITEMS}
         areLogsEnabled

@@ -4,8 +4,6 @@ import { styled, alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
   TreeItem,
   useTreeItem,
@@ -132,12 +130,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 export default function BarTreeView() {
   return (
     <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
-      <SimpleTreeView
-        aria-label="icon expansion"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-        sx={{ position: 'relative' }}
-      >
+      <SimpleTreeView aria-label="icon expansion" sx={{ position: 'relative' }}>
         <CustomTreeItem nodeId="1" label="Applications">
           <CustomTreeItem nodeId="2" label="Calendar" />
         </CustomTreeItem>

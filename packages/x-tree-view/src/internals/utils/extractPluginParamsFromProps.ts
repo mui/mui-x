@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { ConvertPluginsIntoSignatures, MergePluginsProperty, TreeViewPlugin } from '../models';
+import { UseTreeViewBaseParameters } from '../useTreeView/useTreeView.types';
 
 export const extractPluginParamsFromProps = <
-  TProps extends {},
   TPlugins extends readonly TreeViewPlugin<any>[],
+  TSlots extends MergePluginsProperty<TPlugins, 'slots'>,
+  TSlotProps extends MergePluginsProperty<TPlugins, 'slotProps'>,
+  TProps extends { slots?: TSlots; slotProps?: TSlotProps },
 >({
-  props,
+  props: { slots, slotProps, ...props },
   plugins,
   rootRef,
 }: {
@@ -20,10 +23,12 @@ export const extractPluginParamsFromProps = <
     Object.assign(paramsLookup, plugin.params);
   });
 
-  const pluginParams = { plugins, rootRef } as PluginParams & {
-    plugins: TPlugins;
-    rootRef?: React.Ref<HTMLUListElement>;
-  };
+  const pluginParams = {
+    plugins,
+    rootRef,
+    slots: slots ?? {},
+    slotProps: slotProps ?? {},
+  } as UseTreeViewBaseParameters<TPlugins> & PluginParams;
   const otherProps = {} as Omit<TProps, keyof PluginParams>;
 
   Object.keys(props).forEach((propName) => {
@@ -36,5 +41,5 @@ export const extractPluginParamsFromProps = <
     }
   });
 
-  return { pluginParams, otherProps };
+  return { pluginParams, slots, slotProps, otherProps };
 };

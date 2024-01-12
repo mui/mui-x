@@ -10,6 +10,8 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
   instance: TreeViewUsedInstance<TSignature>;
   params: TreeViewUsedDefaultizedParams<TSignature>;
   state: TreeViewUsedState<TSignature>;
+  slots: TSignature['slots'];
+  slotProps: TSignature['slotProps'];
   models: TreeViewUsedModels<TSignature>;
   setState: React.Dispatch<React.SetStateAction<TreeViewUsedState<TSignature>>>;
   rootRef: React.RefObject<HTMLUListElement>;
@@ -37,6 +39,8 @@ export type TreeViewPluginSignature<
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
     contextValue?: {};
+    slots?: { [key in keyof T['slots']]: React.ElementType };
+    slotProps?: { [key in keyof T['slotProps']]: {} | (() => {}) };
     modelNames?: keyof T['defaultizedParams'];
     dependantPlugins?: readonly TreeViewAnyPluginSignature[];
   },
@@ -47,6 +51,8 @@ export type TreeViewPluginSignature<
   events: T extends { events: {} } ? T['events'] : {};
   state: T extends { state: {} } ? T['state'] : {};
   contextValue: T extends { contextValue: {} } ? T['contextValue'] : {};
+  slots: T extends { slots: {} } ? T['slots'] : {};
+  slotProps: T extends { slotProps: {} } ? T['slotProps'] : {};
   models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
     ? {
         [TControlled in T['modelNames']]-?: TreeViewModel<
@@ -65,6 +71,8 @@ export type TreeViewAnyPluginSignature = {
   dependantPlugins: any;
   events: any;
   contextValue: any;
+  slots: any;
+  slotProps: any;
   models: any;
 };
 

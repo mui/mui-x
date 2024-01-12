@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -8,9 +8,11 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 export default function BasicSimpleTreeView() {
   return (
     <Box sx={{ height: 168, flexGrow: 1, maxWidth: 400 }}>
-      <TreeView
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
+      <SimpleTreeView
+        slots={{
+          collapseIcon: ExpandMoreIcon,
+          expandIcon: ChevronRightIcon,
+        }}
       >
         <TreeItem nodeId="grid" label="Data Grid">
           <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
@@ -21,7 +23,7 @@ export default function BasicSimpleTreeView() {
           <TreeItem nodeId="pickers-community" label="@mui/x-date-pickers" />
           <TreeItem nodeId="pickers-pro" label="@mui/x-date-pickers-pro" />
         </TreeItem>
-      </TreeView>
+      </SimpleTreeView>
     </Box>
   );
 }
