@@ -18,7 +18,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
     filename,
     name,
     muiName: getMuiName(name),
-    apiPathname: `/x/api/data-grid/${kebabCase(name)}/`,
+    apiPathname: `/x/api/data-grid/${kebabCase(name)}`,
     apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/data-grid`),
     readFile: () => {
       srcInfo = parseFile(filename);

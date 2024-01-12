@@ -21,7 +21,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
     filename,
     name,
     muiName: getMuiName(name),
-    apiPathname: `/x/api/charts/${kebabCase(name)}/`,
+    apiPathname: `/x/api/charts/${kebabCase(name)}`,
     apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/charts`),
     readFile: () => {
       srcInfo = parseFile(filename);

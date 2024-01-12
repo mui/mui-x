@@ -21,7 +21,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
     filename,
     name,
     muiName: getMuiName(name),
-    apiPathname: `/x/api/tree-view/${kebabCase(name)}/`,
+    apiPathname: `/x/api/tree-view/${kebabCase(name)}`,
     apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/tree-view`),
     readFile: () => {
       srcInfo = parseFile(filename);

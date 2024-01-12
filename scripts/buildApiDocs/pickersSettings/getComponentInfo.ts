@@ -22,7 +22,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
     filename,
     name,
     muiName: getMuiName(name),
-    apiPathname: `/x/api/date-pickers/${kebabCase(name)}/`,
+    apiPathname: `/x/api/date-pickers/${kebabCase(name)}`,
     apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/date-pickers`),
     readFile: () => {
       srcInfo = parseFile(filename);
