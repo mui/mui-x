@@ -168,7 +168,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
 
       return apiRef.current.setColumnVisibilityModel(newModel);
     },
-    [apiRef, columns, getTogglableColumns],
+    [apiRef, columns, currentColumns, toggleAllWithSearch, getTogglableColumns],
   );
 
   const handleSearchValueChange = React.useCallback(
