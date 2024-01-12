@@ -23,6 +23,8 @@ Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props t
 
 Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
 
+The below demo animates Material UI's [Collapse](/material-ui/transitions/#collapse) with [react-spring](https://www.react-spring.dev/).
+
 {{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
 
 ### Styling
