@@ -27,12 +27,8 @@ export interface UseTreeViewContextValueBuilderParameters {
 export type UseTreeViewContextValueBuilderDefaultizedParameters =
   UseTreeViewContextValueBuilderParameters;
 
-export type UseTreeViewContextValueBuilderSignature = TreeViewPluginSignature<
-  UseTreeViewContextValueBuilderParameters,
-  UseTreeViewContextValueBuilderDefaultizedParameters,
-  {},
-  {},
-  {},
-  never,
-  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature]
->;
+export type UseTreeViewContextValueBuilderSignature = TreeViewPluginSignature<{
+  params: UseTreeViewContextValueBuilderParameters;
+  defaultizedParams: UseTreeViewContextValueBuilderDefaultizedParameters;
+  dependantPlugins: [UseTreeViewNodesSignature, UseTreeViewSelectionSignature];
+}>;
