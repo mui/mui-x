@@ -3,12 +3,10 @@ import { FormControlProps } from '@mui/material/FormControl';
 import { FormHelperTextProps } from '@mui/material/FormHelperText';
 import { InputLabelProps } from '@mui/material/InputLabel';
 import { TextFieldVariants } from '@mui/material/TextField';
-import {
-  PickersFilledInputProps,
-  PickersInputPropsUsedByField,
-  PickersOutlinedInputProps,
-  PickersStandardInputProps,
-} from '../PickersInput/PickersInput.types';
+import { PickersInputPropsUsedByField } from './PickersInputBase/PickersInputBase.types';
+import { PickersInputProps } from './PickersInput';
+import { PickersOutlinedInputProps } from './PickersOutlinedInput';
+import { PickersFilledInputProps } from './PickersFilledInput';
 
 interface PickersTextFieldPropsUsedByField {
   onFocus: React.FocusEventHandler<HTMLDivElement>;
@@ -44,7 +42,7 @@ export interface PickersStandardTextFieldProps extends PickersBaseTextFieldProps
    * [`OutlinedInput`](/material-ui/api/outlined-input/) or [`Input`](/material-ui/api/input/)
    * component depending on the `variant` prop value.
    */
-  InputProps?: Partial<PickersStandardInputProps>;
+  InputProps?: Partial<PickersInputProps>;
 }
 export interface PickersOutlinedTextFieldProps extends PickersBaseTextFieldProps {
   /**

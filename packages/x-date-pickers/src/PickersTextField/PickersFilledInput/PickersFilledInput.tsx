@@ -1,18 +1,24 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
-import { styled } from '@mui/material/styles';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_capitalize as capitalize,
-} from '@mui/utils';
+import { styled, useThemeProps } from '@mui/material/styles';
+import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersFilledInputClasses,
   getPickersFilledInputUtilityClass,
-} from './pickersInputClasses';
-import { PickersFilledInputProps } from './PickersInput.types';
-import { PickersInputRoot, PickersInput, PickersInputSectionsContainer } from './PickersInput';
+} from './pickersFilledInputClasses';
+import { PickersInputBaseProps, PickersInputBase } from '../PickersInputBase';
+import {
+  PickersInputBaseRoot,
+  PickersInputBaseSectionsContainer,
+} from '../PickersInputBase/PickersInputBase';
 
-const FilledInputRoot = styled(PickersInputRoot, {
+export interface PickersFilledInputProps extends PickersInputBaseProps {
+  disableUnderline?: boolean;
+  hiddenLabel?: boolean;
+}
+
+const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersFilledInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -38,14 +44,12 @@ const FilledInputRoot = styled(PickersInputRoot, {
         backgroundColor: theme.vars ? theme.vars.palette.FilledInput.bg : backgroundColor,
       },
     },
-
     [`&.${pickersFilledInputClasses.focused}`]: {
       backgroundColor: theme.vars ? theme.vars.palette.FilledInput.bg : backgroundColor,
     },
     [`&.${pickersFilledInputClasses.disabled}`]: {
       backgroundColor: theme.vars ? theme.vars.palette.FilledInput.disabledBg : disabledBackground,
     },
-
     ...(!ownerState.disableUnderline && {
       '&::after': {
         borderBottom: `2px solid ${
@@ -108,7 +112,7 @@ const FilledInputRoot = styled(PickersInputRoot, {
   };
 });
 
-const FilledSectionsContainer = styled(PickersInputSectionsContainer, {
+const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer, {
   name: 'MuiPickersFilledInput',
   slot: 'sectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
@@ -121,7 +125,6 @@ const FilledSectionsContainer = styled(PickersInputSectionsContainer, {
     paddingTop: 21,
     paddingBottom: 4,
   }),
-
   ...(ownerState.startAdornment && {
     paddingLeft: 0,
   }),
@@ -140,48 +143,37 @@ const FilledSectionsContainer = styled(PickersInputSectionsContainer, {
 }));
 
 const useUtilityClasses = (ownerState: OwnerStateType) => {
-  const {
-    focused,
-    disabled,
-    error,
-    classes,
-    fullWidth,
-    color,
-    size,
-    endAdornment,
-    startAdornment,
-  } = ownerState;
+  const { classes, disableUnderline } = ownerState;
 
   const slots = {
-    root: [
-      'root',
-      focused && !disabled && 'focused',
-      disabled && 'disabled',
-      error && 'error',
-      fullWidth && 'fullWidth',
-      `color${capitalize(color as string)}`,
-      size === 'small' && 'inputSizeSmall',
-      Boolean(startAdornment) && 'adornedStart',
-      Boolean(endAdornment) && 'adornedEnd',
-    ],
-    notchedOutline: ['notchedOutline'],
-    before: ['before'],
-    after: ['after'],
-    content: ['content'],
+    root: ['root', !disableUnderline && 'underline'],
     input: ['input'],
   };
 
-  return composeClasses(slots, getPickersFilledInputUtilityClass, classes);
+  const composedClasses = composeClasses(slots, getPickersFilledInputUtilityClass, classes);
+
+  return {
+    ...classes, // forward classes to the InputBase
+    ...composedClasses,
+  };
 };
 
 interface OwnerStateType
   extends FormControlState,
     Omit<PickersFilledInputProps, keyof FormControlState> {}
 
-export const PickersFilledInput = React.forwardRef(function PickersFilledInput(
-  props: PickersFilledInputProps,
+/**
+ * @ignore - internal component.
+ */
+const PickersFilledInput = React.forwardRef(function PickersFilledInput(
+  inProps: PickersFilledInputProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiPickersFilledInput',
+  });
+
   const { label, autoFocus, ownerState: ownerStateProp, ...other } = props;
 
   const muiFormControl = useFormControl();
@@ -195,8 +187,8 @@ export const PickersFilledInput = React.forwardRef(function PickersFilledInput(
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <PickersInput
-      slots={{ root: FilledInputRoot, input: FilledSectionsContainer }}
+    <PickersInputBase
+      slots={{ root: PickersFilledInputRoot, input: PickersFilledSectionsContainer }}
       {...other}
       label={label}
       classes={classes}
@@ -205,4 +197,92 @@ export const PickersFilledInput = React.forwardRef(function PickersFilledInput(
   );
 });
 
-(PickersInput as any).muiName = 'Input';
+PickersFilledInput.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Is `true` if the current values equals the empty value.
+   * For a single item value, it means that `value === null`
+   * For a range value, it means that `value === [null, null]`
+   */
+  areAllSectionsEmpty: PropTypes.bool.isRequired,
+  className: PropTypes.string,
+  /**
+   * The component used for the root node.
+   * Either a string to use a HTML element or a component.
+   */
+  component: PropTypes.elementType,
+  /**
+   * If true, the whole element is editable.
+   * Useful when all the sections are selected.
+   */
+  contentEditable: PropTypes.bool.isRequired,
+  disableUnderline: PropTypes.bool,
+  /**
+   * The elements to render.
+   * Each element contains the prop to edit a section of the value.
+   */
+  elements: PropTypes.arrayOf(
+    PropTypes.shape({
+      after: PropTypes.object.isRequired,
+      before: PropTypes.object.isRequired,
+      container: PropTypes.object.isRequired,
+      content: PropTypes.object.isRequired,
+    }),
+  ).isRequired,
+  endAdornment: PropTypes.node,
+  fullWidth: PropTypes.bool,
+  hiddenLabel: PropTypes.bool,
+  id: PropTypes.string,
+  inputProps: PropTypes.object,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
+  label: PropTypes.node,
+  margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  onChange: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onInput: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func.isRequired,
+  onPaste: PropTypes.func.isRequired,
+  ownerState: PropTypes.any,
+  readOnly: PropTypes.bool,
+  renderSuffix: PropTypes.func,
+  sectionListRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getRoot: PropTypes.func.isRequired,
+        getSectionContainer: PropTypes.func.isRequired,
+        getSectionContent: PropTypes.func.isRequired,
+        getSectionIndexFromDOMElement: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
+   * The components used for each slot inside.
+   *
+   * @default {}
+   */
+  slots: PropTypes.object,
+  startAdornment: PropTypes.node,
+  style: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  value: PropTypes.string.isRequired,
+} as any;
+
+export { PickersFilledInput };
+
+(PickersFilledInput as any).muiName = 'Input';
