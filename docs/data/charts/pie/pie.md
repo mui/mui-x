@@ -1,5 +1,6 @@
 ---
 title: React Pie chart
+components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 ---
 
 # Charts - Pie

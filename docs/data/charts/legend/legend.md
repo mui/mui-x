@@ -1,5 +1,6 @@
 ---
 title: Charts - Legend
+components: ChartsLegend, ChartsText
 ---
 
 # Charts - Legend
