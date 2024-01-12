@@ -1881,9 +1881,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/mui/material-ui.git#master":
+"@mui/monorepo@https://github.com/michaldudak/material-ui.git#baseui-css-classes":
   version "5.15.4"
-  resolved "https://github.com/mui/material-ui.git#2c0bd029fb6bf6f2d6a710e7ac35a9dff5801ed4"
+  resolved "https://github.com/michaldudak/material-ui.git#64cc8fb78a2959aa064208ab6dbe93df27fc16d6"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.0"
@@ -1956,6 +1956,15 @@
   integrity sha512-mT3LiSt9tZWCdx1pl7q4Q5tNo6gdZbvJel286ZHGuj6LQQXjWNAh8qiF9d+LogvNUI+D7eLkTnj605d1zoazfg==
   dependencies:
     "@babel/runtime" "^7.23.6"
+    "@types/prop-types" "^15.7.11"
+    prop-types "^15.8.1"
+    react-is "^18.2.0"
+
+"@mui/utils@https://pkg.csb.dev/mui/material-ui/commit/06c4379b/@mui/utils":
+  version "5.15.3"
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/06c4379b/@mui/utils#5f0cfcd65bc205c0c2274cd1071fda9cbd568a9c"
+  dependencies:
+    "@babel/runtime" "^7.23.7"
     "@types/prop-types" "^15.7.11"
     prop-types "^15.8.1"
     react-is "^18.2.0"
