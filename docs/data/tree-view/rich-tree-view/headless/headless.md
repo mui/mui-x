@@ -79,20 +79,11 @@ useCustomPlugin.getDefaultizedParams = (params) => ({
 });
 
 useCustomPlugin.models = {
-  customModel: { controlledProp: 'customModel', defaultProp: 'defaultCustomModel' },
+  customModel: {
+    getDefaultValue: (params) => defaultCustomModel,
+  },
 };
 ```
-
-:::warning
-The name of the model needs to equal the name of the controlled props (for typing reasons), we could simplify the model definition to equal:
-
-```ts
-useCustomPlugin.models = {
-  customModel: { defaultProp: 'defaultCustomModel' },
-};
-```
-
-:::
 
 :::info
 When creating a model, you should always set a default value to your `defaultXXX` prop.
@@ -107,7 +98,8 @@ const useCustomPlugin = ({ models }) => {
     console.log(models.customModel.value);
   });
 
-  const updateCustomModel = (newValue) => models.customModel.setValue(newValue);
+  const updateCustomModel = (newValue) =>
+    models.customModel.setControlledValue(newValue);
 };
 ```
 
