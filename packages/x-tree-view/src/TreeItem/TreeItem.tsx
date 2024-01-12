@@ -152,7 +152,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const {
     icons: contextIcons,
     runItemPlugins,
-    multiSelect,
+    selection: { multiSelect },
     disabledItemsFocusable,
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
