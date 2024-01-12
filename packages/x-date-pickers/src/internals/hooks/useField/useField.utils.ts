@@ -169,6 +169,11 @@ export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
   return !Number.isNaN(Number(nonLocalizedValueStr));
 };
 
+/**
+ * Remove the leading zeroes to a digit section value.
+ * E.g.: `03` => `3`
+ * Warning: Should only be called with non-localized digits. Call `removeLocalizedDigits` with your value if needed.
+ */
 export const cleanLeadingZeros = (valueStr: string, size: number) => {
   let cleanValueStr = valueStr;
 
