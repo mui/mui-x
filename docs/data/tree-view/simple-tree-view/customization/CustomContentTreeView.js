@@ -78,7 +78,6 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
 });
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  console.log(props);
   return <TreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
 });
 

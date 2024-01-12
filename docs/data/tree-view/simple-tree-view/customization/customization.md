@@ -15,7 +15,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ### Custom icons
 
-Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props to customize the Tree View icons. 
+Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props to customize the Tree View icons.
 You can use either icon libraries, such as [Material Icons](/material-ui/material-icons/), or create your own.
 
 {{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
@@ -36,7 +36,7 @@ Use the `treeItemClasses` to target internal elements of the Tree Item component
 
 ### Adding custom content
 
-Use the `ContentComponent` prop to replace the Tree Item content with an entirely custom component.
+Use the `ContentComponent` prop and the `useTreeItem` to replace the Tree Item content with an entirely custom component.
 The demo below adds an avatar and custom typography.
 
 {{"demo": "CustomContentTreeView.js"}}
@@ -62,14 +62,8 @@ The demo below shows how to replicate it.
 
 {{"demo": "GmailTreeView.js"}}
 
-### ContentComponent prop
+### Limit expansion to icon container
 
-You can use the `ContentComponent` prop and the `useTreeItem` hook to further customize the behavior of the TreeItem.
-
-Such as limiting expansion to clicking the expand icon:
+The demo below shows how to use a custom content for the Tree View, and limit the expansion of the Tree Items to the `iconContainer`
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
-
-Or increasing the width of the item state indicator to be full-width:
-
-{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
