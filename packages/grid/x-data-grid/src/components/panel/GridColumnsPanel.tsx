@@ -149,6 +149,22 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     apiRef.current.setColumnVisibility(field, columnVisibilityModel[field] === false);
   };
 
+  const currentColumns = React.useMemo(() => {
+    const togglableColumns = getTogglableColumns ? getTogglableColumns(sortedColumns) : null;
+
+    const togglableSortedColumns = togglableColumns
+      ? sortedColumns.filter(({ field }) => togglableColumns.includes(field))
+      : sortedColumns;
+
+    if (!searchValue) {
+      return togglableSortedColumns;
+    }
+
+    return togglableSortedColumns.filter((column) =>
+      searchPredicate(column, searchValue.toLowerCase()),
+    );
+  }, [sortedColumns, searchValue, searchPredicate, getTogglableColumns]);
+
   const toggleAllColumns = React.useCallback(
     (isVisible: boolean) => {
       const currentModel = gridColumnVisibilityModelSelector(apiRef);
@@ -177,22 +193,6 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     },
     [],
   );
-
-  const currentColumns = React.useMemo(() => {
-    const togglableColumns = getTogglableColumns ? getTogglableColumns(sortedColumns) : null;
-
-    const togglableSortedColumns = togglableColumns
-      ? sortedColumns.filter(({ field }) => togglableColumns.includes(field))
-      : sortedColumns;
-
-    if (!searchValue) {
-      return togglableSortedColumns;
-    }
-
-    return togglableSortedColumns.filter((column) =>
-      searchPredicate(column, searchValue.toLowerCase()),
-    );
-  }, [sortedColumns, searchValue, searchPredicate, getTogglableColumns]);
 
   const firstSwitchRef = React.useRef<HTMLInputElement>(null);
 
