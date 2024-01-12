@@ -215,63 +215,57 @@ The typing of a plugin is defined using its _signature_.
 This type contains the following information:
 
 ```ts
-type UseCustomPluginSignature = TreeViewPluginSignature<
+type UseCustomPluginSignature = TreeViewPluginSignature<{
   // The params specific to your plugin before running `getDefaultizedParams`
-  UseCustomPluginParams,
+  params: UseCustomPluginParams;
   // The params specific to your plugins after running `getDefaultizedParams`
-  UseCustomPluginDefaultizedParams,
+  defaultizedParams: UseCustomPluginDefaultizedParams;
   // The methods added to the tree view instance by your plugin
-  UseCustomPluginInstance,
+  instance: UseCustomPluginInstance;
   // The events emitted by your plugin
-  UseCustomPluginEvents,
+  events: UseCustomPluginEvents;
   // The states defined by your plugin
-  UseCustomPluginState,
+  state: UseCustomPluginState;
   // The context value defined by your plugin and passed to the items
-  UseCustomPluginContextValue,
+  contextValue: UseCustomPluginContextValue;
   // The name of the models defined by your plugin
-  UseCustomPluginModelNames,
+  modelNames: UseCustomPluginModelNames;
   // The plugins this plugin needs to work correctly
-  UseCustomPluginDependantPlugins
->;
+  dependantPlugins: UseCustomPluginDependantPlugins;
+}>;
 ```
 
 The most basic plugin would have the following signature:
 
 ```ts
-type UseCustomPluginSignature = TreeViewPluginSignature<
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  never,
-  []
->;
+type UseCustomPluginSignature = TreeViewPluginSignature<{}>;
 ```
 
 The plugin built in the sections above would have the following signature:
 
 ```ts
-type UseCustomPluginSignature = TreeViewPluginSignature<
-  // Params
-  { customParam?: boolean; customModel?: boolean; defaultCustomModel?: boolean },
-  // Defaultized params
+type UseCustomPluginSignature = TreeViewPluginSignature<{
+  params: {
+    customParam?: boolean;
+    customModel?: boolean;
+    defaultCustomModel?: boolean;
+  };
   // `customParam` and `defaultCustomModel` have a default value defined in `getDefaultizedParams`
-  { customParam: boolean; customModel?: boolean; defaultCustomModel: boolean },
-  // Instance
-  { toggleCustomModel: () => void },
-  // Events
-  'toggleCustomModel',
-  // State
-  {},
-  // Context value
-  {},
-  // Model names
-  'customModel',
-  // Dependant plugins: We want to have access to the expansion models and methods.
-  [UseTreeViewExpansionSignature]
->;
+  defaultizedParams: {
+    customParam: boolean;
+    customModel?: boolean;
+    defaultCustomModel: boolean;
+  };
+  instance: { toggleCustomModel: () => void };
+  events: {
+    toggleCustomModel: {
+      params: { value: boolean };
+    };
+  };
+  modelNames: 'customModel';
+  // We want to have access to the expansion models and methods of the expansion plugin.
+  dependantPlugins: [UseTreeViewExpansionSignature];
+}>;
 ```
 
 ## Examples
