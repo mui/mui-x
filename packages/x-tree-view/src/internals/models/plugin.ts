@@ -29,27 +29,31 @@ type TreeViewResponse<TSignature extends TreeViewAnyPluginSignature> = {
 } & OptionalIfEmpty<'contextValue', TSignature['contextValue']>;
 
 export type TreeViewPluginSignature<
-  TParams extends {},
-  TDefaultizedParams extends {},
-  TInstance extends {},
-  TEvents extends { [key in keyof TEvents]: TreeViewEventLookupElement },
-  TState extends {},
-  TContextValue extends {},
-  TModelNames extends keyof TDefaultizedParams,
-  TDependantPlugins extends readonly TreeViewAnyPluginSignature[],
+  T extends {
+    params?: {};
+    defaultizedParams?: {};
+    instance?: {};
+    events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
+    state?: {};
+    contextValue?: {};
+    modelNames?: keyof T['defaultizedParams'];
+    dependantPlugins?: readonly TreeViewAnyPluginSignature[];
+  },
 > = {
-  params: TParams;
-  defaultizedParams: TDefaultizedParams;
-  instance: TInstance;
-  state: TState;
-  models: {
-    [TControlled in TModelNames]-?: TreeViewModel<
-      Exclude<TDefaultizedParams[TControlled], undefined>
-    >;
-  };
-  events: TEvents;
-  contextValue: TContextValue;
-  dependantPlugins: TDependantPlugins;
+  params: T extends { params: {} } ? T['params'] : {};
+  defaultizedParams: T extends { defaultizedParams: {} } ? T['defaultizedParams'] : {};
+  instance: T extends { instance: {} } ? T['instance'] : {};
+  events: T extends { events: {} } ? T['events'] : {};
+  state: T extends { state: {} } ? T['state'] : {};
+  contextValue: T extends { contextValue: {} } ? T['contextValue'] : {};
+  models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
+    ? {
+        [TControlled in T['modelNames']]-?: TreeViewModel<
+          Exclude<T['defaultizedParams'][TControlled], undefined>
+        >;
+      }
+    : {};
+  dependantPlugins: T extends { dependantPlugins: Array<any> } ? T['dependantPlugins'] : [];
 };
 
 export type TreeViewAnyPluginSignature = {

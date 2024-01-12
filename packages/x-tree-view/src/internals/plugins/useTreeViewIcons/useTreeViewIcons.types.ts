@@ -35,13 +35,9 @@ interface UseTreeViewIconsContextValue {
   };
 }
 
-export type UseTreeViewIconsSignature = TreeViewPluginSignature<
-  UseTreeViewIconsParameters,
-  UseTreeViewIconsDefaultizedParameters,
-  {},
-  {},
-  {},
-  UseTreeViewIconsContextValue,
-  never,
-  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature]
->;
+export type UseTreeViewIconsSignature = TreeViewPluginSignature<{
+  params: UseTreeViewIconsParameters;
+  defaultizedParams: UseTreeViewIconsDefaultizedParameters;
+  contextValue: UseTreeViewIconsContextValue;
+  dependantPlugins: [UseTreeViewNodesSignature, UseTreeViewSelectionSignature];
+}>;
