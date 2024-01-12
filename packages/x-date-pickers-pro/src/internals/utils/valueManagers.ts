@@ -92,7 +92,14 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (utils, [start, end], fallbackSections, isRTL, getSectionsFromDate) => {
+  getSectionsFromValue: (
+    utils,
+    [start, end],
+    fallbackSections,
+    localizedDigits,
+    isRTL,
+    getSectionsFromDate,
+  ) => {
     const separatedFallbackSections =
       fallbackSections == null
         ? { startDate: null, endDate: null }
@@ -131,13 +138,15 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
         ...getSections(start, separatedFallbackSections.startDate, 'start'),
         ...getSections(end, separatedFallbackSections.endDate, 'end'),
       ],
+      localizedDigits,
       isRTL,
     );
   },
-  getValueStrFromSections: (sections, isRTL) => {
+  getValueStrFromSections: (sections, localizedDigits, isRTL) => {
     const dateRangeSections = splitDateRangeSections(sections);
     return createDateStrForInputFromSections(
       [...dateRangeSections.startDate, ...dateRangeSections.endDate],
+      localizedDigits,
       isRTL,
     );
   },
