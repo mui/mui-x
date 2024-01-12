@@ -189,7 +189,6 @@ LocalizationProvider.propTypes = {
     normalDate: PropTypes.string,
     normalDateWithWeekday: PropTypes.string,
     seconds: PropTypes.string,
-    secondsNoLeadingZeros: PropTypes.string,
     shortDate: PropTypes.string,
     weekday: PropTypes.string,
     weekdayShort: PropTypes.string,

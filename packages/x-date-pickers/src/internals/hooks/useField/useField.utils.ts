@@ -112,18 +112,25 @@ export const getLetterEditingOptions = <TDate>(
   }
 };
 
+// This format should be the same on all the adapters
+// If some adapter does not respect this convention, then we will need to hardcode the format on each adapter.
+export const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
+
 const NON_LOCALIZED_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 export const getLocalizedDigits = <TDate>(utils: MuiPickersAdapter<TDate>) => {
   const today = utils.date(undefined);
-  const formattedZero = utils.format(utils.setSeconds(today, 0), 'secondsNoLeadingZeros');
+  const formattedZero = utils.formatByString(
+    utils.setSeconds(today, 0),
+    FORMAT_SECONDS_NO_LEADING_ZEROS,
+  );
 
   if (formattedZero === '0') {
     return NON_LOCALIZED_DIGITS;
   }
 
   return Array.from({ length: 10 }).map((_, index) =>
-    utils.format(utils.setSeconds(today, index), 'secondsNoLeadingZeros'),
+    utils.formatByString(utils.setSeconds(today, index), FORMAT_SECONDS_NO_LEADING_ZEROS),
   );
 };
 

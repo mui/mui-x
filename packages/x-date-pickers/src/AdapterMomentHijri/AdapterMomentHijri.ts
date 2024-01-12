@@ -57,7 +57,6 @@ const defaultFormats: AdapterFormats = {
   meridiem: 'A',
   minutes: 'mm',
   seconds: 'ss',
-  secondsNoLeadingZeros: 's',
 
   fullDate: 'iYYYY, iMMMM Do',
   keyboardDateTime: 'iYYYY/iMM/iDD LT',

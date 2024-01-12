@@ -80,7 +80,6 @@ const defaultFormats: AdapterFormats = {
   meridiem: 'A',
   minutes: 'mm',
   seconds: 'ss',
-  secondsNoLeadingZeros: 's',
 
   fullDate: 'll',
   keyboardDate: 'L',

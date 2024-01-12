@@ -131,7 +131,6 @@ const defaultFormats: AdapterFormats = {
   meridiem: 'aa',
   minutes: 'mm',
   seconds: 'ss',
-  secondsNoLeadingZeros: 's',
 
   fullDate: 'PPP',
   keyboardDate: 'P',
