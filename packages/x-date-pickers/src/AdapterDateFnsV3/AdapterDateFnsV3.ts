@@ -1,53 +1,55 @@
 /* eslint-disable class-methods-use-this */
-import addDays from 'date-fns/addDays';
-import addSeconds from 'date-fns/addSeconds';
-import addMinutes from 'date-fns/addMinutes';
-import addHours from 'date-fns/addHours';
-import addWeeks from 'date-fns/addWeeks';
-import addMonths from 'date-fns/addMonths';
-import addYears from 'date-fns/addYears';
-import endOfDay from 'date-fns/endOfDay';
-import endOfWeek from 'date-fns/endOfWeek';
-import endOfYear from 'date-fns/endOfYear';
-import dateFnsFormat from 'date-fns/format';
-import getDate from 'date-fns/getDate';
-import getDaysInMonth from 'date-fns/getDaysInMonth';
-import getHours from 'date-fns/getHours';
-import getMinutes from 'date-fns/getMinutes';
-import getMonth from 'date-fns/getMonth';
-import getSeconds from 'date-fns/getSeconds';
-import getMilliseconds from 'date-fns/getMilliseconds';
-import getWeek from 'date-fns/getWeek';
-import getYear from 'date-fns/getYear';
-import isAfter from 'date-fns/isAfter';
-import isBefore from 'date-fns/isBefore';
-import isEqual from 'date-fns/isEqual';
-import isSameDay from 'date-fns/isSameDay';
-import isSameYear from 'date-fns/isSameYear';
-import isSameMonth from 'date-fns/isSameMonth';
-import isSameHour from 'date-fns/isSameHour';
-import isValid from 'date-fns/isValid';
-import dateFnsParse from 'date-fns/parse';
-import setDate from 'date-fns/setDate';
-import setHours from 'date-fns/setHours';
-import setMinutes from 'date-fns/setMinutes';
-import setMonth from 'date-fns/setMonth';
-import setSeconds from 'date-fns/setSeconds';
-import setMilliseconds from 'date-fns/setMilliseconds';
-import setYear from 'date-fns/setYear';
-import startOfDay from 'date-fns/startOfDay';
-import startOfMonth from 'date-fns/startOfMonth';
-import endOfMonth from 'date-fns/endOfMonth';
-import startOfWeek from 'date-fns/startOfWeek';
-import startOfYear from 'date-fns/startOfYear';
-import isWithinInterval from 'date-fns/isWithinInterval';
-import defaultLocale from 'date-fns/locale/en-US';
-// @ts-ignore
-import longFormatters from 'date-fns/_lib/format/longFormatters';
+// TODO remove when date-fns-v3 is the default
+// @ts-nocheck
+import { addDays } from 'date-fns/addDays';
+import { addSeconds } from 'date-fns/addSeconds';
+import { addMinutes } from 'date-fns/addMinutes';
+import { addHours } from 'date-fns/addHours';
+import { addWeeks } from 'date-fns/addWeeks';
+import { addMonths } from 'date-fns/addMonths';
+import { addYears } from 'date-fns/addYears';
+import { endOfDay } from 'date-fns/endOfDay';
+import { endOfWeek } from 'date-fns/endOfWeek';
+import { endOfYear } from 'date-fns/endOfYear';
+// @ts-ignore TODO remove when date-fns-v3 is the default
+import { format as dateFnsFormat, longFormatters } from 'date-fns/format';
+import { getDate } from 'date-fns/getDate';
+import { getDaysInMonth } from 'date-fns/getDaysInMonth';
+import { getHours } from 'date-fns/getHours';
+import { getMinutes } from 'date-fns/getMinutes';
+import { getMonth } from 'date-fns/getMonth';
+import { getSeconds } from 'date-fns/getSeconds';
+import { getMilliseconds } from 'date-fns/getMilliseconds';
+import { getWeek } from 'date-fns/getWeek';
+import { getYear } from 'date-fns/getYear';
+import { isAfter } from 'date-fns/isAfter';
+import { isBefore } from 'date-fns/isBefore';
+import { isEqual } from 'date-fns/isEqual';
+import { isSameDay } from 'date-fns/isSameDay';
+import { isSameYear } from 'date-fns/isSameYear';
+import { isSameMonth } from 'date-fns/isSameMonth';
+import { isSameHour } from 'date-fns/isSameHour';
+import { isValid } from 'date-fns/isValid';
+import { parse as dateFnsParse } from 'date-fns/parse';
+import { setDate } from 'date-fns/setDate';
+import { setHours } from 'date-fns/setHours';
+import { setMinutes } from 'date-fns/setMinutes';
+import { setMonth } from 'date-fns/setMonth';
+import { setSeconds } from 'date-fns/setSeconds';
+import { setMilliseconds } from 'date-fns/setMilliseconds';
+import { setYear } from 'date-fns/setYear';
+import { startOfDay } from 'date-fns/startOfDay';
+import { startOfMonth } from 'date-fns/startOfMonth';
+import { endOfMonth } from 'date-fns/endOfMonth';
+import { startOfWeek } from 'date-fns/startOfWeek';
+import { startOfYear } from 'date-fns/startOfYear';
+import { isWithinInterval } from 'date-fns/isWithinInterval';
+import { enUS } from 'date-fns/locale/en-US';
+// date-fns v2 does not export types
+// @ts-ignore TODO remove when date-fns-v3 is the default
+import { Locale as DateFnsLocale } from 'date-fns/locale/types';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
-
-type DateFnsLocale = typeof defaultLocale;
 
 /**
  * Based on `@date-io/date-fns`
@@ -82,12 +84,17 @@ export class AdapterDateFns
     if (typeof addDays !== 'function') {
       throw new Error(
         [
-          'MUI: The `date-fns` package v3.x is not compatible with this adapter.',
-          'Please, install v2.x of the package or use the `AdapterDateFnsV3` instead.',
+          `MUI: The \`date-fns\` package v2.x is not compatible with this adapter.`,
+          'Please, install v3.x of the package or use the `AdapterDateFns` instead.',
         ].join('\n'),
       );
     }
-    super({ locale: locale ?? defaultLocale, formats, longFormatters });
+    if (!longFormatters) {
+      throw new Error(
+        'MUI: The minimum supported `date-fns` package version compatible with this adapter is `3.2.x`.',
+      );
+    }
+    super({ locale: locale ?? enUS, formats, longFormatters });
   }
 
   public parse = (value: string, format: string) => {
