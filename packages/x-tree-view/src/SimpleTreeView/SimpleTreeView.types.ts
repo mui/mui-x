@@ -10,6 +10,10 @@ import {
 } from './SimpleTreeView.plugins';
 
 export interface SimpleTreeViewSlots extends SimpleTreeViewPluginSlots {
+  /**
+   * Element rendered at the root.
+   * @default SimpleTreeViewRoot
+   */
   root?: React.ElementType;
 }
 
