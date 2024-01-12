@@ -131,19 +131,14 @@ export const GridRootStyles = styled('div', {
     ? t.vars.palette.background.default
     : t.palette.background.default;
 
-  // eslint-disable-next-line no-nested-ternary
-  const pinnedBackground = t.vars
-    ? t.vars.palette.background.default // We cannot lighten/darken the background color if it's a CSS variable.
-    : t.palette.mode === 'dark'
-    ? lighten(t.palette.background.default, 0.1)
-    : darken(t.palette.background.default, 0.05);
+  const pinnedBackground = containerBackground;
 
   const overlayBackground = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
     : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
 
   const hoverOpacity = (t.vars || t).palette.action.hoverOpacity;
-  const hoverBackground = (t.vars || t).palette.action.hover;
+  const hoverColor = (t.vars || t).palette.action.hover;
 
   const selectedOpacity = (t.vars || t).palette.action.selectedOpacity;
   const selectedBackground = t.vars
@@ -161,14 +156,14 @@ export const GridRootStyles = styled('div', {
       );
 
   const pinnedHoverBackground = t.vars
-    ? hoverBackground
-    : blend(pinnedBackground, hoverBackground, hoverOpacity);
+    ? hoverColor
+    : blend(pinnedBackground, hoverColor, hoverOpacity);
   const pinnedSelectedBackground = t.vars
     ? selectedBackground
     : blend(pinnedBackground, selectedBackground, selectedOpacity);
   const pinnedSelectedHoverBackground = t.vars
-    ? hoverBackground
-    : blend(pinnedSelectedBackground, hoverBackground, hoverOpacity);
+    ? hoverColor
+    : blend(pinnedSelectedBackground, hoverColor, hoverOpacity);
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
@@ -180,6 +175,8 @@ export const GridRootStyles = styled('div', {
       },
     },
   };
+
+  console.log({ containerBackground, pinnedBackground, hoverColor, hoverOpacity, pinnedHoverBackground, })
 
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
@@ -625,13 +622,11 @@ export const GridRootStyles = styled('div', {
 
 /**
  * Blend a transparent overlay color with a background color, resulting in a single
- * RGB color. The color space is gamma-corrected with a standard value of 2.2.
+ * RGB color.
  */
-function blend(background: string, overlay: string, opacity: number) {
-  const GAMMA = 2.2;
-
+function blend(background: string, overlay: string, opacity: number, gamma: number = 1) {
   const f = (b: number, o: number) =>
-    Math.round((b ** (1 / GAMMA) * (1 - opacity) + o ** (1 / GAMMA) * opacity) ** GAMMA);
+    Math.round((b ** (1 / gamma) * (1 - opacity) + o ** (1 / gamma) * opacity) ** gamma);
 
   const backgroundColor = decomposeColor(background);
   const overlayColor = decomposeColor(overlay);

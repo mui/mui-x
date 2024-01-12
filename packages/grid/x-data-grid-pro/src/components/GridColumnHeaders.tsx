@@ -70,13 +70,14 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   ...(ownerState.side === GridPinnedColumnPosition.RIGHT && { right: 0 }),
   [`&.${gridClasses['pinnedColumnHeaders--left']}`]: {
     left: 0,
+    '& > [role="row"] > [role="columnheader"]:last-of-type': {
+      borderRight: '1px solid var(--DataGrid-rowBorderColor)',
+    },
   },
   [`&.${gridClasses['pinnedColumnHeaders--right']}`]: {
     right: 0,
     '& > [role="row"] > [role="columnheader"]:first-of-type': {
-      ...(ownerState.showCellVerticalBorder && {
-        borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
-      }),
+      borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
     },
   },
 }));
