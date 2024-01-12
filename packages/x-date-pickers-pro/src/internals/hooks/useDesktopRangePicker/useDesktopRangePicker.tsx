@@ -20,7 +20,7 @@ import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
-  UseDesktopRangePickerSlotProps,
+  UseDesktopRangePickerSlotsComponentsProps,
 } from './useDesktopRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
@@ -114,7 +114,7 @@ export const useDesktopRangePicker = <
     InferError<TExternalProps>
   > = useSlotProps<
     typeof Field,
-    UseDesktopRangePickerSlotProps<TDate, TView>['field'],
+    UseDesktopRangePickerSlotsComponentsProps<TDate, TView>['field'],
     UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
       Partial<
         Pick<
