@@ -52,10 +52,10 @@ In the example below, the **Year** column is not aggregable since its `aggregabl
 
 ### Aggregating non-aggregable columns programmatically
 
-To apply aggregation programmatically on non-aggregable columns (e.g. columns with `aggregable` property on its column definition (`GridColDef`) set to `false`), you can provide aggregation model in one of the following ways.
+To apply aggregation programmatically on non-aggregable columns (columns with `aggregable: false` in the [column definition](/x/api/data-grid/grid-col-def/)), you can provide aggregation model in one of the following ways:
 
-1. Pass `aggregation.model` to the `initialState` prop. This will initialize the aggregation with the provided model.
-2. Provide the `aggregationModel` prop. This will control the aggregation with the provided model.
+1. Pass `aggregation.model` to the `initialState` prop. This will [initialize the aggregation](/x/react-data-grid/aggregation/#initialize-aggregation) with the provided model.
+2. Provide the `aggregationModel` prop. This will [control the aggregation](/x/react-data-grid/aggregation/#controlled-aggregation) with the provided model.
 3. Call the API method `setAggregationModel`. This will set the aggregation with the provided model.
 
 In the demo below, although the **Year** column is not aggregable, yet it's aggregated in a read-only mode by providing an initial aggregation model.
