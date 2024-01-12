@@ -38,7 +38,7 @@ export const testFormat: DescribeGregorianAdapterTestSuite = ({ adapter }) => {
     expectDate('seconds', '00');
   });
 
-  it.only('should format the seconds without leading zeroes for format "s"', () => {
+  it('should format the seconds without leading zeroes for format "s"', () => {
     const date = adapter.date('2020-01-01T23:44:09.000Z')!;
     expect(adapter.formatByString(date, 's')).to.equal('9');
   });
