@@ -125,6 +125,14 @@ To disable `Hide all` or `Show all` buttons in the column visibility panel, pass
 />
 ```
 
+### Customize action buttons behavior when search is active
+
+By default, `Hide all` and `Show all` buttons toggle the visibility of all columns, including the ones that are not visible in the current search results.
+
+To only toggle the visibility of the columns that are visible in the current search results, pass `toggleAllMode="filtered"` to `slotProps.columnsPanel`:
+
+{{"demo": "ColumnSelectorGridToggleAllMode.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
