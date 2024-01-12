@@ -86,10 +86,10 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
   /**
    * Changes the behavior of the `Show all` and `Hide all` buttons when the search field is used.
    * - `all`: The buttons will toggle all columns.
-   * - `filtered`: The buttons will toggle only the columns that match the search criteria.
+   * - `filteredOnly`: The buttons will toggle only the columns that match the search criteria.
    * @default 'all'
    */
-  toggleAllMode?: 'all' | 'filtered';
+  toggleAllMode?: 'all' | 'filteredOnly';
   /**
    * Returns the list of togglable columns.
    * If used, only those columns will be displayed in the panel
@@ -173,7 +173,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       const newModel = { ...currentModel };
       const togglableColumns = getTogglableColumns ? getTogglableColumns(columns) : null;
 
-      (toggleAllMode === 'filtered' ? currentColumns : columns).forEach((col) => {
+      (toggleAllMode === 'filteredOnly' ? currentColumns : columns).forEach((col) => {
         if (col.hideable && (togglableColumns == null || togglableColumns.includes(col.field))) {
           if (isVisible) {
             // delete the key from the model instead of setting it to `true`
@@ -331,10 +331,10 @@ GridColumnsPanel.propTypes = {
   /**
    * Changes the behavior of the `Show all` and `Hide all` buttons when the search field is used.
    * - `all`: The buttons will toggle all columns.
-   * - `filtered`: The buttons will toggle only the columns that match the search criteria.
+   * - `filteredOnly`: The buttons will toggle only the columns that match the search criteria.
    * @default 'all'
    */
-  toggleAllMode: PropTypes.oneOf(['all', 'filtered']),
+  toggleAllMode: PropTypes.oneOf(['all', 'filteredOnly']),
 } as any;
 
 export { GridColumnsPanel };

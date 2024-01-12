@@ -3,7 +3,7 @@
   slots={{ toolbar: GridToolbar }}
   slotProps={{
     columnsPanel: {
-      toggleAllMode: 'filtered',
+      toggleAllMode: 'filteredOnly',
     },
   }}
 />
