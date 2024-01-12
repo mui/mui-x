@@ -84,10 +84,12 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    */
   disableShowAllButton?: boolean;
   /**
-   * If `true`, `Show all` and `Hide all` buttons will work on showing columns
-   * @default false
+   * Changes the behavior of the `Show all` and `Hide all` buttons when the search field is used.
+   * - `all`: The buttons will toggle all columns.
+   * - `filtered`: The buttons will toggle only the columns that match the search criteria.
+   * @default 'all'
    */
-  toggleAllWithSearch?: boolean;
+  toggleAllMode?: 'all' | 'filtered';
   /**
    * Returns the list of togglable columns.
    * If used, only those columns will be displayed in the panel
@@ -122,7 +124,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     autoFocusSearchField = true,
     disableHideAllButton = false,
     disableShowAllButton = false,
-    toggleAllWithSearch = false,
+    toggleAllMode = 'all',
     getTogglableColumns,
     ...other
   } = props;
@@ -171,7 +173,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       const newModel = { ...currentModel };
       const togglableColumns = getTogglableColumns ? getTogglableColumns(columns) : null;
 
-      ( toggleAllWithSearch ? currentColumns : columns ).forEach((col) => {
+      (toggleAllMode === 'filtered' ? currentColumns : columns).forEach((col) => {
         if (col.hideable && (togglableColumns == null || togglableColumns.includes(col.field))) {
           if (isVisible) {
             // delete the key from the model instead of setting it to `true`
@@ -184,7 +186,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
 
       return apiRef.current.setColumnVisibilityModel(newModel);
     },
-    [apiRef, columns, currentColumns, toggleAllWithSearch, getTogglableColumns],
+    [apiRef, columns, currentColumns, toggleAllMode, getTogglableColumns],
   );
 
   const handleSearchValueChange = React.useCallback(
@@ -316,11 +318,6 @@ GridColumnsPanel.propTypes = {
    */
   disableShowAllButton: PropTypes.bool,
   /**
-   * If `true`, `Show all` and `Hide all` buttons will work on showing columns
-   * @default false
-   */
-  toggleAllWithSearch: PropTypes.bool,
-  /**
    * Returns the list of togglable columns.
    * If used, only those columns will be displayed in the panel
    * which are passed as the return value of the function.
@@ -331,6 +328,13 @@ GridColumnsPanel.propTypes = {
   searchPredicate: PropTypes.func,
   slotProps: PropTypes.object,
   sort: PropTypes.oneOf(['asc', 'desc']),
+  /**
+   * Changes the behavior of the `Show all` and `Hide all` buttons when the search field is used.
+   * - `all`: The buttons will toggle all columns.
+   * - `filtered`: The buttons will toggle only the columns that match the search criteria.
+   * @default 'all'
+   */
+  toggleAllMode: PropTypes.oneOf(['all', 'filtered']),
 } as any;
 
 export { GridColumnsPanel };
