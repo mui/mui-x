@@ -166,7 +166,7 @@ const createSection = <TDate>({
       maxLength = sectionConfig.maxLength;
 
       if (isValidDate) {
-        sectionValue = cleanLeadingZeros(utils, sectionValue, maxLength);
+        sectionValue = cleanLeadingZeros(sectionValue, maxLength);
       }
     }
   }

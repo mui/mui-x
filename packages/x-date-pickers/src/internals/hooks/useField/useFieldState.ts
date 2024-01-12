@@ -17,6 +17,7 @@ import {
   validateSections,
   getDateFromDateSections,
   parseSelectedSections,
+  getLocalizedDigits,
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 import { InferError } from '../useValidation';
@@ -59,6 +60,7 @@ export interface UseFieldStateResponse<TValue, TDate, TSection extends FieldSect
   setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
   getSectionsFromValue: (value: TValue, fallbackSections?: TSection[] | null) => TSection[];
+  localizedDigits: string[];
   timezone: PickersTimezone;
 }
 
@@ -118,9 +120,11 @@ export const useFieldState = <
     valueManager,
   });
 
+  const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
+
   const sectionsValueBoundaries = React.useMemo(
-    () => getSectionsBoundaries<TDate>(utils, timezone),
-    [utils, timezone],
+    () => getSectionsBoundaries<TDate>(utils, localizedDigits, timezone),
+    [utils, localizedDigits, timezone],
   );
 
   const getSectionsFromValue = React.useCallback(
@@ -320,7 +324,7 @@ export const useFieldState = <
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
     const newSections = setSectionValue(activeSectionIndex!, newSectionValue);
     const newActiveDateSections = activeDateManager.getSections(newSections);
-    const newActiveDate = getDateFromDateSections(utils, newActiveDateSections);
+    const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
     let values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
     let shouldPublish: boolean;
@@ -412,6 +416,7 @@ export const useFieldState = <
     setTempAndroidValueStr,
     getSectionsFromValue,
     sectionsValueBoundaries,
+    localizedDigits,
     timezone,
   };
 };

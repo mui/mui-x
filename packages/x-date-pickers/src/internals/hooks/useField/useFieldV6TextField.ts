@@ -32,6 +32,7 @@ const cleanString = (dirtyString: string) => dirtyString.replace(/[\u2066\u2067\
 
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   sections: TSection[],
+  localizedDigits: string[],
   isRTL: boolean,
 ): FieldSectionWithPositions<TSection>[] => {
   let position = 0;
@@ -40,7 +41,11 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
-    const renderedValue = getSectionVisibleValue(section, isRTL ? 'input-rtl' : 'input-ltr');
+    const renderedValue = getSectionVisibleValue(
+      section,
+      isRTL ? 'input-rtl' : 'input-ltr',
+      localizedDigits,
+    );
     const sectionStr = `${section.startSeparator}${renderedValue}${section.endSeparator}`;
 
     const sectionLength = cleanString(sectionStr).length;
@@ -92,14 +97,15 @@ export const useFieldV6TextField: UseFieldTextField<'v6'> = (params) => {
     setSelectedSections,
     getSectionsFromValue,
     areAllSectionsEmpty,
+    localizedDigits,
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
 
   const sections = React.useMemo(
-    () => addPositionPropertiesToSections(state.sections, isRTL),
-    [state.sections, isRTL],
+    () => addPositionPropertiesToSections(state.sections, localizedDigits, isRTL),
+    [state.sections, localizedDigits, isRTL],
   );
 
   const interactions = React.useMemo<UseFieldTextFieldInteractions>(
@@ -321,7 +327,7 @@ export const useFieldV6TextField: UseFieldTextField<'v6'> = (params) => {
       keyPressed = cleanValueStr;
     } else {
       const prevValueStr = cleanString(
-        fieldValueManager.getV6InputValueFromSections(sections, isRTL),
+        fieldValueManager.getV6InputValueFromSections(sections, localizedDigits, isRTL),
       );
 
       let startOfDiffIndex = -1;
@@ -381,16 +387,17 @@ export const useFieldV6TextField: UseFieldTextField<'v6'> = (params) => {
     () =>
       fieldValueManager.getV6InputValueFromSections(
         getSectionsFromValue(valueManager.emptyValue),
+        localizedDigits,
         isRTL,
       ),
-    [fieldValueManager, getSectionsFromValue, valueManager.emptyValue, isRTL],
+    [fieldValueManager, getSectionsFromValue, valueManager.emptyValue, localizedDigits, isRTL],
   );
 
   const valueStr = React.useMemo(
     () =>
       state.tempValueStrAndroid ??
-      fieldValueManager.getV6InputValueFromSections(state.sections, isRTL),
-    [state.sections, fieldValueManager, state.tempValueStrAndroid, isRTL],
+      fieldValueManager.getV6InputValueFromSections(state.sections, localizedDigits, isRTL),
+    [state.sections, fieldValueManager, state.tempValueStrAndroid, localizedDigits, isRTL],
   );
 
   React.useEffect(() => {

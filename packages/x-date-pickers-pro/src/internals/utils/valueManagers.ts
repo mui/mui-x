@@ -139,10 +139,11 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
       ...dateRangeSections.endDate,
     ]);
   },
-  getV6InputValueFromSections: (sections, isRTL) => {
+  getV6InputValueFromSections: (sections, localizedDigits, isRTL) => {
     const dateRangeSections = splitDateRangeSections(sections);
     return createDateStrForV6InputFromSections(
       [...dateRangeSections.startDate, ...dateRangeSections.endDate],
+      localizedDigits,
       isRTL,
     );
   },

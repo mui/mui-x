@@ -288,10 +288,15 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
+   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
    * @param {boolean} isRTL `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getV6InputValueFromSections: (sections: TSection[], isRTL: boolean) => string;
+  getV6InputValueFromSections: (
+    sections: TSection[],
+    localizedDigits: string[],
+    isRTL: boolean,
+  ) => string;
   /**
    * Creates the string value to render in the input based on the current section list.
    * @template TSection

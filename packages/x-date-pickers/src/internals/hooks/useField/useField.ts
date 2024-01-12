@@ -71,6 +71,7 @@ export const useField = <
     updateSectionValue,
     setTempAndroidValueStr,
     sectionsValueBoundaries,
+    localizedDigits,
     timezone,
   } = stateResponse;
 
@@ -79,6 +80,7 @@ export const useField = <
     updateSectionValue,
     sectionsValueBoundaries,
     setTempAndroidValueStr,
+    localizedDigits,
     timezone,
   });
 
@@ -198,6 +200,7 @@ export const useField = <
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
+          localizedDigits,
           activeDateManager.date,
           { minutesStep },
         );
