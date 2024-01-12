@@ -1,22 +1,28 @@
 {
   "props": {
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
-  },
-  "slots": [
-    {
-      "class": null,
-      "name": "bar",
-      "description": "The component that renders the root.",
-      "default": "BarElementPath"
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
     }
-  ],
+  },
   "name": "BarElement",
   "imports": [
     "import { BarElement } from '@mui/x-charts/BarChart';",
     "import { BarElement } from '@mui/x-charts';"
   ],
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiBarElement" },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiBarElement-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiBarElement",
   "filename": "/packages/x-charts/src/BarChart/BarElement.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "cssComponent": false
 }

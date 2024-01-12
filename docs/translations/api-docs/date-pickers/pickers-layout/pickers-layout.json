@@ -1,0 +1,28 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "components": { "description": "Overridable components." },
+    "componentsProps": { "description": "The props used for each component slot." },
+    "orientation": { "description": "Force rendering in particular orientation." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {
+    "actionBar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the action bar" },
+    "contentWrapper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the contentWrapper element (which contains the tabs and the view itself)"
+    },
+    "landscape": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element in landscape orientation"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "shortcuts": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the shortcuts container"
+    },
+    "tabs": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tabs" },
+    "toolbar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the toolbar" }
+  }
+}

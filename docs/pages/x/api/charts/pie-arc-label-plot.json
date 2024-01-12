@@ -7,13 +7,14 @@
         "description": "'formattedValue'<br>&#124;&nbsp;'label'<br>&#124;&nbsp;'value'<br>&#124;&nbsp;func"
       }
     },
-    "arcLabelMinAngle": { "type": { "name": "number" } },
+    "arcLabelMinAngle": { "type": { "name": "number" }, "default": "0" },
     "cornerRadius": { "type": { "name": "number" }, "default": "0" },
     "faded": {
       "type": {
         "name": "shape",
         "description": "{ additionalRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
-      }
+      },
+      "default": "{ additionalRadius: -5 }"
     },
     "highlighted": {
       "type": {
@@ -25,15 +26,21 @@
     "paddingAngle": { "type": { "name": "number" }, "default": "0" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
   },
-  "slots": [{ "class": null, "name": "pieArcLabel", "description": "" }],
   "name": "PieArcLabelPlot",
   "imports": [
     "import { PieArcLabelPlot } from '@mui/x-charts/PieChart';",
     "import { PieArcLabelPlot } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPieArcLabelPlot" },
+  "classes": [],
+  "muiName": "MuiPieArcLabelPlot",
   "filename": "/packages/x-charts/src/PieChart/PieArcLabelPlot.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demonstration</a></li></ul>",
+  "cssComponent": false
 }
