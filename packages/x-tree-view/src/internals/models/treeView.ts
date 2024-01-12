@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { TreeViewAnyPluginSignature } from './plugin';
 import type { MergePluginsProperty } from './helpers';
 
@@ -25,7 +24,7 @@ export interface TreeViewItemRange {
 export interface TreeViewModel<TValue> {
   name: string;
   value: TValue;
-  setValue: React.Dispatch<React.SetStateAction<TValue>>;
+  setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
 }
 
 export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
