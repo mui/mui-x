@@ -2,139 +2,139 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 export default [
   {
-    pathname: '/x/api/charts/area-element/',
+    pathname: '/x/api/charts/area-element',
     title: 'AreaElement',
   },
   {
-    pathname: '/x/api/charts/area-plot/',
+    pathname: '/x/api/charts/area-plot',
     title: 'AreaPlot',
   },
   {
-    pathname: '/x/api/charts/bar-chart/',
+    pathname: '/x/api/charts/bar-chart',
     title: 'BarChart',
   },
   {
-    pathname: '/x/api/charts/bar-element/',
+    pathname: '/x/api/charts/bar-element',
     title: 'BarElement',
   },
   {
-    pathname: '/x/api/charts/bar-plot/',
+    pathname: '/x/api/charts/bar-plot',
     title: 'BarPlot',
   },
   {
-    pathname: '/x/api/charts/charts-axis/',
+    pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
   {
-    pathname: '/x/api/charts/charts-axis-highlight/',
+    pathname: '/x/api/charts/charts-axis-highlight',
     title: 'ChartsAxisHighlight',
   },
   {
-    pathname: '/x/api/charts/charts-axis-tooltip-content/',
+    pathname: '/x/api/charts/charts-axis-tooltip-content',
     title: 'ChartsAxisTooltipContent',
   },
   {
-    pathname: '/x/api/charts/charts-clip-path/',
+    pathname: '/x/api/charts/charts-clip-path',
     title: 'ChartsClipPath',
   },
   {
-    pathname: '/x/api/charts/charts-item-tooltip-content/',
+    pathname: '/x/api/charts/charts-item-tooltip-content',
     title: 'ChartsItemTooltipContent',
   },
   {
-    pathname: '/x/api/charts/charts-legend/',
+    pathname: '/x/api/charts/charts-legend',
     title: 'ChartsLegend',
   },
   {
-    pathname: '/x/api/charts/charts-reference-line/',
+    pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
   {
-    pathname: '/x/api/charts/charts-surface/',
+    pathname: '/x/api/charts/charts-surface',
     title: 'ChartsSurface',
   },
   {
-    pathname: '/x/api/charts/charts-text/',
+    pathname: '/x/api/charts/charts-text',
     title: 'ChartsText',
   },
   {
-    pathname: '/x/api/charts/charts-tooltip/',
+    pathname: '/x/api/charts/charts-tooltip',
     title: 'ChartsTooltip',
   },
   {
-    pathname: '/x/api/charts/default-charts-axis-tooltip-content/',
+    pathname: '/x/api/charts/default-charts-axis-tooltip-content',
     title: 'DefaultChartsAxisTooltipContent',
   },
   {
-    pathname: '/x/api/charts/default-charts-item-tooltip-content/',
+    pathname: '/x/api/charts/default-charts-item-tooltip-content',
     title: 'DefaultChartsItemTooltipContent',
   },
   {
-    pathname: '/x/api/charts/line-chart/',
+    pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
   },
   {
-    pathname: '/x/api/charts/line-element/',
+    pathname: '/x/api/charts/line-element',
     title: 'LineElement',
   },
   {
-    pathname: '/x/api/charts/line-highlight-element/',
+    pathname: '/x/api/charts/line-highlight-element',
     title: 'LineHighlightElement',
   },
   {
-    pathname: '/x/api/charts/line-highlight-plot/',
+    pathname: '/x/api/charts/line-highlight-plot',
     title: 'LineHighlightPlot',
   },
   {
-    pathname: '/x/api/charts/line-plot/',
+    pathname: '/x/api/charts/line-plot',
     title: 'LinePlot',
   },
   {
-    pathname: '/x/api/charts/mark-element/',
+    pathname: '/x/api/charts/mark-element',
     title: 'MarkElement',
   },
   {
-    pathname: '/x/api/charts/mark-plot/',
+    pathname: '/x/api/charts/mark-plot',
     title: 'MarkPlot',
   },
   {
-    pathname: '/x/api/charts/pie-arc/',
+    pathname: '/x/api/charts/pie-arc',
     title: 'PieArc',
   },
   {
-    pathname: '/x/api/charts/pie-arc-label/',
+    pathname: '/x/api/charts/pie-arc-label',
     title: 'PieArcLabel',
   },
   {
-    pathname: '/x/api/charts/pie-arc-label-plot/',
+    pathname: '/x/api/charts/pie-arc-label-plot',
     title: 'PieArcLabelPlot',
   },
   {
-    pathname: '/x/api/charts/pie-arc-plot/',
+    pathname: '/x/api/charts/pie-arc-plot',
     title: 'PieArcPlot',
   },
   {
-    pathname: '/x/api/charts/pie-chart/',
+    pathname: '/x/api/charts/pie-chart',
     title: 'PieChart',
   },
   {
-    pathname: '/x/api/charts/pie-plot/',
+    pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
   },
   {
-    pathname: '/x/api/charts/scatter/',
+    pathname: '/x/api/charts/scatter',
     title: 'Scatter',
   },
   {
-    pathname: '/x/api/charts/scatter-chart/',
+    pathname: '/x/api/charts/scatter-chart',
     title: 'ScatterChart',
   },
   {
-    pathname: '/x/api/charts/scatter-plot/',
+    pathname: '/x/api/charts/scatter-plot',
     title: 'ScatterPlot',
   },
   {
-    pathname: '/x/api/charts/spark-line-chart/',
+    pathname: '/x/api/charts/spark-line-chart',
     title: 'SparkLineChart',
   },
 ] as MuiPage[];

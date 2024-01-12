@@ -36,9 +36,6 @@ const DatePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (_, styles) => styles.root,
 })({});
 
-/**
- * @ignore - do not document.
- */
 const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
