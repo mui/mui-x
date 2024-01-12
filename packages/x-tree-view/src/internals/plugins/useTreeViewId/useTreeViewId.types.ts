@@ -14,16 +14,13 @@ export interface UseTreeViewIdParameters {
 
 export type UseTreeViewIdDefaultizedParameters = UseTreeViewIdParameters;
 
-export interface UseTreeViewIdState {
-  focusedNodeId: string | null;
-}
-
 export type UseTreeViewIdSignature = TreeViewPluginSignature<
   UseTreeViewIdParameters,
   UseTreeViewIdDefaultizedParameters,
   UseTreeViewIdInstance,
   {},
-  UseTreeViewIdState,
+  {},
+  {},
   never,
   []
 >;

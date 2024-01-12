@@ -14,8 +14,9 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
+import { DefaultTreeViewPlugins } from '@mui/x-tree-view/internals';
 
-const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<any> = {
+const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins> = {
   instance: {
     isNodeExpandable: () => false,
     isNodeExpanded: () => false,
@@ -26,13 +27,15 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<any> = {
     mapFirstCharFromJSX: () => {},
   } as any,
   runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
-  multiSelect: false,
   disabledItemsFocusable: false,
   icons: {
     defaultCollapseIcon: null,
     defaultExpandIcon: null,
     defaultParentIcon: null,
     defaultEndIcon: null,
+  },
+  selection: {
+    multiSelect: false,
   },
 };
 
@@ -1141,6 +1144,36 @@ describe('<TreeItem />', () => {
           fireEvent.keyDown(getByRole('tree'), { key: ' ' });
 
           expect(getByTestId('one')).not.to.have.attribute('aria-selected');
+        });
+
+        it('should select a node when Enter is pressed and the node is not selected', () => {
+          const { getByRole, getByTestId } = render(
+            <SimpleTreeView>
+              <TreeItem nodeId="one" label="one" data-testid="one" />
+            </SimpleTreeView>,
+          );
+
+          act(() => {
+            getByRole('tree').focus();
+          });
+          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
+
+          expect(getByTestId('one')).to.have.attribute('aria-selected');
+        });
+
+        it('should not un-select a node when Enter is pressed and the node is selected', () => {
+          const { getByRole, getByTestId } = render(
+            <SimpleTreeView defaultSelectedNodes="one">
+              <TreeItem nodeId="one" label="one" data-testid="one" />
+            </SimpleTreeView>,
+          );
+
+          act(() => {
+            getByRole('tree').focus();
+          });
+          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
+
+          expect(getByTestId('one')).to.have.attribute('aria-selected');
         });
       });
 

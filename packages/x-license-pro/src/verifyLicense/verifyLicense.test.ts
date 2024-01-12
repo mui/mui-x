@@ -31,7 +31,7 @@ describe('License: verifyLicense', () => {
             licenseKey,
             acceptedScopes: ['pro', 'premium'],
           }).status,
-      ).to.throw('MUI: The release information is invalid. Not able to validate license.');
+      ).to.throw('MUI X: The release information is invalid. Not able to validate license.');
     });
 
     it('should verify License properly', () => {
@@ -100,7 +100,7 @@ describe('License: verifyLicense', () => {
             licenseKey: licenseKeyPro,
             acceptedScopes: ['pro', 'premium'],
           }).status,
-      ).to.throw('MUI: The release information is invalid. Not able to validate license.');
+      ).to.throw('MUI X: The release information is invalid. Not able to validate license.');
     });
 
     describe('scope', () => {

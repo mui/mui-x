@@ -1,5 +1,6 @@
 ---
 title: React Bar chart
+components: BarChart, BarElement, BarPlot
 ---
 
 # Charts - Bars

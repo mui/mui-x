@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
@@ -18,7 +17,7 @@ import {
 
 const round = (value) => Math.round(value * 1e5) / 1e5;
 
-export const PickersInputRoot = styled(Box, {
+export const PickersInputRoot = styled('div', {
   name: 'MuiPickersInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -192,7 +191,9 @@ export const PickersInput = React.forwardRef(function PickersInput(
 
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
-    throw new Error('MUI: PickersInput should always be used inside a PickersTextField component');
+    throw new Error(
+      'MUI X: PickersInput should always be used inside a PickersTextField component',
+    );
   }
 
   const handleInputFocus = (event: React.FocusEvent<HTMLDivElement>) => {

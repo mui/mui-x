@@ -23,6 +23,7 @@
   { "name": "ClockPointerProps", "kind": "Interface" },
   { "name": "ClockProps", "kind": "Interface" },
   { "name": "csCZ", "kind": "Variable" },
+  { "name": "daDK", "kind": "Variable" },
   { "name": "DateBuilderReturnType", "kind": "TypeAlias" },
   { "name": "DateCalendar", "kind": "Variable" },
   { "name": "dateCalendarClasses", "kind": "Variable" },

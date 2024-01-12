@@ -226,6 +226,8 @@ type UseCustomPluginSignature = TreeViewPluginSignature<
   UseCustomPluginEvents,
   // The states defined by your plugin
   UseCustomPluginState,
+  // The context value defined by your plugin and passed to the items
+  UseCustomPluginContextValue,
   // The name of the models defined by your plugin
   UseCustomPluginModelNames,
   // The plugins this plugin needs to work correctly
@@ -237,6 +239,7 @@ The most basic plugin would have the following signature:
 
 ```ts
 type UseCustomPluginSignature = TreeViewPluginSignature<
+  {},
   {},
   {},
   {},
@@ -261,6 +264,8 @@ type UseCustomPluginSignature = TreeViewPluginSignature<
   // Events
   'toggleCustomModel',
   // State
+  {},
+  // Context value
   {},
   // Model names
   'customModel',
