@@ -42,17 +42,16 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
 
   const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
   const { inputRef: externalInputRef, ...textFieldProps }: DateTimeFieldProps<TDate> = useSlotProps<
-  typeof TextField,
-  DateTimeFieldSlotsComponentsProps<TDate>['textField'],
-  DateTimeFieldProps<TDate>,
-  DateTimeFieldProps<TDate>
->({
-      elementType: TextField,
-      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
-      externalForwardedProps: other,
-      ownerState,
-    },
-  );
+    typeof TextField,
+    DateTimeFieldSlotsComponentsProps<TDate>['textField'],
+    DateTimeFieldProps<TDate>,
+    DateTimeFieldProps<TDate>
+  >({
+    elementType: TextField,
+    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+    externalForwardedProps: other,
+    ownerState,
+  });
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
