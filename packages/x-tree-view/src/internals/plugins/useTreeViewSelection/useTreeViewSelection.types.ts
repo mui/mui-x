@@ -65,10 +65,15 @@ export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> 
   'disableSelection' | 'defaultSelectedNodes' | 'multiSelect'
 >;
 
+interface UseTreeViewSelectionContextValue {
+  selection: Pick<UseTreeViewSelectionDefaultizedParameters<boolean>, 'multiSelect'>;
+}
+
 export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   params: UseTreeViewSelectionParameters<any>;
   defaultizedParams: UseTreeViewSelectionDefaultizedParameters<any>;
   instance: UseTreeViewSelectionInstance;
+  contextValue: UseTreeViewSelectionContextValue;
   modelNames: 'selectedNodes';
   dependantPlugins: [
     UseTreeViewNodesSignature,

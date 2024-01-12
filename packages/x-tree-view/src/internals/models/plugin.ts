@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/base/utils';
 import { TreeViewModel } from './treeView';
-import type { TreeViewContextValue } from '../TreeViewProvider';
-import type { MergePluginsProperty } from './helpers';
+import type { MergePluginsProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginsSignature } from '../corePlugins';
 import type { TreeItemProps } from '../../TreeItem';
@@ -23,12 +22,11 @@ type TreeViewModelsInitializer<TSignature extends TreeViewAnyPluginSignature> = 
   };
 };
 
-interface TreeViewResponse {
+type TreeViewResponse<TSignature extends TreeViewAnyPluginSignature> = {
   getRootProps?: <TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>;
-  contextValue?: TreeViewContextValue<any>;
-}
+} & OptionalIfEmpty<'contextValue', TSignature['contextValue']>;
 
 export type TreeViewPluginSignature<
   T extends {
@@ -37,6 +35,7 @@ export type TreeViewPluginSignature<
     instance?: {};
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
+    contextValue?: {};
     modelNames?: keyof T['defaultizedParams'];
     dependantPlugins?: readonly TreeViewAnyPluginSignature[];
   },
@@ -46,6 +45,7 @@ export type TreeViewPluginSignature<
   instance: T extends { instance: {} } ? T['instance'] : {};
   events: T extends { events: {} } ? T['events'] : {};
   state: T extends { state: {} } ? T['state'] : {};
+  contextValue: T extends { contextValue: {} } ? T['contextValue'] : {};
   models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
     ? {
         [TControlled in T['modelNames']]-?: TreeViewModel<
@@ -63,6 +63,7 @@ export type TreeViewAnyPluginSignature = {
   defaultizedParams: any;
   dependantPlugins: any;
   events: any;
+  contextValue: any;
   models: any;
 };
 
@@ -123,7 +124,7 @@ export type TreeViewItemPlugin = (
 ) => void | TreeViewItemPluginResponse;
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
-  (options: TreeViewPluginOptions<TSignature>): void | TreeViewResponse;
+  (options: TreeViewPluginOptions<TSignature>): void | TreeViewResponse<TSignature>;
   getDefaultizedParams?: (
     params: TreeViewUsedParams<TSignature>,
   ) => TSignature['defaultizedParams'];
