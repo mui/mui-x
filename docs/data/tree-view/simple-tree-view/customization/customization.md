@@ -9,13 +9,14 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Customization
 
-<p class="description">Customize the rendering of your Tree View.</p>
+<p class="description">Learn how to customize the Tree View component.</p>
 
-## Basics of customization
+## Basics
 
 ### Custom icons
 
-Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props to customize the Tree View icons. You can use either icon libraries, such as Material Icons, or create your own.
+Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props to customize the Tree View icons. 
+You can use either icon libraries, such as [Material Icons](/material-ui/material-icons/), or create your own.
 
 {{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
 
@@ -27,15 +28,16 @@ The below demo animates Material UI's [Collapse](/material-ui/transitions/#colla
 
 {{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
 
-### Styling
+### Custom styling
 
-You can use the `treeItemClasses` to target the internal elements of the TreeView.
+Use the `treeItemClasses` to target internal elements of the Tree Item component and change their styles.
 
 {{"demo": "CustomStyling.js"}}
 
-### Setting custom content
+### Adding custom content
 
-You can use the `ContentComponent` prop to replace the `TreeItem` with a custom component
+Use the `ContentComponent` prop to replace the Tree Item content with an entirely custom component.
+The demo below adds an avatar and custom typography.
 
 {{"demo": "CustomContentTreeView.js"}}
 
@@ -49,11 +51,14 @@ Target the `treeItemClasses.group` class to add connection borders between the T
 
 ### File explorer
 
-You can customize the Tree View to accomodate more complex use cases:
+The demo below shows many of the previous customization examples brought together to make the Tree View component look completely different than its default design.
 
 {{"demo": "CustomizedTreeView.js"}}
 
 ### Gmail clone
+
+Google's Gmail side nav is potentially one of the most famous tree view components.
+The demo below shows how to replicate it.
 
 {{"demo": "GmailTreeView.js"}}
 
