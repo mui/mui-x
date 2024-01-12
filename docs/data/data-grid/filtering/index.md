@@ -129,7 +129,7 @@ In the example below, the _rating_ column can not be filtered.
 
 ### Filter non-filterable columns programmatically
 
-You can initialize the `filterModel`, set the `filterModel` prop, or use the API method `apiRef.current.setFilterModel` to set the filters for columns with non-filterable columns. These filters will be applied but will be read-only on the UI and the user won't be able to change them.
+You can initialize the `filterModel`, set the `filterModel` prop, or use the API method `apiRef.current.setFilterModel` to set the filters for non-filterable columns. These filters will be applied but will be read-only on the UI and the user won't be able to change them.
 
 ```jsx
 const columns = [
