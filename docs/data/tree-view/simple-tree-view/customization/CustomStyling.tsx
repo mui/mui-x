@@ -8,7 +8,10 @@ import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 const StyledTreeItem = styled(TreeItem)(({ theme }) => {
   console.log(theme);
   return {
-    color: theme.palette.grey[800],
+    color:
+      theme.palette.mode === 'light'
+        ? theme.palette.grey[800]
+        : theme.palette.grey[200],
 
     [`& .${treeItemClasses.content}`]: {
       borderRadius: theme.spacing(0.5),
@@ -21,7 +24,11 @@ const StyledTreeItem = styled(TreeItem)(({ theme }) => {
     },
     [`& .${treeItemClasses.iconContainer}`]: {
       borderRadius: '50%',
-      backgroundColor: alpha(theme.palette.primary.main, 0.25),
+      backgroundColor:
+        theme.palette.mode === 'light'
+          ? alpha(theme.palette.primary.main, 0.25)
+          : theme.palette.primary.dark,
+      color: theme.palette.mode === 'dark' && theme.palette.primary.contrastText,
       padding: theme.spacing(0, 1.2),
     },
   };
