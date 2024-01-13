@@ -119,7 +119,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
       });
 
-      it('should ignore aggregation rule with colDef.aggregable = false', () => {
+      it('should respect aggregation rule with colDef.aggregable = false', () => {
         render(
           <Test
             columns={[
@@ -140,7 +140,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
-        expect(getColumnValues(1)).to.deep.equal(['0', '1', '2', '3', '4', '5', '' /* Agg */]);
+        expect(getColumnValues(1)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
       });
 
       it('should ignore aggregation rules with invalid aggregation functions', () => {
@@ -514,7 +514,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
   });
 
   describe('colDef: aggregable', () => {
-    it('should not aggregate if colDef.aggregable = false', () => {
+    it('should respect `initialState.aggregation.model` prop even if colDef.aggregable = false', () => {
       render(
         <Test
           initialState={{ aggregation: { model: { id: 'max' } } }}
@@ -527,7 +527,23 @@ describe('<DataGridPremium /> - Aggregation', () => {
           ]}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5']);
+    });
+
+    it('should respect `aggregationModel` prop even if colDef.aggregable = false', () => {
+      render(
+        <Test
+          aggregationModel={{ id: 'max' }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              aggregable: false,
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5']);
     });
 
     it('should not render column menu select if colDef.aggregable = false', () => {
