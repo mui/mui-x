@@ -13,6 +13,9 @@ import {
   GridColDef,
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
+  useGridSelector,
+  gridFilterModelSelector,
+  gridFilterableColumnLookupSelector,
 } from '@mui/x-data-grid';
 import {
   fastMemo,
@@ -21,7 +24,6 @@ import {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
-  useGridSelector,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -82,7 +84,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     } = props;
 
     const apiRef = useGridPrivateApiContext();
-    const columnFields = gridVisibleColumnFieldsSelector(apiRef);
+    const columnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
     const rootProps = useGridRootProps();
     const cellRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(ref, cellRef);
@@ -98,9 +100,21 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     // TODO: Support for `isAnyOf` operator
     const filterOperators =
       colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
+    const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+    const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
+
+    const isFilterReadOnly = React.useMemo(() => {
+      if (!filterModel?.items.length) {
+        return false;
+      }
+      const filterModelItem = filterModel.items.find((it) => it.field === colDef.field);
+      return filterModelItem ? !filterableColumnsLookup[filterModelItem.field] : false;
+    }, [colDef.field, filterModel, filterableColumnsLookup]);
+
     const currentOperator = filterOperators![0];
 
-    const InputComponent = colDef.filterable ? currentOperator!.InputComponent : null;
+    const InputComponent =
+      colDef.filterable || isFilterReadOnly ? currentOperator!.InputComponent : null;
 
     const applyFilterChanges = React.useCallback(
       (updatedItem: GridFilterItem) => {
@@ -136,7 +150,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const onKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
-        if (isMenuOpen || isNavigationKey(event.key)) {
+        if (isMenuOpen || isNavigationKey(event.key) || isFilterReadOnly) {
           return;
         }
         switch (event.key) {
@@ -178,7 +192,16 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             break;
         }
       },
-      [apiRef, colDef.field, colIndex, columnFields, headerFilterMenuRef, isEditing, isMenuOpen],
+      [
+        apiRef,
+        colDef.field,
+        colIndex,
+        columnFields,
+        headerFilterMenuRef,
+        isEditing,
+        isFilterReadOnly,
+        isMenuOpen,
+      ],
     );
 
     const publish = React.useCallback(
@@ -283,10 +306,13 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               isFilterActive={isFilterActive}
               clearButton={
                 showClearIcon && isApplied ? (
-                  <GridHeaderFilterClearButton onClick={clearFilterItem} />
+                  <GridHeaderFilterClearButton
+                    onClick={clearFilterItem}
+                    disabled={isFilterReadOnly}
+                  />
                 ) : null
               }
-              disabled={isNoInputOperator}
+              disabled={isFilterReadOnly || isNoInputOperator}
               tabIndex={-1}
               InputLabelProps={null}
               sx={colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined}
@@ -298,6 +324,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               operators={filterOperators!}
               item={item}
               field={colDef.field}
+              disabled={isFilterReadOnly}
               applyFilterChanges={applyFilterChanges}
               headerFilterMenuRef={headerFilterMenuRef}
               buttonRef={buttonRef}

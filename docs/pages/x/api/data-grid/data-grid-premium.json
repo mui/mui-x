@@ -62,6 +62,7 @@
     "disableColumnReorder": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnResize": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnSelector": { "type": { "name": "bool" }, "default": "false" },
+    "disableColumnSorting": { "type": { "name": "bool" }, "default": "false" },
     "disableDensitySelector": { "type": { "name": "bool" }, "default": "false" },
     "disableEval": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" }, "default": "false" },

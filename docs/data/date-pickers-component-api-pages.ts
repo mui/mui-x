@@ -147,6 +147,10 @@ const apiPages: MuiPage[] = [
     title: 'PickersShortcuts',
   },
   {
+    pathname: '/x/api/date-pickers/pickers-text-field',
+    title: 'PickersTextField',
+  },
+  {
     pathname: '/x/api/date-pickers/single-input-date-range-field',
     title: 'SingleInputDateRangeField',
     plan: 'pro',

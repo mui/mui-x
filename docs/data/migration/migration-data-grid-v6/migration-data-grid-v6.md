@@ -40,7 +40,7 @@ npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -105,6 +105,10 @@ The layout of the grid has been substantially altered to use CSS sticky position
     getOptionLabel: (value: any) => value.name,
   };
   ```
+
+### Behavioral changes
+
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/). See [Sorting non-sortable columns programmatically](/x/react-data-grid/sorting/#sorting-non-sortable-columns-programmatically) for example.
 
 ### State access
 

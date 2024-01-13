@@ -195,6 +195,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
+  const showSortIcon =
+    (colDef.sortable || sortDirection != null) &&
+    !colDef.hideSortIcons &&
+    !rootProps.disableColumnSorting;
 
   const columnTitleIconButtons = (
     <React.Fragment>
@@ -206,11 +210,12 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         />
       )}
 
-      {colDef.sortable && !colDef.hideSortIcons && (
+      {showSortIcon && (
         <GridColumnHeaderSortIcon
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
+          disabled={!colDef.sortable}
         />
       )}
     </React.Fragment>

@@ -81,6 +81,9 @@
     "disableColumnSelector": {
       "description": "If <code>true</code>, hiding/showing columns is disabled."
     },
+    "disableColumnSorting": {
+      "description": "If <code>true</code>, the column sorting feature will be disabled."
+    },
     "disableDensitySelector": {
       "description": "If <code>true</code>, the density selector is disabled."
     },
@@ -91,7 +94,7 @@
       "description": "If <code>true</code>, filtering with multiple columns is disabled."
     },
     "disableMultipleColumnsSorting": {
-      "description": "If <code>true</code>, sorting with multiple columns is disabled."
+      "description": "If <code>true</code>, the sorting with multiple columns is disabled."
     },
     "disableMultipleRowSelection": {
       "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled."
