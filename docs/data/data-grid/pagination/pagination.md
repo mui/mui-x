@@ -14,13 +14,13 @@ By default, each page contains 100 rows. The user can change the size of the pag
 You can customize the options shown in the "Rows per page" select using the `pageSizeOptions` prop.
 You should provide an array of items, each item should be one of these types:
 
-- **numbers**, each number will be used for the option's label and value.
+- **number**, each number will be used for the option's label and value.
 
   ```jsx
   <DataGrid pageSizeOptions={[5, 10, 25]}>
   ```
 
-- **objects**, the `value` and `label` keys will be used respectively for the value and label of the option.
+- **object**, the `value` and `label` keys will be used respectively for the value and label of the option.
 
   ```jsx
   <DataGrid pageSizeOptions={[5, 10, 25, { value: 1000, label: '1,000' }]}>
