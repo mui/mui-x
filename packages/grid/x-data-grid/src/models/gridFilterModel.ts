@@ -13,7 +13,7 @@ export interface GridFilterModel {
   /**
    * - `GridLogicOperator.And`: the row must pass all the filter items.
    * - `GridLogicOperator.Or`: the row must pass at least on filter item.
-   * @default `GridLogicOperator.Or`
+   * @default `GridLogicOperator.And`
    */
   logicOperator?: GridLogicOperator;
   /**
