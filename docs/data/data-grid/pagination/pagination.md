@@ -12,7 +12,7 @@ By default, each page contains 100 rows. The user can change the size of the pag
 ### Page size options
 
 You can customize the options shown in the "Rows per page" select using the `pageSizeOptions` prop.
-You should either provide an array of:
+You should provide an array of items, each item should be one of these types:
 
 - **numbers**, each number will be used for the option's label and value.
 
