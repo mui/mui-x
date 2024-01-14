@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
-import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
   GridFooterPlaceholder,
@@ -12,13 +11,27 @@ import {
   useGridSelector,
   gridPinnedColumnsSelector,
 } from '@mui/x-data-grid-pro';
-import { DataGridProVirtualScroller } from '@mui/x-data-grid-pro/internals';
+import {
+  propValidatorsDataGrid,
+  propValidatorsDataGridPro,
+  DataGridProVirtualScroller,
+  PropValidator,
+  validateProps,
+} from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
-import { DataGridPremiumProps } from '../models/dataGridPremiumProps';
+import {
+  DataGridPremiumProcessedProps,
+  DataGridPremiumProps,
+} from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
+
+const dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[] = [
+  ...propValidatorsDataGrid,
+  ...propValidatorsDataGridPro,
+];
 
 const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends GridValidRowModel>(
   inProps: DataGridPremiumProps<R>,
@@ -30,6 +43,8 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
+
+  validateProps(props, dataGridPremiumPropValidators);
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
@@ -52,7 +67,6 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
     </GridContextProvider>
   );
 });
-
 interface DataGridPremiumComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
@@ -97,15 +111,15 @@ DataGridPremiumRaw.propTypes = {
     current: PropTypes.object.isRequired,
   }),
   /**
-   * The label of the grid.
+   * The label of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the grid.
+   * The id of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the grid height is dynamic and follow the number of rows in the grid.
+   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: PropTypes.bool,
@@ -143,7 +157,7 @@ DataGridPremiumRaw.propTypes = {
    */
   cellSelectionModel: PropTypes.object,
   /**
-   * If `true`, the grid get a first column with a checkbox that allows to select rows.
+   * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -152,14 +166,7 @@ DataGridPremiumRaw.propTypes = {
    * It only works if the pagination is enabled.
    * @default false
    */
-  checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (!props.pagination && props.checkboxSelectionVisibleOnly) {
-      return new Error(
-        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
-      );
-    }
-    return null;
-  }),
+  checkboxSelectionVisibleOnly: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -176,12 +183,12 @@ DataGridPremiumRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Sets the height in pixel of the column headers in the grid.
+   * Sets the height in pixel of the column headers in the Data Grid.
    * @default 56
    */
   columnHeaderHeight: PropTypes.number,
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -190,8 +197,8 @@ DataGridPremiumRaw.propTypes = {
    */
   columnThreshold: PropTypes.number,
   /**
-   * Set the column visibility model of the grid.
-   * If defined, the grid will ignore the `hide` property in [[GridColDef]].
+   * Set the column visibility model of the Data Grid.
+   * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
   /**
@@ -201,7 +208,7 @@ DataGridPremiumRaw.propTypes = {
    */
   defaultGroupingExpansionDepth: PropTypes.number,
   /**
-   * Set the density of the grid.
+   * Set the density of the Data Grid.
    * @default "standard"
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
@@ -267,6 +274,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableColumnSelector: PropTypes.bool,
   /**
+   * If `true`, the column sorting feature will be disabled.
+   * @default false
+   */
+  disableColumnSorting: PropTypes.bool,
+  /**
    * If `true`, the density selector is disabled.
    * @default false
    */
@@ -274,7 +286,6 @@ DataGridPremiumRaw.propTypes = {
   /**
    * If `true`, `eval()` is not used for performance optimization.
    * @default false
-   * @ignore - do not document
    */
   disableEval: PropTypes.bool,
   /**
@@ -283,13 +294,14 @@ DataGridPremiumRaw.propTypes = {
    */
   disableMultipleColumnsFiltering: PropTypes.bool,
   /**
-   * If `true`, sorting with multiple columns is disabled.
+   * If `true`, the sorting with multiple columns is disabled.
    * @default false
    */
   disableMultipleColumnsSorting: PropTypes.bool,
   /**
-   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
-   * @default false
+   * If `true`, multiple selection using the Ctrl/CMD or Shift key is disabled.
+   * The MIT DataGrid will ignore this prop, unless `checkboxSelection` is enabled.
+   * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: PropTypes.bool,
   /**
@@ -332,16 +344,9 @@ DataGridPremiumRaw.propTypes = {
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
    */
-  filterMode: chainPropTypes(PropTypes.oneOf(['client', 'server']), (props: any) => {
-    if (props.treeData && props.filterMode === 'server') {
-      return new Error(
-        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
-      );
-    }
-    return null;
-  }),
+  filterMode: PropTypes.oneOf(['client', 'server']),
   /**
-   * Set the filter model of the grid.
+   * Set the filter model of the Data Grid.
    */
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
@@ -358,7 +363,7 @@ DataGridPremiumRaw.propTypes = {
     quickFilterValues: PropTypes.array,
   }),
   /**
-   * Forwarded props for the grid root element.
+   * Forwarded props for the Data Grid root element.
    * @ignore - do not document.
    */
   forwardedProps: PropTypes.object,
@@ -451,14 +456,7 @@ DataGridPremiumRaw.propTypes = {
    * It has no effect if the pagination is enabled.
    * @default false
    */
-  hideFooterRowCount: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (props.pagination && props.hideFooterRowCount) {
-      return new Error(
-        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
-      );
-    }
-    return null;
-  }),
+  hideFooterRowCount: PropTypes.bool,
   /**
    * If `true`, the selected row count in the footer is hidden.
    * @default false
@@ -471,7 +469,7 @@ DataGridPremiumRaw.propTypes = {
    */
   ignoreDiacritics: PropTypes.bool,
   /**
-   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If `true`, the Data Grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
    * @default false
    */
@@ -525,7 +523,7 @@ DataGridPremiumRaw.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Set the locale text of the grid.
+   * Set the locale text of the Data Grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
@@ -751,7 +749,7 @@ DataGridPremiumRaw.propTypes = {
    */
   onProcessRowUpdateError: PropTypes.func,
   /**
-   * Callback fired when the grid is resized.
+   * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -829,7 +827,7 @@ DataGridPremiumRaw.propTypes = {
    */
   onSortModelChange: PropTypes.func,
   /**
-   * Callback fired when the state of the grid is updated.
+   * Callback fired when the state of the Data Grid is updated.
    * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -911,7 +909,7 @@ DataGridPremiumRaw.propTypes = {
    */
   rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Sets the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the Data Grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
@@ -941,7 +939,7 @@ DataGridPremiumRaw.propTypes = {
    */
   rowSelection: PropTypes.bool,
   /**
-   * Sets the row selection model of the grid.
+   * Sets the row selection model of the Data Grid.
    */
   rowSelectionModel: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
@@ -966,7 +964,7 @@ DataGridPremiumRaw.propTypes = {
    */
   rowThreshold: PropTypes.number,
   /**
-   * Override the height/width of the grid inner scrollbar.
+   * Override the height/width of the Data Grid inner scrollbar.
    */
   scrollbarSize: PropTypes.number,
   /**
@@ -1005,7 +1003,7 @@ DataGridPremiumRaw.propTypes = {
    */
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
   /**
-   * Set the sort model of the grid.
+   * Set the sort model of the Data Grid.
    */
   sortModel: PropTypes.arrayOf(
     PropTypes.shape({
@@ -1029,7 +1027,7 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
+   * If positive, the Data Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
    * @default 0
    */

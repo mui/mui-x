@@ -36,6 +36,7 @@ export const useMobilePicker = <
     format,
     formatDensity,
     timezone,
+    name,
     label,
     inputRef,
     readOnly,
@@ -64,11 +65,9 @@ export const useMobilePicker = <
   });
 
   const Field = slots.field;
-  const fieldProps: BaseSingleInputFieldProps<
-    TDate | null,
-    TDate,
-    FieldSection,
-    InferError<TExternalProps>
+  const fieldProps: Omit<
+    BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, InferError<TExternalProps>>,
+    'referenceDate' | 'defaultValue'
   > = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
@@ -87,6 +86,7 @@ export const useMobilePicker = <
       formatDensity,
       timezone,
       label,
+      name,
     },
     ownerState: props,
   });

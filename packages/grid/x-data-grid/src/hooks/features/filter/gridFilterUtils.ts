@@ -22,15 +22,20 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns';
 
-// Fixes https://github.com/mui/mui-x/issues/10056
-const globalScope = (typeof window === 'undefined' ? globalThis : window) as any;
-const evalCode = globalScope[atob('ZXZhbA==')] as <T>(source: string) => T;
-
 let hasEval: boolean;
-try {
-  hasEval = evalCode<boolean>('true');
-} catch (_: unknown) {
-  hasEval = false;
+
+function getHasEval() {
+  if (hasEval !== undefined) {
+    return hasEval;
+  }
+
+  try {
+    hasEval = new Function('return true')() as boolean;
+  } catch (_: unknown) {
+    hasEval = false;
+  }
+
+  return hasEval;
 }
 
 type GridFilterItemApplier = {
@@ -72,19 +77,19 @@ export const cleanFilterItem = (
 
 const filterModelDisableMultiColumnsFilteringWarning = buildWarning(
   [
-    'MUI: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+    'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
     'If you are using the community version of the `DataGrid`, this prop is always `true`.',
   ],
   'error',
 );
 
 const filterModelMissingItemIdWarning = buildWarning(
-  'MUI: The `id` field is required on `filterModel.items` when you use multiple filters.',
+  'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
   'error',
 );
 
 const filterModelMissingItemOperatorWarning = buildWarning(
-  'MUI: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
+  'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
   'error',
 );
 
@@ -183,7 +188,7 @@ const getFilterCallbackFromItem = (
 
   const filterOperators = column.filterOperators;
   if (!filterOperators?.length) {
-    throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
+    throw new Error(`MUI X: No filter operators found for column '${column.field}'.`);
   }
 
   const filterOperator = filterOperators.find(
@@ -191,7 +196,7 @@ const getFilterCallbackFromItem = (
   )!;
   if (!filterOperator) {
     throw new Error(
-      `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operator}'.`,
+      `MUI X: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operator}'.`,
     );
   }
 
@@ -236,7 +241,7 @@ const buildAggregatedFilterItemsApplier = (
     return null;
   }
 
-  if (!hasEval || disableEval) {
+  if (disableEval || !getHasEval()) {
     // This is the original logic, which is used if `eval()` is not supported (aka prevented by CSP).
     return (row, shouldApplyFilter) => {
       const resultPerItemId: GridFilterItemResult = {};
@@ -252,41 +257,40 @@ const buildAggregatedFilterItemsApplier = (
     };
   }
 
-  // We generate a new function with `eval()` to avoid expensive patterns for JS engines
+  // We generate a new function with `new Function()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
-  const filterItemTemplate = `(function filterItem$$(getRowId, appliers, row, shouldApplyFilter) {
-      ${appliers
-        .map(
-          (applier, i) =>
-            `const shouldApply${i} = !shouldApplyFilter || shouldApplyFilter(${JSON.stringify(
-              applier.item.field,
-            )});`,
-        )
-        .join('\n')}
+  const filterItemCore = new Function(
+    'appliers',
+    'row',
+    'shouldApplyFilter',
+    `"use strict";
+${appliers
+  .map(
+    (applier, i) =>
+      `const shouldApply${i} = !shouldApplyFilter || shouldApplyFilter(${JSON.stringify(
+        applier.item.field,
+      )});`,
+  )
+  .join('\n')}
 
-      const result$$ = {
-      ${appliers
-        .map(
-          (applier, i) =>
-            `${JSON.stringify(String(applier.item.id))}:
-          !shouldApply${i} ?
-            false :
-            appliers[${i}].fn(row),
-      `,
-        )
-        .join('\n')}};
+const result$$ = {
+${appliers
+  .map(
+    (applier, i) =>
+      `  ${JSON.stringify(
+        String(applier.item.id),
+      )}: !shouldApply${i} ? false : appliers[${i}].fn(row),`,
+  )
+  .join('\n')}
+};
 
-      return result$$;
-    })`;
-
-  const filterItemCore = evalCode<Function>(
-    filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
+return result$$;`.replaceAll('$$', String(filterItemsApplierId)),
   );
-  const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) => {
-    return filterItemCore(apiRef.current.getRowId, appliers, row, shouldApplyItem);
-  };
   filterItemsApplierId += 1;
 
+  // Assign to the arrow function a name to help debugging
+  const filterItem: GridFilterItemApplierNotAggregated = (row, shouldApplyItem) =>
+    filterItemCore(appliers, row, shouldApplyItem);
   return filterItem;
 };
 

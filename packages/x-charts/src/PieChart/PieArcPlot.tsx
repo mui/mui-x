@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import { PieArc, PieArcProps } from './PieArc';
 import {
+  ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieItemIdentifier,
@@ -13,7 +14,6 @@ import {
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
-import { DefaultizedProps } from '../models/helpers';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -24,21 +24,16 @@ export interface PieArcPlotSlotProps {
 }
 
 export interface PieArcPlotProps
-  extends DefaultizedProps<
-    Pick<
+  extends Pick<
       DefaultizedPieSeriesType,
-      | 'data'
-      | 'faded'
-      | 'highlighted'
-      | 'innerRadius'
-      | 'outerRadius'
-      | 'cornerRadius'
-      | 'paddingAngle'
-      | 'id'
-      | 'highlightScope'
+      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope'
     >,
-    'outerRadius'
-  > {
+    ComputedPieRadius {
+  /**
+   * Override the arc attibutes when it is faded.
+   * @default { additionalRadius: -5 }
+   */
+  faded?: DefaultizedPieSeriesType['faded'];
   /**
    * Overridable component slots.
    * @default {}
@@ -116,6 +111,7 @@ function PieArcPlot(props: PieArcPlotProps) {
             endAngle,
             paddingAngle: pA,
             innerRadius: iR,
+            arcLabelRadius,
             outerRadius: oR,
             cornerRadius: cR,
             ...style
@@ -160,6 +156,11 @@ PieArcPlot.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * The radius between circle center and the arc label in px.
+   * @default (innerRadius - outerRadius) / 2
+   */
+  arcLabelRadius: PropTypes.number,
+  /**
    * The radius applied to arc corners (similar to border radius).
    * @default 0
    */
@@ -179,9 +180,11 @@ PieArcPlot.propTypes = {
   ).isRequired,
   /**
    * Override the arc attibutes when it is faded.
+   * @default { additionalRadius: -5 }
    */
   faded: PropTypes.shape({
     additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
     color: PropTypes.string,
     cornerRadius: PropTypes.number,
     innerRadius: PropTypes.number,
@@ -193,6 +196,7 @@ PieArcPlot.propTypes = {
    */
   highlighted: PropTypes.shape({
     additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
     color: PropTypes.string,
     cornerRadius: PropTypes.number,
     innerRadius: PropTypes.number,
@@ -218,7 +222,6 @@ PieArcPlot.propTypes = {
   onClick: PropTypes.func,
   /**
    * The radius between circle center and the end of the arc.
-   * @default R_max The maximal radius that fit into the drawing area.
    */
   outerRadius: PropTypes.number.isRequired,
   /**

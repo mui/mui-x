@@ -9,17 +9,34 @@
       "required": true
     }
   },
-  "slots": [],
   "name": "MarkElement",
   "imports": [
     "import { MarkElement } from '@mui/x-charts/LineChart';",
     "import { MarkElement } from '@mui/x-charts';"
   ],
-  "styles": {
-    "classes": ["root", "highlighted", "faded"],
-    "globalClasses": {},
-    "name": "MuiMarkElement"
-  },
+  "classes": [
+    {
+      "key": "faded",
+      "className": "MuiMarkElement-faded",
+      "description": "Styles applied to the root element when faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiMarkElement-highlighted",
+      "description": "Styles applied to the root element when higlighted.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiMarkElement-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiMarkElement",
   "filename": "/packages/x-charts/src/LineChart/MarkElement.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
 }

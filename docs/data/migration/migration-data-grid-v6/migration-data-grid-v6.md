@@ -17,7 +17,7 @@ To get started, check out [the blog post about the release of MUI X v6](https://
 In `package.json`, change the version of the data grid package to `next`.
 
 ```diff
--"@mui/x-data-grid": "^6.0.0",
+-"@mui/x-data-grid": "6.x.x",
 +"@mui/x-data-grid": "next",
 ```
 
@@ -25,31 +25,27 @@ Since v7 is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from v6 to v7.
 
-<!-- ## Run codemods
+## Run codemods
 
-The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6.
-You can run `v6.0.0/data-grid/preset-safe` targeting only Data Grid or `v6.0.0/preset-safe` to target Date and Time pickers as well.
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
+You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like Date and Time pickers as well.
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```bash
 // Data Grid specific
-npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
-// Target Date and Time Pickers as well
-npx @mui/x-codemod v6.0.0/preset-safe <path>
+npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
+// Target other MUI X components as well
+npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
-:::success
-Apart from the removed methods and exports that require manual intervention, around 50% of the DataGrid breaking changes are automatically handled by the `preset-safe` codemod 🎉.
-:::
-
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
 
-If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
+If you have already applied the `v7.0.0/data-grid/preset-safe` (or `v7.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
 
 All other changes must be handled manually.
 
@@ -65,7 +61,7 @@ For example, if a codemod tries to rename a prop, but this prop is hidden with t
 After running the codemods, make sure to test your application and that you don't have any console errors.
 
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
-::: -->
+:::
 
 ## Breaking changes
 
@@ -81,10 +77,43 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
+- The `getOptionValue` and `getOptionLabel` props were removed from the following components:
 
-<!-- ### State access
+  - `GridEditSingleSelectCell`
+  - `GridFilterInputSingleSelect`
+  - `GridFilterInputMultipleSingleSelect`
 
-- -->
+  Use the `getOptionValue` and `getOptionLabel` properties on the `singleSelect` column definition instead:
+
+  ```tsx
+  const column: GridColDef = {
+    type: 'singleSelect',
+    field: 'country',
+    valueOptions: [
+      { code: 'BR', name: 'Brazil' },
+      { code: 'FR', name: 'France' },
+    ],
+    getOptionValue: (value: any) => value.code,
+    getOptionLabel: (value: any) => value.name,
+  };
+  ```
+
+### Behavioral changes
+
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/). See [Sorting non-sortable columns programmatically](/x/react-data-grid/sorting/#sorting-non-sortable-columns-programmatically) for example.
+
+### State access
+
+- Some selectors now require passing `instanceId` as a second argument:
+  ```diff
+  - gridColumnFieldsSelector(apiRef.current.state);
+  + gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
+  ```
+  However, it's preferable to pass the `apiRef` as the first argument instead:
+  ```js
+  gridColumnFieldsSelector(apiRef);
+  ```
+  See [Direct state access](/x/react-data-grid/state/#direct-selector-access) for more info.
 
 <!-- ### Events
 
@@ -130,9 +159,7 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 ### Selection
 
-- The cell selection feature is now stable.
-
-- The `unstable_` prefix has been removed from the cell selection props listed below.
+- ✅ The `unstable_` prefix has been removed from the cell selection props listed below.
 
   | Old name                              | New name                     |
   | :------------------------------------ | :--------------------------- |
@@ -205,11 +232,29 @@ Below are described the steps you need to make to migrate from v6 to v7.
   | `unstable_gridHeaderFilteringStateSelector`       | `gridHeaderFilteringStateSelector`       |
   | `unstable_gridTabIndexColumnHeaderFilterSelector` | `gridTabIndexColumnHeaderFilterSelector` |
 
+- The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
+- The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
+  The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
+  but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
+
 <!-- ### Editing
 
 - -->
 
 ### Other exports
+
+- The import path for locales has been changed:
+
+  ```diff
+  -import { enUS } from '@mui/x-data-grid';
+  +import { enUS } from '@mui/x-data-grid/locales';
+
+  -import { enUS } from '@mui/x-data-grid-pro';
+  +import { enUS } from '@mui/x-data-grid-pro/locales';
+
+  -import { enUS } from '@mui/x-data-grid-premium';
+  +import { enUS } from '@mui/x-data-grid-premium/locales';
+  ```
 
 - The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
   Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.

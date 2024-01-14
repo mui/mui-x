@@ -6,32 +6,33 @@ import { TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
+  PickersCalendarHeaderSlots,
+  PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   BaseDateValidationProps,
   DefaultizedProps,
   ExportedDayCalendarProps,
-  DayCalendarSlotsComponent,
-  DayCalendarSlotsComponentsProps,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
+  DayCalendarSlots,
+  DayCalendarSlotProps,
+  PickersArrowSwitcherSlots,
+  PickersArrowSwitcherSlotProps,
   PickerSelectionState,
   DayCalendarProps,
   ExportedUseViewsOptions,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, DayRangeValidationProps } from '../internals/models';
+import { DayRangeValidationProps } from '../internals/models';
+import { DateRange } from '../models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 
 export type DateRangePosition = 'start' | 'end';
 
-export interface DateRangeCalendarSlotsComponent<TDate>
-  extends PickersArrowSwitcherSlotsComponent,
-    Omit<DayCalendarSlotsComponent<TDate>, 'day'>,
-    PickersCalendarHeaderSlotsComponent {
+export interface DateRangeCalendarSlots<TDate>
+  extends PickersArrowSwitcherSlots,
+    Omit<DayCalendarSlots<TDate>, 'day'>,
+    PickersCalendarHeaderSlots {
   /**
    * Custom component for calendar header.
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
@@ -46,10 +47,10 @@ export interface DateRangeCalendarSlotsComponent<TDate>
   day?: React.ElementType<DateRangePickerDayProps<TDate>>;
 }
 
-export interface DateRangeCalendarSlotsComponentsProps<TDate>
-  extends PickersArrowSwitcherSlotsComponentsProps,
-    Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'>,
-    PickersCalendarHeaderSlotsComponentsProps<TDate> {
+export interface DateRangeCalendarSlotProps<TDate>
+  extends PickersArrowSwitcherSlotProps,
+    Omit<DayCalendarSlotProps<TDate>, 'day'>,
+    PickersCalendarHeaderSlotProps<TDate> {
   calendarHeader?: SlotComponentProps<
     typeof PickersCalendarHeader,
     {},
@@ -147,12 +148,12 @@ export interface DateRangeCalendarProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateRangeCalendarSlotsComponent<TDate>;
+  slots?: DateRangeCalendarSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+  slotProps?: DateRangeCalendarSlotProps<TDate>;
 }
 
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {

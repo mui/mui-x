@@ -4,14 +4,11 @@ import { DefaultizedProps } from '../internals/models/helpers';
 import { DateTimeValidationError } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
-  DateCalendarSlotsComponent,
-  DateCalendarSlotsComponentsProps,
+  DateCalendarSlots,
+  DateCalendarSlotProps,
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar.types';
-import {
-  TimeClockSlotsComponent,
-  TimeClockSlotsComponentsProps,
-} from '../TimeClock/TimeClock.types';
+import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import {
@@ -37,9 +34,7 @@ import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
 
-export interface BaseDateTimePickerSlotsComponent<TDate>
-  extends DateCalendarSlotsComponent<TDate>,
-    TimeClockSlotsComponent {
+export interface BaseDateTimePickerSlots<TDate> extends DateCalendarSlots<TDate>, TimeClockSlots {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
@@ -52,9 +47,9 @@ export interface BaseDateTimePickerSlotsComponent<TDate>
   toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDateTimePickerSlotsComponentsProps<TDate>
-  extends DateCalendarSlotsComponentsProps<TDate>,
-    TimeClockSlotsComponentsProps {
+export interface BaseDateTimePickerSlotProps<TDate>
+  extends DateCalendarSlotProps<TDate>,
+    TimeClockSlotProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -79,12 +74,12 @@ export interface BaseDateTimePickerProps<TDate, TView extends DateOrTimeViewWith
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseDateTimePickerSlotsComponent<TDate>;
+  slots?: BaseDateTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: BaseDateTimePickerSlotProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.

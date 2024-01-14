@@ -4,8 +4,6 @@ productId: x-data-grid
 
 # Migration from v5 to v6
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Data Grid from v5 to v6.</p>
 
 ## Introduction
@@ -14,7 +12,7 @@ To get started, check out [the blog post about the release of MUI X v6](https://
 
 ## Start using the new release
 
-In `package.json`, change the version of the data grid package to `latest` or `^6.0.0`.
+In `package.json`, change the version of the data grid package to `^6.0.0`.
 
 ```diff
 -"@mui/x-data-grid": "5.X.X",
@@ -33,9 +31,9 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 // Data Grid specific
-npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>
 // Target Date and Time Pickers as well
-npx @mui/x-codemod v6.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v6.0.0/preset-safe <path>
 ```
 
 :::success
@@ -499,7 +497,7 @@ To smooth the transition, data grid support both the `components` props which ar
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/rename-components-to-slots <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.

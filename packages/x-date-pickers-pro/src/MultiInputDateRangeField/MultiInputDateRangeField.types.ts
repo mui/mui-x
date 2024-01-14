@@ -5,10 +5,9 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { FieldRef } from '@mui/x-date-pickers/models';
 import { UseDateRangeFieldProps } from '../internals/models/dateRange';
-import { RangePosition } from '../internals/models/range';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { RangeFieldSection } from '../internals/models/fields';
-import { MultiInputRangeFieldClasses } from '../models';
+import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate,
@@ -38,17 +37,17 @@ export interface MultiInputDateRangeFieldProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: MultiInputDateRangeFieldSlotsComponent;
+  slots?: MultiInputDateRangeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: MultiInputDateRangeFieldSlotProps<TDate>;
 }
 
 export type MultiInputDateRangeFieldOwnerState<TDate> = MultiInputDateRangeFieldProps<TDate>;
 
-export interface MultiInputDateRangeFieldSlotsComponent {
+export interface MultiInputDateRangeFieldSlots {
   /**
    * Element rendered at the root.
    * @default MultiInputDateRangeFieldRoot
@@ -68,7 +67,7 @@ export interface MultiInputDateRangeFieldSlotsComponent {
   separator?: React.ElementType;
 }
 
-export interface MultiInputDateRangeFieldSlotsComponentsProps<TDate> {
+export interface MultiInputDateRangeFieldSlotProps<TDate> {
   root?: SlotComponentProps<typeof Stack, {}, MultiInputDateRangeFieldOwnerState<TDate>>;
   textField?: SlotComponentProps<
     typeof TextField,

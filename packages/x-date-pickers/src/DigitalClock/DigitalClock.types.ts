@@ -12,7 +12,7 @@ export interface ExportedDigitalClockProps<TDate>
   extends ExportedBaseClockProps<TDate>,
     DigitalClockOnlyProps {}
 
-export interface DigitalClockSlotsComponent {
+export interface DigitalClockSlots {
   /**
    * Component responsible for rendering a single digital clock item.
    * @default MenuItem from '@mui/material'
@@ -20,13 +20,18 @@ export interface DigitalClockSlotsComponent {
   digitalClockItem?: React.ElementType;
 }
 
-export interface DigitalClockSlotsComponentsProps {
+export interface DigitalClockSlotProps {
   digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
 }
 
 export interface DigitalClockProps<TDate>
   extends ExportedDigitalClockProps<TDate>,
     BaseClockProps<TDate, Extract<TimeView, 'hours'>> {
+  /**
+   * Available views.
+   * @default ['hours']
+   */
+  views?: readonly 'hours'[];
   /**
    * Override or extend the styles applied to the component.
    */
@@ -35,10 +40,10 @@ export interface DigitalClockProps<TDate>
    * Overrideable component slots.
    * @default {}
    */
-  slots?: DigitalClockSlotsComponent;
+  slots?: DigitalClockSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DigitalClockSlotsComponentsProps;
+  slotProps?: DigitalClockSlotProps;
 }

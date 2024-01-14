@@ -17,6 +17,7 @@ import {
   getSectionsBoundaries,
   validateSections,
   getDateFromDateSections,
+  getLocalizedDigits,
 } from './useField.utils';
 import { InferError } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
@@ -88,29 +89,39 @@ export const useFieldState = <
     valueManager,
   });
 
+  const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
+
   const sectionsValueBoundaries = React.useMemo(
-    () => getSectionsBoundaries<TDate>(utils, timezone),
-    [utils, timezone],
+    () => getSectionsBoundaries<TDate>(utils, localizedDigits, timezone),
+    [utils, localizedDigits, timezone],
   );
 
   const getSectionsFromValue = React.useCallback(
     (value: TValue, fallbackSections: TSection[] | null = null) =>
-      fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
-        splitFormatIntoSections(
-          utils,
-          timezone,
-          localeText,
-          format,
-          date,
-          formatDensity,
-          shouldRespectLeadingZeros,
-          isRTL,
-        ),
+      fieldValueManager.getSectionsFromValue(
+        utils,
+        value,
+        fallbackSections,
+        localizedDigits,
+        isRTL,
+        (date) =>
+          splitFormatIntoSections(
+            utils,
+            timezone,
+            localeText,
+            localizedDigits,
+            format,
+            date,
+            formatDensity,
+            shouldRespectLeadingZeros,
+            isRTL,
+          ),
       ),
     [
       fieldValueManager,
       format,
       localeText,
+      localizedDigits,
       isRTL,
       shouldRespectLeadingZeros,
       utils,
@@ -123,9 +134,10 @@ export const useFieldState = <
     () =>
       fieldValueManager.getValueStrFromSections(
         getSectionsFromValue(valueManager.emptyValue),
+        localizedDigits,
         isRTL,
       ),
-    [fieldValueManager, getSectionsFromValue, valueManager.emptyValue, isRTL],
+    [fieldValueManager, getSectionsFromValue, valueManager.emptyValue, localizedDigits, isRTL],
   );
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
@@ -186,7 +198,11 @@ export const useFieldState = <
     }
 
     if (typeof selectedSections === 'number') {
-      return { startIndex: selectedSections, endIndex: selectedSections };
+      return {
+        startIndex: selectedSections,
+        endIndex: selectedSections,
+        shouldSelectBoundarySelectors: state.sections[selectedSections].type === 'empty',
+      };
     }
 
     if (typeof selectedSections === 'string') {
@@ -194,10 +210,19 @@ export const useFieldState = <
         (section) => section.type === selectedSections,
       );
 
-      return { startIndex: selectedSectionIndex, endIndex: selectedSectionIndex };
+      return {
+        startIndex: selectedSectionIndex,
+        endIndex: selectedSectionIndex,
+        shouldSelectBoundarySelectors: state.sections[selectedSectionIndex].type === 'empty',
+      };
     }
 
-    return selectedSections;
+    return {
+      ...selectedSections,
+      shouldSelectBoundarySelectors:
+        selectedSections.startIndex === selectedSections.endIndex &&
+        state.sections[selectedSections.startIndex].type === 'empty',
+    };
   }, [selectedSections, state.sections]);
 
   const publishValue = ({
@@ -237,7 +262,7 @@ export const useFieldState = <
       modified: true,
     };
 
-    return addPositionPropertiesToSections<TSection>(newSections, isRTL);
+    return addPositionPropertiesToSections<TSection>(newSections, localizedDigits, isRTL);
   };
 
   const clearValue = () => {
@@ -292,6 +317,7 @@ export const useFieldState = <
         utils,
         timezone,
         localeText,
+        localizedDigits,
         format,
         date,
         formatDensity,
@@ -343,7 +369,7 @@ export const useFieldState = <
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
     const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const newActiveDateSections = activeDateManager.getSections(newSections);
-    const newActiveDate = getDateFromDateSections(utils, newActiveDateSections);
+    const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
     let values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
     let shouldPublish: boolean;
@@ -433,6 +459,7 @@ export const useFieldState = <
     updateValueFromValueStr,
     setTempAndroidValueStr,
     sectionsValueBoundaries,
+    localizedDigits,
     placeholder,
     timezone,
   };

@@ -1,21 +1,21 @@
 import {
   DesktopDateRangePickerProps,
-  DesktopDateRangePickerSlotsComponent,
-  DesktopDateRangePickerSlotsComponentsProps,
+  DesktopDateRangePickerSlots,
+  DesktopDateRangePickerSlotProps,
 } from '../DesktopDateRangePicker';
 import {
   MobileDateRangePickerProps,
-  MobileDateRangePickerSlotsComponent,
-  MobileDateRangePickerSlotsComponentsProps,
+  MobileDateRangePickerSlots,
+  MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
 
-export interface DateRangePickerSlotsComponents<TDate>
-  extends DesktopDateRangePickerSlotsComponent<TDate>,
-    MobileDateRangePickerSlotsComponent<TDate> {}
+export interface DateRangePickerSlots<TDate>
+  extends DesktopDateRangePickerSlots<TDate>,
+    MobileDateRangePickerSlots<TDate> {}
 
-export interface DateRangePickerSlotsComponentsProps<TDate>
-  extends DesktopDateRangePickerSlotsComponentsProps<TDate>,
-    MobileDateRangePickerSlotsComponentsProps<TDate> {}
+export interface DateRangePickerSlotProps<TDate>
+  extends DesktopDateRangePickerSlotProps<TDate>,
+    MobileDateRangePickerSlotProps<TDate> {}
 
 export interface DateRangePickerProps<TDate>
   extends DesktopDateRangePickerProps<TDate>,
@@ -30,10 +30,10 @@ export interface DateRangePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateRangePickerSlotsComponents<TDate>;
+  slots?: DateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: DateRangePickerSlotProps<TDate>;
 }

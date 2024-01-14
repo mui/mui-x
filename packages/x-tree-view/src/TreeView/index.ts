@@ -4,5 +4,4 @@ export type {
   TreeViewProps,
   SingleSelectTreeViewProps,
   MultiSelectTreeViewProps,
-  TreeViewPropsBase,
 } from './TreeView.types';

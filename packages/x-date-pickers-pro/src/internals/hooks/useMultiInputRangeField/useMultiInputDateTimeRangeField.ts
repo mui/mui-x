@@ -17,13 +17,12 @@ import {
   useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
 import { DateTimeValidationError } from '@mui/x-date-pickers/models';
-import { DateRange } from '../../models/range';
 import type {
   UseMultiInputDateTimeRangeFieldDefaultizedProps,
   UseMultiInputDateTimeRangeFieldParams,
   UseMultiInputDateTimeRangeFieldProps,
 } from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
-import { DateTimeRangeValidationError } from '../../../models';
+import { DateTimeRangeValidationError, DateRange } from '../../../models';
 import {
   DateTimeRangeComponentValidationProps,
   validateDateTimeRange,
@@ -59,10 +58,8 @@ export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps ext
 export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps extends {}>({
   sharedProps: inSharedProps,
   startTextFieldProps,
-  startInputRef,
   unstableStartFieldRef,
   endTextFieldProps,
-  endInputRef,
   unstableEndFieldRef,
 }: UseMultiInputDateTimeRangeFieldParams<
   TDate,
@@ -169,15 +166,11 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
     onSelectedSectionsChange,
   };
 
-  const startDateResponse = useDateTimeField({
-    props: startFieldProps,
-    inputRef: startInputRef,
-  }) as UseFieldResponse<TTextFieldSlotProps>;
+  const startDateResponse = useDateTimeField(
+    startFieldProps,
+  ) as UseFieldResponse<TTextFieldSlotProps>;
 
-  const endDateResponse = useDateTimeField({
-    props: endFieldProps,
-    inputRef: endInputRef,
-  }) as UseFieldResponse<TTextFieldSlotProps>;
+  const endDateResponse = useDateTimeField(endFieldProps) as UseFieldResponse<TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

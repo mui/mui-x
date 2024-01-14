@@ -158,6 +158,10 @@ DatePicker.propTypes = {
    */
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name: PropTypes.string,
+  /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
@@ -259,6 +263,7 @@ DatePicker.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',

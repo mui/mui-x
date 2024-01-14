@@ -24,6 +24,7 @@ export type SeriesContextProviderProps = {
   series: AllSeriesType[];
   /**
    * Color palette used to colorize multiple series.
+   * @default blueberryTwilightPalette
    */
   colors?: ChartsColorPalette;
   children: React.ReactNode;
@@ -34,7 +35,7 @@ export type FormattedSeries = { [type in ChartSeriesType]?: FormatterResult<type
 export const SeriesContext = React.createContext<FormattedSeries>({});
 
 const seriesTypeFormatter: {
-  [type in ChartSeriesType]?: (series: any, dataset?: DatasetType<number>) => any;
+  [type in ChartSeriesType]?: (series: any, dataset?: DatasetType) => any;
 } = {
   bar: barSeriesFormatter,
   scatter: scatterSeriesFormatter,
@@ -50,7 +51,7 @@ const seriesTypeFormatter: {
  * @param colors The color palette used to defaultize series colors
  * @returns An object structuring all the series by type.
  */
-const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: DatasetType<number>) => {
+const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: DatasetType) => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: FormatterParams<type> } = {};
   series.forEach((seriesData, seriesIndex: number) => {
@@ -60,7 +61,7 @@ const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: Datas
       seriesGroups[type] = { series: {}, seriesOrder: [] };
     }
     if (seriesGroups[type]?.series[id] !== undefined) {
-      throw new Error(`MUI: series' id "${id}" is not unique`);
+      throw new Error(`MUI X Charts: series' id "${id}" is not unique.`);
     }
 
     seriesGroups[type]!.series[id] = {
@@ -82,12 +83,9 @@ const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: Datas
   return formattedSeries;
 };
 
-export function SeriesContextProvider({
-  series,
-  dataset,
-  colors = blueberryTwilightPalette,
-  children,
-}: SeriesContextProviderProps) {
+function SeriesContextProvider(props: SeriesContextProviderProps) {
+  const { series, dataset, colors = blueberryTwilightPalette, children } = props;
+
   const theme = useTheme();
 
   const formattedSeries = React.useMemo(
@@ -102,3 +100,5 @@ export function SeriesContextProvider({
 
   return <SeriesContext.Provider value={formattedSeries}>{children}</SeriesContext.Provider>;
 }
+
+export { SeriesContextProvider };

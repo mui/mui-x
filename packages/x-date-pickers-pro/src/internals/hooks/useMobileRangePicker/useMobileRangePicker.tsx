@@ -2,27 +2,26 @@ import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  PickersLayout,
-  PickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout';
+import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   PickersModalDialog,
   InferError,
   ExportedBaseToolbarProps,
   useLocaleText,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import useId from '@mui/utils/useId';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
+  UseMobileRangePickerSlotProps,
 } from './useMobileRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../models/range';
+import { DateRange } from '../../../models';
 import { BaseMultiInputFieldProps, RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
 
@@ -48,6 +47,7 @@ export const useMobileRangePicker = <
     timezone,
     label,
     inputRef,
+    name,
     readOnly,
     disabled,
     disableOpenPicker,
@@ -90,7 +90,27 @@ export const useMobileRangePicker = <
     TDate,
     RangeFieldSection,
     InferError<TExternalProps>
-  > = useSlotProps({
+  > = useSlotProps<
+    typeof Field,
+    UseMobileRangePickerSlotProps<TDate, TView>['field'],
+    UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
+      Partial<
+        Pick<
+          UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
+          | 'readOnly'
+          | 'disabled'
+          | 'className'
+          | 'sx'
+          | 'format'
+          | 'formatDensity'
+          | 'timezone'
+          | 'label'
+          | 'name'
+          | 'autoFocus'
+        >
+      >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -102,7 +122,7 @@ export const useMobileRangePicker = <
       format,
       formatDensity,
       timezone,
-      ...(fieldType === 'single-input' && { inputRef }),
+      ...(fieldType === 'single-input' && { inputRef, name }),
     },
     ownerState: props,
   });
@@ -131,7 +151,7 @@ export const useMobileRangePicker = <
     fieldProps,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...innerSlotProps,
     toolbar: {
       ...innerSlotProps?.toolbar,

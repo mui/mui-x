@@ -25,7 +25,7 @@ export interface ExportedMultiSectionDigitalClockProps<TDate>
 export interface MultiSectionDigitalClockViewProps<TValue>
   extends Pick<MultiSectionDigitalClockSectionProps<TValue>, 'onChange' | 'items'> {}
 
-export interface MultiSectionDigitalClockSlotsComponent {
+export interface MultiSectionDigitalClockSlots {
   /**
    * Component responsible for rendering a single multi section digital clock section item.
    * @default MenuItem from '@mui/material'
@@ -33,13 +33,18 @@ export interface MultiSectionDigitalClockSlotsComponent {
   digitalClockSectionItem?: React.ElementType;
 }
 
-export interface MultiSectionDigitalClockSlotsComponentsProps {
+export interface MultiSectionDigitalClockSlotProps {
   digitalClockSectionItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
 }
 
 export interface MultiSectionDigitalClockProps<TDate>
   extends ExportedMultiSectionDigitalClockProps<TDate>,
     BaseClockProps<TDate, TimeViewWithMeridiem> {
+  /**
+   * Available views.
+   * @default ['hours', 'minutes']
+   */
+  views?: readonly TimeViewWithMeridiem[];
   /**
    * Override or extend the styles applied to the component.
    */
@@ -48,10 +53,10 @@ export interface MultiSectionDigitalClockProps<TDate>
    * Overrideable component slots.
    * @default {}
    */
-  slots?: MultiSectionDigitalClockSlotsComponent;
+  slots?: MultiSectionDigitalClockSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
+  slotProps?: MultiSectionDigitalClockSlotProps;
 }

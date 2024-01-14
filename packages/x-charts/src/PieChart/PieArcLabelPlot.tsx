@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import {
+  ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieSeriesType,
@@ -13,7 +14,6 @@ import {
   useTransformData,
 } from './dataTransform/useTransformData';
 import { PieArcLabel, PieArcLabelProps } from './PieArcLabel';
-import { DefaultizedProps } from '../models/helpers';
 
 const RATIO = 180 / Math.PI;
 
@@ -46,14 +46,11 @@ export interface PieArcLabelPlotSlotProps {
 }
 
 export interface PieArcLabelPlotProps
-  extends DefaultizedProps<
-    Pick<
+  extends Pick<
       DefaultizedPieSeriesType,
       | 'data'
       | 'faded'
       | 'highlighted'
-      | 'innerRadius'
-      | 'outerRadius'
       | 'cornerRadius'
       | 'paddingAngle'
       | 'arcLabel'
@@ -61,8 +58,12 @@ export interface PieArcLabelPlotProps
       | 'id'
       | 'highlightScope'
     >,
-    'outerRadius'
-  > {
+    ComputedPieRadius {
+  /**
+   * Override the arc attibutes when it is faded.
+   * @default { additionalRadius: -5 }
+   */
+  faded?: DefaultizedPieSeriesType['faded'];
   /**
    * Overridable component slots.
    * @default {}
@@ -84,8 +85,9 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const {
     slots,
     slotProps,
-    innerRadius = 0,
+    innerRadius,
     outerRadius,
+    arcLabelRadius,
     cornerRadius = 0,
     paddingAngle = 0,
     id,
@@ -102,6 +104,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const transformedData = useTransformData({
     innerRadius,
     outerRadius,
+    arcLabelRadius,
     cornerRadius,
     paddingAngle,
     id,
@@ -131,6 +134,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
             paddingAngle: pA,
             innerRadius: iR,
             outerRadius: oR,
+            arcLabelRadius: aLR,
             cornerRadius: cR,
             ...style
           },
@@ -143,6 +147,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
               paddingAngle={pA}
               innerRadius={iR}
               outerRadius={oR}
+              arcLabelRadius={aLR}
               cornerRadius={cR}
               style={style}
               id={id}
@@ -173,8 +178,14 @@ PieArcLabelPlot.propTypes = {
   ]),
   /**
    * The minimal angle required to display the arc label.
+   * @default 0
    */
   arcLabelMinAngle: PropTypes.number,
+  /**
+   * The radius between circle center and the arc label in px.
+   * @default (innerRadius - outerRadius) / 2
+   */
+  arcLabelRadius: PropTypes.number,
   /**
    * The radius applied to arc corners (similar to border radius).
    * @default 0
@@ -195,9 +206,11 @@ PieArcLabelPlot.propTypes = {
   ).isRequired,
   /**
    * Override the arc attibutes when it is faded.
+   * @default { additionalRadius: -5 }
    */
   faded: PropTypes.shape({
     additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
     color: PropTypes.string,
     cornerRadius: PropTypes.number,
     innerRadius: PropTypes.number,
@@ -209,6 +222,7 @@ PieArcLabelPlot.propTypes = {
    */
   highlighted: PropTypes.shape({
     additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
     color: PropTypes.string,
     cornerRadius: PropTypes.number,
     innerRadius: PropTypes.number,
@@ -227,7 +241,6 @@ PieArcLabelPlot.propTypes = {
   innerRadius: PropTypes.number,
   /**
    * The radius between circle center and the end of the arc.
-   * @default R_max The maximal radius that fit into the drawing area.
    */
   outerRadius: PropTypes.number.isRequired,
   /**
