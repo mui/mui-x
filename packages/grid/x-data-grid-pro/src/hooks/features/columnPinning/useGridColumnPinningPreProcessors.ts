@@ -19,7 +19,7 @@ export const useGridColumnPinningPreProcessors = (
     // columns should be pinned initially.
     const initializedState = columnPinningStateInitializer(
       apiRef.current.state,
-      { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState },
+      { pinnedColumns: pinnedColumnsProp, initialState },
       apiRef,
     ) as GridApiPro['state'];
     pinnedColumns = gridPinnedColumnsSelector(initializedState);
