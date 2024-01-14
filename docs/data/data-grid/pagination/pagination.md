@@ -23,7 +23,7 @@ You should provide an array of items, each item should be one of these types:
 - **object**, the `value` and `label` keys will be used respectively for the value and label of the option.
 
   ```jsx
-  <DataGrid pageSizeOptions={[5, 10, 25, { value: 1000, label: '1,000' }]}>
+  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }]}>
   ```
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
