@@ -261,6 +261,26 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 - The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
 
+- The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. In order to override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](/x/react-data-grid/components/#toolbar) for more details.
+
+```diff
+ function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton
+-       title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
++       slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
+      />
+      <GridToolbarDensitySelector
+-       variant="outlined"    // 🛑 This was previously forwarded to the button component
++       slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
+      />
+    </GridToolbarContainer>
+  );
+ }
+```
+
 <!-- ### CSS classes
 
 - Some CSS classes were removed or renamed
