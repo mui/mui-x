@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { alpha } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import dayjs, { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
@@ -43,6 +43,32 @@ import { isDatePickerView } from '@mui/x-date-pickers/internals/utils/date-utils
 // eslint-disable-next-line no-restricted-imports
 import { isTimeView } from '@mui/x-date-pickers/internals/utils/time-utils';
 
+const ComponentSection = styled('div')(({ theme }) => ({
+  padding: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  overflowX: 'auto',
+  '& .MuiPickersLayout-root': {
+    borderRadius: 2,
+    border: '1px dashed',
+    borderColor:
+      theme.palette.mode === 'light' ? theme.palette.divider : alpha(theme.palette.grey[500], 0.1),
+    ...(theme.palette.mode === 'dark' && {
+      backgroundColor: alpha(theme.palette.grey[900], 0.2),
+    }),
+  },
+}));
+
+const PropControlsSection = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  background: alpha(theme.palette.grey[50], 0.5),
+  ...(theme.palette.mode === 'dark' && {
+    backgroundColor: alpha(theme.palette.grey[900], 0.3),
+  }),
+}));
+
 function RadioGroupControl({
   label,
   value,
@@ -74,7 +100,7 @@ function RadioGroupControl({
   );
 }
 
-function BooleanRadioGroupControl({
+function BooleanGroupControl({
   label,
   value,
   onChange,
@@ -86,7 +112,7 @@ function BooleanRadioGroupControl({
   const id = React.useId();
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(event.target.value === 'true');
+      onChange(event.target.checked);
     },
     [onChange],
   );
@@ -103,10 +129,6 @@ function BooleanRadioGroupControl({
     >
       <FormLabel id={id}>{label}</FormLabel>
       <Switch checked={value} onChange={handleChange} />
-      {/* <RadioGroup aria-labelledby={id} value={value} onChange={handleChange} row>
-        <FormControlLabel value control={<Radio />} label="true" />
-        <FormControlLabel value={false} control={<Radio />} label="false" />
-      </RadioGroup> */}
     </FormControl>
   );
 }
@@ -489,27 +511,7 @@ export default function PickersPlayground() {
           },
         }}
       >
-        <Box
-          sx={(theme) => ({
-            width: { xs: '100%', sm: '60%' },
-            p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            overflowX: 'auto',
-            '& .MuiPickersLayout-root': {
-              borderRadius: 2,
-              border: '1px dashed',
-              borderColor: 'divider',
-            },
-            [`:where(${theme.vars ? '[data-mui-color-scheme="dark"]' : '.mode-dark'}) &`]: {
-              '& .MuiPickersLayout-root': {
-                backgroundColor: alpha(theme.palette.grey[900], 0.2),
-                borderColor: alpha(theme.palette.grey[500], 0.1),
-              },
-            },
-          })}
-        >
+        <ComponentSection sx={{ width: { xs: '100%', sm: '60%' } }}>
           <FormControl fullWidth>
             <InputLabel id="selected-component-family-label">Selected components</InputLabel>
             <Select
@@ -583,19 +585,10 @@ export default function PickersPlayground() {
               ))}
             </DemoContainer>
           )}
-        </Box>
+        </ComponentSection>
         <Divider orientation="vertical" light sx={{ display: { xs: 'none', sm: 'flex' } }} />
         <Divider light sx={{ display: { xs: 'auto', sm: 'none' } }} />
-        <Box
-          sx={(theme) => ({
-            display: 'flex',
-            flexDirection: 'column',
-            background: alpha(theme.palette.grey[50], 0.5),
-            [`:where(${theme.vars ? '[data-mui-color-scheme="dark"]' : '.mode-dark'}) &`]: {
-              backgroundColor: alpha(theme.palette.grey[900], 0.3),
-            },
-          })}
-        >
+        <PropControlsSection>
           <Typography
             id="usage-props"
             component="h3"
@@ -613,7 +606,7 @@ export default function PickersPlayground() {
           </Typography>
           <Divider light />
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, pt: 2, pl: 3, pr: 2 }}>
-            <BooleanRadioGroupControl
+            <BooleanGroupControl
               label="Static desktop mode"
               value={isStaticDesktopMode}
               onChange={setIsStaticDesktopMode}
@@ -630,23 +623,23 @@ export default function PickersPlayground() {
                 onChange={setIsTabsHidden}
               />
             )}
-            <BooleanRadioGroupControl
+            <BooleanGroupControl
               label="Show days outside current month"
               value={showDaysOutsideCurrentMonth}
               onChange={setShowDaysOutsideCurrentMonth}
             />
-            <BooleanRadioGroupControl
+            <BooleanGroupControl
               label="Fixed 6 weeks"
               value={fixed6Weeks}
               onChange={setFixed6Weeks}
             />
-            <BooleanRadioGroupControl
+            <BooleanGroupControl
               label="Display week number"
               value={displayWeekNumber}
               onChange={setDisplayWeekNumber}
             />
             {selectedPickers !== 'date-range' && (
-              <BooleanRadioGroupControl
+              <BooleanGroupControl
                 label="Disable day margin"
                 value={disableDayMargin}
                 onChange={setDisableDayMargin}
@@ -664,24 +657,24 @@ export default function PickersPlayground() {
             )}
             {selectedPickers === 'date-range' && (
               <React.Fragment>
-                <BooleanRadioGroupControl
+                <BooleanGroupControl
                   label="Single calendar"
                   value={singleCalendar}
                   onChange={setSingleCalendar}
                 />
-                <BooleanRadioGroupControl
+                <BooleanGroupControl
                   label="Display shortcuts"
                   value={displayShortcuts}
                   onChange={setDisplayShortcuts}
                 />
               </React.Fragment>
             )}
-            <BooleanRadioGroupControl
+            <BooleanGroupControl
               label="Custom actions"
               value={customActions}
               onChange={setCustomActions}
             />
-            <BooleanRadioGroupControl
+            <BooleanGroupControl
               label="Landscape orientation"
               value={isLandscape}
               onChange={setIsLandscape}
@@ -695,7 +688,7 @@ export default function PickersPlayground() {
               />
             )}
           </Box>
-        </Box>
+        </PropControlsSection>
       </Box>
     </LocalizationProvider>
   );
