@@ -38,7 +38,12 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
     [apiRef, colDef, onClick, sortDirection],
   );
 
-  if (!colDef || !colDef.sortable || !sortingOrder.some((item) => !!item)) {
+  if (
+    rootProps.disableColumnSorting ||
+    !colDef ||
+    !colDef.sortable ||
+    !sortingOrder.some((item) => !!item)
+  ) {
     return null;
   }
 

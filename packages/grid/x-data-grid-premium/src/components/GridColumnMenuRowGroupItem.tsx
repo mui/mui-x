@@ -30,9 +30,10 @@ function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
       onClick(event);
     };
 
-    const name = columnsLookup[field].headerName ?? field;
+    const groupedColumn = columnsLookup[field];
+    const name = groupedColumn.headerName ?? field;
     return (
-      <MenuItem onClick={ungroupColumn} key={field}>
+      <MenuItem onClick={ungroupColumn} key={field} disabled={!groupedColumn.groupable}>
         <ListItemIcon>
           <rootProps.slots.columnMenuUngroupIcon fontSize="small" />
         </ListItemIcon>

@@ -38,7 +38,7 @@ const COLUMNS: GridColDef[] = [
   },
 ];
 
-export default function AggregationColDefAggregable() {
+export default function AggregationColDefNonAggregable() {
   const data = useMovieData();
 
   return (
@@ -50,6 +50,7 @@ export default function AggregationColDefAggregable() {
           aggregation: {
             model: {
               gross: 'sum',
+              year: 'sum',
             },
           },
         }}

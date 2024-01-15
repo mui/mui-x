@@ -5,6 +5,7 @@
     aggregation: {
       model: {
         gross: 'sum',
+        year: 'sum',
       },
     },
   }}

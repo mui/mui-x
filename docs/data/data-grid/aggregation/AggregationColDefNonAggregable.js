@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -9,7 +9,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-const COLUMNS: GridColDef[] = [
+const COLUMNS = [
   {
     field: 'title',
     headerName: 'Title',
@@ -38,7 +38,7 @@ const COLUMNS: GridColDef[] = [
   },
 ];
 
-export default function AggregationColDefAggregable() {
+export default function AggregationColDefNonAggregable() {
   const data = useMovieData();
 
   return (
@@ -50,6 +50,7 @@ export default function AggregationColDefAggregable() {
           aggregation: {
             model: {
               gross: 'sum',
+              year: 'sum',
             },
           },
         }}
