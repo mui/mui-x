@@ -311,9 +311,9 @@ The layout of the grid has been substantially altered to use CSS sticky position
 
 ### Changes to slots
 
-- The slot `columnHeaders` has had these props removed: columnPositions, densityFactor, minColumnIndex.
-- The slot `row` has had these props removed: containerWidth, position.
+- The slot `columnHeaders` has had these props removed: `columnPositions`, `densityFactor`, `minColumnIndex`.
+- The slot `row` has had these props removed: `containerWidth`, `position`.
 - The slot `row` has typed props now.
-- The slot `headerFilterCell` has had these props removed: filterOperators.
+- The slot `headerFilterCell` has had these props removed: `filterOperators`.
 
 <!-- ### Rename `components` to `slots` -->
