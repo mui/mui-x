@@ -220,8 +220,9 @@ function ViewCheckbox({
   return (
     <Wrapper>
       <FormControlLabel
-        control={<Checkbox name={name} {...other} disabled={isDisabled} />}
+        control={<Checkbox name={name} {...other} disabled={isDisabled} size="small" />}
         label={name}
+        sx={{ textTransform: 'capitalize' }}
       />
     </Wrapper>
   );
