@@ -50,10 +50,12 @@ const ComponentSection = styled('div')(({ theme }) => ({
   gap: theme.spacing(2),
   overflowX: 'auto',
   '& .MuiPickersLayout-root': {
-    borderRadius: 2,
+    borderRadius: 6,
     border: '1px dashed',
     borderColor:
-      theme.palette.mode === 'light' ? theme.palette.divider : alpha(theme.palette.grey[500], 0.1),
+      theme.palette.mode === 'light'
+        ? theme.palette.grey[300]
+        : alpha(theme.palette.grey[500], 0.1),
     ...(theme.palette.mode === 'dark' && {
       backgroundColor: alpha(theme.palette.grey[900], 0.2),
     }),
@@ -505,10 +507,6 @@ export default function PickersPlayground() {
           maxWidth: '100%',
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          '& .markdown-body pre': {
-            margin: 0,
-            borderRadius: 'md',
-          },
         }}
       >
         <ComponentSection sx={{ width: { xs: '100%', sm: '60%' } }}>
