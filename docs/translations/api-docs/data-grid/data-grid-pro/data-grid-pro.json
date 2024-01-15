@@ -885,6 +885,15 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
     },
+    "filler": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the filler row" },
+    "filler--pinnedLeft": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the filler row pinned left section"
+    },
+    "filler--pinnedRight": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the filler row pinned right section"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
