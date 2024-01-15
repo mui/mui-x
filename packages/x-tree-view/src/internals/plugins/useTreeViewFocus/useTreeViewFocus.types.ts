@@ -16,7 +16,7 @@ export interface UseTreeViewFocusParameters {
    * Focused node id.
    * Used when the item's focus is controlled.
    */
-  focusedNodeId?: string | null;
+  focusedNode?: string | null;
   /**
    * Focused node id.
    * Used when the item's focus is controlled.
@@ -29,7 +29,7 @@ export interface UseTreeViewFocusParameters {
    * @param {string} nodeId The id of the node focused.
    * @param {string} value of the focused node.
    */
-  onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
+  onFocusedNodeChange?: (event: React.SyntheticEvent, nodeId: string) => void;
 }
 
 export type UseTreeViewFocusDefaultizedParameters = DefaultizedProps<
@@ -41,7 +41,7 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
   params: UseTreeViewFocusParameters;
   defaultizedParams: UseTreeViewFocusDefaultizedParameters;
   instance: UseTreeViewFocusInstance;
-  modelNames: 'focusedNodeId';
+  modelNames: 'focusedNode';
   dependantPlugins: [
     UseTreeViewIdSignature,
     UseTreeViewNodesSignature,

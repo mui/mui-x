@@ -51,7 +51,7 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
   icon?: React.ReactNode;
   /**
    * This prop isn't supported.
-   * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
+   * Use the `onFocusedNodeChange` callback on the tree if you need to monitor a node's focus.
    */
   onFocus?: null;
   /**

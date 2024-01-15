@@ -49,7 +49,7 @@
         "describedArgs": ["event", "nodeId", "isExpanded"]
       }
     },
-    "onNodeFocus": {
+    "onFocusedNodeChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.SyntheticEvent, nodeId: string, value: string) => void",

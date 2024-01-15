@@ -54,7 +54,7 @@
         "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
       }
     },
-    "onNodeFocus": {
+    "onFocusedNodeChange": {
       "description": "Callback fired when tree items are focused.",
       "typeDescriptions": {
         "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",

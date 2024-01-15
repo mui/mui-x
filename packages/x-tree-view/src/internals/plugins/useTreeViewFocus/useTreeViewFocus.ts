@@ -14,16 +14,16 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   rootRef,
 }) => {
   const isNodeFocused = React.useCallback(
-    (nodeId: string) => models.focusedNodeId.value === nodeId,
-    [models.focusedNodeId.value],
+    (nodeId: string) => models.focusedNode.value === nodeId,
+    [models.focusedNode.value],
   );
 
   const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
     if (nodeId) {
-      if (params.onNodeFocus) {
-        params.onNodeFocus(event, nodeId);
+      if (params.onFocusedNodeChange) {
+        params.onFocusedNodeChange(event, nodeId);
       }
-      models.focusedNodeId.setControlledValue(nodeId);
+      models.focusedNode.setControlledValue(nodeId);
     }
   });
 
@@ -39,11 +39,11 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
     if (
-      models.focusedNodeId.value === id &&
+      models.focusedNode.value === id &&
       rootRef.current === ownerDocument(rootRef.current).activeElement
     ) {
       const newId = instance.getChildrenIds(null)[0];
-      models.focusedNodeId.setControlledValue(newId);
+      models.focusedNode.setControlledValue(newId);
     }
   });
 
@@ -79,10 +79,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   const createHandleBlur =
     (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
       otherHandlers.onBlur?.(event);
-      models.focusedNodeId.setControlledValue(null);
+      models.focusedNode.setControlledValue(null);
     };
 
-  const focusedNode = instance.getNode(models.focusedNodeId.value!);
+  const focusedNode = instance.getNode(models.focusedNode.value!);
   const activeDescendant = focusedNode
     ? instance.getTreeItemId(focusedNode.id, focusedNode.idAttribute)
     : null;
@@ -97,7 +97,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 };
 
 useTreeViewFocus.models = {
-  focusedNodeId: {
+  focusedNode: {
     getDefaultValue: (params) => params.defaultFocusedNodeId,
   },
 };
@@ -108,7 +108,7 @@ useTreeViewFocus.getDefaultizedParams = (params) => ({
 });
 
 useTreeViewFocus.params = {
-  onNodeFocus: true,
-  focusedNodeId: true,
+  onFocusedNodeChange: true,
+  focusedNode: true,
   defaultFocusedNodeId: true,
 };

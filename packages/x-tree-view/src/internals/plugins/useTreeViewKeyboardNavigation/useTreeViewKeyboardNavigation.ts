@@ -130,7 +130,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       if (
         event.altKey ||
         event.currentTarget !== event.target ||
-        models.focusedNodeId.value == null
+        models.focusedNode.value == null
       ) {
         return;
       }
@@ -141,14 +141,14 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // eslint-disable-next-line default-case
       switch (true) {
         // Select the node when pressing "Space"
-        case key === ' ' && canToggleNodeSelection(models.focusedNodeId.value): {
+        case key === ' ' && canToggleNodeSelection(models.focusedNode.value): {
           event.preventDefault();
           if (params.multiSelect && event.shiftKey) {
-            instance.selectRange(event, { end: models.focusedNodeId.value });
+            instance.selectRange(event, { end: models.focusedNode.value });
           } else if (params.multiSelect) {
-            instance.selectNode(event, models.focusedNodeId.value, true);
+            instance.selectNode(event, models.focusedNode.value, true);
           } else {
-            instance.selectNode(event, models.focusedNodeId.value);
+            instance.selectNode(event, models.focusedNode.value);
           }
           break;
         }
@@ -156,15 +156,15 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // If the focused node has children, we expand it.
         // If the focused node has no children, we select it.
         case key === 'Enter': {
-          if (canToggleNodeExpansion(models.focusedNodeId.value)) {
-            instance.toggleNodeExpansion(event, models.focusedNodeId.value);
+          if (canToggleNodeExpansion(models.focusedNode.value)) {
+            instance.toggleNodeExpansion(event, models.focusedNode.value);
             event.preventDefault();
-          } else if (canToggleNodeSelection(models.focusedNodeId.value)) {
+          } else if (canToggleNodeSelection(models.focusedNode.value)) {
             if (params.multiSelect) {
               event.preventDefault();
-              instance.selectNode(event, models.focusedNodeId.value, true);
-            } else if (!instance.isNodeSelected(models.focusedNodeId.value)) {
-              instance.selectNode(event, models.focusedNodeId.value);
+              instance.selectNode(event, models.focusedNode.value, true);
+            } else if (!instance.isNodeSelected(models.focusedNode.value)) {
+              instance.selectNode(event, models.focusedNode.value);
               event.preventDefault();
             }
           }
@@ -174,7 +174,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
         // Focus the next focusable node
         case key === 'ArrowDown': {
-          const nextNode = getNextNode(instance, models.focusedNodeId.value);
+          const nextNode = getNextNode(instance, models.focusedNode.value);
           if (nextNode) {
             event.preventDefault();
             instance.focusNode(event, nextNode);
@@ -186,7 +186,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
                 event,
                 {
                   end: nextNode,
-                  current: models.focusedNodeId.value,
+                  current: models.focusedNode.value,
                 },
                 true,
               );
@@ -198,7 +198,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
         // Focuses the previous focusable node
         case key === 'ArrowUp': {
-          const previousNode = getPreviousNode(instance, models.focusedNodeId.value);
+          const previousNode = getPreviousNode(instance, models.focusedNode.value);
           if (previousNode) {
             event.preventDefault();
             instance.focusNode(event, previousNode);
@@ -210,7 +210,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
                 event,
                 {
                   end: previousNode,
-                  current: models.focusedNodeId.value,
+                  current: models.focusedNode.value,
                 },
                 true,
               );
@@ -223,11 +223,11 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // If the focused node is expanded, we move the focus to its first child
         // If the focused node is collapsed and has children, we expand it
         case (key === 'ArrowRight' && !isRTL) || (key === 'ArrowLeft' && isRTL): {
-          if (instance.isNodeExpanded(models.focusedNodeId.value)) {
-            instance.focusNode(event, getNextNode(instance, models.focusedNodeId.value));
+          if (instance.isNodeExpanded(models.focusedNode.value)) {
+            instance.focusNode(event, getNextNode(instance, models.focusedNode.value));
             event.preventDefault();
-          } else if (canToggleNodeExpansion(models.focusedNodeId.value)) {
-            instance.toggleNodeExpansion(event, models.focusedNodeId.value);
+          } else if (canToggleNodeExpansion(models.focusedNode.value)) {
+            instance.toggleNodeExpansion(event, models.focusedNode.value);
             event.preventDefault();
           }
 
@@ -238,13 +238,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // If the focused node is collapsed and has a parent, we move the focus to this parent
         case (key === 'ArrowLeft' && !isRTL) || (key === 'ArrowRight' && isRTL): {
           if (
-            canToggleNodeExpansion(models.focusedNodeId.value) &&
-            instance.isNodeExpanded(models.focusedNodeId.value)
+            canToggleNodeExpansion(models.focusedNode.value) &&
+            instance.isNodeExpanded(models.focusedNode.value)
           ) {
-            instance.toggleNodeExpansion(event, models.focusedNodeId.value!);
+            instance.toggleNodeExpansion(event, models.focusedNode.value!);
             event.preventDefault();
           } else {
-            const parent = instance.getNode(models.focusedNodeId.value).parentId;
+            const parent = instance.getNode(models.focusedNode.value).parentId;
             if (parent) {
               instance.focusNode(event, parent);
               event.preventDefault();
@@ -261,12 +261,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           // Multi select behavior when pressing Ctrl + Shift + Home
           // Selects the focused node and all nodes up to the first node.
           if (
-            canToggleNodeSelection(models.focusedNodeId.value) &&
+            canToggleNodeSelection(models.focusedNode.value) &&
             params.multiSelect &&
             ctrlPressed &&
             event.shiftKey
           ) {
-            instance.rangeSelectToFirst(event, models.focusedNodeId.value);
+            instance.rangeSelectToFirst(event, models.focusedNode.value);
           }
 
           event.preventDefault();
@@ -280,12 +280,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           // Multi select behavior when pressing Ctrl + Shirt + End
           // Selects the focused node and all the nodes down to the last node.
           if (
-            canToggleNodeSelection(models.focusedNodeId.value) &&
+            canToggleNodeSelection(models.focusedNode.value) &&
             params.multiSelect &&
             ctrlPressed &&
             event.shiftKey
           ) {
-            instance.rangeSelectToLast(event, models.focusedNodeId.value);
+            instance.rangeSelectToLast(event, models.focusedNode.value);
           }
 
           event.preventDefault();
@@ -294,7 +294,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
         // Expand all siblings that are at the same level as the focused node
         case key === '*': {
-          instance.expandAllSiblings(event, models.focusedNodeId.value);
+          instance.expandAllSiblings(event, models.focusedNode.value);
           event.preventDefault();
           break;
         }
@@ -313,7 +313,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // Type-ahead
         // TODO: Support typing multiple characters
         case !ctrlPressed && !event.shiftKey && isPrintableCharacter(key): {
-          const matchingNode = getFirstMatchingNode(models.focusedNodeId.value, key);
+          const matchingNode = getFirstMatchingNode(models.focusedNode.value, key);
           if (matchingNode != null) {
             instance.focusNode(event, matchingNode);
             event.preventDefault();

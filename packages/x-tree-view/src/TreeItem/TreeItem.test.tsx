@@ -2035,7 +2035,7 @@ describe('<TreeItem />', () => {
         it('should prevent focus by mouse', () => {
           const focusSpy = spy();
           const { getByText } = render(
-            <SimpleTreeView disabledItemsFocusable onNodeFocus={focusSpy}>
+            <SimpleTreeView disabledItemsFocusable onFocusedNodeChange={focusSpy}>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" disabled data-testid="two" />
             </SimpleTreeView>,
@@ -2113,7 +2113,7 @@ describe('<TreeItem />', () => {
         it('should prevent focus by mouse', () => {
           const focusSpy = spy();
           const { getByText } = render(
-            <SimpleTreeView onNodeFocus={focusSpy}>
+            <SimpleTreeView onFocusedNodeChange={focusSpy}>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" disabled data-testid="two" />
             </SimpleTreeView>,
