@@ -9,14 +9,14 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Customization
 
-<p class="description">Learn how to customize the Tree View component.</p>
+<p class="description">Learn how to customize the simple version of the Tree View component.</p>
 
 ## Basics
 
 ### Custom icons
 
 Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props to customize the Tree View icons.
-You can use either icon libraries, such as [Material Icons](/material-ui/material-icons/), or create your own.
+The demo below shows how to add icons using both an existing icon library, such as [Material Icons](/material-ui/material-icons/), and creating an icon from scratch using Material UI's [SVG Icon component](/material-ui/icons/#svgicon).
 
 {{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
 
@@ -24,20 +24,20 @@ You can use either icon libraries, such as [Material Icons](/material-ui/materia
 
 Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
 
-The below demo animates Material UI's [Collapse](/material-ui/transitions/#collapse) with [react-spring](https://www.react-spring.dev/).
+The demo below is animated using Material UI's [Collapse](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
 
 {{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
 
 ### Custom styling
 
-Use the `treeItemClasses` to target internal elements of the Tree Item component and change their styles.
+Use `treeItemClasses` to target internal elements of the Tree Item component and change their styles.
 
 {{"demo": "CustomStyling.js"}}
 
 ### Adding custom content
 
 Use the `ContentComponent` prop and the `useTreeItem` hook to replace the Tree Item content with an entirely custom component.
-The demo below adds an avatar and custom typography.
+The demo below shows how to add an avatar and custom typography elements.
 
 {{"demo": "CustomContentTreeView.js"}}
 
@@ -63,7 +63,7 @@ The demo below shows many of the previous customization examples brought togethe
 
 ### Gmail clone
 
-Google's Gmail side nav is potentially one of the most famous tree view components.
+Google's Gmail side nav is potentially one of the web's most famous tree view components.
 The demo below shows how to replicate it.
 
 {{"demo": "GmailTreeView.js"}}
