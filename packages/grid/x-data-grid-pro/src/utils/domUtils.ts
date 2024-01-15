@@ -53,6 +53,36 @@ export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateAp
   return cells;
 }
 
+export function findGridElement(api: GridPrivateApiPro, klass: keyof typeof gridClasses) {
+  return api.rootElementRef.current!.querySelector(`.${gridClasses[klass]}`)! as HTMLElement;
+}
+
+export function findLeftPinnedCellsAfterCol(api: GridPrivateApiPro, col: HTMLElement) {
+  const colIndex = parseCellColIndex(col);
+  if (colIndex === null) {
+    return [];
+  }
+
+  const cells: HTMLElement[] = [];
+
+  queryRows(api).forEach((rowElement) => {
+    const rowId = rowElement.getAttribute('data-id');
+    if (!rowId) {
+      return;
+    }
+
+    const rightPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedLeft']}`);
+    rightPinnedCells.forEach((cell) => {
+      const currentColIndex = parseCellColIndex(cell);
+      if (currentColIndex !== null && currentColIndex > colIndex) {
+        cells.push(cell as HTMLElement);
+      }
+    });
+  });
+
+  return cells;
+}
+
 export function findRightPinnedCellsBeforeCol(api: GridPrivateApiPro, col: HTMLElement) {
   const colIndex = parseCellColIndex(col);
   if (colIndex === null) {

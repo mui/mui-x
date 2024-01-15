@@ -9,6 +9,7 @@ import {
   CursorCoordinates,
   GridColumnHeaderSeparatorSides,
   GridColumnResizeParams,
+  GridPinnedColumnPosition,
   useGridApiEventHandler,
   useGridApiOptionHandler,
   useGridApiMethod,
@@ -31,6 +32,8 @@ import {
 import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
+  findGridElement,
+  findLeftPinnedCellsAfterCol,
   findRightPinnedCellsBeforeCol,
   getFieldFromHeaderElem,
   findHeaderElementFromField,
@@ -285,7 +288,10 @@ export const useGridColumnResize = (
   const headerFilterElementRef = React.useRef<HTMLDivElement>();
   const groupHeaderElementsRef = React.useRef<Element[]>([]);
   const cellElementsRef = React.useRef<Element[]>([]);
-  const rightPinnedCellsBeforeElementsRef = React.useRef<HTMLElement[]>([]);
+  const leftPinnedCellsAfterRef = React.useRef<HTMLElement[]>([]);
+  const rightPinnedCellsBeforeRef = React.useRef<HTMLElement[]>([]);
+  const fillerLeftRef = React.useRef<HTMLElement>();
+  const fillerRightRef = React.useRef<HTMLElement>();
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
@@ -349,11 +355,23 @@ export const useGridColumnResize = (
       div.style.setProperty('--width', finalWidth);
     });
 
-    rightPinnedCellsBeforeElementsRef.current?.forEach((cell) => {
-      const right = parseInt(cell.style.right, 10);
-      const newRight = right + widthDiff;
-      cell.style.right = `${newRight}px`;
-    });
+    const pinnedPosition = apiRef.current.isColumnPinned(colDefRef.current!.field);
+
+    if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+      updateProperty(fillerLeftRef.current!, 'width', widthDiff);
+
+      leftPinnedCellsAfterRef.current.forEach((cell) => {
+        updateProperty(cell, 'left', widthDiff);
+      });
+    }
+
+    if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
+      updateProperty(fillerRightRef.current!, 'width', widthDiff);
+
+      rightPinnedCellsBeforeRef.current.forEach((cell) => {
+        updateProperty(cell, 'right', widthDiff);
+      });
+    }
   };
 
   const finishResize = (nativeEvent: MouseEvent) => {
@@ -399,10 +417,19 @@ export const useGridColumnResize = (
       apiRef.current,
     );
 
-    rightPinnedCellsBeforeElementsRef.current = findRightPinnedCellsBeforeCol(
-      apiRef.current,
-      columnHeaderElementRef.current,
-    );
+    fillerLeftRef.current = findGridElement(apiRef.current, 'filler--pinnedLeft');
+    fillerRightRef.current = findGridElement(apiRef.current, 'filler--pinnedRight');
+
+    const pinnedPosition = apiRef.current.isColumnPinned(colDef.field);
+
+    leftPinnedCellsAfterRef.current =
+      pinnedPosition !== GridPinnedColumnPosition.LEFT
+        ? []
+        : findLeftPinnedCellsAfterCol(apiRef.current, columnHeaderElementRef.current);
+    rightPinnedCellsBeforeRef.current =
+      pinnedPosition !== GridPinnedColumnPosition.RIGHT
+        ? []
+        : findRightPinnedCellsBeforeCol(apiRef.current, columnHeaderElementRef.current);
 
     resizeDirection.current = getResizeDirection(separator, theme.direction);
 
@@ -721,3 +748,7 @@ export const useGridColumnResize = (
   useGridApiOptionHandler(apiRef, 'columnResize', props.onColumnResize);
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
+
+function updateProperty(element: HTMLElement, property: 'right' | 'left' | 'width', delta: number) {
+  element.style[property] = `${parseInt(element.style[property], 10) + delta}px`;
+}

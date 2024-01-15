@@ -4,14 +4,13 @@ import { fastMemo } from '../../utils/fastMemo';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
-import { gridClasses } from '../../constants/gridClasses';
+import { gridClasses } from '../../constants';
 
 const Filler = styled('div')({
   display: 'flex',
   flexDirection: 'row',
   width: 'var(--DataGrid-rowWidth)',
   boxSizing: 'border-box',
-  // backgroundColor: 'rgb(255 0 0 / 0.2)',
 });
 
 const Pinned = styled('div')({
@@ -23,15 +22,11 @@ const Pinned = styled('div')({
 });
 const PinnedLeft = styled(Pinned)({
   left: 0,
-  [`.${gridClasses.withVerticalBorder}`]: {
-    borderRight: '1px solid var(--DataGrid-rowBorderColor)',
-  },
+  borderRight: '1px solid var(--DataGrid-rowBorderColor)',
 });
 const PinnedRight = styled(Pinned)({
   right: 0,
-  [`.${gridClasses.withVerticalBorder}`]: {
-    borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
-  },
+  borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
 });
 
 const Main = styled('div')({
@@ -58,10 +53,20 @@ function GridVirtualScrollerFiller() {
   }
 
   return (
-    <Filler role="presentation" style={{ height }}>
-      <PinnedLeft style={{ width: leftPinnedWidth }} />
+    <Filler className={gridClasses.filler} role="presentation" style={{ height }}>
+      {leftPinnedWidth > 0 && (
+        <PinnedLeft
+          className={gridClasses['filler--pinnedLeft']}
+          style={{ width: leftPinnedWidth }}
+        />
+      )}
       <Main />
-      <PinnedRight style={{ width: rightPinnedWidth }} />
+      {rightPinnedWidth > 0 && (
+        <PinnedRight
+          className={gridClasses['filler--pinnedRight']}
+          style={{ width: rightPinnedWidth }}
+        />
+      )}
     </Filler>
   );
 }

@@ -297,6 +297,18 @@ export interface GridClasses {
    */
   editBooleanCell: string;
   /**
+   * Styles applied to the filler row.
+   */
+  filler: string;
+  /**
+   * Styles applied to the filler row pinned left section.
+   */
+  'filler--pinnedLeft': string;
+  /**
+   * Styles applied to the filler row pinned right section.
+   */
+  'filler--pinnedRight': string;
+  /**
    * Styles applied to the root of the filter form component.
    */
   filterForm: string;
@@ -660,6 +672,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'paper',
   'editBooleanCell',
   'editInputCell',
+  'filler',
+  'filler--pinnedLeft',
+  'filler--pinnedRight',
   'filterForm',
   'filterFormDeleteIcon',
   'filterFormLogicOperatorInput',
