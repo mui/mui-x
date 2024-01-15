@@ -61,7 +61,7 @@ export interface SparkLineChartProps
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
-   * @default (v: number) => v.toString()
+   * @default (v: number | null) => (v === null ? '' : v.toString())
    */
   valueFormatter?: (value: number | null) => string;
   /**
@@ -328,7 +328,7 @@ SparkLineChart.propTypes = {
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
-   * @default (v: number) => v.toString()
+   * @default (v: number | null) => (v === null ? '' : v.toString())
    */
   valueFormatter: PropTypes.func,
   viewBox: PropTypes.shape({
