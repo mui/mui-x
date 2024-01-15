@@ -973,6 +973,24 @@
       "isGlobal": false
     },
     {
+      "key": "filler",
+      "className": "MuiDataGridPro-filler",
+      "description": "Styles applied to the filler row.",
+      "isGlobal": false
+    },
+    {
+      "key": "filler--pinnedLeft",
+      "className": "MuiDataGridPro-filler--pinnedLeft",
+      "description": "Styles applied to the filler row pinned left section.",
+      "isGlobal": false
+    },
+    {
+      "key": "filler--pinnedRight",
+      "className": "MuiDataGridPro-filler--pinnedRight",
+      "description": "Styles applied to the filler row pinned right section.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGridPro-filterForm",
       "description": "Styles applied to the root of the filter form component.",
