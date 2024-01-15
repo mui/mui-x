@@ -5,18 +5,20 @@ import {
   UseFieldInternalProps,
   DateTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+
 import { DayRangeValidationProps } from './dateRange';
 import { DateTimeRangeValidationError, RangeFieldSection, DateRange } from '../../models';
 
-export interface UseDateTimeRangeFieldProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
-  extends MakeOptional<
+export interface UseDateTimeRangeFieldProps<
+  TDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
       Omit<
         UseFieldInternalProps<
           DateRange<TDate>,
           TDate,
           RangeFieldSection,
-          TTextFieldVersion,
+          TEnableAccessibleFieldDOMStructure,
           DateTimeRangeValidationError
         >,
         'unstableFieldRef'

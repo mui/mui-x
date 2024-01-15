@@ -10,12 +10,7 @@ import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
-import {
-  FieldSection,
-  BaseSingleInputFieldProps,
-  FieldRef,
-  FieldTextFieldVersion,
-} from '../../../models';
+import { FieldSection, BaseSingleInputFieldProps, FieldRef } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -27,13 +22,19 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
 export const useMobilePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
-  TExternalProps extends UseMobilePickerProps<TDate, TView, TTextFieldVersion, any, TExternalProps>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseMobilePickerProps<
+    TDate,
+    TView,
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
 >({
   props,
   getOpenDialogAriaText,
   ...pickerParams
-}: UseMobilePickerParams<TDate, TView, TTextFieldVersion, TExternalProps>) => {
+}: UseMobilePickerParams<TDate, TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
     slots,
     slotProps: innerSlotProps,
@@ -41,7 +42,7 @@ export const useMobilePicker = <
     sx,
     format,
     formatDensity,
-    textFieldVersion,
+    enableAccessibleFieldDOMStructure,
     selectedSections,
     onSelectedSectionsChange,
     timezone,
@@ -91,7 +92,7 @@ export const useMobilePicker = <
       sx,
       format,
       formatDensity,
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
@@ -104,7 +105,7 @@ export const useMobilePicker = <
     TDate | null,
     TDate,
     FieldSection,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >;
 

@@ -21,10 +21,13 @@ import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
 import { TimeView } from '../models/views';
-import { FieldTextFieldVersion } from '../models';
 
-type DesktopTimePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
-  props: DesktopTimePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
+type DesktopTimePickerComponent = (<
+  TDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -39,8 +42,11 @@ type DesktopTimePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFi
  */
 const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
->(inProps: DesktopTimePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -48,7 +54,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeViewWithMeridiem,
-    DesktopTimePickerProps<TDate, TTextFieldVersion>
+    DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopTimePicker');
 
   const {
@@ -117,7 +123,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   const { renderPicker } = useDesktopPicker<
     TDate,
     TimeViewWithMeridiem,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
     props,
@@ -192,6 +198,10 @@ DesktopTimePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @default 'v6'
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
@@ -361,10 +371,6 @@ DesktopTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * @default 'v6'
-   */
-  textFieldVersion: PropTypes.any,
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24

@@ -9,7 +9,7 @@ import {
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView, FieldTextFieldVersion } from '../models';
+import { DateOrTimeView } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
 export interface MobileDateTimePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
@@ -19,14 +19,14 @@ export interface MobileDateTimePickerSlots<TDate, TView extends DateOrTimeViewWi
 export interface MobileDateTimePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
 > extends BaseDateTimePickerSlotProps<TDate>,
-    ExportedUseMobilePickerSlotProps<TDate, TView, TTextFieldVersion> {}
+    ExportedUseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileDateTimePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDateTimePickerProps<TDate, TView>,
     MobileOnlyPickerProps {
   /**
@@ -38,5 +38,5 @@ export interface MobileDateTimePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateTimePickerSlotProps<TDate, TView, TTextFieldVersion>;
+  slotProps?: MobileDateTimePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { FieldRef, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
@@ -28,18 +28,23 @@ const releaseInfo = getReleaseInfo();
 export const useMobileRangePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseMobileRangePickerProps<
     TDate,
     TView,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,
 >({
   props,
   ...pickerParams
-}: UseMobileRangePickerParams<TDate, TView, TTextFieldVersion, TExternalProps>) => {
+}: UseMobileRangePickerParams<
+  TDate,
+  TView,
+  TEnableAccessibleFieldDOMStructure,
+  TExternalProps
+>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -49,7 +54,7 @@ export const useMobileRangePicker = <
     sx,
     format,
     formatDensity,
-    textFieldVersion,
+    enableAccessibleFieldDOMStructure,
     selectedSections,
     onSelectedSectionsChange,
     timezone,
@@ -111,7 +116,7 @@ export const useMobileRangePicker = <
       sx,
       format,
       formatDensity,
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
@@ -122,7 +127,7 @@ export const useMobileRangePicker = <
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >;
 
@@ -131,7 +136,7 @@ export const useMobileRangePicker = <
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,
     TView,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
     wrapperVariant: 'mobile',

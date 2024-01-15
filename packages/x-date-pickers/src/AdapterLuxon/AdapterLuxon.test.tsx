@@ -107,7 +107,7 @@ describe('<AdapterLuxon />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ textFieldVersion: 'v7' });
+          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
           expectFieldValueV7(
             v7Response.getSectionsContainer(),
@@ -117,7 +117,7 @@ describe('<AdapterLuxon />', () => {
 
         it('should have well formatted value', () => {
           const v7Response = renderWithProps({
-            textFieldVersion: 'v7',
+            enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
@@ -166,7 +166,10 @@ describe('<AdapterLuxon />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ textFieldVersion: 'v7', format: 'DD' });
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            format: 'DD',
+          });
 
           expectFieldValueV7(
             v7Response.getSectionsContainer(),
@@ -176,7 +179,7 @@ describe('<AdapterLuxon />', () => {
 
         it('should have well formatted value', () => {
           const v7Response = renderWithProps({
-            textFieldVersion: 'v7',
+            enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
             format: 'DD',
           });

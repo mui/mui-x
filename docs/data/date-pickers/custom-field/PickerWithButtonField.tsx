@@ -12,12 +12,12 @@ import {
 } from '@mui/x-date-pickers/models';
 
 interface ButtonFieldProps
-  extends UseDateFieldProps<Dayjs, 'v6'>,
+  extends UseDateFieldProps<Dayjs, false>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
-      'v6',
+      false,
       DateValidationError
     > {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;

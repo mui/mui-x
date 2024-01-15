@@ -21,18 +21,18 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
   describe('Picker open / close lifecycle', () => {
     it('should not open on mount if `props.open` is false', () => {
-      render(<ElementToTest textFieldVersion="v7" />);
+      render(<ElementToTest enableAccessibleFieldDOMStructure />);
       expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
     });
 
     it('should open on mount if `prop.open` is true', () => {
-      render(<ElementToTest textFieldVersion="v7" open />);
+      render(<ElementToTest enableAccessibleFieldDOMStructure open />);
       expect(screen.queryByRole(viewWrapperRole)).toBeVisible();
     });
 
     it('should not open when `prop.disabled` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest textFieldVersion="v7" disabled onOpen={onOpen} />);
+      render(<ElementToTest enableAccessibleFieldDOMStructure disabled onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -40,7 +40,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
     it('should not open when `prop.readOnly` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest textFieldVersion="v7" readOnly onOpen={onOpen} />);
+      render(<ElementToTest enableAccessibleFieldDOMStructure readOnly onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -53,7 +53,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -93,7 +93,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       }
 
       const { selectSection, pressKey } = renderWithProps(
-        { textFieldVersion: 'v7', defaultValue: values[0] },
+        { enableAccessibleFieldDOMStructure: true, defaultValue: values[0] },
         { componentFamily },
       );
 
@@ -110,7 +110,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -152,7 +152,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -187,7 +187,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -251,7 +251,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -291,7 +291,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -320,7 +320,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -349,7 +349,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -371,7 +371,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}

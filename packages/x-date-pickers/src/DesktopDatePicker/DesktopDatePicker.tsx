@@ -7,7 +7,7 @@ import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
-import { DateView, FieldTextFieldVersion } from '../models';
+import { DateView } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
@@ -16,8 +16,12 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type DesktopDatePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
-  props: DesktopDatePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
+type DesktopDatePickerComponent = (<
+  TDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -32,15 +36,18 @@ type DesktopDatePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFi
  */
 const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
->(inProps: DesktopDatePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
   const defaultizedProps = useDatePickerDefaultizedProps<
     TDate,
-    DesktopDatePickerProps<TDate, TTextFieldVersion>
+    DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDatePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
@@ -75,7 +82,12 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, DateView, TTextFieldVersion, typeof props>({
+  const { renderPicker } = useDesktopPicker<
+    TDate,
+    DateView,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
@@ -149,6 +161,10 @@ DesktopDatePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
+  /**
+   * @default 'v6'
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -368,10 +384,6 @@ DesktopDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * @default 'v6'
-   */
-  textFieldVersion: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

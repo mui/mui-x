@@ -11,12 +11,7 @@ import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
-import {
-  FieldSection,
-  BaseSingleInputFieldProps,
-  FieldRef,
-  FieldTextFieldVersion,
-} from '../../../models';
+import { FieldSection, BaseSingleInputFieldProps, FieldRef } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -28,11 +23,11 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
 export const useDesktopPicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopPickerProps<
     TDate,
     TView,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,
@@ -40,7 +35,7 @@ export const useDesktopPicker = <
   props,
   getOpenDialogAriaText,
   ...pickerParams
-}: UseDesktopPickerParams<TDate, TView, TTextFieldVersion, TExternalProps>) => {
+}: UseDesktopPickerParams<TDate, TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
     slots,
     slotProps: innerSlotProps,
@@ -48,7 +43,7 @@ export const useDesktopPicker = <
     sx,
     format,
     formatDensity,
-    textFieldVersion,
+    enableAccessibleFieldDOMStructure,
     selectedSections,
     onSelectedSectionsChange,
     timezone,
@@ -124,7 +119,7 @@ export const useDesktopPicker = <
       sx,
       format,
       formatDensity,
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
@@ -139,7 +134,7 @@ export const useDesktopPicker = <
     TDate | null,
     TDate,
     FieldSection,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >;
 

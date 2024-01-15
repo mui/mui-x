@@ -3,7 +3,7 @@ import {
   splitFieldInternalAndForwardedProps,
   useDefaultizedTimeField,
 } from '@mui/x-date-pickers/internals';
-import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+
 import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
@@ -11,14 +11,14 @@ import { RangeFieldSection, DateRange } from '../models';
 
 export const useSingleInputTimeRangeField = <
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
-  TAllProps extends UseSingleInputTimeRangeFieldProps<TDate, TTextFieldVersion>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TAllProps extends UseSingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
 >(
   inProps: TAllProps,
 ) => {
   const props = useDefaultizedTimeField<
     TDate,
-    UseSingleInputTimeRangeFieldProps<TDate, TTextFieldVersion>,
+    UseSingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
     TAllProps
   >(inProps);
 
@@ -31,7 +31,7 @@ export const useSingleInputTimeRangeField = <
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
     typeof internalProps
   >({

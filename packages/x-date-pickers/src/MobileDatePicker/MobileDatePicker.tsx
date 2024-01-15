@@ -8,15 +8,19 @@ import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { useUtils, useLocaleText } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { DateView, FieldTextFieldVersion } from '../models';
+import { DateView } from '../models';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type MobileDatePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
-  props: MobileDatePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
+type MobileDatePickerComponent = (<
+  TDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -31,15 +35,18 @@ type MobileDatePickerComponent = (<TDate, TTextFieldVersion extends FieldTextFie
  */
 const MobileDatePicker = React.forwardRef(function MobileDatePicker<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
->(inProps: MobileDatePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
   const defaultizedProps = useDatePickerDefaultizedProps<
     TDate,
-    MobileDatePickerProps<TDate, TTextFieldVersion>
+    MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDatePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
@@ -72,7 +79,12 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, DateView, TTextFieldVersion, typeof props>({
+  const { renderPicker } = useMobilePicker<
+    TDate,
+    DateView,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
@@ -146,6 +158,10 @@ MobileDatePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
+  /**
+   * @default 'v6'
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -365,10 +381,6 @@ MobileDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * @default 'v6'
-   */
-  textFieldVersion: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

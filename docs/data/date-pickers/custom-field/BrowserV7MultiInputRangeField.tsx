@@ -37,10 +37,10 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BasePickersTextFieldProps<'v7'>,
+  extends BasePickersTextFieldProps<true>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      keyof BasePickersTextFieldProps<'v7'>
+      keyof BasePickersTextFieldProps<true>
     > {}
 
 // This demo uses `BasePickersTextFieldProps` instead of `BaseMultiInputPickersTextFieldProps`,
@@ -49,7 +49,7 @@ const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
     const {
       // Should be ignored
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
 
       // Should be passed to the PickersSectionList component
       elements,
@@ -107,12 +107,12 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs, 'v7'>,
+  extends UseDateRangeFieldProps<Dayjs, true>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      'v7',
+      true,
       DateRangeValidationError
     > {}
 
@@ -157,7 +157,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useMultiInputDateRangeField<
       Dayjs,
-      'v7',
+      true,
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
@@ -175,7 +175,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
       },
       startTextFieldProps,
       endTextFieldProps,
@@ -200,7 +200,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 ) as BrowserMultiInputDateRangeFieldComponent;
 
 const BrowserDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, 'v7'>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps<Dayjs, true>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DateRangePicker
         ref={ref}

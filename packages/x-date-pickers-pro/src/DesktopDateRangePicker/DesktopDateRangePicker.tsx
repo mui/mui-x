@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
-import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -15,9 +15,9 @@ import { DateRange } from '../models';
 
 type DesktopDateRangePickerComponent = (<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 >(
-  props: DesktopDateRangePickerProps<TDate, TTextFieldVersion> &
+  props: DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -33,12 +33,15 @@ type DesktopDateRangePickerComponent = (<
  */
 const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
->(inProps: DesktopDateRangePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
-    DesktopDateRangePickerProps<TDate, TTextFieldVersion>
+    DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateRangePicker');
 
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
@@ -70,7 +73,12 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, 'day', TTextFieldVersion, typeof props>({
+  const { renderPicker } = useDesktopRangePicker<
+    TDate,
+    'day',
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
@@ -168,6 +176,10 @@ DesktopDateRangePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
+  /**
+   * @default 'v6'
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -360,10 +372,6 @@ DesktopDateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * @default 'v6'
-   */
-  textFieldVersion: PropTypes.any,
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

@@ -3,25 +3,25 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { FieldRef, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { UseDateRangeFieldProps } from '../internals/models/dateRange';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { RangeFieldSection, MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 > = UseMultiInputRangeFieldParams<
-  UseMultiInputDateRangeFieldProps<TDate, TTextFieldVersion>,
+  UseMultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   TTextFieldSlotProps
 >;
 
 export interface UseMultiInputDateRangeFieldProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
 > extends Omit<
-    UseDateRangeFieldProps<TDate, TTextFieldVersion>,
+    UseDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
     'unstableFieldRef' | 'clearable' | 'onClear'
   > {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
@@ -30,17 +30,20 @@ export interface UseMultiInputDateRangeFieldProps<
 
 export type UseMultiInputDateRangeFieldComponentProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TChildProps extends {},
-> = Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate, TTextFieldVersion>> &
-  UseMultiInputDateRangeFieldProps<TDate, TTextFieldVersion>;
+> = Omit<
+  TChildProps,
+  keyof UseMultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+> &
+  UseMultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
 export interface MultiInputDateRangeFieldProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends UseMultiInputDateRangeFieldComponentProps<
     TDate,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     Omit<StackProps, 'position'>
   > {
   autoFocus?: boolean;
@@ -57,7 +60,7 @@ export interface MultiInputDateRangeFieldProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputDateRangeFieldSlotProps<TDate, TTextFieldVersion>;
+  slotProps?: MultiInputDateRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface MultiInputDateRangeFieldSlots {
@@ -69,8 +72,7 @@ export interface MultiInputDateRangeFieldSlots {
   /**
    * Form control with an input to render a date.
    * It is rendered twice: once for the start date and once for the end date.
-   * Receives the same props as `@mui/material/TextField`.
-   * @default TextField from '@mui/material'
+   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
    */
   textField?: React.ElementType;
   /**
@@ -82,21 +84,23 @@ export interface MultiInputDateRangeFieldSlots {
 
 export interface MultiInputDateRangeFieldSlotProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
 > {
   root?: SlotComponentProps<
     typeof Stack,
     {},
-    MultiInputDateRangeFieldProps<TDate, TTextFieldVersion>
+    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
   >;
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    MultiInputDateRangeFieldProps<TDate, TTextFieldVersion> & { position: RangePosition }
+    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+      position: RangePosition;
+    }
   >;
   separator?: SlotComponentProps<
     typeof Typography,
     {},
-    MultiInputDateRangeFieldProps<TDate, TTextFieldVersion>
+    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
   >;
 }

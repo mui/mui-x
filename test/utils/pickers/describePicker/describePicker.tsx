@@ -17,7 +17,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
     }
 
     const inputRef = React.createRef<HTMLInputElement>();
-    render(<ElementToTest inputRef={inputRef} textFieldVersion="v6" />);
+    render(<ElementToTest inputRef={inputRef} enableAccessibleFieldDOMStructure={false} />);
 
     expect(inputRef.current).to.have.tagName('input');
   });

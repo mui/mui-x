@@ -1,5 +1,5 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
-import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+
 import {
   UseMobileRangePickerSlots,
   UseMobileRangePickerSlotProps,
@@ -17,13 +17,13 @@ export interface MobileDateRangePickerSlots<TDate>
 
 export interface MobileDateRangePickerSlotProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
 > extends BaseDateRangePickerSlotProps<TDate>,
-    UseMobileRangePickerSlotProps<TDate, 'day', TTextFieldVersion> {}
+    UseMobileRangePickerSlotProps<TDate, 'day', TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileDateRangePickerProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDateRangePickerProps<TDate>,
     MobileRangeOnlyPickerProps {
   /**
@@ -40,5 +40,5 @@ export interface MobileDateRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateRangePickerSlotProps<TDate, TTextFieldVersion>;
+  slotProps?: MobileDateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

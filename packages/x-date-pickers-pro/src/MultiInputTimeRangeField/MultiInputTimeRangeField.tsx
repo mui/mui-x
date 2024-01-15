@@ -11,7 +11,7 @@ import {
   unstable_generateUtilityClass as generateUtilityClass,
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
-import { BuiltInFieldTextFieldProps, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
 import {
   splitFieldInternalAndForwardedProps,
   convertFieldResponseIntoMuiTextFieldProps,
@@ -62,9 +62,9 @@ const MultiInputTimeRangeFieldSeparator = styled(
 
 type MultiInputTimeRangeFieldComponent = (<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 >(
-  props: MultiInputTimeRangeFieldProps<TDate, TTextFieldVersion> &
+  props: MultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -80,9 +80,9 @@ type MultiInputTimeRangeFieldComponent = (<
  */
 const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeField<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 >(
-  inProps: MultiInputTimeRangeFieldProps<TDate, TTextFieldVersion>,
+  inProps: MultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -120,18 +120,19 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   });
 
   const TextField =
-    slots?.textField ?? (inProps.textFieldVersion === 'v7' ? PickersTextField : MuiTextField);
+    slots?.textField ??
+    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
   const startTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
-  }) as BuiltInFieldTextFieldProps<TTextFieldVersion>;
+  }) as BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>;
 
   const endTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
-  }) as BuiltInFieldTextFieldProps<TTextFieldVersion>;
+  }) as BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>;
 
   const Separator = slots?.separator ?? MultiInputTimeRangeFieldSeparator;
   const separatorProps = useSlotProps({
@@ -143,8 +144,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
 
   const fieldResponse = useMultiInputTimeRangeField<
     TDate,
-    TTextFieldVersion,
-    BuiltInFieldTextFieldProps<TTextFieldVersion>
+    TEnableAccessibleFieldDOMStructure,
+    BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>
   >({
     sharedProps: internalProps,
     startTextFieldProps,
@@ -223,6 +224,10 @@ MultiInputTimeRangeField.propTypes = {
    * Add an element between each child.
    */
   divider: PropTypes.node,
+  /**
+   * @default 'v6'
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -357,10 +362,6 @@ MultiInputTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * @default 'v6'
-   */
-  textFieldVersion: PropTypes.oneOf(['v6', 'v7']),
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

@@ -5,7 +5,6 @@ import {
   BaseSingleInputPickersTextFieldProps,
   FieldRef,
   FieldSection,
-  FieldTextFieldVersion,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers';
 
@@ -48,10 +47,10 @@ export interface BaseMultiInputFieldProps<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Omit<
-    BaseFieldProps<TValue, TDate, TSection, TTextFieldVersion, TError>,
+    BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
     'unstableFieldRef'
   > {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
@@ -79,13 +78,16 @@ export interface BaseMultiInputFieldProps<
  * Props the text field receives when used with a multi input picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.textField`.
  */
-export type BaseMultiInputPickersTextFieldProps<TTextFieldVersion extends FieldTextFieldVersion> =
-  UseClearableFieldResponse<UseFieldResponse<TTextFieldVersion, MultiInputFieldSlotTextFieldProps>>;
+export type BaseMultiInputPickersTextFieldProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> = UseClearableFieldResponse<
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>
+>;
 
 /**
  * Props the text field receives when used with a single or multi input picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` or `props.slotProps.textField`.
  */
-export type BasePickersTextFieldProps<TTextFieldVersion extends FieldTextFieldVersion> =
-  BaseSingleInputPickersTextFieldProps<TTextFieldVersion> &
-    BaseMultiInputPickersTextFieldProps<TTextFieldVersion>;
+export type BasePickersTextFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  BaseSingleInputPickersTextFieldProps<TEnableAccessibleFieldDOMStructure> &
+    BaseMultiInputPickersTextFieldProps<TEnableAccessibleFieldDOMStructure>;

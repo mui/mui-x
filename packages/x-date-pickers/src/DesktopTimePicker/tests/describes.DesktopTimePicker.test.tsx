@@ -30,7 +30,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     variant: 'desktop',
   }));
 
-  describeConformance(<DesktopTimePicker textFieldVersion="v7" />, () => ({
+  describeConformance(<DesktopTimePicker enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiDesktopTimePicker',

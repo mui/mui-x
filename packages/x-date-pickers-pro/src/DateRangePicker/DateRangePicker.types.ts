@@ -1,4 +1,3 @@
-import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import {
   DesktopDateRangePickerProps,
   DesktopDateRangePickerSlots,
@@ -14,13 +13,15 @@ export interface DateRangePickerSlots<TDate>
   extends DesktopDateRangePickerSlots<TDate>,
     MobileDateRangePickerSlots<TDate> {}
 
-export interface DateRangePickerSlotProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
-  extends DesktopDateRangePickerSlotProps<TDate, TTextFieldVersion>,
-    MobileDateRangePickerSlotProps<TDate, TTextFieldVersion> {}
+export interface DateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure extends boolean>
+  extends DesktopDateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    MobileDateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {}
 
-export interface DateRangePickerProps<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>
-  extends DesktopDateRangePickerProps<TDate, TTextFieldVersion>,
-    MobileDateRangePickerProps<TDate, TTextFieldVersion> {
+export interface DateRangePickerProps<
+  TDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    MobileDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -36,5 +37,5 @@ export interface DateRangePickerProps<TDate, TTextFieldVersion extends FieldText
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateRangePickerSlotProps<TDate, TTextFieldVersion>;
+  slotProps?: DateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

@@ -1,2 +1,2 @@
-<DateField textFieldVersion="v7" />
-<DatePicker textFieldVersion="v7" />
+<DateField enableAccessibleFieldDOMStructure />
+<DatePicker enableAccessibleFieldDOMStructure />

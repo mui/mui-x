@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
-import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
-type DateRangeFieldComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
-  props: SingleInputTimeRangeFieldProps<TDate, TTextFieldVersion> &
+type DateRangeFieldComponent = (<TDate, TEnableAccessibleFieldDOMStructure extends boolean = false>(
+  props: SingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
 
@@ -27,9 +27,9 @@ type DateRangeFieldComponent = (<TDate, TTextFieldVersion extends FieldTextField
  */
 const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 >(
-  inProps: SingleInputTimeRangeFieldProps<TDate, TTextFieldVersion>,
+  inProps: SingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -42,7 +42,8 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
   const ownerState = themeProps;
 
   const TextField =
-    slots?.textField ?? (inProps.textFieldVersion === 'v7' ? PickersTextField : MuiTextField);
+    slots?.textField ??
+    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
   const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
@@ -51,7 +52,7 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     additionalProps: {
       ref: inRef,
     },
-  }) as SingleInputTimeRangeFieldProps<TDate, TTextFieldVersion>;
+  }) as SingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
@@ -59,7 +60,7 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
 
   const fieldResponse = useSingleInputTimeRangeField<
     TDate,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     typeof textFieldProps
   >(textFieldProps);
   const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
@@ -124,6 +125,10 @@ SingleInputTimeRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @default 'v6'
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * If `true`, the component is displayed in focused state.
    */
@@ -314,10 +319,6 @@ SingleInputTimeRangeField.propTypes = {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.any,
-  /**
-   * @default 'v6'
-   */
-  textFieldVersion: PropTypes.oneOf(['v6', 'v7']),
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

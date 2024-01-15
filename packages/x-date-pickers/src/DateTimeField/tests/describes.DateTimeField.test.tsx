@@ -22,7 +22,7 @@ describe('<DateTimeField /> - Describes', () => {
     componentFamily: 'field',
   }));
 
-  describeConformance(<DateTimeField textFieldVersion="v7" />, () => ({
+  describeConformance(<DateTimeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     inheritComponent: PickersTextField,
     render,

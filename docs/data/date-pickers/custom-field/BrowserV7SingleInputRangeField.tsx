@@ -42,17 +42,17 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BasePickersTextFieldProps<'v7'>,
+  extends BasePickersTextFieldProps<true>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      keyof BasePickersTextFieldProps<'v7'>
+      keyof BasePickersTextFieldProps<true>
     > {}
 
 const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
     const {
       // Should be ignored
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
 
       // Should be passed to the PickersSectionList component
       elements,
@@ -110,12 +110,12 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserSingleInputDateRangeFieldProps
-  extends UseSingleInputDateRangeFieldProps<Dayjs, 'v7'>,
+  extends UseSingleInputDateRangeFieldProps<Dayjs, true>,
     BaseSingleInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      'v7',
+      true,
       DateRangeValidationError
     > {
   onAdornmentClick?: () => void;
@@ -149,9 +149,9 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useSingleInputDateRangeField<
       Dayjs,
-      'v7',
+      true,
       typeof textFieldProps
-    >({ ...textFieldProps, textFieldVersion: 'v7' });
+    >({ ...textFieldProps, enableAccessibleFieldDOMStructure: true });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({

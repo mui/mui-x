@@ -21,12 +21,7 @@ import {
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 import { InferError } from '../useValidation';
-import {
-  FieldSection,
-  FieldSelectedSections,
-  FieldTextFieldVersion,
-  PickersTimezone,
-} from '../../../models';
+import { FieldSection, FieldSelectedSections, PickersTimezone } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
   GetDefaultReferenceDateProps,
@@ -68,15 +63,15 @@ export const useFieldState = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TTextFieldVersion extends FieldTextFieldVersion,
-  TForwardedProps extends UseFieldForwardedProps<TTextFieldVersion>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
   TInternalProps extends UseFieldInternalProps<any, any, any, any, any>,
 >(
   params: UseFieldParams<
     TValue,
     TDate,
     TSection,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
   >,
@@ -104,7 +99,7 @@ export const useFieldState = <
       onSelectedSectionsChange,
       shouldRespectLeadingZeros = false,
       timezone: timezoneProp,
-      textFieldVersion = false,
+      enableAccessibleFieldDOMStructure = false,
     },
   } = params;
 
@@ -138,7 +133,7 @@ export const useFieldState = <
           date,
           formatDensity,
           shouldRespectLeadingZeros,
-          textFieldVersion,
+          enableAccessibleFieldDOMStructure,
           isRTL,
         }),
       ),
@@ -151,7 +146,7 @@ export const useFieldState = <
       utils,
       formatDensity,
       timezone,
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
     ],
   );
 
@@ -285,7 +280,7 @@ export const useFieldState = <
         date,
         formatDensity,
         shouldRespectLeadingZeros,
-        textFieldVersion,
+        enableAccessibleFieldDOMStructure,
         isRTL,
       });
       return mergeDateIntoReferenceDate(utils, timezone, date, sections, referenceDate, false);

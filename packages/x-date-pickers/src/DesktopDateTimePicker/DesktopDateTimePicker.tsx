@@ -20,13 +20,13 @@ import {
   resolveTimeViewsResponse,
 } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
-import { FieldTextFieldVersion } from '../models';
 
 type DesktopDateTimePickerComponent = (<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 >(
-  props: DesktopDateTimePickerProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
+  props: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -41,8 +41,11 @@ type DesktopDateTimePickerComponent = (<
  */
 const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
->(inProps: DesktopDateTimePickerProps<TDate, TTextFieldVersion>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  inProps: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -50,7 +53,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DateOrTimeViewWithMeridiem,
-    DesktopDateTimePickerProps<TDate, TTextFieldVersion>
+    DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateTimePicker');
 
   const {
@@ -131,7 +134,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const { renderPicker } = useDesktopPicker<
     TDate,
     DateOrTimeViewWithMeridiem,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
     props,
@@ -222,6 +225,10 @@ DesktopDateTimePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
+  /**
+   * @default 'v6'
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -477,10 +484,6 @@ DesktopDateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * @default 'v6'
-   */
-  textFieldVersion: PropTypes.any,
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24

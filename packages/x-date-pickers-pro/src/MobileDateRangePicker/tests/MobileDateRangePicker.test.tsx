@@ -18,7 +18,7 @@ describe('<MobileDateRangePicker />', () => {
     it('should open when focusing the start input', () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker textFieldVersion="v7" onOpen={onOpen} />);
+      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
@@ -29,7 +29,7 @@ describe('<MobileDateRangePicker />', () => {
     it('should open when focusing the end input', () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker textFieldVersion="v7" onOpen={onOpen} />);
+      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
 
@@ -48,7 +48,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(
         <MobileDateRangePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -89,7 +89,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(
         <MobileDateRangePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -122,7 +122,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(
         <MobileDateRangePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
@@ -152,7 +152,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(
         <MobileDateRangePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -186,7 +186,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(
         <MobileDateRangePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -219,7 +219,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(
         <MobileDateRangePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -246,7 +246,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(
         <MobileDateRangePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -265,7 +265,7 @@ describe('<MobileDateRangePicker />', () => {
     });
 
     it('should correctly set focused styles when input is focused', () => {
-      render(<MobileDateRangePicker textFieldVersion="v7" />);
+      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure />);
 
       const startSectionsContainer = getFieldSectionsContainer();
       fireEvent.focus(startSectionsContainer);

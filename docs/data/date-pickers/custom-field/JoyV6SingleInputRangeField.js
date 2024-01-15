@@ -28,7 +28,7 @@ const joyTheme = extendJoyTheme();
 const JoyField = React.forwardRef((props, ref) => {
   const {
     // Should be ignored
-    textFieldVersion,
+    enableAccessibleFieldDOMStructure,
     disabled,
     id,
     label,
@@ -81,7 +81,7 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
 
   const fieldResponse = useSingleInputDateRangeField({
     ...textFieldProps,
-    textFieldVersion: 'v6',
+    enableAccessibleFieldDOMStructure: false,
   });
 
   /* If you don't need a clear button, you can skip the use of this hook */

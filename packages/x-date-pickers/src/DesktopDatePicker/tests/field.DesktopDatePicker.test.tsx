@@ -27,7 +27,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       // Test with v7 input
       const v7Response = renderWithProps(
         {
-          textFieldVersion: 'v7' as const,
+          enableAccessibleFieldDOMStructure: true as const,
           format: `${adapterToUse.formats.month} ${adapterToUse.formats.dayOfMonth}`,
         },
         { componentFamily: 'picker' },
@@ -50,7 +50,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       // Test with v6 input
       const v6Response = renderWithProps(
         {
-          textFieldVersion: 'v6' as const,
+          enableAccessibleFieldDOMStructure: false as const,
           format: `${adapterToUse.formats.month} ${adapterToUse.formats.dayOfMonth}`,
         },
         { componentFamily: 'picker' },
@@ -74,7 +74,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       const testFormat = (props: DesktopDatePickerProps<any, any>, expectedFormat: string) => {
         // Test with v7 input
         const v7Response = renderWithProps(
-          { ...props, textFieldVersion: 'v7' as const },
+          { ...props, enableAccessibleFieldDOMStructure: true as const },
           { componentFamily: 'picker' },
         );
         expectFieldValueV7(v7Response.getSectionsContainer(), expectedFormat);
@@ -82,7 +82,7 @@ describe('<DesktopDatePicker /> - Field', () => {
 
         // Test with v6 input
         const v6Response = renderWithProps(
-          { ...props, textFieldVersion: 'v6' as const },
+          { ...props, enableAccessibleFieldDOMStructure: false as const },
           { componentFamily: 'picker' },
         );
         const input = getTextbox();
@@ -104,7 +104,7 @@ describe('<DesktopDatePicker /> - Field', () => {
     it('should clear the selected section when all sections are completed when using timezones', () => {
       const v7Response = renderWithProps(
         {
-          textFieldVersion: 'v7' as const,
+          enableAccessibleFieldDOMStructure: true as const,
           value: adapter.date()!,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           timezone: 'America/Chicago',

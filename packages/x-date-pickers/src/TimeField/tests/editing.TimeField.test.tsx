@@ -254,7 +254,7 @@ describe('<TimeField /> - Editing', () => {
     it('should go to the next section when pressing `2` in a 12-hours format', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.fullTime12h,
       });
 
@@ -268,7 +268,7 @@ describe('<TimeField /> - Editing', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps({
-        textFieldVersion: 'v6',
+        enableAccessibleFieldDOMStructure: false,
         format: adapter.formats.fullTime12h,
       });
 
@@ -284,7 +284,7 @@ describe('<TimeField /> - Editing', () => {
     it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.fullTime12h,
       });
 
@@ -303,7 +303,7 @@ describe('<TimeField /> - Editing', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps({
-        textFieldVersion: 'v6',
+        enableAccessibleFieldDOMStructure: false,
         format: adapter.formats.fullTime12h,
       });
 
@@ -388,7 +388,7 @@ describe('<TimeField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
         });
@@ -404,7 +404,7 @@ describe('<TimeField /> - Editing', () => {
         const onChangeV6 = spy();
 
         const v6Response = renderWithProps({
-          textFieldVersion: 'v6',
+          enableAccessibleFieldDOMStructure: false,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
         });
@@ -421,7 +421,7 @@ describe('<TimeField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
           format: adapter.formats.fullTime24h,
@@ -445,7 +445,7 @@ describe('<TimeField /> - Editing', () => {
         const onChangeV6 = spy();
 
         const v6Response = renderWithProps({
-          textFieldVersion: 'v6',
+          enableAccessibleFieldDOMStructure: false,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
           format: adapter.formats.fullTime24h,
@@ -470,7 +470,7 @@ describe('<TimeField /> - Editing', () => {
         const onChangeV7 = spy();
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
           format: adapter.formats.hours24h,
@@ -487,7 +487,7 @@ describe('<TimeField /> - Editing', () => {
         const onChangeV6 = spy();
 
         const v6Response = renderWithProps({
-          textFieldVersion: 'v6',
+          enableAccessibleFieldDOMStructure: false,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
           format: adapter.formats.hours24h,

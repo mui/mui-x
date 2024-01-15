@@ -18,7 +18,7 @@ describe('<MobileDateTimePicker />', () => {
   it('should render date and time by default', () => {
     render(
       <MobileDateTimePicker
-        textFieldVersion="v7"
+        enableAccessibleFieldDOMStructure
         open
         slotProps={{ toolbar: { hidden: false } }}
         defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
@@ -35,7 +35,7 @@ describe('<MobileDateTimePicker />', () => {
   it('should render toolbar and tabs by default', () => {
     render(
       <MobileDateTimePicker
-        textFieldVersion="v7"
+        enableAccessibleFieldDOMStructure
         open
         value={adapterToUse.date('2021-11-20T10:01:22')}
         defaultValue={(params) => <TextField {...params} />}
@@ -49,7 +49,7 @@ describe('<MobileDateTimePicker />', () => {
   it('can render seconds on view', () => {
     render(
       <MobileDateTimePicker
-        textFieldVersion="v7"
+        enableAccessibleFieldDOMStructure
         open
         slotProps={{ toolbar: { hidden: false } }}
         openTo="seconds"
@@ -64,7 +64,7 @@ describe('<MobileDateTimePicker />', () => {
     it('should not render tabs when `hidden` is `true`', () => {
       render(
         <MobileDateTimePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           open
           defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
           slotProps={{
@@ -82,7 +82,7 @@ describe('<MobileDateTimePicker />', () => {
     it('should not render only toolbar when `hidden` is `true`', () => {
       render(
         <MobileDateTimePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           open
           slotProps={{ toolbar: { hidden: true } }}
           defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
@@ -98,7 +98,7 @@ describe('<MobileDateTimePicker />', () => {
     it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      render(<MobileDateTimePicker textFieldVersion="v7" onOpen={onOpen} />);
+      render(<MobileDateTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
       userEvent.mousePress(getFieldSectionsContainer());
 
@@ -118,7 +118,7 @@ describe('<MobileDateTimePicker />', () => {
 
       render(
         <MobileDateTimePicker
-          textFieldVersion="v7"
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}

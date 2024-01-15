@@ -28,10 +28,7 @@ import {
   UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import {
-  BaseSingleInputFieldProps,
-  FieldTextFieldVersion,
-} from '@mui/x-date-pickers/models';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import {
   DateRange,
   DateRangeValidationError,
@@ -43,7 +40,7 @@ const joyTheme = extendJoyTheme();
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
-  textFieldVersion?: FieldTextFieldVersion;
+  enableAccessibleFieldDOMStructure?: boolean;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -59,7 +56,7 @@ const JoyField = React.forwardRef(
   (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       // Should be ignored
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
 
       disabled,
       id,
@@ -103,12 +100,12 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoySingleInputDateRangeFieldProps
-  extends UseSingleInputDateRangeFieldProps<Dayjs, 'v6'>,
+  extends UseSingleInputDateRangeFieldProps<Dayjs, false>,
     BaseSingleInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      'v6',
+      false,
       DateRangeValidationError
     > {
   onAdornmentClick?: () => void;
@@ -131,9 +128,9 @@ const JoySingleInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useSingleInputDateRangeField<
       Dayjs,
-      'v6',
+      false,
       JoySingleInputDateRangeFieldProps
-    >({ ...textFieldProps, textFieldVersion: 'v6' });
+    >({ ...textFieldProps, enableAccessibleFieldDOMStructure: false });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
@@ -164,7 +161,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
 const JoySingleInputDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, 'v6'>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
     const toggleOpen = (event: React.PointerEvent) => {

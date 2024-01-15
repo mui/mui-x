@@ -6,12 +6,7 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../hooks/useClearableField';
-import {
-  DateValidationError,
-  FieldSection,
-  BuiltInFieldTextFieldProps,
-  FieldTextFieldVersion,
-} from '../models';
+import { DateValidationError, FieldSection, BuiltInFieldTextFieldProps } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import {
@@ -21,13 +16,13 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 
-export interface UseDateFieldProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
+export interface UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
       UseFieldInternalProps<
         TDate | null,
         TDate,
         FieldSection,
-        TTextFieldVersion,
+        TEnableAccessibleFieldDOMStructure,
         DateValidationError
       >,
       'format'
@@ -40,18 +35,18 @@ export interface UseDateFieldProps<TDate, TTextFieldVersion extends FieldTextFie
 
 export type UseDateFieldComponentProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TChildProps extends {},
-> = Omit<TChildProps, keyof UseDateFieldProps<TDate, TTextFieldVersion>> &
-  UseDateFieldProps<TDate, TTextFieldVersion>;
+> = Omit<TChildProps, keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>> &
+  UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
 export type DateFieldProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 > = UseDateFieldComponentProps<
   TDate,
-  TTextFieldVersion,
-  BuiltInFieldTextFieldProps<TTextFieldVersion>
+  TEnableAccessibleFieldDOMStructure,
+  BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>
 > & {
   /**
    * Overridable component slots.
@@ -62,28 +57,27 @@ export type DateFieldProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateFieldSlotProps<TDate, TTextFieldVersion>;
+  slotProps?: DateFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 };
 
 export type DateFieldOwnerState<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
-> = DateFieldProps<TDate, TTextFieldVersion>;
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> = DateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
 export interface DateFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
-   * Receives the same props as `@mui/material/TextField`.
-   * @default TextField from '@mui/material'
+   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
    */
   textField?: React.ElementType;
 }
 
-export interface DateFieldSlotProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
+export interface DateFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure extends boolean>
   extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    DateFieldOwnerState<TDate, TTextFieldVersion>
+    DateFieldOwnerState<TDate, TEnableAccessibleFieldDOMStructure>
   >;
 }

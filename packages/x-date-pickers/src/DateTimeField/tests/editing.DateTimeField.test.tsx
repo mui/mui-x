@@ -27,7 +27,7 @@ describe('<DateTimeField /> - Editing', () => {
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const v7Response = renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         format: adapterToUse.formats.month,
@@ -46,7 +46,7 @@ describe('<DateTimeField /> - Editing', () => {
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const v7Response = renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         value,
@@ -66,7 +66,7 @@ describe('<DateTimeField /> - Editing', () => {
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const v7Response = renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         defaultValue,
@@ -85,7 +85,7 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.month,
         });
@@ -100,7 +100,7 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.dayOfMonth,
         });
@@ -115,7 +115,7 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.fullTime24h,
         });
@@ -139,7 +139,7 @@ describe('<DateTimeField /> - Editing', () => {
         const minDate = adapterToUse.date('2030-05-05T18:30:00');
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           minDate,
           format: adapterToUse.formats.month,
@@ -157,7 +157,7 @@ describe('<DateTimeField /> - Editing', () => {
         const minDate = adapterToUse.date('2007-05-05T18:30:00');
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           minDate,
           format: adapterToUse.formats.month,
@@ -175,7 +175,7 @@ describe('<DateTimeField /> - Editing', () => {
         const maxDate = adapterToUse.date('2007-05-05T18:30:00');
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           maxDate,
           format: adapterToUse.formats.month,
@@ -193,7 +193,7 @@ describe('<DateTimeField /> - Editing', () => {
         const maxDate = adapterToUse.date('2030-05-05T18:30:00');
 
         const v7Response = renderWithProps({
-          textFieldVersion: 'v7',
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           maxDate,
           format: adapterToUse.formats.month,
@@ -209,7 +209,11 @@ describe('<DateTimeField /> - Editing', () => {
   });
 
   it('should correctly update `value` when both `format` and `value` are changed', () => {
-    const v7Response = renderWithProps({ textFieldVersion: 'v7', value: null, format: 'P' });
+    const v7Response = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      value: null,
+      format: 'P',
+    });
     expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
 
     v7Response.setProps({

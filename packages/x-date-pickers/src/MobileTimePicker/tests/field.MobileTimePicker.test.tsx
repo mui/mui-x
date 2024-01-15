@@ -15,7 +15,7 @@ describe('<MobileTimePicker /> - Field', () => {
 
   it('should pass the ampm prop to the field', () => {
     const v7Response = renderWithProps(
-      { textFieldVersion: 'v7' as const, ampm: true },
+      { enableAccessibleFieldDOMStructure: true as const, ampm: true },
       { componentFamily: 'picker' },
     );
 

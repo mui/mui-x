@@ -18,7 +18,7 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'selectedSections',
   'onSelectedSectionsChange',
   'unstableFieldRef',
-  'textFieldVersion',
+  'enableAccessibleFieldDOMStructure',
   'disabled',
   'readOnly',
 ] as const;

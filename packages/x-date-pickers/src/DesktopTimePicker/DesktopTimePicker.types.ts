@@ -16,7 +16,7 @@ import {
   MultiSectionDigitalClockSlots,
   MultiSectionDigitalClockSlotProps,
 } from '../MultiSectionDigitalClock';
-import { FieldTextFieldVersion, TimeView } from '../models';
+import { TimeView } from '../models';
 
 export interface DesktopTimePickerSlots<TDate>
   extends BaseTimePickerSlots<TDate>,
@@ -24,15 +24,21 @@ export interface DesktopTimePickerSlots<TDate>
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
-export interface DesktopTimePickerSlotProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
-  extends BaseTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TDate, TimeViewWithMeridiem, TTextFieldVersion>,
+export interface DesktopTimePickerSlotProps<
+  TDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseTimePickerSlotProps,
+    ExportedUseDesktopPickerSlotProps<
+      TDate,
+      TimeViewWithMeridiem,
+      TEnableAccessibleFieldDOMStructure
+    >,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 
 export interface DesktopTimePickerProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseTimePickerProps<TDate, TimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate> {
@@ -49,5 +55,5 @@ export interface DesktopTimePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopTimePickerSlotProps<TDate, TTextFieldVersion>;
+  slotProps?: DesktopTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

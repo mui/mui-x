@@ -30,22 +30,26 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
   describe('Controlled / uncontrolled value', () => {
     it('should render `props.defaultValue` if no `props.value` is passed', () => {
-      renderWithProps({ textFieldVersion: 'v7', defaultValue: values[0] });
+      renderWithProps({ enableAccessibleFieldDOMStructure: true, defaultValue: values[0] });
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if passed', () => {
-      renderWithProps({ textFieldVersion: 'v7', value: values[0] });
+      renderWithProps({ enableAccessibleFieldDOMStructure: true, value: values[0] });
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if both `props.defaultValue` and `props.value` are passed', () => {
-      renderWithProps({ textFieldVersion: 'v7', defaultValue: values[0], value: values[1] });
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        defaultValue: values[0],
+        value: values[1],
+      });
       assertRenderedValue(values[1]);
     });
 
     it('should render nothing if neither `props.defaultValue` or `props.value` are passed', () => {
-      renderWithProps({ textFieldVersion: 'v7' });
+      renderWithProps({ enableAccessibleFieldDOMStructure: true });
       assertRenderedValue(emptyValue);
     });
 
@@ -53,7 +57,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       const onChange = spy();
 
       const v7Response = renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         defaultValue: values[0],
         onChange,
       });
@@ -90,7 +94,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       };
 
       const v7Response = renderWithProps(
-        { textFieldVersion: 'v7', value: values[0], onChange },
+        { enableAccessibleFieldDOMStructure: true, value: values[0], onChange },
         { hook: useControlledElement },
       );
       const newValue = setNewValue(values[0], {
@@ -109,7 +113,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should react to `props.value` update', () => {
-      const v7Response = renderWithProps({ textFieldVersion: 'v7', value: values[0] });
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        value: values[0],
+      });
       v7Response.setProps({ value: values[1] });
       assertRenderedValue(values[1]);
     });
@@ -119,7 +126,11 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return;
       }
 
-      renderWithProps({ textFieldVersion: 'v7', value: values[0], disabled: true });
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        value: values[0],
+        disabled: true,
+      });
 
       getAllFieldInputRoot().forEach((fieldRoot) => {
         expect(fieldRoot).to.have.class('Mui-disabled');
@@ -131,7 +142,11 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return;
       }
 
-      renderWithProps({ textFieldVersion: 'v7', value: values[0], readOnly: true });
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        value: values[0],
+        readOnly: true,
+      });
 
       getAllFieldInputRoot().forEach((fieldInputRoot) => {
         expect(fieldInputRoot).to.have.class('Mui-readOnly');
@@ -145,7 +160,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       const handleChange = spy();
 
-      const v7Response = renderWithProps({ textFieldVersion: 'v7', onChange: handleChange });
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        onChange: handleChange,
+      });
       v7Response.selectSection(undefined);
       userEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
       expect(handleChange.callCount).to.equal(0);
@@ -160,7 +178,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       }
 
       renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         open: true,
         slotProps: { toolbar: { hidden: false } },
         localeText: { toolbarTitle: 'Test toolbar' },
@@ -178,7 +196,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       }
 
       renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         open: true,
         slotProps: { toolbar: { hidden: true } },
         ...(params.type === 'date-range'
@@ -209,7 +227,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         <div>
           <div id="label-id">external label</div>
           <ElementToTest
-            textFieldVersion="v7"
+            enableAccessibleFieldDOMStructure
             open
             {...(params.type === 'date-range' && {
               localeText: {
@@ -235,7 +253,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           return;
         }
 
-        renderWithProps({ textFieldVersion: 'v7', slotProps: { textField: { error: true } } });
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          slotProps: { textField: { error: true } },
+        });
 
         const fieldRoot = getFieldInputRoot();
         expect(fieldRoot).to.have.class(inputBaseClasses.error);

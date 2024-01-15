@@ -2,12 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createRenderer, screen, userEvent, act, fireEvent } from '@mui-internal/test-utils';
-import {
-  FieldRef,
-  FieldSection,
-  FieldSectionType,
-  FieldTextFieldVersion,
-} from '@mui/x-date-pickers/models';
+import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
@@ -33,7 +28,7 @@ export type FieldPressCharacter = (
 
 export interface BuildFieldInteractionsResponse<P extends {}> {
   renderWithProps: (
-    props: P & { textFieldVersion: FieldTextFieldVersion },
+    props: P & { enableAccessibleFieldDOMStructure: boolean },
     config?: {
       hook?: (props: P) => Record<string, any>;
       componentFamily?: 'picker' | 'field';
@@ -139,7 +134,7 @@ export const buildFieldInteractions = <P extends {}>({
     const result = render(<WrappedComponent {...(props as any)} />);
 
     const getSectionsContainer = () => {
-      if (props.textFieldVersion === 'v6') {
+      if (!props.enableAccessibleFieldDOMStructure) {
         throw new Error('Cannot use fake input with v6 TextField');
       }
 
@@ -168,13 +163,13 @@ export const buildFieldInteractions = <P extends {}>({
 
       act(() => {
         fieldRef.current!.setSelectedSections(sectionIndexToSelect);
-        if (props.textFieldVersion === 'v6') {
+        if (!props.enableAccessibleFieldDOMStructure) {
           getTextbox().focus();
         }
       });
 
       act(() => {
-        if (props.textFieldVersion === 'v7') {
+        if (props.enableAccessibleFieldDOMStructure) {
           getSection(sectionIndexToSelect).focus();
         }
       });
@@ -195,7 +190,7 @@ export const buildFieldInteractions = <P extends {}>({
     };
 
     const pressKey: FieldPressCharacter = (sectionIndex, key) => {
-      if (props.textFieldVersion === 'v6') {
+      if (!props.enableAccessibleFieldDOMStructure) {
         throw new Error('`pressKey` is only available with v7 TextField');
       }
 
@@ -239,14 +234,20 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     // Test with v7 input
-    const v7Response = renderWithProps({ ...props, textFieldVersion: 'v7' } as any);
+    const v7Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: true,
+    } as any);
     v7Response.selectSection(selectedSection);
     v7Response.pressKey(undefined, key);
     expectFieldValueV7(v7Response.getSectionsContainer(), expectedValue);
     v7Response.unmount();
 
     // Test with v6 input
-    const v6Response = renderWithProps({ ...props, textFieldVersion: 'v6' } as any);
+    const v6Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: false,
+    } as any);
     v6Response.selectSection(selectedSection);
     const input = getTextbox();
     userEvent.keyPress(input, { key });
@@ -262,7 +263,10 @@ export const buildFieldInteractions = <P extends {}>({
   }) => {
     if (!skipV7) {
       // Test with v7 input
-      const v7Response = renderWithProps({ ...props, textFieldVersion: 'v7' } as any);
+      const v7Response = renderWithProps({
+        ...props,
+        enableAccessibleFieldDOMStructure: true,
+      } as any);
       v7Response.selectSection(selectedSection);
       keyStrokes.forEach((keyStroke) => {
         v7Response.pressKey(undefined, keyStroke.value);
@@ -276,7 +280,10 @@ export const buildFieldInteractions = <P extends {}>({
     }
 
     // Test with v6 input
-    const v6Response = renderWithProps({ ...props, textFieldVersion: 'v6' } as any);
+    const v6Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: false,
+    } as any);
     v6Response.selectSection(selectedSection);
     const input = getTextbox();
 

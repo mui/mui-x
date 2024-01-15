@@ -9,19 +9,31 @@ import {
   MobileDateTimePickerSlots,
   MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
-import { FieldTextFieldVersion } from '../models';
 
 export interface DateTimePickerSlots<TDate>
   extends DesktopDateTimePickerSlots<TDate>,
     MobileDateTimePickerSlots<TDate, DateOrTimeViewWithMeridiem> {}
 
-export interface DateTimePickerSlotProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
-  extends DesktopDateTimePickerSlotProps<TDate, TTextFieldVersion>,
-    MobileDateTimePickerSlotProps<TDate, DateOrTimeViewWithMeridiem, TTextFieldVersion> {}
+export interface DateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure extends boolean>
+  extends DesktopDateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    MobileDateTimePickerSlotProps<
+      TDate,
+      DateOrTimeViewWithMeridiem,
+      TEnableAccessibleFieldDOMStructure
+    > {}
 
-export interface DateTimePickerProps<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>
-  extends DesktopDateTimePickerProps<TDate, TTextFieldVersion>,
-    Omit<MobileDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem, TTextFieldVersion>, 'views'> {
+export interface DateTimePickerProps<
+  TDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    Omit<
+      MobileDateTimePickerProps<
+        TDate,
+        DateOrTimeViewWithMeridiem,
+        TEnableAccessibleFieldDOMStructure
+      >,
+      'views'
+    > {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -42,5 +54,5 @@ export interface DateTimePickerProps<TDate, TTextFieldVersion extends FieldTextF
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimePickerSlotProps<TDate, TTextFieldVersion>;
+  slotProps?: DateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

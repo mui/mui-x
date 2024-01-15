@@ -7,7 +7,7 @@ import { UseFieldTextField, UseFieldTextFieldInteractions } from './useField.typ
 import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 
-export const useFieldV7TextField: UseFieldTextField<'v7'> = (params) => {
+export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
     internalProps: { disabled, readOnly = false },
     forwardedProps: {
@@ -448,7 +448,7 @@ export const useFieldV7TextField: UseFieldTextField<'v7'> = (params) => {
           'MUI: The `sectionListRef` prop has not been initialized by `PickersSectionList`',
           'You probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.',
           '',
-          'If you want to keep using an `<input />` HTML element for the editing, please remove the `textFieldVersion="v7"` from your picker or field component:',
+          'If you want to keep using an `<input />` HTML element for the editing, please remove the `enableAccessibleFieldDOMStructure` from your picker or field component:',
           '',
           '<DatePicker slots={{ textField: MyCustomTextField }} />',
           '',
@@ -478,7 +478,7 @@ export const useFieldV7TextField: UseFieldTextField<'v7'> = (params) => {
       onPaste: handleContainerPaste,
 
       // Additional
-      textFieldVersion: 'v7' as const,
+      enableAccessibleFieldDOMStructure: true,
       elements,
       // TODO v7: Try to set to undefined when there is a section selected.
       tabIndex: 0,

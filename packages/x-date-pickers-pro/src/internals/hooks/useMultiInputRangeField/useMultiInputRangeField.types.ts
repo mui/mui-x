@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FieldRef, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { UseFieldResponse } from '@mui/x-date-pickers/internals';
 import { RangeFieldSection } from '../../../models';
 
@@ -15,9 +15,9 @@ export interface UseMultiInputRangeFieldParams<
 }
 
 export interface UseMultiInputRangeFieldResponse<
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends {},
 > {
-  startDate: UseFieldResponse<TTextFieldVersion, TForwardedProps>;
-  endDate: UseFieldResponse<TTextFieldVersion, TForwardedProps>;
+  startDate: UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
+  endDate: UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
 }

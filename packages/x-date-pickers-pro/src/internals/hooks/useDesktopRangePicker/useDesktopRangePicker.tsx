@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { FieldRef, FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   executeInTheNextEventLoopTick,
@@ -28,18 +28,23 @@ const releaseInfo = getReleaseInfo();
 export const useDesktopRangePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopRangePickerProps<
     TDate,
     TView,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,
 >({
   props,
   ...pickerParams
-}: UseDesktopRangePickerParams<TDate, TView, TTextFieldVersion, TExternalProps>) => {
+}: UseDesktopRangePickerParams<
+  TDate,
+  TView,
+  TEnableAccessibleFieldDOMStructure,
+  TExternalProps
+>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -49,7 +54,7 @@ export const useDesktopRangePicker = <
     sx,
     format,
     formatDensity,
-    textFieldVersion,
+    enableAccessibleFieldDOMStructure,
     selectedSections,
     onSelectedSectionsChange,
     timezone,
@@ -127,7 +132,7 @@ export const useDesktopRangePicker = <
       sx,
       format,
       formatDensity,
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
@@ -140,14 +145,14 @@ export const useDesktopRangePicker = <
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >;
 
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,
     TView,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
     wrapperVariant: 'desktop',

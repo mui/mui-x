@@ -9,7 +9,6 @@ import {
   FieldValueType,
   PickersTimezone,
   FieldRef,
-  FieldTextFieldVersion,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
@@ -21,9 +20,16 @@ export interface UseFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TTextFieldVersion extends FieldTextFieldVersion,
-  TForwardedProps extends UseFieldCommonForwardedProps & UseFieldForwardedProps<TTextFieldVersion>,
-  TInternalProps extends UseFieldInternalProps<any, any, any, TTextFieldVersion, any>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps &
+    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+  TInternalProps extends UseFieldInternalProps<
+    any,
+    any,
+    any,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  >,
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
@@ -42,7 +48,7 @@ export interface UseFieldInternalProps<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends TimezoneProps {
   /**
@@ -129,7 +135,7 @@ export interface UseFieldInternalProps<
   /**
    * @default 'v6'
    */
-  textFieldVersion?: TTextFieldVersion;
+  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
   /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
@@ -159,9 +165,11 @@ export interface UseFieldCommonForwardedProps {
   clearable?: boolean;
 }
 
-export type UseFieldForwardedProps<TTextFieldVersion extends FieldTextFieldVersion> =
+export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends boolean> =
   UseFieldCommonForwardedProps &
-    (TTextFieldVersion extends 'v6' ? UseFieldV6ForwardedProps : UseFieldV7ForwardedProps);
+    (TEnableAccessibleFieldDOMStructure extends false
+      ? UseFieldV6ForwardedProps
+      : UseFieldV7ForwardedProps);
 
 export interface UseFieldV6ForwardedProps {
   inputRef?: React.Ref<HTMLInputElement>;
@@ -178,7 +186,7 @@ interface UseFieldV6AdditionalProps
       'inputMode' | 'placeholder' | 'value' | 'onChange' | 'autoComplete'
     >
   > {
-  textFieldVersion: 'v6';
+  enableAccessibleFieldDOMStructure: false;
 }
 
 export interface UseFieldV7ForwardedProps {
@@ -193,7 +201,7 @@ export interface UseFieldV7ForwardedProps {
 }
 
 interface UseFieldV7AdditionalProps {
-  textFieldVersion: 'v7';
+  enableAccessibleFieldDOMStructure: true;
   elements: PickersSectionElement[];
   tabIndex: number | undefined;
   contentEditable: boolean;
@@ -203,12 +211,12 @@ interface UseFieldV7AdditionalProps {
 }
 
 export type UseFieldResponse<
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldCommonForwardedProps & { [key: string]: any },
 > = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
   Required<UseFieldCommonForwardedProps> &
   UseFieldCommonAdditionalProps &
-  (TTextFieldVersion extends 'v6'
+  (TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
     : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>);
 
@@ -440,14 +448,20 @@ export interface UseFieldTextFieldInteractions {
   isFieldFocused: () => boolean;
 }
 
-export type UseFieldTextField<TTextFieldVersion extends FieldTextFieldVersion> = <
+export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean> = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TForwardedProps extends TTextFieldVersion extends 'v6'
+  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, TTextFieldVersion, any> & {
+  TInternalProps extends UseFieldInternalProps<
+    any,
+    any,
+    any,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  > & {
     minutesStep?: number;
   },
 >(
@@ -455,13 +469,13 @@ export type UseFieldTextField<TTextFieldVersion extends FieldTextFieldVersion> =
     TValue,
     TDate,
     TSection,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
   >,
 ) => {
   interactions: UseFieldTextFieldInteractions;
-  returnedValue: TTextFieldVersion extends 'v6'
+  returnedValue: TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
     : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>;
 };
@@ -470,16 +484,22 @@ interface UseFieldTextFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TTextFieldVersion extends FieldTextFieldVersion,
-  TForwardedProps extends TTextFieldVersion extends 'v6'
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, TTextFieldVersion, any>,
+  TInternalProps extends UseFieldInternalProps<
+    any,
+    any,
+    any,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  >,
 > extends UseFieldParams<
       TValue,
       TDate,
       TSection,
-      TTextFieldVersion,
+      TEnableAccessibleFieldDOMStructure,
       TForwardedProps,
       TInternalProps
     >,

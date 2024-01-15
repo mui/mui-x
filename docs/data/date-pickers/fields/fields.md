@@ -52,12 +52,12 @@ but the `<input />` approach will be removed in 2025.
 
 #### How to enable the v7 DOM structure?
 
-You can enable the v7 DOM structure on any field or picker component using the `textFieldVersion` prop:
+You can enable the v7 DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop:
 
 ```tsx
-<DateField textFieldVersion="v7" />
-<DatePicker textFieldVersion="v7" />
-<DateRangePicker textFieldVersion="v7" />
+<DateField enableAccessibleFieldDOMStructure />
+<DatePicker enableAccessibleFieldDOMStructure />
+<DateRangePicker enableAccessibleFieldDOMStructure />
 ```
 
 #### Usage with `slotProps.field`
@@ -73,7 +73,7 @@ the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards th
   ```js
   <DatePicker
     slotProps={{ field: { size: 'small' } }}
-    textFieldVersion="v7"
+    enableAccessibleFieldDOMStructure
   />
   <DatePicker
     slotProps={{ field: { size: 'small' } }}
@@ -87,7 +87,7 @@ the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards th
   ```js
   <DatePicker
     slotProps={{ field: { shouldRespectLeadingZeros: true } }}
-    textFieldVersion="v7"
+    enableAccessibleFieldDOMStructure
   />
   <DatePicker
     slotProps={{ field: { shouldRespectLeadingZeros: true } }}
@@ -104,7 +104,7 @@ Both components below will render a small size UI:
 ```js
 <DatePicker
   slotProps={{ textField: { size: 'small' } }}
-  textFieldVersion="v7"
+  enableAccessibleFieldDOMStructure
 />
 <DatePicker
   slotProps={{ textField: { size: 'small' } }}

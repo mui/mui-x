@@ -9,7 +9,7 @@ import {
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView, FieldTextFieldVersion } from '../models';
+import { DateOrTimeView } from '../models';
 import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
@@ -29,15 +29,19 @@ export interface DesktopDateTimePickerSlots<TDate>
 
 export interface DesktopDateTimePickerSlotProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
 > extends BaseDateTimePickerSlotProps<TDate>,
-    ExportedUseDesktopPickerSlotProps<TDate, DateOrTimeViewWithMeridiem, TTextFieldVersion>,
+    ExportedUseDesktopPickerSlotProps<
+      TDate,
+      DateOrTimeViewWithMeridiem,
+      TEnableAccessibleFieldDOMStructure
+    >,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 
 export interface DesktopDateTimePickerProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate> {
@@ -59,5 +63,5 @@ export interface DesktopDateTimePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimePickerSlotProps<TDate, TTextFieldVersion>;
+  slotProps?: DesktopDateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

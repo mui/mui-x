@@ -49,7 +49,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       referenceDate: adapterToUse.date('2018-03-12'),
       open: true,
       ...(componentFamily === 'field' || componentFamily === 'picker'
-        ? { textFieldVersion: 'v7' }
+        ? { enableAccessibleFieldDOMStructure: true }
         : {}),
     };
 

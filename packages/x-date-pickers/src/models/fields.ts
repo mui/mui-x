@@ -26,8 +26,6 @@ export type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
 
 export type FieldValueType = 'date' | 'time' | 'date-time';
 
-export type FieldTextFieldVersion = 'v6' | 'v7';
-
 export interface FieldSection {
   /**
    * Value of the section, as rendered inside the input.
@@ -152,9 +150,9 @@ interface BaseForwardedV7SingleInputFieldProps {
   sectionListRef?: React.Ref<PickersSectionListRef>;
 }
 
-type BaseForwardedSingleInputFieldProps<TTextFieldVersion extends FieldTextFieldVersion> =
+type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
   BaseForwardedCommonSingleInputFieldProps &
-    (TTextFieldVersion extends 'v6'
+    (TEnableAccessibleFieldDOMStructure extends false
       ? BaseForwardedV6SingleInputFieldProps
       : BaseForwardedV7SingleInputFieldProps);
 
@@ -167,25 +165,29 @@ export type BaseSingleInputFieldProps<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> = BaseFieldProps<TValue, TDate, TSection, TTextFieldVersion, TError> &
-  BaseForwardedSingleInputFieldProps<TTextFieldVersion>;
+> = BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError> &
+  BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 /**
  * Props the text field receives when used with a single input picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
  */
-export type BaseSingleInputPickersTextFieldProps<TTextFieldVersion extends FieldTextFieldVersion> =
-  UseClearableFieldResponse<
-    UseFieldResponse<TTextFieldVersion, BaseForwardedSingleInputFieldProps<TTextFieldVersion>>
-  >;
+export type BaseSingleInputPickersTextFieldProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> = UseClearableFieldResponse<
+  UseFieldResponse<
+    TEnableAccessibleFieldDOMStructure,
+    BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>
+  >
+>;
 
 /**
  * Props the built-in text field component can receive.
  */
-export type BuiltInFieldTextFieldProps<TTextFieldVersion extends FieldTextFieldVersion> =
-  TTextFieldVersion extends 'v6'
+export type BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  TEnableAccessibleFieldDOMStructure extends false
     ? Omit<
         TextFieldProps,
         | 'autoComplete'

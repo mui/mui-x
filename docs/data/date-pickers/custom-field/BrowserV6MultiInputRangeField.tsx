@@ -18,7 +18,6 @@ import {
   UseDateRangeFieldProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-  FieldTextFieldVersion,
 } from '@mui/x-date-pickers-pro';
 
 interface BrowserFieldProps
@@ -34,7 +33,7 @@ interface BrowserFieldProps
   focused?: boolean;
   ownerState?: any;
   sx?: any;
-  textFieldVersion: FieldTextFieldVersion;
+  enableAccessibleFieldDOMStructure: boolean;
 }
 
 type BrowserFieldComponent = ((
@@ -45,7 +44,7 @@ const BrowserField = React.forwardRef(
   (props: BrowserFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       // Should be ignored
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
 
       disabled,
       id,
@@ -77,12 +76,12 @@ const BrowserField = React.forwardRef(
 ) as BrowserFieldComponent;
 
 interface BrowserMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs, 'v6'>,
+  extends UseDateRangeFieldProps<Dayjs, false>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      'v6',
+      false,
       DateRangeValidationError
     > {}
 
@@ -127,7 +126,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useMultiInputDateRangeField<
       Dayjs,
-      'v6',
+      false,
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
@@ -145,7 +144,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
-        textFieldVersion: 'v6',
+        enableAccessibleFieldDOMStructure: false,
       },
       startTextFieldProps,
       endTextFieldProps,
@@ -170,7 +169,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 ) as BrowserMultiInputDateRangeFieldComponent;
 
 const BrowserDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, 'v6'>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DateRangePicker
         ref={ref}

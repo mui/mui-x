@@ -10,7 +10,7 @@ import {
   UsePickerViewsNonStaticProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -31,10 +31,10 @@ export interface UseDesktopRangePickerSlots<TDate, TView extends DateOrTimeViewW
 export interface UseDesktopRangePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersPopperSlotProps,
     ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotProps<TDate, TTextFieldVersion> {
+    RangePickerFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -54,7 +54,7 @@ export interface DesktopRangeOnlyPickerProps
 export interface UseDesktopRangePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends DesktopRangeOnlyPickerProps,
@@ -75,7 +75,7 @@ export interface UseDesktopRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView, TTextFieldVersion>;
+  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps
@@ -84,11 +84,11 @@ export interface DesktopRangePickerAdditionalViewProps
 export interface UseDesktopRangePickerParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopRangePickerProps<
     TDate,
     TView,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,

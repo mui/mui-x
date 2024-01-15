@@ -18,10 +18,7 @@ import {
   UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import {
-  BaseSingleInputFieldProps,
-  FieldTextFieldVersion,
-} from '@mui/x-date-pickers/models';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import {
   DateRangeValidationError,
   RangeFieldSection,
@@ -41,7 +38,7 @@ interface BrowserFieldProps
   focused?: boolean;
   ownerState?: any;
   sx?: any;
-  textFieldVersion: FieldTextFieldVersion;
+  enableAccessibleFieldDOMStructure: boolean;
 }
 
 type BrowserFieldComponent = ((
@@ -52,7 +49,7 @@ const BrowserField = React.forwardRef(
   (props: BrowserFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       // Should be ignored
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
 
       disabled,
       id,
@@ -84,12 +81,12 @@ const BrowserField = React.forwardRef(
 ) as BrowserFieldComponent;
 
 interface BrowserSingleInputDateRangeFieldProps
-  extends UseSingleInputDateRangeFieldProps<Dayjs, 'v6'>,
+  extends UseSingleInputDateRangeFieldProps<Dayjs, false>,
     BaseSingleInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      'v6',
+      false,
       DateRangeValidationError
     > {
   onAdornmentClick?: () => void;
@@ -103,14 +100,13 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
   (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
 
-    const textFieldProps: SingleInputDateRangeFieldProps<Dayjs, 'v6'> = useSlotProps(
-      {
+    const textFieldProps: SingleInputDateRangeFieldProps<Dayjs, false> =
+      useSlotProps({
         elementType: 'input',
         externalSlotProps: slotProps?.textField,
         externalForwardedProps: other,
         ownerState: props as any,
-      },
-    );
+      });
 
     textFieldProps.InputProps = {
       ...textFieldProps.InputProps,
@@ -125,9 +121,9 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useSingleInputDateRangeField<
       Dayjs,
-      'v6',
+      false,
       typeof textFieldProps
-    >({ ...textFieldProps, textFieldVersion: 'v6' });
+    >({ ...textFieldProps, enableAccessibleFieldDOMStructure: false });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({

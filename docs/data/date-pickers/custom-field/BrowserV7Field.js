@@ -28,7 +28,7 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 const BrowserTextField = React.forwardRef((props, ref) => {
   const {
     // Should be ignored
-    textFieldVersion,
+    enableAccessibleFieldDOMStructure,
     // Should be passed to the PickersSectionList component
     elements,
     sectionListRef,
@@ -83,7 +83,7 @@ const BrowserDateField = React.forwardRef((props, ref) => {
 
   const fieldResponse = useDateField({
     ...textFieldProps,
-    textFieldVersion: 'v7',
+    enableAccessibleFieldDOMStructure: true,
   });
 
   /* If you don't need a clear button, you can skip the use of this hook */

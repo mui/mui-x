@@ -8,10 +8,10 @@ import { useDateTimeField } from './useDateTimeField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
-import { FieldTextFieldVersion } from '../models';
 
-type DateTimeFieldComponent = (<TDate, TTextFieldVersion extends FieldTextFieldVersion = 'v6'>(
-  props: DateTimeFieldProps<TDate, TTextFieldVersion> & React.RefAttributes<HTMLDivElement>,
+type DateTimeFieldComponent = (<TDate, TEnableAccessibleFieldDOMStructure extends boolean = false>(
+  props: DateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -26,8 +26,11 @@ type DateTimeFieldComponent = (<TDate, TTextFieldVersion extends FieldTextFieldV
  */
 const DateTimeField = React.forwardRef(function DateTimeField<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
->(inProps: DateTimeFieldProps<TDate, TTextFieldVersion>, inRef: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: DateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inRef: React.Ref<HTMLDivElement>,
+) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiDateTimeField',
@@ -38,7 +41,8 @@ const DateTimeField = React.forwardRef(function DateTimeField<
   const ownerState = themeProps;
 
   const TextField =
-    slots?.textField ?? (inProps.textFieldVersion === 'v7' ? PickersTextField : MuiTextField);
+    slots?.textField ??
+    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
   const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
@@ -47,15 +51,17 @@ const DateTimeField = React.forwardRef(function DateTimeField<
     additionalProps: {
       ref: inRef,
     },
-  }) as DateTimeFieldProps<TDate, TTextFieldVersion>;
+  }) as DateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const fieldResponse = useDateTimeField<TDate, TTextFieldVersion, typeof textFieldProps>(
-    textFieldProps,
-  );
+  const fieldResponse = useDateTimeField<
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    typeof textFieldProps
+  >(textFieldProps);
   const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
@@ -116,6 +122,10 @@ DateTimeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @default 'v6'
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * If `true`, the component is displayed in focused state.
    */
@@ -346,10 +356,6 @@ DateTimeField.propTypes = {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.any,
-  /**
-   * @default 'v6'
-   */
-  textFieldVersion: PropTypes.oneOf(['v6', 'v7']),
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".

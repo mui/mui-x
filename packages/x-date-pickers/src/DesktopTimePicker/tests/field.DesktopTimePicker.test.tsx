@@ -17,7 +17,7 @@ describe('<DesktopTimePicker /> - Field', () => {
 
   it('should pass the ampm prop to the field', () => {
     const v7Response = renderWithProps(
-      { textFieldVersion: 'v7' as const, ampm: true },
+      { enableAccessibleFieldDOMStructure: true as const, ampm: true },
       { componentFamily: 'picker' },
     );
 
@@ -31,7 +31,7 @@ describe('<DesktopTimePicker /> - Field', () => {
     const testFormat = (props: DesktopTimePickerProps<any, any>, expectedFormat: string) => {
       // Test with v7 input
       const v7Response = renderWithProps(
-        { ...props, textFieldVersion: 'v7' as const },
+        { ...props, enableAccessibleFieldDOMStructure: true as const },
         { componentFamily: 'picker' },
       );
       expectFieldValueV7(v7Response.getSectionsContainer(), expectedFormat);
@@ -39,7 +39,7 @@ describe('<DesktopTimePicker /> - Field', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps(
-        { ...props, textFieldVersion: 'v6' as const },
+        { ...props, enableAccessibleFieldDOMStructure: false as const },
         { componentFamily: 'picker' },
       );
       const input = getTextbox();

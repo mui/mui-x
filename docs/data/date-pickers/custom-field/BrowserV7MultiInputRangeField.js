@@ -31,7 +31,7 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 const BrowserTextField = React.forwardRef((props, ref) => {
   const {
     // Should be ignored
-    textFieldVersion,
+    enableAccessibleFieldDOMStructure,
     // Should be passed to the PickersSectionList component
     elements,
     sectionListRef,
@@ -131,7 +131,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      textFieldVersion: 'v7',
+      enableAccessibleFieldDOMStructure: true,
     },
     startTextFieldProps,
     endTextFieldProps,

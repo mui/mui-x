@@ -34,17 +34,17 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BaseSingleInputPickersTextFieldProps<'v7'>,
+  extends BaseSingleInputPickersTextFieldProps<true>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseSingleInputPickersTextFieldProps<'v7'>
+      keyof BaseSingleInputPickersTextFieldProps<true>
     > {}
 
 const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
     const {
       // Should be ignored
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
 
       // Should be passed to the PickersSectionList component
       elements,
@@ -102,12 +102,12 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserDateFieldProps
-  extends UseDateFieldProps<Dayjs, 'v7'>,
+  extends UseDateFieldProps<Dayjs, true>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
-      'v7',
+      true,
       DateValidationError
     > {}
 
@@ -115,9 +115,9 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, 'v7', typeof textFieldProps>({
+    const fieldResponse = useDateField<Dayjs, true, typeof textFieldProps>({
       ...textFieldProps,
-      textFieldVersion: 'v7',
+      enableAccessibleFieldDOMStructure: true,
     });
 
     /* If you don't need a clear button, you can skip the use of this hook */

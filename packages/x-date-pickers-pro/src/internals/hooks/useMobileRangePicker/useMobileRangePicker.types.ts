@@ -10,7 +10,7 @@ import {
   UsePickerViewsNonStaticProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
+
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -31,10 +31,10 @@ export interface UseMobileRangePickerSlots<TDate, TView extends DateOrTimeViewWi
 export interface UseMobileRangePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotProps<TDate, TTextFieldVersion> {
+    RangePickerFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -48,7 +48,7 @@ export interface MobileRangeOnlyPickerProps
 export interface UseMobileRangePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends MobileRangeOnlyPickerProps,
@@ -69,7 +69,7 @@ export interface UseMobileRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobileRangePickerSlotProps<TDate, TView, TTextFieldVersion>;
+  slotProps?: UseMobileRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface MobileRangePickerAdditionalViewProps
@@ -78,11 +78,11 @@ export interface MobileRangePickerAdditionalViewProps
 export interface UseMobileRangePickerParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseMobileRangePickerProps<
     TDate,
     TView,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,

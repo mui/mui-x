@@ -29,7 +29,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     views: ['day'],
   }));
 
-  describeConformance(<DesktopDateRangePicker textFieldVersion="v7" />, () => ({
+  describeConformance(<DesktopDateRangePicker enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiDesktopDateRangePicker',

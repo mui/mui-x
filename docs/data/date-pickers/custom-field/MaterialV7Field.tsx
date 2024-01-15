@@ -9,8 +9,8 @@ export default function MaterialV7Field() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateField', 'DatePicker']}>
-        <DateField textFieldVersion="v7" />
-        <DatePicker textFieldVersion="v7" />
+        <DateField enableAccessibleFieldDOMStructure />
+        <DatePicker enableAccessibleFieldDOMStructure />
       </DemoContainer>
     </LocalizationProvider>
   );

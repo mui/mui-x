@@ -17,7 +17,7 @@ import {
 import { adjustSectionValue, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
-import { FieldSection, FieldTextFieldVersion } from '../../../models';
+import { FieldSection } from '../../../models';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 
@@ -25,9 +25,16 @@ export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TTextFieldVersion extends FieldTextFieldVersion,
-  TForwardedProps extends UseFieldCommonForwardedProps & UseFieldForwardedProps<TTextFieldVersion>,
-  TInternalProps extends UseFieldInternalProps<any, any, any, TTextFieldVersion, any> & {
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps &
+    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+  TInternalProps extends UseFieldInternalProps<
+    any,
+    any,
+    any,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  > & {
     minutesStep?: number;
   },
 >(
@@ -35,11 +42,11 @@ export const useField = <
     TValue,
     TDate,
     TSection,
-    TTextFieldVersion,
+    TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
   >,
-): UseFieldResponse<TTextFieldVersion, TForwardedProps> => {
+): UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
   const utils = useUtils<TDate>();
 
   const {
@@ -47,7 +54,7 @@ export const useField = <
     internalProps: {
       unstableFieldRef,
       minutesStep,
-      textFieldVersion = 'v6',
+      enableAccessibleFieldDOMStructure = false,
       disabled = false,
       readOnly = false,
     },
@@ -93,12 +100,12 @@ export const useField = <
   );
 
   const useFieldTextField = (
-    textFieldVersion === 'v6' ? useFieldV6TextField : useFieldV7TextField
-  ) as UseFieldTextField<TTextFieldVersion>;
+    enableAccessibleFieldDOMStructure ? useFieldV7TextField : useFieldV6TextField
+  ) as UseFieldTextField<TEnableAccessibleFieldDOMStructure>;
 
   const sectionOrder = React.useMemo(
-    () => getSectionOrder(state.sections, isRTL && textFieldVersion === 'v6'),
-    [state.sections, isRTL, textFieldVersion],
+    () => getSectionOrder(state.sections, isRTL && !enableAccessibleFieldDOMStructure),
+    [state.sections, isRTL, enableAccessibleFieldDOMStructure],
   );
 
   const { returnedValue, interactions } = useFieldTextField({

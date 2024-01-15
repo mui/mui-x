@@ -31,7 +31,6 @@ import {
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
 } from '@mui/x-date-pickers-pro/models';
-import { FieldTextFieldVersion } from '@mui/x-date-pickers/models';
 import { UseDateRangeFieldProps, DateRange } from '@mui/x-date-pickers-pro';
 
 const joyTheme = extendJoyTheme();
@@ -39,7 +38,7 @@ const joyTheme = extendJoyTheme();
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
-  textFieldVersion?: FieldTextFieldVersion;
+  enableAccessibleFieldDOMStructure?: boolean;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -55,7 +54,7 @@ const JoyField = React.forwardRef(
   (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       // Should be ignored
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
 
       disabled,
       id,
@@ -132,12 +131,12 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 )({ marginTop: '25px' });
 
 interface JoyMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs, 'v6'>,
+  extends UseDateRangeFieldProps<Dayjs, false>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
-      'v6',
+      false,
       DateRangeValidationError
     > {}
 
@@ -180,7 +179,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useMultiInputDateRangeField<
       Dayjs,
-      'v6',
+      false,
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
@@ -198,7 +197,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
-        textFieldVersion: 'v6',
+        enableAccessibleFieldDOMStructure: false,
       },
       startTextFieldProps,
       endTextFieldProps,

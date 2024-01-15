@@ -11,12 +11,7 @@ import {
   PickersModalDialogSlotProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import {
-  BaseSingleInputFieldProps,
-  FieldSection,
-  FieldTextFieldVersion,
-  MuiPickersAdapter,
-} from '../../../models';
+import { BaseSingleInputFieldProps, FieldSection, MuiPickersAdapter } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -36,7 +31,7 @@ export interface UseMobilePickerSlots<TDate, TView extends DateOrTimeViewWithMer
   field: React.ElementType;
   /**
    * Form control with an input to render the value inside the default field.
-   * @default TextField from '@mui/material' or PickersTextField if textFieldVersion === 'v6' .
+   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
    */
   textField?: React.ElementType;
 }
@@ -44,11 +39,17 @@ export interface UseMobilePickerSlots<TDate, TView extends DateOrTimeViewWithMer
 export interface ExportedUseMobilePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, TTextFieldVersion, unknown>,
+    BaseSingleInputFieldProps<
+      TDate | null,
+      TDate,
+      FieldSection,
+      TEnableAccessibleFieldDOMStructure,
+      unknown
+    >,
     {},
     UsePickerProps<TDate | null, TDate, any, any, any, any>
   >;
@@ -58,8 +59,8 @@ export interface ExportedUseMobilePickerSlotProps<
 export interface UseMobilePickerSlotProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
-> extends ExportedUseMobilePickerSlotProps<TDate, TView, TTextFieldVersion>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends ExportedUseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps
@@ -71,7 +72,7 @@ export interface MobileOnlyPickerProps
 export interface UseMobilePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
@@ -85,14 +86,20 @@ export interface UseMobilePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobilePickerSlotProps<TDate, TView, TTextFieldVersion>;
+  slotProps?: UseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface UseMobilePickerParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TTextFieldVersion extends FieldTextFieldVersion,
-  TExternalProps extends UseMobilePickerProps<TDate, TView, TTextFieldVersion, any, TExternalProps>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseMobilePickerProps<
+    TDate,
+    TView,
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
     'valueManager' | 'valueType' | 'validator'

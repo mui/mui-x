@@ -26,7 +26,6 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
-  FieldTextFieldVersion,
 } from '@mui/x-date-pickers/models';
 
 const joyTheme = extendJoyTheme();
@@ -34,7 +33,7 @@ const joyTheme = extendJoyTheme();
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
-  textFieldVersion?: FieldTextFieldVersion;
+  enableAccessibleFieldDOMStructure?: boolean;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -51,7 +50,7 @@ const JoyField = React.forwardRef(
   (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       // Should be ignored
-      textFieldVersion,
+      enableAccessibleFieldDOMStructure,
 
       disabled,
       id,
@@ -101,12 +100,12 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs, 'v6'>,
+  extends UseDateFieldProps<Dayjs, false>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
-      'v6',
+      false,
       DateValidationError
     > {}
 
@@ -114,9 +113,9 @@ const JoyDateField = React.forwardRef(
   (props: JoyDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, 'v6', typeof textFieldProps>({
+    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
       ...textFieldProps,
-      textFieldVersion: 'v6',
+      enableAccessibleFieldDOMStructure: false,
     });
 
     /* If you don't need a clear button, you can skip the use of this hook */
@@ -131,7 +130,7 @@ const JoyDateField = React.forwardRef(
 );
 
 const JoyDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs, 'v6'>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DatePicker
         ref={ref}

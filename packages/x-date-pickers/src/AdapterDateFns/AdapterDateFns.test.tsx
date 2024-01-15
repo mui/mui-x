@@ -109,7 +109,7 @@ describe('<AdapterDateFns />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ textFieldVersion: 'v7' });
+          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
           expectFieldValueV7(
             v7Response.getSectionsContainer(),
@@ -119,7 +119,7 @@ describe('<AdapterDateFns />', () => {
 
         it('should have well formatted value', () => {
           const v7Response = renderWithProps({
-            textFieldVersion: 'v7',
+            enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 

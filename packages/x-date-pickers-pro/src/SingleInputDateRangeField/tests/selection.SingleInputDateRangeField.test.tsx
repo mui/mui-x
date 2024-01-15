@@ -22,14 +22,17 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   describe('Focus', () => {
     it('should select 1st section (v7) / all sections (v6) on mount focus (`autoFocus = true`)', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({ textFieldVersion: 'v7', autoFocus: true });
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        autoFocus: true,
+      });
       expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
       v7Response.unmount();
 
       // Test with v6 input
-      renderWithProps({ autoFocus: true, textFieldVersion: 'v6' });
+      renderWithProps({ autoFocus: true, enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       expectFieldValueV6(input, 'MM/DD/YYYY – MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY – MM/DD/YYYY');
@@ -37,7 +40,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
     it('should select all on <Tab> focus (v6 only)', () => {
       // Test with v6 input
-      renderWithProps({ textFieldVersion: 'v6' });
+      renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
@@ -55,7 +58,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     it('should select the clicked selection when the input is already focused', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         value: [null, adapterToUse.date('2022-02-24')],
       });
 
@@ -77,7 +80,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps({
-        textFieldVersion: 'v6',
+        enableAccessibleFieldDOMStructure: false,
         value: [null, adapterToUse.date('2022-02-24')],
       });
 
@@ -99,7 +102,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     it('should not change the selection when clicking on the only already selected section', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
-        textFieldVersion: 'v7',
+        enableAccessibleFieldDOMStructure: true,
         value: [null, adapterToUse.date('2022-02-24')],
       });
 
@@ -121,7 +124,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       // Test with v6 input
       const v6Response = renderWithProps({
-        textFieldVersion: 'v6',
+        enableAccessibleFieldDOMStructure: false,
         value: [null, adapterToUse.date('2022-02-24')],
       });
 
@@ -144,7 +147,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   describe('key: ArrowRight', () => {
     it('should allow to move from left to right with ArrowRight', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({ textFieldVersion: 'v7' });
+      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
       v7Response.selectSection('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
@@ -167,7 +170,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       v7Response.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({ textFieldVersion: 'v6' });
+      const v6Response = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
       v6Response.selectSection('month');
@@ -191,7 +194,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
     it('should stay on the current section when the last section is selected', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({ textFieldVersion: 'v7' });
+      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
       v7Response.selectSection('year', 'last');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
@@ -201,7 +204,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       v7Response.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({ textFieldVersion: 'v6' });
+      const v6Response = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
       v6Response.selectSection('year', 'last');
@@ -214,7 +217,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   describe('key: ArrowLeft', () => {
     it('should allow to move from right to left with ArrowLeft', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({ textFieldVersion: 'v7' });
+      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
       v7Response.selectSection('year', 'last');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
@@ -236,7 +239,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       v7Response.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({ textFieldVersion: 'v6' });
+      const v6Response = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
       v6Response.selectSection('year', 'last');
@@ -259,7 +262,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
     it('should stay on the current section when the first section is selected', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({ textFieldVersion: 'v7' });
+      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
       v7Response.selectSection('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
@@ -269,7 +272,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       v7Response.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({ textFieldVersion: 'v6' });
+      const v6Response = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
       v6Response.selectSection('month');

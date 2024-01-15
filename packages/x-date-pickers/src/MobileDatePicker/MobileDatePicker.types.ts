@@ -9,19 +9,21 @@ import {
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateView, FieldTextFieldVersion } from '../models';
+import { DateView } from '../models';
 
 export interface MobileDatePickerSlots<TDate>
   extends BaseDatePickerSlots<TDate>,
     MakeOptional<UseMobilePickerSlots<TDate, DateView>, 'field'> {}
 
-export interface MobileDatePickerSlotProps<TDate, TTextFieldVersion extends FieldTextFieldVersion>
-  extends BaseDatePickerSlotProps<TDate>,
-    ExportedUseMobilePickerSlotProps<TDate, DateView, TTextFieldVersion> {}
+export interface MobileDatePickerSlotProps<
+  TDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseDatePickerSlotProps<TDate>,
+    ExportedUseMobilePickerSlotProps<TDate, DateView, TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileDatePickerProps<
   TDate,
-  TTextFieldVersion extends FieldTextFieldVersion = 'v6',
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDatePickerProps<TDate>,
     MobileOnlyPickerProps {
   /**
@@ -33,5 +35,5 @@ export interface MobileDatePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDatePickerSlotProps<TDate, TTextFieldVersion>;
+  slotProps?: MobileDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }
