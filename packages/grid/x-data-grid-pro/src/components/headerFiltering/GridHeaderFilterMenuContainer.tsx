@@ -23,8 +23,17 @@ function GridHeaderFilterMenuContainer(props: {
   applyFilterChanges: (item: GridFilterItem) => void;
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
   buttonRef: React.Ref<HTMLButtonElement>;
+  disabled?: boolean;
 }) {
-  const { operators, item, field, buttonRef, headerFilterMenuRef, ...others } = props;
+  const {
+    operators,
+    item,
+    field,
+    buttonRef,
+    headerFilterMenuRef,
+    disabled = false,
+    ...others
+  } = props;
 
   const buttonId = useId();
   const menuId = useId();
@@ -58,6 +67,7 @@ function GridHeaderFilterMenuContainer(props: {
         size="small"
         onClick={handleClick}
         sx={sx}
+        disabled={disabled}
         {...rootProps.slotProps?.baseIconButton}
       >
         <rootProps.slots.openFilterButtonIcon fontSize="small" />
@@ -83,6 +93,7 @@ GridHeaderFilterMenuContainer.propTypes = {
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
   buttonRef: refType,
+  disabled: PropTypes.bool,
   field: PropTypes.string.isRequired,
   headerFilterMenuRef: PropTypes.shape({
     current: PropTypes.object,

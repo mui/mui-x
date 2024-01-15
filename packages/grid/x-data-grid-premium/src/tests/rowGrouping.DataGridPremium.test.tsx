@@ -164,7 +164,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
     });
 
-    it('should ignore grouping criteria with colDef.groupable = false', () => {
+    it('should respect the grouping criteria with colDef.groupable = false', () => {
       render(
         <Test
           columns={[
@@ -184,7 +184,19 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'Cat A (3)',
+        'Cat 1 (1)',
+        '',
+        'Cat 2 (2)',
+        '',
+        '',
+        'Cat B (2)',
+        'Cat 2 (1)',
+        '',
+        'Cat 1 (1)',
+        '',
+      ]);
     });
 
     it('should allow to use several time the same grouping criteria', () => {
@@ -1750,6 +1762,43 @@ describe('<DataGridPremium /> - Row grouping', () => {
       });
       fireEvent.click(menuItemCategory2);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal([]);
+    });
+
+    it('should add a "Stop grouping {field}" menu item for each grouping criteria with colDef.groupable = false but it should be disabled', () => {
+      render(
+        <Test
+          columns={[
+            {
+              field: 'id',
+            },
+            {
+              field: 'category1',
+              groupable: false,
+            },
+            {
+              field: 'category2',
+              groupable: false,
+            },
+          ]}
+          initialState={{
+            rowGrouping: {
+              model: ['category1', 'category2'],
+            },
+          }}
+        />,
+      );
+
+      act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group__'));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      const menuItemCategory1 = screen.getByRole('menuitem', {
+        name: 'Stop grouping by category1',
+      });
+      expect(menuItemCategory1).to.have.class('Mui-disabled');
+      const menuItemCategory2 = screen.getByRole('menuitem', {
+        name: 'Stop grouping by category2',
+      });
+      expect(menuItemCategory2).to.have.class('Mui-disabled');
     });
 
     it('should use the colDef.headerName property for grouping menu item label', () => {

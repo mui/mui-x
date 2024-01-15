@@ -274,6 +274,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableColumnSelector: PropTypes.bool,
   /**
+   * If `true`, the column sorting feature will be disabled.
+   * @default false
+   */
+  disableColumnSorting: PropTypes.bool,
+  /**
    * If `true`, the density selector is disabled.
    * @default false
    */
@@ -289,7 +294,7 @@ DataGridPremiumRaw.propTypes = {
    */
   disableMultipleColumnsFiltering: PropTypes.bool,
   /**
-   * If `true`, sorting with multiple columns is disabled.
+   * If `true`, the sorting with multiple columns is disabled.
    * @default false
    */
   disableMultipleColumnsSorting: PropTypes.bool,
