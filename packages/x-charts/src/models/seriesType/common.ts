@@ -1,5 +1,5 @@
 import type { HighlightScope } from '../../context/HighlightProvider';
-import type { StackOffsetType, StackOrderType } from '../../internals/stackSeries';
+import type { StackOffsetType, StackOrderType } from '../stacking';
 
 export type CommonSeriesType<TValue> = {
   id?: string;

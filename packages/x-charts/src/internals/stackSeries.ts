@@ -12,7 +12,8 @@ import {
   stackOffsetWiggle as d3StackOffsetWiggle,
   Series,
 } from 'd3-shape';
-import { BarSeriesType, LineSeriesType } from '../models/seriesType';
+import type { BarSeriesType, LineSeriesType } from '../models/seriesType';
+import type { StackOffsetType, StackOrderType } from '../models/stacking';
 
 type StackableSeries = { [id: string]: BarSeriesType } | { [id: string]: LineSeriesType };
 
@@ -30,14 +31,6 @@ export type StackingGroupsType = {
   stackingOrder: (series: Series<any, any>) => number[];
   stackingOffset: (series: Series<any, any>, order: Iterable<number>) => void;
 }[];
-export type StackOrderType =
-  | 'appearance'
-  | 'ascending'
-  | 'descending'
-  | 'insideOut'
-  | 'none'
-  | 'reverse';
-export type StackOffsetType = 'expand' | 'diverging' | 'none' | 'silhouette' | 'wiggle';
 
 export const StackOrder: {
   [key in StackOrderType]: (series: Series<any, any>) => number[];

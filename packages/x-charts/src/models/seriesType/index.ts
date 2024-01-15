@@ -31,7 +31,6 @@ export * from './line';
 export * from './bar';
 export * from './scatter';
 export * from './pie';
-export type { StackOffsetType, StackOrderType } from '../../internals/stackSeries';
 export type {
   AllSeriesType,
   CartesianSeriesType,

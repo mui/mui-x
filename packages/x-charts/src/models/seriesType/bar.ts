@@ -1,5 +1,5 @@
 import { DefaultizedProps } from '../helpers';
-import type { StackOffsetType } from '../../internals/stackSeries';
+import type { StackOffsetType } from '../stacking';
 import {
   CartesianSeriesType,
   CommonSeriesType,
