@@ -1753,7 +1753,7 @@ describe('<DateField /> - Editing', () => {
   );
 
   describeAdapters(
-    'Android editing (v6 textfield only)',
+    'Android editing (<input /> textfield DOM structure only)',
     DateField,
     ({ adapter, renderWithProps }) => {
       let originalUserAgent: string = '';

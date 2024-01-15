@@ -448,12 +448,11 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           'MUI: The `sectionListRef` prop has not been initialized by `PickersSectionList`',
           'You probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.',
           '',
-          'If you want to keep using an `<input />` HTML element for the editing, please remove the `enableAccessibleFieldDOMStructure` from your picker or field component:',
+          'If you want to keep using an `<input />` HTML element for the editing, please remove the `enableAccessibleFieldDOMStructure` prop from your picker or field component:',
           '',
           '<DatePicker slots={{ textField: MyCustomTextField }} />',
           '',
-          'Warning: This DOM structure based on an `<input />` HTML element will be removed in the next major (v8).',
-          'Learn more about the new DOM structure on the MUI documentation: https://next.mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
+          'Learn more about the field accessible DOM structure on the MUI documentation: https://next.mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
         ].join('\n'),
       );
     }

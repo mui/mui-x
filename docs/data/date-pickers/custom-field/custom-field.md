@@ -70,12 +70,12 @@ You can import the `TextField` component to create custom wrappers:
 
 ### Using Material `PickersTextField`
 
-Pass the `enableAccessibleFieldDOMStructure` to any field or picker component to enable the new DOM structure:
+Pass the `enableAccessibleFieldDOMStructure` to any field or picker component to enable the accessible DOM structure:
 
 {{"demo": "MaterialV7Field.js"}}
 
 :::success
-Learn more about this new DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#dom-structure)
+Learn more about the accessible DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#dom-structure)
 :::
 
 You can import the `PickersTextField` component to create custom wrappers:
@@ -117,7 +117,7 @@ You will need to use a component that supports the `sx` prop as a wrapper for yo
 ### Using custom `PickersTextField`
 
 :::success
-Learn more about this new DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#dom-structure)
+Learn more about the accessible DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#dom-structure)
 :::
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}

@@ -27,18 +27,23 @@ All fields to edit a range are available in a single input version and in a mult
 
 ## DOM structure
 
-Before the v7.0.0 version, the field editing always happened inside a `<input />` element.
-Version v7.0.0 brings a new DOM structure that aims at improving the accessibility of the component.
-To provide a smooth migration path, both structures are supported during the v7 major,
-but the `<input />` approach will be removed in 2025.
+### Without accessible DOM structure
 
-### v6: One `<input />` for all sections
+Until version v7.0.0, the only DOM structure available consisted of an `<input />` containing the whole value:
 
 ```html
 <input value="MM/DD/YYYY" />
 ```
 
-### v7: One `<span />` per section
+The field component would then tweak the selected part of the input value
+to allow navigation across sections and edition.
+
+{{"demo": "BasicV6DOMStructure.js", "defaultCodeOpen": false }}
+
+### With accessible DOM structure
+
+Version v7.0.0 introduces a new DOM structure which aims at improving those accessibility problems.
+It is now composed of one `<span />` element per section:
 
 ```html
 <span>
@@ -48,11 +53,16 @@ but the `<input />` approach will be removed in 2025.
 </span>
 ```
 
-### Migrating to the v7 DOM structure
+This new DOM structure allows the field component to set aria attributes on individual sections,
+providing a far better experience with screen readers.
 
-#### How to enable the v7 DOM structure?
+{{"demo": "BasicV7DOMStructure.js", "defaultCodeOpen": false }}
 
-You can enable the v7 DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop:
+### Migrating to the accessible DOM structure
+
+#### How to enable the accessible DOM structure?
+
+You can enable the accessible DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop:
 
 ```tsx
 <DateField enableAccessibleFieldDOMStructure />
@@ -80,7 +90,7 @@ the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards th
   />
   ```
 
-- For the props consumed by the field, the behavior should remain exactly the same with v6 and v7 DOM structures.
+- For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
 
   Both components below will respect the leading zeroes on digit sections:
 
@@ -118,7 +128,7 @@ this props will now be passed to the hidden `<input />` element.
 
 #### Usage with `slots.field`
 
-If you are passing a custom field component to your pickers, you need to create a new one that is using the new DOM structure.
+If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
 This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
 
 You can have a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) to have a concrete example.
@@ -131,7 +141,7 @@ you may want to wait a few weeks for us to release an out-of-the-box Joy `Picker
 #### Usage with `slots.textField`
 
 If you are passing a custom `TextField` component to your fields and pickers,
-you need to create a new one that is using the new DOM structure.
+you need to create a new one that is using the accessible DOM structure.
 
 You can have a look at the second demo of the [Material PickersTextField section](/x/react-date-pickers/custom-field/#using-material-pickerstextfield) to have a concrete example.
 
