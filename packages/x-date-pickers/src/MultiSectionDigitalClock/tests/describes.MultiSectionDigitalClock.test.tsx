@@ -10,7 +10,7 @@ import {
   describeValue,
 } from 'test/utils/pickers';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { formatMeridiem } from '@mui/x-date-pickers/internals/utils/date-utils';
+import { formatMeridiem } from '@mui/x-date-pickers/internals';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

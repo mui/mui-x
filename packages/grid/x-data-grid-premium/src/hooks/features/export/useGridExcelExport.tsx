@@ -101,22 +101,23 @@ export const useGridExcelExport = (
         return;
       }
 
-      if (exceljsPostProcess && process.env.NODE_ENV !== 'production') {
-        console.warn(
-          [
-            `MUI: The exceljsPostProcess option is not supported when a web worker is used.`,
-            'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
-          ].join('\n'),
-        );
-      }
-
-      if (exceljsPreProcess && process.env.NODE_ENV !== 'production') {
-        console.warn(
-          [
-            `MUI: The exceljsPreProcess option is not supported when a web worker is used.`,
-            'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
-          ].join('\n'),
-        );
+      if (process.env.NODE_ENV !== 'production') {
+        if (exceljsPostProcess) {
+          console.warn(
+            [
+              `MUI X: The exceljsPostProcess option is not supported when a web worker is used.`,
+              'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
+            ].join('\n'),
+          );
+        }
+        if (exceljsPreProcess) {
+          console.warn(
+            [
+              `MUI X: The exceljsPreProcess option is not supported when a web worker is used.`,
+              'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
+            ].join('\n'),
+          );
+        }
       }
 
       const worker = workerFn();

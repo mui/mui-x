@@ -6,7 +6,7 @@ import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
@@ -16,21 +16,19 @@ import {
   WrapperVariant,
   UsePickerProps,
   getActiveElement,
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
-  DateRange,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-  RangePosition,
   UseDateRangeFieldProps,
 } from '../models';
+import { DateRange, RangePosition } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
-export interface RangePickerFieldSlotsComponent extends FieldSlotsComponents {
+export interface RangePickerFieldSlots extends UseClearableFieldSlots {
   field: React.ElementType;
   /**
    * Element rendered at the root.
@@ -51,7 +49,7 @@ export interface RangePickerFieldSlotsComponent extends FieldSlotsComponents {
   textField?: React.ElementType<TextFieldProps>;
 }
 
-export interface RangePickerFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
+export interface RangePickerFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
   field?: SlotComponentProps<
     React.ElementType<
       BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, unknown>
@@ -93,8 +91,8 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   inputRef?: React.Ref<HTMLInputElement>;
   label?: React.ReactNode;
   localeText: PickersInputLocaleText<TDate> | undefined;
-  pickerSlotProps: RangePickerFieldSlotsComponentsProps<TDate> | undefined;
-  pickerSlots: RangePickerFieldSlotsComponent | undefined;
+  pickerSlotProps: RangePickerFieldSlotProps<TDate> | undefined;
+  pickerSlots: RangePickerFieldSlots | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
 }

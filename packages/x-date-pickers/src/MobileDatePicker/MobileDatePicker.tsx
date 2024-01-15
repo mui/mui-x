@@ -5,7 +5,9 @@ import { refType } from '@mui/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { PickerViewRendererLookup, useLocaleText, useUtils, validateDate } from '../internals';
+import { useUtils, useLocaleText } from '../internals/hooks/useUtils';
+import { validateDate } from '../internals/utils/validation/validateDate';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateView } from '../models';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
@@ -194,6 +196,10 @@ MobileDatePicker.propTypes = {
    */
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name: PropTypes.string,
+  /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
@@ -295,6 +301,7 @@ MobileDatePicker.propTypes = {
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',

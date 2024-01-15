@@ -8,7 +8,10 @@ import {
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import {
+  gridFilterableColumnDefinitionsSelector,
+  gridColumnLookupSelector,
+} from '../../../hooks/features/columns/gridColumnsSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
@@ -16,7 +19,12 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
-import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import {
+  GridColDef,
+  GridSingleSelectColDef,
+  GridStateColDef,
+} from '../../../models/colDef/gridColDef';
+import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -38,10 +46,6 @@ export interface GridFilterFormProps {
    * If `true`, the logic operator field is visible.
    */
   showMultiFilterOperators?: boolean;
-  /**
-   * The current logic operator applied.
-   */
-  multiFilterOperator?: GridLogicOperator;
   /**
    * If `true`, disables the logic operator field but still renders it.
    */
@@ -102,6 +106,12 @@ export interface GridFilterFormProps {
    * @default {}
    */
   columnInputProps?: any;
+  /**
+   * `true` if the filter is disabled/read only.
+   * i.e. `colDef.fiterable = false` but passed in `filterModel`
+   * @default false
+   */
+  readOnly?: boolean;
   /**
    * Props passed to the value input component.
    * @default {}
@@ -185,7 +195,7 @@ const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
     case GridLogicOperator.Or:
       return 'filterPanelOperatorOr';
     default:
-      throw new Error('MUI: Invalid `logicOperator` property in the `GridFilterPanel`.');
+      throw new Error('MUI X: Invalid `logicOperator` property in the `GridFilterPanel`.');
   }
 };
 
@@ -200,7 +210,6 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       hasMultipleFilters,
       deleteFilter,
       applyFilterChanges,
-      multiFilterOperator,
       showMultiFilterOperators,
       disableMultiFilterOperator,
       applyMultiFilterOperatorChanges,
@@ -213,10 +222,12 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       operatorInputProps = {},
       columnInputProps = {},
       valueInputProps = {},
+      readOnly,
       children,
       ...other
     } = props;
     const apiRef = useGridApiContext();
+    const columnLookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const columnSelectId = useId();
@@ -227,22 +238,36 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const classes = useUtilityClasses(rootProps);
     const valueRef = React.useRef<any>(null);
     const filterSelectorRef = React.useRef<HTMLInputElement>(null);
+    const multiFilterOperator = filterModel.logicOperator ?? GridLogicOperator.And;
 
     const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
 
     const baseFormControlProps = rootProps.slotProps?.baseFormControl || {};
 
     const baseSelectProps = rootProps.slotProps?.baseSelect || {};
-    const isBaseSelectNative = baseSelectProps.native ?? true;
+    const isBaseSelectNative = baseSelectProps.native ?? false;
 
     const baseInputLabelProps = rootProps.slotProps?.baseInputLabel || {};
     const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
-    const filteredColumns = React.useMemo(() => {
+    const { filteredColumns, selectedField } = React.useMemo(() => {
+      let itemField: string | undefined = item.field;
+
+      // Yields a valid value if the current filter belongs to a column that is not filterable
+      const selectedNonFilterableColumn =
+        columnLookup[item.field].filterable === false ? columnLookup[item.field] : null;
+
+      if (selectedNonFilterableColumn) {
+        return {
+          filteredColumns: [selectedNonFilterableColumn],
+          selectedField: itemField,
+        };
+      }
+
       if (filterColumns === undefined || typeof filterColumns !== 'function') {
-        return filterableColumns;
+        return { filteredColumns: filterableColumns, selectedField: itemField };
       }
 
       const filteredFields = filterColumns({
@@ -251,8 +276,17 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         currentFilters: filterModel?.items || [],
       });
 
-      return filterableColumns.filter((column) => filteredFields.includes(column.field));
-    }, [filterColumns, filterModel?.items, filterableColumns, item.field]);
+      return {
+        filteredColumns: filterableColumns.filter((column) => {
+          const isFieldIncluded = filteredFields.includes(column.field);
+          if (column.field === item.field && !isFieldIncluded) {
+            itemField = undefined;
+          }
+          return isFieldIncluded;
+        }),
+        selectedField: itemField,
+      };
+    }, [filterColumns, filterModel?.items, filterableColumns, item.field, columnLookup]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -297,16 +331,38 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           column.filterOperators![0];
 
         // Erase filter value if the input component or filtered column type is modified
-        const eraseItemValue =
+        const eraseFilterValue =
           !newOperator.InputComponent ||
           newOperator.InputComponent !== currentOperator?.InputComponent ||
           column.type !== currentColumn!.type;
+
+        let filterValue = eraseFilterValue ? undefined : item.value;
+
+        // Check filter value against the new valueOptions
+        if (column.type === 'singleSelect' && filterValue !== undefined) {
+          const colDef = column as GridSingleSelectColDef;
+          const valueOptions = getValueOptions(colDef);
+          if (Array.isArray(filterValue)) {
+            filterValue = filterValue.filter((val) => {
+              return (
+                // Only keep values that are in the new value options
+                getValueFromValueOptions(val, valueOptions, colDef?.getOptionValue!) !== undefined
+              );
+            });
+          } else if (
+            getValueFromValueOptions(item.value, valueOptions, colDef?.getOptionValue!) ===
+            undefined
+          ) {
+            // Reset the filter value if it is not in the new value options
+            filterValue = undefined;
+          }
+        }
 
         applyFilterChanges({
           ...item,
           field,
           operator: newOperator.value,
-          value: eraseItemValue ? undefined : item.value,
+          value: filterValue,
         });
       },
       [apiRef, applyFilterChanges, item, currentColumn, currentOperator],
@@ -394,6 +450,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             title={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
             onClick={handleDeleteFilter}
             size="small"
+            disabled={readOnly}
             {...rootProps.slotProps?.baseIconButton}
           >
             <rootProps.slots.filterPanelDeleteIcon fontSize="small" />
@@ -421,7 +478,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             inputProps={{
               'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
             }}
-            value={multiFilterOperator}
+            value={multiFilterOperator ?? ''}
             onChange={changeLogicOperator}
             disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
             native={isBaseSelectNative}
@@ -462,9 +519,10 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             labelId={columnSelectLabelId}
             id={columnSelectId}
             label={apiRef.current.getLocaleText('filterPanelColumns')}
-            value={item.field || ''}
+            value={selectedField ?? ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
+            disabled={readOnly}
             {...rootProps.slotProps?.baseSelect}
           >
             {sortedFilteredColumns.map((col) => (
@@ -506,6 +564,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             onChange={changeOperator}
             native={isBaseSelectNative}
             inputRef={filterSelectorRef}
+            disabled={readOnly}
             {...rootProps.slotProps?.baseSelect}
           >
             {currentColumn?.filterOperators?.map((operator) => (
@@ -541,6 +600,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               item={item}
               applyValue={applyFilterChanges}
               focusElementRef={valueRef}
+              disabled={readOnly}
+              key={item.field}
               {...currentOperator.InputComponentProps}
               {...InputComponentProps}
             />
@@ -633,14 +694,16 @@ GridFilterForm.propTypes = {
    */
   logicOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   /**
-   * The current logic operator applied.
-   */
-  multiFilterOperator: PropTypes.oneOf(['and', 'or']),
-  /**
    * Props passed to the operator input component.
    * @default {}
    */
   operatorInputProps: PropTypes.any,
+  /**
+   * `true` if the filter is disabled/read only.
+   * i.e. `colDef.fiterable = false` but passed in `filterModel`
+   * @default false
+   */
+  readOnly: PropTypes.bool,
   /**
    * If `true`, the logic operator field is visible.
    */

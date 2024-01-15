@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../internals';
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
 import { DateValidationError, FieldSection } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
@@ -12,11 +12,6 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
-
-export interface UseDateFieldParams<TDate, TChildProps extends {}> {
-  props: UseDateFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
 
 export interface UseDateFieldProps<TDate>
   extends MakeOptional<
@@ -45,17 +40,17 @@ export interface DateFieldProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateFieldSlotsComponent;
+  slots?: DateFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateFieldSlotsComponentsProps<TDate>;
+  slotProps?: DateFieldSlotProps<TDate>;
 }
 
 export type DateFieldOwnerState<TDate> = DateFieldProps<TDate>;
 
-export interface DateFieldSlotsComponent extends FieldSlotsComponents {
+export interface DateFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -64,6 +59,6 @@ export interface DateFieldSlotsComponent extends FieldSlotsComponents {
   textField?: React.ElementType;
 }
 
-export interface DateFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
+export interface DateFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, DateFieldOwnerState<TDate>>;
 }

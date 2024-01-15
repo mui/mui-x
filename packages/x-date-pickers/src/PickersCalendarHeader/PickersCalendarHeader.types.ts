@@ -4,15 +4,15 @@ import SvgIcon from '@mui/material/SvgIcon';
 import { SxProps, Theme } from '@mui/material/styles';
 import {
   ExportedPickersArrowSwitcherProps,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
+  PickersArrowSwitcherSlots,
+  PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
 import { DateView } from '../models/views';
 import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
 import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
-export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
+export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
   /**
    * Button displayed to switch between different calendar views.
    * @default IconButton
@@ -26,21 +26,20 @@ export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitche
 }
 
 // We keep the interface to allow module augmentation
-export interface PickersCalendarHeaderComponentsPropsOverrides {}
+export interface PickersCalendarHeaderSlotPropsOverrides {}
 
 export type PickersCalendarHeaderOwnerState<TDate> = PickersCalendarHeaderProps<TDate>;
 
-export interface PickersCalendarHeaderSlotsComponentsProps<TDate>
-  extends PickersArrowSwitcherSlotsComponentsProps {
+export interface PickersCalendarHeaderSlotProps<TDate> extends PickersArrowSwitcherSlotProps {
   switchViewButton?: SlotComponentProps<
     typeof IconButton,
-    PickersCalendarHeaderComponentsPropsOverrides,
+    PickersCalendarHeaderSlotPropsOverrides,
     PickersCalendarHeaderOwnerState<TDate>
   >;
 
   switchViewIcon?: SlotComponentProps<
     typeof SvgIcon,
-    PickersCalendarHeaderComponentsPropsOverrides,
+    PickersCalendarHeaderSlotPropsOverrides,
     undefined
   >;
 }
@@ -52,12 +51,12 @@ export interface PickersCalendarHeaderProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: PickersCalendarHeaderSlotsComponent;
+  slots?: PickersCalendarHeaderSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
+  slotProps?: PickersCalendarHeaderSlotProps<TDate>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly DateView[];

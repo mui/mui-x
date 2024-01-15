@@ -1,17 +1,9 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import {
-  FieldsTextFieldProps,
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-} from '@mui/x-date-pickers/internals';
+import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { UseDateRangeFieldDefaultizedProps, UseDateRangeFieldProps } from '../internals/models';
-
-export interface UseSingleInputDateRangeFieldParams<TDate, TChildProps extends {}> {
-  props: UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps>;
-  inputRef?: React.Ref<HTMLInputElement>;
-}
 
 export interface UseSingleInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
 
@@ -35,17 +27,17 @@ export type SingleInputDateRangeFieldProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: SingleInputDateRangeFieldSlotsComponent;
+  slots?: SingleInputDateRangeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: SingleInputDateRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: SingleInputDateRangeFieldSlotProps<TDate>;
 };
 
 export type SingleInputDateRangeFieldOwnerState<TDate> = SingleInputDateRangeFieldProps<TDate>;
 
-export interface SingleInputDateRangeFieldSlotsComponent extends FieldSlotsComponents {
+export interface SingleInputDateRangeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -54,7 +46,6 @@ export interface SingleInputDateRangeFieldSlotsComponent extends FieldSlotsCompo
   textField?: React.ElementType;
 }
 
-export interface SingleInputDateRangeFieldSlotsComponentsProps<TDate>
-  extends FieldSlotsComponentsProps {
+export interface SingleInputDateRangeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, SingleInputDateRangeFieldOwnerState<TDate>>;
 }

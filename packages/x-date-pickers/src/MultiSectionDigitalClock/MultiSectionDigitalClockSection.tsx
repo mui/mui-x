@@ -11,8 +11,8 @@ import {
 } from './multiSectionDigitalClockSectionClasses';
 import type {
   MultiSectionDigitalClockOption,
-  MultiSectionDigitalClockSlotsComponent,
-  MultiSectionDigitalClockSlotsComponentsProps,
+  MultiSectionDigitalClockSlots,
+  MultiSectionDigitalClockSlotProps,
 } from './MultiSectionDigitalClock.types';
 import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
@@ -22,8 +22,8 @@ import {
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
   classes?: Partial<MultiSectionDigitalClockSectionClasses>;
-  slots?: MultiSectionDigitalClockSlotsComponent;
-  slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
+  slots?: MultiSectionDigitalClockSlots;
+  slotProps?: MultiSectionDigitalClockSlotProps;
 }
 
 export interface MultiSectionDigitalClockSectionProps<TValue>
@@ -72,7 +72,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     '&:not(:first-of-type)': {
       borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
     },
-    '&:after': {
+    '&::after': {
       display: 'block',
       content: '""',
       // subtracting the height of one item, extra margin and borders to make sure the max height is correct
@@ -162,17 +162,13 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       const activeItem = containerRef.current.querySelector<HTMLElement>(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
+      if (active && autoFocus && activeItem) {
+        activeItem.focus();
+      }
       if (!activeItem || previousActive.current === activeItem) {
-        // Handle setting the ref to null if the selected item is ever reset via UI
-        if (previousActive.current !== activeItem) {
-          previousActive.current = activeItem;
-        }
         return;
       }
       previousActive.current = activeItem;
-      if (active && autoFocus) {
-        activeItem.focus();
-      }
       const offsetTop = activeItem.offsetTop;
 
       // Subtracting the 4px of extra margin intended for the first visible section item

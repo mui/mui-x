@@ -27,9 +27,14 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
   });
 
+  const focusRoot = useEventCallback(() => {
+    rootRef.current?.focus({ preventScroll: true });
+  });
+
   populateInstance<UseTreeViewFocusSignature>(instance, {
     isNodeFocused,
     focusNode,
+    focusRoot,
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
@@ -54,10 +59,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
         };
 
         let nodeToFocusId: string | null | undefined;
-        if (Array.isArray(models.selected.value)) {
-          nodeToFocusId = models.selected.value.find(isNodeVisible);
-        } else if (models.selected.value != null && isNodeVisible(models.selected.value)) {
-          nodeToFocusId = models.selected.value;
+        if (Array.isArray(models.selectedNodes.value)) {
+          nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
+        } else if (
+          models.selectedNodes.value != null &&
+          isNodeVisible(models.selectedNodes.value)
+        ) {
+          nodeToFocusId = models.selectedNodes.value;
         }
 
         if (nodeToFocusId == null) {
@@ -75,7 +83,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     };
 
   const focusedNode = instance.getNode(models.focusedNodeId.value!);
-  const activeDescendant = focusedNode ? focusedNode.idAttribute : null;
+  const activeDescendant = focusedNode
+    ? instance.getTreeItemId(focusedNode.id, focusedNode.idAttribute)
+    : null;
 
   return {
     getRootProps: (otherHandlers) => ({
@@ -88,8 +98,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
 useTreeViewFocus.models = {
   focusedNodeId: {
-    controlledProp: 'focusedNodeId',
-    defaultProp: 'defaultFocusedNodeId',
+    getDefaultValue: (params) => params.defaultFocusedNodeId,
   },
 };
 
@@ -98,3 +107,10 @@ useTreeViewFocus.getDefaultizedParams = (params) => ({
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
   defaultFocusedNodeId: params.defaultFocusedNodeId ?? null,
 });
+
+useTreeViewFocus.params = {
+  onNodeFocus: true,
+  focusedNodeId: true,
+  defaultFocusedNodeId: true,
+  disabledItemsFocusable: true,
+};

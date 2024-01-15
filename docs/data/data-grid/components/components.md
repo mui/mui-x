@@ -67,7 +67,9 @@ This demo showcases how this can be achieved.
 
 {{"demo": "ToolbarGrid.js", "bg": "inline"}}
 
-Alternatively, you can compose your own toolbar.
+You can also compose your own toolbar. Each button in the toolbar is wrapped with a tooltip component. In order to override some of the props corresponding to the toolbar buttons, you can use the `slotProps` prop.
+
+The following demo shows how to override the tooltip title of the density selector and the variant of the export button.
 
 ```jsx
 function CustomToolbar() {
@@ -75,8 +77,16 @@ function CustomToolbar() {
     <GridToolbarContainer>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarExport />
+      <GridToolbarDensitySelector
+        slotProps={{ tooltip: { title: 'Change density' } }}
+      />
+      <Box sx={{ flexGrow: 1 }} />
+      <GridToolbarExport
+        slotProps={{
+          tooltip: { title: 'Export data' },
+          button: { variant: 'outlined' },
+        }}
+      />
     </GridToolbarContainer>
   );
 }

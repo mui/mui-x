@@ -176,7 +176,7 @@ adapterToTest.forEach((adapterName) => {
       sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>,
     ) => {
       if (sectionConfig.contentType === 'digit' && sectionConfig.maxLength != null) {
-        return cleanLeadingZeros(adapter, valueStr, sectionConfig.maxLength);
+        return cleanLeadingZeros(valueStr, sectionConfig.maxLength);
       }
 
       return valueStr;

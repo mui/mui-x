@@ -358,6 +358,6 @@ describe('<DesktopDatePicker />', () => {
       render(<DesktopDatePicker defaultValue={null} openTo="month" />);
 
       openPicker({ type: 'date', variant: 'desktop' });
-    }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
+    }).toWarnDev('MUI X: `openTo="month"` is not a valid prop.');
   });
 });

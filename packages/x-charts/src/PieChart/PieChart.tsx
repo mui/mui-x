@@ -23,7 +23,12 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
-import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import {
+  ChartsAxisSlots,
+  ChartsAxisSlotProps,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+} from '../models/axis';
 
 export interface PieChartSlots
   extends ChartsAxisSlots,
@@ -38,9 +43,21 @@ export interface PieChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface PieChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
+  /**
+   * Indicate which axis to display the bottom of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
+   * @default null
+   */
+  bottomAxis?: null | string | ChartsXAxisProps;
+  /**
+   * Indicate which axis to display the left of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
+   * @default null
+   */
+  leftAxis?: null | string | ChartsYAxisProps;
   series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
@@ -153,7 +170,7 @@ PieChart.propTypes = {
   /**
    * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
-   * @default xAxisIds[0] The id of the first provided axis
+   * @default null
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
@@ -188,6 +205,7 @@ PieChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
+   * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -209,7 +227,7 @@ PieChart.propTypes = {
   /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
-   * @default yAxisIds[0] The id of the first provided axis
+   * @default null
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
@@ -308,10 +326,11 @@ PieChart.propTypes = {
         PropTypes.func,
       ]),
       arcLabelMinAngle: PropTypes.number,
+      arcLabelRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       color: PropTypes.string,
       cornerRadius: PropTypes.number,
-      cx: PropTypes.number,
-      cy: PropTypes.number,
+      cx: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       data: PropTypes.arrayOf(
         PropTypes.shape({
           color: PropTypes.string,
@@ -323,6 +342,7 @@ PieChart.propTypes = {
       endAngle: PropTypes.number,
       faded: PropTypes.shape({
         additionalRadius: PropTypes.number,
+        arcLabelRadius: PropTypes.number,
         color: PropTypes.string,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
@@ -331,6 +351,7 @@ PieChart.propTypes = {
       }),
       highlighted: PropTypes.shape({
         additionalRadius: PropTypes.number,
+        arcLabelRadius: PropTypes.number,
         color: PropTypes.string,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
@@ -342,8 +363,8 @@ PieChart.propTypes = {
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
       }),
       id: PropTypes.string,
-      innerRadius: PropTypes.number,
-      outerRadius: PropTypes.number,
+      innerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      outerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       paddingAngle: PropTypes.number,
       sortingValues: PropTypes.oneOfType([
         PropTypes.oneOf(['asc', 'desc', 'none']),

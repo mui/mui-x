@@ -14,12 +14,13 @@ import {
   GridToolbar,
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, screen, act, within } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getSelectInput } from 'test/utils/helperFn';
 
 const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
@@ -170,10 +171,10 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
 
-    const selectListOfColumns = document.querySelectorAll<HTMLElement>(
-      '.MuiDataGrid-filterFormColumnInput',
-    )[0];
-    const availableColumns = within(selectListOfColumns).getAllByRole('option');
+    const select = screen.getByRole('combobox', { name: 'Columns' });
+    fireEvent.mouseDown(select);
+    const listbox = screen.getByRole('listbox', { name: 'Columns' });
+    const availableColumns = within(listbox).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
   });
 
@@ -437,10 +438,12 @@ describe('<DataGridPro /> - Filter', () => {
 
     // The first combo is hidden and we include hidden elements to make the query faster
     // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
-    const select = screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
-      isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
-    ];
-    fireEvent.change(select, { target: { value: 'or' } });
+    const input = getSelectInput(
+      screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
+        isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
+      ],
+    );
+    fireEvent.change(input!, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('changeLogicOperator');
     expect(getColumnValues(0)).to.deep.equal([]);
@@ -995,6 +998,100 @@ describe('<DataGridPro /> - Filter', () => {
       );
 
       expect(getColumnHeaderCell(0, 1).textContent).to.equal('Custom Input');
+    });
+  });
+
+  describe('Read-only filters', () => {
+    const columns: GridColDef[] = [
+      {
+        field: 'id',
+        type: 'number',
+        filterable: false,
+      },
+      {
+        field: 'brand',
+      },
+    ];
+
+    it('should allow multiple filters for `filterable: false` columns', () => {
+      const newModel = {
+        items: [
+          {
+            id: 1,
+            field: 'id',
+            value: 0,
+            operator: '>',
+          },
+          {
+            id: 2,
+            field: 'id',
+            operator: 'isNotEmpty',
+          },
+          {
+            id: 3,
+            field: 'brand',
+            value: 'm',
+            operator: 'contains',
+          },
+        ],
+      };
+      render(<TestCase filterModel={newModel} columns={columns} />);
+      expect(getColumnValues(0)).to.deep.equal(['2']);
+      expect(getColumnValues(1)).to.deep.equal(['Puma']);
+    });
+
+    it('should allow updating logic operator even from read-only filters', function test() {
+      const newModel = {
+        items: [
+          {
+            id: 1,
+            field: 'id',
+            value: 0,
+            operator: '>',
+          },
+          {
+            id: 2,
+            field: 'id',
+            operator: 'isNotEmpty',
+          },
+        ],
+      };
+      const initialState = {
+        preferencePanel: {
+          open: true,
+          openedPanelValue: GridPreferencePanelsValue.filters,
+        },
+      };
+      const { getAllByRole } = render(
+        <TestCase initialState={initialState} filterModel={newModel} columns={columns} />,
+      );
+      // For JSDom, the first hidden combo is also found which we are not interested in
+      const select = getAllByRole('combobox', { name: 'Logic operator' })[isJSDOM ? 1 : 0];
+      expect(select).not.to.have.class('Mui-disabled');
+    });
+
+    it('should disable `Remove all` button for only read-only filters', () => {
+      const newModel = {
+        items: [
+          {
+            id: 1,
+            field: 'id',
+            value: 0,
+            operator: '>',
+          },
+        ],
+      };
+
+      const initialState = {
+        preferencePanel: {
+          open: true,
+          openedPanelValue: GridPreferencePanelsValue.filters,
+        },
+      };
+      const { setProps } = render(<TestCase initialState={initialState} columns={columns} />);
+      expect(screen.queryByRole('button', { name: /Remove all/i })).not.to.equal(null);
+      setProps({ filterModel: newModel });
+      expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
     });
   });
 });

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { UseTreeViewIdSignature } from '../useTreeViewId/useTreeViewId.types';
 import type { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
@@ -7,6 +8,7 @@ import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 export interface UseTreeViewFocusInstance {
   isNodeFocused: (nodeId: string) => boolean;
   focusNode: (event: React.SyntheticEvent, nodeId: string | null) => void;
+  focusRoot: () => void;
 }
 
 export interface UseTreeViewFocusParameters {
@@ -35,12 +37,15 @@ export type UseTreeViewFocusDefaultizedParameters = DefaultizedProps<
   'defaultFocusedNodeId'
 >;
 
-export type UseTreeViewFocusSignature = TreeViewPluginSignature<
-  UseTreeViewFocusParameters,
-  UseTreeViewFocusDefaultizedParameters,
-  UseTreeViewFocusInstance,
-  {},
-  {},
-  'focusedNodeId',
-  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature<any>, UseTreeViewExpansionSignature]
->;
+export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
+  params: UseTreeViewFocusParameters;
+  defaultizedParams: UseTreeViewFocusDefaultizedParameters;
+  instance: UseTreeViewFocusInstance;
+  modelNames: 'focusedNodeId';
+  dependantPlugins: [
+    UseTreeViewIdSignature,
+    UseTreeViewNodesSignature,
+    UseTreeViewSelectionSignature,
+    UseTreeViewExpansionSignature,
+  ];
+}>;

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
-  DateCalendarSlotsComponent,
-  DateCalendarSlotsComponentsProps,
+  DateCalendarSlots,
+  DateCalendarSlotProps,
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar.types';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -11,7 +11,7 @@ import { applyDefaultViewProps } from '../internals/utils/views';
 import { DateValidationError, DateView } from '../models';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { BaseDateValidationProps } from '../internals';
+import { BaseDateValidationProps } from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DatePickerToolbar,
@@ -21,7 +21,7 @@ import {
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 
-export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
+export interface BaseDatePickerSlots<TDate> extends DateCalendarSlots<TDate> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DatePickerToolbar
@@ -29,8 +29,7 @@ export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsCo
   toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDatePickerSlotsComponentsProps<TDate>
-  extends DateCalendarSlotsComponentsProps<TDate> {
+export interface BaseDatePickerSlotProps<TDate> extends DateCalendarSlotProps<TDate> {
   toolbar?: ExportedDatePickerToolbarProps;
 }
 
@@ -41,12 +40,12 @@ export interface BaseDatePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseDatePickerSlotsComponent<TDate>;
+  slots?: BaseDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseDatePickerSlotsComponentsProps<TDate>;
+  slotProps?: BaseDatePickerSlotProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
