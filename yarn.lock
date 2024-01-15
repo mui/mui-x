@@ -1881,13 +1881,13 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/mui/material-ui.git#master":
+"@mui/monorepo@https://github.com/michaldudak/material-ui.git#unify-tsconfig":
   version "5.15.4"
-  resolved "https://github.com/mui/material-ui.git#2c0bd029fb6bf6f2d6a710e7ac35a9dff5801ed4"
+  resolved "https://github.com/michaldudak/material-ui.git#21c26e8383d644677bcdb8c7dbd568d71db4ff5b"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
-    "@slack/bolt" "^3.17.0"
-    google-auth-library "^9.4.1"
+    "@slack/bolt" "^3.17.1"
+    google-auth-library "^9.4.2"
 
 "@mui/private-theming@^5.15.3":
   version "5.15.3"
@@ -2670,16 +2670,16 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.2.tgz#5981a8db18b56ba38ef0efb7d995b12aa7b51918"
   integrity sha512-sXXKG+uL9IrKqViTtao2Ws6dy0znu9sOaP1di/jKGW1M6VssO8vlpXCQcpZ+jisQ1tTFAC5Jo/EOzFbggBagFQ==
 
-"@slack/bolt@^3.17.0":
-  version "3.17.0"
-  resolved "https://registry.yarnpkg.com/@slack/bolt/-/bolt-3.17.0.tgz#717b1aa30243ba08332a3ab17c31361444e06a97"
-  integrity sha512-gxZygJj/wnrrSPCAlXO4D5FIYre2McPC+Vwrkq6CS74S4MI+0/gRvdUUXMHoF+oSGfsGs3ul6Fk+Bc/EE7Waig==
+"@slack/bolt@^3.17.1":
+  version "3.17.1"
+  resolved "https://registry.yarnpkg.com/@slack/bolt/-/bolt-3.17.1.tgz#97afcd3f79869591f82bb77ee4e8383607f4be79"
+  integrity sha512-N+4WxpkM59RXi7BL3IXUtENnn9cF7TOBn7ttaHpgvlnjUaro+yQyY60arXTlP4ytVDFJ1w0mSdfftcM17h+i2w==
   dependencies:
     "@slack/logger" "^4.0.0"
-    "@slack/oauth" "^2.6.1"
-    "@slack/socket-mode" "^1.3.2"
+    "@slack/oauth" "^2.6.2"
+    "@slack/socket-mode" "^1.3.3"
     "@slack/types" "^2.11.0"
-    "@slack/web-api" "^6.11.0"
+    "@slack/web-api" "^6.11.2"
     "@types/express" "^4.16.1"
     "@types/promise.allsettled" "^1.0.3"
     "@types/tsscmp" "^1.0.0"
@@ -2705,25 +2705,25 @@
   dependencies:
     "@types/node" ">=18.0.0"
 
-"@slack/oauth@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/@slack/oauth/-/oauth-2.6.1.tgz#96327397455d5cf8797c891c9f10a4c5050638ce"
-  integrity sha512-Qm8LI+W9gtC5YQz/3yq7b6Qza7SSIJ9jVIgbkrY3AGwT4E0P6mUFV5gKHadvDEfTGG3ZiWuKMyC06ZpexZsQgg==
+"@slack/oauth@^2.6.2":
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/@slack/oauth/-/oauth-2.6.2.tgz#02fc569ecd0be459c92ac17d4629b7fdc89ff3a9"
+  integrity sha512-2R3MyB/R63hTRXzk5J6wcui59TBxXzhk+Uh2/Xu3Wp3O4pXg/BNucQhP/DQbL/ScVhLvFtMXirLrKi0Yo5gIVw==
   dependencies:
     "@slack/logger" "^3.0.0"
-    "@slack/web-api" "^6.3.0"
+    "@slack/web-api" "^6.11.2"
     "@types/jsonwebtoken" "^8.3.7"
     "@types/node" ">=12"
     jsonwebtoken "^9.0.0"
     lodash.isstring "^4.0.1"
 
-"@slack/socket-mode@^1.3.2":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@slack/socket-mode/-/socket-mode-1.3.2.tgz#b3c4db146779cb63ec240a10de722deadd907305"
-  integrity sha512-6LiwYE6k4DNbnctZZSLfERiOzWngAvXogxQEYzUkxeZgh2GC6EdmRq6OEbZXOBe71/K66YVx05VfR7B4b1ScTQ==
+"@slack/socket-mode@^1.3.3":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@slack/socket-mode/-/socket-mode-1.3.3.tgz#8eb669653d5fd4ab3014e966cc5c83134fbd8835"
+  integrity sha512-vN3zG4woRtf2Ut6rZgRW6G/Oe56uLMlnz39I08Q7DOvVfB+1MmDbNv0PNOiFgujdKXJR+bXF41/F/VvryXcqlw==
   dependencies:
     "@slack/logger" "^3.0.0"
-    "@slack/web-api" "^6.2.3"
+    "@slack/web-api" "^6.11.2"
     "@types/node" ">=12.0.0"
     "@types/p-queue" "^2.3.2"
     "@types/ws" "^7.4.7"
@@ -2738,16 +2738,16 @@
   resolved "https://registry.yarnpkg.com/@slack/types/-/types-2.11.0.tgz#948c556081c3db977dfa8433490cc2ff41f47203"
   integrity sha512-UlIrDWvuLaDly3QZhCPnwUSI/KYmV1N9LyhuH6EDKCRS1HWZhyTG3Ja46T3D0rYfqdltKYFXbJSSRPwZpwO0cQ==
 
-"@slack/web-api@^6.11.0", "@slack/web-api@^6.2.3", "@slack/web-api@^6.3.0":
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/@slack/web-api/-/web-api-6.11.1.tgz#a23552d9ee89fb5a727cce30ff58e4a3e3faf9ab"
-  integrity sha512-AU7Sty+NwkMU0qT/cKSIYV1NZ+bGDYqmJ3LAJD/3vtrxJvV9F9DdALgRSV2zRhrRjzjOgLhCRXVuOikQsKQhAg==
+"@slack/web-api@^6.11.2":
+  version "6.11.2"
+  resolved "https://registry.yarnpkg.com/@slack/web-api/-/web-api-6.11.2.tgz#4a4543e722a953a63b4ae7c655398430e6129a8f"
+  integrity sha512-s4qCQGXasr8jpCf/+6+V/smq+Z2RX7EIBnJeO/xe7Luie1nyBihFMgjICNyvzWoWBdaGntSnn5CcZdFm4ItBWg==
   dependencies:
     "@slack/logger" "^3.0.0"
     "@slack/types" "^2.11.0"
     "@types/is-stream" "^1.1.0"
     "@types/node" ">=12.0.0"
-    axios "^1.6.3"
+    axios "^1.6.5"
     eventemitter3 "^3.1.0"
     form-data "^2.5.0"
     is-electron "2.2.2"
@@ -4300,7 +4300,7 @@ axe-core@=4.7.0:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.7.0.tgz#34ba5a48a8b564f67e103f0aa5768d76e15bbbbf"
   integrity sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==
 
-axios@^1.0.0, axios@^1.5.0, axios@^1.6.0, axios@^1.6.3:
+axios@^1.0.0, axios@^1.5.0, axios@^1.6.0, axios@^1.6.5:
   version "1.6.5"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.5.tgz#2c090da14aeeab3770ad30c3a1461bc970fb0cd8"
   integrity sha512-Ii012v05KEVuUoFWmMW/UQv9aRIc3ZwkWDcM+h5Il8izZCtRVpDUfwpoFf7eOtajT3QiGR4yDUx7lPqHJULgbg==
@@ -7924,10 +7924,22 @@ gm@^1.25.0:
     cross-spawn "^4.0.0"
     debug "^3.1.0"
 
-google-auth-library@^9.0.0, google-auth-library@^9.4.1:
+google-auth-library@^9.0.0:
   version "9.4.1"
   resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-9.4.1.tgz#dea32cbdae0a47066995a379e6873c52926ea80e"
   integrity sha512-Chs7cuzDuav8W/BXOoRgSXw4u0zxYtuqAHETDR5Q6dG1RwNwz7NUKjsDDHAsBV3KkiiJBtJqjbzy1XU1L41w1g==
+  dependencies:
+    base64-js "^1.3.0"
+    ecdsa-sig-formatter "^1.0.11"
+    gaxios "^6.1.1"
+    gcp-metadata "^6.1.0"
+    gtoken "^7.0.0"
+    jws "^4.0.0"
+
+google-auth-library@^9.4.2:
+  version "9.4.2"
+  resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-9.4.2.tgz#4831150d2c049c37450a81141be34027657c38b6"
+  integrity sha512-rTLO4gjhqqo3WvYKL5IdtlCvRqeQ4hxUx/p4lObobY2xotFW3bCQC+Qf1N51CYOfiqfMecdMwW9RIo7dFWYjqw==
   dependencies:
     base64-js "^1.3.0"
     ecdsa-sig-formatter "^1.0.11"
