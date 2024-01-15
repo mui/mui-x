@@ -49,6 +49,12 @@ Target the `treeItemClasses.group` class to add connection borders between the T
 
 {{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
 
+### Limit expansion to icon container
+
+The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
+
+{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
+
 ### File explorer
 
 The demo below shows many of the previous customization examples brought together to make the Tree View component look completely different than its default design.
@@ -61,9 +67,3 @@ Google's Gmail side nav is potentially one of the most famous tree view componen
 The demo below shows how to replicate it.
 
 {{"demo": "GmailTreeView.js"}}
-
-### Limit expansion to icon container
-
-The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
-
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
