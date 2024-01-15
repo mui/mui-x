@@ -234,7 +234,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
-      { pathname: '/x/react-date-pickers/playground' },
       { pathname: '/x/react-date-pickers/faq', title: 'FAQ' },
       {
         pathname: '/x/react-date-pickers-components',
@@ -372,6 +371,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
+          { pathname: '/x/react-date-pickers/playground', title: 'Customziation playground' },
         ],
       },
     ],
