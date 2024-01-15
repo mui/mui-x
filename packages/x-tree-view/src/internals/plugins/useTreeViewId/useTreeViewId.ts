@@ -22,3 +22,7 @@ export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ instance
     }),
   };
 };
+
+useTreeViewId.params = {
+  id: true,
+};

@@ -84,7 +84,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       ) {
         console.warn(
           [
-            `MUI: The page size \`${paginationModel.pageSize}\` is not preset in the \`pageSizeOptions\``,
+            `MUI X: The page size \`${paginationModel.pageSize}\` is not preset in the \`pageSizeOptions\`.`,
             `Add it to show the pagination select.`,
           ].join('\n'),
         );

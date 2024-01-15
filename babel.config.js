@@ -17,6 +17,7 @@ const defaultAlias = {
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/markdown': '@mui/monorepo/packages/markdown',
+  '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': '@mui/monorepo/packages/api-docs-builder',
   '@mui-internal/docs-utilities': '@mui/monorepo/packages/docs-utilities',
   '@mui-internal/test-utils': resolveAliasPath(
@@ -82,6 +83,17 @@ module.exports = function getBabelConfig(api) {
 
   if (process.env.NODE_ENV === 'test') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);
+    // We replace `date-fns` imports with an aliased `date-fns@v3` version installed as `date-fns-v3` for tests.
+    // The plugin is patched to only run on `AdapterDateFnsV3.ts`.
+    // TODO: remove when we upgrade to date-fns v3 by default.
+    plugins.push([
+      'babel-plugin-replace-imports',
+      {
+        test: /date-fns/i,
+        replacer: 'date-fns-v3',
+        ignoreFilenames: 'AdapterDateFns.ts',
+      },
+    ]);
   }
 
   if (process.env.NODE_ENV === 'production') {

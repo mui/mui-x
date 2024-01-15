@@ -17,7 +17,7 @@ To get started, check out [the blog post about the release of MUI X v6](https://
 In `package.json`, change the version of the data grid package to `next`.
 
 ```diff
--"@mui/x-data-grid": "^6.0.0",
+-"@mui/x-data-grid": "6.x.x",
 +"@mui/x-data-grid": "next",
 ```
 
@@ -40,7 +40,7 @@ npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -97,6 +97,10 @@ Below are described the steps you need to make to migrate from v6 to v7.
     getOptionLabel: (value: any) => value.name,
   };
   ```
+
+### Behavioral changes
+
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/). See [Sorting non-sortable columns programmatically](/x/react-data-grid/sorting/#sorting-non-sortable-columns-programmatically) for example.
 
 ### State access
 
@@ -239,10 +243,43 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 ### Other exports
 
+- The import path for locales has been changed:
+
+  ```diff
+  -import { enUS } from '@mui/x-data-grid';
+  +import { enUS } from '@mui/x-data-grid/locales';
+
+  -import { enUS } from '@mui/x-data-grid-pro';
+  +import { enUS } from '@mui/x-data-grid-pro/locales';
+
+  -import { enUS } from '@mui/x-data-grid-premium';
+  +import { enUS } from '@mui/x-data-grid-premium/locales';
+  ```
+
 - The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
   Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
+
+- The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. In order to override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](/x/react-data-grid/components/#toolbar) for more details.
+
+```diff
+ function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton
+-       title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
++       slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
+      />
+      <GridToolbarDensitySelector
+-       variant="outlined"    // 🛑 This was previously forwarded to the button component
++       slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
+      />
+    </GridToolbarContainer>
+  );
+ }
+```
 
 <!-- ### CSS classes
 

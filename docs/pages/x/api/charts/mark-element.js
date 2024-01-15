@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/charts',
+    'docsx/translations/api-docs/charts/mark-element',
     false,
-    /\.\/mark-element(-[a-z]{2})?\.json$/,
+    /\.\/mark-element.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
