@@ -235,6 +235,7 @@ const pages: MuiPage[] = [
           },
         ],
       },
+      { pathname: '/x/react-data-grid/faq', title: 'FAQ' },
     ],
   },
   {
