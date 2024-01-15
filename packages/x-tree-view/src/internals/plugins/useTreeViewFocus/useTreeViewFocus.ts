@@ -23,7 +23,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       if (params.onNodeFocus) {
         params.onNodeFocus(event, nodeId);
       }
-      models.focusedNodeId.setValue(nodeId);
+      models.focusedNodeId.setControlledValue(nodeId);
     }
   });
 
@@ -43,7 +43,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       rootRef.current === ownerDocument(rootRef.current).activeElement
     ) {
       const newId = instance.getChildrenIds(null)[0];
-      models.focusedNodeId.setValue(newId);
+      models.focusedNodeId.setControlledValue(newId);
     }
   });
 
@@ -79,7 +79,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   const createHandleBlur =
     (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
       otherHandlers.onBlur?.(event);
-      models.focusedNodeId.setValue(null);
+      models.focusedNodeId.setControlledValue(null);
     };
 
   const focusedNode = instance.getNode(models.focusedNodeId.value!);
@@ -104,7 +104,6 @@ useTreeViewFocus.models = {
 
 useTreeViewFocus.getDefaultizedParams = (params) => ({
   ...params,
-  disabledItemsFocusable: params.disabledItemsFocusable ?? false,
   defaultFocusedNodeId: params.defaultFocusedNodeId ?? null,
 });
 
@@ -112,5 +111,4 @@ useTreeViewFocus.params = {
   onNodeFocus: true,
   focusedNodeId: true,
   defaultFocusedNodeId: true,
-  disabledItemsFocusable: true,
 };
