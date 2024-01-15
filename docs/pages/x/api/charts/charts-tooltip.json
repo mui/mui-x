@@ -30,6 +30,11 @@
     "import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';",
     "import { ChartsTooltip } from '@mui/x-charts';"
   ],
+  "slots": [
+    { "name": "axisContent", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null },
+    { "name": "popper", "description": "", "class": null }
+  ],
   "classes": [
     {
       "key": "cell",

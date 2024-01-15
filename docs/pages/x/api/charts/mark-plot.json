@@ -12,6 +12,7 @@
     "import { MarkPlot } from '@mui/x-charts/LineChart';",
     "import { MarkPlot } from '@mui/x-charts';"
   ],
+  "slots": [{ "name": "mark", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiMarkPlot",
   "filename": "/packages/x-charts/src/LineChart/MarkPlot.tsx",

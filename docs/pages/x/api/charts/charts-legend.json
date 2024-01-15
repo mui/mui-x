@@ -15,6 +15,7 @@
     "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
     "import { ChartsLegend } from '@mui/x-charts';"
   ],
+  "slots": [{ "name": "legend", "description": "", "class": null }],
   "classes": [
     {
       "key": "column",

@@ -12,6 +12,7 @@
     "import { AreaPlot } from '@mui/x-charts/LineChart';",
     "import { AreaPlot } from '@mui/x-charts';"
   ],
+  "slots": [{ "name": "area", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiAreaPlot",
   "filename": "/packages/x-charts/src/LineChart/AreaPlot.tsx",

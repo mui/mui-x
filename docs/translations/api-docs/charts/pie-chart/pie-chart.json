@@ -38,5 +38,17 @@
       "description": "The configuration of the y-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_Y_AXIS_KEY</code>."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "axisLine": "",
+    "axisTick": "",
+    "axisTickLabel": "",
+    "axisLabel": "",
+    "pieArc": "",
+    "pieArcLabel": "",
+    "legend": "",
+    "popper": "",
+    "axisContent": "",
+    "itemContent": ""
+  }
 }

@@ -12,6 +12,7 @@
     "import { LineHighlightPlot } from '@mui/x-charts/LineChart';",
     "import { LineHighlightPlot } from '@mui/x-charts';"
   ],
+  "slots": [{ "name": "lineHighlight", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiLineHighlightPlot",
   "filename": "/packages/x-charts/src/LineChart/LineHighlightPlot.tsx",

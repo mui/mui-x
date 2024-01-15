@@ -37,6 +37,7 @@
     "import { PieArcPlot } from '@mui/x-charts/PieChart';",
     "import { PieArcPlot } from '@mui/x-charts';"
   ],
+  "slots": [{ "name": "pieArc", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiPieArcPlot",
   "filename": "/packages/x-charts/src/PieChart/PieArcPlot.tsx",

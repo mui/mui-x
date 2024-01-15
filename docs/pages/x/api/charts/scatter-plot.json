@@ -12,6 +12,7 @@
     "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
     "import { ScatterPlot } from '@mui/x-charts';"
   ],
+  "slots": [{ "name": "scatter", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiScatterPlot",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterPlot.tsx",

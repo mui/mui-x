@@ -74,6 +74,17 @@
     "import { BarChart } from '@mui/x-charts/BarChart';",
     "import { BarChart } from '@mui/x-charts';"
   ],
+  "slots": [
+    { "name": "axisContent", "description": "", "class": null },
+    { "name": "axisLabel", "description": "", "class": null },
+    { "name": "axisLine", "description": "", "class": null },
+    { "name": "axisTick", "description": "", "class": null },
+    { "name": "axisTickLabel", "description": "", "class": null },
+    { "name": "bar", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null },
+    { "name": "legend", "description": "", "class": null },
+    { "name": "popper", "description": "", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiBarChart",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",

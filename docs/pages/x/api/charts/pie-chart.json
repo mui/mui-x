@@ -63,6 +63,18 @@
     "import { PieChart } from '@mui/x-charts/PieChart';",
     "import { PieChart } from '@mui/x-charts';"
   ],
+  "slots": [
+    { "name": "axisContent", "description": "", "class": null },
+    { "name": "axisLabel", "description": "", "class": null },
+    { "name": "axisLine", "description": "", "class": null },
+    { "name": "axisTick", "description": "", "class": null },
+    { "name": "axisTickLabel", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null },
+    { "name": "legend", "description": "", "class": null },
+    { "name": "pieArc", "description": "", "class": null },
+    { "name": "pieArcLabel", "description": "", "class": null },
+    { "name": "popper", "description": "", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiPieChart",
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",

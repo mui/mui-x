@@ -20,6 +20,10 @@
     "import { PiePlot } from '@mui/x-charts/PieChart';",
     "import { PiePlot } from '@mui/x-charts';"
   ],
+  "slots": [
+    { "name": "pieArc", "description": "", "class": null },
+    { "name": "pieArcLabel", "description": "", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiPiePlot",
   "filename": "/packages/x-charts/src/PieChart/PiePlot.tsx",

@@ -75,6 +75,20 @@
     "import { LineChart } from '@mui/x-charts/LineChart';",
     "import { LineChart } from '@mui/x-charts';"
   ],
+  "slots": [
+    { "name": "area", "description": "", "class": null },
+    { "name": "axisContent", "description": "", "class": null },
+    { "name": "axisLabel", "description": "", "class": null },
+    { "name": "axisLine", "description": "", "class": null },
+    { "name": "axisTick", "description": "", "class": null },
+    { "name": "axisTickLabel", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null },
+    { "name": "legend", "description": "", "class": null },
+    { "name": "line", "description": "", "class": null },
+    { "name": "lineHighlight", "description": "", "class": null },
+    { "name": "mark", "description": "", "class": null },
+    { "name": "popper", "description": "", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiLineChart",
   "filename": "/packages/x-charts/src/LineChart/LineChart.tsx",

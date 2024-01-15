@@ -12,6 +12,7 @@
     "import { LinePlot } from '@mui/x-charts/LineChart';",
     "import { LinePlot } from '@mui/x-charts';"
   ],
+  "slots": [{ "name": "line", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiLinePlot",
   "filename": "/packages/x-charts/src/LineChart/LinePlot.tsx",
