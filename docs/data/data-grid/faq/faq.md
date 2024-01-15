@@ -50,7 +50,7 @@ This can be achieved by one of the following ways:
        [props.someValue],
      );
 
-     const columns = useMemo(
+     const columns = React.useMemo(
        () => [
          { field: 'id' },
          { field: 'firstName' },
