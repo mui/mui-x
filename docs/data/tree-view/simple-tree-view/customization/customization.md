@@ -36,7 +36,7 @@ Use the `treeItemClasses` to target internal elements of the Tree Item component
 
 ### Adding custom content
 
-Use the `ContentComponent` prop and the `useTreeItem` to replace the Tree Item content with an entirely custom component.
+Use the `ContentComponent` prop and the `useTreeItem` hook to replace the Tree Item content with an entirely custom component.
 The demo below adds an avatar and custom typography.
 
 {{"demo": "CustomContentTreeView.js"}}
@@ -64,6 +64,6 @@ The demo below shows how to replicate it.
 
 ### Limit expansion to icon container
 
-The demo below shows how to use a custom content for the Tree View, and limit the expansion of the Tree Items to the `iconContainer`
+The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
