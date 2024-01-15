@@ -25,6 +25,12 @@ Since v7 is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from v6 to v7.
 
+## Update `@mui/material` package
+
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+It is a change in minor version only, so it should not cause any breaking changes.
+Please update your `@mui/material` package to this or a newer version.
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
