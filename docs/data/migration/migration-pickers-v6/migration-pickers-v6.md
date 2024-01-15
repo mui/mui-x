@@ -429,6 +429,19 @@ dayjs.extend(customParseFormatPlugin);
 
 The other plugins are still added before the adapter initialization.
 
+## Remove root level `locales` export
+
+The `locales` export has been removed from the root of the packages.
+In an effort to reduce the bundle size, the locales are now only available from the `@mui/x-date-pickers/locales` or `@mui/x-date-pickers-pro/locales` paths.
+If you were still relying on the root level export, please update your code.
+
+Before v7, it was possible to import locales from the package root (i.e. `import { frFR } from '@mui/x-date-pickers'`).
+
+```diff
+- import { frFR } from '@mui/x-date-pickers';
++ import { frFR } from '@mui/x-date-pickers/locales';
+```
+
 ## Adapters internal changes
 
 :::success
