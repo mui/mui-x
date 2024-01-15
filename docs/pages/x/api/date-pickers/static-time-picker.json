@@ -135,6 +135,55 @@
     "import { StaticTimePicker } from '@mui/x-date-pickers';",
     "import { StaticTimePicker } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [
+    {
+      "name": "ActionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar",
+      "class": null
+    },
+    {
+      "name": "Layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "class": null
+    },
+    {
+      "name": "LeftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft",
+      "class": null
+    },
+    {
+      "name": "NextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "PreviousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "RightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight",
+      "class": null
+    },
+    {
+      "name": "Shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts",
+      "class": null
+    },
+    {
+      "name": "Toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "TimePickerToolbar",
+      "class": null
+    }
+  ],
   "classes": [],
   "spread": false,
   "themeDefaultProps": false,

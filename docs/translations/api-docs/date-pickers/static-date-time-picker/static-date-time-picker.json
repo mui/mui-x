@@ -173,5 +173,20 @@
     "views": { "description": "Available views." },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "Tabs": "Tabs enabling toggling between date and time pickers.",
+    "Toolbar": "Custom component for the toolbar rendered above the views.",
+    "CalendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
+    "SwitchViewButton": "Button displayed to switch between different calendar views.",
+    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+    "PreviousIconButton": "Button allowing to switch to the left view.",
+    "NextIconButton": "Button allowing to switch to the right view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "Day": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+    "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "Shortcuts": "Custom component for the shortcuts.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+  }
 }

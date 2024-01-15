@@ -162,5 +162,24 @@
     "views": { "description": "Available views." },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "Toolbar": "Custom component for the toolbar rendered above the views.",
+    "CalendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
+    "SwitchViewButton": "Button displayed to switch between different calendar views.",
+    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+    "PreviousIconButton": "Button allowing to switch to the left view.",
+    "NextIconButton": "Button allowing to switch to the right view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "Day": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+    "TextField": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
+    "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "Shortcuts": "Custom component for the shortcuts.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+    "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "MobilePaper": "Custom component for the paper rendered inside the mobile picker's Dialog.",
+    "MobileTransition": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
+    "Field": "Component used to enter the date with the keyboard."
+  }
 }

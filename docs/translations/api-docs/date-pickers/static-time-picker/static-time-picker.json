@@ -104,5 +104,15 @@
     },
     "views": { "description": "Available views." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "Toolbar": "Custom component for the toolbar rendered above the views.",
+    "PreviousIconButton": "Button allowing to switch to the left view.",
+    "NextIconButton": "Button allowing to switch to the right view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "Shortcuts": "Custom component for the shortcuts.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+  }
 }

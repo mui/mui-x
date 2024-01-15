@@ -106,5 +106,8 @@
       "nodeName": "the list (by default: MenuList) element"
     },
     "root": { "description": "Styles applied to the root element." }
+  },
+  "slotDescriptions": {
+    "DigitalClockItem": "Component responsible for rendering a single digital clock item."
   }
 }

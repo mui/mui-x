@@ -96,5 +96,8 @@
     },
     "views": { "description": "Available views." }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "slotDescriptions": {
+    "DigitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item."
+  }
 }

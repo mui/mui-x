@@ -5,7 +5,6 @@ import { getHeaders, getTitle } from '@mui/markdown';
 import {
   ComponentInfo,
   extractPackageFile,
-  fixPathname,
   getMuiName,
   parseFile,
   toGitHubPath,
@@ -22,6 +21,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
     filename,
     name,
     muiName: getMuiName(name),
+    slotInterfaceName: `${name}SlotsComponent`,
     apiPathname: `/x/api/date-pickers/${kebabCase(name)}`,
     apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/date-pickers`),
     readFile: () => {

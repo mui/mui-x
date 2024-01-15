@@ -28,6 +28,31 @@
     "import { PickersLayout } from '@mui/x-date-pickers';",
     "import { PickersLayout } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [
+    {
+      "name": "ActionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar",
+      "class": null
+    },
+    {
+      "name": "Layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "class": null
+    },
+    {
+      "name": "Shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts",
+      "class": null
+    },
+    { "name": "Tabs", "description": "Tabs enabling toggling between views.", "class": null },
+    {
+      "name": "Toolbar",
+      "description": "Custom component for the toolbar.\nIt is placed above the picker views.",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "actionBar",

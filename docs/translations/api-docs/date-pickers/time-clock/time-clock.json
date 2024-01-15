@@ -99,5 +99,11 @@
       "nodeName": "the arrowSwitcher element"
     },
     "root": { "description": "Styles applied to the root element." }
+  },
+  "slotDescriptions": {
+    "PreviousIconButton": "Button allowing to switch to the left view.",
+    "NextIconButton": "Button allowing to switch to the right view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowIcon": "Icon displayed in the right view switch button."
   }
 }

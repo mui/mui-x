@@ -138,5 +138,28 @@
     },
     "views": { "description": "Available views." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "Toolbar": "Custom component for the toolbar rendered above the views.",
+    "PreviousIconButton": "Button allowing to switch to the left view.",
+    "NextIconButton": "Button allowing to switch to the right view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "DesktopPaper": "Custom component for the paper rendered inside the desktop picker's Popper.",
+    "DesktopTransition": "Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).",
+    "DesktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
+    "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
+    "TextField": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
+    "InputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
+    "OpenPickerButton": "Button to open the picker on desktop.",
+    "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "Shortcuts": "Custom component for the shortcuts.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+    "ClearIcon": "Icon to display inside the clear button.",
+    "ClearButton": "Button to clear the value.",
+    "Field": "Component used to enter the date with the keyboard.",
+    "OpenPickerIcon": "Icon displayed in the open picker button on desktop.",
+    "DigitalClockItem": "Component responsible for rendering a single digital clock item.",
+    "DigitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item."
+  }
 }

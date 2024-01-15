@@ -119,6 +119,32 @@
     "import { TimeClock } from '@mui/x-date-pickers';",
     "import { TimeClock } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [
+    {
+      "name": "LeftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft",
+      "class": null
+    },
+    {
+      "name": "NextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "PreviousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "RightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "arrowSwitcher",
