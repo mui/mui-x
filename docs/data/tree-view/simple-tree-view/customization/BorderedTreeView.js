@@ -10,11 +10,6 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
   [`& .${treeItemClasses.content}`]: {
     padding: theme.spacing(0.5, 1),
     margin: theme.spacing(0.2, 0),
-    [`& .${treeItemClasses.label}`]: {
-      fontFamily: 'General Sans',
-      fontWeight: 500,
-      fontSize: '0.8rem',
-    },
   },
   [`& .${treeItemClasses.iconContainer}`]: {
     '& .close': {
