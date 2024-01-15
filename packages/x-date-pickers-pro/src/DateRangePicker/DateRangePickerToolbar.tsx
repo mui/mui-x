@@ -129,7 +129,7 @@ DateRangePickerToolbar.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   /**
-   * className applied to the root component.
+   * Class name applied to the root component.
    */
   className: PropTypes.string,
   disabled: PropTypes.bool,

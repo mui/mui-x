@@ -80,7 +80,7 @@ StaticDatePicker.propTypes = {
    */
   autoFocus: PropTypes.bool,
   /**
-   * Class name applied to the root element.
+   * @ignore
    */
   className: PropTypes.string,
   /**

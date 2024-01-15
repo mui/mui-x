@@ -4,9 +4,6 @@ import clsx from 'clsx';
 import { useTreeItem } from './useTreeItem';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
-  /**
-   * className applied to the root element.
-   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.

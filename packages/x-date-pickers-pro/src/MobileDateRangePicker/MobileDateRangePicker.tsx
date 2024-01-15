@@ -93,7 +93,7 @@ MobileDateRangePicker.propTypes = {
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
   /**
-   * Class name applied to the root element.
+   * @ignore
    */
   className: PropTypes.string,
   /**

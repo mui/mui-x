@@ -3,7 +3,6 @@
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
-    "className": { "type": { "name": "string" } },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",

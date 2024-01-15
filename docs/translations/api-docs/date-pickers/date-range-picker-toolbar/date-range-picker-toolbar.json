@@ -1,7 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "className": { "description": "className applied to the root component." },
+    "className": { "description": "Class name applied to the root component." },
     "hidden": { "description": "If <code>true</code>, show the toolbar even in desktop mode." },
     "toolbarFormat": { "description": "Toolbar date format." },
     "toolbarPlaceholder": {

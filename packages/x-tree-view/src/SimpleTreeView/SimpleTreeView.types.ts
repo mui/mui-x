@@ -28,9 +28,6 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    * The props used for each component slot.
    */
   slotProps?: SimpleTreeViewSlotProps;
-  /**
-   * className applied to the root element.
-   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.

@@ -310,7 +310,7 @@ MonthCalendar.propTypes = {
    */
   classes: PropTypes.object,
   /**
-   * className applied to the root element.
+   * @ignore
    */
   className: PropTypes.string,
   /**
