@@ -1881,13 +1881,13 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/mui/material-ui.git#master":
+"@mui/monorepo@https://github.com/alexfauquette/material-ui.git#fix-items-order":
   version "5.15.4"
-  resolved "https://github.com/mui/material-ui.git#54e9b1365f7024e98ffc4a22dd69ce595110191a"
+  resolved "https://github.com/alexfauquette/material-ui.git#f97a557cdf70212dbf416644f25bb1d1a518115f"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
-    "@slack/bolt" "^3.17.0"
-    google-auth-library "^9.4.1"
+    "@slack/bolt" "^3.17.1"
+    google-auth-library "^9.4.2"
 
 "@mui/private-theming@^5.15.4":
   version "5.15.4"
@@ -2670,7 +2670,7 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.2.tgz#5981a8db18b56ba38ef0efb7d995b12aa7b51918"
   integrity sha512-sXXKG+uL9IrKqViTtao2Ws6dy0znu9sOaP1di/jKGW1M6VssO8vlpXCQcpZ+jisQ1tTFAC5Jo/EOzFbggBagFQ==
 
-"@slack/bolt@^3.17.0":
+"@slack/bolt@^3.17.1":
   version "3.17.1"
   resolved "https://registry.yarnpkg.com/@slack/bolt/-/bolt-3.17.1.tgz#97afcd3f79869591f82bb77ee4e8383607f4be79"
   integrity sha512-N+4WxpkM59RXi7BL3IXUtENnn9cF7TOBn7ttaHpgvlnjUaro+yQyY60arXTlP4ytVDFJ1w0mSdfftcM17h+i2w==
@@ -7924,7 +7924,7 @@ gm@^1.25.0:
     cross-spawn "^4.0.0"
     debug "^3.1.0"
 
-google-auth-library@^9.0.0, google-auth-library@^9.4.1:
+google-auth-library@^9.0.0, google-auth-library@^9.4.2:
   version "9.4.2"
   resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-9.4.2.tgz#4831150d2c049c37450a81141be34027657c38b6"
   integrity sha512-rTLO4gjhqqo3WvYKL5IdtlCvRqeQ4hxUx/p4lObobY2xotFW3bCQC+Qf1N51CYOfiqfMecdMwW9RIo7dFWYjqw==
