@@ -163,9 +163,6 @@
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
-    "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
-    "MobilePaper": "Custom component for the paper rendered inside the mobile picker's Dialog.",
-    "MobileTransition": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
     "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
     "Shortcuts": "Custom component for the shortcuts.",
     "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
@@ -174,6 +171,9 @@
     "TextField": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.\nReceives the same props as `@mui/material/TextField`.",
     "ClearIcon": "Icon to display inside the clear button.",
     "ClearButton": "Button to clear the value.",
+    "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "MobilePaper": "Custom component for the paper rendered inside the mobile picker's Dialog.",
+    "MobileTransition": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
     "Field": ""
   }
 }

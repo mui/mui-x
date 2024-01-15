@@ -624,6 +624,440 @@
     "import { DataGridPremium } from '@mui/x-data-grid-premium/DataGridPremium';",
     "import { DataGridPremium } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [
+    {
+      "name": "BaseButton",
+      "description": "The custom Button component used in the grid.",
+      "default": "Button",
+      "class": null
+    },
+    {
+      "name": "BaseCheckbox",
+      "description": "The custom Checkbox component used in the grid for both header and cells.",
+      "default": "Checkbox",
+      "class": null
+    },
+    {
+      "name": "BaseChip",
+      "description": "The custom Chip component used in the grid.",
+      "default": "Chip",
+      "class": null
+    },
+    {
+      "name": "BaseFormControl",
+      "description": "The custom FormControl component used in the grid.",
+      "default": "FormControl",
+      "class": null
+    },
+    {
+      "name": "BaseIconButton",
+      "description": "The custom IconButton component used in the grid.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "BaseInputAdornment",
+      "description": "The custom InputAdornment component used in the grid.",
+      "default": "InputAdornment",
+      "class": null
+    },
+    {
+      "name": "BaseInputLabel",
+      "description": "The custom InputLabel component used in the grid.",
+      "default": "InputLabel",
+      "class": null
+    },
+    {
+      "name": "BasePopper",
+      "description": "The custom Popper component used in the grid.",
+      "default": "Popper",
+      "class": null
+    },
+    {
+      "name": "BaseSelect",
+      "description": "The custom Select component used in the grid.",
+      "default": "Select",
+      "class": null
+    },
+    {
+      "name": "BaseSelectOption",
+      "description": "The custom SelectOption component used in the grid.",
+      "default": "MenuItem",
+      "class": null
+    },
+    {
+      "name": "BaseSwitch",
+      "description": "The custom Switch component used in the grid.",
+      "default": "Switch",
+      "class": null
+    },
+    {
+      "name": "BaseTextField",
+      "description": "The custom TextField component used in the grid.",
+      "default": "TextField",
+      "class": null
+    },
+    {
+      "name": "BaseTooltip",
+      "description": "The custom Tooltip component used in the grid.",
+      "default": "Tooltip",
+      "class": null
+    },
+    {
+      "name": "BooleanCellFalseIcon",
+      "description": "Icon displayed on the boolean cell to represent the false value.",
+      "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "BooleanCellTrueIcon",
+      "description": "Icon displayed on the boolean cell to represent the true value.",
+      "default": "GridCheckIcon",
+      "class": null
+    },
+    {
+      "name": "Cell",
+      "description": "Component rendered for each cell.",
+      "default": "GridCell",
+      "class": null
+    },
+    {
+      "name": "ColumnFilteredIcon",
+      "description": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
+      "default": "GridFilterAltIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnHeaderFilterIconButton",
+      "description": "Filter icon component rendered in each column header.",
+      "default": "GridColumnHeaderFilterIconButton",
+      "class": null
+    },
+    {
+      "name": "ColumnHeaders",
+      "description": "Component responsible for rendering the column headers.",
+      "default": "DataGridColumnHeaders",
+      "class": null
+    },
+    {
+      "name": "ColumnMenu",
+      "description": "Column menu component rendered by clicking on the 3 dots \"kebab\" icon in column headers.",
+      "default": "GridColumnMenu",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuAggregationIcon",
+      "description": "Icon displayed in column menu for aggregation",
+      "default": "GridFunctionsIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuClearIcon",
+      "description": "Icon displayed in column menu for clearing values",
+      "default": "GridClearIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuFilterIcon",
+      "description": "Icon displayed in column menu for filter",
+      "default": "GridFilterAltIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuGroupIcon",
+      "description": "Icon displayed in column menu for grouping",
+      "default": "GridGroupWorkIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuHideIcon",
+      "description": "Icon displayed in column menu for hiding column",
+      "default": "GridVisibilityOffIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuIcon",
+      "description": "Icon displayed on the side of the column header title to display the filter input component.",
+      "default": "GridTripleDotsVerticalIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuManageColumnsIcon",
+      "description": "Icon displayed in column menu for showing all columns",
+      "default": "GridViewColumnIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuPinLeftIcon",
+      "description": "Icon displayed in column menu for left pinning",
+      "default": "GridPushPinLeftIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuPinRightIcon",
+      "description": "Icon displayed in column menu for right pinning",
+      "default": "GridPushPinRightIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuSortAscendingIcon",
+      "description": "Icon displayed in column menu for ascending sort",
+      "default": "GridArrowUpwardIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuSortDescendingIcon",
+      "description": "Icon displayed in column menu for descending sort",
+      "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnMenuUngroupIcon",
+      "description": "Icon displayed in column menu for ungrouping",
+      "default": "GridWorkspacesIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnReorderIcon",
+      "description": "Icon displayed on the column reorder button.",
+      "default": "GridDragIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnResizeIcon",
+      "description": "Icon displayed in between two column headers that allows to resize the column header.",
+      "default": "GridSeparatorIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnSelectorIcon",
+      "description": "Icon displayed on the column menu selector tab.",
+      "default": "GridColumnIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnSortedAscendingIcon",
+      "description": "Icon displayed on the side of the column header title when sorted in ascending order.",
+      "default": "GridArrowUpwardIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnSortedDescendingIcon",
+      "description": "Icon displayed on the side of the column header title when sorted in descending order.",
+      "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "ColumnsPanel",
+      "description": "GridColumns panel component rendered when clicking the columns button.",
+      "default": "GridColumnsPanel",
+      "class": null
+    },
+    {
+      "name": "ColumnUnsortedIcon",
+      "description": "Icon displayed on the side of the column header title when unsorted.",
+      "default": "GridColumnUnsortedIcon",
+      "class": null
+    },
+    {
+      "name": "DensityComfortableIcon",
+      "description": "Icon displayed on the \"comfortable\" density option in the toolbar.",
+      "default": "GridViewStreamIcon",
+      "class": null
+    },
+    {
+      "name": "DensityCompactIcon",
+      "description": "Icon displayed on the compact density option in the toolbar.",
+      "default": "GridViewHeadlineIcon",
+      "class": null
+    },
+    {
+      "name": "DensityStandardIcon",
+      "description": "Icon displayed on the standard density option in the toolbar.",
+      "default": "GridTableRowsIcon",
+      "class": null
+    },
+    {
+      "name": "DetailPanelCollapseIcon",
+      "description": "Icon displayed on the detail panel toggle column when expanded.",
+      "default": "GridRemoveIcon",
+      "class": null
+    },
+    {
+      "name": "DetailPanelExpandIcon",
+      "description": "Icon displayed on the detail panel toggle column when collapsed.",
+      "default": "GridAddIcon",
+      "class": null
+    },
+    {
+      "name": "ExportIcon",
+      "description": "Icon displayed on the open export button present in the toolbar by default.",
+      "default": "GridSaveAltIcon",
+      "class": null
+    },
+    {
+      "name": "FilterPanel",
+      "description": "Filter panel component rendered when clicking the filter button.",
+      "default": "GridFilterPanel",
+      "class": null
+    },
+    {
+      "name": "FilterPanelAddIcon",
+      "description": "Icon displayed for deleting the filter from filter panel.",
+      "default": "GridAddIcon",
+      "class": null
+    },
+    {
+      "name": "FilterPanelDeleteIcon",
+      "description": "Icon displayed for deleting the filter from filter panel.",
+      "default": "GridDeleteIcon",
+      "class": null
+    },
+    {
+      "name": "FilterPanelRemoveAllIcon",
+      "description": "Icon displayed for deleting all the active filters from filter panel.",
+      "default": "GridDeleteForeverIcon",
+      "class": null
+    },
+    {
+      "name": "Footer",
+      "description": "Footer component rendered at the bottom of the grid viewport.",
+      "default": "GridFooter",
+      "class": null
+    },
+    {
+      "name": "FooterRowCount",
+      "description": "Row count component rendered in the footer",
+      "default": "GridRowCount",
+      "class": null
+    },
+    {
+      "name": "GroupingCriteriaCollapseIcon",
+      "description": "Icon displayed on the grouping column when the children are expanded",
+      "default": "GridExpandMoreIcon",
+      "class": null
+    },
+    {
+      "name": "GroupingCriteriaExpandIcon",
+      "description": "Icon displayed on the grouping column when the children are collapsed",
+      "default": "GridKeyboardArrowRight",
+      "class": null
+    },
+    {
+      "name": "HeaderFilterCell",
+      "description": "Component responsible for showing menu adornment in Header filter row",
+      "default": "GridHeaderFilterCell",
+      "class": null
+    },
+    {
+      "name": "HeaderFilterMenu",
+      "description": "Component responsible for showing menu in Header filter row",
+      "default": "GridHeaderFilterMenu",
+      "class": null
+    },
+    {
+      "name": "LoadIcon",
+      "description": "Icon displayed on the input while processing.",
+      "default": "GridLoadIcon",
+      "class": null
+    },
+    {
+      "name": "LoadingOverlay",
+      "description": "Loading overlay component rendered when the grid is in a loading state.",
+      "default": "GridLoadingOverlay",
+      "class": null
+    },
+    {
+      "name": "MoreActionsIcon",
+      "description": "Icon displayed on the `actions` column type to open the menu.",
+      "default": "GridMoreVertIcon",
+      "class": null
+    },
+    {
+      "name": "NoResultsOverlay",
+      "description": "No results overlay component rendered when the grid has no results after filtering.",
+      "default": "GridNoResultsOverlay",
+      "class": null
+    },
+    {
+      "name": "NoRowsOverlay",
+      "description": "No rows overlay component rendered when the grid has no rows.",
+      "default": "GridNoRowsOverlay",
+      "class": null
+    },
+    {
+      "name": "OpenFilterButtonIcon",
+      "description": "Icon displayed on the open filter button present in the toolbar by default.",
+      "default": "GridFilterListIcon",
+      "class": null
+    },
+    {
+      "name": "Pagination",
+      "description": "Pagination component rendered in the grid footer by default.",
+      "default": "Pagination",
+      "class": null
+    },
+    {
+      "name": "Panel",
+      "description": "Panel component wrapping the filters and columns panels.",
+      "default": "GridPanel",
+      "class": null
+    },
+    {
+      "name": "PreferencesPanel",
+      "description": "PreferencesPanel component rendered inside the Header component.",
+      "default": "GridPreferencesPanel",
+      "class": null
+    },
+    {
+      "name": "QuickFilterClearIcon",
+      "description": "Icon displayed on the quick filter reset input.",
+      "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "QuickFilterIcon",
+      "description": "Icon displayed on the quick filter input.",
+      "default": "GridSearchIcon",
+      "class": null
+    },
+    {
+      "name": "Row",
+      "description": "Component rendered for each row.",
+      "default": "GridRow",
+      "class": null
+    },
+    {
+      "name": "RowReorderIcon",
+      "description": "Icon displayed on the `reorder` column type to reorder a row.",
+      "default": "GridDragIcon",
+      "class": null
+    },
+    {
+      "name": "SkeletonCell",
+      "description": "Component rendered for each skeleton cell.",
+      "default": "GridSkeletonCell",
+      "class": null
+    },
+    {
+      "name": "Toolbar",
+      "description": "Toolbar component rendered inside the Header component.",
+      "default": "null",
+      "class": null
+    },
+    {
+      "name": "TreeDataCollapseIcon",
+      "description": "Icon displayed on the tree data toggling column when the children are expanded",
+      "default": "GridExpandMoreIcon",
+      "class": null
+    },
+    {
+      "name": "TreeDataExpandIcon",
+      "description": "Icon displayed on the tree data toggling column when the children are collapsed",
+      "default": "GridKeyboardArrowRight",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "actionsCell",

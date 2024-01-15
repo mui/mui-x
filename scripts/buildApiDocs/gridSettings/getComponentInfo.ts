@@ -17,6 +17,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
   return {
     filename,
     name,
+    slotInterfaceName: `${name.replace('DataGrid', 'Grid')}SlotsComponent`,
     muiName: getMuiName(name),
     apiPathname: `/x/api/data-grid/${kebabCase(name)}`,
     apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/data-grid`),
