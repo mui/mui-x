@@ -377,7 +377,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
             autoHeight={isJSDOM}
             slotProps={{
               columnsPanel: {
-                toggleAllMode: 'filtered',
+                toggleAllMode: 'filteredOnly',
               },
             }}
             slots={{ toolbar: GridToolbar }}
