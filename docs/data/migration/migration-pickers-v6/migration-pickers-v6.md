@@ -602,7 +602,7 @@ You can use the `startOfYear` and `addMonths` methods to recreate its behavior:
 
 #### Remove the `getNextMonth` method
 
-The `getNextMonth` method have been removed.
+The `getNextMonth` method has been removed.
 You can use the `addMonths` method instead:
 
 ```diff
