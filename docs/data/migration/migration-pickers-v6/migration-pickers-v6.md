@@ -580,7 +580,7 @@ You can use the `setHours`, `date` and `format` methods to recreate its behavior
 
 #### Remove the `getMonthArray` method
 
-The `getMonthArray` method have been removed.
+The `getMonthArray` method has been removed.
 You can use the `startOfYear` and `addMonths` methods to recreate its behavior:
 
 ```diff
