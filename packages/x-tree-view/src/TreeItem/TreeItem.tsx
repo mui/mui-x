@@ -132,7 +132,7 @@ const TreeItemGroup = styled(Collapse, {
 })({
   margin: 0,
   padding: 0,
-  paddingLeft: 16,
+  paddingLeft: 12,
 });
 
 /**
