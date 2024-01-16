@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { createSvgIcon } from '@mui/material/utils';
 import Collapse from '@mui/material/Collapse';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
@@ -13,16 +12,7 @@ import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
-
-const TreeViewExpandIcon = createSvgIcon(
-  <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />,
-  'TreeViewExpandIcon',
-);
-
-const TreeViewCollapseIcon = createSvgIcon(
-  <path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z" />,
-  'TreeViewCollapseIcon',
-);
+import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
