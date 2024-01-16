@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
 
 const Element = styled('div')({
@@ -15,12 +14,7 @@ export const GridMainContainer = React.forwardRef<
     className: string;
   }>
 >((props, ref) => {
-  const rootProps = useGridRootProps();
-
-  const getAriaAttributes = rootProps.experimentalFeatures?.ariaV7 // ariaV7 should never change
-    ? useGridAriaAttributes
-    : null;
-  const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
+  const ariaAttributes = useGridAriaAttributes();
 
   return (
     <Element ref={ref} className={props.className} tabIndex={-1} {...ariaAttributes}>

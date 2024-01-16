@@ -17,7 +17,6 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
-import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -60,11 +59,6 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const rootElementRef = apiRef.current.rootElementRef;
   const handleRef = useForkRef(rootElementRef, ref);
 
-  const getAriaAttributes = rootProps.experimentalFeatures?.ariaV7 // ariaV7 should never change
-    ? null
-    : useGridAriaAttributes;
-  const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
-
   const ownerState = {
     ...rootProps,
     density: densityValue,
@@ -87,7 +81,6 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
       ref={handleRef}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
-      {...ariaAttributes}
       {...other}
     >
       <GridPanelAnchor role="presentation" data-id="gridPanelAnchor" />

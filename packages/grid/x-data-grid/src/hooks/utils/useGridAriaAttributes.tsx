@@ -18,7 +18,7 @@ export const useGridAriaAttributes = () => {
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
   let role = 'grid';
-  if (rootProps.experimentalFeatures?.ariaV7 && (rootProps as any).treeData) {
+  if ((rootProps as any).treeData) {
     role = 'treegrid';
   }
 
