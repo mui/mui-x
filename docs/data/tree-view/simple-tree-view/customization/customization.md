@@ -9,24 +9,61 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Customization
 
-<p class="description">Customize the rendering of your Tree View.</p>
+<p class="description">Learn how to customize the simple version of the Tree View component.</p>
 
-## Custom icons, border and animation
+## Basics
 
-{{"demo": "CustomizedTreeView.js"}}
+### Custom icons
 
-## ContentComponent prop
+Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props to customize the Tree View icons.
+The demo below shows how to add icons using both an existing icon library, such as [Material Icons](/material-ui/material-icons/), and creating an icon from scratch using Material UI's [SVG Icon component](/material-ui/icons/#svgicon).
 
-You can use the `ContentComponent` prop and the `useTreeItem` hook to further customize the behavior of the TreeItem.
+{{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
 
-Such as limiting expansion to clicking the expand icon:
+### Custom toggle animations
+
+Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
+
+The demo below is animated using Material UI's [Collapse](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
+
+{{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
+
+### Custom styling
+
+Use `treeItemClasses` to target internal elements of the Tree Item component and change their styles.
+
+{{"demo": "CustomStyling.js"}}
+
+### Adding custom content
+
+Use the `ContentComponent` prop and the `useTreeItem` hook to replace the Tree Item content with an entirely custom component.
+The demo below shows how to add an avatar and custom typography elements.
+
+{{"demo": "CustomContentTreeView.js"}}
+
+## Common examples
+
+### Connection border
+
+Target the `treeItemClasses.group` class to add connection borders between the Tree View items.
+
+{{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
+
+### Limit expansion to icon container
+
+The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
 
-Or increasing the width of the item state indicator to be full-width:
+### File explorer
 
-{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
+The demo below shows many of the previous customization examples brought together to make the Tree View component look completely different than its default design.
 
-## Gmail clone
+{{"demo": "CustomizedTreeView.js"}}
+
+### Gmail clone
+
+Google's Gmail side nav is potentially one of the web's most famous tree view components.
+The demo below shows how to replicate it.
 
 {{"demo": "GmailTreeView.js"}}
