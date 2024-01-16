@@ -13,7 +13,7 @@ This repository contains a collection of codemod scripts based for use with
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod <codemod> <paths...>
+npx @mui/x-codemod@next <codemod> <paths...>
 
 Applies a `@mui/x-codemod` to the specified paths
 
@@ -29,8 +29,8 @@ Options:
   --jscodeshift Pass options directly to jscodeshift                  [array]
 
 Examples:
-  npx @mui/x-codemod v6.0.0/preset-safe src
-  npx @mui/x-codemod v6.0.0/component-rename-prop src --
+  npx @mui/x-codemod@latest v6.0.0/preset-safe src
+  npx @mui/x-codemod@latest v6.0.0/component-rename-prop src --
   --component=DataGrid --from=prop --to=newProp
 ```
 
@@ -40,9 +40,9 @@ To pass more options directly to jscodeshift, use `--jscodeshift=...`. For examp
 
 ```bash
 // single option
-npx @mui/x-codemod --jscodeshift=--run-in-band
+npx @mui/x-codemod@next --jscodeshift=--run-in-band
 // multiple options
-npx @mui/x-codemod --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
+npx @mui/x-codemod@next --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 
 See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).
@@ -53,7 +53,7 @@ Options to [recast](https://github.com/benjamn/recast)'s printer can be provided
 through jscodeshift's `printOptions` command line argument
 
 ```bash
-npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
+npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
 ```
 
 ## v7.0.0
@@ -66,13 +66,14 @@ It runs codemods for both Data Grid and Date and Time Pickers packages.
 To run codemods for a specific package, refer to the respective section.
 
 ```bash
-npx @mui/x-codemod v7.0.0/preset-safe <path|folder>
+npx @mui/x-codemod@next v7.0.0/preset-safe <path|folder>
 ```
 
 The corresponding sub-sections are listed below
 
 - [`preset-safe-for-pickers`](#preset-safe-for-pickers-v700)
 - [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v700)
+- [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v700)
 
 ### Pickers codemods
 
@@ -81,7 +82,7 @@ The corresponding sub-sections are listed below
 The `preset-safe` codemods for pickers.
 
 ```bash
-npx @mui/x-codemod v7.0.0/pickers/preset-safe <path|folder>
+npx @mui/x-codemod@next v7.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -100,14 +101,14 @@ This change only affects Date and Time Picker components.
 ```diff
  <DatePicker
 -  components={{ Toolbar: CustomToolbar }}
-+  slots={{ toolbar: CustomToolbar }}
 -  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slots={{ toolbar: CustomToolbar }}
 +  slotProps={{ actionBar: { actions: ['clear'] } }}
  />;
 ```
 
 ```bash
-npx @mui/x-codemod v7.0.0/pickers/rename-components-to-slots <path>
+npx @mui/x-codemod@next v7.0.0/pickers/rename-components-to-slots <path>
 ```
 
 #### `rename-default-calendar-month-to-reference-date`
@@ -115,12 +116,12 @@ npx @mui/x-codemod v7.0.0/pickers/rename-components-to-slots <path>
 Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
 
 ```diff
-- <DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
-+ <DateCalendar referenceDate{dayjs('2022-04-01')} />
+-<DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
++<DateCalendar referenceDate{dayjs('2022-04-01')} />
 ```
 
 ```bash
-npx @mui/x-codemod v7.0.0/pickers/rename-default-calendar-month-to-reference-date <path>
+npx @mui/x-codemod@next v7.0.0/pickers/rename-default-calendar-month-to-reference-date <path>
 ```
 
 #### `rename-day-picker-classes`
@@ -128,12 +129,12 @@ npx @mui/x-codemod v7.0.0/pickers/rename-default-calendar-month-to-reference-dat
 Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
 
 ```diff
-- import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
-+ import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+-import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
++import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 ```
 
 ```bash
-npx @mui/x-codemod v7.0.0/pickers/rename-day-picker-classes <path>
+npx @mui/x-codemod@next v7.0.0/pickers/rename-day-picker-classes <path>
 ```
 
 #### `rename-slots-types`
@@ -141,24 +142,24 @@ npx @mui/x-codemod v7.0.0/pickers/rename-day-picker-classes <path>
 Replace types suffix `SlotsComponent` by `Slots` and `SlotsComponentsProps` by `SlotProps`.
 
 ```diff
-- DateCalendarSlotsComponent
-+ DateCalendarSlots
-- DateCalendarSlotsComponentsProps
-+ DateCalendarSlotProps
+-DateCalendarSlotsComponent
+-DateCalendarSlotsComponentsProps
++DateCalendarSlots
++DateCalendarSlotProps
 ```
 
 ```bash
-npx @mui/x-codemod v7.0.0/pickers/rename-slots-types <path>
+npx @mui/x-codemod@next v7.0.0/pickers/rename-slots-types <path>
 ```
 
-### Data grid codemods
+### Data Grid codemods
 
 #### `preset-safe` for data grid v7.0.0
 
 The `preset-safe` codemods for data grid.
 
 ```bash
-npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path|folder>
+npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -175,14 +176,14 @@ This change only affects Data Grid components.
 ```diff
  <DataGrid
 -  components={{ Toolbar: CustomToolbar }}
-+  slots={{ toolbar: CustomToolbar }}
 -  componentsProps={{ toolbar: { showQuickFilter: true }}}
++  slots={{ toolbar: CustomToolbar }}
 +  slotProps={{ toolbar: { showQuickFilter: true }}}
  />;
 ```
 
 ```bash
-npx @mui/x-codemod v7.0.0/data-grid/rename-components-to-slots <path>
+npx @mui/x-codemod@next v7.0.0/data-grid/rename-components-to-slots <path>
 ```
 
 #### `rename-cell-selection-props`
@@ -192,16 +193,86 @@ Rename props related to `cellSelection` feature.
 ```diff
  <DataGridPremium
 -  unstable_cellSelection
-+  cellSelection
--  cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
-+  cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
+-  unstable_cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
 -  unstable_onCellSelectionModelChange={() => {}}
++  cellSelection
++  cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
 +  onCellSelectionModelChange={() => {}}
  />;
 ```
 
 ```bash
-npx @mui/x-codemod v7.0.0/data-grid/rename-cell-selection-props <path>
+npx @mui/x-codemod@next v7.0.0/data-grid/rename-cell-selection-props <path>
+```
+
+### Tree View codemods
+
+#### `preset-safe` for tree view v7.0.0
+
+The `preset-safe` codemods for tree view.
+
+```bash
+npx @mui/x-codemod@next v7.0.0/tree-view/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
+- [`rename-expansion-props`](#rename-expansion-props)
+- [`rename-selection-props`](#rename-selection-props)
+
+#### `rename-tree-view-simple-tree-view`
+
+Renames the `TreeView` component to `SimpleTreeView`
+
+```diff
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
+
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+   return (
+-    <TreeView>
++    <SimpleTreeView>
+       <TreeItem nodeId="1" label="First item" />
+-    </TreeView>
++    </SimpleTreeView>
+   );
+```
+
+#### `rename-expansion-props`
+
+Rename the expansion props
+
+```diff
+ <TreeView
+-  onNodeToggle={handleExpansionChange}
++  onExpandedNodesChange={handleExpansionChange}
+
+-  expanded={expandedNodes}
++  expandedNodes={expandedNodes}
+
+-  defaultExpanded={defaultExpandedNodes}
++  defaultExpandedNodes={defaultExpandedNodes}
+ />
+```
+
+#### `rename-selection-props`
+
+Rename the selection props
+
+```diff
+ <TreeView
+-  onNodeSelect={handleSelectionChange}
++  onSelectedNodesChange={handleSelectionChange}
+
+-  selected={selectedNodes}
++  selectedNodes={selectedNodes}
+
+-  defaultSelected={defaultSelectedNodes}
++  defaultSelectedNodes={defaultSelectedNodes}
+ />
 ```
 
 ## v6.0.0
@@ -214,7 +285,7 @@ It runs codemods for both Data Grid and Date and Time Pickers packages.
 To run codemods for a specific package, refer to the respective section.
 
 ```bash
-npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
+npx @mui/x-codemod@latest v6.0.0/preset-safe <path|folder>
 ```
 
 The corresponding sub-sections are listed below
@@ -229,7 +300,7 @@ The corresponding sub-sections are listed below
 The `preset-safe` codemods for pickers.
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/preset-safe <path|folder>
+npx @mui/x-codemod@latest v6.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -314,7 +385,7 @@ Renames the `locale` prop of the `LocalizationProvider` component into `adapterL
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/localization-provider-rename-locale <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/localization-provider-rename-locale <path>
 ```
 
 #### `text-props-to-localeText`
@@ -331,7 +402,7 @@ Replace props used for localization such as `cancelText` to their corresponding 
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/text-props-to-localeText <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/text-props-to-localeText <path>
 ```
 
 If you were always using the same text value in all your components, consider moving those translation from the component to the `LocalizationProvider` by hand.
@@ -372,7 +443,7 @@ Replace props used for `Tabs` in DateTime pickers by `componentsProps.tabs` prop
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/replace-tabs-props <path>
 ```
 
 #### `replace-toolbar-props-by-slot`
@@ -398,7 +469,7 @@ Replace props used to customize the `Toolbar` in pickers by slots properties and
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/replace-toolbar-props-by-slot <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/replace-toolbar-props-by-slot <path>
 ```
 
 #### `migrate-to-components-componentsProps`
@@ -448,7 +519,7 @@ Replace customization props by their equivalent `components` and `componentsProp
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/migrate-to-components-componentsProps <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/migrate-to-components-componentsProps <path>
 ```
 
 #### `replace-arrows-button-slot`
@@ -474,7 +545,7 @@ Replace `LeftArrowButton` and `RightArrowButton` slots for navigation buttons by
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/replace-arrows-button-slot <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/replace-arrows-button-slot <path>
 ```
 
 #### `rename-should-disable-time`
@@ -489,7 +560,7 @@ Replace `shouldDisableTime` by `shouldDisableClock`.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/rename-should-disable-time <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/rename-should-disable-time <path>
 ```
 
 #### `rename-inputFormat-prop`
@@ -504,7 +575,7 @@ Replace `inputFormat` prop with `format`.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/rename-inputFormat-prop <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/rename-inputFormat-prop <path>
 ```
 
 #### `rename-default-toolbar-title-localeText`
@@ -527,7 +598,7 @@ Rename toolbar related translation keys, removing `Default` part from them to be
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
 ```
 
 #### `rename-components-to-slots-pickers`
@@ -539,24 +610,24 @@ This change only affects Date and Time Pickers components.
 ```diff
  <DatePicker
 -  components={{ Toolbar: CustomToolbar }}
-+  slots={{ toolbar: CustomToolbar }}
 -  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slots={{ toolbar: CustomToolbar }}
 +  slotProps={{ actionBar: { actions: ['clear'] } }}
  />;
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
+npx @mui/x-codemod@latest v6.0.0/pickers/rename-components-to-slots <path>
 ```
 
-### Data grid codemods
+### Data Grid codemods
 
 #### `preset-safe` for data grid v6.0.0
 
 The `preset-safe` codemods for data grid.
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
+npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -591,14 +662,14 @@ Replace column menu items that have been renamed.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/column-menu-components-rename <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/column-menu-components-rename <path>
 ```
 
 If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` for grouping, consider fixing them manually as these imports are replaced by `GridColumnMenuGroupingItem` and may require some extra work to port.
 
 #### `row-selection-props-rename`
 
-Data grid props that have been renamed.
+Data Grid props that have been renamed.
 
 ```diff
  <DataGrid
@@ -618,7 +689,7 @@ Data grid props that have been renamed.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/row-selection-props-rename <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/row-selection-props-rename <path>
 ```
 
 #### `rename-rowsPerPageOptions-prop`
@@ -633,7 +704,7 @@ Rename `rowsPerPageOptions` prop to `pageSizeOptions`.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/rename-rowsPerPageOptions-prop <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/rename-rowsPerPageOptions-prop <path>
 ```
 
 #### `remove-disableExtendRowFullWidth-prop`
@@ -647,7 +718,7 @@ Remove `disableExtendRowFullWidth` prop which is no longer supported.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/remove-disableExtendRowFullWidth-prop <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/remove-disableExtendRowFullWidth-prop <path>
 ```
 
 #### `rename-linkOperators-logicOperators`
@@ -702,7 +773,7 @@ Rename `linkOperators` related props to `logicOperators` and rename classes.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/rename-linkOperators-logicOperators <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/rename-linkOperators-logicOperators <path>
 ```
 
 #### `rename-filter-item-props`
@@ -743,7 +814,7 @@ Rename filter item props to the new values.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/rename-filter-item-props <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/rename-filter-item-props <path>
 ```
 
 #### `rename-selectors-and-events`
@@ -782,7 +853,7 @@ Rename selectors and events.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/rename-selectors-and-events <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/rename-selectors-and-events <path>
 ```
 
 #### `remove-stabilized-experimentalFeatures`
@@ -807,7 +878,7 @@ Remove feature flags for stabilized `experimentalFeatures`.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 #### `replace-onCellFocusOut-prop`
@@ -826,7 +897,7 @@ Replace `onCellFocusOut` prop with `componentsProps.cell.onBlur`.
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
 ```
 
 #### `rename-components-to-slots-data-grid`
@@ -838,14 +909,14 @@ This change only affects Data Grid components.
 ```diff
  <DataGrid
 -  components={{ Toolbar: CustomToolbar }}
-+  slots={{ toolbar: CustomToolbar }}
 -  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slots={{ toolbar: CustomToolbar }}
 +  slotProps={{ actionBar: { actions: ['clear'] } }}
  />;
 ```
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/rename-components-to-slots <path>
 ```
 
 You can find more details about Data Grid breaking change in [the migration guide](https://mui.com/x/migration/migration-data-grid-v5/).

@@ -41,5 +41,5 @@ export function exportAs<ExtraExtensions extends string>(
     return;
   }
 
-  throw new Error('MUI: exportAs not supported');
+  throw new Error('MUI X: exportAs not supported.');
 }

@@ -1,5 +1,7 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { ButtonProps } from '@mui/material/Button';
+import { TooltipProps } from '@mui/material/Tooltip';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
@@ -7,9 +9,19 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
+interface GridToolbarColumnsButtonProps {
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
+}
+
+const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
   function GridToolbarColumnsButton(props, ref) {
-    const { onClick, ...other } = props;
+    const { slotProps = {} } = props;
+    const buttonProps = slotProps.button || {};
+    const tooltipProps = slotProps.tooltip || {};
     const columnButtonId = useId();
     const columnPanelId = useId();
 
@@ -31,7 +43,7 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
         );
       }
 
-      onClick?.(event);
+      buttonProps.onClick?.(event);
     };
 
     // Disable the button if the corresponding is disabled
@@ -42,21 +54,42 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
     const isOpen = preferencePanel.open && preferencePanel.panelId === columnPanelId;
 
     return (
-      <rootProps.slots.baseButton
-        ref={ref}
-        id={columnButtonId}
-        size="small"
-        aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-        aria-controls={isOpen ? columnPanelId : undefined}
-        startIcon={<rootProps.slots.columnSelectorIcon />}
-        {...other}
-        onClick={showColumns}
-        {...rootProps.slotProps?.baseButton}
+      <rootProps.slots.baseTooltip
+        title={apiRef.current.getLocaleText('toolbarColumnsLabel')}
+        enterDelay={1000}
+        {...tooltipProps}
+        {...rootProps.slotProps?.baseTooltip}
       >
-        {apiRef.current.getLocaleText('toolbarColumns')}
-      </rootProps.slots.baseButton>
+        <rootProps.slots.baseButton
+          ref={ref}
+          id={columnButtonId}
+          size="small"
+          aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
+          aria-haspopup="menu"
+          aria-expanded={isOpen}
+          aria-controls={isOpen ? columnPanelId : undefined}
+          startIcon={<rootProps.slots.columnSelectorIcon />}
+          {...buttonProps}
+          onClick={showColumns}
+          {...rootProps.slotProps?.baseButton}
+        >
+          {apiRef.current.getLocaleText('toolbarColumns')}
+        </rootProps.slots.baseButton>
+      </rootProps.slots.baseTooltip>
     );
   },
 );
+
+GridToolbarColumnsButton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+} as any;
+
+export { GridToolbarColumnsButton };

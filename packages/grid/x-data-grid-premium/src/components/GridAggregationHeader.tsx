@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
@@ -20,7 +19,7 @@ interface OwnerState extends DataGridPremiumProcessedProps {
   colDef: GridColDef;
 }
 
-const GridAggregationHeaderRoot = styled(Box, {
+const GridAggregationHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeader',
   overridesResolver: (_, styles) => styles.aggregationColumnHeader,

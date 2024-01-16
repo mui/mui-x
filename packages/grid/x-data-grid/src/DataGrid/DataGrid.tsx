@@ -1,13 +1,31 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { chainPropTypes } from '@mui/utils';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
-import { DataGridProps } from '../models/props/DataGridProps';
+import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
-import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { GridValidRowModel } from '../models/gridRows';
+import {
+  PropValidator,
+  propValidatorsDataGrid,
+  validateProps,
+} from '../internals/utils/propValidation';
+
+const propValidators: PropValidator<DataGridProcessedProps>[] = [
+  ...propValidatorsDataGrid,
+  // Only validate in MIT version
+  (props) =>
+    (props.columns &&
+      props.columns.some((column) => column.resizable) &&
+      [
+        `MUI X: \`column.resizable = true\` is not a valid prop.`,
+        'Column resizing is not available in the MIT version.',
+        '',
+        'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+      ].join('\n')) ||
+    undefined,
+];
 
 const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
@@ -15,6 +33,8 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
 ) {
   const props = useDataGridProps(inProps);
   const privateApiRef = useDataGridComponent(props.apiRef, props);
+
+  validateProps(props, propValidators);
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
@@ -26,7 +46,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
         {...props.forwardedProps}
       >
         <GridHeader />
-        <GridBody VirtualScrollerComponent={DataGridVirtualScroller} />
+        <GridBody />
         <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
@@ -108,22 +128,9 @@ DataGridRaw.propTypes = {
    */
   columnHeaderHeight: PropTypes.number,
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
-  columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
-    // @ts-ignore because otherwise `build:api` doesn't work
-    if (props.columns && props.columns.some((column) => column.resizable)) {
-      return new Error(
-        [
-          `MUI: \`column.resizable = true\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version.',
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-        ].join('\n'),
-      );
-    }
-    return null;
-  }),
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
    * @default 3
@@ -155,6 +162,11 @@ DataGridRaw.propTypes = {
    */
   disableColumnSelector: PropTypes.bool,
   /**
+   * If `true`, the column sorting feature will be disabled.
+   * @default false
+   */
+  disableColumnSorting: PropTypes.bool,
+  /**
    * If `true`, the density selector is disabled.
    * @default false
    */
@@ -162,9 +174,14 @@ DataGridRaw.propTypes = {
   /**
    * If `true`, `eval()` is not used for performance optimization.
    * @default false
-   * @ignore - do not document
    */
   disableEval: PropTypes.bool,
+  /**
+   * If `true`, multiple selection using the Ctrl/CMD or Shift key is disabled.
+   * The MIT DataGrid will ignore this prop, unless `checkboxSelection` is enabled.
+   * @default false (`!props.checkboxSelection` for MIT Data Grid)
+   */
+  disableMultipleRowSelection: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
@@ -573,19 +590,7 @@ DataGridRaw.propTypes = {
       }),
     ]).isRequired,
   ),
-  pagination: (props: any) => {
-    if (props.pagination === false) {
-      return new Error(
-        [
-          'MUI: `<DataGrid pagination={false} />` is not a valid prop.',
-          'Infinite scrolling is not available in the MIT version.',
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to disable the pagination.',
-        ].join('\n'),
-      );
-    }
-    return null;
-  },
+  pagination: PropTypes.oneOf([true]),
   /**
    * Pagination can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle the pagination on the client-side.

@@ -19,14 +19,25 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   data: Tdata[];
   /**
    * The radius between circle center and the begining of the arc.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the maximal radius that fit into the drawing area.
    * @default 0
    */
-  innerRadius?: number;
+  innerRadius?: number | string;
   /**
    * The radius between circle center and the end of the arc.
-   * @default R_max The maximal radius that fit into the drawing area.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the maximal radius that fit into the drawing area.
+   * @default '100%'
    */
-  outerRadius?: number;
+  outerRadius?: number | string;
+  /**
+   * The radius between circle center and the arc label.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the maximal radius that fit into the drawing area.
+   * @default (innerRadius - outerRadius) / 2
+   */
+  arcLabelRadius?: number | string;
   /**
    * The radius applied to arc corners (similar to border radius).
    * @default 0
@@ -54,18 +65,23 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   arcLabel?: 'formattedValue' | 'label' | 'value' | ((item: DefaultizedPieValueType) => string);
   /**
    * The minimal angle required to display the arc label.
+   * @default 0
    */
   arcLabelMinAngle?: number;
   /**
    * The x coordinate of the pie center.
-   * @default width/2 the center of the drawing area.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the width the drawing area.
+   * @default '50%'
    */
-  cx?: number;
+  cx?: number | string;
   /**
    * The y coordinate of the pie center.
-   * @default height/2 the center of the drawing area.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the height the drawing area.
+   * @default '50%'
    */
-  cy?: number;
+  cy?: number | string;
   /**
    * Override the arc attibutes when it is highlighted.
    */
@@ -79,6 +95,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     outerRadius?: number;
     cornerRadius?: number;
     paddingAngle?: number;
+    arcLabelRadius?: number;
     color?: string;
   };
   /**
@@ -94,6 +111,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     outerRadius?: number;
     cornerRadius?: number;
     paddingAngle?: number;
+    arcLabelRadius?: number;
     color?: string;
   };
 }
@@ -111,4 +129,24 @@ export type PieItemIdentifier = {
 export interface DefaultizedPieSeriesType
   extends DefaultizedProps<PieSeriesType, CommonDefaultizedProps> {
   data: DefaultizedPieValueType[];
+}
+
+/**
+ * Props received when the parent components has done the percentage conversion.
+ */
+export interface ComputedPieRadius {
+  /**
+   * The radius between circle center and the begining of the arc.
+   * @default 0
+   */
+  innerRadius?: number;
+  /**
+   * The radius between circle center and the end of the arc.
+   */
+  outerRadius: number;
+  /**
+   * The radius between circle center and the arc label in px.
+   * @default (innerRadius - outerRadius) / 2
+   */
+  arcLabelRadius?: number;
 }

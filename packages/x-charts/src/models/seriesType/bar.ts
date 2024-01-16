@@ -1,4 +1,5 @@
 import { DefaultizedProps } from '../helpers';
+import type { StackOffsetType } from '../stacking';
 import {
   CartesianSeriesType,
   CommonSeriesType,
@@ -25,6 +26,11 @@ export interface BarSeriesType
    * @default 'vertical'
    */
   layout?: 'horizontal' | 'vertical';
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'diverging'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 /**

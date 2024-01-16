@@ -78,7 +78,6 @@ export type DataGridForcedPropsKey =
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
-  | 'disableMultipleRowSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
   | 'keepColumnPositionIfDraggedOutside'
@@ -191,7 +190,6 @@ export interface DataGridPropsWithDefaultValues {
   /**
    * If `true`, `eval()` is not used for performance optimization.
    * @default false
-   * @ignore - do not document
    */
   disableEval: boolean;
   /**
@@ -200,12 +198,18 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableMultipleColumnsFiltering: boolean;
   /**
-   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
-   * @default false
+   * If `true`, multiple selection using the Ctrl/CMD or Shift key is disabled.
+   * The MIT DataGrid will ignore this prop, unless `checkboxSelection` is enabled.
+   * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: boolean;
   /**
-   * If `true`, sorting with multiple columns is disabled.
+   * If `true`, the column sorting feature will be disabled.
+   * @default false
+   */
+  disableColumnSorting: boolean;
+  /**
+   * If `true`, the sorting with multiple columns is disabled.
    * @default false
    */
   disableMultipleColumnsSorting: boolean;
@@ -710,7 +714,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   'aria-labelledby'?: string;
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
   columns: readonly GridColDef<R>[];
   /**

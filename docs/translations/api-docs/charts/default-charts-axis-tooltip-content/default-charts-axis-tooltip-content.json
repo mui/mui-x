@@ -1,0 +1,30 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "axis": { "description": "The properties of the triggered axis." },
+    "axisData": { "description": "Data identifying the triggered axis." },
+    "axisValue": { "description": "The value associated to the current mouse position." },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "dataIndex": { "description": "The index of the data item triggered." },
+    "series": { "description": "The series linked to the triggered axis." }
+  },
+  "classDescriptions": {
+    "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
+    "labelCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the labelCell element"
+    },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
+    "markCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the markCell element"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
+    "table": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the table element" },
+    "valueCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the valueCell element"
+    }
+  }
+}
