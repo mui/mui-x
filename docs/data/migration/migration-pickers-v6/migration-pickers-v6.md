@@ -700,7 +700,7 @@ You can directly use your date library:
 -const isoString = adapter.toISO(value);
 +const isoString = value.toISOString();
 
-// For Luxon
+ // For Luxon
 -const isoString = adapter.toISO(value);
 +const isoString = value.toUTC().toISO({ format: 'extended' });
 
