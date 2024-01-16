@@ -176,14 +176,14 @@ async function initializeEnvironment(
         await waitFor(async () => {
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Nike');
           expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
-            'cell',
+            'gridcell',
           );
         });
         await page.keyboard.press('ArrowDown');
         await waitFor(async () => {
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
           expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
-            'cell',
+            'gridcell',
           );
         });
         await page.keyboard.press('Tab');
@@ -197,7 +197,7 @@ async function initializeEnvironment(
         await waitFor(async () => {
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
           expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
-            'cell',
+            'gridcell',
           );
         });
         // WebKit does not focus on buttons by default when pressing tab.
@@ -212,7 +212,7 @@ async function initializeEnvironment(
 
       it('should display the rows', async () => {
         await renderFixture('DataGrid/ConcurrentReactUpdate');
-        const cells = page.locator('[role="cell"]');
+        const cells = page.locator('[role="gridcell"]');
         await cells.first().waitFor();
         expect(await cells.allTextContents()).to.deep.equal(['1', '2']);
       });
@@ -223,7 +223,7 @@ async function initializeEnvironment(
         await page.click('"Gucci"');
         expect(
           await page.evaluate(() => {
-            const selector = '[role="row"][data-rowindex="0"] [role="cell"][data-colindex="0"]';
+            const selector = '[role="row"][data-rowindex="0"] [role="gridcell"][data-colindex="0"]';
             return document.querySelector(selector)!.textContent!;
           }),
         ).to.equal('Gucci');
@@ -258,7 +258,7 @@ async function initializeEnvironment(
 
         const brand = page.locator('[role="columnheader"][aria-colindex="1"] > [draggable]');
         const rowColumn1990 = page.locator(
-          '[role="row"][data-rowindex="0"] [role="cell"][data-colindex="1"]',
+          '[role="row"][data-rowindex="0"] [role="gridcell"][data-colindex="1"]',
         );
         await brand.dragTo(rowColumn1990);
 
@@ -292,7 +292,7 @@ async function initializeEnvironment(
 
       it('should select one row', async () => {
         await renderFixture('DataGrid/CheckboxSelection');
-        await page.click('[role="row"][data-rowindex="0"] [role="cell"] input');
+        await page.click('[role="row"][data-rowindex="0"] [role="gridcell"] input');
         expect(
           await page.evaluate(
             () => document.querySelector('[role="row"][data-rowindex="0"]')!.className!,
@@ -302,15 +302,17 @@ async function initializeEnvironment(
 
       it('should not scroll when changing the selected row', async () => {
         await renderFixture('DataGrid/RowSelection');
-        await page.click('[role="row"][data-rowindex="0"] [role="cell"]');
+        await page.click('[role="row"][data-rowindex="0"] [role="gridcell"]');
         await page.evaluate(() =>
-          document.querySelector('[role="row"][data-rowindex="3"] [role="cell"]')!.scrollIntoView(),
+          document
+            .querySelector('[role="row"][data-rowindex="3"] [role="gridcell"]')!
+            .scrollIntoView(),
         );
         const scrollTop = await page.evaluate(
           () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop!,
         );
         expect(scrollTop).not.to.equal(0);
-        await page.click('[role="row"][data-rowindex="3"] [role="cell"]');
+        await page.click('[role="row"][data-rowindex="3"] [role="gridcell"]');
         expect(
           await page.evaluate(
             () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop!,
@@ -328,23 +330,23 @@ async function initializeEnvironment(
         await renderFixture('DataGrid/KeyboardEditDate');
 
         // Edit date column
-        expect(await page.locator('[role="cell"][data-field="birthday"]').textContent()).to.equal(
-          '2/29/1984',
-        );
+        expect(
+          await page.locator('[role="gridcell"][data-field="birthday"]').textContent(),
+        ).to.equal('2/29/1984');
 
         // set 06/25/1986
-        await page.dblclick('[role="cell"][data-field="birthday"]');
-        await page.type('[role="cell"][data-field="birthday"] input', '06/25/1986');
+        await page.dblclick('[role="gridcell"][data-field="birthday"]');
+        await page.type('[role="gridcell"][data-field="birthday"] input', '06/25/1986');
 
         await page.keyboard.press('Enter');
 
-        expect(await page.locator('[role="cell"][data-field="birthday"]').textContent()).to.equal(
-          '6/25/1986',
-        );
+        expect(
+          await page.locator('[role="gridcell"][data-field="birthday"]').textContent(),
+        ).to.equal('6/25/1986');
 
         // Edit dateTime column
         expect(
-          await page.locator('[role="cell"][data-field="lastConnection"]').textContent(),
+          await page.locator('[role="gridcell"][data-field="lastConnection"]').textContent(),
         ).to.equal('2/20/2022, 6:50:00 AM');
 
         // start editing lastConnection
@@ -352,7 +354,7 @@ async function initializeEnvironment(
         await page.keyboard.press('Enter');
 
         // set 01/31/2025 04:05:00 PM
-        const dateTimeInput = page.locator('[role="cell"][data-field="lastConnection"] input');
+        const dateTimeInput = page.locator('[role="gridcell"][data-field="lastConnection"] input');
         if (browserType.name() === 'firefox') {
           // firefox seems to break the section jumping if the section is edited without firstly clearing it
           dateTimeInput.press('Backspace');
@@ -392,7 +394,7 @@ async function initializeEnvironment(
         await keyDown(); // 3
 
         expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
-          'cell',
+          'gridcell',
           'Expected cell to be focused',
         );
         expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('3');
@@ -415,7 +417,7 @@ async function initializeEnvironment(
       it('should move the focus from left pinned column to the cell in main render zone after pressing Tab during row editing', async () => {
         await renderFixture('DataGridPro/RowEditingWithPinnedColumns');
 
-        await page.dblclick('[role="cell"][data-field="column0"]');
+        await page.dblclick('[role="gridcell"][data-field="column0"]');
         await page.keyboard.down('Tab');
 
         expect(
@@ -437,11 +439,11 @@ async function initializeEnvironment(
       it('should start editing a cell when a printable char is pressed', async () => {
         await renderFixture('DataGrid/KeyboardEditInput');
 
-        expect(await page.locator('[role="cell"][data-field="brand"]').textContent()).to.equal(
+        expect(await page.locator('[role="gridcell"][data-field="brand"]').textContent()).to.equal(
           'Nike',
         );
 
-        await page.click('[role="cell"][data-field="brand"]');
+        await page.click('[role="gridcell"][data-field="brand"]');
         await page.keyboard.press('p');
         if (browserType.name() === 'firefox') {
           // In firefox the test fails without this
@@ -449,16 +451,16 @@ async function initializeEnvironment(
           await page.keyboard.insertText('p');
         }
 
-        expect(await page.locator('[role="cell"][data-field="brand"] input').inputValue()).to.equal(
-          'p',
-        );
+        expect(
+          await page.locator('[role="gridcell"][data-field="brand"] input').inputValue(),
+        ).to.equal('p');
       });
 
       // https://github.com/mui/mui-x/issues/9281
       it('should return a number value when editing with a digit key press', async () => {
         await renderFixture('DataGrid/KeyboardEditNumber');
 
-        await page.click('[role="cell"][data-field="age"]');
+        await page.click('[role="gridcell"][data-field="age"]');
         await page.keyboard.press('1');
         if (browserType.name() === 'firefox') {
           // In firefox the test fails without this
@@ -474,7 +476,7 @@ async function initializeEnvironment(
       it('should update input value when editing starts with `0` key press', async () => {
         await renderFixture('DataGrid/KeyboardEditNumber');
 
-        await page.click('[role="cell"][data-field="age"]');
+        await page.click('[role="gridcell"][data-field="age"]');
         await page.keyboard.press('0');
         if (browserType.name() === 'firefox') {
           // In firefox the test fails without this
@@ -482,32 +484,32 @@ async function initializeEnvironment(
           await page.keyboard.insertText('0');
         }
 
-        expect(await page.locator('[role="cell"][data-field="age"] input').inputValue()).to.equal(
-          '0',
-        );
+        expect(
+          await page.locator('[role="gridcell"][data-field="age"] input').inputValue(),
+        ).to.equal('0');
       });
 
       // https://github.com/mui/mui-x/issues/10582
       it('should update input value when editing starts with `-` key press', async () => {
         await renderFixture('DataGrid/KeyboardEditNumber');
 
-        await page.click('[role="cell"][data-field="age"]');
+        await page.click('[role="gridcell"][data-field="age"]');
         await page.keyboard.press('-');
 
-        expect(await page.locator('[role="cell"][data-field="age"] input').inputValue()).to.equal(
-          '',
-        );
+        expect(
+          await page.locator('[role="gridcell"][data-field="age"] input').inputValue(),
+        ).to.equal('');
       });
 
       // https://github.com/mui/mui-x/issues/9195
       it('should not paste "v" on Ctrl+V press', async () => {
         await renderFixture('DataGrid/KeyboardEditInput');
 
-        await page.click('[role="cell"][data-field="brand"]');
+        await page.click('[role="gridcell"][data-field="brand"]');
         await page.keyboard.press('Control+v');
 
         expect(
-          await page.locator('[role="cell"][data-field="brand"] input').inputValue(),
+          await page.locator('[role="gridcell"][data-field="brand"] input').inputValue(),
         ).not.to.equal('v');
       });
     });

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { createRenderer, screen, act } from '@mui-internal/test-utils';
+import { createRenderer, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { ptBR } from '@mui/x-data-grid-pro/locales';
+import { grid } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Layout', () => {
   const { render } = createRenderer();
@@ -174,7 +175,7 @@ describe('<DataGridPro /> - Layout', () => {
       </ThemeProvider>,
     );
 
-    expect(screen.getByRole('grid')).toHaveComputedStyle({
+    expect(grid('root')).toHaveComputedStyle({
       color: 'rgb(0, 0, 255)',
     });
   });

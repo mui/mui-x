@@ -18,7 +18,7 @@ function getSelectedRowIds() {
     .filter((row) => row.classList.contains('Mui-selected'))
     .map((row) =>
       Number(
-        row.querySelector(`[role="cell"][data-colindex="${hasCheckbox ? 1 : 0}"]`)!.textContent,
+        row.querySelector(`[role="gridcell"][data-colindex="${hasCheckbox ? 1 : 0}"]`)!.textContent,
       ),
     );
 }

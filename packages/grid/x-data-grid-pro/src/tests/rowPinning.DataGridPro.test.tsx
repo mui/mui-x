@@ -339,7 +339,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   describe('keyboard navigation', () => {
     function getActiveCellRowId() {
       const cell = document.activeElement;
-      if (!cell || cell.getAttribute('role') !== 'cell') {
+      if (!cell || cell.getAttribute('role') !== 'gridcell') {
         return undefined;
       }
       return cell.parentElement!.getAttribute('data-id');

@@ -131,7 +131,7 @@ describe('<DataGrid /> - Slots', () => {
             disableVirtualization
             slots={{
               cell: ({ rowIndex, colIndex }) => (
-                <span role="cell" data-rowindex={rowIndex} data-colindex={colIndex} />
+                <span role="gridcell" data-rowindex={rowIndex} data-colindex={colIndex} />
               ),
             }}
           />
