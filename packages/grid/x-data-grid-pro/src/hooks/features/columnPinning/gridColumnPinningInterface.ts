@@ -1,14 +1,5 @@
-export interface GridPinnedColumns {
-  left?: string[];
-  right?: string[];
-}
-
-export type GridColumnPinningState = GridPinnedColumns;
-
-enum GridPinnedPosition {
-  left = 'left',
-  right = 'right',
-}
+import { GridPinnedColumnPosition } from '@mui/x-data-grid';
+import { GridPinnedColumnFields } from '@mui/x-data-grid/internals';
 
 /**
  * The column pinning API interface that is available in the grid [[apiRef]].
@@ -17,9 +8,9 @@ export interface GridColumnPinningApi {
   /**
    * Pins a column to the left or right side of the grid.
    * @param {string} field The column field to pin.
-   * @param {GridPinnedPosition} side Which side to pin the column.
+   * @param {GridPinnedColumnPosition} side Which side to pin the column.
    */
-  pinColumn: (field: string, side: GridPinnedPosition) => void;
+  pinColumn: (field: string, side: GridPinnedColumnPosition) => void;
   /**
    * Unpins a column.
    * @param {string} field The column field to unpin.
@@ -27,20 +18,20 @@ export interface GridColumnPinningApi {
   unpinColumn: (field: string) => void;
   /**
    * Returns which columns are pinned.
-   * @returns {GridPinnedColumns} An object containing the pinned columns.
+   * @returns {GridPinnedColumnFields} An object containing the pinned columns.
    */
-  getPinnedColumns: () => GridPinnedColumns;
+  getPinnedColumns: () => GridPinnedColumnFields;
   /**
    * Changes the pinned columns.
-   * @param {GridPinnedColumns} pinnedColumns An object containing the columns to pin.
+   * @param {GridPinnedColumnFields} pinnedColumns An object containing the columns to pin.
    */
-  setPinnedColumns: (pinnedColumns: GridPinnedColumns) => void;
+  setPinnedColumns: (pinnedColumns: GridPinnedColumnFields) => void;
   /**
    * Returns which side a column is pinned to.
    * @param {string} field The column field to check.
    * @returns {string | false} Which side the column is pinned or `false` if not pinned.
    */
-  isColumnPinned: (field: string) => GridPinnedPosition | false;
+  isColumnPinned: (field: string) => GridPinnedColumnPosition | false;
 }
 
 export interface GridColumnPinningInternalCache {
@@ -49,5 +40,3 @@ export interface GridColumnPinningInternalCache {
    */
   orderedFieldsBeforePinningColumns: string[] | null;
 }
-
-export { GridPinnedPosition };

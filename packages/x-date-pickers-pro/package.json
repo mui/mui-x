@@ -42,7 +42,7 @@
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.7",
+    "@babel/runtime": "^7.23.8",
     "@mui/base": "^5.0.0-beta.29",
     "@mui/system": "^5.15.2",
     "@mui/utils": "^5.15.2",
@@ -55,7 +55,7 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.8.6",
+    "@mui/material": "^5.15.0",
     "date-fns": "^2.25.0 || ^3.2.0",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.10.7",
@@ -96,7 +96,7 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.7",
+    "@types/luxon": "^3.4.1",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "luxon": "^3.4.4",

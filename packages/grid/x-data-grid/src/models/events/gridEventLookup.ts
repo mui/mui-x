@@ -6,11 +6,11 @@ import type {
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
   GridPreferencePanelParams,
-  GridRenderedRowsIntervalChangeParams,
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
   GridColumnGroupHeaderParams,
+  GridRenderContext,
 } from '../params';
 import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
@@ -460,9 +460,9 @@ export interface GridEventLookup
    */
   rowExpansionChange: { params: GridGroupNode };
   /**
-   * Fired when the rendered rows index interval changes. Called with a [[GridRenderedRowsIntervalChangeParams]] object.
+   * Fired when the rendered rows index interval changes. Called with a [[GridRenderContext]] object.
    */
-  renderedRowsIntervalChange: { params: GridRenderedRowsIntervalChangeParams };
+  renderedRowsIntervalChange: { params: GridRenderContext };
 
   // Edit
   /**

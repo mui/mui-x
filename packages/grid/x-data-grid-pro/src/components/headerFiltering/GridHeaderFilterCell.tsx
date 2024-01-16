@@ -18,6 +18,7 @@ import {
   gridFilterableColumnLookupSelector,
 } from '@mui/x-data-grid';
 import {
+  fastMemo,
   GridStateColDef,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
@@ -35,7 +36,6 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   sortIndex?: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
-  filterOperators?: GridFilterOperator[];
   width: number;
   colDef: GridColDef;
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
@@ -73,7 +73,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       colIndex,
       height,
       hasFocus,
-      filterOperators,
       width,
       headerClassName,
       colDef,
@@ -92,9 +91,15 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const inputRef = React.useRef<HTMLInputElement>(null);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-    const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
-    const isMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
+    const editingField = useGridSelector(apiRef, gridHeaderFilteringEditFieldSelector);
+    const isEditing = editingField === colDef.field;
 
+    const menuOpenField = useGridSelector(apiRef, gridHeaderFilteringMenuSelector);
+    const isMenuOpen = menuOpenField === colDef.field;
+
+    // TODO: Support for `isAnyOf` operator
+    const filterOperators =
+      colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
 
@@ -338,18 +343,6 @@ GridHeaderFilterCell.propTypes = {
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
-  filterOperators: PropTypes.arrayOf(
-    PropTypes.shape({
-      getApplyFilterFn: PropTypes.func.isRequired,
-      getValueAsString: PropTypes.func,
-      headerLabel: PropTypes.string,
-      InputComponent: PropTypes.elementType,
-      InputComponentProps: PropTypes.object,
-      label: PropTypes.string,
-      requiresFilterValue: PropTypes.bool,
-      value: PropTypes.string.isRequired,
-    }),
-  ),
   hasFocus: PropTypes.bool,
   /**
    * Class name that will be added in the column header cell.
@@ -372,4 +365,6 @@ GridHeaderFilterCell.propTypes = {
   width: PropTypes.number.isRequired,
 } as any;
 
-export { GridHeaderFilterCell };
+const Memoized = fastMemo(GridHeaderFilterCell);
+
+export { Memoized as GridHeaderFilterCell };

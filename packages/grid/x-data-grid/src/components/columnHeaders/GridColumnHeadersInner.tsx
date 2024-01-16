@@ -58,7 +58,7 @@ export const GridColumnHeadersInner = React.forwardRef<HTMLDivElement, GridColum
     const ownerState = {
       ...rootProps,
       isDragging,
-      hasScrollX: apiRef.current.getRootDimensions()?.hasScrollX ?? false,
+      hasScrollX: apiRef.current.getRootDimensions().hasScrollX,
     };
     const classes = useUtilityClasses(ownerState);
 

@@ -1,10 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/utils';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridExpandedRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -12,8 +9,10 @@ import {
   gridRowCountSelector,
   gridRowsLoadingSelector,
 } from '../../hooks/features/rows/gridRowsSelector';
+import { gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridVisibleRows } from '../../hooks/utils/useGridVisibleRows';
 import { getMinimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -25,7 +24,7 @@ const GridOverlayWrapperRoot = styled('div', {
   overridesResolver: (props, styles) => styles.overlayWrapper,
 })<{ overlayType: 'loadingOverlay' | string }>(({ overlayType }) => ({
   position: 'sticky', // To stay in place while scrolling
-  top: 0,
+  top: 'var(--DataGrid-headersTotalHeight)',
   left: 0,
   width: 0, // To stay above the content instead of shifting it down
   height: 0, // To stay above the content instead of shifting it down
@@ -58,29 +57,19 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 function GridOverlayWrapper(props: React.PropsWithChildren<{ overlayType: string }>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const currentPage = useGridVisibleRows(apiRef, rootProps);
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
-  const [viewportInnerSize, setViewportInnerSize] = React.useState(
-    () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
-  );
+  let height: React.CSSProperties['height'] =
+    dimensions.viewportOuterSize.height -
+    dimensions.headersTotalHeight -
+    (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
 
-  const handleViewportSizeChange = React.useCallback(() => {
-    setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
-  }, [apiRef]);
-
-  useEnhancedEffect(() => {
-    return apiRef.current.subscribeEvent('viewportInnerSizeChange', handleViewportSizeChange);
-  }, [apiRef, handleViewportSizeChange]);
-
-  let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
-  if (rootProps.autoHeight && height === 0) {
-    height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
+  if ((rootProps.autoHeight && currentPage.rows.length === 0) || height === 0) {
+    height = getMinimalContentHeight(apiRef);
   }
 
   const classes = useUtilityClasses({ ...props, classes: rootProps.classes });
-
-  if (!viewportInnerSize) {
-    return null;
-  }
 
   return (
     <GridOverlayWrapperRoot className={clsx(classes.root)} overlayType={props.overlayType}>
@@ -88,7 +77,7 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{ overlayType: string
         className={clsx(classes.inner)}
         style={{
           height,
-          width: viewportInnerSize?.width ?? 0,
+          width: dimensions.viewportOuterSize.width,
         }}
         {...props}
       />
