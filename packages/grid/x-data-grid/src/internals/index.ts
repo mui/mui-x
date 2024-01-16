@@ -143,6 +143,7 @@ export {
 } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
+export { styled } from '../utils/styled';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';

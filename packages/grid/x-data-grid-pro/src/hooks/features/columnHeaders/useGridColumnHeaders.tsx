@@ -7,7 +7,6 @@ import {
   getDataGridUtilityClass,
   GridFilterItem,
 } from '@mui/x-data-grid';
-import { styled } from '@mui/system';
 import {
   useGridColumnHeaders as useGridColumnHeadersCommunity,
   UseGridColumnHeadersProps,
@@ -16,6 +15,7 @@ import {
   useGridPrivateApiContext,
   getGridFilter,
   GridStateColDef,
+  styled,
 } from '@mui/x-data-grid/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';

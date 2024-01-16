@@ -1,9 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/system';
 import { defaultMemoize } from 'reselect';
 import { useGridSelector } from '../../utils';
+import { styled } from '../../../utils/styled';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
