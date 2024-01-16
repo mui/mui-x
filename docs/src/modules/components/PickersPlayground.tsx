@@ -1,20 +1,21 @@
 import * as React from 'react';
+import { alpha, styled } from '@mui/material/styles';
 import dayjs, { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import InputLabel from '@mui/material/InputLabel';
-import RadioGroup from '@mui/material/RadioGroup';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
-import FormHelperText from '@mui/material/FormHelperText';
+import Switch from '@mui/material/Switch';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -38,63 +39,105 @@ import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePi
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { isDatePickerView, isTimeView } from '@mui/x-date-pickers/internals';
 
-function RadioGroupControl({
+const ComponentSection = styled('div')(({ theme }) => ({
+  padding: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  overflowX: 'auto',
+  '& .MuiPickersLayout-root': {
+    borderRadius: 8,
+    border: '1px dashed',
+    borderColor: theme.palette.mode === 'light' ? theme.palette.grey[300] : theme.palette.divider,
+    ...(theme.palette.mode === 'dark' && {
+      backgroundColor: alpha(theme.palette.grey[900], 0.2),
+    }),
+  },
+}));
+
+const PropControlsSection = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  background: alpha(theme.palette.grey[50], 0.5),
+  ...(theme.palette.mode === 'dark' && {
+    backgroundColor: alpha(theme.palette.grey[900], 0.3),
+  }),
+}));
+
+function TriBooleanGroupControl({
   label,
   value,
   onChange,
-  helperText,
 }: {
   label: string;
   value: boolean | undefined;
   onChange: (value: boolean | undefined) => void;
-  helperText?: string;
 }) {
   const id = React.useId();
   const handleChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(event.target.value === '' ? undefined : event.target.value === 'true');
+    (event: React.MouseEvent<HTMLElement>, newValue: any) => {
+      if (newValue === null) {
+        return;
+      }
+      onChange(newValue === '' ? undefined : newValue);
     },
     [onChange],
   );
   return (
-    <FormControl>
+    <FormControl
+      sx={{
+        flexDirection: 'column',
+        gap: 1,
+        // alignItems: 'center',
+      }}
+    >
       <FormLabel id={id}>{label}</FormLabel>
-      <RadioGroup aria-labelledby={id} value={value ?? ''} onChange={handleChange} row>
-        <FormControlLabel value={''} control={<Radio />} label="undefined" />
-        <FormControlLabel value control={<Radio />} label="true" />
-        <FormControlLabel value={false} control={<Radio />} label="false" />
-      </RadioGroup>
-      <FormHelperText>{helperText}</FormHelperText>
+      <ToggleButtonGroup
+        aria-labelledby={id}
+        value={value ?? ''}
+        exclusive
+        onChange={handleChange}
+        size="small"
+        color="primary"
+        fullWidth
+      >
+        <ToggleButton value={''}>Undefined</ToggleButton>
+        <ToggleButton value>True</ToggleButton>
+        <ToggleButton value={false}>False</ToggleButton>
+      </ToggleButtonGroup>
     </FormControl>
   );
 }
 
-function BooleanRadioGroupControl({
+function BooleanGroupControl({
   label,
   value,
   onChange,
-  helperText,
 }: {
   label: string;
   value: boolean;
   onChange: (value: boolean) => void;
-  helperText?: string;
 }) {
   const id = React.useId();
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(event.target.value === 'true');
+      onChange(event.target.checked);
     },
     [onChange],
   );
   return (
-    <FormControl>
+    <FormControl
+      size="small"
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 4,
+      }}
+    >
       <FormLabel id={id}>{label}</FormLabel>
-      <RadioGroup aria-labelledby={id} value={value} onChange={handleChange} row>
-        <FormControlLabel value control={<Radio />} label="true" />
-        <FormControlLabel value={false} control={<Radio />} label="false" />
-      </RadioGroup>
-      <FormHelperText>{helperText}</FormHelperText>
+      <Switch checked={value} onChange={handleChange} />
     </FormControl>
   );
 }
@@ -184,8 +227,9 @@ function ViewCheckbox({
   return (
     <Wrapper>
       <FormControlLabel
-        control={<Checkbox name={name} {...other} disabled={isDisabled} />}
+        control={<Checkbox name={name} {...other} disabled={isDisabled} size="small" />}
         label={name}
+        sx={{ textTransform: 'capitalize' }}
       />
     </Wrapper>
   );
@@ -467,125 +511,13 @@ export default function PickersPlayground() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box
         sx={{
+          flexGrow: 1,
+          maxWidth: '100%',
           display: 'flex',
-          flexWrap: 'wrap',
-          width: '100%',
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: '8px',
+          flexDirection: { xs: 'column', md: 'row' },
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 1.5,
-            bgcolor: 'action.hover',
-            padding: 2,
-            mx: {
-              xs: 2,
-              sm: 0,
-            },
-            flexGrow: 1,
-            width: {
-              xs: '100%',
-              sm: 312,
-            },
-          }}
-        >
-          <BooleanRadioGroupControl
-            label="Static desktop mode"
-            value={isStaticDesktopMode}
-            onChange={setIsStaticDesktopMode}
-          />
-          <RadioGroupControl
-            label="Toolbar hidden"
-            value={isToolbarHidden}
-            onChange={setIsToolbarHidden}
-          />
-          {selectedPickers === 'date-time' && (
-            <RadioGroupControl
-              label="Tabs hidden"
-              value={isTabsHidden}
-              onChange={setIsTabsHidden}
-            />
-          )}
-          <BooleanRadioGroupControl
-            label="Show days outside current month"
-            value={showDaysOutsideCurrentMonth}
-            onChange={setShowDaysOutsideCurrentMonth}
-          />
-          <BooleanRadioGroupControl
-            label="Fixed 6 weeks"
-            value={fixed6Weeks}
-            onChange={setFixed6Weeks}
-          />
-          <BooleanRadioGroupControl
-            label="Display week number"
-            value={displayWeekNumber}
-            onChange={setDisplayWeekNumber}
-          />
-          {selectedPickers !== 'date-range' && (
-            <BooleanRadioGroupControl
-              label="Disable day margin"
-              value={disableDayMargin}
-              onChange={setDisableDayMargin}
-            />
-          )}
-          {(selectedPickers === 'time' || selectedPickers === 'date-time') && (
-            <React.Fragment>
-              <RadioGroupControl label="AM/PM" value={ampm} onChange={setAmpm} />
-              <RadioGroupControl
-                label="ampmInClock"
-                value={ampmInClock}
-                onChange={setAmpmInClock}
-              />
-            </React.Fragment>
-          )}
-          {selectedPickers === 'date-range' && (
-            <React.Fragment>
-              <BooleanRadioGroupControl
-                label="Single calendar"
-                value={singleCalendar}
-                onChange={setSingleCalendar}
-              />
-              <BooleanRadioGroupControl
-                label="Display shortcuts"
-                value={displayShortcuts}
-                onChange={setDisplayShortcuts}
-              />
-            </React.Fragment>
-          )}
-          <BooleanRadioGroupControl
-            label="Custom actions"
-            value={customActions}
-            onChange={setCustomActions}
-          />
-          <BooleanRadioGroupControl
-            label="Landscape orientation"
-            value={isLandscape}
-            onChange={setIsLandscape}
-          />
-          {selectedPickers !== 'date-range' && (
-            <ViewSwitcher
-              showDateViews={selectedPickers === 'date' || selectedPickers === 'date-time'}
-              showTimeViews={selectedPickers === 'time' || selectedPickers === 'date-time'}
-              views={views}
-              handleViewsChange={handleViewsChange}
-            />
-          )}
-        </Box>
-        <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 2,
-            flexDirection: 'column',
-            margin: '0 auto',
-            padding: 2,
-            overflowX: 'auto',
-          }}
-        >
+        <ComponentSection sx={{ width: { xs: '100%', sm: '60%' } }}>
           <FormControl fullWidth>
             <InputLabel id="selected-component-family-label">Selected components</InputLabel>
             <Select
@@ -602,66 +534,167 @@ export default function PickersPlayground() {
               ))}
             </Select>
           </FormControl>
-          <Stack spacing={2} direction="row" flexWrap="wrap">
-            {selectedPickers === 'date' && (
-              <DemoContainer
-                components={['DesktopDatePicker', 'MobileDatePicker', 'StaticDatePicker']}
-              >
-                {DATE_PICKERS.map(({ name, component: Component, props }) => (
-                  <Component label={name} key={name} {...props} />
-                ))}
-              </DemoContainer>
+          {selectedPickers === 'date' && (
+            <DemoContainer
+              components={['DesktopDatePicker', 'MobileDatePicker', 'StaticDatePicker']}
+              sx={{ flexGrow: 1 }}
+            >
+              {DATE_PICKERS.map(({ name, component: Component, props }) => (
+                <Component label={name} key={name} {...props} />
+              ))}
+            </DemoContainer>
+          )}
+          {selectedPickers === 'time' && (
+            <DemoContainer
+              components={['DesktopTimePicker', 'MobileTimePicker', 'StaticTimePicker']}
+              sx={{ flexGrow: 1 }}
+            >
+              {TIME_PICKERS.map(({ name, component: Component, props }) => (
+                <Component label={name} key={name} {...props} />
+              ))}
+            </DemoContainer>
+          )}
+          {selectedPickers === 'date-time' && (
+            <DemoContainer
+              components={['DesktopDateTimePicker', 'MobileDateTimePicker', 'StaticDateTimePicker']}
+              sx={{ flexGrow: 1 }}
+            >
+              {DATE_TIME_PICKERS.map(({ name, component: Component, props }) => (
+                <Component label={name} key={name} views={availableViews} {...props} />
+              ))}
+            </DemoContainer>
+          )}
+          {selectedPickers === 'date-range' && (
+            <DemoContainer
+              components={[
+                'DesktopDateRangePicker',
+                'MobileDateRangePicker',
+                'StaticDateRangePicker',
+              ]}
+              sx={{ flexGrow: 1 }}
+            >
+              {DATE_RANGE_PICKERS.map(({ name, component: Component, props }) => (
+                <Component
+                  key={name}
+                  label={name}
+                  calendars={singleCalendar ? 1 : undefined}
+                  {...props}
+                  slotProps={{
+                    ...props.slotProps,
+                    ...(displayShortcuts && {
+                      shortcuts: {
+                        items: shortcutsItems,
+                      },
+                    }),
+                  }}
+                />
+              ))}
+            </DemoContainer>
+          )}
+        </ComponentSection>
+        <Divider orientation="vertical" light sx={{ display: { xs: 'none', sm: 'flex' } }} />
+        <Divider light sx={{ display: { xs: 'auto', sm: 'none' } }} />
+        <PropControlsSection>
+          <Typography
+            id="usage-props"
+            component="h3"
+            fontWeight="600"
+            sx={{
+              scrollMarginTop: 160,
+              fontFamily: 'General Sans',
+              p: 3,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            Playground
+          </Typography>
+          <Divider light />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, pt: 2, pl: 3, pr: 2 }}>
+            <TriBooleanGroupControl
+              label="Toolbar hidden"
+              value={isToolbarHidden}
+              onChange={setIsToolbarHidden}
+            />
+            {selectedPickers !== 'date-range' && (
+              <ViewSwitcher
+                showDateViews={selectedPickers === 'date' || selectedPickers === 'date-time'}
+                showTimeViews={selectedPickers === 'time' || selectedPickers === 'date-time'}
+                views={views}
+                handleViewsChange={handleViewsChange}
+              />
             )}
-            {selectedPickers === 'time' && (
-              <DemoContainer
-                components={['DesktopTimePicker', 'MobileTimePicker', 'StaticTimePicker']}
-              >
-                {TIME_PICKERS.map(({ name, component: Component, props }) => (
-                  <Component label={name} key={name} {...props} />
-                ))}
-              </DemoContainer>
-            )}
+            <BooleanGroupControl
+              label="Static desktop mode"
+              value={isStaticDesktopMode}
+              onChange={setIsStaticDesktopMode}
+            />
             {selectedPickers === 'date-time' && (
-              <DemoContainer
-                components={[
-                  'DesktopDateTimePicker',
-                  'MobileDateTimePicker',
-                  'StaticDateTimePicker',
-                ]}
-              >
-                {DATE_TIME_PICKERS.map(({ name, component: Component, props }) => (
-                  <Component label={name} key={name} views={availableViews} {...props} />
-                ))}
-              </DemoContainer>
+              <TriBooleanGroupControl
+                label="Tabs hidden"
+                value={isTabsHidden}
+                onChange={setIsTabsHidden}
+              />
+            )}
+            <BooleanGroupControl
+              label="Show days outside current month"
+              value={showDaysOutsideCurrentMonth}
+              onChange={setShowDaysOutsideCurrentMonth}
+            />
+            <BooleanGroupControl
+              label="Fixed 6 weeks"
+              value={fixed6Weeks}
+              onChange={setFixed6Weeks}
+            />
+            <BooleanGroupControl
+              label="Display week number"
+              value={displayWeekNumber}
+              onChange={setDisplayWeekNumber}
+            />
+            {selectedPickers !== 'date-range' && (
+              <BooleanGroupControl
+                label="Disable day margin"
+                value={disableDayMargin}
+                onChange={setDisableDayMargin}
+              />
+            )}
+            {(selectedPickers === 'time' || selectedPickers === 'date-time') && (
+              <React.Fragment>
+                <TriBooleanGroupControl label="AM/PM" value={ampm} onChange={setAmpm} />
+                <TriBooleanGroupControl
+                  label="ampmInClock"
+                  value={ampmInClock}
+                  onChange={setAmpmInClock}
+                />
+              </React.Fragment>
             )}
             {selectedPickers === 'date-range' && (
-              <DemoContainer
-                components={[
-                  'DesktopDateRangePicker',
-                  'MobileDateRangePicker',
-                  'StaticDateRangePicker',
-                ]}
-              >
-                {DATE_RANGE_PICKERS.map(({ name, component: Component, props }) => (
-                  <Component
-                    key={name}
-                    label={name}
-                    calendars={singleCalendar ? 1 : undefined}
-                    {...props}
-                    slotProps={{
-                      ...props.slotProps,
-                      ...(displayShortcuts && {
-                        shortcuts: {
-                          items: shortcutsItems,
-                        },
-                      }),
-                    }}
-                  />
-                ))}
-              </DemoContainer>
+              <React.Fragment>
+                <BooleanGroupControl
+                  label="Single calendar"
+                  value={singleCalendar}
+                  onChange={setSingleCalendar}
+                />
+                <BooleanGroupControl
+                  label="Display shortcuts"
+                  value={displayShortcuts}
+                  onChange={setDisplayShortcuts}
+                />
+              </React.Fragment>
             )}
-          </Stack>
-        </Box>
+            <BooleanGroupControl
+              label="Custom actions"
+              value={customActions}
+              onChange={setCustomActions}
+            />
+            <BooleanGroupControl
+              label="Landscape orientation"
+              value={isLandscape}
+              onChange={setIsLandscape}
+            />
+          </Box>
+        </PropControlsSection>
       </Box>
     </LocalizationProvider>
   );
