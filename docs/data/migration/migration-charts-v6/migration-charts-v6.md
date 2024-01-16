@@ -21,6 +21,12 @@ In `package.json`, change the version of the charts package to `next`.
 +"@mui/x-charts": "next",
 ```
 
+## Update `@mui/material` package
+
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+It is a change in minor version only, so it should not cause any breaking changes.
+Please update your `@mui/material` package to this or a newer version.
+
 ## Breaking changes
 
 Since `v7` is a major release, it contains changes that affect the public API.
