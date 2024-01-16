@@ -272,7 +272,7 @@ TimePickerToolbar.propTypes = {
   ampmInClock: PropTypes.bool,
   classes: PropTypes.object,
   /**
-   * Class name applied to the root component.
+   * @ignore
    */
   className: PropTypes.string,
   disabled: PropTypes.bool,
