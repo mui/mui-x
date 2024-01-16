@@ -304,9 +304,29 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(screen.queryByRole('menuitem', { name: 'Pin to right' })).to.equal(null);
     });
 
-    it('should not throw an error when calling `apiRef.current.pinColumn`', () => {
+    it('should allow to pin column using `initialState.pinnedColumns` prop', () => {
+      render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} disableColumnPinning />);
+      const cell = document.querySelector<HTMLDivElement>(
+        `.${gridClasses['cell--pinnedLeft']}[data-field="id"]`,
+      )!;
+      expect(cell).not.to.equal(null);
+    });
+
+    it('should allow to pin column using `pinnedColumns` prop', () => {
+      render(<TestCase pinnedColumns={{ left: ['id'] }} disableColumnPinning />);
+      const cell = document.querySelector<HTMLDivElement>(
+        `.${gridClasses['cell--pinnedLeft']}[data-field="id"]`,
+      )!;
+      expect(cell).not.to.equal(null);
+    });
+
+    it('should allow to pin column using `apiRef.current.pinColumn`', () => {
       render(<TestCase disableColumnPinning />);
-      expect(() => apiRef.current.pinColumn('id', GridPinnedColumnPosition.LEFT)).not.to.throw();
+      act(() => apiRef.current.pinColumn('id', GridPinnedColumnPosition.LEFT));
+      const cell = document.querySelector<HTMLDivElement>(
+        `.${gridClasses['cell--pinnedLeft']}[data-field="id"]`,
+      )!;
+      expect(cell).not.to.equal(null);
     });
   });
 
