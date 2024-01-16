@@ -708,7 +708,7 @@ You can directly use your date library:
 -const isoString = adapter.toISO(value);
 +const isoString = dateFns.formatISO(value, { format: 'extended' });
 
-// For Moment
+ // For Moment
 -const isoString = adapter.toISO(value);
 +const isoString = value.toISOString();
 ```
