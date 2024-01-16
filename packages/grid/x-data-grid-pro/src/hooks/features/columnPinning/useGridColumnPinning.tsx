@@ -1,32 +1,28 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
-  gridVisibleColumnFieldsSelector,
   useGridApiMethod,
   useGridApiEventHandler,
   GridEventListener,
+  GridPinnedColumnPosition,
   gridColumnFieldsSelector,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
+  gridPinnedColumnsSelector,
+  gridVisiblePinnedColumnDefinitionsSelector,
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
+  GridPinnedColumnFields,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
+import { GridInitialStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import {
-  GridColumnPinningApi,
-  GridPinnedPosition,
-  GridPinnedColumns,
-} from './gridColumnPinningInterface';
-import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
-import { filterColumns } from '../../../components/DataGridProVirtualScroller';
+import { GridColumnPinningApi } from './gridColumnPinningInterface';
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState'>
@@ -35,11 +31,11 @@ export const columnPinningStateInitializer: GridStateInitializer<
     orderedFieldsBeforePinningColumns: null,
   };
 
-  let model: GridPinnedColumns;
+  let model: GridPinnedColumnFields;
   if (props.pinnedColumns) {
     model = props.pinnedColumns;
   } else if (props.initialState?.pinnedColumns) {
-    model = props.initialState?.pinnedColumns;
+    model = props.initialState.pinnedColumns;
   } else {
     model = {};
   }
@@ -49,10 +45,6 @@ export const columnPinningStateInitializer: GridStateInitializer<
     pinnedColumns: model,
   };
 };
-
-const mergeStateWithPinnedColumns =
-  (pinnedColumns: GridPinnedColumns) =>
-  (state: GridStatePro): GridStatePro => ({ ...state, pinnedColumns });
 
 export const useGridColumnPinning = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
@@ -67,21 +59,18 @@ export const useGridColumnPinning = (
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-  const theme = useTheme();
 
   /**
    * PRE-PROCESSING
    */
   const calculateScrollLeft = React.useCallback<GridPipeProcessor<'scrollToIndexes'>>(
     (initialValue, params) => {
-      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
-      const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
-        pinnedColumns,
-        visibleColumnFields,
-        theme.direction === 'rtl',
-      );
+      const visiblePinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
 
-      if (!params.colIndex || (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0)) {
+      if (
+        !params.colIndex ||
+        (visiblePinnedColumns.left.length === 0 && visiblePinnedColumns.right.length === 0)
+      ) {
         return initialValue;
       }
 
@@ -95,9 +84,10 @@ export const useGridColumnPinning = (
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
       const offsetLeft = columnPositions[params.colIndex];
 
-      const leftPinnedColumnsWidth = columnPositions[leftPinnedColumns.length];
+      const leftPinnedColumnsWidth = columnPositions[visiblePinnedColumns.left.length];
       const rightPinnedColumnsWidth =
-        columnsTotalWidth - columnPositions[columnPositions.length - rightPinnedColumns.length];
+        columnsTotalWidth -
+        columnPositions[columnPositions.length - visiblePinnedColumns.right.length];
 
       const elementBottom = offsetLeft + offsetWidth;
       if (elementBottom - (clientWidth - rightPinnedColumnsWidth) > scrollLeft) {
@@ -110,7 +100,7 @@ export const useGridColumnPinning = (
       }
       return initialValue;
     },
-    [apiRef, pinnedColumns, theme.direction],
+    [apiRef],
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
@@ -130,30 +120,26 @@ export const useGridColumnPinning = (
 
   const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(
     (initialValue, { targetIndex }) => {
-      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
-      const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
-        pinnedColumns,
-        visibleColumnFields,
-        theme.direction === 'rtl',
-      );
+      const visiblePinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
 
-      if (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0) {
+      if (visiblePinnedColumns.left.length === 0 && visiblePinnedColumns.right.length === 0) {
         return initialValue;
       }
 
-      if (leftPinnedColumns.length > 0 && targetIndex < leftPinnedColumns.length) {
+      if (visiblePinnedColumns.left.length > 0 && targetIndex < visiblePinnedColumns.left.length) {
         return false;
       }
 
-      if (rightPinnedColumns.length > 0) {
+      if (visiblePinnedColumns.right.length > 0) {
         const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
-        const firstRightPinnedColumnIndex = visibleColumns.length - rightPinnedColumns.length;
+        const firstRightPinnedColumnIndex =
+          visibleColumns.length - visiblePinnedColumns.right.length;
         return targetIndex >= firstRightPinnedColumnIndex ? false : initialValue;
       }
 
       return initialValue;
     },
-    [apiRef, pinnedColumns, theme.direction],
+    [apiRef],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
@@ -187,7 +173,7 @@ export const useGridColumnPinning = (
     (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
       const newPinnedColumns = context.stateToRestore.pinnedColumns;
       if (newPinnedColumns != null) {
-        apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));
+        setState(apiRef, newPinnedColumns);
       }
 
       return params;
@@ -210,13 +196,15 @@ export const useGridColumnPinning = (
   });
 
   const pinColumn = React.useCallback<GridColumnPinningApi['pinColumn']>(
-    (field: string, side: GridPinnedPosition) => {
+    (field: string, side: GridPinnedColumnPosition) => {
       if (apiRef.current.isColumnPinned(field) === side) {
         return;
       }
 
       const otherSide =
-        side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
+        side === GridPinnedColumnPosition.RIGHT
+          ? GridPinnedColumnPosition.LEFT
+          : GridPinnedColumnPosition.RIGHT;
 
       const newPinnedColumns = {
         [side]: [...(pinnedColumns[side] || []), field],
@@ -244,7 +232,7 @@ export const useGridColumnPinning = (
 
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
-      apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));
+      setState(apiRef, newPinnedColumns);
       apiRef.current.forceUpdate();
     },
     [apiRef],
@@ -254,11 +242,11 @@ export const useGridColumnPinning = (
     (field) => {
       const leftPinnedColumns = pinnedColumns.left || [];
       if (leftPinnedColumns.includes(field)) {
-        return GridPinnedPosition.left;
+        return GridPinnedColumnPosition.LEFT;
       }
       const rightPinnedColumns = pinnedColumns.right || [];
       if (rightPinnedColumns.includes(field)) {
-        return GridPinnedPosition.right;
+        return GridPinnedColumnPosition.RIGHT;
       }
       return false;
     },
@@ -275,73 +263,69 @@ export const useGridColumnPinning = (
 
   useGridApiMethod(apiRef, columnPinningApi, 'public');
 
-  const handleColumnOrderChange = React.useCallback<GridEventListener<'columnOrderChange'>>(
-    (params) => {
-      if (!apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns) {
-        return;
+  const handleColumnOrderChange: GridEventListener<'columnOrderChange'> = (params) => {
+    if (!apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns) {
+      return;
+    }
+
+    const { column, targetIndex, oldIndex } = params;
+    const delta = targetIndex > oldIndex ? 1 : -1;
+
+    const latestColumnFields = gridColumnFieldsSelector(apiRef);
+
+    /**
+     * When a column X is reordered to somewhere else, the position where this column X is dropped
+     * on must be moved to left or right to make room for it. The ^^^ below represents the column
+     * which gave space to receive X.
+     *
+     * | X | B | C | D | -> | B | C | D | X | (e.g. X moved to after D, so delta=1)
+     *              ^^^              ^^^
+     *
+     * | A | B | C | X | -> | X | A | B | C | (e.g. X moved before A, so delta=-1)
+     *  ^^^                      ^^^
+     *
+     * If column P is pinned, it will not move to provide space. However, it will jump to the next
+     * non-pinned column.
+     *
+     * | X | B | P | D | -> | B | D | P | X | (e.g. X moved to after D, with P pinned)
+     *              ^^^          ^^^
+     */
+    const siblingField = latestColumnFields[targetIndex - delta];
+
+    const newOrderedFieldsBeforePinningColumns = [
+      ...apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns,
+    ];
+
+    // The index to start swapping fields
+    let i = newOrderedFieldsBeforePinningColumns.findIndex(
+      (currentColumn) => currentColumn === column.field,
+    );
+    // The index of the field to swap with
+    let j = i + delta;
+
+    // When to stop swapping fields.
+    // We stop one field before because the swap is done with i + 1 (if delta=1)
+    const stop = newOrderedFieldsBeforePinningColumns.findIndex(
+      (currentColumn) => currentColumn === siblingField,
+    );
+
+    while (delta > 0 ? i < stop : i > stop) {
+      // If the field to swap with is a pinned column, jump to the next
+      while (apiRef.current.isColumnPinned(newOrderedFieldsBeforePinningColumns[j])) {
+        j += delta;
       }
 
-      const { column, targetIndex, oldIndex } = params;
-      const delta = targetIndex > oldIndex ? 1 : -1;
+      const temp = newOrderedFieldsBeforePinningColumns[i];
+      newOrderedFieldsBeforePinningColumns[i] = newOrderedFieldsBeforePinningColumns[j];
+      newOrderedFieldsBeforePinningColumns[j] = temp;
 
-      const latestColumnFields = gridColumnFieldsSelector(apiRef);
+      i = j;
+      j = i + delta;
+    }
 
-      /**
-       * When a column X is reordered to somewhere else, the position where this column X is dropped
-       * on must be moved to left or right to make room for it. The ^^^ below represents the column
-       * which gave space to receive X.
-       *
-       * | X | B | C | D | -> | B | C | D | X | (e.g. X moved to after D, so delta=1)
-       *              ^^^              ^^^
-       *
-       * | A | B | C | X | -> | X | A | B | C | (e.g. X moved before A, so delta=-1)
-       *  ^^^                      ^^^
-       *
-       * If column P is pinned, it will not move to provide space. However, it will jump to the next
-       * non-pinned column.
-       *
-       * | X | B | P | D | -> | B | D | P | X | (e.g. X moved to after D, with P pinned)
-       *              ^^^          ^^^
-       */
-      const siblingField = latestColumnFields[targetIndex - delta];
-
-      const newOrderedFieldsBeforePinningColumns = [
-        ...apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns,
-      ];
-
-      // The index to start swapping fields
-      let i = newOrderedFieldsBeforePinningColumns.findIndex(
-        (currentColumn) => currentColumn === column.field,
-      );
-      // The index of the field to swap with
-      let j = i + delta;
-
-      // When to stop swapping fields.
-      // We stop one field before because the swap is done with i + 1 (if delta=1)
-      const stop = newOrderedFieldsBeforePinningColumns.findIndex(
-        (currentColumn) => currentColumn === siblingField,
-      );
-
-      while (delta > 0 ? i < stop : i > stop) {
-        // If the field to swap with is a pinned column, jump to the next
-        while (apiRef.current.isColumnPinned(newOrderedFieldsBeforePinningColumns[j])) {
-          j += delta;
-        }
-
-        const temp = newOrderedFieldsBeforePinningColumns[i];
-        newOrderedFieldsBeforePinningColumns[i] = newOrderedFieldsBeforePinningColumns[j];
-        newOrderedFieldsBeforePinningColumns[j] = temp;
-
-        i = j;
-        j = i + delta;
-      }
-
-      apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns =
-        newOrderedFieldsBeforePinningColumns;
-    },
-
-    [apiRef],
-  );
+    apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns =
+      newOrderedFieldsBeforePinningColumns;
+  };
 
   useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnOrderChange);
 
@@ -351,3 +335,13 @@ export const useGridColumnPinning = (
     }
   }, [apiRef, props.pinnedColumns]);
 };
+
+function setState(
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  model: GridPinnedColumnFields,
+) {
+  apiRef.current.setState((state) => ({
+    ...state,
+    pinnedColumns: model,
+  }));
+}

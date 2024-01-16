@@ -64,7 +64,7 @@ const parseSortItem = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridParsedSortItem | null => {
   const column = apiRef.current.getColumn(sortItem.field);
-  if (!column) {
+  if (!column || sortItem.sort === null) {
     return null;
   }
 

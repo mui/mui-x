@@ -81,6 +81,14 @@ export interface GridClasses {
    */
   'cell--rangeRight': string;
   /**
+   * Styles applied to the cell element if it is pinned to the left.
+   */
+  'cell--pinnedLeft': string;
+  /**
+   * Styles applied to the cell element if it is pinned to the right.
+   */
+  'cell--pinnedRight': string;
+  /**
    * Styles applied to the cell element if it is in a cell selection range.
    */
   'cell--selectionMode': string;
@@ -96,6 +104,10 @@ export interface GridClasses {
    * Styles applied to the cell checkbox element.
    */
   cellCheckbox: string;
+  /**
+   * Styles applied to the empty cell element.
+   */
+  cellEmpty: string;
   /**
    * Styles applied to the skeleton cell element.
    */
@@ -229,6 +241,14 @@ export interface GridClasses {
    */
   columnsPanelRow: string;
   /**
+   * Styles applied to the top container.
+   */
+  'container--top': string;
+  /**
+   * Styles applied to the bottom container.
+   */
+  'container--bottom': string;
+  /**
    * Styles applied to the detail panel element.
    */
   detailPanel: string;
@@ -276,6 +296,18 @@ export interface GridClasses {
    * Styles applied to root of the boolean edit component.
    */
   editBooleanCell: string;
+  /**
+   * Styles applied to the filler row.
+   */
+  filler: string;
+  /**
+   * Styles applied to the filler row pinned left section.
+   */
+  'filler--pinnedLeft': string;
+  /**
+   * Styles applied to the filler row pinned right section.
+   */
+  'filler--pinnedRight': string;
   /**
    * Styles applied to the root of the filter form component.
    */
@@ -329,6 +361,10 @@ export interface GridClasses {
    */
   main: string;
   /**
+   * Styles applied to the main container element when it has right pinned columns.
+   */
+  'main--hasPinnedRight': string;
+  /**
    * Styles applied to the menu element.
    */
   menu: string;
@@ -381,14 +417,6 @@ export interface GridClasses {
    */
   pinnedColumns: string;
   /**
-   * Styles applied to the left pinned columns.
-   */
-  'pinnedColumns--left': string;
-  /**
-   * Styles applied to the right pinned columns.
-   */
-  'pinnedColumns--right': string;
-  /**
    * Styles applied to the pinned column headers.
    */
   pinnedColumnHeaders: string;
@@ -432,6 +460,10 @@ export interface GridClasses {
    * Styles applied to the floating special row reorder cell element when it is dragged.
    */
   'row--dragging': string;
+  /**
+   * Styles applied to the first visible row element on every page of the grid.
+   */
+  'row--firstVisible': string;
   /**
    * Styles applied to the last visible row element on every page of the grid.
    */
@@ -478,6 +510,18 @@ export interface GridClasses {
    */
   'scrollArea--right': string;
   /**
+   * Styles applied to the scrollbars.
+   */
+  scrollbar: string;
+  /**
+   * Styles applied to the horizontal scrollbar.
+   */
+  'scrollbar--horizontal': string;
+  /**
+   * Styles applied to the horizontal scrollbar.
+   */
+  'scrollbar--vertical': string;
+  /**
    * Styles applied to the footer selected row count element.
    */
   selectedRowCount: string;
@@ -494,6 +538,10 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
+   * Styles applied the grid if `showColumnVerticalBorder={true}`.
+   */
+  withVerticalBorder: string;
+  /**
    * Styles applied to cells, column header and other elements that have border.
    * Sets border color only.
    */
@@ -502,6 +550,10 @@ export interface GridClasses {
    * Styles applied the cell if `showColumnVerticalBorder={true}`.
    */
   'cell--withRightBorder': string;
+  /**
+   * Styles applied the cell if `showColumnVerticalBorder={true}`.
+   */
+  'cell--withLeftBorder': string;
   /**
    * Styles applied the column header if `showColumnVerticalBorder={true}`.
    */
@@ -566,10 +618,13 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--rangeBottom',
   'cell--rangeLeft',
   'cell--rangeRight',
+  'cell--pinnedLeft',
+  'cell--pinnedRight',
   'cell--selectionMode',
   'cell',
   'cellContent',
   'cellCheckbox',
+  'cellEmpty',
   'cellSkeleton',
   'checkboxInput',
   'columnHeader--alignCenter',
@@ -602,6 +657,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnSeparator',
   'columnsPanel',
   'columnsPanelRow',
+  'container--top',
+  'container--bottom',
   'detailPanel',
   'detailPanels',
   'detailPanelToggleCell',
@@ -615,6 +672,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'paper',
   'editBooleanCell',
   'editInputCell',
+  'filler',
+  'filler--pinnedLeft',
+  'filler--pinnedRight',
   'filterForm',
   'filterFormDeleteIcon',
   'filterFormLogicOperatorInput',
@@ -627,6 +687,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'iconButtonContainer',
   'iconSeparator',
   'main',
+  'main--hasPinnedRight',
   'menu',
   'menuIcon',
   'menuIconButton',
@@ -643,6 +704,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row',
   'row--editable',
   'row--editing',
+  'row--firstVisible',
   'row--lastVisible',
   'row--dragging',
   'row--dynamicHeight',
@@ -655,6 +717,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollArea--left',
   'scrollArea--right',
   'scrollArea',
+  'scrollbar',
+  'scrollbar--vertical',
+  'scrollbar--horizontal',
   'selectedRowCount',
   'sortIcon',
   'toolbarContainer',
@@ -664,13 +729,13 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
   'pinnedColumns',
-  'pinnedColumns--left',
-  'pinnedColumns--right',
   'pinnedColumnHeaders',
   'pinnedColumnHeaders--left',
   'pinnedColumnHeaders--right',
+  'withVerticalBorder',
   'withBorderColor',
   'cell--withRightBorder',
+  'cell--withLeftBorder',
   'columnHeader--withRightBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',

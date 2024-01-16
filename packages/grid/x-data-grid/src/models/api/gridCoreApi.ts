@@ -14,7 +14,7 @@ export interface GridCoreApi {
    * The React ref of the grid root container div element.
    * @ignore - do not document.
    */
-  rootElementRef?: React.RefObject<HTMLDivElement>;
+  rootElementRef: React.RefObject<HTMLDivElement>;
   /**
    * Registers a handler for an event.
    * @param {string} event The name of the event.
@@ -64,14 +64,28 @@ export interface GridCorePrivateApi<
    * The generic event emitter manager.
    */
   eventManager: EventManager;
-  /**
-   * The React ref of the grid virtual scroller container element.
-   */
-  virtualScrollerRef?: React.RefObject<HTMLDivElement>;
+
   /**
    * The React ref of the grid main container div element.
    */
-  mainElementRef?: React.RefObject<HTMLDivElement>;
+  mainElementRef: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid virtual scroller container element.
+   */
+  virtualScrollerRef: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid column container virtualized div element.
+   */
+  columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid column headers container element.
+   */
+  columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid header filter row element.
+   */
+  headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
+
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'
@@ -94,16 +108,4 @@ export interface GridCorePrivateApi<
    * Do not use in React components - use the `useGridRootProps` hook instead.
    */
   rootProps: GridProps;
-  /**
-   * The React ref of the grid column container virtualized div element.
-   */
-  columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
-  /**
-   * The React ref of the grid header filter row element.
-   */
-  headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
-  /**
-   * The React ref of the grid column headers container element.
-   */
-  columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
 }

@@ -1,6 +1,14 @@
 import { CSSInterpolation } from '@mui/system';
-import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
-import { gridClasses } from '../../constants/gridClasses';
+import {
+  alpha,
+  styled,
+  darken,
+  lighten,
+  decomposeColor,
+  recomposeColor,
+  Theme,
+} from '@mui/material/styles';
+import { gridClasses as c } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type OwnerState = DataGridProcessedProps;
@@ -16,18 +24,18 @@ function getBorderColor(theme: Theme) {
 }
 
 const columnHeadersStyles = {
-  [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
+  [`.${c.columnSeparator}, .${c['columnSeparator--resizing']}`]: {
     visibility: 'visible',
     width: 'auto',
   },
 };
 
 const columnHeaderStyles = {
-  [`& .${gridClasses.iconButtonContainer}`]: {
+  [`& .${c.iconButtonContainer}`]: {
     visibility: 'visible',
     width: 'auto',
   },
-  [`& .${gridClasses.menuIcon}`]: {
+  [`& .${c.menuIcon}`]: {
     width: 'auto',
     visibility: 'visible',
   },
@@ -37,98 +45,162 @@ export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Root',
   overridesResolver: (props, styles) => [
-    { [`&.${gridClasses.autoHeight}`]: styles.autoHeight },
-    { [`&.${gridClasses.aggregationColumnHeader}`]: styles.aggregationColumnHeader },
+    { [`&.${c.autoHeight}`]: styles.autoHeight },
+    { [`&.${c.aggregationColumnHeader}`]: styles.aggregationColumnHeader },
     {
-      [`&.${gridClasses['aggregationColumnHeader--alignLeft']}`]:
+      [`&.${c['aggregationColumnHeader--alignLeft']}`]:
         styles['aggregationColumnHeader--alignLeft'],
     },
     {
-      [`&.${gridClasses['aggregationColumnHeader--alignCenter']}`]:
+      [`&.${c['aggregationColumnHeader--alignCenter']}`]:
         styles['aggregationColumnHeader--alignCenter'],
     },
     {
-      [`&.${gridClasses['aggregationColumnHeader--alignRight']}`]:
+      [`&.${c['aggregationColumnHeader--alignRight']}`]:
         styles['aggregationColumnHeader--alignRight'],
     },
-    { [`&.${gridClasses.aggregationColumnHeaderLabel}`]: styles.aggregationColumnHeaderLabel },
+    { [`&.${c.aggregationColumnHeaderLabel}`]: styles.aggregationColumnHeaderLabel },
     {
-      [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]:
-        styles['root--disableUserSelection'],
+      [`&.${c['root--disableUserSelection']} .${c.cell}`]: styles['root--disableUserSelection'],
     },
-    { [`&.${gridClasses.autosizing}`]: styles.autosizing },
-    { [`& .${gridClasses.editBooleanCell}`]: styles.editBooleanCell },
-    { [`& .${gridClasses['cell--editing']}`]: styles['cell--editing'] },
-    { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
-    { [`& .${gridClasses['cell--textLeft']}`]: styles['cell--textLeft'] },
-    { [`& .${gridClasses['cell--textRight']}`]: styles['cell--textRight'] },
+    { [`&.${c.autosizing}`]: styles.autosizing },
+    { [`& .${c.editBooleanCell}`]: styles.editBooleanCell },
+    { [`& .${c['cell--editing']}`]: styles['cell--editing'] },
+    { [`& .${c['cell--textCenter']}`]: styles['cell--textCenter'] },
+    { [`& .${c['cell--textLeft']}`]: styles['cell--textLeft'] },
+    { [`& .${c['cell--textRight']}`]: styles['cell--textRight'] },
     // TODO v6: Remove
-    { [`& .${gridClasses['cell--withRenderer']}`]: styles['cell--withRenderer'] },
-    { [`& .${gridClasses.cell}`]: styles.cell },
-    { [`& .${gridClasses['cell--rangeTop']}`]: styles['cell--rangeTop'] },
-    { [`& .${gridClasses['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
-    { [`& .${gridClasses['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
-    { [`& .${gridClasses['cell--rangeRight']}`]: styles['cell--rangeRight'] },
-    { [`& .${gridClasses['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
-    { [`& .${gridClasses.cellContent}`]: styles.cellContent },
-    { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
-    { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
-    { [`& .${gridClasses.checkboxInput}`]: styles.checkboxInput },
-    { [`& .${gridClasses['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
-    { [`& .${gridClasses['columnHeader--alignLeft']}`]: styles['columnHeader--alignLeft'] },
-    { [`& .${gridClasses['columnHeader--alignRight']}`]: styles['columnHeader--alignRight'] },
-    { [`& .${gridClasses['columnHeader--dragging']}`]: styles['columnHeader--dragging'] },
-    { [`& .${gridClasses['columnHeader--moving']}`]: styles['columnHeader--moving'] },
-    { [`& .${gridClasses['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
-    { [`& .${gridClasses['columnHeader--sortable']}`]: styles['columnHeader--sortable'] },
-    { [`& .${gridClasses['columnHeader--sorted']}`]: styles['columnHeader--sorted'] },
+    { [`& .${c['cell--withRenderer']}`]: styles['cell--withRenderer'] },
+    { [`& .${c.cell}`]: styles.cell },
+    { [`& .${c['cell--rangeTop']}`]: styles['cell--rangeTop'] },
+    { [`& .${c['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
+    { [`& .${c['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
+    { [`& .${c['cell--rangeRight']}`]: styles['cell--rangeRight'] },
+    { [`& .${c['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
+    { [`& .${c.cellContent}`]: styles.cellContent },
+    { [`& .${c.cellCheckbox}`]: styles.cellCheckbox },
+    { [`& .${c.cellSkeleton}`]: styles.cellSkeleton },
+    { [`& .${c.checkboxInput}`]: styles.checkboxInput },
+    { [`& .${c['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
+    { [`& .${c['columnHeader--alignLeft']}`]: styles['columnHeader--alignLeft'] },
+    { [`& .${c['columnHeader--alignRight']}`]: styles['columnHeader--alignRight'] },
+    { [`& .${c['columnHeader--dragging']}`]: styles['columnHeader--dragging'] },
+    { [`& .${c['columnHeader--moving']}`]: styles['columnHeader--moving'] },
+    { [`& .${c['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
+    { [`& .${c['columnHeader--sortable']}`]: styles['columnHeader--sortable'] },
+    { [`& .${c['columnHeader--sorted']}`]: styles['columnHeader--sorted'] },
     {
-      [`& .${gridClasses['columnHeader--withRightBorder']}`]:
-        styles['columnHeader--withRightBorder'],
+      [`& .${c['columnHeader--withRightBorder']}`]: styles['columnHeader--withRightBorder'],
     },
-    { [`& .${gridClasses.columnHeader}`]: styles.columnHeader },
-    { [`& .${gridClasses.headerFilterRow}`]: styles.headerFilterRow },
-    { [`& .${gridClasses.columnHeaderCheckbox}`]: styles.columnHeaderCheckbox },
-    { [`& .${gridClasses.columnHeaderDraggableContainer}`]: styles.columnHeaderDraggableContainer },
-    { [`& .${gridClasses.columnHeaderTitleContainer}`]: styles.columnHeaderTitleContainer },
-    { [`& .${gridClasses['columnSeparator--resizable']}`]: styles['columnSeparator--resizable'] },
-    { [`& .${gridClasses['columnSeparator--resizing']}`]: styles['columnSeparator--resizing'] },
-    { [`& .${gridClasses.columnSeparator}`]: styles.columnSeparator },
-    { [`& .${gridClasses.filterIcon}`]: styles.filterIcon },
-    { [`& .${gridClasses.iconSeparator}`]: styles.iconSeparator },
-    { [`& .${gridClasses.menuIcon}`]: styles.menuIcon },
-    { [`& .${gridClasses.menuIconButton}`]: styles.menuIconButton },
-    { [`& .${gridClasses.menuOpen}`]: styles.menuOpen },
-    { [`& .${gridClasses.menuList}`]: styles.menuList },
-    { [`& .${gridClasses['row--editable']}`]: styles['row--editable'] },
-    { [`& .${gridClasses['row--editing']}`]: styles['row--editing'] },
-    { [`& .${gridClasses['row--dragging']}`]: styles['row--dragging'] },
-    { [`& .${gridClasses.row}`]: styles.row },
-    { [`& .${gridClasses.rowReorderCellPlaceholder}`]: styles.rowReorderCellPlaceholder },
-    { [`& .${gridClasses.rowReorderCell}`]: styles.rowReorderCell },
-    { [`& .${gridClasses['rowReorderCell--draggable']}`]: styles['rowReorderCell--draggable'] },
-    { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
-    { [`& .${gridClasses.withBorderColor}`]: styles.withBorderColor },
-    { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
-    { [`& .${gridClasses.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
-    { [`& .${gridClasses.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
+    { [`& .${c.columnHeader}`]: styles.columnHeader },
+    { [`& .${c.headerFilterRow}`]: styles.headerFilterRow },
+    { [`& .${c.columnHeaderCheckbox}`]: styles.columnHeaderCheckbox },
+    { [`& .${c.columnHeaderDraggableContainer}`]: styles.columnHeaderDraggableContainer },
+    { [`& .${c.columnHeaderTitleContainer}`]: styles.columnHeaderTitleContainer },
+    { [`& .${c['columnSeparator--resizable']}`]: styles['columnSeparator--resizable'] },
+    { [`& .${c['columnSeparator--resizing']}`]: styles['columnSeparator--resizing'] },
+    { [`& .${c.columnSeparator}`]: styles.columnSeparator },
+    { [`& .${c.filterIcon}`]: styles.filterIcon },
+    { [`& .${c.iconSeparator}`]: styles.iconSeparator },
+    { [`& .${c.menuIcon}`]: styles.menuIcon },
+    { [`& .${c.menuIconButton}`]: styles.menuIconButton },
+    { [`& .${c.menuOpen}`]: styles.menuOpen },
+    { [`& .${c.menuList}`]: styles.menuList },
+    { [`& .${c['row--editable']}`]: styles['row--editable'] },
+    { [`& .${c['row--editing']}`]: styles['row--editing'] },
+    { [`& .${c['row--dragging']}`]: styles['row--dragging'] },
+    { [`& .${c.row}`]: styles.row },
+    { [`& .${c.rowReorderCellPlaceholder}`]: styles.rowReorderCellPlaceholder },
+    { [`& .${c.rowReorderCell}`]: styles.rowReorderCell },
+    { [`& .${c['rowReorderCell--draggable']}`]: styles['rowReorderCell--draggable'] },
+    { [`& .${c.sortIcon}`]: styles.sortIcon },
+    { [`& .${c.withBorderColor}`]: styles.withBorderColor },
+    { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
+    { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
+    { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
     {
-      [`& .${gridClasses['detailPanelToggleCell--expanded']}`]:
-        styles['detailPanelToggleCell--expanded'],
+      [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'],
     },
     styles.root,
   ],
-})<{ ownerState: OwnerState }>(({ theme }) => {
-  const borderColor = getBorderColor(theme);
-  const radius = theme.shape.borderRadius;
+})<{ ownerState: OwnerState }>(({ theme: t }) => {
+  const borderColor = getBorderColor(t);
+  const radius = t.shape.borderRadius;
+
+  const containerBackground = t.vars
+    ? t.vars.palette.background.default
+    : t.palette.background.default;
+
+  const pinnedBackground = containerBackground;
+
+  const overlayBackground = t.vars
+    ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
+    : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
+
+  const hoverOpacity = (t.vars || t).palette.action.hoverOpacity;
+  const hoverColor = (t.vars || t).palette.action.hover;
+
+  const selectedOpacity = (t.vars || t).palette.action.selectedOpacity;
+  const selectedBackground = t.vars
+    ? `rgba(${t.vars.palette.primary.mainChannel} / ${selectedOpacity})`
+    : alpha(t.palette.primary.main, selectedOpacity);
+
+  const selectedHoverBackground = t.vars
+    ? `rgba(${t.vars.palette.primary.mainChannel} / calc(
+                ${t.vars.palette.action.selectedOpacity} + 
+                ${t.vars.palette.action.hoverOpacity}
+              ))`
+    : alpha(
+        t.palette.primary.main,
+        t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
+      );
+
+  const pinnedHoverBackground = t.vars
+    ? hoverColor
+    : blend(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedSelectedBackground = t.vars
+    ? selectedBackground
+    : blend(pinnedBackground, selectedBackground, selectedOpacity);
+  const pinnedSelectedHoverBackground = t.vars
+    ? hoverColor
+    : blend(pinnedSelectedBackground, hoverColor, hoverOpacity);
+
+  const selectedStyles = {
+    backgroundColor: selectedBackground,
+    '&:hover': {
+      backgroundColor: selectedHoverBackground,
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        backgroundColor: selectedBackground,
+      },
+    },
+  };
 
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
-    '--unstable_DataGrid-headWeight': theme.typography.fontWeightMedium,
-    '--unstable_DataGrid-overlayBackground': theme.vars
-      ? `rgba(${theme.vars.palette.background.defaultChannel} / ${theme.vars.palette.action.disabledOpacity})`
-      : alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
+    '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
+    '--unstable_DataGrid-overlayBackground': overlayBackground,
+
+    '--DataGrid-containerBackground': containerBackground,
+    '--DataGrid-pinnedBackground': pinnedBackground,
+    '--DataGrid-rowBorderColor': borderColor,
+
     '--DataGrid-cellOffsetMultiplier': 2,
+    '--DataGrid-width': '0px',
+    '--DataGrid-hasScrollX': '0',
+    '--DataGrid-hasScrollY': '0',
+    '--DataGrid-offsetTop': '0px',
+    '--DataGrid-offsetLeft': '0px',
+    '--DataGrid-scrollbarSize': '10px',
+    '--DataGrid-rowWidth': '0px',
+    '--DataGrid-columnsTotalWidth': '0px',
+    '--DataGrid-leftPinnedWidth': '0px',
+    '--DataGrid-rightPinnedWidth': '0px',
+    '--DataGrid-headerHeight': '0px',
+    '--DataGrid-headersTotalHeight': '0px',
+    '--DataGrid-topContainerHeight': '0px',
+    '--DataGrid-bottomContainerHeight': '0px',
+
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
@@ -136,8 +208,8 @@ export const GridRootStyles = styled('div', {
     borderStyle: 'solid',
     borderColor,
     borderRadius: 'var(--unstable_DataGrid-radius)',
-    color: (theme.vars || theme).palette.text.primary,
-    ...theme.typography.body2,
+    color: (t.vars || t).palette.text.primary,
+    ...t.typography.body2,
     outline: 'none',
     height: '100%',
     display: 'flex',
@@ -145,66 +217,68 @@ export const GridRootStyles = styled('div', {
     minHeight: 0,
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
-    [`&.${gridClasses.autoHeight}`]: {
-      height: 'auto',
-      [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
-        borderBottomColor: 'transparent',
-      },
+    // The selector we really want here is `:first-child`, but emotion thinks it knows better than use what we
+    // want and prints a warning to the console if we use it, about :first-child being "unsafe" in an SSR context.
+    // https://github.com/emotion-js/emotion/issues/1105
+    // Using `:first-of-type instead` is ironically less "safe" because if all our elements aren't `div`, this style
+    // will fail to apply.
+    [`.${c.main} > *:first-of-type`]: {
+      borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
+      borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
     },
-    [`&.${gridClasses.autosizing}`]: {
-      [`& .${gridClasses.columnHeaderTitleContainerContent} > *`]: {
+    [`&.${c.autoHeight}`]: {
+      height: 'auto',
+    },
+    [`&.${c.autosizing}`]: {
+      [`& .${c.columnHeaderTitleContainerContent} > *`]: {
         overflow: 'visible !important',
       },
-      [`& .${gridClasses.cell} > *`]: {
+      [`& .${c.cell} > *`]: {
         overflow: 'visible !important',
         whiteSpace: 'nowrap',
       },
     },
-    [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
-      {
-        borderBottomColor: 'transparent',
-      },
-    [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
+    [`& .${c.columnHeader}, & .${c.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
       lineHeight: null,
       padding: '0 10px',
       boxSizing: 'border-box',
     },
-    [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
+    [`& .${c.columnHeader}:focus-within, & .${c.cell}:focus-within`]: {
       outline: `solid ${
-        theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.5)`
-          : alpha(theme.palette.primary.main, 0.5)
+        t.vars
+          ? `rgba(${t.vars.palette.primary.mainChannel} / 0.5)`
+          : alpha(t.palette.primary.main, 0.5)
       } 1px`,
       outlineWidth: 1,
       outlineOffset: -1,
     },
-    [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.cell}:focus`]: {
-      outline: `solid ${theme.palette.primary.main} 1px`,
+    [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
+      outline: `solid ${t.palette.primary.main} 1px`,
     },
-    [`& .${gridClasses.columnHeaderCheckbox}, & .${gridClasses.cellCheckbox}`]: {
+    [`& .${c.columnHeaderCheckbox}, & .${c.cellCheckbox}`]: {
       padding: 0,
       justifyContent: 'center',
       alignItems: 'center',
     },
-    [`& .${gridClasses.columnHeader}`]: {
+    [`& .${c.columnHeader}`]: {
       position: 'relative',
       display: 'flex',
       alignItems: 'center',
+      overflow: 'hidden',
     },
-    [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}, & .${gridClasses['columnHeader--filtered']} .${gridClasses.iconButtonContainer}`]:
+    [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
       {
         visibility: 'visible',
         width: 'auto',
       },
-    [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}) .${gridClasses.sortIcon}`]:
-      {
-        opacity: 0,
-        transition: theme.transitions.create(['opacity'], {
-          duration: theme.transitions.duration.shorter,
-        }),
-      },
-    [`& .${gridClasses.columnHeaderTitleContainer}`]: {
+    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
+      opacity: 0,
+      transition: t.transitions.create(['opacity'], {
+        duration: t.transitions.duration.shorter,
+      }),
+    },
+    [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
       minWidth: 0,
@@ -214,56 +288,52 @@ export const GridRootStyles = styled('div', {
       // to anchor the aggregation label
       position: 'relative',
     },
-    [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
+    [`& .${c.columnHeaderTitleContainerContent}`]: {
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
     },
-    [`& .${gridClasses['columnHeader--filledGroup']} .${gridClasses.columnHeaderTitleContainer}`]: {
+    [`& .${c['columnHeader--filledGroup']} .${c.columnHeaderTitleContainer}`]: {
       borderBottomWidth: '1px',
       borderBottomStyle: 'solid',
       boxSizing: 'border-box',
     },
-    [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']} .${gridClasses.columnHeaderTitleContainer}`]:
+    [`& .${c['columnHeader--filledGroup']}.${c['columnHeader--showColumnBorder']} .${c.columnHeaderTitleContainer}`]:
       {
         borderBottom: `none`,
       },
-    [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']}`]:
-      {
-        borderBottomWidth: '1px',
-        borderBottomStyle: 'solid',
-        boxSizing: 'border-box',
-      },
-    [`& .${gridClasses.headerFilterRow}`]: {
-      borderTop: `1px solid ${borderColor}`,
+    [`& .${c['columnHeader--filledGroup']}.${c['columnHeader--showColumnBorder']}`]: {
+      borderBottomWidth: '1px',
+      borderBottomStyle: 'solid',
+      boxSizing: 'border-box',
     },
-    [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
+    [`& .${c.sortIcon}, & .${c.filterIcon}`]: {
       fontSize: 'inherit',
     },
-    [`& .${gridClasses['columnHeader--sortable']}`]: {
+    [`& .${c['columnHeader--sortable']}`]: {
       cursor: 'pointer',
     },
-    [`& .${gridClasses['columnHeader--alignCenter']} .${gridClasses.columnHeaderTitleContainer}`]: {
+    [`& .${c['columnHeader--alignCenter']} .${c.columnHeaderTitleContainer}`]: {
       justifyContent: 'center',
     },
-    [`& .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderDraggableContainer}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderTitleContainer}`]:
+    [`& .${c['columnHeader--alignRight']} .${c.columnHeaderDraggableContainer}, & .${c['columnHeader--alignRight']} .${c.columnHeaderTitleContainer}`]:
       {
         flexDirection: 'row-reverse',
       },
-    [`& .${gridClasses['columnHeader--alignCenter']} .${gridClasses.menuIcon}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}`]:
+    [`& .${c['columnHeader--alignCenter']} .${c.menuIcon}, & .${c['columnHeader--alignRight']} .${c.menuIcon}`]:
       {
         marginRight: 'auto',
         marginLeft: -6,
       },
-    [`& .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}`]:
+    [`& .${c['columnHeader--alignRight']} .${c.menuIcon}, & .${c['columnHeader--alignRight']} .${c.menuIcon}`]:
       {
         marginRight: 'auto',
         marginLeft: -10,
       },
-    [`& .${gridClasses['columnHeader--moving']}`]: {
-      backgroundColor: (theme.vars || theme).palette.action.hover,
+    [`& .${c['columnHeader--moving']}`]: {
+      backgroundColor: (t.vars || t).palette.action.hover,
     },
-    [`& .${gridClasses.columnSeparator}`]: {
+    [`& .${c.columnSeparator}`]: {
       visibility: 'hidden',
       position: 'absolute',
       zIndex: 100,
@@ -272,45 +342,47 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       color: borderColor,
     },
+    [`& .${c.columnHeaders}`]: {
+      width: 'var(--DataGrid-rowWidth)',
+    },
     '@media (hover: hover)': {
-      [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
-      [`& .${gridClasses.columnHeader}:hover`]: columnHeaderStyles,
-      [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]:
-        {
-          opacity: 0.5,
-        },
+      [`& .${c.columnHeaders}:hover`]: columnHeadersStyles,
+      [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon}`]: {
+        opacity: 0.5,
+      },
     },
     '@media (hover: none)': {
-      [`& .${gridClasses.columnHeaders}`]: columnHeadersStyles,
-      [`& .${gridClasses.columnHeader}`]: columnHeaderStyles,
+      [`& .${c.columnHeaders}`]: columnHeadersStyles,
+      [`& .${c.columnHeader}`]: columnHeaderStyles,
     },
-    [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
+    [`& .${c['columnSeparator--sideLeft']}`]: {
       left: -12,
     },
-    [`& .${gridClasses['columnSeparator--sideRight']}`]: {
+    [`& .${c['columnSeparator--sideRight']}`]: {
       right: -12,
     },
-    [`& .${gridClasses['columnSeparator--resizable']}`]: {
+    [`& .${c['columnSeparator--resizable']}`]: {
       cursor: 'col-resize',
       touchAction: 'none',
       '&:hover': {
-        color: (theme.vars || theme).palette.text.primary,
+        color: (t.vars || t).palette.text.primary,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
           color: borderColor,
         },
       },
-      [`&.${gridClasses['columnSeparator--resizing']}`]: {
-        color: (theme.vars || theme).palette.text.primary,
+      [`&.${c['columnSeparator--resizing']}`]: {
+        color: (t.vars || t).palette.text.primary,
       },
       '& svg': {
         pointerEvents: 'none',
       },
     },
-    [`& .${gridClasses.iconSeparator}`]: {
+    [`& .${c.iconSeparator}`]: {
       color: 'inherit',
     },
-    [`& .${gridClasses.menuIcon}`]: {
+    [`& .${c.menuIcon}`]: {
       width: 0,
       visibility: 'hidden',
       fontSize: 20,
@@ -318,199 +390,253 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
-    [`.${gridClasses.menuOpen}`]: {
+    [`.${c.menuOpen}`]: {
       visibility: 'visible',
       width: 'auto',
     },
-    [`& .${gridClasses.row}`]: {
+
+    [`& .${c.headerFilterRow}`]: {
+      [`& .${c.columnHeader}`]: {
+        boxSizing: 'border-box',
+        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+      },
+    },
+
+    /* Row styles */
+    [`.${c.row}`]: {
       display: 'flex',
-      width: 'fit-content',
+      width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
-      '&:hover, &.Mui-hovered': {
-        backgroundColor: (theme.vars || theme).palette.action.hover,
+
+      '--rowBorderColor': 'var(--DataGrid-rowBorderColor)',
+
+      [`&.${c['row--firstVisible']}`]: {
+        '--rowBorderColor': 'transparent',
+      },
+
+      '&:hover': {
+        backgroundColor: (t.vars || t).palette.action.hover,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
           backgroundColor: 'transparent',
         },
       },
-      '&.Mui-selected': {
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-          : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-        '&:hover, &.Mui-hovered': {
-          backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(
-                ${theme.vars.palette.action.selectedOpacity} + 
-                ${theme.vars.palette.action.hoverOpacity}
-              ))`
-            : alpha(
-                theme.palette.primary.main,
-                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-              ),
-          // Reset on touch devices, it doesn't add specificity
-          '@media (hover: none)': {
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-              : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-          },
-        },
+      '&.Mui-selected': selectedStyles,
+    },
+    [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
+      '[role=row]': {
+        background: 'var(--DataGrid-containerBackground)',
+      },
+      [`.${c.pinnedColumnHeaders} [role=row]`]: {
+        background: 'var(--DataGrid-pinnedBackground)',
       },
     },
-    [`& .${gridClasses.cell}`]: {
+
+    /* Cell styles */
+    [`& .${c.cell}`]: {
       display: 'flex',
       alignItems: 'center',
-      borderBottom: '1px solid',
-      '&.Mui-selected': {
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-          : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-        '&:hover, &.Mui-hovered': {
-          backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${
-                theme.vars.palette.action.selectedOpacity + theme.palette.action.hoverOpacity
-              })`
-            : alpha(
-                theme.palette.primary.main,
-                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-              ),
-          // Reset on touch devices, it doesn't add specificity
-          '@media (hover: none)': {
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-              : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-          },
-        },
-      },
+      height: 'var(--height)',
+      minWidth: 'var(--width)',
+      maxWidth: 'var(--width)',
+
+      '--width': '0px',
+      '--height': '0px',
+
+      boxSizing: 'border-box',
+      borderTop: `1px solid var(--rowBorderColor)`,
+
+      '&.Mui-selected': selectedStyles,
     },
-    [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]: {
+    [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
+      borderTopColor: 'transparent',
+    },
+    [`&.${c['root--disableUserSelection']} .${c.cell}`]: {
       userSelect: 'none',
     },
-    [`& .${gridClasses.row}:not(.${gridClasses['row--dynamicHeight']}) > .${gridClasses.cell}`]: {
+    [`& .${c.row}:not(.${c['row--dynamicHeight']}) > .${c.cell}`]: {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
     },
-    [`& .${gridClasses.cellContent}`]: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
+    [`& .${c.cellEmpty}`]: {
+      padding: 0,
     },
-    [`& .${gridClasses.cell}.${gridClasses['cell--selectionMode']}`]: {
+    [`& .${c.cell}.${c['cell--selectionMode']}`]: {
       cursor: 'default',
     },
-    [`& .${gridClasses.cell}.${gridClasses['cell--editing']}`]: {
+    [`& .${c.cell}.${c['cell--editing']}`]: {
       padding: 1,
       display: 'flex',
-      boxShadow: theme.shadows[2],
-      backgroundColor: (theme.vars || theme).palette.background.paper,
+      boxShadow: t.shadows[2],
+      backgroundColor: (t.vars || t).palette.background.paper,
       '&:focus-within': {
-        outline: `solid ${(theme.vars || theme).palette.primary.main} 1px`,
+        outline: `solid ${(t.vars || t).palette.primary.main} 1px`,
         outlineOffset: '-1px',
       },
     },
-    [`& .${gridClasses['row--editing']}`]: {
-      boxShadow: theme.shadows[2],
+    [`& .${c.cellContent}`]: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     },
-    [`& .${gridClasses['row--editing']} .${gridClasses.cell}`]: {
-      boxShadow: theme.shadows[0],
-      backgroundColor: (theme.vars || theme).palette.background.paper,
+    [`& .${c['row--editing']}`]: {
+      boxShadow: t.shadows[2],
     },
-    [`& .${gridClasses.editBooleanCell}`]: {
+    [`& .${c['row--editing']} .${c.cell}`]: {
+      boxShadow: t.shadows[0],
+      backgroundColor: (t.vars || t).palette.background.paper,
+    },
+    [`& .${c.editBooleanCell}`]: {
       display: 'flex',
       height: '100%',
       width: '100%',
       alignItems: 'center',
       justifyContent: 'center',
     },
-    [`& .${gridClasses.booleanCell}[data-value="true"]`]: {
-      color: (theme.vars || theme).palette.text.secondary,
+    [`& .${c.booleanCell}[data-value="true"]`]: {
+      color: (t.vars || t).palette.text.secondary,
     },
-    [`& .${gridClasses.booleanCell}[data-value="false"]`]: {
-      color: (theme.vars || theme).palette.text.disabled,
+    [`& .${c.booleanCell}[data-value="false"]`]: {
+      color: (t.vars || t).palette.text.disabled,
     },
-    [`& .${gridClasses.actionsCell}`]: {
+    [`& .${c.actionsCell}`]: {
       display: 'inline-flex',
       alignItems: 'center',
-      gridGap: theme.spacing(1),
+      gridGap: t.spacing(1),
     },
-    [`& .${gridClasses.rowReorderCell}`]: {
+    [`& .${c.rowReorderCell}`]: {
       display: 'inline-flex',
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      opacity: (theme.vars || theme).palette.action.disabledOpacity,
+      opacity: (t.vars || t).palette.action.disabledOpacity,
     },
-    [`& .${gridClasses['rowReorderCell--draggable']}`]: {
+    [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'move',
       opacity: 1,
     },
-    [`& .${gridClasses.rowReorderCellContainer}`]: {
+    [`& .${c.rowReorderCellContainer}`]: {
       padding: 0,
       alignItems: 'stretch',
     },
-    [`.${gridClasses.withBorderColor}`]: {
+    [`.${c.withBorderColor}`]: {
       borderColor,
     },
-    [`& .${gridClasses['cell--withRightBorder']}`]: {
+    [`& .${c['cell--withLeftBorder']}`]: {
+      borderLeftColor: 'var(--DataGrid-rowBorderColor)',
+      borderLeftWidth: '1px',
+      borderLeftStyle: 'solid',
+    },
+    [`& .${c['cell--withRightBorder']}`]: {
+      borderRightColor: 'var(--DataGrid-rowBorderColor)',
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
     },
-    [`& .${gridClasses['columnHeader--withRightBorder']}`]: {
+    [`& .${c['columnHeader--withRightBorder']}`]: {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
     },
-    [`& .${gridClasses['cell--textLeft']}`]: {
+    [`& .${c['cell--textLeft']}`]: {
       justifyContent: 'flex-start',
     },
-    [`& .${gridClasses['cell--textRight']}`]: {
+    [`& .${c['cell--textRight']}`]: {
       justifyContent: 'flex-end',
     },
-    [`& .${gridClasses['cell--textCenter']}`]: {
+    [`& .${c['cell--textCenter']}`]: {
       justifyContent: 'center',
     },
-    [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
+    [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
+      position: 'sticky',
+      zIndex: 3,
+      background: 'var(--DataGrid-pinnedBackground)',
+    },
+    [`& .${c.virtualScrollerContent} .${c.row}`]: {
+      '&:hover': {
+        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
+          backgroundColor: pinnedHoverBackground,
+        },
+      },
+      [`&.Mui-selected`]: {
+        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
+          backgroundColor: pinnedSelectedBackground,
+        },
+        '&:hover': {
+          [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
+            backgroundColor: pinnedSelectedHoverBackground,
+          },
+        },
+      },
+    },
+    [`& .${c.cell}:not(.${c['cell--pinnedLeft']}):not(.${c['cell--pinnedRight']})`]: {
+      transform: 'translate3d(var(--DataGrid-offsetLeft), 0, 0)',
+    },
+    [`& .${c.columnHeaderDraggableContainer}`]: {
       display: 'flex',
       width: '100%',
       height: '100%',
     },
-    [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
+    [`& .${c.rowReorderCellPlaceholder}`]: {
       display: 'none',
     },
-    [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
-      background: (theme.vars || theme).palette.background.paper,
+    [`& .${c['columnHeader--dragging']}, & .${c['row--dragging']}`]: {
+      background: (t.vars || t).palette.background.paper,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: (theme.vars || theme).palette.action.disabledOpacity,
+      opacity: (t.vars || t).palette.action.disabledOpacity,
     },
-    [`& .${gridClasses['row--dragging']}`]: {
-      background: (theme.vars || theme).palette.background.paper,
+    [`& .${c['row--dragging']}`]: {
+      background: (t.vars || t).palette.background.paper,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: (theme.vars || theme).palette.action.disabledOpacity,
+      opacity: (t.vars || t).palette.action.disabledOpacity,
 
-      [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
+      [`& .${c.rowReorderCellPlaceholder}`]: {
         display: 'flex',
       },
     },
-    [`& .${gridClasses.treeDataGroupingCell}`]: {
+    [`& .${c.treeDataGroupingCell}`]: {
       display: 'flex',
       alignItems: 'center',
       width: '100%',
     },
-    [`& .${gridClasses.treeDataGroupingCellToggle}`]: {
+    [`& .${c.treeDataGroupingCellToggle}`]: {
       flex: '0 0 28px',
       alignSelf: 'stretch',
-      marginRight: theme.spacing(2),
+      marginRight: t.spacing(2),
     },
-    [`& .${gridClasses.groupingCriteriaCell}`]: {
+    [`& .${c.groupingCriteriaCell}`]: {
       display: 'flex',
       alignItems: 'center',
       width: '100%',
     },
-    [`& .${gridClasses.groupingCriteriaCellToggle}`]: {
+    [`& .${c.groupingCriteriaCellToggle}`]: {
       flex: '0 0 28px',
       alignSelf: 'stretch',
-      marginRight: theme.spacing(2),
+      marginRight: t.spacing(2),
     },
   };
 
   return gridStyle;
 });
+
+/**
+ * Blend a transparent overlay color with a background color, resulting in a single
+ * RGB color.
+ */
+function blend(background: string, overlay: string, opacity: number, gamma: number = 1) {
+  const f = (b: number, o: number) =>
+    Math.round((b ** (1 / gamma) * (1 - opacity) + o ** (1 / gamma) * opacity) ** gamma);
+
+  const backgroundColor = decomposeColor(background);
+  const overlayColor = decomposeColor(overlay);
+
+  const rgb = [
+    f(backgroundColor.values[0], overlayColor.values[0]),
+    f(backgroundColor.values[1], overlayColor.values[1]),
+    f(backgroundColor.values[2], overlayColor.values[2]),
+  ] as const;
+
+  return recomposeColor({
+    type: 'rgb',
+    values: rgb as any,
+  });
+}

@@ -8,6 +8,13 @@ swap:
   # Capitalize
   data grid: Data Grid
   date picker: Date Picker
+  Data grid: Data Grid
+  Date picker: Date Picker
+  Time picker: Time Picker
+  Date [t|T]ime picker: Date Time Picker
+  Date [r|R]ange picker: Date Range Picker
+  Time [r|R]ange picker: Time Range Picker
+  Date [t|T]ime [r|R]ange picker: Date Time Range Picker
   time picker: Time Picker
   date time picker: Date Time Picker
   date range picker: Date Range Picker
