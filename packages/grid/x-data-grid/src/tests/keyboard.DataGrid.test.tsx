@@ -55,7 +55,7 @@ describe('<DataGrid /> - Keyboard', () => {
           columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
-          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
           {...props}
         />
       </div>
@@ -484,7 +484,7 @@ describe('<DataGrid /> - Keyboard', () => {
             hideFooter
             disableVirtualization
             columnGroupingModel={columnGroupingModel}
-            experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
+            experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
             {...props}
           />
         </div>
@@ -499,7 +499,6 @@ describe('<DataGrid /> - Keyboard', () => {
       render(
         <div style={{ width: 60, height: 300 }}>
           <DataGrid
-            experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={columnGroupingModel}
             autoHeight={isJSDOM}
             {...getBasicGridData(10, 10)}
@@ -521,7 +520,6 @@ describe('<DataGrid /> - Keyboard', () => {
       render(
         <div style={{ width: 60, height: 300 }}>
           <DataGrid
-            experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={columnGroupingModel}
             autoHeight={isJSDOM}
             {...getBasicGridData(10, 10)}

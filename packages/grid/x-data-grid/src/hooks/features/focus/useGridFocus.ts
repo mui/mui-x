@@ -15,7 +15,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import {
   gridFocusCellSelector,
-  unstable_gridFocusColumnGroupHeaderSelector,
+  gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
@@ -201,7 +201,7 @@ export const useGridFocus = (
 
   const getColumnGroupHeaderFocus = React.useCallback<
     GridFocusPrivateApi['getColumnGroupHeaderFocus']
-  >(() => unstable_gridFocusColumnGroupHeaderSelector(apiRef), [apiRef]);
+  >(() => gridFocusColumnGroupHeaderSelector(apiRef), [apiRef]);
 
   const moveFocusToRelativeCell = React.useCallback<GridFocusPrivateApi['moveFocusToRelativeCell']>(
     (id, field, direction) => {
@@ -315,7 +315,7 @@ export const useGridFocus = (
       if (event.target !== event.currentTarget) {
         return;
       }
-      const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
+      const focusedColumnGroup = gridFocusColumnGroupHeaderSelector(apiRef);
       if (
         focusedColumnGroup !== null &&
         focusedColumnGroup.depth === depth &&

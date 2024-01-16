@@ -145,7 +145,7 @@ export const useGridExcelExport = (
       );
 
       const columnGroupPaths = exportedColumns.reduce<Record<string, string[]>>((acc, column) => {
-        acc[column.field] = apiRef.current.unstable_getColumnGroupPath(column.field);
+        acc[column.field] = apiRef.current.getColumnGroupPath(column.field);
         return acc;
       }, {});
 
@@ -154,7 +154,7 @@ export const useGridExcelExport = (
         serializedRows,
         valueOptionsData,
         columnGroupPaths,
-        columnGroupDetails: apiRef.current.unstable_getAllGroupDetails(),
+        columnGroupDetails: apiRef.current.getAllGroupDetails(),
         options: cloneableOptions,
         valueOptionsSheetName,
       };

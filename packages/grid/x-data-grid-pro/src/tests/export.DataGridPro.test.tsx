@@ -549,13 +549,7 @@ describe('<DataGridPro /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300 }}>
-            <DataGridPro
-              apiRef={apiRef}
-              autoHeight
-              {...defaultProps}
-              experimentalFeatures={{ columnGrouping: true }}
-              {...props}
-            />
+            <DataGridPro apiRef={apiRef} autoHeight {...defaultProps} {...props} />
           </div>
         );
       }

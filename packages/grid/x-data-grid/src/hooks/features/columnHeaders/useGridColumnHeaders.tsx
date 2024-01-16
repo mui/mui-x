@@ -252,7 +252,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const firstColumnFieldToRender = visibleColumns[firstColumnToRender].field;
       const firstGroupToRender =
-        apiRef.current.unstable_getColumnGroupPath(firstColumnFieldToRender)[depth] ?? null;
+        apiRef.current.getColumnGroupPath(firstColumnFieldToRender)[depth] ?? null;
 
       const firstGroupIndex = rowStructure.findIndex(
         ({ groupId, columnFields }) =>
@@ -261,7 +261,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
       const lastGroupToRender =
-        apiRef.current.unstable_getColumnGroupPath(lastColumnFieldToRender)[depth] ?? null;
+        apiRef.current.getColumnGroupPath(lastColumnFieldToRender)[depth] ?? null;
       const lastGroupIndex = rowStructure.findIndex(
         ({ groupId, columnFields }) =>
           groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),

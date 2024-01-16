@@ -47,7 +47,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ ariaV7?: bool, columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ ariaV7?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },

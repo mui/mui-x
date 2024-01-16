@@ -111,15 +111,15 @@ export const useGridColumnReorder = (
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
 
-      const draggingColumnGroupPath = apiRef.current.unstable_getColumnGroupPath(params.field);
+      const draggingColumnGroupPath = apiRef.current.getColumnGroupPath(params.field);
 
       const columnIndex = originColumnIndex.current;
       const allColumns = apiRef.current.getAllColumns();
-      const groupsLookup = apiRef.current.unstable_getAllGroupDetails();
+      const groupsLookup = apiRef.current.getAllGroupDetails();
 
       const getGroupPathFromColumnIndex = (colIndex: number) => {
         const field = allColumns[colIndex].field;
-        return apiRef.current.unstable_getColumnGroupPath(field);
+        return apiRef.current.getColumnGroupPath(field);
       };
 
       // The limitingGroupId is the id of the group from which the dragged column should not escape

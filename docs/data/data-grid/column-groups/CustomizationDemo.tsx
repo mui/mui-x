@@ -110,7 +110,6 @@ export default function CustomizationDemo() {
       <DataGrid
         rows={rows}
         columns={columns}
-        experimentalFeatures={{ columnGrouping: true }}
         checkboxSelection
         disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}

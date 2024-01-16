@@ -59,7 +59,6 @@ export default function BreakingGroupDemo() {
       <DataGridPro
         rows={rows}
         columns={columns}
-        experimentalFeatures={{ columnGrouping: true }}
         checkboxSelection
         disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}

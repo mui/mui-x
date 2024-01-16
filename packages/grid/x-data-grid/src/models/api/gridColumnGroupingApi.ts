@@ -11,10 +11,10 @@ export interface GridColumnGroupingApi {
    * @param {string} field The field of of the column requested.
    * @returns {string[]} The id of the groups leading to the requested column.
    */
-  unstable_getColumnGroupPath: (field: string) => GridColumnGroup['groupId'][];
+  getColumnGroupPath: (field: string) => GridColumnGroup['groupId'][];
   /**
    * Returns the column group lookup.
    * @returns {GridColumnGroupLookup} The column group lookup.
    */
-  unstable_getAllGroupDetails: () => GridColumnGroupLookup;
+  getAllGroupDetails: () => GridColumnGroupLookup;
 }

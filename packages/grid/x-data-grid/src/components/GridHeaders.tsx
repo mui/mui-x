@@ -13,8 +13,8 @@ import {
   gridTabIndexColumnHeaderSelector,
   gridTabIndexCellSelector,
   gridFocusColumnHeaderSelector,
-  unstable_gridTabIndexColumnGroupHeaderSelector,
-  unstable_gridFocusColumnGroupHeaderSelector,
+  gridTabIndexColumnGroupHeaderSelector,
+  gridFocusColumnGroupHeaderSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
 import {
   gridColumnGroupsHeaderMaxDepthSelector,
@@ -33,14 +33,11 @@ function GridHeaders() {
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnGroupHeaderTabIndexState = useGridSelector(
     apiRef,
-    unstable_gridTabIndexColumnGroupHeaderSelector,
+    gridTabIndexColumnGroupHeaderSelector,
   );
 
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
-  const columnGroupHeaderFocus = useGridSelector(
-    apiRef,
-    unstable_gridFocusColumnGroupHeaderSelector,
-  );
+  const columnGroupHeaderFocus = useGridSelector(apiRef, gridFocusColumnGroupHeaderSelector);
 
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
 
