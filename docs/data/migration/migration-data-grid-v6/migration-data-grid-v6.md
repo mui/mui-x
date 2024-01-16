@@ -69,6 +69,14 @@ Since v7 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v6 to v7.
 
+### DOM changes
+
+The layout of the grid has been substantially altered to use CSS sticky positioned elements. As a result, the following changes have been made:
+
+- The main element now corresponds to the virtal scroller element.
+- Headers are now contained in the virtual scroller.
+- Pinned row and column sections are now contained in the virtual scroller.
+
 <!-- ### Renamed props
 
 - -->
@@ -137,6 +145,9 @@ Below are described the steps you need to make to migrate from v6 to v7.
   const columns = [{ type: 'number' as const, field: 'id' }];
   <DataGrid columns={columns} />;
   ```
+
+- The type `GridPinnedColumns` has been renamed to `GridPinnedColumnFields`.
+- The type `GridPinnedPosition` has been renamed to `GridPinnedColumnPosition`.
 
 <!-- ### Rows
 
@@ -281,17 +292,28 @@ Below are described the steps you need to make to migrate from v6 to v7.
  }
 ```
 
-<!-- ### CSS classes
+### CSS classes
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v6 classes | MUI X v7 classes | Note |
-  | :--------------- | :--------------- | :--- |
-  |                  |                  |      |
-  |                  |                  |      | -->
+  | MUI X v6 classes                            | MUI X v7 classes | Note                   |
+  | :------------------------------------------ | :--------------- | :--------------------- | --- |
+  | `.Mui-hovered`                              | `:hover`         | For rows               |
+  | `.MuiDataGrid--pinnedColumns-(left\|right)` | Removed          | Not applicable anymore | --> |
 
-<!-- ### Removals from the public API
+### Changes to the public API
 
-- -->
+- The method `getRootDimensions()` now returns a non-null value.
+- The field `mainElementRef` is now always non-null.
+- The field `rootElementRef` is now always non-null.
+- The field `virtualScrollerRef` is now always non-null.
+- The event `renderedRowsIntervalChange` params changed from `GridRenderedRowsIntervalChangeParams` to `GridRenderContext`, and the former has been removed.
+
+### Changes to slots
+
+- The slot `columnHeaders` has had these props removed: `columnPositions`, `densityFactor`, `minColumnIndex`.
+- The slot `row` has had these props removed: `containerWidth`, `position`.
+- The slot `row` has typed props now.
+- The slot `headerFilterCell` has had these props removed: `filterOperators`.
 
 <!-- ### Rename `components` to `slots` -->

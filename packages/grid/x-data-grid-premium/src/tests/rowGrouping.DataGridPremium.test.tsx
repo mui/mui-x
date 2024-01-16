@@ -835,8 +835,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(renderIdCell.lastCall.firstArg.id).to.equal(4);
-        expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
         expect(getColumnValues(0)).to.deep.equal([
           'Cat A (3)',
           'Custom leaf',
@@ -1257,8 +1255,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(renderIdCell.lastCall.firstArg.id).to.equal(4);
-        expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
         expect(getColumnValues(0)).to.deep.equal([
           'Cat A (3)',
           '',

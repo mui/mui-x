@@ -81,14 +81,16 @@ export const gridPinnedRowsSelector = createSelectorMemoized(
     const rawPinnedRows = additionalRowGroups?.pinnedRows;
 
     return {
-      bottom: rawPinnedRows?.bottom?.map((rowEntry) => ({
-        id: rowEntry.id,
-        model: rowEntry.model ?? {},
-      })),
-      top: rawPinnedRows?.top?.map((rowEntry) => ({
-        id: rowEntry.id,
-        model: rowEntry.model ?? {},
-      })),
+      bottom:
+        rawPinnedRows?.bottom?.map((rowEntry) => ({
+          id: rowEntry.id,
+          model: rowEntry.model ?? {},
+        })) ?? [],
+      top:
+        rawPinnedRows?.top?.map((rowEntry) => ({
+          id: rowEntry.id,
+          model: rowEntry.model ?? {},
+        })) ?? [],
     };
   },
 );

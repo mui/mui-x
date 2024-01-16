@@ -1,14 +1,11 @@
-import { GridRowId } from '@mui/x-data-grid';
+import { GridRowId, GridPinnedColumnFields } from '@mui/x-data-grid';
 import type {
   GridRowScrollEndParams,
   GridRowOrderChangeParams,
   GridFetchRowsParams,
 } from '../models';
 import type { GridHeaderFilterCellProps } from '../components/headerFiltering/GridHeaderFilterCell';
-import type {
-  GridColumnPinningInternalCache,
-  GridPinnedColumns,
-} from '../hooks/features/columnPinning/gridColumnPinningInterface';
+import type { GridColumnPinningInternalCache } from '../hooks/features/columnPinning/gridColumnPinningInterface';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 import { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
 
@@ -31,7 +28,7 @@ export interface GridControlledStateEventLookupPro {
    * Fired when the pinned columns is changed.
    * @ignore - do not document.
    */
-  pinnedColumnsChange: { params: GridPinnedColumns };
+  pinnedColumnsChange: { params: GridPinnedColumnFields };
 }
 
 export interface GridEventLookupPro {

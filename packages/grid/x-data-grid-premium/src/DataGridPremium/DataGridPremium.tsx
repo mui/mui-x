@@ -8,13 +8,10 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
-  useGridSelector,
-  gridPinnedColumnsSelector,
 } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
-  DataGridProVirtualScroller,
   PropValidator,
   validateProps,
 } from '@mui/x-data-grid-pro/internals';
@@ -42,10 +39,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-  const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
-
   validateProps(props, dataGridPremiumPropValidators);
-
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
@@ -56,10 +50,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
         {...props.forwardedProps}
       >
         <GridHeader />
-        <GridBody
-          VirtualScrollerComponent={DataGridProVirtualScroller}
-          ColumnHeadersProps={{ pinnedColumns }}
-        >
+        <GridBody>
           <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
         </GridBody>
         <GridFooterPlaceholder />
@@ -725,7 +716,7 @@ DataGridPremiumRaw.propTypes = {
   onPaginationModelChange: PropTypes.func,
   /**
    * Callback fired when the pinned columns have changed.
-   * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
+   * @param {GridPinnedColumnFields} pinnedColumns The changed pinned columns.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange: PropTypes.func,

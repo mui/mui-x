@@ -1,6 +1,11 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridColumnLookup } from './gridColumnsInterfaces';
+import {
+  GridColumnLookup,
+  GridPinnedColumnFields,
+  EMPTY_PINNED_COLUMN_FIELDS,
+} from './gridColumnsInterfaces';
+import { gridThemeSelector } from '../../core/gridCoreSelector';
 
 /**
  * Get the columns state
@@ -65,6 +70,69 @@ export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => visibleColumns.map((column) => column.field),
 );
+
+/**
+ * Get the visible pinned columns model.
+ * @category Visible Columns
+ */
+export const gridPinnedColumnsSelector = (state: GridStateCommunity) => state.pinnedColumns;
+
+/**
+ * Get the visible pinned columns.
+ * @category Visible Columns
+ */
+export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized(
+  gridColumnsStateSelector,
+  gridPinnedColumnsSelector,
+  gridVisibleColumnFieldsSelector,
+  gridThemeSelector,
+  (columnsState, model, visibleColumnFields, theme) => {
+    const visiblePinnedFields = filterVisibleColumns(
+      model,
+      visibleColumnFields,
+      theme.direction === 'rtl',
+    );
+    const visiblePinnedColumns = {
+      left: visiblePinnedFields.left.map((field) => columnsState.lookup[field]),
+      right: visiblePinnedFields.right.map((field) => columnsState.lookup[field]),
+    };
+    return visiblePinnedColumns;
+  },
+);
+
+function filterVisibleColumns(
+  pinnedColumns: GridPinnedColumnFields,
+  columns: string[],
+  invert?: boolean,
+) {
+  if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
+    return EMPTY_PINNED_COLUMN_FIELDS;
+  }
+
+  if (pinnedColumns.left?.length === 0 && pinnedColumns.right?.length === 0) {
+    return EMPTY_PINNED_COLUMN_FIELDS;
+  }
+
+  const filter = (newPinnedColumns: string[] | undefined, remainingColumns: string[]) => {
+    if (!Array.isArray(newPinnedColumns)) {
+      return [];
+    }
+    return newPinnedColumns.filter((field) => remainingColumns.includes(field));
+  };
+
+  const leftPinnedColumns = filter(pinnedColumns.left, columns);
+  const columnsWithoutLeftPinnedColumns = columns.filter(
+    // Filter out from the remaining columns those columns already pinned to the left
+    (field) => !leftPinnedColumns.includes(field),
+  );
+  const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
+
+  if (invert) {
+    return { left: rightPinnedColumns, right: leftPinnedColumns };
+  }
+
+  return { left: leftPinnedColumns, right: rightPinnedColumns };
+}
 
 /**
  * Get the left position in pixel of each visible columns relative to the left of the first column.

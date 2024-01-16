@@ -5,7 +5,6 @@ import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridP
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
-import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { GridValidRowModel } from '../models/gridRows';
 import {
   PropValidator,
@@ -47,7 +46,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
         {...props.forwardedProps}
       >
         <GridHeader />
-        <GridBody VirtualScrollerComponent={DataGridVirtualScroller} />
+        <GridBody />
         <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
