@@ -2,18 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 export default function BasicSimpleTreeView() {
   return (
     <Box sx={{ height: 168, flexGrow: 1, maxWidth: 400 }}>
-      <SimpleTreeView
-        slots={{
-          collapseIcon: ExpandMoreIcon,
-          expandIcon: ChevronRightIcon,
-        }}
-      >
+      <SimpleTreeView>
         <TreeItem nodeId="grid" label="Data Grid">
           <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
           <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
