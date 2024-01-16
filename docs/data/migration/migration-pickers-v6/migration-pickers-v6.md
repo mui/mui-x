@@ -332,11 +332,44 @@ You should now be able to directly pass the returned value from your field hook 
 ```
 
 :::info
-// TODO v7: update to a more specific section link when the refactored field components are released?
-
 If your custom field is based on one of the examples of the [Custom field](/x/react-date-pickers/custom-field/) page,
 then you can look at the page to see all the examples improved and updated to use the new simplified API.
 :::
+
+#### Do not forward the `enableAccessibleFieldDOMStructure` prop to the DOM
+
+The headless field hooks (e.g.: `useDateField`) are returning a new prop called `enableAccessibleFieldDOMStructure`.
+This is used to know if the current UI expected is built using the accessible DOM structure or not.
+Learn more about this new DOM structure on the [dedicated doc section](/x/react-date-pickers/fields/#dom-structure).
+
+When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
+
+```diff
+  function MyCustomTextField(props) {
+    const {
++     // Should be ignored
++     enableAccessibleFieldDOMStructure,
+
+      // ... rest of the props you are using
+    }
+
+    return ( /* Some UI to edit the date */ )
+  }
+
+  function MyCustomField(props) {
+    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+      ...props,
++     // If you only support one DOM structure, we advise you to hardcode it here it avoid unwanted switches in your application
++     enableAccessibleFieldDOMStructure: false,
+    });
+
+    return <MyCustomTextField ref={ref} {...fieldResponse} />;
+  }
+
+  function App() {
+    return <DatePicker slots={{ field: MyCustomField }} />;
+  }
+```
 
 ## Date management
 
