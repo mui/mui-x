@@ -9,7 +9,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import Switch from '@mui/material/Switch';
-import FormHelperText from '@mui/material/FormHelperText';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 import Select from '@mui/material/Select';
@@ -75,12 +74,10 @@ function RadioGroupControl({
   label,
   value,
   onChange,
-  helperText,
 }: {
   label: string;
   value: boolean | undefined;
   onChange: (value: boolean | undefined) => void;
-  helperText?: string;
 }) {
   const id = React.useId();
   const handleChange = React.useCallback(
@@ -97,7 +94,6 @@ function RadioGroupControl({
         <FormControlLabel value control={<Radio />} label="true" />
         <FormControlLabel value={false} control={<Radio />} label="false" />
       </RadioGroup>
-      <FormHelperText>{helperText}</FormHelperText>
     </FormControl>
   );
 }
