@@ -82,21 +82,28 @@ function TriBooleanGroupControl({
     [onChange],
   );
   return (
-    <FormControl sx={{ gap: 1 }}>
-      <FormLabel id={id}>{label}</FormLabel>
-      <ToggleButtonGroup
-        aria-labelledby={id}
-        value={value ?? ''}
-        exclusive
-        onChange={handleChange}
-        size="small"
-        color="primary"
-        fullWidth
-      >
-        <ToggleButton value={''}>Undefined</ToggleButton>
-        <ToggleButton value>True</ToggleButton>
-        <ToggleButton value={false}>False</ToggleButton>
-      </ToggleButtonGroup>
+    <FormControl>
+      <FormControlLabel
+        sx={{ gap: 1, m: 0, alignItems: 'start' }}
+        label={label}
+        id={id}
+        labelPlacement="top"
+        control={
+          <ToggleButtonGroup
+            aria-labelledby={id}
+            value={value ?? ''}
+            exclusive
+            onChange={handleChange}
+            size="small"
+            color="primary"
+            fullWidth
+          >
+            <ToggleButton value={''}>Undefined</ToggleButton>
+            <ToggleButton value>True</ToggleButton>
+            <ToggleButton value={false}>False</ToggleButton>
+          </ToggleButtonGroup>
+        }
+      />
     </FormControl>
   );
 }
@@ -129,8 +136,8 @@ function BooleanGroupControl({
         id={id}
         checked={value}
         onChange={handleChange as any}
-        control={<Switch />}
         labelPlacement="start"
+        control={<Switch />}
       />
     </FormControl>
   );
