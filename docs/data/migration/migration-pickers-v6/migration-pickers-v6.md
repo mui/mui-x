@@ -534,7 +534,7 @@ You can directly use your date library:
 
 #### Remove the `getFormatHelperText` method
 
-The `getFormatHelperText` method have been removed.
+The `getFormatHelperText` method has been removed.
 You can use the `expandFormat` instead:
 
 ```diff
