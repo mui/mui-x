@@ -49,12 +49,9 @@ const ComponentSection = styled('div')(({ theme }) => ({
   gap: theme.spacing(2),
   overflowX: 'auto',
   '& .MuiPickersLayout-root': {
-    borderRadius: 6,
+    borderRadius: 8,
     border: '1px dashed',
-    borderColor:
-      theme.palette.mode === 'light'
-        ? theme.palette.grey[300]
-        : alpha(theme.palette.grey[500], 0.1),
+    borderColor: theme.palette.mode === 'light' ? theme.palette.grey[300] : theme.palette.divider,
     ...(theme.palette.mode === 'dark' && {
       backgroundColor: alpha(theme.palette.grey[900], 0.2),
     }),
@@ -92,9 +89,9 @@ function TriBooleanGroupControl({
   return (
     <FormControl
       sx={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        flexDirection: 'column',
+        gap: 1,
+        // alignItems: 'center',
       }}
     >
       <FormLabel id={id}>{label}</FormLabel>
@@ -104,6 +101,8 @@ function TriBooleanGroupControl({
         exclusive
         onChange={handleChange}
         size="small"
+        color="primary"
+        fullWidth
       >
         <ToggleButton value={''}>Undefined</ToggleButton>
         <ToggleButton value>True</ToggleButton>
@@ -615,16 +614,24 @@ export default function PickersPlayground() {
             Playground
           </Typography>
           <Divider light />
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, pt: 2, pl: 3, pr: 2 }}>
-            <BooleanGroupControl
-              label="Static desktop mode"
-              value={isStaticDesktopMode}
-              onChange={setIsStaticDesktopMode}
-            />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, pt: 2, pl: 3, pr: 2 }}>
             <TriBooleanGroupControl
               label="Toolbar hidden"
               value={isToolbarHidden}
               onChange={setIsToolbarHidden}
+            />
+            {selectedPickers !== 'date-range' && (
+              <ViewSwitcher
+                showDateViews={selectedPickers === 'date' || selectedPickers === 'date-time'}
+                showTimeViews={selectedPickers === 'time' || selectedPickers === 'date-time'}
+                views={views}
+                handleViewsChange={handleViewsChange}
+              />
+            )}
+            <BooleanGroupControl
+              label="Static desktop mode"
+              value={isStaticDesktopMode}
+              onChange={setIsStaticDesktopMode}
             />
             {selectedPickers === 'date-time' && (
               <TriBooleanGroupControl
@@ -689,14 +696,6 @@ export default function PickersPlayground() {
               value={isLandscape}
               onChange={setIsLandscape}
             />
-            {selectedPickers !== 'date-range' && (
-              <ViewSwitcher
-                showDateViews={selectedPickers === 'date' || selectedPickers === 'date-time'}
-                showTimeViews={selectedPickers === 'time' || selectedPickers === 'date-time'}
-                views={views}
-                handleViewsChange={handleViewsChange}
-              />
-            )}
           </Box>
         </PropControlsSection>
       </Box>
