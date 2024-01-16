@@ -92,9 +92,6 @@ StaticTimePicker.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
-  /**
-   * @ignore
-   */
   className: PropTypes.string,
   /**
    * The default value.

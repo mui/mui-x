@@ -84,9 +84,6 @@ StaticDateRangePicker.propTypes = {
    * @default 2
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
-  /**
-   * @ignore
-   */
   className: PropTypes.string,
   /**
    * Position the current month is rendered in.

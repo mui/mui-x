@@ -126,9 +126,6 @@ TreeItemContent.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object.isRequired,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * The icon to display next to the tree node's label. Either a parent or end icon.
