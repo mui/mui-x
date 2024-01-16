@@ -8,14 +8,14 @@ import {
 } from './common';
 
 export interface BarSeriesType
-  extends CommonSeriesType<number>,
+  extends CommonSeriesType<number | null>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'bar';
   /**
    * Data associated to each bar.
    */
-  data?: number[];
+  data?: (number | null)[];
   /**
    * The key used to retrive data from the dataset.
    */

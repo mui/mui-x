@@ -41,7 +41,7 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 }
 
 export interface LineSeriesType
-  extends CommonSeriesType<number>,
+  extends CommonSeriesType<number | null>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'line';
