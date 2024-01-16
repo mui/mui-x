@@ -612,7 +612,7 @@ You can use the `addMonths` method instead:
 
 #### Remove the `getPreviousMonth` method
 
-The `getPreviousMonth` method have been removed.
+The `getPreviousMonth` method has been removed.
 You can use the `addMonths` method instead:
 
 ```diff
