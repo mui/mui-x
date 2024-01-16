@@ -5,9 +5,9 @@ import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import InputLabel from '@mui/material/InputLabel';
-import RadioGroup from '@mui/material/RadioGroup';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
 import Switch from '@mui/material/Switch';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
@@ -81,19 +81,34 @@ function RadioGroupControl({
 }) {
   const id = React.useId();
   const handleChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(event.target.value === '' ? undefined : event.target.value === 'true');
+    (event: React.MouseEvent<HTMLElement>, newValue: any) => {
+      if (newValue === null) {
+        return;
+      }
+      onChange(newValue === '' ? undefined : newValue);
     },
     [onChange],
   );
   return (
-    <FormControl>
+    <FormControl
+      sx={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
       <FormLabel id={id}>{label}</FormLabel>
-      <RadioGroup aria-labelledby={id} value={value ?? ''} onChange={handleChange} row>
-        <FormControlLabel value={''} control={<Radio />} label="undefined" />
-        <FormControlLabel value control={<Radio />} label="true" />
-        <FormControlLabel value={false} control={<Radio />} label="false" />
-      </RadioGroup>
+      <ToggleButtonGroup
+        aria-labelledby={id}
+        value={value ?? ''}
+        exclusive
+        onChange={handleChange}
+        size="small"
+      >
+        <ToggleButton value={''}>Undefined</ToggleButton>
+        <ToggleButton value>True</ToggleButton>
+        <ToggleButton value={false}>False</ToggleButton>
+      </ToggleButtonGroup>
     </FormControl>
   );
 }
