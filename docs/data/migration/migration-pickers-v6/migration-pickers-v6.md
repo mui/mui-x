@@ -622,7 +622,7 @@ You can use the `addMonths` method instead:
 
 #### Remove the `getWeekdays` method
 
-The `getWeekdays` method have been removed.
+The `getWeekdays` method has been removed.
 You can use the `startOfWeek` and `addDays` methods instead:
 
 ```diff
