@@ -637,7 +637,7 @@ You can use the `startOfWeek` and `addDays` methods instead:
 
 #### Remove the `isNull` method
 
-The `isNull` method have been removed.
+The `isNull` method has been removed.
 You can replace it with a very basic check:
 
 ```diff
