@@ -565,7 +565,7 @@ You can apply the following transformation:
 
 #### Remove the `getMeridiemText` method
 
-The `getMeridiemText` method have been removed.
+The `getMeridiemText` method has been removed.
 You can use the `setHours`, `date` and `format` methods to recreate its behavior:
 
 ```diff
