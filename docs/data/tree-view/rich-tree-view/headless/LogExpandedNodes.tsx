@@ -14,6 +14,8 @@ import {
   TreeViewPlugin,
   TreeViewPluginSignature,
   DefaultTreeViewPluginParameters,
+  DefaultTreeViewPluginSlotProps,
+  DefaultTreeViewPluginSlots,
   DEFAULT_TREE_VIEW_PLUGINS,
   extractPluginParamsFromProps,
   useTreeView,
@@ -66,9 +68,15 @@ useTreeViewLogExpanded.params = {
 export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
   extends DefaultTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
-    RichTreeViewPropsBase {}
+    RichTreeViewPropsBase {
+  slots?: DefaultTreeViewPluginSlots;
+  slotProps?: DefaultTreeViewPluginSlotProps;
+}
 
-const plugins = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded] as const;
+const TREE_VIEW_PLUGINS = [
+  ...DEFAULT_TREE_VIEW_PLUGINS,
+  useTreeViewLogExpanded,
+] as const;
 
 function TreeView<R extends {}, Multiple extends boolean | undefined>(
   inProps: TreeViewProps<R, Multiple>,
@@ -76,9 +84,14 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
   const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
   const ownerState = themeProps as TreeViewProps<any, any>;
 
-  const { pluginParams, otherProps } = extractPluginParamsFromProps({
+  const { pluginParams, otherProps } = extractPluginParamsFromProps<
+    typeof TREE_VIEW_PLUGINS,
+    DefaultTreeViewPluginSlots,
+    DefaultTreeViewPluginSlotProps,
+    TreeViewProps<R, Multiple>
+  >({
     props: themeProps,
-    plugins,
+    plugins: TREE_VIEW_PLUGINS,
   });
 
   const { getRootProps, contextValue, instance } = useTreeView(pluginParams);

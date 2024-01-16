@@ -4,7 +4,11 @@ export { TreeViewProvider } from './TreeViewProvider';
 export type { TreeViewPlugin, TreeViewPluginSignature } from './models';
 
 export { DEFAULT_TREE_VIEW_PLUGINS } from './plugins/defaultPlugins';
-export type { DefaultTreeViewPlugins } from './plugins/defaultPlugins';
+export type {
+  DefaultTreeViewPlugins,
+  DefaultTreeViewPluginSlots,
+  DefaultTreeViewPluginSlotProps,
+} from './plugins/defaultPlugins';
 export type { DefaultTreeViewPluginParameters } from './plugins/defaultPlugins';
 export type { UseTreeViewExpansionSignature } from './plugins/useTreeViewExpansion';
 export type { UseTreeViewSelectionSignature } from './plugins/useTreeViewSelection';
