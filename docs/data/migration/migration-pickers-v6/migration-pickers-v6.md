@@ -669,7 +669,7 @@ You can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate i
 
 #### Remove the `parseISO` method
 
-The `parseISO` method have been removed.
+The `parseISO` method has been removed.
 You can directly use your date library:
 
 ```diff
