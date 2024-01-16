@@ -111,10 +111,10 @@ If you are not relying on the codemod, consider checking all the renamed types i
 Here is an example on the `DateCalendar` typing.
 
 ```diff
-- DateCalendarSlotsComponent
-+ DateCalendarSlots
-- DateCalendarSlotsComponentsProps
-+ DateCalendarSlotProps
+-DateCalendarSlotsComponent
++DateCalendarSlots
+-DateCalendarSlotsComponentsProps
++DateCalendarSlotProps
 ```
 
 ### Add new parameters to the `shortcuts` slot `onChange` callback
@@ -438,8 +438,8 @@ If you were still relying on the root level export, please update your code.
 Before v7, it was possible to import locales from the package root (i.e. `import { frFR } from '@mui/x-date-pickers'`).
 
 ```diff
-- import { frFR } from '@mui/x-date-pickers';
-+ import { frFR } from '@mui/x-date-pickers/locales';
+-import { frFR } from '@mui/x-date-pickers';
++import { frFR } from '@mui/x-date-pickers/locales';
 ```
 
 ## Adapters internal changes
@@ -468,8 +468,8 @@ The `dateWithTimezone` method has been removed and its content has been moved th
 You can use the `date` method instead:
 
 ```diff
--adater.dateWithTimezone(undefined, 'system');
-+adater.date(undefined, 'system');
+-adapter.dateWithTimezone(undefined, 'system');
++adapter.date(undefined, 'system');
 ```
 
 #### Remove the `getDiff` method
@@ -731,7 +731,7 @@ The method has been simplified and now only accepts an already-parsed date or `n
  const adapterDayjs = new AdapterDayjs();
  const adapterLuxon = new AdapterLuxon();
  const adapterDateFns = new AdapterDateFns();
- const adapterMoment = new AdatperMoment();
+ const adapterMoment = new AdapterMoment();
 
  // Supported formats
  const isEqual = adapterDayjs.isEqual(null, null); // Same for the other adapters
@@ -773,7 +773,7 @@ Which is the same type as the one accepted by the components `value` prop.
  const adapterDayjs = new AdapterDayjs();
  const adapterLuxon = new AdapterLuxon();
  const adapterDateFns = new AdapterDateFns();
- const adapterMoment = new AdatperMoment();
+ const adapterMoment = new AdapterMoment();
 
  // Supported formats
  const isValid = adapterDayjs.isValid(null); // Same for the other adapters
