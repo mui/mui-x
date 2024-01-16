@@ -647,7 +647,7 @@ You can replace it with a very basic check:
 
 #### Remove the `mergeDateAndTime` method
 
-The `mergeDateAndTime` method have been removed.
+The `mergeDateAndTime` method has been removed.
 You can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
 
 ```diff
