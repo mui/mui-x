@@ -70,7 +70,7 @@ const PropControlsSection = styled('div')(({ theme }) => ({
   }),
 }));
 
-function RadioGroupControl({
+function TriBooleanGroupControl({
   label,
   value,
   onChange,
@@ -621,13 +621,13 @@ export default function PickersPlayground() {
               value={isStaticDesktopMode}
               onChange={setIsStaticDesktopMode}
             />
-            <RadioGroupControl
+            <TriBooleanGroupControl
               label="Toolbar hidden"
               value={isToolbarHidden}
               onChange={setIsToolbarHidden}
             />
             {selectedPickers === 'date-time' && (
-              <RadioGroupControl
+              <TriBooleanGroupControl
                 label="Tabs hidden"
                 value={isTabsHidden}
                 onChange={setIsTabsHidden}
@@ -657,8 +657,8 @@ export default function PickersPlayground() {
             )}
             {(selectedPickers === 'time' || selectedPickers === 'date-time') && (
               <React.Fragment>
-                <RadioGroupControl label="AM/PM" value={ampm} onChange={setAmpm} />
-                <RadioGroupControl
+                <TriBooleanGroupControl label="AM/PM" value={ampm} onChange={setAmpm} />
+                <TriBooleanGroupControl
                   label="ampmInClock"
                   value={ampmInClock}
                   onChange={setAmpmInClock}
