@@ -696,7 +696,7 @@ The `toISO` method has been removed.
 You can directly use your date library:
 
 ```diff
-// For Day.js
+ // For Day.js
 -const isoString = adapter.toISO(value);
 +const isoString = value.toISOString();
 
