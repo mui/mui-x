@@ -201,6 +201,48 @@ const useCustomPlugin = ({ params }) => {
 };
 ```
 
+### Pass elements to the Tree Item
+
+You can use the `contextValue` property of your returned value to pass elements to the Tree Item:
+
+:::warning
+For now the context is private and cannot be accessed outside our own plugins.
+You need to modify the `useTreeItem` hook to return the value newly returned by your plugin.
+:::
+
+```tsx
+const useCustomPlugin = ({ params }) => {
+  return {
+    contextValue: () => ({
+      customPlugin: { enabled: true },
+    }),
+  };
+};
+
+function useTreeItem(nodeId: string) {
+  const {
+    customPlugin,
+    // ...other elements returned by the context
+  } = useTreeViewContext<DefaultTreeViewPlugins>();
+
+  // ...rest of the `useTreeItem` hook content
+
+  return {
+    customPlugin,
+    // ...other elements returned by `useTreeItem`
+  };
+}
+
+function TreeItemContent() {
+  const {
+    customPlugin,
+    // ...other elements returned by `useTreeItem`
+  } = useTreeItem(props.nodeId);
+
+  // Do something with customPlugin.enabled
+}
+```
+
 ### Plugin typing
 
 The typing of a plugin is defined using its _signature_.
@@ -220,6 +262,10 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
   state: UseCustomPluginState;
   // The context value defined by your plugin and passed to the items
   contextValue: UseCustomPluginContextValue;
+  // The slots used by this plugin
+  slots: UseCustomPluginSlots;
+  // The slot props used by this plugin
+  slotProps: UseCustomPluginSlotProps;
   // The name of the models defined by your plugin
   modelNames: UseCustomPluginModelNames;
   // The plugins this plugin needs to work correctly
@@ -254,6 +300,7 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
       params: { value: boolean };
     };
   };
+  contextValue: { customPlugin: { enabled: boolean } };
   modelNames: 'customModel';
   // We want to have access to the expansion models and methods of the expansion plugin.
   dependantPlugins: [UseTreeViewExpansionSignature];
