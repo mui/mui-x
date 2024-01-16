@@ -692,7 +692,7 @@ You can directly use your date library:
 
 #### Remove the `toISO` method
 
-The `toISO` method have been removed.
+The `toISO` method has been removed.
 You can directly use your date library:
 
 ```diff
