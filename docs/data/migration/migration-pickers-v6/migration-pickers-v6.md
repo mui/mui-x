@@ -245,7 +245,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 ### Headless fields
 
 :::success
-The following breaking changes only impact you if you are using hooks like `useDateField` to build a custom UI.
+The following breaking changes only impacts you if you are using hooks like `useDateField` to build a custom UI.
 
 If you are just using the regular field components, then you can safely skip this section.
 :::
@@ -343,7 +343,8 @@ then you can look at the page to see all the examples improved and updated to us
 The `AdapterLuxon` now uses the localized week when Luxon `v3.4.4` or higher is installed.
 This improvement aligns `AdapterLuxon` with the behavior of other adapters.
 
-If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
+If you want to keep the start of the week on Monday even if your locale says otherwise.
+You can hardcode the week settings as follows:
 
 ```ts
 import { Settings } from 'luxon';
@@ -358,7 +359,8 @@ Settings.defaultWeekSettings = {
 ### Remove the `monthAndYear` format
 
 The `monthAndYear` format has been removed.
-It was used in the header of the calendar views, you can replace it with the new `format` prop of the `calendarHeader` slot:
+It was used in the header of the calendar views.
+You can replace it with the new `format` prop of the `calendarHeader` slot:
 
 ```diff
  <LocalizationProvider
@@ -474,7 +476,8 @@ You can use the `date` method instead:
 
 #### Remove the `getDiff` method
 
-The `getDiff` method have been removed, you can directly use your date library:
+The `getDiff` method have been removed.
+You can directly use your date library:
 
 ```diff
  // For Day.js
@@ -531,14 +534,16 @@ The `getDiff` method have been removed, you can directly use your date library:
 
 #### Remove the `getFormatHelperText` method
 
-The `getFormatHelperText` method have been removed, you can use the `expandFormat` instead:
+The `getFormatHelperText` method have been removed.
+You can use the `expandFormat` instead:
 
 ```diff
 -const expandedFormat = adapter.getFormatHelperText(format);
 +const expandedFormat = adapter.expandFormat(format);
 ```
 
-And if you need the exact same output, you can apply the following transformation:
+And if you need the exact same output.
+You can apply the following transformation:
 
 ```diff
  // For Day.js
@@ -560,7 +565,8 @@ And if you need the exact same output, you can apply the following transformatio
 
 #### Remove the `getMeridiemText` method
 
-The `getMeridiemText` method have been removed, you can use the `setHours`, `date` and `format` methods to recreate its behavior:
+The `getMeridiemText` method have been removed.
+You can use the `setHours`, `date` and `format` methods to recreate its behavior:
 
 ```diff
 -const meridiem = adapter.getMeridiemText('am');
@@ -574,7 +580,8 @@ The `getMeridiemText` method have been removed, you can use the `setHours`, `dat
 
 #### Remove the `getMonthArray` method
 
-The `getMonthArray` method have been removed, you can use the `startOfYear` and `addMonths` methods to recreate its behavior:
+The `getMonthArray` method have been removed.
+You can use the `startOfYear` and `addMonths` methods to recreate its behavior:
 
 ```diff
 -const monthArray = adapter.getMonthArray(value);
@@ -595,7 +602,8 @@ The `getMonthArray` method have been removed, you can use the `startOfYear` and 
 
 #### Remove the `getNextMonth` method
 
-The `getNextMonth` method have been removed, you can use the `addMonths` method instead:
+The `getNextMonth` method have been removed.
+You can use the `addMonths` method instead:
 
 ```diff
 -const nextMonth = adapter.getNextMonth(value);
@@ -604,7 +612,8 @@ The `getNextMonth` method have been removed, you can use the `addMonths` method 
 
 #### Remove the `getPreviousMonth` method
 
-The `getPreviousMonth` method have been removed, you can use the `addMonths` method instead:
+The `getPreviousMonth` method have been removed.
+You can use the `addMonths` method instead:
 
 ```diff
 -const previousMonth = adapter.getPreviousMonth(value);
@@ -613,7 +622,8 @@ The `getPreviousMonth` method have been removed, you can use the `addMonths` met
 
 #### Remove the `getWeekdays` method
 
-The `getWeekdays` method have been removed, you can use the `startOfWeek` and `addDays` methods instead:
+The `getWeekdays` method have been removed.
+You can use the `startOfWeek` and `addDays` methods instead:
 
 ```diff
 -const weekDays = adapter.getWeekdays(value);
@@ -627,7 +637,8 @@ The `getWeekdays` method have been removed, you can use the `startOfWeek` and `a
 
 #### Remove the `isNull` method
 
-The `isNull` method have been removed, you can replace it with a very basic check:
+The `isNull` method have been removed.
+You can replace it with a very basic check:
 
 ```diff
 -const isNull = adapter.isNull(value);
@@ -636,7 +647,8 @@ The `isNull` method have been removed, you can replace it with a very basic chec
 
 #### Remove the `mergeDateAndTime` method
 
-The `mergeDateAndTime` method have been removed, you can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
+The `mergeDateAndTime` method have been removed.
+You can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
 
 ```diff
 -const result = adapter.mergeDateAndTime(valueWithDate, valueWithTime);
@@ -657,7 +669,8 @@ The `mergeDateAndTime` method have been removed, you can use the `setHours`, `se
 
 #### Remove the `parseISO` method
 
-The `parseISO` method have been removed, you can directly use your date library:
+The `parseISO` method have been removed.
+You can directly use your date library:
 
 ```diff
  // For Day.js
@@ -679,13 +692,24 @@ The `parseISO` method have been removed, you can directly use your date library:
 
 #### Remove the `toISO` method
 
-The `toISO` method have been removed, you can directly use your date library:
+The `toISO` method have been removed.
+You can directly use your date library:
 
 ```diff
+// For Day.js
 -const isoString = adapter.toISO(value);
 +const isoString = value.toISOString();
+
+// For Luxon
+-const isoString = adapter.toISO(value);
 +const isoString = value.toUTC().toISO({ format: 'extended' });
+
+// For DateFns
+-const isoString = adapter.toISO(value);
 +const isoString = dateFns.formatISO(value, { format: 'extended' });
+
+// For Moment
+-const isoString = adapter.toISO(value);
 +const isoString = value.toISOString();
 ```
 
