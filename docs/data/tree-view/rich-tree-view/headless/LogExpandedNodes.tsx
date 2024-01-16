@@ -3,33 +3,24 @@ import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
-import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
 import {
   RichTreeViewPropsBase,
   RichTreeViewRoot,
 } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
+  UseTreeViewExpansionSignature,
   TreeViewPlugin,
   TreeViewPluginSignature,
-} from '@mui/x-tree-view/internals/models';
-/* eslint-disable */
-import {
   DefaultTreeViewPluginParameters,
   DEFAULT_TREE_VIEW_PLUGINS,
-} from '@mui/x-tree-view/internals/plugins/defaultPlugins';
-import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion';
-import { extractPluginParamsFromProps } from '@mui/x-tree-view/internals/utils/extractPluginParamsFromProps';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-if (false) {
-  console.log(
-    'This log is here to make sure the js version has a lint error, otherwise we have a CI error',
-  );
-}
-/* eslint-enable */
+  extractPluginParamsFromProps,
+  useTreeView,
+  TreeViewProvider,
+} from '@mui/x-tree-view/internals';
 
 interface TreeViewLogExpandedParameters {
   areLogsEnabled?: boolean;
@@ -140,7 +131,7 @@ const ITEMS: TreeViewBaseItem[] = [
   },
 ];
 
-export default function HeadlessTreeView() {
+export default function LogExpandedNodes() {
   const [logs, setLogs] = React.useState<string[]>([]);
 
   return (
