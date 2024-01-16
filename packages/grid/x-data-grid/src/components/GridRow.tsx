@@ -475,7 +475,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const column = renderedColumns[i];
 
     let indexRelativeToAllColumns = firstColumnToRender + i;
-
     if (focusedCellColumnIndexNotInRange !== undefined && focusedCell) {
       if (visibleColumns[focusedCellColumnIndexNotInRange].field === column.field) {
         indexRelativeToAllColumns = focusedCellColumnIndexNotInRange;
@@ -484,7 +483,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     }
 
-    cells.push(getCell(column, i, indexRelativeToAllColumns, middleColumnsLength));
+    const indexInSection = indexRelativeToAllColumns - pinnedColumns.left.length;
+
+    cells.push(getCell(column, indexInSection, indexRelativeToAllColumns, middleColumnsLength));
   }
 
   const eventHandlers = row

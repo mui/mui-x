@@ -244,12 +244,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   const isSectionLastCell = sectionIndex === sectionLength - 1;
 
-  const showLeftBorder =
-    rootProps.showCellVerticalBorder ||
-    (pinnedPosition === PinnedPosition.RIGHT && sectionIndex === 0);
+  const showLeftBorder = pinnedPosition === PinnedPosition.RIGHT && sectionIndex === 0;
 
   const showRightBorder =
-    rootProps.showCellVerticalBorder ||
+    (rootProps.showCellVerticalBorder &&
+      (pinnedPosition !== PinnedPosition.LEFT ? !isSectionLastCell : true)) ||
     (pinnedPosition === PinnedPosition.LEFT && isSectionLastCell);
 
   const ownerState = {
