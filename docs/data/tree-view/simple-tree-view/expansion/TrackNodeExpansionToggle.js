@@ -22,6 +22,7 @@ export default function TrackNodeExpansionToggle() {
           Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.nodeId}
         </Typography>
       )}
+
       <SimpleTreeView
         onNodeExpansionToggle={handleNodeExpansionToggle}
         defaultCollapseIcon={<ExpandMoreIcon />}
