@@ -56,7 +56,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     ];
   },
 })<{ ownerState: TreeItemOwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0.5),
+  padding: theme.spacing(0.5, 1),
   borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
