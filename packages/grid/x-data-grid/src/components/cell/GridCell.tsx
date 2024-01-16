@@ -431,7 +431,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       };
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       ref={handleRef}
       className={clsx(className, classNames, classes.root)}
