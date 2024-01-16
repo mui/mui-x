@@ -61,7 +61,7 @@ useCustomPlugin.getDefaultizedParams = (params) => ({
 ### Controllable models
 
 A model is a value that can either be controlled or initialized using a prop.
-The Tree View contains several models like the `expandedNodes` model which contains the id of the nodes currently expanded.
+The Tree View contains several models like the `expandedNodes` model which contains the ids of the nodes currently expanded.
 
 You can create your own models using the `models` property of your plugin:
 
