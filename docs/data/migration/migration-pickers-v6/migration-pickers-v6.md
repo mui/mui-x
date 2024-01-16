@@ -476,7 +476,7 @@ You can use the `date` method instead:
 
 #### Remove the `getDiff` method
 
-The `getDiff` method have been removed.
+The `getDiff` method has been removed.
 You can directly use your date library:
 
 ```diff
