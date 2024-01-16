@@ -704,7 +704,7 @@ You can directly use your date library:
 -const isoString = adapter.toISO(value);
 +const isoString = value.toUTC().toISO({ format: 'extended' });
 
-// For DateFns
+ // For DateFns
 -const isoString = adapter.toISO(value);
 +const isoString = dateFns.formatISO(value, { format: 'extended' });
 
