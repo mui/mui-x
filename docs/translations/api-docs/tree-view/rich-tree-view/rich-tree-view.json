@@ -2,7 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "className": { "description": "className applied to the root element." },
     "defaultCollapseIcon": { "description": "The default icon used to collapse the node." },
     "defaultEndIcon": {
       "description": "The default icon displayed next to a end node. This is applied to all tree nodes and can be overridden by the TreeItem <code>icon</code> prop."
