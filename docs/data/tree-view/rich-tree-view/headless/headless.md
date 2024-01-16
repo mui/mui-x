@@ -86,7 +86,7 @@ useCustomPlugin.models = {
 ```
 
 :::info
-When creating a model, you should always set a default value to your `defaultXXX` prop.
+When creating a model, you should always set a default value to your `defaultCustomModel` prop. This will initialize the component's internal state when the model is uncontrolled.
 See the [Params default value](/x/react-tree-view/rich-tree-view/headless/#params-default-value) section for more information.
 :::
 
