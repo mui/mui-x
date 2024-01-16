@@ -483,6 +483,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/simple-tree-view/items' },
           { pathname: '/x/react-tree-view/simple-tree-view/selection' },
           { pathname: '/x/react-tree-view/simple-tree-view/expansion' },
+          { pathname: '/x/react-tree-view/simple-tree-view/focus' },
           { pathname: '/x/react-tree-view/simple-tree-view/customization' },
         ],
       },
@@ -493,6 +494,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/items' },
           { pathname: '/x/react-tree-view/rich-tree-view/selection' },
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
+          { pathname: '/x/react-tree-view/rich-tree-view/focus' },
         ],
       },
       {
