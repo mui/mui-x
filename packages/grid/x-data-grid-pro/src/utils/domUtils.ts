@@ -116,11 +116,10 @@ export function findGridHeader(api: GridPrivateApiPro, field: string) {
 
 export function findGridCells(api: GridPrivateApiPro, field: string) {
   const container = api.virtualScrollerRef!.current!;
-  const selectorFor = (role: string) =>
-    `:scope > div > div > div > [data-field="${field}"][role="${role}"]`;
-  // TODO(v7): Keep only the selector for the correct role
   return Array.from(
-    container.querySelectorAll(`${selectorFor('cell')}, ${selectorFor('gridcell')}`),
+    container.querySelectorAll(
+      `:scope > div > div > div > [data-field="${field}"][role="gridcell"]`,
+    ),
   );
 }
 
