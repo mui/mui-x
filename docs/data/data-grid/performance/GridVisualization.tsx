@@ -28,7 +28,7 @@ const TraceUpdates = React.forwardRef<any, any>((props, ref) => {
 
 const CellWithTracer = React.forwardRef((props, ref) => {
   return <TraceUpdates ref={ref} Component={GridCell} {...props} />;
-});
+}) as typeof GridCell;
 
 const slots = {
   cell: CellWithTracer,

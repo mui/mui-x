@@ -8,7 +8,8 @@
       "default": "xAxisIds[0] The id of the first provided axis"
     },
     "colors": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "blueberryTwilightPalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
@@ -36,7 +37,11 @@
       "default": "null"
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "topAxis": {
       "type": {
         "name": "union",
@@ -59,23 +64,26 @@
       }
     }
   },
-  "slots": [
-    { "class": null, "name": "axisContent", "description": "" },
-    { "class": null, "name": "axisLabel", "description": "" },
-    { "class": null, "name": "axisLine", "description": "" },
-    { "class": null, "name": "axisTick", "description": "" },
-    { "class": null, "name": "axisTickLabel", "description": "" },
-    { "class": null, "name": "itemContent", "description": "" },
-    { "class": null, "name": "legend", "description": "" },
-    { "class": null, "name": "popper", "description": "" },
-    { "class": null, "name": "scatter", "description": "" }
-  ],
   "name": "ScatterChart",
   "imports": [
     "import { ScatterChart } from '@mui/x-charts/ScatterChart';",
     "import { ScatterChart } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatterChart" },
+  "slots": [
+    { "name": "axisLine", "description": "", "class": null },
+    { "name": "axisTick", "description": "", "class": null },
+    { "name": "axisTickLabel", "description": "", "class": null },
+    { "name": "axisLabel", "description": "", "class": null },
+    { "name": "scatter", "description": "", "class": null },
+    { "name": "legend", "description": "", "class": null },
+    { "name": "popper", "description": "", "class": null },
+    { "name": "axisContent", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiScatterChart",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demonstration</a></li></ul>",
+  "cssComponent": false
 }

@@ -9,40 +9,62 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Customization
 
-<p class="description">Learn how to customize the Tree View component.</p>
+<p class="description">Learn how to customize the simple version of the Tree View component.</p>
 
-## Custom icons, border, and animation
+## Basics
 
-The demo below shows how to use a custom animation for displaying the Tree View items (using [react-sprint](https://www.react-spring.dev/)), as well as adding a custom border and icons.
+### Custom icons
 
-{{"demo": "CustomizedTreeView.js"}}
+Use the `defaultCollapseIcon`, `defaultExpandIcon`, and `defaultEndIcon` props to customize the Tree View icons.
+The demo below shows how to add icons using both an existing icon library, such as [Material Icons](/material-ui/material-icons/), and creating an icon from scratch using Material UI's [SVG Icon component](/material-ui/icons/#svgicon).
 
-## The ContentProps component and useTreeItem hook
+{{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
 
-```jsx
-import {
-  TreeItemContentProps,
-  TreeItemProps,
-  useTreeItem,
-} from '@mui/x-tree-view/TreeItem';
-```
+### Custom toggle animations
 
-The MUI X Tree View component also provides the `TreeItemContentProps` and `TreeItemProps` components as well as the `useTreeItem` hook for deeper customization options.
-Below are a couple of example demos on how to use them:
+Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
 
-### Limit expansion interaction
+The demo below is animated using Material UI's [Collapse](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
 
-The demo below shows how to limit the expansion interaction click area to the arrow icon only.
+{{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
+
+### Custom styling
+
+Use `treeItemClasses` to target internal elements of the Tree Item component and change their styles.
+
+{{"demo": "CustomStyling.js"}}
+
+### Adding custom content
+
+Use the `ContentComponent` prop and the `useTreeItem` hook to replace the Tree Item content with an entirely custom component.
+The demo below shows how to add an avatar and custom typography elements.
+
+{{"demo": "CustomContentTreeView.js"}}
+
+## Common examples
+
+### Connection border
+
+Target the `treeItemClasses.group` class to add connection borders between the Tree View items.
+
+{{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
+
+### Limit expansion to icon container
+
+The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
 
-### Full width background
+### File explorer
 
-The demo below builds upon the above to also make the Tree Item background span the full Tree View width.
+The demo below shows many of the previous customization examples brought together to make the Tree View component look completely different than its default design.
 
-{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
+{{"demo": "CustomizedTreeView.js"}}
 
-## Gmail clone
+### Gmail clone
+
+Google's Gmail side nav is potentially one of the web's most famous tree view components.
+The demo below shows how to replicate it.
 
 The Gmail sidenav is probably one of the most famous Tree View component in daily use.
 The demo below shows how to build a similar version:

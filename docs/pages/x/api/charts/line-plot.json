@@ -1,22 +1,22 @@
 {
   "props": {
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
-  },
-  "slots": [
-    {
-      "class": null,
-      "name": "line",
-      "description": "The component that renders the root.",
-      "default": "LineElementPath"
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
     }
-  ],
+  },
   "name": "LinePlot",
   "imports": [
     "import { LinePlot } from '@mui/x-charts/LineChart';",
     "import { LinePlot } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiLinePlot" },
+  "slots": [{ "name": "line", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiLinePlot",
   "filename": "/packages/x-charts/src/LineChart/LinePlot.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
 }

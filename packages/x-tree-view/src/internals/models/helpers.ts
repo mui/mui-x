@@ -1,4 +1,4 @@
-import { TreeViewAnyPluginSignature, TreeViewPlugin } from './plugin';
+import type { TreeViewAnyPluginSignature, TreeViewPlugin } from './plugin';
 
 export type DefaultizedProps<
   P extends {},
@@ -7,6 +7,14 @@ export type DefaultizedProps<
 > = Omit<P, RequiredProps | keyof AdditionalProps> &
   Required<Pick<P, RequiredProps>> &
   AdditionalProps;
+
+type IsAny<T> = 0 extends 1 & T ? true : false;
+
+export type OptionalIfEmpty<A extends string, B> = keyof B extends never
+  ? Partial<Record<A, B>>
+  : IsAny<B> extends true
+  ? Partial<Record<A, B>>
+  : Record<A, B>;
 
 export type MergePluginsProperty<
   TPlugins extends readonly any[],
@@ -30,6 +38,7 @@ export interface MergePlugins<TPlugins extends readonly any[]> {
   params: MergePluginsProperty<TPlugins, 'params'>;
   defaultizedParams: MergePluginsProperty<TPlugins, 'defaultizedParams'>;
   dependantPlugins: MergePluginsProperty<TPlugins, 'dependantPlugins'>;
+  contextValue: MergePluginsProperty<TPlugins, 'contextValue'>;
   events: MergePluginsProperty<TPlugins, 'events'>;
   models: MergePluginsProperty<TPlugins, 'models'>;
 }

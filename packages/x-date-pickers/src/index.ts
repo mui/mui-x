@@ -5,7 +5,7 @@ export * from './MultiSectionDigitalClock';
 
 export * from './LocalizationProvider';
 export * from './PickersDay';
-export * from './locales';
+export * from './locales/utils/pickersLocaleTextApi';
 
 // Fields
 export * from './DateField';
@@ -47,6 +47,7 @@ export * from './PickersShortcuts';
 export * from './PickersCalendarHeader';
 
 // Field utilities
+export * from './PickersTextField';
 export * from './PickersSectionList';
 
 export { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from './internals/utils/utils';

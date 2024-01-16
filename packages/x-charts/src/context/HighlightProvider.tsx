@@ -85,7 +85,8 @@ const dataReducer: React.Reducer<Omit<HighlighState, 'dispatch'>, HighlighAction
   }
 };
 
-export function HighlightProvider({ children }: HighlightProviderProps) {
+function HighlightProvider(props: HighlightProviderProps) {
+  const { children } = props;
   const [data, dispatch] = React.useReducer(dataReducer, {
     item: null,
     scope: defaultScope,
@@ -101,3 +102,5 @@ export function HighlightProvider({ children }: HighlightProviderProps) {
 
   return <HighlighContext.Provider value={value}>{children}</HighlighContext.Provider>;
 }
+
+export { HighlightProvider };

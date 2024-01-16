@@ -16,7 +16,7 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
-import { gridClasses } from '../../../constants/gridClasses';
+import { gridDimensionsSelector } from '../dimensions';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -63,6 +63,7 @@ export const useGridScroll = (
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
+      const dimensions = gridDimensionsSelector(apiRef.current.state);
       const totalRowCount = gridRowCountSelector(apiRef);
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       const scrollToHeader = params.rowIndex == null;
@@ -74,7 +75,7 @@ export const useGridScroll = (
 
       let scrollCoordinates: Partial<GridScrollParams> = {};
 
-      if (params.colIndex != null) {
+      if (params.colIndex !== undefined) {
         const columnPositions = gridColumnPositionsSelector(apiRef);
 
         let cellWidth: number | undefined;
@@ -95,13 +96,13 @@ export const useGridScroll = (
         }
         // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
         scrollCoordinates.left = scrollIntoView({
-          clientHeight: virtualScrollerRef.current!.clientWidth,
+          clientHeight: dimensions.viewportInnerSize.width,
           scrollTop: Math.abs(virtualScrollerRef.current!.scrollLeft),
           offsetHeight: cellWidth,
           offsetTop: columnPositions[params.colIndex],
         });
       }
-      if (params.rowIndex != null) {
+      if (params.rowIndex !== undefined) {
         const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
         const page = gridPageSelector(apiRef);
         const pageSize = gridPageSizeSelector(apiRef);
@@ -114,16 +115,8 @@ export const useGridScroll = (
           ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
           : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
 
-        const topPinnedRowsHeight =
-          virtualScrollerRef.current!.querySelector(`.${gridClasses['pinnedRows--top']}`)
-            ?.clientHeight || 0;
-        const bottomPinnedRowsHeight =
-          virtualScrollerRef.current!.querySelector(`.${gridClasses['pinnedRows--bottom']}`)
-            ?.clientHeight || 0;
-
         scrollCoordinates.top = scrollIntoView({
-          clientHeight:
-            virtualScrollerRef.current!.clientHeight - topPinnedRowsHeight - bottomPinnedRowsHeight,
+          clientHeight: dimensions.viewportInnerSize.height,
           scrollTop: virtualScrollerRef.current!.scrollTop,
           offsetHeight: targetOffsetHeight,
           offsetTop: rowsMeta.positions[elementIndex],
@@ -151,13 +144,13 @@ export const useGridScroll = (
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(
     (params: Partial<GridScrollParams>) => {
-      if (virtualScrollerRef.current && params.left != null && colRef.current) {
+      if (virtualScrollerRef.current && params.left !== undefined && colRef.current) {
         const direction = theme.direction === 'rtl' ? -1 : 1;
         colRef.current.scrollLeft = params.left;
         virtualScrollerRef.current.scrollLeft = direction * params.left;
         logger.debug(`Scrolling left: ${params.left}`);
       }
-      if (virtualScrollerRef.current && params.top != null) {
+      if (virtualScrollerRef.current && params.top !== undefined) {
         virtualScrollerRef.current.scrollTop = params.top;
         logger.debug(`Scrolling top: ${params.top}`);
       }

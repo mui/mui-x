@@ -2,7 +2,7 @@
 title: React Tree map chart
 ---
 
-# Charts - Treemap
+# Charts - Treemap 🚧
 
 <p class="description">Treemap allows to display data with a hierarchical structure.</p>
 

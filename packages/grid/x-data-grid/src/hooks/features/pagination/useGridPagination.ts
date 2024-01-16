@@ -15,7 +15,6 @@ import {
 } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPaginationModelSelector } from './gridPaginationSelector';
-import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 import {
   getPageCount,
   noRowCountInServerMode,
@@ -243,16 +242,14 @@ export const useGridPagination = (
   };
 
   const handleUpdateAutoPageSize = React.useCallback(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    if (!props.autoPageSize || !dimensions) {
+    if (!props.autoPageSize) {
       return;
     }
 
-    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
+    const dimensions = apiRef.current.getRootDimensions();
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      (dimensions.viewportInnerSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom) /
-        rowHeight,
+      dimensions.viewportInnerSize.height / rowHeight,
     );
 
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);

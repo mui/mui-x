@@ -7,7 +7,7 @@ import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
-import { DateRange } from '../internals/models';
+import { DateRange } from '../models';
 
 type StaticDateRangePickerComponent = (<TDate>(
   props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -84,9 +84,6 @@ StaticDateRangePicker.propTypes = {
    * @default 2
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
-  /**
-   * Class name applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * Position the current month is rendered in.

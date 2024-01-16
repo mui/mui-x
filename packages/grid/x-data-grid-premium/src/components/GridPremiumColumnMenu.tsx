@@ -14,13 +14,11 @@ import { GridColumnMenuRowUngroupItem } from './GridColumnMenuRowUngroupItem';
 
 export function GridColumnMenuGroupingItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
+
   if (isGroupingColumn(colDef.field)) {
     return <GridColumnMenuRowGroupItem {...props} />;
   }
-  if (colDef.groupable) {
-    return <GridColumnMenuRowUngroupItem {...props} />;
-  }
-  return null;
+  return <GridColumnMenuRowUngroupItem {...props} />;
 }
 
 export const GRID_COLUMN_MENU_SLOTS_PREMIUM = {

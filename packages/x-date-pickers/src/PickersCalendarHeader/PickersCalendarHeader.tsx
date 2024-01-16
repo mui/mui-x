@@ -266,9 +266,6 @@ PickersCalendarHeader.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
   currentMonth: PropTypes.any.isRequired,
   disabled: PropTypes.bool,

@@ -11,9 +11,6 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    * The content of the component.
    */
   children?: React.ReactNode;
-  /**
-   * className applied to the root element.
-   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.

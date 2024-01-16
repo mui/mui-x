@@ -28,6 +28,9 @@ import {
   GridDetailPanelState,
 } from './gridDetailPanelInterface';
 
+// FIXME: calling `api.updateDimensions()` here triggers a cycle where `updateDimensions` is
+// called 3 times when opening/closing a panel.
+
 export const detailPanelStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'initialState' | 'detailPanelExpandedRowIds'>
 > = (state, props) => {
@@ -170,6 +173,7 @@ export const useGridDetailPanel = (
           },
         };
       });
+      apiRef.current.updateDimensions();
       apiRef.current.forceUpdate();
     },
     [apiRef],
@@ -194,6 +198,7 @@ export const useGridDetailPanel = (
           },
         };
       });
+      apiRef.current.updateDimensions();
 
       apiRef.current.requestPipeProcessorsApplication('rowHeight');
     },
@@ -248,6 +253,7 @@ export const useGridDetailPanel = (
         },
       };
     });
+    apiRef.current.updateDimensions?.();
     apiRef.current.forceUpdate();
   }, [apiRef, props.getDetailPanelContent, props.getDetailPanelHeight]);
 
@@ -280,6 +286,7 @@ export const useGridDetailPanel = (
         },
       };
     });
+    apiRef.current.updateDimensions?.();
 
     previousGetDetailPanelContentProp.current = props.getDetailPanelContent;
     previousGetDetailPanelHeightProp.current = props.getDetailPanelHeight;

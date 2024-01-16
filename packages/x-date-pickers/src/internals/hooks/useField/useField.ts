@@ -39,6 +39,7 @@ export const useField = <
     updateValueFromValueStr,
     setTempAndroidValueStr,
     sectionsValueBoundaries,
+    localizedDigits,
     placeholder,
     timezone,
   } = useFieldState(params);
@@ -69,6 +70,7 @@ export const useField = <
     sections: state.sections,
     updateSectionValue,
     sectionsValueBoundaries,
+    localizedDigits,
     setTempAndroidValueStr,
     timezone,
   });
@@ -238,7 +240,7 @@ export const useField = <
       keyPressed = cleanValueStr;
     } else {
       const prevValueStr = cleanString(
-        fieldValueManager.getValueStrFromSections(state.sections, isRTL),
+        fieldValueManager.getValueStrFromSections(state.sections, localizedDigits, isRTL),
       );
 
       let startOfDiffIndex = -1;
@@ -386,6 +388,7 @@ export const useField = <
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
+          localizedDigits,
           activeDateManager.date,
           { minutesStep },
         );
@@ -486,8 +489,9 @@ export const useField = <
 
   const valueStr = React.useMemo(
     () =>
-      state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections, isRTL),
-    [state.sections, fieldValueManager, state.tempValueStrAndroid, isRTL],
+      state.tempValueStrAndroid ??
+      fieldValueManager.getValueStrFromSections(state.sections, localizedDigits, isRTL),
+    [state.sections, fieldValueManager, state.tempValueStrAndroid, localizedDigits, isRTL],
   );
 
   const inputMode = React.useMemo(() => {

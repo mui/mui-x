@@ -152,7 +152,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const {
     icons: contextIcons,
     runItemPlugins,
-    multiSelect,
+    selection: { multiSelect },
     disabledItemsFocusable,
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
@@ -307,9 +307,6 @@ TreeItem.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * The icon used to collapse the node.
