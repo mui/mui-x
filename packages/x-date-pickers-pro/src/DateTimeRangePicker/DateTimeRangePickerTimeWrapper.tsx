@@ -39,6 +39,9 @@ export type DateTimeRangePickerTimeWrapperProps<
     openTo?: TView;
   };
 
+/**
+ * @ignore - internal component.
+ */
 function DateTimeRangePickerTimeWrapper<
   TDate,
   TView extends DateTimeRangePickerView,
