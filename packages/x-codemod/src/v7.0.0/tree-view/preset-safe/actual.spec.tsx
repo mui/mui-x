@@ -1,7 +1,7 @@
 // @ts-nocheck
 import * as React from 'react';
 import { TreeView, treeViewClasses } from '@mui/x-tree-view/TreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
 
 const className = treeViewClasses.root;
 

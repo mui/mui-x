@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 
-export function useTreeItem(nodeId: string) {
+export function useTreeItemState(nodeId: string) {
   const {
     instance,
     selection: { multiSelect },

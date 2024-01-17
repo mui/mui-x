@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useTreeItem } from './useTreeItem';
+import { useTreeItemState } from './useTreeItemState';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -76,7 +76,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     handleExpansion,
     handleSelection,
     preventSelection,
-  } = useTreeItem(nodeId);
+  } = useTreeItemState(nodeId);
 
   const icon = iconProp || expansionIcon || displayIcon;
 
