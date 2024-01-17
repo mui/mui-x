@@ -251,8 +251,8 @@ Renames the `useTreeItem` hook to `useTreeItemState`
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled }  = useTreeItem(props.nodeId);
-+  const { disabled }  = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.nodeId);
++  const { disabled } = useTreeItemState(props.nodeId);
 
    // Render some UI
  });
