@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
+import { act, createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { DataGrid, DataGridProps, GridRowsProp, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { getColumnHeadersTextContent, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -374,19 +374,21 @@ describe('<DataGridPro /> - Columns visibility', () => {
               { field: 'age' },
             ]}
             rows={[{ id: 1, firstName: 'John', lastName: 'Doe', age: 20 }]}
-            autoHeight={isJSDOM}
             slotProps={{
               columnsPanel: {
                 toggleAllMode: 'filteredOnly',
               },
             }}
             slots={{ toolbar: GridToolbar }}
+            disableVirtualization
           />
         </div>,
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'lastName', 'age']);
-      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      const button = screen.getByRole('button', { name: 'Select columns' });
+      act(() => button.focus());
+      fireEvent.click(button);
       const input = screen.getByRole('textbox', { name: 'Find column' });
 
       fireEvent.change(input, { target: { value: 'name' } });
