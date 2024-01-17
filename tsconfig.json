@@ -29,7 +29,9 @@
       "@mui-internal/test-utils": ["./node_modules/@mui/monorepo/packages/test-utils/src"],
       "@mui-internal/test-utils/*": ["./node_modules/@mui/monorepo/packages/test-utils/src/*"],
       "@mui-internal/api-docs-builder": ["./node_modules/@mui/monorepo/packages/api-docs-builder"],
-      "@mui-internal/api-docs-builder/*": ["./node_modules/@mui/monorepo/packages/api-docs-builder/*"],
+      "@mui-internal/api-docs-builder/*": [
+        "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
+      ],
       "test/*": ["./test/*"],
       "docs/*": ["./node_modules/@mui/monorepo/docs"],
       "docsx/*": ["./docs/*"]
