@@ -6,11 +6,13 @@
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
+    "defaultFocusedNodeId": { "type": { "name": "string" }, "default": "undefined" },
     "defaultParentIcon": { "type": { "name": "node" } },
     "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "focusedNode": { "type": { "name": "string" } },
     "getItemId": {
       "type": { "name": "func" },
       "default": "`(item) => item.id`",
@@ -46,18 +48,18 @@
         "describedArgs": ["event", "nodeIds"]
       }
     },
-    "onNodeExpansionToggle": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeId: array, isExpanded: array) => void",
-        "describedArgs": ["event", "nodeId", "isExpanded"]
-      }
-    },
     "onFocusedNodeChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.SyntheticEvent, nodeId: string, value: string) => void",
         "describedArgs": ["event", "nodeId", "value"]
+      }
+    },
+    "onNodeExpansionToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeId: array, isExpanded: array) => void",
+        "describedArgs": ["event", "nodeId", "isExpanded"]
       }
     },
     "onNodeSelectionToggle": {
@@ -108,6 +110,6 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/RichTreeView/RichTreeView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/overview/\">MUI X Tree View</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/overview/\">MUI X Tree View</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/focus/\">Rich Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li></ul>",
   "cssComponent": false
 }

@@ -9,6 +9,9 @@
     "defaultExpandedNodes": {
       "description": "Expanded node ids. Used when the item&#39;s expansion is not controlled."
     },
+    "defaultFocusedNodeId": {
+      "description": "Focused node id. Used when the item&#39;s focus is controlled."
+    },
     "defaultParentIcon": {
       "description": "The default icon displayed next to a parent node. This is applied to all parent nodes and can be overridden by the TreeItem <code>icon</code> prop."
     },
@@ -21,6 +24,9 @@
     "disableSelection": { "description": "If <code>true</code> selection is disabled." },
     "expandedNodes": {
       "description": "Expanded node ids. Used when the item&#39;s expansion is controlled."
+    },
+    "focusedNode": {
+      "description": "Focused node id. Used when the item&#39;s focus is controlled."
     },
     "getItemId": {
       "description": "Used to determine the string label for a given item.",
@@ -43,20 +49,20 @@
         "nodeIds": "The ids of the expanded nodes."
       }
     },
-    "onNodeExpansionToggle": {
-      "description": "Callback fired when a tree item is expanded or collapsed.",
-      "typeDescriptions": {
-        "event": "The event source of the callback.",
-        "nodeId": "The nodeId of the modified node.",
-        "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
-      }
-    },
     "onFocusedNodeChange": {
       "description": "Callback fired when tree items are focused.",
       "typeDescriptions": {
         "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
         "nodeId": "The id of the node focused.",
         "value": "of the focused node."
+      }
+    },
+    "onNodeExpansionToggle": {
+      "description": "Callback fired when a tree item is expanded or collapsed.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "nodeId": "The nodeId of the modified node.",
+        "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
       }
     },
     "onNodeSelectionToggle": {

@@ -7,11 +7,13 @@
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
+    "defaultFocusedNodeId": { "type": { "name": "string" }, "default": "undefined" },
     "defaultParentIcon": { "type": { "name": "node" } },
     "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "focusedNode": { "type": { "name": "string" } },
     "getItemId": {
       "type": { "name": "func" },
       "default": "`(item) => item.id`",
@@ -39,18 +41,18 @@
         "describedArgs": ["event", "nodeIds"]
       }
     },
-    "onNodeExpansionToggle": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeId: array, isExpanded: array) => void",
-        "describedArgs": ["event", "nodeId", "isExpanded"]
-      }
-    },
     "onFocusedNodeChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.SyntheticEvent, nodeId: string, value: string) => void",
         "describedArgs": ["event", "nodeId", "value"]
+      }
+    },
+    "onNodeExpansionToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, nodeId: array, isExpanded: array) => void",
+        "describedArgs": ["event", "nodeId", "isExpanded"]
       }
     },
     "onNodeSelectionToggle": {
