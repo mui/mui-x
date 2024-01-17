@@ -75,10 +75,10 @@ export async function raf() {
  */
 export function getActiveCell(): string | null {
   let activeElement: Element | null;
-  if (document.activeElement && document.activeElement.getAttribute('role') === 'cell') {
+  if (document.activeElement && document.activeElement.getAttribute('role') === 'gridcell') {
     activeElement = document.activeElement;
   } else {
-    activeElement = document.activeElement && document.activeElement.closest('[role="cell"]');
+    activeElement = document.activeElement && document.activeElement.closest('[role="gridcell"]');
   }
 
   if (!activeElement) {
@@ -110,9 +110,9 @@ export function getActiveColumnHeader() {
 }
 
 export function getColumnValues(colIndex: number) {
-  return Array.from(document.querySelectorAll(`[role="cell"][data-colindex="${colIndex}"]`)).map(
-    (node) => node!.textContent,
-  );
+  return Array.from(
+    document.querySelectorAll(`[role="gridcell"][data-colindex="${colIndex}"]`),
+  ).map((node) => node!.textContent);
 }
 
 export function getColumnHeaderCell(colIndex: number, rowIndex?: number): HTMLElement {
@@ -137,13 +137,13 @@ export function getColumnHeadersTextContent() {
 
 export function getRowsFieldContent(field: string) {
   return Array.from(document.querySelectorAll('[role="row"][data-rowindex]')).map(
-    (node) => node.querySelector(`[role="cell"][data-field="${field}"]`)?.textContent,
+    (node) => node.querySelector(`[role="gridcell"][data-field="${field}"]`)?.textContent,
   );
 }
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector<HTMLElement>(
-    `[role="row"][data-rowindex="${rowIndex}"] [role="cell"][data-colindex="${colIndex}"]`,
+    `[role="row"][data-rowindex="${rowIndex}"] [role="gridcell"][data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);
