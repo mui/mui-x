@@ -20,7 +20,7 @@ module.exports = function setKarmaConfig(config) {
         timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000,
       },
     },
-    frameworks: (process.env.CIRCLECI === 'true' ? [] : ['parallel']).concat(['mocha', 'webpack']),
+    frameworks: (process.env.PARALLEL === 'true' ? ['parallel'] : []).concat(['mocha', 'webpack']),
     files: [
       {
         pattern: 'test/karma.tests.js',
@@ -29,7 +29,7 @@ module.exports = function setKarmaConfig(config) {
         included: true,
       },
     ],
-    plugins: (process.env.CIRCLECI === 'true' ? [] : ['karma-parallel']).concat([
+    plugins: (process.env.PARALLEL === 'true' ? ['karma-parallel'] : []).concat([
       'karma-mocha',
       'karma-chrome-launcher',
       'karma-sourcemap-loader',

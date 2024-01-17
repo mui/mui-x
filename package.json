@@ -35,6 +35,7 @@
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=coverage nyc mocha --exclude '**/node_modules/**' && nyc report -r lcovonly",
     "test:coverage:html": "cross-env NODE_ENV=test BABEL_ENV=coverage nyc mocha --exclude '**/node_modules/**' && nyc report --reporter=html",
     "test:karma": "cross-env NODE_ENV=test TZ=UTC karma start test/karma.conf.js",
+    "test:karma:parallel": "cross-env NODE_ENV=test TZ=UTC PARALLEL=true karma start test/karma.conf.js",
     "test:unit": "cross-env NODE_ENV=test TZ=UTC mocha -n expose_gc",
     "test:e2e": "cross-env NODE_ENV=production yarn test:e2e:build && concurrently --success first --kill-others \"yarn test:e2e:run\" \"yarn test:e2e:server\"",
     "test:e2e:build": "webpack --config test/e2e/webpack.config.js",
