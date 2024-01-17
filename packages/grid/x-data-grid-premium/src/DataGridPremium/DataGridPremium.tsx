@@ -321,7 +321,6 @@ DataGridPremiumRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     ariaV7: PropTypes.bool,
-    columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
