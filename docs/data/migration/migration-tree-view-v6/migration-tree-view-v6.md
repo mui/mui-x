@@ -236,7 +236,7 @@ The icon rendered next to item
 is now defined as a slot both on the Tree View component.
 
 If you were passing an icon to your Tree Item component,
-you need to use the new `endIcon` slot on this component:
+you need to use the new `icon` slot on this component:
 
 ```diff
   <SimpleTreeView>
