@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
 import {
   PickerSelectionState,
   PickerViewRenderer,
@@ -40,12 +39,6 @@ export type DateTimeRangePickerTimeWrapperProps<
     openTo?: TView;
   };
 
-const DateTimeRangePickerTimeWrapperRoot = styled('div', {
-  name: 'DateTimeRangePickerTimeWrapper',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})({});
-
 function DateTimeRangePickerTimeWrapper<
   TDate,
   TView extends DateTimeRangePickerView,
@@ -54,10 +47,9 @@ function DateTimeRangePickerTimeWrapper<
     'value' | 'defaultValue' | 'onChange'
   >,
 >(
-  inProps: DateTimeRangePickerTimeWrapperProps<TDate, TView, TComponentProps>,
+  props: DateTimeRangePickerTimeWrapperProps<TDate, TView, TComponentProps>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePickerTimeWrapper' });
   const utils = useUtils<TDate>();
 
   const {
@@ -104,19 +96,15 @@ function DateTimeRangePickerTimeWrapper<
     onChange(newRange, isFullRangeSelected ? 'finish' : 'partial', selectedView);
   };
 
-  return (
-    <DateTimeRangePickerTimeWrapperRoot className={className}>
-      {viewRenderer({
-        ...other,
-        ref,
-        views,
-        onViewChange,
-        value: currentValue,
-        onChange: handleOnChange,
-        defaultValue: currentDefaultValue,
-      })}
-    </DateTimeRangePickerTimeWrapperRoot>
-  );
+  return viewRenderer({
+    ...other,
+    ref,
+    views,
+    onViewChange,
+    value: currentValue,
+    onChange: handleOnChange,
+    defaultValue: currentDefaultValue,
+  });
 }
 
 export { DateTimeRangePickerTimeWrapper };
