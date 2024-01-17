@@ -140,9 +140,6 @@ export const useGridColumnGrouping = (
 
   const updateColumnGroupingState = React.useCallback(
     (columnGroupingModel: GridColumnGroupingModel | undefined) => {
-      if (!columnGroupingModel) {
-        return;
-      }
       // @ts-expect-error Move this logic to `Pro` package
       const pinnedColumns = apiRef.current.getPinnedColumns?.() ?? {};
       const columnFields = gridColumnFieldsSelector(apiRef);
