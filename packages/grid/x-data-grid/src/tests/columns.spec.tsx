@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
+import type { Expect, Equal } from 'test/utils/typeUtils';
 import { GridCellParams } from '../models/params/gridCellParams';
 import { GridColDef, GridRowParams } from '../models';
 
@@ -155,4 +156,47 @@ const constEmptyRows = [] as const;
 
 function ConstProps() {
   return <DataGrid rows={constEmptyRows} columns={constBrandColumns} />;
+}
+
+function ValueGetter() {
+  const oldSignatureValueGetter: GridColDef[] = [
+    {
+      field: 'brand',
+      valueGetter: (params) => {
+        type Test = Expect<Equal<typeof params, never>>;
+        return '';
+      },
+    },
+    {
+      field: 'brand',
+      valueGetter: ({ value, row }) => {
+        type Tests = [Expect<Equal<typeof value, never>>, Expect<Equal<typeof row, never>>];
+        return '';
+      },
+    },
+  ];
+
+  const currentSignatureValueGetter: GridColDef[] = [
+    {
+      field: 'brand',
+      valueGetter: (value) => {
+        type Test = Expect<Equal<typeof value, never>>;
+        return value;
+      },
+    },
+    {
+      field: 'brand',
+      valueGetter: (value: number) => {
+        type Test = Expect<Equal<typeof value, number>>;
+        return value;
+      },
+    },
+    {
+      field: 'brand',
+      valueGetter: (value: 'foo' | 'bar') => {
+        type Test = Expect<Equal<typeof value, 'foo' | 'bar'>>;
+        return value;
+      },
+    },
+  ];
 }
