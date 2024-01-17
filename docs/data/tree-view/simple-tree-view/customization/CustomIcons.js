@@ -33,8 +33,10 @@ export default function CustomIcons() {
     <SimpleTreeView
       aria-label="customized"
       defaultExpandedNodes={['1']}
-      defaultCollapseIcon={<IndeterminateCheckBoxIcon />}
-      defaultExpandIcon={<AddBoxIcon />}
+      slots={{
+        expandIcon: AddBoxIcon,
+        collapseIcon: IndeterminateCheckBoxIcon,
+      }}
       defaultEndIcon={<CloseSquare />}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >

@@ -1,13 +1,23 @@
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewIconsSignature } from './useTreeViewIcons.types';
 
-export const useTreeViewIcons: TreeViewPlugin<UseTreeViewIconsSignature> = ({ params }) => {
+export const useTreeViewIcons: TreeViewPlugin<UseTreeViewIconsSignature> = ({
+  params,
+  slots,
+  slotProps,
+}) => {
   return {
     contextValue: {
       icons: {
-        defaultCollapseIcon: params.defaultCollapseIcon,
+        slots: {
+          collapseIcon: slots.collapseIcon,
+          expandIcon: slots.expandIcon,
+        },
+        slotProps: {
+          collapseIcon: slotProps.collapseIcon,
+          expandIcon: slotProps.expandIcon,
+        },
         defaultEndIcon: params.defaultEndIcon,
-        defaultExpandIcon: params.defaultExpandIcon,
         defaultParentIcon: params.defaultParentIcon,
       },
     },
@@ -15,8 +25,6 @@ export const useTreeViewIcons: TreeViewPlugin<UseTreeViewIconsSignature> = ({ pa
 };
 
 useTreeViewIcons.params = {
-  defaultCollapseIcon: true,
   defaultEndIcon: true,
-  defaultExpandIcon: true,
   defaultParentIcon: true,
 };

@@ -1,7 +1,6 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "className": { "type": { "name": "string" } },
     "format": {
       "type": { "name": "string" },
       "default": "`${adapter.formats.month} ${adapter.formats.year}`"

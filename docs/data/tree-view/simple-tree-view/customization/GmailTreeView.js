@@ -101,8 +101,10 @@ export default function GmailTreeView() {
       aria-label="gmail"
       defaultExpandedNodes={['3']}
       defaultSelectedNodes="5"
-      defaultCollapseIcon={<ArrowDropDownIcon />}
-      defaultExpandIcon={<ArrowRightIcon />}
+      slots={{
+        expandIcon: ArrowRightIcon,
+        collapseIcon: ArrowDropDownIcon,
+      }}
       defaultEndIcon={<div style={{ width: 24 }} />}
       sx={{ flexGrow: 1, maxWidth: 400 }}
     >

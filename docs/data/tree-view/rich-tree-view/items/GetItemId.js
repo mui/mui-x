@@ -1,7 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
@@ -30,12 +28,7 @@ const getItemId = (item) => item.internalId;
 export default function GetItemId() {
   return (
     <Box sx={{ height: 168, flexGrow: 1, maxWidth: 400 }}>
-      <RichTreeView
-        items={MUI_X_PRODUCTS}
-        getItemId={getItemId}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      />
+      <RichTreeView items={MUI_X_PRODUCTS} getItemId={getItemId} />
     </Box>
   );
 }

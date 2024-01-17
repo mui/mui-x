@@ -40,7 +40,6 @@ import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePi
 import { isDatePickerView, isTimeView } from '@mui/x-date-pickers/internals';
 
 const ComponentSection = styled('div')(({ theme }) => ({
-  padding: theme.spacing(4),
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
@@ -56,8 +55,7 @@ const ComponentSection = styled('div')(({ theme }) => ({
 }));
 
 const PropControlsSection = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
+  flexGrow: 1,
   background: alpha(theme.palette.grey[50], 0.5),
   ...(theme.palette.mode === 'dark' && {
     backgroundColor: alpha(theme.palette.grey[900], 0.3),
@@ -84,27 +82,28 @@ function TriBooleanGroupControl({
     [onChange],
   );
   return (
-    <FormControl
-      sx={{
-        flexDirection: 'column',
-        gap: 1,
-        // alignItems: 'center',
-      }}
-    >
-      <FormLabel id={id}>{label}</FormLabel>
-      <ToggleButtonGroup
-        aria-labelledby={id}
-        value={value ?? ''}
-        exclusive
-        onChange={handleChange}
-        size="small"
-        color="primary"
-        fullWidth
-      >
-        <ToggleButton value={''}>Undefined</ToggleButton>
-        <ToggleButton value>True</ToggleButton>
-        <ToggleButton value={false}>False</ToggleButton>
-      </ToggleButtonGroup>
+    <FormControl>
+      <FormControlLabel
+        sx={{ gap: 1, m: 0, alignItems: 'start' }}
+        label={label}
+        id={id}
+        labelPlacement="top"
+        control={
+          <ToggleButtonGroup
+            aria-labelledby={id}
+            value={value ?? ''}
+            exclusive
+            onChange={handleChange}
+            size="small"
+            color="primary"
+            fullWidth
+          >
+            <ToggleButton value={''}>Undefined</ToggleButton>
+            <ToggleButton value>True</ToggleButton>
+            <ToggleButton value={false}>False</ToggleButton>
+          </ToggleButtonGroup>
+        }
+      />
     </FormControl>
   );
 }
@@ -126,18 +125,20 @@ function BooleanGroupControl({
     [onChange],
   );
   return (
-    <FormControl
-      size="small"
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 4,
-      }}
-    >
-      <FormLabel id={id}>{label}</FormLabel>
-      <Switch checked={value} onChange={handleChange} />
+    <FormControl>
+      <FormControlLabel
+        sx={{
+          justifyContent: 'space-between',
+          ml: 0,
+          width: '100%',
+        }}
+        label={label}
+        id={id}
+        checked={value}
+        onChange={handleChange as any}
+        labelPlacement="start"
+        control={<Switch />}
+      />
     </FormControl>
   );
 }
@@ -517,7 +518,7 @@ export default function PickersPlayground() {
           flexDirection: { xs: 'column', md: 'row' },
         }}
       >
-        <ComponentSection sx={{ width: { xs: '100%', sm: '60%' } }}>
+        <ComponentSection sx={{ width: { xs: '100%', md: '60%' }, padding: { xs: 2, md: 4 } }}>
           <FormControl fullWidth>
             <InputLabel id="selected-component-family-label">Selected components</InputLabel>
             <Select
@@ -592,8 +593,8 @@ export default function PickersPlayground() {
             </DemoContainer>
           )}
         </ComponentSection>
-        <Divider orientation="vertical" light sx={{ display: { xs: 'none', sm: 'flex' } }} />
-        <Divider light sx={{ display: { xs: 'auto', sm: 'none' } }} />
+        <Divider orientation="vertical" light sx={{ display: { xs: 'none', md: 'flex' } }} />
+        <Divider light sx={{ display: { xs: 'auto', md: 'none' } }} />
         <PropControlsSection>
           <Typography
             id="usage-props"
@@ -603,6 +604,7 @@ export default function PickersPlayground() {
               scrollMarginTop: 160,
               fontFamily: 'General Sans',
               p: 3,
+              pl: { xs: 2, md: 3 },
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
@@ -611,7 +613,7 @@ export default function PickersPlayground() {
             Playground
           </Typography>
           <Divider light />
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, pt: 2, pl: 3, pr: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, p: 2, pl: { md: 3 } }}>
             <TriBooleanGroupControl
               label="Toolbar hidden"
               value={isToolbarHidden}

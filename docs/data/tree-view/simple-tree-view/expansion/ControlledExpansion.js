@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
@@ -44,8 +42,6 @@ export default function ControlledExpansion() {
         <SimpleTreeView
           expandedNodes={expandedNodes}
           onExpandedNodesChange={handleExpandedNodesChange}
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
         >
           <TreeItem nodeId="grid" label="Data Grid">
             <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />

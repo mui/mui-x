@@ -80,6 +80,104 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 +const rootClass = simpleTreeViewClasses.root;
 ```
 
+### Use slots to define the item icons
+
+#### Define `expandIcon`
+
+The icon used to expand the children of a node (rendered when this node is collapsed)
+is now defined as a slot both on the Tree View and the Tree Item components.
+
+If you were using the `ChevronRight` icon from `@mui/icons-material`,
+you can stop passing it to your component because it is now the default value:
+
+```diff
+-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
+ <SimpleTreeView
+-  defaultExpandIcon={<ChevronRightIcon />}
+ >
+   {items}
+ </SimpleTreeView>
+```
+
+If you were passing another icon to your Tree View component,
+you need to use the new `expandIcon` slot on this component:
+
+```diff
+ <SimpleTreeView
+-  defaultExpandIcon={<MyCustomExpandIcon />}
++  slots={{ expandIcon: MyCustomExpandIcon }}
+ >
+   {items}
+ </SimpleTreeView>
+```
+
+:::warning
+Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
+:::
+
+If you were passing another icon to your Tree Item component,
+you need to use the new `expandIcon` slot on this component:
+
+```diff
+  <SimpleTreeView>
+    <TreeItem
+      nodeId="1"
+      label="Node 1"
+-     expandIcon={<MyCustomExpandIcon />}
++     slots={{ expandIcon: MyCustomExpandIcon }}
+    />
+  </SimpleTreeView>
+```
+
+#### Define `collapseIcon`
+
+The icon used to collapse the children of a node (rendered when this node is expanded)
+is now defined as a slot both on the Tree View and the Tree Item components.
+
+If you were using the `ExpandMore` icon from `@mui/icons-material`,
+you can stop passing it to your component because it is now the default value:
+
+```diff
+- import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+  <SimpleTreeView
+-   defaultCollapseIcon={<ExpandMoreIcon />}
+  >
+    {items}
+  </SimpleTreeView>
+```
+
+If you were passing another icon to your Tree View component,
+you need to use the new `collapseIcon` slot on this component:
+
+```diff
+  <SimpleTreeView
+-   defaultCollapseIcon={<MyCustomCollapseIcon />}
++   slots={{ collapseIcon: MyCustomCollapseIcon }}
+  >
+    {items}
+  </SimpleTreeView>
+```
+
+:::warning
+Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
+:::
+
+If you were passing another icon to your Tree Item component,
+you need to use the new `collapseIcon` slot on this component:
+
+```diff
+  <SimpleTreeView>
+    <TreeItem
+      nodeId="1"
+      label="Node 1"
+-     collapseIcon={<MyCustomCollapseIcon />}
++     slots={{ collapseIcon: MyCustomCollapseIcon }}
+    />
+  </SimpleTreeView>
+```
+
 ### Rename `onNodeToggle`, `expanded` and `defaultExpanded`
 
 The expansion props have been renamed to better describe their behaviors:
