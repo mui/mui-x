@@ -33,7 +33,7 @@
     },
     "valueFormatter": {
       "type": { "name": "func" },
-      "default": "(v: number) => v.toString()",
+      "default": "(v: number | null) => (v === null ? '' : v.toString())",
       "signature": {
         "type": "function(value: number) => string",
         "describedArgs": ["value"],

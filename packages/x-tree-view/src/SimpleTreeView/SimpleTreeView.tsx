@@ -117,9 +117,6 @@ SimpleTreeView.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * The default icon displayed next to a end node. This is applied to all

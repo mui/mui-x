@@ -36,9 +36,6 @@ export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | 
 }
 
 export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
-  /**
-   * className applied to the root element.
-   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.
